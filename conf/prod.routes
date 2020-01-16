@@ -1,5 +1,5 @@
 # Add all the application routes to the app.routes file
-->         /maintain-a-trust                    app.Routes
+->         /maintain-trust                    app.Routes
 ->         /                          health.Routes
 ->     	   /template                  template.Routes
 
