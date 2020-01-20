@@ -12,5 +12,8 @@ GET        /check-your-answers                          controllers.CheckYourAns
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
-GET        /trust-utr                              controllers.WhatIsTheUTRVariationsController.onPageLoad()
-POST       /trust-utr                              controllers.WhatIsTheUTRVariationsController.onSubmit()
+GET        /trust-utr                                   controllers.WhatIsTheUTRVariationsController.onPageLoad()
+POST       /trust-utr                                   controllers.WhatIsTheUTRVariationsController.onSubmit()
+
+GET        /declare-what-changed                        controllers.WhatIsNextController.onPageLoad()
+POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()

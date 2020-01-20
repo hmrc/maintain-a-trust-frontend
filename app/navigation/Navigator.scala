@@ -16,12 +16,11 @@
 
 package navigation
 
-import javax.inject.{Inject, Singleton}
-
-import play.api.mvc.Call
 import controllers.routes
-import pages._
+import javax.inject.{Inject, Singleton}
 import models._
+import pages._
+import play.api.mvc.Call
 
 @Singleton
 class Navigator @Inject()() {
@@ -39,5 +38,11 @@ class Navigator @Inject()() {
       normalRoutes(page)(userAnswers)
     case CheckMode =>
       checkRouteMap(page)(userAnswers)
+  }
+
+  def whatIsNextPage(answers: UserAnswers) = {
+    answers.get(WhatIsNextPage) match {
+      case _  => routes.WhatIsNextController.onPageLoad()
+    }
   }
 }

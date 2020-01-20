@@ -1569,3 +1569,11 @@ employerFinancedRetirementBenefitsSchemeStartDate.checkYourAnswersLabel = When d
 
 deedOfVariation.replaceAbsoluteInterestOverWill = to replace an absolute interest over a will
 deedOfVariation.replaceWillTrust = to replace a will trust
+
+whatIsNext.title = What do you want to do next?
+whatIsNext.heading = What do you want to do next?
+whatIsNext.declare = Declare the trust is up to date
+whatIsNext.makeChanges = Make changes to the trust and declare
+whatIsNext.closeTrust = Close the trust
+whatIsNext.checkYourAnswersLabel = What do you want to do next?
+whatIsNext.error.required = Select what you want to do next
