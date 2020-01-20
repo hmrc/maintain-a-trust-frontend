@@ -24,13 +24,13 @@
 @(fakeTvn: String, isAgent: Boolean, agentOverviewUrl: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${messages("variationsConfirmationPage.title", formatReferenceNumber(fakeTvn))}"
+    title = s"${messages("confirmationPage.title", formatReferenceNumber(fakeTvn))}"
     ) {
 
     <div class="govuk-main-wrapper--l">
         <h1 class="form-title heading-large heading-confirmation ">
-            @messages("variationsConfirmationPage.heading")
-            <span class="reference-text">@messages("variationsConfirmationPage.heading2")</span>
+            @messages("confirmationPage.heading")
+            <span class="reference-text">@messages("confirmationPage.heading2")</span>
             <span id="trusts-registration-number" class="reference-number">
                 <span aria-hidden=true>@fakeTvn</span>
                 <span class="visually-hidden">@formatReferenceNumber(fakeTvn)</span>
@@ -38,17 +38,17 @@
         </h1>
     </div>
 
-<p class="panel-indent">@components.link("" , "print-and-save","variationsConfirmationPage.printsave.link", openInNewWindow = true)</p>
+<p class="panel-indent">@components.link("" , "print-and-save","confirmationPage.printsave.link", openInNewWindow = true)</p>
 
-    <h2>@messages("variationsConfirmationPage.subheading1")</h2>
+    <h2>@messages("confirmationPage.subheading1")</h2>
 
-    <p>@messages("variationsConfirmationPage.paragraph1")</p>
+    <p>@messages("confirmationPage.paragraph1")</p>
 
-    <p>@messages("variationsConfirmationPage.paragraph2")</p>
+    <p>@messages("confirmationPage.paragraph2")</p>
 
-    <h2>@messages("variationsConfirmationPage.subheading2")</h2>
+    <h2>@messages("confirmationPage.subheading2")</h2>
 
-    <p>@messages("variationsConfirmationPage.paragraph3")</p>
+    <p>@messages("confirmationPage.paragraph3")</p>
 
 @if(isAgent: Boolean) {
 @messages("confirmationPage.agent.you.can") @components.link(agentOverviewUrl, "agent-overview", "confirmationPage.agent.link", true).
