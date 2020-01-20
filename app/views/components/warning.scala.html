@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models.requests
+@(messageKeyPrefix: String)(implicit messages: Messages)
 
-import play.api.mvc.{Request, WrappedRequest}
-import uk.gov.hmrc.auth.core.AffinityGroup
-
-case class IdentifierRequest[A] (request: Request[A],
-                                 identifier: String,
-                                 affinityGroup: AffinityGroup = AffinityGroup.Organisation
-                                ) extends WrappedRequest[A](request)
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
+        @messages(s"$messageKeyPrefix.warning")
+    </strong>
+</div>
