@@ -12,8 +12,8 @@ GET        /check-your-answers                          controllers.CheckYourAns
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
-GET        /trust-utr                                   controllers.WhatIsTheUTRVariationsController.onPageLoad()
-POST       /trust-utr                                   controllers.WhatIsTheUTRVariationsController.onSubmit()
+GET        /unique-taxpayer-reference                        controllers.UTRController.onPageLoad()
+POST       /unique-taxpayer-reference                        controllers.UTRController.onSubmit()
 
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
 

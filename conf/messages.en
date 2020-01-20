@@ -244,14 +244,14 @@ trustHaveAUTR.hint = This is 10 numbers, for example 1234567890. It will be on t
 trustHaveAUTR.hint.reader = This is 10 numbers, for example one two three four five six seven eight nine zero. It will be on tax returns and other letters about Self Assessment. It may be called ‘reference’, ‘UTR’ or ‘official use’. You can
 trustHaveAUTR.link = find a lost UTR number.
 
-whatIsTheUTR.title = What is the trust’s Unique Taxpayer Reference?
-whatIsTheUTR.heading = What is the trust’s Unique Taxpayer Reference?
-whatIsTheUTR.checkYourAnswersLabel = What is the trust’s Unique Taxpayer Reference?
-whatIsTheUTR.error.required = Enter the trust’s Unique Taxpayer Reference
-whatIsTheUTR.error.length = Unique Taxpayer Reference must be a 10 digit number
-whatIsTheUTR.error.invalidCharacters = Enter the trust’s Unique Taxpayer Reference in the correct format
-whatIsTheUTR.hint = This is 10 numbers, for example 1234567890. It will be on the trust’s Self Assessment notice to file (SA316). It may be called ‘reference’, ‘UTR’ or ‘official use’.
-whatIsTheUTR.hint.reader = This is 10 numbers, for example one two three four five six seven eight nine zero. It will be on the trust’s Self Assessment notice to file (S A three one six). It may be called ‘reference’, ‘UTR’ or ‘official use’.
+utr.title = What is the trust’s Unique Taxpayer Reference?
+utr.heading = What is the trust’s Unique Taxpayer Reference?
+utr.checkYourAnswersLabel = What is the trust’s Unique Taxpayer Reference?
+utr.error.required = Enter the trust’s Unique Taxpayer Reference
+utr.error.length = Unique Taxpayer Reference must be a 10 digit number
+utr.error.invalidCharacters = Enter the trust’s Unique Taxpayer Reference in the correct format
+utr.hint = This is 10 numbers, for example 1234567890. It will be on the trust’s Self Assessment notice to file (SA316). It may be called ‘reference’, ‘UTR’ or ‘official use’.
+utr.hint.reader = This is 10 numbers, for example one two three four five six seven eight nine zero. It will be on the trust’s Self Assessment notice to file (S A three one six). It may be called ‘reference’, ‘UTR’ or ‘official use’.
 
 postcodeForTheTrust.title = What is the trust’s postcode?
 postcodeForTheTrust.heading = What is the trust’s postcode?

@@ -18,30 +18,30 @@ package controllers
 
 import config.FrontendAppConfig
 import controllers.actions.{DataRetrievalAction, IdentifierAction}
-import forms.WhatIsTheUTRFormProvider
+import forms.UTRFormProvider
 import handlers.ErrorHandler
 import javax.inject.Inject
 import models.UserAnswers
-import pages.WhatIsTheUTRVariationPage
+import pages.UTRPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.WhatIsTheUTRView
+import views.html.UTRView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class WhatIsTheUTRVariationsController @Inject()(
-                                                  override val messagesApi: MessagesApi,
-                                                  identify: IdentifierAction,
-                                                  getData: DataRetrievalAction,
-                                                  playbackRepository: PlaybackRepository,
-                                                  formProvider: WhatIsTheUTRFormProvider,
-                                                  val controllerComponents: MessagesControllerComponents,
-                                                  view: WhatIsTheUTRView,
-                                                  config: FrontendAppConfig,
-                                                  errorHandler: ErrorHandler
+class UTRController @Inject()(
+                               override val messagesApi: MessagesApi,
+                               identify: IdentifierAction,
+                               getData: DataRetrievalAction,
+                               playbackRepository: PlaybackRepository,
+                               formProvider: UTRFormProvider,
+                               val controllerComponents: MessagesControllerComponents,
+                               view: UTRView,
+                               config: FrontendAppConfig,
+                               errorHandler: ErrorHandler
                                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
@@ -49,22 +49,22 @@ class WhatIsTheUTRVariationsController @Inject()(
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.internalId)).get(WhatIsTheUTRVariationPage) match {
+      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.internalId)).get(UTRPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, routes.WhatIsTheUTRVariationsController.onSubmit()))
+      Ok(view(preparedForm, routes.UTRController.onSubmit()))
   }
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, routes.WhatIsTheUTRVariationsController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors, routes.UTRController.onSubmit()))),
         utr => {
 
-          val newUpdatedAnswerSession = request.userAnswers.getOrElse(UserAnswers(request.internalId)).set(WhatIsTheUTRVariationPage, utr)
+          val newUpdatedAnswerSession = request.userAnswers.getOrElse(UserAnswers(request.internalId)).set(UTRPage, utr)
 
           for {
             updatedAnswers <- Future.fromTry(newUpdatedAnswerSession)

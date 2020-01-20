@@ -28,6 +28,6 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
 
   def onPageLoad(): Action[AnyContent] = Action.async {
     implicit request =>
-      Future.successful(Redirect(controllers.routes.WhatIsTheUTRVariationsController.onPageLoad()))
+      Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
   }
 }

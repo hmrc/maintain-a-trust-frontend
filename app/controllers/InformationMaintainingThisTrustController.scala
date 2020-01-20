@@ -19,7 +19,7 @@ package controllers
 import config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import javax.inject.Inject
-import pages.WhatIsTheUTRVariationPage
+import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -39,13 +39,13 @@ class InformationMaintainingThisTrustController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-      request.userAnswers.flatMap(_.get(WhatIsTheUTRVariationPage)) match {
+      request.userAnswers.flatMap(_.get(UTRPage)) match {
         case Some(utr) =>
           request.affinityGroup match {
             case Agent => Ok(agentCannotAccessTrustYetView(utr))
             case _ => Ok(maintainingTrustView(utr))
           }
-        case None => Redirect(routes.WhatIsTheUTRVariationsController.onPageLoad())
+        case None => Redirect(routes.UTRController.onPageLoad())
       }
   }
 }

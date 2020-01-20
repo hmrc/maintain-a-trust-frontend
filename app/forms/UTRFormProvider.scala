@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import play.api.libs.json.JsPath
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-case object WhatIsTheUTRVariationPage extends QuestionPage[String] {
+class UTRFormProvider @Inject() extends Mappings {
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "whatIsTheUTRVariation"
+  def apply(): Form[String] =
+    Form(
+      "value" -> text("utr.error.required")
+        .verifying(
+          firstError(
+            maxLength(10, "utr.error.length"),
+            minLength(10, "utr.error.length"),
+            regexp(Validation.utrRegex, "utr.error.invalidCharacters"),
+            isNotEmpty("value", "utr.error.required")
+          ))
+    )
 }
+
+
