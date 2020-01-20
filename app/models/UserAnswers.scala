@@ -18,39 +18,57 @@ package models
 
 import java.time.LocalDateTime
 
-import pages._
+import play.api.Logger
 import play.api.libs.json._
+import queries.{Gettable, Settable}
 
 import scala.util.{Failure, Success, Try}
 
 final case class UserAnswers(
-                              id: String,
+                              internalAuthId: String,
                               data: JsObject = Json.obj(),
-                              lastUpdated: LocalDateTime = LocalDateTime.now
+                              updatedAt: LocalDateTime = LocalDateTime.now
                             ) {
 
-  def get[A](page: QuestionPage[A])(implicit rds: Reads[A]): Option[A] =
-    Reads.optionNoError(Reads.at(page.path)).reads(data).getOrElse(None)
+  def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
+    Reads.at(page.path).reads(data) match {
+      case JsSuccess(value, _) => Some(value)
+      case JsError(errors) => None
+    }
+  }
 
-  def set[A](page: QuestionPage[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
 
+  def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A]) : Try[UserAnswers] = {
+    value match {
+      case Some(v) => setValue(page, v)
+      case None =>
+        val updatedAnswers = this
+        page.cleanup(value, updatedAnswers)
+    }
+  }
+
+  def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = setValue(page, value)
+
+  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A]) = {
     val updatedData = data.setObject(page.path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
       case JsError(errors) =>
+        val errorPaths = errors.collectFirst { case (path, e) => s"$path $e" }
+        Logger.warn(s"[UserAnswers] unable to set path ${page.path} due to errors $errorPaths")
         Failure(JsResultException(errors))
     }
 
     updatedData.flatMap {
       d =>
-        val updatedAnswers = copy (data = d)
+        val updatedAnswers = copy(data = d)
         page.cleanup(Some(value), updatedAnswers)
     }
   }
 
-  def remove[A](page: QuestionPage[A]): Try[UserAnswers] = {
+  def remove[A](query: Settable[A]): Try[UserAnswers] = {
 
-    val updatedData = data.setObject(page.path, JsNull) match {
+    val updatedData = data.removeObject(query.path) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
       case JsError(_) =>
@@ -60,7 +78,7 @@ final case class UserAnswers(
     updatedData.flatMap {
       d =>
         val updatedAnswers = copy (data = d)
-        page.cleanup(None, updatedAnswers)
+        query.cleanup(None, updatedAnswers)
     }
   }
 }
@@ -72,10 +90,10 @@ object UserAnswers {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "_id").read[String] and
-      (__ \ "data").read[JsObject] and
-      (__ \ "lastUpdated").read(MongoDateTimeFormats.localDateTimeRead)
-    ) (UserAnswers.apply _)
+      (__ \ "internalId").read[String] and
+        (__ \ "data").read[JsObject] and
+        (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
+      ) (UserAnswers.apply _)
   }
 
   implicit lazy val writes: OWrites[UserAnswers] = {
@@ -83,9 +101,9 @@ object UserAnswers {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "_id").write[String] and
-      (__ \ "data").write[JsObject] and
-      (__ \ "lastUpdated").write(MongoDateTimeFormats.localDateTimeWrite)
-    ) (unlift(UserAnswers.unapply))
+      (__ \ "internalId").write[String] and
+        (__ \ "data").write[JsObject] and
+        (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
+      ) (unlift(UserAnswers.unapply))
   }
 }
