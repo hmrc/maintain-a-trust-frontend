@@ -16,20 +16,10 @@
 
 package controllers.actions
 
-import javax.inject.Inject
-import models.requests.IdentifierRequest
-import play.api.mvc._
+import models.UserAnswers
+import play.api.mvc.{Request, WrappedRequest}
+import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolments}
 
-import scala.concurrent.{ExecutionContext, Future}
+case class OptionalPlaybackDataRequest[A](request: Request[A], internalId: String, userAnswers: Option[UserAnswers], affinityGroup: AffinityGroup, enrolments: Enrolments, agentARN: Option[String] = None) extends WrappedRequest[A](request)
 
-class FakeIdentifierAction @Inject()(bodyParsers: PlayBodyParsers) extends IdentifierAction {
-
-  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
-    block(IdentifierRequest(request, "id"))
-
-  override def parser: BodyParser[AnyContent] =
-    bodyParsers.default
-
-  override protected def executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
-}
+case class PlaybackDataRequest[A](request: Request[A], internalId: String, userAnswers: UserAnswers, affinityGroup: AffinityGroup, enrolments: Enrolments, agentARN: Option[String] = None) extends WrappedRequest[A](request)

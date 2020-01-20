@@ -26,7 +26,6 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -45,7 +44,7 @@ class AuthenticatedIdentifierAction @Inject()(
 
     authorised().retrieve(Retrievals.internalId) {
       _.map {
-        internalId => block(IdentifierRequest(request, internalId, Agent, Enrolments(Set[Enrolment]()), None))
+        internalId => block(IdentifierRequest(request, internalId))
       }.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
     } recover {
       case _: NoActiveSession =>
@@ -68,7 +67,7 @@ class SessionIdentifierAction @Inject()(
 
     hc.sessionId match {
       case Some(session) =>
-        block(IdentifierRequest(request, session.value, Agent, Enrolments(Set[Enrolment]()), None))
+        block(IdentifierRequest(request, session.value))
       case None =>
         Future.successful(Redirect(routes.SessionExpiredController.onPageLoad()))
     }

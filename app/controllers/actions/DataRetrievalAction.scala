@@ -38,9 +38,7 @@ class DataRetrievalActionImpl @Inject()(
         request.request,
         request.identifier,
         userAnswers,
-        request.affinityGroup,
-        request.enrolments,
-        request.agentARN
+        request.affinityGroup
       )
 
     sessionRepository.get(request.identifier) map {

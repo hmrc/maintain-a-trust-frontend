@@ -12,7 +12,11 @@ GET        /check-your-answers                          controllers.CheckYourAns
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
-GET        /trust-utr                              controllers.WhatIsTheUTRVariationsController.onPageLoad()
-POST       /trust-utr                              controllers.WhatIsTheUTRVariationsController.onSubmit()
+GET        /trust-utr                                   controllers.WhatIsTheUTRVariationsController.onPageLoad()
+POST       /trust-utr                                   controllers.WhatIsTheUTRVariationsController.onSubmit()
 
-GET        /confirmation                           controllers.VariationsConfirmationController.onPageLoad()
+GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
+
+GET        /declaration                                 controllers.DeclarationController.onPageLoad()
+POST       /declaration                                 controllers.DeclarationController.onSubmit()
+GET        /confirmation                                controllers.VariationsConfirmationController.onPageLoad()

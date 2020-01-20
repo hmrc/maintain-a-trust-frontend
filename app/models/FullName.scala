@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package models.requests
+package models
 
-import play.api.mvc.{Request, WrappedRequest}
-import uk.gov.hmrc.auth.core.AffinityGroup
+import play.api.libs.json._
 
-case class IdentifierRequest[A] (request: Request[A],
-                                 identifier: String,
-                                 affinityGroup: AffinityGroup = AffinityGroup.Organisation
-                                ) extends WrappedRequest[A](request)
+case class FullName(firstName: String, middleName: Option[String], lastName: String) {
+
+  override def toString = s"$firstName $lastName"
+
+}
+
+object FullName {
+
+  implicit lazy val formats: OFormat[FullName] = Json.format[FullName]
+
+}
