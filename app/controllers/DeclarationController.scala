@@ -47,16 +47,17 @@ class DeclarationController @Inject()(
 
   val form = formProvider()
 
-  def actions() = identify andThen getData andThen requireData // andThen playbackIdentify //andThen
+  def actions() = identify andThen getData //andThen requireData // andThen playbackIdentify //andThen
   //requiredAnswer(RequiredAnswer(DeclarationWhatNextPage, routes.DeclarationWhatNextController.onPageLoad()))
 
   def onPageLoad(): Action[AnyContent] = actions() {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(DeclarationPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+//      val preparedForm = request.userAnswers.get(DeclarationPage) match {
+//        case None => form
+//        case Some(value) => form.fill(value)
+//      }
+      val preparedForm = form
 
       Ok(view(preparedForm, AffinityGroup.Individual, controllers.routes.DeclarationController.onSubmit())) //TODO: change to request.affinityGroup when auth added
   }
@@ -71,10 +72,11 @@ class DeclarationController @Inject()(
         // TODO: Check response for submission of no change data and redirect accordingly
 
         value => {
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, value))
-            _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.routes.ConfirmationController.onPageLoad())
+//          for {
+//            updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, value))
+//            _ <- playbackRepository.set(updatedAnswers)
+//          } yield Redirect(controllers.routes.ConfirmationController.onPageLoad())
+          Future.successful(Redirect(controllers.routes.ConfirmationController.onPageLoad()))
         }
       )
 
