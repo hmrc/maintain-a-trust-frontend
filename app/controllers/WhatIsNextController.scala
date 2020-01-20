@@ -19,7 +19,7 @@ package controllers
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import forms.WhatIsNextFormProvider
 import javax.inject.Inject
-import models.Enumerable
+import models.{Enumerable, UserAnswers}
 import navigation.Navigator
 import pages.WhatIsNextPage
 import play.api.data.Form
@@ -47,13 +47,14 @@ class WhatIsNextController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData /*andThen requireData*/) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(WhatIsNextPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+//      val preparedForm = request.userAnswers.get(WhatIsNextPage) match {
+//        case None => form
+//        case Some(value) => form.fill(value)
+//      }
+      val preparedForm = form
 
       Ok(view(preparedForm))
 
@@ -61,16 +62,18 @@ class WhatIsNextController @Inject()(
 
   //playbackAction
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(): Action[AnyContent] = (identify andThen getData /*andThen requireData*/).async {
     implicit request =>
+      val updatedAnswers = request.userAnswers.getOrElse(UserAnswers("authId"))
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors))),
 
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
+//            updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, value))
+//            _              <- sessionRepository.set(updatedAnswers)
+            _ <- Future[Boolean] { true }
           } yield Redirect(navigator.whatIsNextPage(updatedAnswers))
         }
       )
