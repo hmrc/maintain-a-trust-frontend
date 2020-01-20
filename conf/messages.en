@@ -982,32 +982,6 @@ removeIndividualBeneficiary.heading = Are you sure you want to remove {0}?
 removeIndividualBeneficiary.default = the individual beneficiary
 removeIndividualBeneficiary.error.required = Select yes if you want to remove the individual beneficiary
 
-confirmationPage.title = Registration received, your reference is: {0}
-confirmationPage.heading = Registration received Your reference is: {0}
-
-confirmationPage.printsave.link = Print or save a declared copy of the trust’s registration (opens in a new window or tab)
-confirmationPage.posthmrc.link = post the changes to HMRC (opens in a new window or tab)
-confirmationPage.contacthmrc.link = contact HMRC to find out why (opens in a new window or tab)
-
-confirmationPage.heading1 = Registration received
-confirmationPage.heading2 = Your reference is:
-
-confirmationPage.subheading1 = What happens next
-
-confirmationPage.new.paragraph1 = We will post {0} a Unique Taxpayer Reference (UTR). If they are based in the UK, this can take 15 working days. For international trustees, this can take up to 21 working days.
-confirmationPage.existing.paragraph1 = You can continue to use your Unique Taxpayer Reference as usual. If there is a problem with your registration, we will contact {0}.
-
-confirmationPage.new.paragraph2 = Make a note of your reference number in case you need to contact HMRC. If you do not get your UTR within 15 working days,
-confirmationPage.existing.paragraph2 = Make a note of your reference number in case you need to contact HMRC.
-
-confirmationPage.subheading2 = What you need to do next
-
-confirmationPage.paragraph3 = You cannot make online changes to the trust. To change the lead trustee or their contact details,
-confirmationPage.paragraph4 = You must keep a record of any other changes until you can change them using the online service.
-
-confirmationPage.agent.you.can = You can
-confirmationPage.agent.link = return to register and maintain a trust for a client
-
 declaration.title = Declaration
 declaration.heading = Declaration
 declaration.firstName = Your first name
@@ -1439,15 +1413,16 @@ declarationWhatNext.closeTrust = Close the trust
 declarationWhatNext.checkYourAnswersLabel = What do you want to do next?
 declarationWhatNext.error.required = Select what you want to do next
 
-variationsConfirmationPage.title = Declaration received
-variationsConfirmationPage.heading = Declaration received
-variationsConfirmationPage.heading2 = Your reference is:
-variationsConfirmationPage.printsave.link = Print or save a declared copy of the trust’s registration (opens in a new window or tab)
-variationsConfirmationPage.subheading1 = What happens next
-variationsConfirmationPage.paragraph1 = Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.
-variationsConfirmationPage.paragraph2 = If any of the settlor, trustee or beneficiary details change (before you make your next declaration) you will need to update them using the online service.
-variationsConfirmationPage.subheading2 = Declaring the trust is up to date
-variationsConfirmationPage.paragraph3 = You need to declare every year the details we have are up to date. This needs to be done through the Trust Registration Service and Self Assessment online or the Trust and Estate Tax Return form (SA900).
+confirmationPage.title = Declaration received
+confirmationPage.heading = Declaration received
+confirmationPage.heading2 = Your reference is:
+confirmationPage.printsave.link = Print or save a declared copy of the trust’s registration (opens in a new window or tab)
+confirmationPage.subheading1 = What happens next
+confirmationPage.paragraph1 = Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.
+confirmationPage.paragraph2 = If any of the settlor, trustee or beneficiary details change (before you make your next declaration) you will need to update them using the online service.
+confirmationPage.subheading2 = Declaring the trust is up to date
+confirmationPage.paragraph3 = You need to declare every year the details we have are up to date. This needs to be done through the Trust Registration Service and Self Assessment online or the Trust and Estate Tax Return form (SA900).
+confirmationPage.paragraph4 = You can
 
 trustNotClaimed.title = Sorry, you cannot access this trust
 trustNotClaimed.heading = Sorry, you cannot access this trust
@@ -1479,8 +1454,6 @@ agentNotAuthorised.p4.a = contact the trusts helpline (opens in a new window or 
 agentNotAuthorised.p5 = You can
 agentNotAuthorised.p5.a = return to register and maintain a trust for a client.
 
-variationsConfirmationPage.paragraph4 = You can
-
 trustAlreadyClaimed.title = Sorry, you cannot access this trust
 trustAlreadyClaimed.heading = Sorry, you cannot access this trust
 trustAlreadyClaimed.subheading = This trust’s UTR: {0}
@@ -1502,16 +1475,6 @@ agentCannotAccessTrustYet.bullet.4 = If you need to close the trust, you will ne
 agentCannotAccessTrustYet.heading.3 = Changes you cannot tell us about on this service
 agentCannotAccessTrustYet.p4 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
 
-variationsConfirmationPage.title = Declaration received
-variationsConfirmationPage.heading = Declaration received
-variationsConfirmationPage.heading2 = Your reference is:
-variationsConfirmationPage.printsave.link = Print or save a declared copy of the trust’s registration (opens in a new window or tab)
-variationsConfirmationPage.subheading1 = What happens next
-variationsConfirmationPage.paragraph1 = Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.
-variationsConfirmationPage.paragraph2 = If any of the settlor, trustee or beneficiary details change (before you make your next declaration) you will need to update them using the online service.
-variationsConfirmationPage.subheading2 = Declaring the trust is up to date
-variationsConfirmationPage.paragraph3 = You need to declare every year the details we have are up to date. This needs to be done through the Trust Registration Service and Self Assessment online or the Trust and Estate Tax Return form (SA900).
-variationsConfirmationPage.paragraph4 = You can
 
 playbackProblemContactHMRC.title = Sorry, there has been a problem accessing your trust’s registration
 playbackProblemContactHMRC.heading = Sorry, there has been a problem accessing your trust’s registration

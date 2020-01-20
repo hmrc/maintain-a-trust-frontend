@@ -26,7 +26,7 @@ import views.html.VariationsConfirmationView
 
 import scala.concurrent.ExecutionContext
 
-class VariationsConfirmationController @Inject()(
+class ConfirmationController @Inject()(
                                                   override val messagesApi: MessagesApi,
                                                   identify: IdentifierAction,
                                                   getData: DataRetrievalAction,

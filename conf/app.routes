@@ -20,7 +20,7 @@ GET        /information                                 controllers.InformationM
 GET        /declaration                                 controllers.DeclarationController.onPageLoad()
 POST       /declaration                                 controllers.DeclarationController.onSubmit()
 
-GET        /confirmation                                controllers.VariationsConfirmationController.onPageLoad()
+GET        /confirmation                                controllers.ConfirmationController.onPageLoad()
 
 GET        /declare-what-changed                        controllers.WhatIsNextController.onPageLoad()
 POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()

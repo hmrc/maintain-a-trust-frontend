@@ -74,7 +74,7 @@ class DeclarationController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.routes.VariationsConfirmationController.onPageLoad())
+          } yield Redirect(controllers.routes.ConfirmationController.onPageLoad())
         }
       )
 
