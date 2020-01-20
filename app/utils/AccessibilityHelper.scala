@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package models.requests
+package utils
 
-import play.api.mvc.{Request, WrappedRequest}
-import models.UserAnswers
-import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolments}
+object AccessibilityHelper {
 
-case class OptionalDataRequest[A] (request: Request[A], internalId: String, userAnswers: Option[UserAnswers], affinityGroup: AffinityGroup, enrolments: Enrolments, agentARN: Option[String] = None) extends WrappedRequest[A](request)
+  def formatReferenceNumber(referenceNumber: String): String = {
+    val trnFormatter = referenceNumber.replace(" ", "").replace("", " ").trim()
+    trnFormatter
+  }
 
-case class DataRequest[A] (request: Request[A], internalId: String, userAnswers: UserAnswers, affinityGroup: AffinityGroup, enrolments: Enrolments, agentARN: Option[String] = None) extends WrappedRequest[A](request)
+}

@@ -36,11 +36,47 @@ p.font-xsmall{
   display: block;
 }
 
+@media (min-width: 40.0625em){
+.govuk-list > li {
+    margin-bottom: 15px;
+    }
+}
 
-/* CYA padding in line with current GDS */
-@media screen and (min-width: 769px) {
-  .govuk-check-your-answers > * > * {
-    padding-top: 0.53em;
-    padding-bottom: 0.53em;
+.govuk-list, .app-prose-scope ul, .app-prose-scope ol {
+    font-family: "GDS Transport",Arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    line-height: 1.25;
+    color: #0b0c0c;
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-left: 0;
+    list-style-type: none;
+}
+
+.govuk-list--number, .app-prose-scope ol {
+    padding-left: 20px;
+    list-style-type: decimal;
+}
+
+.govuk-caption-xl {
+    font-family: "nta", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.11111;
+    display: block;
+    margin-top: 1.25em;
+    margin-bottom: 5px;
+    color: #6f777b;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-caption-xl {
+    font-size: 27px;
+    line-height: 1.11111;
   }
 }
+
