@@ -14,14 +14,12 @@
  * limitations under the License.
  *@
 
-@(overrideMessage : Option[String] = None, submitClass: Option[String] = None)(implicit messages: Messages)
+@(messageKeyPrefix: String)(implicit messages: Messages)
 
-<div class="section">
- <button id="submit" class="button  @if(submitClass.nonEmpty){@{submitClass.get}}">
- @if(overrideMessage.isEmpty) {
-  @messages("site.save.continue")
- } else {
-  @messages(overrideMessage.get)
- }
- </button>
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
+        @messages(s"$messageKeyPrefix.warning")
+    </strong>
 </div>

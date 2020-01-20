@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@(overrideMessage : Option[String] = None, submitClass: Option[String] = None)(implicit messages: Messages)
+package pages
 
-<div class="section">
- <button id="submit" class="button  @if(submitClass.nonEmpty){@{submitClass.get}}">
- @if(overrideMessage.isEmpty) {
-  @messages("site.save.continue")
- } else {
-  @messages(overrideMessage.get)
- }
- </button>
-</div>
+import models.Declaration
+import play.api.libs.json.JsPath
+
+case object DeclarationPage extends QuestionPage[Declaration] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "declaration"
+}

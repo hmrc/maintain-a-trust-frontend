@@ -14,3 +14,6 @@ GET        /unauthorised                                controllers.Unauthorised
 
 GET        /trust-utr                              controllers.WhatIsTheUTRVariationsController.onPageLoad()
 POST       /trust-utr                              controllers.WhatIsTheUTRVariationsController.onSubmit()
+
+GET        /declaration                            controllers.DeclarationController.onPageLoad()
+POST       /declaration                            controllers.DeclarationController.onSubmit()
