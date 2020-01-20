@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package models.requests
+package models
 
-import play.api.mvc.{Request, WrappedRequest}
-import uk.gov.hmrc.auth.core.AffinityGroup
+import play.api.libs.json.{Json, OFormat}
 
-case class IdentifierRequest[A] (request: Request[A],
-                                 identifier: String,
-                                 affinityGroup: AffinityGroup = AffinityGroup.Organisation
-                                ) extends WrappedRequest[A](request)
+case class Declaration(name: FullName, email: Option[String])
+
+object Declaration {
+
+  implicit lazy val formats: OFormat[Declaration] = Json.format[Declaration]
+
+}

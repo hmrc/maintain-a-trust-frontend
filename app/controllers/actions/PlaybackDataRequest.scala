@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.requests
+package controllers.actions
 
+import models.UserAnswers
 import play.api.mvc.{Request, WrappedRequest}
-import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolments}
 
-case class IdentifierRequest[A] (request: Request[A],
-                                 identifier: String,
-                                 affinityGroup: AffinityGroup = AffinityGroup.Organisation
-                                ) extends WrappedRequest[A](request)
+case class OptionalPlaybackDataRequest[A](request: Request[A], internalId: String, userAnswers: Option[UserAnswers], affinityGroup: AffinityGroup, enrolments: Enrolments, agentARN: Option[String] = None) extends WrappedRequest[A](request)
+
+case class PlaybackDataRequest[A](request: Request[A], internalId: String, userAnswers: UserAnswers, affinityGroup: AffinityGroup, enrolments: Enrolments, agentARN: Option[String] = None) extends WrappedRequest[A](request)

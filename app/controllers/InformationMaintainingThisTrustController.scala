@@ -37,9 +37,9 @@ class InformationMaintainingThisTrustController @Inject()(
                                                            agentCannotAccessTrustYetView: AgentCannotAccessTrustYetView
                                                          )(implicit ec: ExecutionContext, config: FrontendAppConfig) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-      request.userAnswers.get(WhatIsTheUTRVariationPage) match {
+      request.userAnswers.flatMap(_.get(WhatIsTheUTRVariationPage)) match {
         case Some(utr) =>
           request.affinityGroup match {
             case Agent => Ok(agentCannotAccessTrustYetView(utr))

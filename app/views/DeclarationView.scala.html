@@ -1,0 +1,79 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.routes._
+@import uk.gov.hmrc.auth.core.AffinityGroup
+@import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
+@import play.api.mvc.Call
+@import config.FrontendAppConfig
+
+@this(
+        appConfig: FrontendAppConfig,
+        main_template: MainTemplate,
+        formHelper: FormWithCSRF
+)
+
+@(form: Form[_], affinityGroup : AffinityGroup, onSubmit: Call)(implicit request: Request[_], messages: Messages)
+
+@main_template(
+    title = s"${errorPrefix(form)} ${messages("declaration.title")}"
+) {
+
+    @formHelper(action = onSubmit, 'autoComplete -> "off") {
+
+        @components.back_link()
+
+        @components.error_summary(form.errors)
+
+        @components.heading("declaration.heading")
+
+        @components.input_text(
+            field = form("firstName"),
+            label = messages("declaration.firstName"),
+            ariaRequired = true
+        )
+
+        @components.input_text(
+            field = form("middleName"),
+            label = messages("declaration.middleName")
+        )
+
+        @components.input_text(
+            field = form("lastName"),
+            label = messages("declaration.lastName"),
+            ariaRequired = true
+        )
+
+
+        @if(appConfig.declarationEmailEnabled) {
+            <p>@messages("declaration.paragraph1")</p>
+            <p>@messages("declaration.paragraph2")</p>
+            @components.input_text(
+                field = form("email"),
+                inputClass = Some("declaration-email"),
+                label = messages("declaration.email")
+            )
+        }
+
+        @if(affinityGroup == AffinityGroup.Agent) {
+            @components.warning("declaration.variation.agent")
+        } else {
+            @components.warning("declaration.variation.individual")
+        }
+
+        @components.submit_button(Some("site.confirm-send"))
+    }
+}

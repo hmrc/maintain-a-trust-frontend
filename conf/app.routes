@@ -16,3 +16,6 @@ GET        /trust-utr                                   controllers.WhatIsTheUTR
 POST       /trust-utr                                   controllers.WhatIsTheUTRVariationsController.onSubmit()
 
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
+
+GET        /declaration                                 controllers.DeclarationController.onPageLoad()
+POST       /declaration                                 controllers.DeclarationController.onSubmit()
