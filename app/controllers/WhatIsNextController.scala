@@ -64,7 +64,7 @@ class WhatIsNextController @Inject()(
 
   def onSubmit(): Action[AnyContent] = (identify andThen getData /*andThen requireData*/).async {
     implicit request =>
-      val updatedAnswers = request.userAnswers.getOrElse(UserAnswers("authId"))
+      val updatedAnswers = request.userAnswers.getOrElse(UserAnswers(request.internalId))
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors))),
