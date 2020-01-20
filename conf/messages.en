@@ -5,10 +5,16 @@ checkYourAnswers.guidance = Guidance for check your answers
 date.day = Day
 date.month = Month
 date.year = Year
+date.hidden =  in numbers
+
+address.country = Country
+address.country.select = Select a country
+
+unauthorised.title = You can’t access this service with this account
+unauthorised.heading = You can’t access this service with this account
 
 error.browser.title.prefix = Error:
 error.boolean = Please give an answer
-error.invalid_date = Give a correct date
 error.date.day_blank = Enter a day
 error.date.day_invalid = Give a correct day using numbers 1 to 31
 error.date.month_blank = Enter a month
@@ -20,9 +26,10 @@ error.non_numeric = Give a value using only numbers
 error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
+error.postcodeInvalid = Enter a real postcode
 
-index.title = maintain-a-trust-frontend
-index.heading = maintain-a-trust-frontend
+index.title = Trusts Registration Service
+index.heading = Trusts Registration Service
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
 
 session_expired.title = For your security, this service has been reset
@@ -32,13 +39,1504 @@ session_expired.guidance = The details you have given have been deleted because 
 site.back = Back
 site.delete = Remove
 site.edit = Change
-site.hidden-delete = Delete {0}
+site.cancel = Cancel
+site.continue = Continue
+site.hidden-cancel = Cancel {0}
+site.hidden-continue = Continue {0}
+site.try-again = Try again
+site.hidden-delete = Remove {0}
 site.hidden-edit = Change {0}
 site.no = No
 site.yes = Yes
-site.continue = Continue
-site.service_name = Maintain a trust
+site.save.continue = Save and continue
+site.service_name = Trusts Registration Service
 site.textarea.char_limit = (Limit is {0} characters)
+site.inprogress = In Progress
+site.complete = Completed
+site.onlyContinue = Continue
+site.date.hint = For example, 31 3 1980
+site.warning = Warning
+site.confirm-send = Confirm and send
+site.address = Address
+site.utr = Unique Taxpayer Reference
 
-unauthorised.title = You can’t access this service with this account
-unauthorised.heading = You can’t access this service with this account
+site.address.uk.title = What is the address?
+site.address.uk.heading = What is {0}’s address?
+site.address.uk.line1 = Address line 1
+site.address.uk.line2 = Address line 2
+site.address.uk.line3 = Address line 3 (optional)
+site.address.uk.line4 = Address line 4 (optional)
+site.address.uk.postcode = Postcode
+site.address.uk.postcode.hint = For example AB1 1AB
+site.address.uk.checkYourAnswersLabel = What is {0}’s address?
+
+ukAddress.error.line1.required = Enter address line 1
+ukAddress.error.line2.required = Enter address line 2
+ukAddress.error.postcode.required = Enter a postcode
+ukAddress.error.line1.length = Address line 1 must be 35 characters or less
+ukAddress.error.line2.length = Address line 2 must be 35 characters or less
+ukAddress.error.line3.length = Address line 3 must be 35 characters or less
+ukAddress.error.line4.length = Address line 4 must be 35 characters or less
+ukAddress.error.line1.invalidCharacters = Address line 1 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line2.invalidCharacters = Address line 2 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line3.invalidCharacters = Address line 3 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line4.invalidCharacters = Address line 4 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.postcode.invalidCharacters = Enter a real postcode
+
+site.address.international.title = What is the address?
+site.address.international.heading = What is {0}’s address?
+site.address.international.line1 = Address line 1
+site.address.international.line2 = Address line 2
+site.address.international.line3 = Address line 3 (optional)
+site.address.international.country = Country
+
+internationalAddress.error.line1.required = Enter address line 1
+internationalAddress.error.line2.required = Enter address line 2
+internationalAddress.error.country.required = Select a country
+internationalAddress.error.line1.length = Address line 1 must be 35 characters or less
+internationalAddress.error.line2.length = Address line 2 must be 35 characters or less
+internationalAddress.error.line3.length = Address line 3 must be 35 characters or less
+internationalAddress.error.line1.invalidCharacters = Address line 1 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+internationalAddress.error.line2.invalidCharacters = Address line 2 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+internationalAddress.error.line3.invalidCharacters = Address line 3 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
+individualOrBusiness.individual = Individual
+individualOrBusiness.business = Business
+
+charityOrTrust.charity = Charity
+charityOrTrust.trust = Trust
+
+entity.settlor.individual = Individual Settlor
+
+entity.trustee = Trustees
+entity.asset = Assets
+entity.beneficiary = Beneficiaries
+entity.settlor = Settlors
+
+entities.no.name.added = No name added
+entities.no.value.added = No value added
+entities.no.address.added = No address added
+entities.no.description.added = No description added
+
+entities.lead = Lead
+entities.trustee = Trustee
+entities.trustee.individual = Trustee Individual
+entities.trustee.business = Trustee Business
+entities.beneficiary.individual = Individual Beneficiary
+entities.beneficiary.class = Class of beneficiaries
+
+entities.propertyOrLand.default = No address or description added
+
+createAgentServicesAccount.title = Create an agent services account
+createAgentServicesAccount.heading = Create an agent services account
+createAgentServicesAccount.paragraph1 = Before you can register a trust you will need to create an agent services account. You can do this now.
+createAgentServicesAccount.insetText = You need to be the person responsible for your firm’s tax or administrative matters. The account gives you administrative control over your firm’s access to new HMRC online services.
+createAgentServicesAccount.link = Check the guidance
+createAgentServicesAccount.paragraph2 = to find out what you will need to create an agent services account.
+createAgentServicesAccount.paragraph3 = Once you have created your agent services account, you can carry on with your trust registration.
+createAgentServicesAccount.cta = Create an agent services account
+
+trustName.title = What is the trust’s name?
+trustName.heading = What is the trust’s name?
+trustName.hint.hasUtr = This must be entered exactly as it is on the trust’s most recent Self Assessment notice to file (SA316) or tax return.
+trustName.hint.hasUtr.reader = This must be entered exactly as it is on the trust’s most recent Self Assessment notice to file (S A 3 1 6) or tax return.
+trustName.hint.noUtr = This must be 53 characters or less
+trustName.checkYourAnswersLabel = What is the trust’s name?
+trustName.error.length = The trust’s name must be 53 characters or less
+trustName.error.invalidCharacters = The trust’s name must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+trustName.error.required = Enter the trust’s name
+
+governedInsideTheUK.title = Is the trust governed by UK law?
+governedInsideTheUK.heading = Is the trust governed by UK law?
+governedInsideTheUK.checkYourAnswersLabel = Is the trust governed by UK law?
+governedInsideTheUK.error.required = Select yes if the trust is governed by UK law
+
+countryGoverningTrust.title = What country governs the trust?
+countryGoverningTrust.heading = What country governs the trust?
+countryGoverningTrust.checkYourAnswersLabel = What country governs the trust?
+countryGoverningTrust.error.required = Enter the country that governs the trust
+countryGoverningTrust.error.length = The country that governs the trust must be 100 characters or less
+countryGoverningTrust.error.invalidCharacters = The country that governs the trust must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
+
+administrationInsideUK.title = Is the trust’s general administration done in the UK?
+administrationInsideUK.heading = Is the trust’s general administration done in the UK?
+administrationInsideUK.checkYourAnswersLabel = Is the trust’s general administration done in the UK?
+administrationInsideUK.error.required = Select yes if the trust’s general administration is done in the UK
+
+countryAdministeringTrust.title = In what country is the trust administered?
+countryAdministeringTrust.heading = In what country is the trust administered?
+countryAdministeringTrust.checkYourAnswersLabel = In what country is the trust administered?
+countryAdministeringTrust.error.required = Enter the country the trust is administered in
+countryAdministeringTrust.error.length = The country that is administered in must be 100 characters or less
+countryAdministeringTrust.error.invalidCharacters = The country that governs the trust must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
+
+trustResidentInUK.title = Is the trust resident in the UK?
+trustResidentInUK.heading = Is the trust resident in the UK?
+trustResidentInUK.checkYourAnswersLabel = Is the trust resident in the UK?
+trustResidentInUK.error.required = Select yes if the trust is resident in the UK
+trustResidentInTheUK.yes = Based on your answers, the trust is resident in the UK
+trustResidentInTheUK.no = Based on your answers, the trust is not resident in the UK
+
+establishedUnderScotsLaw.title = Is the trust established under Scots Law?
+establishedUnderScotsLaw.heading = Is the trust established under Scots Law?
+establishedUnderScotsLaw.checkYourAnswersLabel = Is the trust established under Scots Law?
+establishedUnderScotsLaw.error.required = Select yes if the trust was established under Scots Law
+
+registeringTrustFor5A.title = Are you registering the trust because the settlor benefits from the trust’s assets?
+registeringTrustFor5A.heading = Are you registering the trust because the settlor benefits from the trust’s assets?
+registeringTrustFor5A.checkYourAnswersLabel = Are you registering the trust because the settlor benefits from the trust’s assets?
+registeringTrustFor5A.hint = This relates to Schedule 5A of the Taxation of Chargeable Gains Act 1992.
+registeringTrustFor5A.error.required = Select yes if the settlor benefits from the trust’s assets
+
+trustResidentOffshore.title = Has the trust ever been resident offshore?
+trustResidentOffshore.heading = Has the trust ever been resident offshore?
+trustResidentOffshore.checkYourAnswersLabel = Has the trust ever been resident offshore?
+trustResidentOffshore.error.required = Select yes if the trust has ever been resident offshore
+
+trustPreviouslyResident.title = In what country was the trust previously resident?
+trustPreviouslyResident.heading = In what country was the trust previously resident?
+trustPreviouslyResident.checkYourAnswersLabel = In what country was the trust previously resident?
+trustPreviouslyResident.error.required = Enter the country the trust was previously resident in
+trustPreviouslyResident.error.length = The country the trust was previously resident in must be 100 characters or less
+trustPreviouslyResident.error.invalidCharacters = The country that governs the trust must only include letters a to z, apostrophes, commas, full stops, hyphens, round brackets and spaces
+
+nonresidentType.title = What is the non-resident type?
+nonresidentType.heading = What is the non-resident type?
+nonresidentType.non-resident-domiciled = Settlor domiciled trustees are non-resident
+nonresidentType.non-resident-non-domiciled = Settlor non-domiciled becomes domiciled then resident
+nonresidentType.non-resident-cease-resident = Trustees cease to be resident
+nonresidentType.checkYourAnswersLabel = What is the non-resident type?
+nonresidentType.error.required = Select the non-resident type
+
+inheritanceTaxAct.title = Are you registering the trust for Inheritance Tax reasons?
+inheritanceTaxAct.heading = Are you registering the trust for Inheritance Tax reasons?
+inheritanceTaxAct.checkYourAnswersLabel = Are you registering the trust for Inheritance Tax reasons?
+inheritanceTaxAct.hint = This relates to Section 218 of the Inheritance Tax Act 1984.
+inheritanceTaxAct.error.required = Select yes if you are registering the trust for Inheritance Tax reasons
+
+agentOtherThanBarrister.title = Has an agent who is not a barrister created this trust?
+agentOtherThanBarrister.heading = Has an agent who is not a barrister created this trust?
+agentOtherThanBarrister.checkYourAnswersLabel = Has an agent who is not a barrister created this trust?
+agentOtherThanBarrister.error.required = Select yes if an agent who is not a barrister created this trust
+
+whenTrustSetup.title = When was the trust created?
+whenTrustSetup.heading = When was the trust created?
+whenTrustSetup.checkYourAnswersLabel = When was the trust created?
+whenTrustSetup.error.required.all = Enter the date the trust was created
+whenTrustSetup.error.required.two = The date the trust was created must include a {0} and a {1}
+whenTrustSetup.error.required = The date the trust was created must include a {0}
+
+whenTrustSetup.error.invalid = Enter a real date the trust was created
+whenTrustSetup.error.future = The date the trust was created must be today or in the past
+whenTrustSetup.error.past = The date the trust was created must be after 31 December 1499
+whenTrustSetup.hint = This is the date the trust deed was signed. Use the date the settlor died for will trusts. For example, 31 3 2015
+
+trustRegisteredOnline.title = Has the trust already been registered online?
+trustRegisteredOnline.heading = Has the trust already been registered online?
+trustRegisteredOnline.checkYourAnswersLabel = Has the trust already been registered online?
+trustRegisteredOnline.error.required = Select yes if the trust has already been registered online
+
+trustHaveAUTR.title = Does the trust have a Unique Taxpayer Reference?
+trustHaveAUTR.heading = Does the trust have a Unique Taxpayer Reference?
+trustHaveAUTR.checkYourAnswersLabel = Does the trust have a Unique Taxpayer Reference?
+trustHaveAUTR.error.required = Select yes if the trust has a Unique Taxpayer Reference
+trustHaveAUTR.hint = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Self Assessment. It may be called ‘reference’, ‘UTR’ or ‘official use’. You can
+trustHaveAUTR.hint.reader = This is 10 numbers, for example one two three four five six seven eight nine zero. It will be on tax returns and other letters about Self Assessment. It may be called ‘reference’, ‘UTR’ or ‘official use’. You can
+trustHaveAUTR.link = find a lost UTR number.
+
+whatIsTheUTR.title = What is the trust’s Unique Taxpayer Reference?
+whatIsTheUTR.heading = What is the trust’s Unique Taxpayer Reference?
+whatIsTheUTR.checkYourAnswersLabel = What is the trust’s Unique Taxpayer Reference?
+whatIsTheUTR.error.required = Enter the trust’s Unique Taxpayer Reference
+whatIsTheUTR.error.length = Unique Taxpayer Reference must be a 10 digit number
+whatIsTheUTR.error.invalidCharacters = Enter the trust’s Unique Taxpayer Reference in the correct format
+whatIsTheUTR.hint = This is 10 numbers, for example 1234567890. It will be on the trust’s Self Assessment notice to file (SA316). It may be called ‘reference’, ‘UTR’ or ‘official use’.
+whatIsTheUTR.hint.reader = This is 10 numbers, for example one two three four five six seven eight nine zero. It will be on the trust’s Self Assessment notice to file (S A three one six). It may be called ‘reference’, ‘UTR’ or ‘official use’.
+
+postcodeForTheTrust.title = What is the trust’s postcode?
+postcodeForTheTrust.heading = What is the trust’s postcode?
+postcodeForTheTrust.checkYourAnswersLabel = What is the trust’s postcode?
+postcodeForTheTrust.error.required = Enter the trust’s postcode
+postcodeForTheTrust.hint = This must be entered exactly as it is on the trust’s most recent Self Assessment notice to file (SA316) or tax return. For example, AA1 1AA.
+postcodeForTheTrust.hint.reader = This must be entered exactly as it is on the trust’s most recent Self Assessment notice to file (S A 3 1 6) or tax return. For example, A,A,1,  1,A,A.
+
+FailedMatch.title = We cannot match the details you have given us to our records
+FailedMatch.heading = We cannot match the details you have given us to our records
+FailedMatch.paragraph1 = Check that you have entered the right:
+FailedMatch.bulletpoint1 = Unique Taxpayer Reference (UTR)
+FailedMatch.bulletpoint2 = trust name
+FailedMatch.bulletpoint3 = postcode
+FailedMatch.paragraph2 = You can find this information on any letters about the trust sent by HMRC, including the latest:
+FailedMatch.bulletpoint4 = Trust and Estate (SA900) tax return
+FailedMatch.bulletpoint5 = notice to file (SA316)
+FailedMatch.bulletpoint6 = statement of account
+FailedMatch.paragraph3 = The trust name must be entered exactly as it is on these letters.
+FailedMatch.h2 = What to do next
+FailedMatch.paragraph4 = If we still cannot match your trust details to our records, you can
+FailedMatch.paragraph5 = . You will need the details of the trust to answer some security questions.
+FailedMatch.contactLink =  contact the trusts helpline
+
+cannotMakeChanges.title = You cannot make changes to the trust online
+cannotMakeChanges.heading = You cannot make changes to the trust online
+cannotMakeChanges.paragraph1 = You can
+cannotMakeChanges.paragraph2 = if you need to update the lead trustee or contact details for the trust.
+cannotMakeChanges.paragraph3 = You must keep a record of all other changes to the trust, but you do not need to send them by post.
+cannotMakeChanges.postLink = send a letter by post to HM Revenue and Customs
+
+UTRSentByPost.title = The trust’s Unique Taxpayer Reference (UTR) has been sent by post
+UTRSentByPost.heading = The trust’s Unique Taxpayer Reference (UTR) has been sent by post
+UTRSentByPost.paragraph1 = It can take 15 working days for you to get the trust’s UTR. For International addresses it can take 21 working days.
+UTRSentByPost.paragraph2 =  if you have not received the trust’s UTR after this time.
+UTRSentByPost.link.contactHelpline = Contact the trusts helpline (opens in a new window or tab)
+UTRSentByPost.paragraph3 = You can
+UTRSentByPost.link.returnToRegister = return to register and maintain a trust for a client
+
+
+ClosedError.title = Sorry, you cannot access this trust
+ClosedError.heading = Sorry, you cannot access this trust
+ClosedError.subheading = This trust’s UTR: {0}
+ClosedError.paragraph1 = You cannot make changes to this trust as it has been closed.
+ClosedError.paragraph2 = If this has been done in error or you need help with the service, please
+ClosedError.contact.link = contact the trusts helpline (opens in a new window or tab)
+ClosedError.paragraph3 = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
+ClosedError.paragraph4 = You can
+ClosedError.return.link = return to register and maintain a trust for a client
+ClosedError.link.paragraph = If you need help with the service
+
+DoesNotMatchError.title = Sorry, you cannot access this trust
+DoesNotMatchError.heading = Sorry, you cannot access this trust
+DoesNotMatchError.subheading = This trust’s UTR: {0}
+DoesNotMatchError.paragraph1 = The Unique Taxpayer Reference (UTR) entered does not match our records.
+DoesNotMatchError.paragraph2 = Check you have entered the trust’s UTR correctly.
+DoesNotMatchError.paragraph3 = If you do not have a UTR for the trust you will need to register the trust first.
+DoesNotMatchError.paragraph4 = If you need help with the service
+DoesNotMatchError.paragraph5 = You can
+DoesNotMatchError.contact.link = contact the trusts helpline (opens in a new window or tab)
+DoesNotMatchError.return.link = return to register and maintain a trust for a client
+
+StillProcessingError.title = Sorry, you cannot access this trust
+StillProcessingError.heading = Sorry, you cannot access this trust
+StillProcessingError.subheading = This trust’s UTR: {0}
+StillProcessingError.paragraph1 = HMRC is still processing changes recently made to this trust.
+StillProcessingError.paragraph2 = Try again later.
+StillProcessingError.paragraph3 = If you need help with the service
+StillProcessingError.paragraph4 = You can
+StillProcessingError.contact.link = contact the trusts helpline (opens in a new window or tab)
+StillProcessingError.return.link = return to register and maintain a trust for a client
+
+IvDown.heading = Sorry, there is a problem with the service
+IvDown.title = Sorry, there is a problem with the service
+IvDown.paragraph1 = Try again later.
+IvDown.paragraph2 = You can
+IvDown.paragraph3 = if you need to speak to someone about registering and maintaining a trust.
+IvDown.contact.link = contact the trusts helpline (opens in a new window or tab)
+IvDown.return.link = return to register and maintain a trust for a client
+
+isThisLeadTrustee.title = Is this the lead trustee?
+isThisLeadTrustee.heading = Is this the lead trustee?
+isThisLeadTrustee.checkYourAnswersLabel = Is this the lead trustee?
+isThisLeadTrustee.error.required = Select yes if this is the trust’s lead trustee
+isThisLeadTrustee.hint = The lead trustee is the main point of contact for the trust. Do not enter agent details here unless they are legally a trustee.
+
+trusteeIndividualOrBusiness.title = Is the trustee an individual or a business?
+trusteeIndividualOrBusiness.heading = Is the trustee an individual or a business?
+trusteeIndividualOrBusiness.checkYourAnswersLabel = Is the trustee an individual or a business?
+trusteeIndividualOrBusiness.error.required = Select if the trustee is an individual or a business
+
+leadTrusteeIndividualOrBusiness.title = Is the lead trustee an individual or a business?
+leadTrusteeIndividualOrBusiness.heading = Is the lead trustee an individual or a business?
+leadTrusteeIndividualOrBusiness.checkYourAnswersLabel = Is the lead trustee an individual or a business?
+leadTrusteeIndividualOrBusiness.error.required = Select if the lead trustee is an individual or a business
+
+trustDetailsAnswerPage.title = Check trust details
+trustDetailsAnswerPage.heading = Check trust details
+
+trusteeBusinessName.checkYourAnswersLabel = What is the business’s name?
+
+trusteesName.title = What is the trustee’s name?
+trusteesName.heading = What is the trustee’s name?
+trusteesName.checkYourAnswersLabel = What is the trustee’s name?
+trusteesName.firstName = First name
+trusteesName.middleName = Middle names (optional)
+trusteesName.lastName = Last name
+trusteesName.error.firstnamerequired = Enter the trustee’s first name
+trusteesName.error.lastnamerequired = Enter the trustee’s last name
+trusteesName.error.lengthfirstname = Trustee’s first name must be 35 characters or less
+trusteesName.error.lengthmiddlename = Trustee’s middle names must be 35 characters or less
+trusteesName.error.lengthlastname = Trustee’s last name must be 35 characters or less
+trusteesName.error.invalidFirstNameCharacters = Trustee’s first name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+trusteesName.error.invalidMiddleNameCharacters = Trustee’s middle names must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+trusteesName.error.invalidLastNameCharacters = Trustee’s last name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
+leadTrusteesName.title = What is the lead trustee’s name?
+leadTrusteesName.heading = What is the lead trustee’s name?
+leadTrusteesName.checkYourAnswersLabel = What is the lead trustee’s name?
+leadTrusteesName.firstName = First name
+leadTrusteesName.middleName = Middle names (optional)
+leadTrusteesName.lastName = Last name
+leadTrusteesName.error.firstnamerequired = Enter the lead trustee’s first name
+leadTrusteesName.error.lastnamerequired = Enter the lead trustee’s last name
+leadTrusteesName.error.lengthfirstname = Lead trustee’s first name must be 35 characters or less
+leadTrusteesName.error.lengthmiddlename = Lead trustee’s middle names must be 35 characters or less
+leadTrusteesName.error.lengthlastname = Lead trustee’s last name must be 35 characters or less
+leadTrusteesName.error.invalidFirstNameCharacters = Lead trustee’s first name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+leadTrusteesName.error.invalidMiddleNameCharacters = Lead trustee’s middle names must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+leadTrusteesName.error.invalidLastNameCharacters = Lead trustee’s last name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
+trusteesAnswerPage.title = Check trustee details
+trusteesAnswerPage.heading = Check trustee details
+
+addATrustee.title = Add a trustee
+
+addATrustee.heading = Add a trustee
+addATrustee.singular.heading = Add a trustee
+addATrustee.count.heading = You have added {0} trustees
+
+addASettlor.heading = Add a settlor
+addASettlor.title = Add a settlor
+addASettlor.singular.heading = Add a settlor
+addASettlor.singular.title = Add a settlor
+addASettlor.count.heading = You have added {0} settlors
+addASettlor.count.title = You have added {0} settlors
+
+addASettlor.Lifetime = This is a trust created during the settlor’s lifetime to gift or transfer assets (also known as an inter vivos trust)
+addASettlor.Deed.a = This trust was set up by a family agreement
+addASettlor.Deed.a = This trust was set up by a family agreement, in addition to a will
+addASettlor.Employees = This trust was set up for the employees of a company
+addASettlor.Building = This trust was set up for a building or building with lots of tenants
+addASettlor.Repair = This trust was set up to pay for the repair of historic buildings
+addASettlor.additional-content = Do you need to add another settlor?
+addASettlor.add-them-now = Yes, I want to add them now
+addASettlor.add-them-later = Yes, I want to add them later
+addASettlor.no-complete = No, I have added all of the settlors
+addASettlor.error.required = Select yes if you want to add another settlor
+
+addATrustee.additional-content = Do you need to add another trustee?
+addATrustee.add-them-now = Yes, I want to add them now
+addATrustee.add-them-later = Yes, I want to add them later
+addATrustee.no-complete = No, I have added all trustees
+addATrustee.checkYourAnswersLabel = Add A Trustee
+addATrustee.individual = Trustee Individual
+addATrustee.business = Trustee Business
+addATrustee.error.required = Select yes if you want to add another trustee
+addATrustee.lead-trustee.required = You need to add or nominate a lead trustee.
+
+removeATrustee.title = Are you sure you want to remove {0}?
+removeATrustee.heading = Are you sure you want to remove {0}?
+removeATrustee.default = the trustee
+removeATrustee.error.required = Select yes if you want to remove the trustee
+
+removeAsset.title = Are you sure you want to remove this asset?
+removeAsset.heading = Are you sure you want to remove this asset?
+removeAsset.error.required = Select yes if you want to remove this asset
+
+telephoneNumber.title = What is the trustee’s telephone number?
+telephoneNumber.heading = What is {0}’s telephone number?
+telephoneNumber.checkYourAnswersLabel = What is {0}’s telephone number?
+telephoneNumber.error.required = Enter trustee’s telephone number
+telephoneNumber.error.invalid.characters = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
+telephoneNumber.hint = For international numbers include the country code
+
+emailAddress.checkYourAnswersLabel = What is {0}’s email address?
+
+leadTrusteesTelephoneNumber.title = What is the lead trustee’s telephone number?
+leadTrusteesTelephoneNumber.error.required = Enter lead trustee’s telephone number
+
+trusteeAUKCitizen.title = Is the trustee a UK citizen?
+trusteeAUKCitizen.heading = Is {0} a UK citizen?
+trusteeAUKCitizen.checkYourAnswersLabel = Is {0} a UK citizen?
+trusteeAUKCitizen.error.required = Select yes if the trustee is a UK citizen
+
+leadTrusteeAUKCitizen.title = Is the lead trustee a UK citizen?
+leadTrusteeAUKCitizen.error.required = Select yes if the lead trustee is a UK citizen
+
+trusteeDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+trusteeUtrYesNo.checkYourAnswersLabel = Do you know {0}’s Unique Taxpayer Reference (UTR) number?
+trusteeUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+leadTrusteeUtrYesNo.checkYourAnswersLabel = Is this trustee a UK registered company?
+
+trusteesDateOfBirth.title = What is the trustee’s date of birth?
+trusteesDateOfBirth.heading = What is {0}’s date of birth?
+trusteesDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+trusteesDateOfBirth.hint = For example, 31 3 1980
+trusteesDateOfBirth.error.required.all = Enter a date of birth
+trusteesDateOfBirth.error.required.two = Date of birth must include a {0} and a {1}
+trusteesDateOfBirth.error.required = Date of birth must include a {0}
+trusteesDateOfBirth.error.invalid = Enter a real date of birth
+trusteesDateOfBirth.error.future = Date of birth must be today or in the past
+trusteesDateOfBirth.error.past = Date of birth must be after 31 December 1499
+
+leadTrusteesDateOfBirth.title = What is the lead trustee’s date of birth?
+
+trusteeNinoYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+
+trusteesNino.title = What is the trustee’s National Insurance number?
+trusteesNino.heading = What is {0}’s National Insurance number?
+trusteesNino.checkYourAnswersLabel = What is {0}’s National Insurance number?
+trusteesNino.hint = It is on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
+trusteesNino.hint.reader = It is on their National Insurance card, benefit letter, payslip or P60. For example, Q Q 1 2 3 4 5 6 C.
+trusteesNino.error.required = Enter the trustee’s National Insurance number
+trusteesNino.error.invalidFormat = Enter the trustee’s National Insurance number in the correct format
+
+leadTrusteesNino.title = What is the lead trustee’s National Insurance number?
+leadTrusteesNino.error.required = Enter the lead trustee’s National Insurance number
+leadTrusteesNino.error.invalidFormat = Enter the lead trustee’s National Insurance number in the correct format
+
+trusteeLiveInTheUK.title = Does the trustee live in the UK?
+trusteeLiveInTheUK.heading = Does {0} live in the UK?
+trusteeLiveInTheUK.checkYourAnswersLabel = Does {0} live in the UK?
+trusteeLiveInTheUK.error.required = Select yes if the trustee lives in the UK
+
+leadTrusteeLiveInTheUK.title = Does the lead trustee live in the UK?
+leadTrusteeLiveInTheUK.error.required = Select yes if the lead trustee lives in the UK
+
+trusteeUkAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+trusteeTelephoneNumber.checkYourAnswersLabel = What is {0}’s telephone number?
+trusteeEmailAddressYesNo.checkYourAnswersLabel = Do you know {0}’s email address?
+trusteeEmailAddress.checkYourAnswersLabel = What is {0}’s email address?
+
+trusteesUkAddress.title = What is the trustee’s address?
+trusteesUkAddress.heading = What is {0}’s address?
+trusteesUkAddress.checkYourAnswersLabel = What is {0}’s address?
+
+trusteesNonUkAddress.checkYourAnswersLabel = What is {0}’s address?
+
+trusteesPassportOrIdCard.checkYourAnswersLabel = What are {0}'s Passport or ID card details
+
+leadTrusteeUkAddress.title = What is the lead trustee’s address?
+
+trusteePassportOrIdCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
+trusteePassportOrIdCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+
+agentInternalReference.title = What is your internal reference for this client?
+agentInternalReference.heading = What is your internal reference for this client?
+agentInternalReference.checkYourAnswersLabel = What is your internal reference for this client?
+agentInternalReference.paragraph1 = This reference will help you identify this trust in your saved registrations.
+agentInternalReference.hint = It must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces.
+agentInternalReference.error.required = Enter your internal reference for this client
+agentInternalReference.error.length = Your internal reference for this client must be 56 characters or less
+agentInternalReference.error.invalidFormat = The internal reference for this client must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
+taskList.title = Registration progress
+taskList.heading = Registration progress
+taskList.paragraph1 = You can save your registration and come back later. You have 28 days from the first time you save to complete this registration or your information will be deleted.
+taskList.savedUntil.heading = Saved until
+taskList.sections.heading = Sections to be completed
+taskList.paragraph2 = You can print a draft copy of your saved answers once all sections are completed, as well as a declared copy after you have made a declaration.
+
+taskList.trustDetails.label = Trust details
+taskList.settlors.label = Settlors
+taskList.trustees.label = Trustees
+taskList.beneficiaries.label = Beneficiaries
+taskList.assets.label = Assets
+taskList.taxLiability.label = Years of tax liability
+taskList.agent.savedRegistrations = Return to saved registrations
+taskList.agent.agentDetails = Agent details
+
+taskList.summary.heading = Summary
+taskList.summary.paragraph = If you need to update any asset details after making the declaration for this trust, use Self Assessment online or the Trust and Estate Tax Return form (SA900).
+taskList.summary.paragraph.reader = If you need to update any asset details after making the declaration for this trust, use Self Assessment online or the Trust and Estate Tax Return form (S A 900).
+taskList.summary.link = Print or save a copy of your answers (opens in a new window or tab).
+taskList.summary.continue = Continue to declaration
+
+taskList.completed = Completed
+taskList.progress = In Progress
+
+agentOverview.title = Register and maintain a trust for a client
+agentOverview.heading = Register and maintain a trust for a client
+agentOverview.paragraph1 = You can save your registration and come back later. You have 28 days from the first time you save to complete this registration or your information will be deleted.
+agentOverview.paragraph2 = You can print a draft copy of your saved answers once all sections are completed, as well as a declared copy after you have made a declaration.
+agentOverview.paragraph3 = For information about what you need to register a trust,
+agentOverview.paragraph4 = If you need to maintain a trust which has already been registered online, any changes you make without declaring will not be saved.
+agentOverview.contactLink = read the GOV.UK trusts guidance (opens in a new window or tab)
+agentOverview.h2 = Saved registrations
+agentOverview.start = Start now
+agentOverview.internalClientReference = Internal client reference
+agentOverview.savedUntil = Saved until
+
+trusteesInfo.title = Information you need to add a trustee
+trusteesInfo.heading = Information you need to add a trustee
+trusteesInfo.subheading1 = Lead trustee
+trusteesInfo.paragraph1 = You must have a lead trustee who is the main contact point for the trust. They will be sent all official documents like the trust’s Unique Taxpayer Reference and notice to file tax returns.
+trusteesInfo.paragraph2 = If the lead trustee is a UK citizen, you must give their:
+trusteesInfo.bulletpoint1 = National Insurance number
+trusteesInfo.bulletpoint2 = address
+trusteesInfo.bulletpoint3 = telephone number
+trusteesInfo.paragraph3 = For an international lead trustee who doesn’t have a National Insurance number, passport or ID card details will need to be given instead.
+trusteesInfo.paragraph4 = If the lead trustee is a UK-registered company, you must provide its Unique Taxpayer Reference.
+trusteesInfo.subheading2 = Trustee
+trusteesInfo.paragraph5 = To add a trustee you need their name, and if available:
+trusteesInfo.bulletpoint4 = date of birth
+trusteesInfo.bulletpoint5 = National Insurance number or passport/ID card details and address
+trusteesInfo.paragraph6 = To add a business as a trustee, you need their:
+trusteesInfo.bulletpoint6 = registered name
+trusteesInfo.bulletpoint7 = Unique Taxpayer Reference
+trusteesInfo.paragraph7 = If it is a non-UK business, you need their address.
+trusteesInfo.warning = All trustees have the same legal responsibilities.
+trusteesInfo.continue = Continue
+
+agentTelephoneNumber.title = What is the agency’s telephone number?
+agentTelephoneNumber.heading = What is {0}’s telephone number?
+agentTelephoneNumber.checkYourAnswersLabel = What is {0}’s telephone number?
+agentTelephoneNumber.hint = We will use this number to contact you about this trust’s registration. For international numbers include the country code
+agentTelephoneNumber.error.required = Enter the agency’s telephone number
+agentTelephoneNumber.error.invalid.characters = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
+
+assetInterruptPage.title = Information you need to add assets
+assetInterruptPage.heading = Information you need to add assets
+
+assetInterruptPage.subheading1 = Money
+assetInterruptPage.paragraph1 = You must give the total amount of money in the trust. If more than one amount has been added to the trust, add them together.
+
+assetInterruptPage.subheading2 = Property or land
+assetInterruptPage.paragraph2 = For property or land in the trust deed, you need:
+assetInterruptPage.bullet1 = description of the property or land, or address if available
+assetInterruptPage.bullet2 = estimated total value of the property or land
+assetInterruptPage.bullet3 = estimated value of the property or land if the trust only owns a proportion
+assetInterruptPage.paragraph3 = The current value of the property or land is needed, not the value when it first entered the trust. This can be an estimate.
+
+assetInterruptPage.subheading3 = Shares
+assetInterruptPage.paragraph4 = For shares named in the trust deed, you need:
+assetInterruptPage.bullet4 = share company or share portfolio name
+assetInterruptPage.bullet5 = number of shares (for a share portfolio you will need to estimate the total number of shares across all share holdings)
+assetInterruptPage.bullet6 = total current value
+assetInterruptPage.paragraph5 = You will also need to choose whether the shares are listed on a stock exchange (quoted shares) or not. For individual shares, you will need to choose the class type.
+
+assetInterruptPage.subheading4 = Business
+assetInterruptPage.paragraph6 = For a business named in the trust deed, you need:
+assetInterruptPage.bullet7 = business name
+assetInterruptPage.bullet8 = the business’s Unique Taxpayer Reference (UTR), if you don’t have this you will need to enter the business’s address
+assetInterruptPage.bullet9 = current estimated value
+
+assetInterruptPage.subheading5 = Partnerships
+assetInterruptPage.paragraph7 = You need the name of the partnership, a description of the partnership and the date it started.
+
+assetInterruptPage.subheading6 = Other assets
+assetInterruptPage.paragraph8 = You need a description and an estimate of the current value of the asset.
+
+
+agentAnswer.title = Check agency details
+agentAnswer.heading = Check agency details
+
+assetMoneyValue.title = What is the total amount of money in the trust?
+assetMoneyValue.heading = What is the total amount of money in the trust?
+assetMoneyValue.checkYourAnswersLabel = What is the total amount of money in the trust?
+assetMoneyValue.paragraph1 = If more than one amount has been added to the trust, add them together.
+assetMoneyValue.hint = Rounded down to the nearest pound. For example, 4000
+assetMoneyValue.error.required = Enter the current total amount of money in the trust
+assetMoneyValue.error.length = Total assets value must be 12 numbers or less
+assetMoneyValue.error.invalidFormat = Total assets value must be a number
+assetMoneyValue.error.wholeNumber = Total assets value must be a whole number
+assetMoneyValue.error.zero = Total amount of money in the trust must be 1 or more
+assetMoneyValue.link = Return to registration progress
+
+removeMoneyAsset.title = Are you sure you want to remove {0}?
+removeMoneyAsset.heading = Are you sure you want to remove {0}?
+removeMoneyAsset.default = the money
+removeMoneyAsset.error.required = Select yes if you want to remove the money
+
+removeShareAsset.title = Are you sure you want to remove {0}?
+removeShareAsset.heading = Are you sure you want to remove {0}?
+removeShareAsset.default = the share
+removeShareAsset.error.required = Select yes if you want to remove the shares
+
+removePropertyOrLandAsset.title = Are you sure you want to remove {0}?
+removePropertyOrLandAsset.heading = Are you sure you want to remove {0}?
+removePropertyOrLandAsset.default = the property or land
+removePropertyOrLandAsset.error.required = Select yes if you want to remove the property or land
+
+whatKindOfAsset.first.title = What kind of asset do you need to add first?
+whatKindOfAsset.next.title = What kind of asset do you need to add next?
+whatKindOfAsset.first.heading = What kind of asset do you need to add first?
+whatKindOfAsset.next.heading = What kind of asset do you need to add next?
+whatKindOfAsset.Money = Money
+whatKindOfAsset.PropertyOrLand = Property or land
+whatKindOfAsset.Shares = Shares
+whatKindOfAsset.Business = Business
+whatKindOfAsset.Partnership = Partnership
+whatKindOfAsset.Other = Other
+whatKindOfAsset.checkYourAnswersLabel = What kind of asset do you need to add first?
+whatKindOfAsset.error.required = Select the kind of asset you need to add
+
+
+addAssets.title = Add assets
+addAssets.heading = Add assets
+addAssets.additional-content = Do you want to add another asset?
+addAssets.add-them-now = Yes, I want to add them now
+addAssets.add-them-later = Yes, I want to add them later
+addAssets.no-complete = No, I have added all assets
+addAssets.checkYourAnswersLabel = Do you want to add another asset?
+addAssets.error.required = Select yes if you want to add another asset
+addAssets.count.heading = You have added {0} assets
+addAssets.count.title = You have added {0} assets
+addAssets.singular.heading = Add assets
+addAssets.singular.title = Add assets
+
+addAssets.propertyOrLand = Property or Land
+
+settlorDateOfBirthYesNo.title = Do you know the settlor’s date of birth?
+settlorDateOfBirthYesNo.heading = Do you know {0}’s date of birth?
+settlorDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+settlorDateOfBirthYesNo.error.required = Select yes if you know the settlor’s date of birth
+
+settlorDateOfDeath.title = What is the settlor’s date of death?
+settlorDateOfDeath.heading = What is {0}’s date of death?
+settlorDateOfDeath.checkYourAnswersLabel = What is {0}’s date of death?
+settlorDateOfDeath.hint = For example, 31 3 1980
+settlorDateOfDeath.error.required.all = Enter a date of death
+settlorDateOfDeath.error.required.two = The date of death must include {0} and {1}
+settlorDateOfDeath.error.required = The date of death must include {0}
+settlorDateOfDeath.error.invalid = Enter a real date of death
+settlorDateOfDeath.error.future = Date of death must be today or in the past
+settlorDateOfDeath.error.past = Date of death must be after 31 December 1499
+
+settlorDateOfDeathYesNo.title = Do you know the settlor’s date of death?
+settlorDateOfDeathYesNo.heading = Do you know {0}’s date of death?
+settlorDateOfDeathYesNo.checkYourAnswersLabel = Do you know {0}’s date of death?
+settlorDateOfDeathYesNo.error.required = Select yes if you know the settlor’s date of death
+
+settlorNationalInsuranceNumber.title = What is the settlor’s National Insurance number?
+settlorNationalInsuranceNumber.heading = What is {0}’s National Insurance number?
+settlorNationalInsuranceNumber.hint = It is on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
+settlorNationalInsuranceNumber.hint.reader = It is on their National Insurance card, benefit letter, payslip or P60. For example, Q Q 1 2 3 4 5 6 C.
+settlorNationalInsuranceNumber.checkYourAnswersLabel = What is {0}’s National Insurance number?
+settlorNationalInsuranceNumber.error.required = Enter the settlor’s National Insurance number
+settlorNationalInsuranceNumber.error.length = Settlor’s National Insurance number must be 9 characters or less
+settlorNationalInsuranceNumber.error.invalid = Enter the settlor’s National Insurance number in the correct format
+
+settlorsDateOfBirth.title = What is the settlor’s date of birth?
+settlorsDateOfBirth.heading = What is {0}’s date of birth?
+settlorsDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+settlorsDateOfBirth.hint = For example, 31 3 1980
+settlorsDateOfBirth.error.required.all = Enter a date of birth
+settlorsDateOfBirth.error.required.two = The date of birth must include {0} and {1}
+settlorsDateOfBirth.error.required = The date of birth must include {0}
+settlorsDateOfBirth.error.invalid = Enter a real date of birth
+settlorsDateOfBirth.error.future = Date of birth must be today or in the past
+settlorsDateOfBirth.error.past = Date of birth must be after 31 December 1499
+
+settlorsInternationalAddress.title = What is the settlor’s last known address?
+settlorsInternationalAddress.heading = What is {0}’s last known address?
+settlorsInternationalAddress.checkYourAnswersLabel = What is {0}’s last known address?
+
+settlorsLastKnownAddressYesNo.title = Do you know the settlor’s last known address?
+settlorsLastKnownAddressYesNo.heading = Do you know {0}’s last known address?
+settlorsLastKnownAddressYesNo.checkYourAnswersLabel = Do you know {0}’s last known address?
+settlorsLastKnownAddressYesNo.error.required = Select yes if you know the settlor’s last known address
+
+settlorsPassportOrIdCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+
+settlorsName.title = What is the settlor’s name?
+settlorsName.heading = What is the settlor’s name?
+settlorsName.firstName = First name
+settlorsName.middleName = Middle names (optional)
+settlorsName.lastName = Last name
+settlorsName.checkYourAnswersLabel = What is the settlor’s name?
+settlorsName.error.firstName.required = Enter the settlor’s first name
+settlorsName.error.firstName.invalid = Settlor’s first name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+settlorsName.error.lastName.required = Enter the settlor’s last name
+settlorsName.error.lastName.invalid = Settlor’s last name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+settlorsName.error.firstName.length = Settlor’s first name must be 35 characters or less
+settlorsName.error.middleName.length = Settlor’s middle names must be 35 characters or less
+settlorsName.error.middleName.invalid = Settlor’s middle names must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+settlorsName.error.lastName.length = Settlor’s last name must be 35 characters or less
+
+settlorsNationalInsuranceYesNo.title = Do you know the settlor’s National Insurance number?
+settlorsNationalInsuranceYesNo.heading = Do you know {0}’s National Insurance number?
+settlorsNationalInsuranceYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+settlorsNationalInsuranceYesNo.error.required = Select yes if you know the settlor’s National Insurance number
+
+settlorsUKAddress.title = What is the settlor’s last known address?
+settlorsUKAddress.heading = What is {0}’s last known address?
+settlorsUKAddress.checkYourAnswersLabel = What is {0}’s last known address?
+
+setUpAfterSettlorDied.title = Was the trust set up after the settlor died?
+setUpAfterSettlorDied.heading = Was the trust set up after the settlor died?
+setUpAfterSettlorDied.checkYourAnswersLabel = Was the trust set up after the settlor died?
+setUpAfterSettlorDied.error.required = Select yes if the trust was set up after the settlor died
+setUpAfterSettlorDied.hint = This is also known as a will trust
+
+wasSettlorsAddressUKYesNo.title = Was the settlor’s last known address in the UK?
+wasSettlorsAddressUKYesNo.heading = Was {0}’s last known address in the UK?
+wasSettlorsAddressUKYesNo.checkYourAnswersLabel = Was {0}’s last known address in the UK?
+wasSettlorsAddressUKYesNo.error.required = Select yes if the settlor’s last known address was in the UK
+
+deceasedSettlorAnswer.title = Check settlor details
+deceasedSettlorAnswer.heading = Check settlor details
+
+agentName.title = What is the name of the agency registering this trust?
+agentName.heading = What is the name of the agency registering this trust?
+agentName.checkYourAnswersLabel = What is the name of the agency registering this trust?
+agentName.error.required = Enter the agency’s name
+agentName.error.length = Agency’s name must be 56 characters or less
+agentName.error.invalidFormat = Agency’s name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
+charityBeneficiaryName.checkYourAnswersLabel = What is the name of the charity?
+charityBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+charityBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+charityBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+charityBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+charityBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+charityBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+
+companyBeneficiaryName.checkYourAnswersLabel = What is the name of the company?
+companyBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+companyBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+companyBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+companyBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+companyBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+companyBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+
+largeBeneficiaryName.checkYourAnswersLabel = What is the business’s name?
+largeBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+largeBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+largeBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+largeBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+largeBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+largeBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+largeBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
+largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel = How many people are in this employment related beneficiary?
+
+individualBeneficiaryName.title = What is the name of the individual?
+individualBeneficiaryName.heading = What is the name of the individual?
+individualBeneficiaryName.checkYourAnswersLabel = What is the name of the individual?
+individualBeneficiaryName.firstName = First name
+individualBeneficiaryName.middleName = Middle names (optional)
+individualBeneficiaryName.lastName = Last name
+individualBeneficiaryName.error.firstname.required = Enter the individual beneficiary’s first name
+individualBeneficiaryName.error.lastname.required = Enter the individual beneficiary’s last name
+individualBeneficiaryName.error.firstname.length = The individual beneficiary’s first name must be 35 characters or less
+individualBeneficiaryName.error.middlename.length = The individual beneficiary’s middle names must be 35 characters or less
+individualBeneficiaryName.error.lastname.length = The individual beneficiary’s last name must be 35 characters or less
+individualBeneficiaryName.error.firstname.invalid = The individual beneficiary’s first name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+individualBeneficiaryName.error.middlename.invalid = The individual beneficiary’s middle names must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+individualBeneficiaryName.error.lastname.invalid = The individual beneficiary’s last name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
+individualBeneficiaryDateOfBirthYesNo.title = Do you know the individual beneficiary’s date of birth?
+individualBeneficiaryDateOfBirthYesNo.heading = Do you know {0}’s date of birth?
+individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+individualBeneficiaryDateOfBirthYesNo.error.required = Select yes if you know the individual beneficiary’s date of birth
+
+individualBeneficiaryDateOfBirth.title = What is the individual beneficiary’s date of birth?
+individualBeneficiaryDateOfBirth.heading = What is {0}’s date of birth?
+individualBeneficiaryDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+individualBeneficiaryDateOfBirth.hint = For example, 31 3 1980
+individualBeneficiaryDateOfBirth.error.required.all = Enter a date of birth
+individualBeneficiaryDateOfBirth.error.required.two = The date of birth must include {0} and {1}
+individualBeneficiaryDateOfBirth.error.required = The date of birth must include {0}
+individualBeneficiaryDateOfBirth.error.invalid = Enter a real date of birth
+individualBeneficiaryDateOfBirth.error.future = Date of birth must be today or in the past
+individualBeneficiaryDateOfBirth.error.past = Date of birth must be after 31 December 1499
+
+individualBeneficiaryIncomeYesNo.title = Do the trustees have discretion over how much income the individual beneficiary may get?
+individualBeneficiaryIncomeYesNo.heading = Do the trustees have discretion over how much income {0} may get?
+individualBeneficiaryIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+individualBeneficiaryIncomeYesNo.hint = See the trust deed for details
+individualBeneficiaryIncomeYesNo.error.required = Select yes if the trustees have discretion over how much income the individual beneficiary may get
+
+individualBeneficiaryIncome.title = What percentage of the trust’s assets is the individual beneficiary entitled to?
+individualBeneficiaryIncome.heading = What percentage of the trust’s assets is {0} entitled to?
+individualBeneficiaryIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+individualBeneficiaryIncome.hint = Round this down to a whole number.
+individualBeneficiaryIncome.error.required = Enter what percentage of the trust’s assets the beneficiary is entitled to
+individualBeneficiaryIncome.error.length = The percentage of the trust’s assets the beneficiary is entitled to must be 100 or less
+individualBeneficiaryIncome.error.invalid = The percentage of the trust’s assets the beneficiary is entitled to must be a whole number
+
+individualBeneficiaryNationalInsuranceYesNo.title = Do you know the individual beneficiary’s National Insurance number?
+individualBeneficiaryNationalInsuranceYesNo.heading = Do you know {0}’s National Insurance number?
+individualBeneficiaryNationalInsuranceYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+individualBeneficiaryNationalInsuranceYesNo.error.required = Select yes if you know the individual beneficiary’s National Insurance number
+
+individualBeneficiaryNationalInsuranceNumber.title = What is the individual beneficiary’s National Insurance number?
+individualBeneficiaryNationalInsuranceNumber.heading = What is {0}’s National Insurance number?
+individualBeneficiaryNationalInsuranceNumber.hint = It is on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
+individualBeneficiaryNationalInsuranceNumber.hint.reader = It is on their National Insurance card, benefit letter, payslip or P60. For example, Q Q 1 2 3 4 5 6 C.
+individualBeneficiaryNationalInsuranceNumber.checkYourAnswersLabel = What is {0}’s National Insurance number?
+individualBeneficiaryNationalInsuranceNumber.error.required = Enter the individual beneficiary’s National Insurance number
+individualBeneficiaryNationalInsuranceNumber.error.length = Individual beneficiary’s National Insurance number must be 9 characters or less
+individualBeneficiaryNationalInsuranceNumber.error.invalid = Enter the individual beneficiary’s National Insurance number in the correct format
+
+individualBeneficiaryAddressYesNo.title = Do you know the individual beneficiary’s address?
+individualBeneficiaryAddressYesNo.heading = Do you know {0}’s address?
+individualBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+individualBeneficiaryAddressYesNo.error.required = Select yes if you know the individual beneficiary’s address
+
+individualBeneficiaryAddressUK.title = What is the individual beneficiary’s address?
+individualBeneficiaryAddressUK.heading = What is {0}’s address?
+individualBeneficiaryAddressUK.checkYourAnswersLabel = What is {0}’s address?
+
+individualBeneficiaryRoleInCompany.checkYourAnswersLabel = What is {0}’s role in the company that the trust was created for?
+individualBeneficiaryPassportIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
+individualBeneficiaryPassportIDCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+
+individualBeneficiaryVulnerableYesNo.title = Has a vulnerable person election form (VPE1) been submitted to HMRC for the individual beneficiary?
+individualBeneficiaryVulnerableYesNo.heading = Has a vulnerable person election form (VPE1) been submitted to HMRC for {0}?
+individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel = Has a vulnerable person election form (VPE1) been submitted to HMRC for {0}?
+individualBeneficiaryVulnerableYesNo.error.required = Select yes if a vulnerable person election form (VPE1) has been submitted to HMRC for the individual beneficiary
+
+individualBeneficiaryRoleInCompany.checkYourAnswersLabel = What is {0}’s role in the company the trust was created for?
+individualBeneficiaryPassportYeNo.checkYourAnswersLabel = Do you know {0}’s passport details
+individualBeneficiaryPassport.checkYourAnswersLabel = What are {0}’s passport details?
+individualBeneficiaryIDCardDetailsYesNo.checkYourAnswersLabel = Do you know {0}’s ID card details?
+individualBeneficiaryIDCardDetails.checkYourAnswersLabel = What are {0}’s ID card details?
+
+individualBeneficiaryInfo.title = Information you need to add a beneficiary
+individualBeneficiaryInfo.heading = Information you need to add a beneficiary
+individualBeneficiaryInfo.caption = Beneficiaries
+individualBeneficiaryInfo.subheading1 = Individual beneficiaries
+individualBeneficiaryInfo.paragraph1 = For individuals named in the trust deed, you need their:
+individualBeneficiaryInfo.bulletpoint1 = name
+individualBeneficiaryInfo.bulletpoint2 = date of birth
+individualBeneficiaryInfo.bulletpoint3 = National Insurance number. If you don’t have this you will need passport details and address
+individualBeneficiaryInfo.paragraph2 = If they are not a UK citizen, you need their passport details and address.
+individualBeneficiaryInfo.paragraph3 = You need to know whether the trustees can decide how much the individual beneficiary can get and if they have been elected as a vulnerable beneficiary.
+individualBeneficiaryInfo.subheading2 = Class of beneficiaries
+individualBeneficiaryInfo.paragraph4 = A short description for beneficiaries that cannot be identified is needed. For example, children not born yet, future grandchildren and great grandchildren.
+individualBeneficiaryInfo.subheading3 = Named company, charity or trust
+individualBeneficiaryInfo.paragraph5 = For a named company, charity or trust in the trust deed, you need the beneficiary’s name and address.
+individualBeneficiaryInfo.subheading4 = Group of beneficiaries from a company or employment-related trust
+individualBeneficiaryInfo.paragraph6 = For beneficiaries from a company or employment-related trust, you need:
+individualBeneficiaryInfo.bulletpoint4 = the name of the company or employment-related trust
+individualBeneficiaryInfo.bulletpoint5 = how many beneficiaries there are
+individualBeneficiaryInfo.bulletpoint6 = a short description of the beneficiaries. For example, employees and their children, spouses or widows
+individualBeneficiaryInfo.paragraph7 = Do not include named or specific employees such as directors. They must be listed as individual beneficiaries.
+individualBeneficiaryInfo.subheading5 = Other beneficiaries
+individualBeneficiaryInfo.paragraph8 = A short description for beneficiaries that do not fall into the other beneficiary types is needed. For example, pets.
+
+trustBeneficiaryName.checkYourAnswersLabel = What is the name of the trust?
+trustBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+trustBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+trustBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+trustBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+trustBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+trustBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+
+otherBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
+otherBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+otherBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+otherBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+otherBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+otherBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+
+addABeneficiary.title = Add a beneficiary
+addABeneficiary.heading = Add a beneficiary
+addABeneficiary.additional-content = Do you want to add another beneficiary?
+addABeneficiary.add-them-now = Yes, I want to add them now
+addABeneficiary.add-them-later = Yes, I want to add them later
+addABeneficiary.no-complete = No, I have added all beneficiaries
+addABeneficiary.individualBeneficiary = Individual beneficiary
+addABeneficiary.error.required = Select yes if you want to add another beneficiary
+addABeneficiary.singular.heading = Add a beneficiary
+addABeneficiary.singular.title = Add a beneficiary
+addABeneficiary.count.heading = You have added {0} beneficiaries
+addABeneficiary.count.title = You have added {0} beneficiaries
+
+addABeneficiaryYesNo.title = Do you want to add a beneficiary?
+addABeneficiaryYesNo.heading = Do you want to add a beneficiary?
+addABeneficiaryYesNo.error.required = Select yes if you want to add a beneficiary
+
+individualBenficiaryAnswers.title = Check beneficiary details
+individualBenficiaryAnswers.heading = Check beneficiary details
+
+individualBeneficiaryAddressUKYesNo.title = Does the individual beneficiary live in the UK?
+individualBeneficiaryAddressUKYesNo.heading = Does {0} live in the UK?
+individualBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Does {0} live in the UK?
+individualBeneficiaryAddressUKYesNo.error.required = Select yes if the individual beneficiary lives in the UK
+
+agentAddressYesNo.title = Is the agency’s address in the UK?
+agentAddressYesNo.heading = Is {0}’s address in the UK?
+agentAddressYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+agentAddressYesNo.error.required = Select yes if the agency’s address is in the UK
+
+classBeneficiaryDescription.title = What is the description for the class of beneficiaries?
+classBeneficiaryDescription.heading = What is the description for the class of beneficiaries?
+classBeneficiaryDescription.checkYourAnswersLabel = What is the description for the class of beneficiaries?
+classBeneficiaryDescription.error.required = Enter the description for the class of beneficiaries
+classBeneficiaryDescription.error.length = The description of the class in the trust deed must be 56 characters or less
+classBeneficiaryDescription.error.invalid = The description of the class in the trust deed must only include letters a to z, numbers, ampersands (&), backward slashes or spaces
+classBeneficiaryDescription.hint = This must be 56 characters or less. For example, future grandchildren and future great-grandchildren.
+
+classBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+classBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+
+removeClassOfBeneficiary.title = Are you sure you want to remove the class of beneficiaries?
+removeClassOfBeneficiary.heading = Are you sure you want to remove {0}?
+removeClassOfBeneficiary.default = the class of beneficiaries
+removeClassOfBeneficiary.error.required = Select yes if you want to remove the class of beneficiaries
+
+whatTypeOfBeneficiary.first.title = What kind of beneficiary do you need to add first?
+whatTypeOfBeneficiary.next.title = What kind of beneficiary do you need to add next?
+whatTypeOfBeneficiary.first.heading = What kind of beneficiary do you need to add first?
+whatTypeOfBeneficiary.next.heading = What kind of beneficiary do you need to add next?
+
+whatTypeOfBeneficiary.Individual = Individual
+whatTypeOfBeneficiary.ClassOfBeneficiary = Class of beneficiaries
+whatTypeOfBeneficiary.CharityOrTrust = Charity or trust
+whatTypeOfBeneficiary.CompanyOrEmployment = Company or employment related
+whatTypeOfBeneficiary.Other = Other beneficiary
+whatTypeOfBeneficiary.error.required = Select the type of beneficiary you need to add
+whatTypeOfBeneficiary.hint = You can enter a maximum of 25 entries for each beneficiary type
+
+removeIndividualBeneficiary.title = Are you sure you want to remove the individual beneficiary?
+removeIndividualBeneficiary.heading = Are you sure you want to remove {0}?
+removeIndividualBeneficiary.default = the individual beneficiary
+removeIndividualBeneficiary.error.required = Select yes if you want to remove the individual beneficiary
+
+declaration.title = Declaration
+declaration.heading = Declaration
+declaration.firstName = Your first name
+declaration.middleName = Your middle names (optional)
+declaration.lastName = Your last name
+declaration.paragraph1 = Please give us your email address to get a confirmation of your declaration.
+declaration.paragraph2 = If you do not enter your email address, you will not receive a confirmation email with the declaration reference number.
+declaration.email = Email address (optional)
+declaration.error.firstName.required = Enter your first name
+declaration.error.firstName.invalid = Your first name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+declaration.error.lastName.required = Enter your last name
+declaration.error.lastName.invalid = Your last name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+declaration.error.firstName.length = Your first name must be 35 characters or less
+declaration.error.middleName.length = Your middle names must be 35 characters or less
+declaration.error.middleName.invalid = Your middle names must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+declaration.error.lastName.length = Your last name must be 35 characters or less
+declaration.error.email.length = Your email must be 35 characters or less
+declaration.error.email.invalid = Enter a valid email address with no spaces, like name@example.com
+declaration.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
+declaration.individual.warning = I confirm that I have taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if I knowingly provide false information and I cannot demonstrate that I have taken all reasonable steps, I could be subject to penalties.
+
+declaration.variation.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
+declaration.variation.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief. I will ensure it is regularly kept up to date as required including changes of address. If I discover that I have made an error or something has changed, I will update this register.
+
+summaryAnswerPage.title = Draft copy of the trust’s registration
+summaryAnswerPage.heading = Draft copy of the trust’s registration
+summaryAnswerPage.paragraph1 = You can save your registration and come back later. You have 28 days from the first time you save to complete this registration or your information will be deleted.
+summaryAnswerPage.paragraph2 = This is not a declaration confirming the trust has been registered. You can print a declared copy after you have made a declaration.
+
+confirmationAnswerPage.title = Declared copy of the trust’s registration
+confirmationAnswerPage.heading = Declared copy of the trust’s registration
+confirmationAnswerPage.paragraph1 = Declaration reference number is: {0}
+confirmationAnswerPage.paragraph2 = The trust’s registration was sent on {0}.
+confirmationAnswerPage.warning = You need to declare every year through this service that the details we have are up to date.
+
+answerPage.section.trustsDetails.heading = Trust details
+answerPage.section.deceasedSettlor.heading = Settlor
+answerPage.section.settlors.heading = Settlors
+answerPage.section.settlor.subheading = Settlor {0}
+answerPage.section.leadTrustee.subheading = Lead trustee
+answerPage.section.trustees.heading = Trustees
+answerPage.section.trustee.subheading = Trustee
+answerPage.section.beneficiaries.heading = Beneficiaries
+answerPage.section.charityBeneficiary.subheading = Charity beneficiary {0}
+answerPage.section.companyBeneficiary.subheading = Company beneficiary {0}
+answerPage.section.individualBeneficiary.subheading = Individual beneficiary
+answerPage.section.classOfBeneficiary.subheading = Class of beneficiary
+answerPage.section.trustBeneficiary.heading = Trust beneficiary {0}
+answerPage.section.otherBeneficiary.heading = Other beneficiary {0}
+answerPage.section.largeBeneficiary.subheading = Employment related beneficiary {0}
+answerPage.section.assets.heading = Assets
+answerPage.section.moneyAsset.subheading = Money
+answerPage.section.shareAsset.subheading = Share
+answerPage.section.propertyOrLandAsset.subheading = Property or land
+answerPage.agentClientRef = Client reference number: {0}
+answerPage.section.other.individual.heading = Other individual
+
+sharePortfolioName.title = What is the share portfolio’s name?
+sharePortfolioName.heading = What is the share portfolio’s name?
+sharePortfolioName.checkYourAnswersLabel = What is the share portfolio’s name?
+sharePortfolioName.error.required = Enter the share portfolio’s name
+sharePortfolioName.error.length = Share portfolio’s name cannot be more than 53 characters
+sharePortfolioName.error.invalid = Share portfolio’s name must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
+sharePortfolioOnStockExchange.title = Are the majority of the shares in the portfolio listed on a stock exchange?
+sharePortfolioOnStockExchange.heading = Are the majority of the shares in the portfolio listed on a stock exchange?
+sharePortfolioOnStockExchange.checkYourAnswersLabel = Are the majority of the shares in the portfolio listed on a stock exchange?
+sharePortfolioOnStockExchange.error.required = Select yes if the majority of the shares are listed on a stock exchange
+sharePortfolioOnStockExchange.hint = A quoted share is listed on a stock exchange
+
+sharePortfolioQuantityInTrust.title = How many individual shares are in the portfolio?
+sharePortfolioQuantityInTrust.heading = How many individual shares are in the portfolio?
+sharePortfolioQuantityInTrust.checkYourAnswersLabel = How many individual shares are in the portfolio?
+sharePortfolioQuantityInTrust.error.required = Enter the current number of shares in the portfolio
+sharePortfolioQuantityInTrust.error.length = Total amount of individual shares in the portfolio must be 12 numbers or less
+sharePortfolioQuantityInTrust.error.invalid = Total amount of individual shares in the portfolio must be a number
+sharePortfolioQuantityInTrust.hint = Add together the total number of shares across all share holdings. This can be an estimate.
+sharePortfolioQuantityInTrust.error.zero = Total amount of individual shares in the portfolio must be 1 or more
+
+sharePortfolioValueInTrust.title = What is the current value of the portfolio?
+sharePortfolioValueInTrust.heading = What is the current value of the portfolio?
+sharePortfolioValueInTrust.checkYourAnswersLabel = What is the current value of the portfolio?
+sharePortfolioValueInTrust.error.required = Enter the current value of the portfolio
+sharePortfolioValueInTrust.error.length = Total current value of the portfolio must be 12 numbers or less
+sharePortfolioValueInTrust.error.invalid = Total current value of the portfolio must be a number
+sharePortfolioValueInTrust.hint = Rounded down to the nearest pound. For example, 4000
+sharePortfolioValueInTrust.error.zero = Total current value of the portfolio must be 1 or more
+
+sharesOnStockExchange.title = Are the shares listed on a stock exchange?
+sharesOnStockExchange.heading = Are {0}’s shares listed on a stock exchange?
+sharesOnStockExchange.checkYourAnswersLabel = Are {0}’s shares listed on a stock exchange?
+sharesOnStockExchange.error.required = Select yes if the shares are listed on a stock exchange
+sharesOnStockExchange.hint = A quoted share is listed on a stock exchange
+
+shareClass.title = What class are the shares?
+shareClass.heading = What class are the {0} shares?
+shareClass.ordinary = Ordinary
+shareClass.preference = Preference
+shareClass.deferred = Deferred
+shareClass.growth = Growth
+shareClass.other = Other
+shareClass.checkYourAnswersLabel = What class are the {0} shares?
+shareClass.error.required = Select the class of shares
+
+shareQuantityInTrust.title = How many shares are in the trust?
+shareQuantityInTrust.heading = How many {0} shares are in the trust?
+shareQuantityInTrust.checkYourAnswersLabel = How many {0} shares are in the trust?
+shareQuantityInTrust.hint = Add together the total number of shares across all share holdings. This can be an estimate.
+shareQuantityInTrust.error.invalid = Total shares in the trust must be a number
+shareQuantityInTrust.error.length = Total shares in the trust must be 12 numbers or less
+shareQuantityInTrust.error.required = Enter the current number of shares in the trust
+shareQuantityInTrust.error.zero = Total shares in the trust must be 1 or more
+
+shareValueInTrust.title = What is the current value of shares in the trust?
+shareValueInTrust.heading = What is the current value of {0} shares in the trust?
+shareValueInTrust.checkYourAnswersLabel = What is the current value of {0} shares in the trust?
+shareValueInTrust.hint = Rounded down to the nearest pound. For example, 4000
+shareValueInTrust.error.required = Enter the current value of the shares in the trust
+shareValueInTrust.error.length = Total value of shares in the trust must be 12 characters or less
+shareValueInTrust.error.invalid = Total value of shares in the trust must be a number
+shareValueInTrust.error.zero = Total value of shares in the trust must be 1 or more
+
+sharesInAPortfolio.title = Are the shares in a portfolio?
+sharesInAPortfolio.heading = Are the shares in a portfolio?
+sharesInAPortfolio.checkYourAnswersLabel = Are the shares in a portfolio?
+sharesInAPortfolio.error.required = Select yes if the shares are in a portfolio
+
+shareCompanyName.title = What is the share company’s name?
+shareCompanyName.heading = What is the share company’s name?
+shareCompanyName.checkYourAnswersLabel = What is the share company’s name?
+shareCompanyName.error.required = Enter the share company’s name
+shareCompanyName.error.length = Share company’s name must be 53 characters or less
+shareCompanyName.error.invalid = Share company’s name must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
+shareAnswers.title = Check share details
+shareAnswers.heading = Check share details
+
+trustOwnAllThePropertyOrLand.title = Does the trust own all of the property or land?
+trustOwnAllThePropertyOrLand.heading = Does the trust own all of the property or land?
+trustOwnAllThePropertyOrLand.checkYourAnswersLabel = Does the trust own all of the property or land?
+trustOwnAllThePropertyOrLand.error.required = Select yes if the trust owns all of the property or land
+
+propertyOrLandDescription.title = What is the description of the property or land?
+propertyOrLandDescription.heading = What is the description of the property or land?
+propertyOrLandDescription.checkYourAnswersLabel = What is the description of the property or land?
+propertyOrLandDescription.hint = This must be 56 characters or less
+propertyOrLandDescription.error.required = Enter a description of the property or land
+propertyOrLandDescription.error.length = The description of the property or land must be 56 characters or less
+propertyOrLandDescription.error.invalid = The description of the property or land must only include letters a to z, numbers, ampersands (&), apostrophes, forward slashes, hyphens and spaces
+
+propertyOrLandInternationalAddress.title = What is the property or land’s address?
+propertyOrLandInternationalAddress.heading = What is the property or land’s address?
+propertyOrLandInternationalAddress.checkYourAnswersLabel = What is the property or land’s address?
+
+propertyOrLandTotalValue.title = What is the current total value of the property or land?
+propertyOrLandTotalValue.heading = What is the current total value of the property or land?
+propertyOrLandTotalValue.checkYourAnswersLabel = What is the current total value of the property or land?
+propertyOrLandTotalValue.hint = This can be an estimate. Rounded down to the nearest pound. For example, 4000
+propertyOrLandTotalValue.error.required = Enter the current total value of the property or land
+propertyOrLandTotalValue.error.length = Current total value of the property or land must be 12 numbers or less
+propertyOrLandTotalValue.error.invalid = Current total value of the property or land must be a number
+propertyOrLandTotalValue.error.zero = Current total value of the property or land must be 1 or more
+propertyOrLandTotalValue.error.wholeNumber = Current total value of the property or land must be a whole number
+
+propertyLandValueTrust.title = What is the value of the property or land owned by the trust?
+propertyLandValueTrust.heading = What is the value of the property or land owned by the trust?
+propertyLandValueTrust.hint = This can be an estimate. Rounded down to the nearest pound. For example, 4000
+propertyLandValueTrust.checkYourAnswersLabel = What is the value of the property or land owned by the trust?
+propertyLandValueTrust.error.required = Enter the current value of the property or land owned by the trust
+propertyLandValueTrust.error.invalid = Current value of the property or land owned by the trust must be a number
+propertyLandValueTrust.error.whole = Current value of the property or land owned by the trust must be a whole number
+propertyLandValueTrust.error.zero = Current value of the property or land owned by the trust must be 1 or more
+propertyLandValueTrust.error.length = Current value of the property or land owned by the trust must be 12 characters or less
+
+propertyOrLandAddressUkYesNo.title = Is the property or land’s address in the UK?
+propertyOrLandAddressUkYesNo.heading = Is the property or land’s address in the UK?
+propertyOrLandAddressUkYesNo.checkYourAnswersLabel = Is the property or land’s address in the UK?
+propertyOrLandAddressUkYesNo.error.required = Select yes if the property or land has an address in the UK
+
+propertyOrLandUKAddress.title = What is the property or land’s address?
+propertyOrLandUKAddress.heading = What is the property or land’s address?
+propertyOrLandUKAddress.checkYourAnswersLabel = What is the property or land’s address?
+
+propertyOrLandAddressYesNo.title = Does the property or land have an address?
+propertyOrLandAddressYesNo.heading = Does the property or land have an address?
+propertyOrLandAddressYesNo.checkYourAnswersLabel = Does the property or land have an address?
+propertyOrLandAddressYesNo.error.required = Select yes if the property or land has an address
+
+propertyOrLandAnswers.title = Check property or land details
+propertyOrLandAnswers.heading = Check property or land details
+
+settlorIndividualOrBusiness.title = Is the settlor an individual or a business?
+settlorIndividualOrBusiness.heading = Is the settlor an individual or a business?
+settlorIndividualOrBusiness.individual = Individual
+settlorIndividualOrBusiness.business = Business
+settlorIndividualOrBusiness.checkYourAnswersLabel = Is the settlor an individual or a business?
+settlorIndividualOrBusiness.error.required = Select if the settlor is an individual or a business
+
+settlorIndividualName.title = What is the settlor’s name?
+settlorIndividualName.heading = What is the settlor’s name?
+settlorIndividualName.checkYourAnswersLabel = What is the settlor’s name?
+settlorIndividualName.firstName = First name
+settlorIndividualName.middleName = Middle names (optional)
+settlorIndividualName.lastName = Last name
+settlorIndividualName.error.firstname.required = Enter the settlor’s first name
+settlorIndividualName.error.lastname.required = Enter the settlor’s last name
+settlorIndividualName.error.firstname.length = Settlor’s first name must be 35 characters or less
+settlorIndividualName.error.middlename.length = Settlor’s middle names must be 35 characters or less
+settlorIndividualName.error.lastname.length = Settlor’s last name must be 35 characters or less
+settlorIndividualName.error.firstname.invalid = Settlor’s first name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+settlorIndividualName.error.middlename.invalid = Settlor’s middle names must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+settlorIndividualName.error.lastname.invalid = Settlor’s last name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
+settlorIndividualDateOfBirthYesNo.title = Do you know the settlor’s date of birth?
+settlorIndividualDateOfBirthYesNo.heading = Do you know {0}’s date of birth?
+settlorIndividualDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+settlorIndividualDateOfBirthYesNo.error.required = Select yes if you know date of birth
+
+settlorIndividualDateOfBirth.title = What is the settlor’s date of birth?
+settlorIndividualDateOfBirth.heading = What is {0}’s date of birth?
+settlorIndividualDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+settlorIndividualDateOfBirth.hint = For example, 31 3 1980
+
+dateOfBirth.error.required.all = Enter a date of birth
+dateOfBirth.error.required.two = The date of birth must include {0} and {1}
+dateOfBirth.error.required = The date of birth must include {0}
+dateOfBirth.error.invalid = Enter a real date of birth
+dateOfBirth.error.future = Date of birth must be today or in the past
+dateOfBirth.error.past = Date of birth must be after 31 December 1499
+
+settlorIndividualAddressYesNo.title = Do you know the settlor’s address?
+settlorIndividualAddressYesNo.heading = Do you know {0}’s address?
+settlorIndividualAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+settlorIndividualAddressYesNo.error.required = Select yes if you know the settlor’s address
+
+settlorIndividualNINO.title = What is the settlor’s National Insurance number?
+settlorIndividualNINO.heading = What is {0}’s National Insurance number?
+settlorIndividualNINO.checkYourAnswersLabel = What is {0}’s National Insurance number?
+settlorIndividualNINO.hint = It is on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
+settlorIndividualNINO.hint.reader = It is on their National Insurance card, benefit letter, payslip or P60. For example, Q Q 1 2 3 4 5 6 C.
+settlorIndividualNINO.error.required = Enter the settlor’s National Insurance number
+settlorIndividualNINO.error.invalidFormat = Enter the settlor’s National Insurance number in the correct format
+
+settlorIndividualNINOYesNo.title = Do you know the settlor’s National Insurance number?
+settlorIndividualNINOYesNo.heading = Do you know {0}’s National Insurance number?
+settlorIndividualNINOYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+settlorIndividualNINOYesNo.error.required = Select yes if you know the settlor’s National Insurance number
+
+settlorIndividualAddressInternational.title = What is the settlor’s address?
+settlorIndividualAddressInternational.heading = What is {0}’s address?
+settlorIndividualAddressInternational.checkYourAnswersLabel = What is {0}’s address?
+
+settlorIndividualAddressUK.title = What is the settlor’s address?
+settlorIndividualAddressUK.heading = What is {0}’s address?
+settlorIndividualAddressUK.checkYourAnswersLabel = What is {0}’s address?
+
+settlorIndividualAddressUKYesNo.title = Does the settlor live in the UK?
+settlorIndividualAddressUKYesNo.heading = Does {0} live in the UK?
+settlorIndividualAddressUKYesNo.checkYourAnswersLabel = Does {0} live in the UK?
+settlorIndividualAddressUKYesNo.error.required = Select yes if the settlor lives in the UK
+
+settlorIndividualIDCard.title = What are the settlor’s ID card details?
+settlorIndividualIDCard.heading = What are {0}’s ID card details?
+settlorIndividualIDCard.checkYourAnswersLabel = What are {0}’s ID card details?
+settlorIndividualIDCard.country = ID card country of issue
+settlorIndividualIDCard.error.country.required = Enter the settlor’s ID card country of issue
+settlorIndividualIDCard.country.error.required = Enter the settlor’s ID card country of issue
+settlorIndividualIDCard.country.error.length = The settlor’s ID card country must be 100 characters or less
+settlorIndividualIDCard.number = ID card number
+settlorIndividualIDCard.number.error.required = Enter the settlor’s ID card number
+settlorIndividualIDCard.number.error.length = ID card number must be 30 characters or less
+settlorIndividualIDCard.number.error.invalid = ID card number can only include letters and numbers
+settlorIndividualIDCard.expiryDate.title = Expiry date
+settlorIndividualIDCard.expiryDate.hint = Expiry date can be in the past. For example, 31 3 1980
+settlorIndividualIDCard.expiryDate.error.required.all = Enter the ID card expiry date
+settlorIndividualIDCard.expiryDate.error.required.two = ID card expiry date must include a {0} and {1}
+settlorIndividualIDCard.expiryDate.error.required = ID card expiry date must include a {0}
+settlorIndividualIDCard.expiryDate.error.invalid = Enter a real date when the settlor’s ID card expires
+settlorIndividualIDCard.expiryDate.error.future = ID card expiry date must be after 31 December 1499 and before 01 January 2100
+settlorIndividualIDCard.expiryDate.error.past = ID card expiry date must be after 31 December 1499 and before 01 January 2100
+
+settlorIndividualIDCardYesNo.title = Do you know the settlor’s ID card details?
+settlorIndividualIDCardYesNo.heading = Do you know {0}’s ID card details?
+settlorIndividualIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s ID card details?
+settlorIndividualIDCardYesNo.error.required = Select yes if you know the settlor’s ID card details
+
+settlorIndividualPassport.title = What are the settlor’s passport details?
+settlorIndividualPassport.heading = What are {0}’s passport details?
+settlorIndividualPassport.checkYourAnswersLabel = What are {0}’s passport details?
+settlorIndividualPassport.country = Passport country of issue
+settlorIndividualPassport.country.error.required = Enter the settlor’s passport country of issue
+settlorIndividualPassport.country.error.length = The settlor’s passport country must be 100 characters or less
+settlorIndividualPassport.number = Passport number
+settlorIndividualPassport.number.hint = For example, 502135326
+settlorIndividualPassport.number.error.required = Enter the settlor’s passport number
+settlorIndividualPassport.number.error.length = Passport number must be 30 characters or less
+settlorIndividualPassport.number.error.invalid = Passport number can only include letters and numbers
+settlorIndividualPassport.expiryDate.title = Expiry date
+settlorIndividualPassport.expiryDate.hint = Expiry date can be in the past. For example, 31 3 1980
+settlorIndividualPassport.expiryDate.error.required.all = Enter the passport expiry date
+settlorIndividualPassport.expiryDate.error.required.two = Passport expiry date must include a {0} and {1}
+settlorIndividualPassport.expiryDate.error.required = Passport expiry date must include {0}
+settlorIndividualPassport.expiryDate.error.invalid = Enter a real date when the settlor’s passport expires
+settlorIndividualPassport.expiryDate.error.future = Passport expiry date must be after 31 December 1499 and before 01 January 2100
+settlorIndividualPassport.expiryDate.error.past = Passport expiry date must be after 31 December 1499 and before 01 January 2100
+
+settlorIndividualPassportYesNo.title = Do you know the settlor’s passport details?
+settlorIndividualPassportYesNo.heading = Do you know {0}’s passport details?
+settlorIndividualPassportYesNo.checkYourAnswersLabel = Do you know {0}’s passport details?
+settlorIndividualPassportYesNo.error.required = Select yes if you know the settlor’s passport details
+
+settlorIndividualAnswers.title = Check settlor details
+settlorIndividualAnswers.heading = Check settlor details
+
+addAnAssetYesNo.title = Do you want to add an asset?
+addAnAssetYesNo.heading = Do you want to add an asset?
+addAnAssetYesNo.error.required = Select yes if you want to add an asset
+
+addATrusteeYesNo.title = Do you want to add a trustee?
+addATrusteeYesNo.heading = Do you want to add a trustee?
+addATrusteeYesNo.error.required = Select yes if you want to add a trustee
+
+
+settlorBusinessName.title = What is the business’s name?
+settlorBusinessName.heading = What is the business’s name?
+settlorBusinessName.checkYourAnswersLabel = What is the business’s name?
+settlorBusinessName.error.required = Enter the business’s name
+settlorBusinessName.error.length = Business’s name must be 105 characters or less
+settlorBusinessName.error.invalid = Business name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
+addASettlorYesNo.title = Do you want to add a settlor?
+addASettlorYesNo.heading = Do you want to add a settlor?
+addASettlorYesNo.error.required = Select yes if you want to add a settlor
+
+kindOfTrust.title = What kind of trust did the settlor create?
+kindOfTrust.heading = What kind of trust did the settlor create?
+kindOfTrust.Lifetime = A trust created during their lifetime to gift or transfer assets
+kindOfTrust.Deed = A trust through a Deed of Variation or family agreement
+kindOfTrust.Employees = A trust for the employees of a company
+kindOfTrust.Building = A trust for a building or building with tenants
+kindOfTrust.Repair = A trust for the repair of historic buildings
+kindOfTrust.checkYourAnswersLabel = What kind of trust did the settlor create?
+kindOfTrust.error.required = Select what kind of trust the settlor created
+
+holdoverReliefYesNo.title = Was holdover relief claimed on any assets put into the trust?
+holdoverReliefYesNo.heading = Was holdover relief claimed on any assets put into the trust?
+holdoverReliefYesNo.checkYourAnswersLabel = Was holdover relief claimed on any assets put into the trust?
+holdoverReliefYesNo.error.required = Select yes if holdover relief was claimed by any settlor on transfer into the trust
+
+settlorBusinessDetails.title = Which of the settlor’s details do you know?
+settlorBusinessDetails.heading = Which of {0}’s details do you know?
+settlorBusinessDetails.uniqueTaxReference = Unique Taxpayer Reference
+settlorBusinessDetails.address = Address
+settlorBusinessDetails.checkYourAnswersLabel = Which of {0}’s details do you know?
+settlorBusinessDetails.error.required = Select which of the business’s details you know
+
+trusteesBasedInTheUK.title = How many of the trustees are based in the UK?
+trusteesBasedInTheUK.heading =  How many of the trustees are based in the UK?
+trusteesBasedInTheUK.UKBasedTrustees = All of the trustees are based in the UK
+trusteesBasedInTheUK.NonUkBasedTrustees = None of the trustees are based in the UK
+trusteesBasedInTheUK.InternationalAndUKTrustees = The trust contains international and UK-based trustees
+trusteesBasedInTheUK.checkYourAnswersLabel = How many of the trustees are based in the UK?
+trusteesBasedInTheUK.error.required = Select how many of the trustees are based in the UK
+
+settlorsBasedInTheUK.title = Are any of the settlors based in the UK?
+settlorsBasedInTheUK.heading = Are any of the settlors based in the UK?
+settlorsBasedInTheUK.checkYourAnswersLabel = Are any of the settlors based in the UK?
+settlorsBasedInTheUK.error.required = Select yes if the any of the settlors are based in the UK
+
+removeSettlor.title = Are you sure you want to remove the settlor?
+removeSettlor.default = the settlor
+removeSettlor.heading = Are you sure you want to remove {0}?
+removeSettlor.checkYourAnswersLabel = Are you sure you want to remove {0}?
+removeSettlor.error.required = Select yes if you want to remove the settlor
+
+settlorInfo.title = Information you need to add a settlor
+settlorInfo.heading = Information you need to add a settlor
+settlorInfo.caption = Settlors
+settlorInfo.subheading1 = Individual settlor
+settlorInfo.paragraph1 = If the trust was created after the settlor died, you need to give the name and these details if available:
+settlorInfo.bulletpoint1 = date of death
+settlorInfo.bulletpoint2 = date of birth
+settlorInfo.bulletpoint3 = National Insurance number
+settlorInfo.bulletpoint4 = last known address
+settlorInfo.paragraph2 = If the settlor created a different kind of trust you need their name and details for one of these options:
+settlorInfo.bulletpoint5 = National Insurance number
+settlorInfo.bulletpoint6 = Passport and address
+settlorInfo.bulletpoint7 = ID card and address
+settlorInfo.bulletpoint8 = address
+settlorInfo.subheading2 = Business settlor
+settlorInfo.paragraph3 = If the settlor is a business, you will need the business’s name and details for one of these options:
+settlorInfo.bulletpoint9 = Unique Taxpayer Reference
+settlorInfo.bulletpoint10 = address
+settlorInfo.subheading3 = Details about the set up of the trust
+settlorInfo.paragraph4 = If the settlor created the trust during their lifetime to gift or transfer assets, you will need to confirm if holdover relief has been claimed.
+settlorInfo.paragraph5 = For trusts set up for employees of a company, you will need to confirm:
+settlorInfo.bulletpoint11 = if it’s an employer-financed retirement scheme, and if so what date it started.
+settlorInfo.bulletpoint12 = the business type (trading or investment) if the scheme’s settlor is a business
+settlorInfo.bulletpoint13 = if the business had been in existence for at least two years each time an asset was added to the trust.
+
+TrustLocked.title = Sorry, you cannot access this trust
+TrustLocked.heading = Sorry, you cannot access this trust
+TrustLocked.p1 = You have not passed the security questions asked by HMRC.
+TrustLocked.p2 = Try again in 30 minutes.
+TrustLocked.p3 = If you need help with the service
+TrustLocked.link1 = contact the trusts helpline (opens in a new window or tab)
+TrustLocked.subheading = This trust’s UTR: {0}
+
+informationMaintainingThisTrust.title = Information about maintaining this trust
+informationMaintainingThisTrust.heading = Information about maintaining this trust
+informationMaintainingThisTrust.subHeading = This trust’s UTR: {0}
+informationMaintainingThisTrust.warning = Some questions may have changed since the trust was registered. You have a legal responsibility to make sure the details held on the register are accurate.
+informationMaintainingThisTrust.h3 = Keep the trust updated
+informationMaintainingThisTrust.paragraph1 = You can make changes to the register, declare it’s up to date or close the trust by following these steps:
+informationMaintainingThisTrust.list1 = You can find out what details we hold about the trust by checking its last declaration.
+informationMaintainingThisTrust.list2 = If the trust is up to date you can continue to make a declaration. If you have written in with changes, these may not have been updated so you will need to update them now.
+informationMaintainingThisTrust.printsave.link = You can save or print a copy of this trust’s last declaration (opens in a new window or tab)
+informationMaintainingThisTrust.list3 = If details about the settlors, trustees or beneficiaries have changed, you can update them through this service.
+informationMaintainingThisTrust.list4 = If you need to close the trust, you will need to declare the details we have are up to date.
+informationMaintainingThisTrust.h2 = Changes to the trust
+informationMaintainingThisTrust.paragraph2 = Any changes you make will not be saved unless you make a declaration. You can print a draft copy of your answers as well as a declared copy. You will not be able to save and come back later.
+informationMaintainingThisTrust.paragraph3 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
+
+declarationWhatNext.title = What do you want to do next?
+declarationWhatNext.heading = What do you want to do next?
+declarationWhatNext.declare = Declare the trust is up to date
+declarationWhatNext.makeChanges = Make changes to the trust and declare
+declarationWhatNext.closeTrust = Close the trust
+declarationWhatNext.checkYourAnswersLabel = What do you want to do next?
+declarationWhatNext.error.required = Select what you want to do next
+
+confirmationPage.title = Declaration received
+confirmationPage.heading = Declaration received
+confirmationPage.heading2 = Your reference is:
+confirmationPage.printsave.link = Print or save a declared copy of the trust’s registration (opens in a new window or tab)
+confirmationPage.subheading1 = What happens next
+confirmationPage.paragraph1 = Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.
+confirmationPage.paragraph2 = If any of the settlor, trustee or beneficiary details change (before you make your next declaration) you will need to update them using the online service.
+confirmationPage.subheading2 = Declaring the trust is up to date
+confirmationPage.paragraph3 = You need to declare every year the details we have are up to date. This needs to be done through the Trust Registration Service and Self Assessment online or the Trust and Estate Tax Return form (SA900).
+confirmationPage.paragraph4 = You can
+
+trustNotClaimed.title = Sorry, you cannot access this trust
+trustNotClaimed.heading = Sorry, you cannot access this trust
+trustNotClaimed.subheading = This trust’s UTR: {0}
+trustNotClaimed.p1 = One of the trustees will need to complete the next two steps so you can maintain the trust online on their behalf.
+trustNotClaimed.bullet.1.title = Trustee needs to claim the trust
+trustNotClaimed.bullet.1.p1 = A trustee needs to log onto the Trust Registration Service using their Government Gateway account. The account they use must be an organisation account, not an individual account.
+trustNotClaimed.bullet.1.p2 = If they do not have an account, they can
+trustNotClaimed.bullet.1.p2.a = register for one here (opens in a new tab).
+trustNotClaimed.bullet.1.p3 = The trustee needs to correctly answer questions about the trust so HMRC can prove the connection between the trustee and the trust.
+trustNotClaimed.bullet.1.p4 = The trustee must complete this step before you can request authorisation from them to maintain the trust.
+trustNotClaimed.bullet.2.title = Trustee needs to authorise your online access the trust
+trustNotClaimed.bullet.2.p1 = Through Agent Services you can create an authorisation link to send to the trustee.
+trustNotClaimed.bullet.2.p2 = The trustee needs to use the same Government Gateway organisation account used to claim the trust to approve your request.
+trustNotClaimed.bullet.2.p3 = If you need help with the service
+trustNotClaimed.bullet.2.p3.a = contact the trusts helpline (opens in a new window or tab).
+trustNotClaimed.bullet.2.p4 = You can
+trustNotClaimed.bullet.2.p4.a = return to register and maintain a trust for a client.
+
+agentNotAuthorised.title = Sorry, you cannot access this trust
+agentNotAuthorised.heading = Sorry, you cannot access this trust
+agentNotAuthorised.subheading = This trust’s UTR: {0}
+agentNotAuthorised.p1 = The trustee who claimed the trust needs to give you authorisation.
+agentNotAuthorised.p2 = You can create an authorisation link to send to the trustee through
+agentNotAuthorised.p2.a = Agent Services.
+agentNotAuthorised.p3 = The trustee who claimed the trust must use the same Government Gateway account to approve your request.
+agentNotAuthorised.p4 = If you need help with this service
+agentNotAuthorised.p4.a = contact the trusts helpline (opens in a new window or tab).
+agentNotAuthorised.p5 = You can
+agentNotAuthorised.p5.a = return to register and maintain a trust for a client.
+
+trustAlreadyClaimed.title = Sorry, you cannot access this trust
+trustAlreadyClaimed.heading = Sorry, you cannot access this trust
+trustAlreadyClaimed.subheading = This trust’s UTR: {0}
+trustAlreadyClaimed.p1 = Another Government Gateway account is linked to it. Please sign in with that account.
+trustAlreadyClaimed.p2 = If you are unable to do so,
+trustAlreadyClaimed.p2.a = contact the trusts helpline (opens in a new window or tab)
+
+agentCannotAccessTrustYet.title = You cannot access this trust yet
+agentCannotAccessTrustYet.heading = You cannot access this trust yet
+agentCannotAccessTrustYet.subHeading = This trust’s UTR: {0}
+agentCannotAccessTrustYet.p1 = You have been authorised by your client and do not need to do anything else at the moment.
+agentCannotAccessTrustYet.p2 = You will be able to access this trust by 2020.
+agentCannotAccessTrustYet.heading.2 = What you need to know about maintaining this trust
+agentCannotAccessTrustYet.p3 = You will be able to make changes to the register, declare it’s up to date or close the trust.
+agentCannotAccessTrustYet.bullet.1 = You will be able to find out what details we hold about the trust by checking its last declaration.
+agentCannotAccessTrustYet.bullet.2 = If the trust is up to date you will be able to continue to make a declaration. If you have written in with changes, these may not have been updated so you will need to update them now.
+agentCannotAccessTrustYet.bullet.3 = If details about the settlors, trustees or beneficiaries have changed, you will be able to update them through this service.
+agentCannotAccessTrustYet.bullet.4 = If you need to close the trust, you will need to declare the details we have are up to date.
+agentCannotAccessTrustYet.heading.3 = Changes you cannot tell us about on this service
+agentCannotAccessTrustYet.p4 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
+
+
+playbackProblemContactHMRC.title = Sorry, there has been a problem accessing your trust’s registration
+playbackProblemContactHMRC.heading = Sorry, there has been a problem accessing your trust’s registration
+playbackProblemContactHMRC.subheading = This trust’s UTR: {0}
+playbackProblemContactHMRC.p1.beforeLink = You need to
+playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
+playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
+playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment available when you contact HMRC.
+
+playbackLastDeclared.title = Last declared copy of the trust’s registration
+playbackLastDeclared.heading = Last declared copy of the trust’s registration
+playbackLastDeclared.declareAnnually.warning = You only need to declare the trust is up to date every year if there is a tax liability.
+playbackLastDeclared.informationFirstRegistered = The following sections indicate what was entered when the trust was first registered. No further updates to trust details, assets and years of tax liability are required through this service.
+playbackLastDeclared.selfAssessmentOnline = If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts.
+
+individualProtectorName.checkYourAnswersLabel = What is the protector's name?
+individualProtectorDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+individualProtectorDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+individualProtectorNINOYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+individualProtectorNINO.checkYourAnswersLabel = What is {0}’s National Insurance number?
+individualProtectorAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+individualProtectorAddressUkYesNo.checkYourAnswersLabel = Does {0} live in the UK?
+individualProtectorAddress.checkYourAnswersLabel = What is {0}’s address?
+individualProtectorPassportIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
+individualProtectorPassportIDCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+
+otherIndividualName.checkYourAnswersLabel = What is the name of the individual?
+otherIndividualDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+otherIndividualDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+otherIndividualNINOYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+otherIndividualNINO.checkYourAnswersLabel = What is {0}’s National Insurance number?
+otherIndividualAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+otherIndividualAddressUKYesNo.checkYourAnswersLabel = Does {0} live in the UK?
+otherIndividualAddress.checkYourAnswersLabel = What is {0}’s address?
+otherIndividualPassportIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
+otherIndividualPassportIDCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+
+companyProtectorName.checkYourAnswersLabel = What is the business’s name?
+companyProtectorUtrYesNo.checkYourAnswersLabel = Do you know {0}’s Unique Taxpayer Reference (UTR) number?
+companyProtectorUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+companyProtectorAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+companyProtectorAddressUkYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+companyProtectorAddress.checkYourAnswersLabel = What is {0}’s address?
+
+protectorIndividualOrBusiness.checkYourAnswersLabel = Is the protector an individual or a business?
+
+answerPage.section.protectors.heading = Protectors
+answerPage.section.protectors.subheading = Protector {0}
+
+answerPage.section.trustType.heading = Trust type
+setupInAdditionToWillTrustYesNo.checkYourAnswersLabel = Was it set up in addition to a will trust?
+howDeedOfVariationCreated.checkYourAnswersLabel = How was the Deed of Variation created?
+employerFinancedRetirementBenefitsSchemeYesNo.checkYourAnswersLabel = Is this an employer-financed retirement benefits scheme?
+employerFinancedRetirementBenefitsSchemeStartDate.checkYourAnswersLabel = When did the employer-financed retirement benefits scheme start?
+
+deedOfVariation.replaceAbsoluteInterestOverWill = to replace an absolute interest over a will
+deedOfVariation.replaceWillTrust = to replace a will trust
+
+whatIsNext.title = What do you want to do next?
+whatIsNext.heading = What do you want to do next?
+whatIsNext.declare = Declare the trust is up to date
+whatIsNext.makeChanges = Make changes to the trust and declare
+whatIsNext.closeTrust = Close the trust
+whatIsNext.checkYourAnswersLabel = What do you want to do next?
+whatIsNext.error.required = Select what you want to do next

@@ -18,14 +18,25 @@ package forms.mappings
 
 import java.time.LocalDate
 
+import models.Enumerable
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
-import models.Enumerable
 
 trait Mappings extends Formatters with Constraints {
 
+  protected def nino(errorKey: String = "error.required"): FieldMapping[String] =
+    of(ninoFormatter(errorKey))
+
   protected def text(errorKey: String = "error.required"): FieldMapping[String] =
     of(stringFormatter(errorKey))
+
+  protected def postcode(requiredKey : String = "error.required",
+                         invalidKey : String = "error.postcodeInvalid") : FieldMapping[String] =
+    of(postcodeFormatter(requiredKey, invalidKey))
+
+  protected def currency(requiredKey : String = "assetMoneyValue.error.required",
+                         invalidKey : String = "assetMoneyValue.error.invalidFormat") : FieldMapping[String] =
+    of(currencyFormatter(requiredKey, invalidKey))
 
   protected def int(requiredKey: String = "error.required",
                     wholeNumberKey: String = "error.wholeNumber",
@@ -45,7 +56,6 @@ trait Mappings extends Formatters with Constraints {
                            invalidKey: String,
                            allRequiredKey: String,
                            twoRequiredKey: String,
-                           requiredKey: String,
-                           args: Seq[String] = Seq.empty): FieldMapping[LocalDate] =
-    of(new LocalDateFormatter(invalidKey, allRequiredKey, twoRequiredKey, requiredKey, args))
+                           requiredKey: String): FieldMapping[LocalDate] =
+    of(new LocalDateFormatter(invalidKey, allRequiredKey, twoRequiredKey, requiredKey))
 }

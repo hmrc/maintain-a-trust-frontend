@@ -61,11 +61,11 @@ class DefaultSessionRepository @Inject()(
   override def set(userAnswers: UserAnswers): Future[Boolean] = {
 
     val selector = Json.obj(
-      "_id" -> userAnswers.id
+      "_id" -> userAnswers.internalAuthId
     )
 
     val modifier = Json.obj(
-      "$set" -> (userAnswers copy (lastUpdated = LocalDateTime.now))
+      "$set" -> (userAnswers copy (updatedAt = LocalDateTime.now))
     )
 
     collection.flatMap {

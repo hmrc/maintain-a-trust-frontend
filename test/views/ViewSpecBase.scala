@@ -18,9 +18,10 @@ package views
 
 import models.UserAnswers
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import play.twirl.api.Html
 import base.SpecBase
+import org.jsoup.nodes.{Document, Element}
+import org.scalatest.Assertion
 
 import scala.reflect.ClassTag
 
@@ -59,12 +60,21 @@ trait ViewSpecBase extends SpecBase {
     for (key <- expectedMessageKeys) assertContainsText(doc, messages(key))
   }
 
+  def assertAttributeValueForElement(element: Element, attribute: String, attributeValue: String): Assertion = {
+    assert(element.attr(attribute) == attributeValue)
+  }
+
+
   def assertRenderedById(doc: Document, id: String) = {
     assert(doc.getElementById(id) != null, "\n\nElement " + id + " was not rendered on the page.\n")
   }
 
   def assertNotRenderedById(doc: Document, id: String) = {
     assert(doc.getElementById(id) == null, "\n\nElement " + id + " was rendered on the page.\n")
+  }
+
+  def assertContainsTextForId(doc: Document, id: String, expectedText: String): Assertion = {
+    assert(doc.getElementById(id).text() == expectedText, s"\n\nElement $id does not have text $expectedText")
   }
 
   def assertRenderedByCssSelector(doc: Document, cssSelector: String) = {

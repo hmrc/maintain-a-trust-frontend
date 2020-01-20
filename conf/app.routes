@@ -11,3 +11,16 @@ GET        /this-service-has-been-reset                 controllers.SessionExpir
 GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
+
+GET        /trust-utr                                   controllers.WhatIsTheUTRVariationsController.onPageLoad()
+POST       /trust-utr                                   controllers.WhatIsTheUTRVariationsController.onSubmit()
+
+GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
+
+GET        /declaration                                 controllers.DeclarationController.onPageLoad()
+POST       /declaration                                 controllers.DeclarationController.onSubmit()
+
+GET        /confirmation                                controllers.ConfirmationController.onPageLoad()
+
+GET        /declare-what-changed                        controllers.WhatIsNextController.onPageLoad()
+POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()
