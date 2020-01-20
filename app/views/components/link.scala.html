@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models.requests
+@(href : String, id : String = "", key : String, openInNewWindow: Boolean = false)(implicit messages: Messages)
 
-import play.api.mvc.{Request, WrappedRequest}
-import models.UserAnswers
-import uk.gov.hmrc.auth.core.AffinityGroup
-
-case class OptionalDataRequest[A] (request: Request[A], internalId: String, userAnswers: Option[UserAnswers]) extends WrappedRequest[A](request)
-
-case class DataRequest[A] (request: Request[A], internalId: String, userAnswers: UserAnswers, affinityGroup: AffinityGroup = AffinityGroup.Organisation) extends WrappedRequest[A](request)
+<a id="@id" href="@href" @if(openInNewWindow) {target="_blank"}>@messages(key)</a>
