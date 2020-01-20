@@ -19,4 +19,5 @@ GET        /information                                 controllers.InformationM
 
 GET        /declaration                                 controllers.DeclarationController.onPageLoad()
 POST       /declaration                                 controllers.DeclarationController.onSubmit()
+
 GET        /confirmation                                controllers.VariationsConfirmationController.onPageLoad()

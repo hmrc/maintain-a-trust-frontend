@@ -38,6 +38,7 @@ class DeclarationController @Inject()(
                                        identify: IdentifierAction,
                                        getData: DataRetrievalAction,
                                        requireData: DataRequiredAction,
+//                                       playbackIdentify: PlaybackIdentifierAction,
                                        requiredAnswer: RequiredAnswerActionProvider,
                                        formProvider: DeclarationFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
@@ -67,13 +68,13 @@ class DeclarationController @Inject()(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, AffinityGroup.Individual, controllers.routes.DeclarationController.onSubmit()))), //TODO: change to request.affinityGroup when auth added
 
-        // TODO:  Check response for submission of no change data and redirect accordingly
+        // TODO: Check response for submission of no change data and redirect accordingly
 
         value => {
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(???) //controllers.routes.VariationsConfirmationController.onPageLoad()
+          } yield Redirect(controllers.routes.VariationsConfirmationController.onPageLoad())
         }
       )
 
