@@ -24,3 +24,8 @@ GET        /confirmation                                controllers.Confirmation
 
 GET        /declare-what-changed                        controllers.WhatIsNextController.onPageLoad()
 POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()
+
+GET        /create-agent-services-account               controllers.CreateAgentServicesAccountController.onPageLoad()
+
+GET        /trust-not-claimed                      controllers.TrustNotClaimedController.onPageLoad()
+GET        /agent-not-authorised                   controllers.AgentNotAuthorisedController.onPageLoad()

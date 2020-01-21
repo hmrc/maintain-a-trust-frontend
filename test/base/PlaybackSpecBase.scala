@@ -16,13 +16,13 @@
 
 package base
 
-import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, FakeDataRetrievalAction, FakeIdentifierAction, IdentifierAction}
+import controllers.actions._
 import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{BodyParsers, PlayBodyParsers}
+import play.api.mvc.PlayBodyParsers
 import repositories.PlaybackRepository
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, Enrolments}
 import utils.TestUserAnswers
@@ -42,17 +42,11 @@ trait PlaybackSpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mo
                                   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
-//        bind[RegistrationIdentifierAction].toInstance(new FakeIdentifyForRegistration(affinityGroup)(injectedParsers, trustsAuth, enrolments)),
         bind[IdentifierAction].toInstance(new FakeIdentifierAction(bodyParsers)),
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[PlaybackRepository].toInstance(playbackRepository)
-//        bind[RegistrationsRepository].toInstance(registrationsRepository),
-//        bind[SubmissionService].toInstance(mockSubmissionService),
-//        bind[Navigator].qualifiedWith(classOf[PropertyOrLand]).toInstance(navigator),
-//        bind[Navigator].qualifiedWith(classOf[LivingSettlor]).toInstance(navigator)
       )
-
 }
 
 trait PlaybackSpecBase extends PlaySpec with PlaybackSpecBaseHelpers
