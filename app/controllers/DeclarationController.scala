@@ -58,7 +58,7 @@ class DeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, AffinityGroup.Individual, controllers.routes.DeclarationController.onSubmit())) //TODO: change to request.affinityGroup when auth added
+      Ok(view(preparedForm, request.affinityGroup, controllers.routes.DeclarationController.onSubmit()))
   }
 
   def onSubmit(): Action[AnyContent] = actions().async {
@@ -66,7 +66,7 @@ class DeclarationController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, AffinityGroup.Individual, controllers.routes.DeclarationController.onSubmit()))), //TODO: change to request.affinityGroup when auth added
+          Future.successful(BadRequest(view(formWithErrors, request.affinityGroup, controllers.routes.DeclarationController.onSubmit()))),
 
         // TODO: Check response for submission of no change data and redirect accordingly
 
