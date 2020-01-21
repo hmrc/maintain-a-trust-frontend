@@ -39,7 +39,7 @@ class DefaultPlaybackRepository @Inject()(
                                           dateFormatter: DateFormatter
                                         )(implicit ec: ExecutionContext, m: Materializer) extends PlaybackRepository {
 
-  private val collectionName: String = "playback-answers"
+  private val collectionName: String = "user-answers"
 
   private val cacheTtl = config.get[Int]("mongodb.playback.ttlSeconds")
 
