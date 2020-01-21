@@ -19,7 +19,6 @@ package controllers
 import controllers.actions._
 import forms.DeclarationFormProvider
 import javax.inject.Inject
-import navigation.Navigator
 import pages.DeclarationPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -34,7 +33,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeclarationController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        playbackRepository: PlaybackRepository,
-                                       navigator: Navigator,
                                        identify: IdentifierAction,
                                        getData: DataRetrievalAction,
                                        requireData: DataRequiredAction,
