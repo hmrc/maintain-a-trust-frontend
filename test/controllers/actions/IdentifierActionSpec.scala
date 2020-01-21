@@ -16,7 +16,7 @@
 
 package controllers.actions
 
-import base.PlaybackSpecBase
+import base.SpecBase
 import config.FrontendAppConfig
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
@@ -27,7 +27,7 @@ import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 
 import scala.concurrent.Future
 
-class IdentifierActionSpec extends PlaybackSpecBase {
+class IdentifierActionSpec extends SpecBase {
 
   type RetrievalType = Option[String] ~ Option[AffinityGroup] ~ Enrolments
 

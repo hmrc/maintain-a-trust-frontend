@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.{AuthenticateForPlayback, DataRequiredAction, DataRetrievalAction, IdentifierAction, PlaybackIdentifierAction}
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.MessagesControllerComponents
@@ -28,15 +28,13 @@ import scala.concurrent.ExecutionContext
 
 class ConfirmationController @Inject()(
                                                   override val messagesApi: MessagesApi,
-                                                  identify: IdentifierAction,
-                                                  getData: DataRetrievalAction,
-                                                  requireData: DataRequiredAction,
+                                                  actions : AuthenticateForPlayback,
                                                   val controllerComponents: MessagesControllerComponents,
                                                   view: ConfirmationView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
-  def onPageLoad() = (identify andThen getData andThen requireData) {
+  def onPageLoad() = actions.authWithData {
     implicit request =>
 
       val isAgent = request.user.affinityGroup == Agent

@@ -16,7 +16,7 @@
 
 package controllers
 
-import base.PlaybackSpecBase
+import base.SpecBase
 import forms.UTRFormProvider
 import pages.UTRPage
 import play.api.data.Form
@@ -27,7 +27,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.UTRView
 
-class WhatIsTheUTRVariationsControllerSpec extends PlaybackSpecBase {
+class UTRControllerSpec extends SpecBase {
 
   val formProvider = new UTRFormProvider()
   val form: Form[String] = formProvider()
@@ -36,7 +36,7 @@ class WhatIsTheUTRVariationsControllerSpec extends PlaybackSpecBase {
 
   lazy val onSubmit: Call = routes.UTRController.onSubmit()
 
-  "TrustUTR Controller" must {
+  "UTR Controller" must {
 
     "return OK and the correct view for a GET" in {
 

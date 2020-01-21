@@ -16,7 +16,7 @@
 
 package services
 
-import base.PlaybackSpecBase
+import base.SpecBase
 import config.FrontendAppConfig
 import connectors.EnrolmentStoreConnector
 import controllers.actions.TrustsAuthorisedFunctions
@@ -37,7 +37,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutures with EitherValues with RecoverMethods {
+class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherValues with RecoverMethods {
 
   val utr = "0987654321"
 

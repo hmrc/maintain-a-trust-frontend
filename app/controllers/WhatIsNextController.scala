@@ -16,10 +16,10 @@
 
 package controllers
 
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.AuthenticateForPlayback
 import forms.WhatIsNextFormProvider
 import javax.inject.Inject
-import models.{Enumerable, UserAnswers, WhatIsNext}
+import models.{Enumerable, WhatIsNext}
 import pages.WhatIsNextPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -31,21 +31,17 @@ import views.html.WhatIsNextView
 import scala.concurrent.{ExecutionContext, Future}
 
 class WhatIsNextController @Inject()(
-                                               override val messagesApi: MessagesApi,
-                                               playbackRepository: PlaybackRepository,
-                                               identify: IdentifierAction,
-                                               getData: DataRetrievalAction,
-                                               requireData: DataRequiredAction,
-                                               formProvider: WhatIsNextFormProvider,
-                                               val controllerComponents: MessagesControllerComponents,
-                                               view: WhatIsNextView
+                                      override val messagesApi: MessagesApi,
+                                      playbackRepository: PlaybackRepository,
+                                      actions: AuthenticateForPlayback,
+                                      formProvider: WhatIsNextFormProvider,
+                                      val controllerComponents: MessagesControllerComponents,
+                                      view: WhatIsNextView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
-
-  //playbackAction
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(): Action[AnyContent] = actions.authWithData {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(WhatIsNextPage) match {
@@ -57,9 +53,7 @@ class WhatIsNextController @Inject()(
 
   }
 
-  //playbackAction
-
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
@@ -69,10 +63,11 @@ class WhatIsNextController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, value))
             _              <- playbackRepository.set(updatedAnswers)
-            _ <- Future[Boolean] { true }
-          } yield  updatedAnswers.get(WhatIsNextPage) match {
-            case Some(WhatIsNext.DeclareTheTrustIsUpToDate) => Redirect(controllers.routes.DeclarationController.onPageLoad())
-            case _ => Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+          } yield value match {
+            case WhatIsNext.DeclareTheTrustIsUpToDate =>
+              Redirect(controllers.routes.DeclarationController.onPageLoad())
+            case _ =>
+              Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
           }
         }
       )

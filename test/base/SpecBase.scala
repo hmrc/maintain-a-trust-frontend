@@ -16,40 +16,36 @@
 
 package base
 
-import config.FrontendAppConfig
 import controllers.actions._
-import models.UserAnswers
-import org.scalatest.TryValues
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.inject.{Injector, bind}
-import play.api.libs.json.Json
-import play.api.test.FakeRequest
+import play.api.mvc.{BodyParsers, PlayBodyParsers}
+import repositories.PlaybackRepository
+import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, Enrolments}
+import utils.TestUserAnswers
 
-trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with ScalaFutures with IntegrationPatience {
+trait PlaybackSpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked with BeforeAndAfter with FakeTrustsApp {
+  this: TestSuite =>
 
-  val userAnswersId = "id"
+  def emptyUserAnswers = models.UserAnswers(TestUserAnswers.userInternalId)
 
-  def emptyUserAnswers = UserAnswers(userAnswersId, Json.obj())
+  val bodyParsers = injector.instanceOf[BodyParsers.Default]
 
-  def injector: Injector = app.injector
-
-  def frontendAppConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
-
-  def messagesApi: MessagesApi = injector.instanceOf[MessagesApi]
-
-  def fakeRequest = FakeRequest("", "")
-
-  implicit def messages: Messages = messagesApi.preferred(fakeRequest)
-
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
+  protected def applicationBuilder(userAnswers: Option[models.UserAnswers] = None,
+                                   affinityGroup: AffinityGroup = AffinityGroup.Organisation,
+                                   enrolments: Enrolments = Enrolments(Set.empty[Enrolment])
+                                  ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
+        bind[IdentifierAction].toInstance(new FakeIdentifierAction(bodyParsers)),
+        bind[PlaybackIdentifierAction].toInstance(new FakePlaybackIdentifierAction()),
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeIdentifierAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+        bind[PlaybackRepository].toInstance(playbackRepository)
       )
 }
+
+trait SpecBase extends PlaySpec with PlaybackSpecBaseHelpers
