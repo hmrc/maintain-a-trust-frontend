@@ -30,15 +30,15 @@ class DataRetrievalActionImpl @Inject()(
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
 
-    def createdOptionalDataRequest(request: IdentifierRequest[A], userAnswers: Option[UserAnswers]) =
+    def createdOptionalDataRequest(request: IdentifierRequest[A], userAnswers: Option[UserAnswers]) = {
       OptionalDataRequest(
         request.request,
-        request.identifier,
         userAnswers,
-        request.affinityGroup
+        request.user
       )
+    }
 
-    playbackRepository.get(request.identifier) map {
+    playbackRepository.get(request.user.internalId) map {
       case None =>
         createdOptionalDataRequest(request, None)
       case Some(userAnswers) =>

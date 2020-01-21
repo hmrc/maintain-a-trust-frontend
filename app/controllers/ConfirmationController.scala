@@ -39,7 +39,7 @@ class ConfirmationController @Inject()(
   def onPageLoad() = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val isAgent = request.affinityGroup == Agent
+      val isAgent = request.user.affinityGroup == Agent
 //      val agentOverviewUrl = controllers.register.agents.routes.AgentOverviewController.onPageLoad().url
 
       val fakeTvn = "XC TVN 000 000 4912"

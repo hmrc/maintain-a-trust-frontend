@@ -18,11 +18,12 @@ package controllers.actions
 
 import base.SpecBase
 import models.UserAnswers
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import models.requests.{IdentifierRequest, OptionalDataRequest, OrganisationUser}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import repositories.PlaybackRepository
+import uk.gov.hmrc.auth.core.Enrolments
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -43,7 +44,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         when(playbackRepository.get("id")) thenReturn Future(None)
         val action = new Harness(playbackRepository)
 
-        val futureResult = action.callTransform(new IdentifierRequest(fakeRequest, "id"))
+        val futureResult = action.callTransform(new IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
         whenReady(futureResult) { result =>
           result.userAnswers.isEmpty mustBe true
@@ -59,7 +60,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         when(playbackRepository.get("id")) thenReturn Future(Some(new UserAnswers("id")))
         val action = new Harness(playbackRepository)
 
-        val futureResult = action.callTransform(new IdentifierRequest(fakeRequest, "id"))
+        val futureResult = action.callTransform(new IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
         whenReady(futureResult) { result =>
           result.userAnswers.isDefined mustBe true

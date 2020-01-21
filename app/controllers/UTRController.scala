@@ -42,14 +42,14 @@ class UTRController @Inject()(
                                view: UTRView,
                                config: FrontendAppConfig,
                                errorHandler: ErrorHandler
-                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.internalId)).get(UTRPage) match {
+      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.user.internalId)).get(UTRPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -64,7 +64,7 @@ class UTRController @Inject()(
           Future.successful(BadRequest(view(formWithErrors, routes.UTRController.onSubmit()))),
         utr => {
 
-          val newUpdatedAnswerSession = request.userAnswers.getOrElse(UserAnswers(request.internalId)).set(UTRPage, utr)
+          val newUpdatedAnswerSession = request.userAnswers.getOrElse(UserAnswers(request.user.internalId)).set(UTRPage, utr)
 
           for {
             updatedAnswers <- Future.fromTry(newUpdatedAnswerSession)

@@ -41,7 +41,7 @@ class InformationMaintainingThisTrustController @Inject()(
     implicit request =>
       request.userAnswers.flatMap(_.get(UTRPage)) match {
         case Some(utr) =>
-          request.affinityGroup match {
+          request.user.affinityGroup match {
             case Agent => Ok(agentCannotAccessTrustYetView(utr))
             case _ => Ok(maintainingTrustView(utr))
           }
