@@ -22,7 +22,7 @@ import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.PlayBodyParsers
+import play.api.mvc.{BodyParsers, PlayBodyParsers}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, Enrolments}
 import utils.TestUserAnswers
@@ -32,9 +32,7 @@ trait PlaybackSpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mo
 
   def emptyUserAnswers = models.UserAnswers(TestUserAnswers.userInternalId)
 
-
-  def bodyParsers = injector.instanceOf[PlayBodyParsers]
-
+  val bodyParsers = injector.instanceOf[BodyParsers.Default]
 
   protected def applicationBuilder(userAnswers: Option[models.UserAnswers] = None,
                                    affinityGroup: AffinityGroup = AffinityGroup.Organisation,

@@ -17,7 +17,7 @@
 package controllers.actions
 
 import com.google.inject.Inject
-import models.requests.{AgentUser, IdentifierRequest, OrganisationUser}
+import models.requests.{AgentUser, DataRequest, IdentifierRequest, OrganisationUser}
 import play.api.Logger
 import play.api.mvc.Results._
 import play.api.mvc.{Request, Result, _}
@@ -37,36 +37,23 @@ class AffinityGroupIdentifierAction[A] @Inject()(action: Action[A],
   private def authoriseAgent(request : Request[A],
                                 enrolments : Enrolments,
                                 internalId : String,
-                                action: Action[A]
-                               ) = {
+  action: Action[A]
+  ) = {
 
-    def redirectToCreateAgentServicesAccount(reason: String): Future[Result] = {
-      Logger.info(s"[AuthenticatedIdentifierAction][authoriseAgent]: Agent services account required - $reason")
-      Future.successful(Redirect(controllers.routes.CreateAgentServicesAccountController.onPageLoad()))
-    }
-
-    val hmrcAgentEnrolmentKey = "HMRC-AS-AGENT"
-    val arnIdentifier = "AgentReferenceNumber"
-
-    enrolments.getEnrolment(hmrcAgentEnrolmentKey).fold(
-      redirectToCreateAgentServicesAccount("missing HMRC-AS-AGENT enrolment group")
-    ){
-      agentEnrolment =>
-        agentEnrolment.getIdentifier(arnIdentifier).fold(
-          redirectToCreateAgentServicesAccount("missing agent reference number")
-        ){
-          enrolmentIdentifier =>
-            val arn = enrolmentIdentifier.value
-
-            if(arn.isEmpty) {
-              redirectToCreateAgentServicesAccount("agent reference number is empty")
-            } else {
-              action(IdentifierRequest(request, AgentUser(internalId, enrolments, arn)))
-            }
-      }
+    getAgentReferenceNumber(enrolments) match {
+      case Some(arn) if arn.nonEmpty =>
+        action(IdentifierRequest(request, AgentUser(internalId, enrolments, arn)))
+      case _ =>
+        Logger.info(s"[AuthenticatedIdentifierAction][authoriseAgent]: Not a valid agent service account")
+        Future.successful(Redirect(controllers.routes.CreateAgentServicesAccountController.onPageLoad()))
     }
   }
 
+  private def getAgentReferenceNumber(enrolments: Enrolments) =
+    enrolments.enrolments
+      .find(_.key equals "HMRC-AS-AGENT")
+      .flatMap(_.identifiers.find(_.key equals "AgentReferenceNumber"))
+      .collect { case EnrolmentIdentifier(_, value) => value }
 
   def apply(request: Request[A]): Future[Result] = {
 
