@@ -44,8 +44,10 @@ class PlaybackAuthenticationServiceImpl @Inject()(
                      (implicit request: DataRequest[A],
                       hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] =
     request.user.affinityGroup match {
-      case Agent => checkIfAgentAuthorised(utr)
-      case _ => checkIfTrustIsClaimedAndTrustIV(utr)
+      case Agent =>
+        checkIfAgentAuthorised(utr)
+      case _ =>
+        checkIfTrustIsClaimedAndTrustIV(utr)
     }
 
   private def checkIfTrustIsClaimedAndTrustIV[A](utr: String)
@@ -107,7 +109,7 @@ class PlaybackAuthenticationServiceImpl @Inject()(
 
   private def checkForTrustEnrolmentForUTR[A](utr: String)(implicit request: DataRequest[A]): Boolean =
     request.user.enrolments.enrolments
-      .find(_.key equals config.serviceName)
+      .find(_.key equals "HMRC-TERS-ORG")
       .flatMap(_.identifiers.find(_.key equals "SAUTR"))
       .exists(_.value equals utr)
 

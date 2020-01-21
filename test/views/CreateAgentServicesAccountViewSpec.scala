@@ -17,6 +17,7 @@
 package views
 
 import views.behaviours.ViewBehaviours
+import views.html.CreateAgentServicesAccountView
 
 class CreateAgentServicesAccountViewSpec extends ViewBehaviours {
 

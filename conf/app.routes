@@ -12,8 +12,8 @@ GET        /check-your-answers                          controllers.CheckYourAns
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
-GET        /unique-taxpayer-reference                        controllers.UTRController.onPageLoad()
-POST       /unique-taxpayer-reference                        controllers.UTRController.onSubmit()
+GET        /unique-taxpayer-reference                   controllers.UTRController.onPageLoad()
+POST       /unique-taxpayer-reference                   controllers.UTRController.onSubmit()
 
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
 
@@ -27,5 +27,5 @@ POST       /declare-what-changed                        controllers.WhatIsNextCo
 
 GET        /create-agent-services-account               controllers.CreateAgentServicesAccountController.onPageLoad()
 
-GET        /trust-not-claimed                      controllers.TrustNotClaimedController.onPageLoad()
-GET        /agent-not-authorised                   controllers.AgentNotAuthorisedController.onPageLoad()
+GET        /trust-not-claimed                           controllers.TrustNotClaimedController.onPageLoad()
+GET        /agent-not-authorised                        controllers.AgentNotAuthorisedController.onPageLoad()
