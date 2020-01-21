@@ -50,8 +50,8 @@
 
     <p>@messages("confirmationPage.paragraph3")</p>
 
-@if(isAgent: Boolean) {
-@messages("confirmationPage.agent.you.can") @components.link(agentOverviewUrl, "agent-overview", "confirmationPage.agent.link", true).
+    @if(isAgent: Boolean) {
+        @messages("confirmationPage.agent.you.can") @components.link(agentOverviewUrl, "agent-overview", "confirmationPage.agent.link", true).
 
     }
 }

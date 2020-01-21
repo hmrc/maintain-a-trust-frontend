@@ -23,7 +23,7 @@ import views.html.ConfirmationView
 
 class ConfirmationControllerSpec extends SpecBase {
 
-  "Variations confirmation Controller" must {
+  "Confirmation Controller" must {
 
     "return OK and the correct view for a onPageLoad when TVN is available" in {
 
@@ -40,7 +40,7 @@ class ConfirmationControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(fakeTvn, false, "#")(fakeRequest, messages).toString
+        view(fakeTvn, isAgent = false, "#")(fakeRequest, messages).toString
 
       application.stop()
     }

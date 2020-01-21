@@ -31,7 +31,7 @@ case class AgentUser(internalId: String, enrolments: Enrolments, agentReferenceN
 }
 
 case class OrganisationUser(internalId: String, enrolments: Enrolments) extends User {
-  override val affinityGroup: AffinityGroup = AffinityGroup.Agent
+  override val affinityGroup: AffinityGroup = AffinityGroup.Organisation
 }
 
 case class OptionalDataRequest[A](request: Request[A],
