@@ -20,7 +20,6 @@ import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierA
 import forms.WhatIsNextFormProvider
 import javax.inject.Inject
 import models.{Enumerable, UserAnswers}
-import navigation.Navigator
 import pages.WhatIsNextPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -34,7 +33,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class WhatIsNextController @Inject()(
                                                override val messagesApi: MessagesApi,
                                                playbackRepository: PlaybackRepository,
-                                               navigator: Navigator,
                                                identify: IdentifierAction,
                                                getData: DataRetrievalAction,
                                                requireData: DataRequiredAction,
@@ -72,7 +70,7 @@ class WhatIsNextController @Inject()(
             updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, value))
             _              <- playbackRepository.set(updatedAnswers)
             _ <- Future[Boolean] { true }
-          } yield Redirect(navigator.whatIsNextPage(updatedAnswers))
+          } yield Redirect(controllers.routes.DeclarationController.onPageLoad())
         }
       )
   }

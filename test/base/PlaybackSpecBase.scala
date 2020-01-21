@@ -17,7 +17,6 @@
 package base
 
 import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, FakeDataRetrievalAction, FakeIdentifierAction, IdentifierAction}
-import navigation.{FakeNavigator, Navigator}
 import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
@@ -33,15 +32,13 @@ trait PlaybackSpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mo
 
   def emptyUserAnswers = models.UserAnswers(TestUserAnswers.userInternalId)
 
-  lazy val fakeNavigator = new FakeNavigator(frontendAppConfig)
 
   def bodyParsers = injector.instanceOf[PlayBodyParsers]
 
 
   protected def applicationBuilder(userAnswers: Option[models.UserAnswers] = None,
                                    affinityGroup: AffinityGroup = AffinityGroup.Organisation,
-                                   enrolments: Enrolments = Enrolments(Set.empty[Enrolment]),
-                                   navigator: Navigator = fakeNavigator
+                                   enrolments: Enrolments = Enrolments(Set.empty[Enrolment])
                                   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
@@ -49,10 +46,9 @@ trait PlaybackSpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mo
         bind[IdentifierAction].toInstance(new FakeIdentifierAction(bodyParsers)),
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[PlaybackRepository].toInstance(playbackRepository),
+        bind[PlaybackRepository].toInstance(playbackRepository)
 //        bind[RegistrationsRepository].toInstance(registrationsRepository),
 //        bind[SubmissionService].toInstance(mockSubmissionService),
-        bind[Navigator].toInstance(navigator)
 //        bind[Navigator].qualifiedWith(classOf[PropertyOrLand]).toInstance(navigator),
 //        bind[Navigator].qualifiedWith(classOf[LivingSettlor]).toInstance(navigator)
       )
