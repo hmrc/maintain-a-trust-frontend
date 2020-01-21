@@ -20,18 +20,15 @@ import javax.inject.Inject
 import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.mvc.ActionTransformer
-import repositories.SessionRepository
-import uk.gov.hmrc.play.HeaderCarrierConverter
+import repositories.PlaybackRepository
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalActionImpl @Inject()(
-                                         val sessionRepository: SessionRepository
+                                         val playbackRepository: PlaybackRepository
                                        )(implicit val executionContext: ExecutionContext) extends DataRetrievalAction {
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
-
-//    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     def createdOptionalDataRequest(request: IdentifierRequest[A], userAnswers: Option[UserAnswers]) =
       OptionalDataRequest(
@@ -41,7 +38,7 @@ class DataRetrievalActionImpl @Inject()(
         request.affinityGroup
       )
 
-    sessionRepository.get(request.identifier) map {
+    playbackRepository.get(request.identifier) map {
       case None =>
         createdOptionalDataRequest(request, None)
       case Some(userAnswers) =>
