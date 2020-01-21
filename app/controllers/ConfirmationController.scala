@@ -36,7 +36,7 @@ class ConfirmationController @Inject()(
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
-  def onPageLoad() = (identify andThen getData /*andThen requireData*/) {
+  def onPageLoad() = (identify andThen getData andThen requireData) {
     implicit request =>
 
       val isAgent = request.affinityGroup == Agent
