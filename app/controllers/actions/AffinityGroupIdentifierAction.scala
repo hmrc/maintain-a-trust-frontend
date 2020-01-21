@@ -37,8 +37,8 @@ class AffinityGroupIdentifierAction[A] @Inject()(action: Action[A],
   private def authoriseAgent(request : Request[A],
                                 enrolments : Enrolments,
                                 internalId : String,
-                                action: Action[A]
-                               ) = {
+  action: Action[A]
+  ) = {
 
     getAgentReferenceNumber(enrolments) match {
       case Some(arn) if arn.nonEmpty =>

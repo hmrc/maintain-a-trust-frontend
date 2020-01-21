@@ -27,14 +27,14 @@ import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 
 import scala.concurrent.Future
 
-class AffinityGroupIdentifierActionSpec extends PlaybackSpecBase {
+class IdentifierActionSpec extends PlaybackSpecBase {
 
   type RetrievalType = Option[String] ~ Option[AffinityGroup] ~ Enrolments
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
   val fakeAction: Action[AnyContent] = Action { _ => Results.Ok }
-
+  
   lazy val trustsAuth = new TrustsAuthorisedFunctions(mockAuthConnector, appConfig)
 
   private val noEnrollment = Enrolments(Set())
@@ -54,7 +54,7 @@ class AffinityGroupIdentifierActionSpec extends PlaybackSpecBase {
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
           .thenReturn(authRetrievals(AffinityGroup.Agent, noEnrollment))
 
-        val result = new AffinityGroupIdentifierAction(fakeAction, trustsAuth).apply(fakeRequest)
+        val result = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers).invokeBlock(fakeRequest, _ => Future.successful(Results.Ok))
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(controllers.routes.CreateAgentServicesAccountController.onPageLoad().url)
