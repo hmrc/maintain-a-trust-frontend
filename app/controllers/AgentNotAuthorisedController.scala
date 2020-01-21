@@ -22,6 +22,7 @@ import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import views.html.AgentNotAuthorisedView
 
 class AgentNotAuthorisedController @Inject()(
                                               val controllerComponents: MessagesControllerComponents,
