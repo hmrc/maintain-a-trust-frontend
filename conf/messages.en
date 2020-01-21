@@ -13,6 +13,9 @@ address.country.select = Select a country
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
+featureNotAvailable.title = This feature is currently not available
+featureNotAvailable.heading = This feature is currently not available
+
 error.browser.title.prefix = Error:
 error.boolean = Please give an answer
 error.date.day_blank = Enter a day
