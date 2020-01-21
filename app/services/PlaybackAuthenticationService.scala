@@ -105,8 +105,8 @@ class PlaybackAuthenticationServiceImpl @Inject()(
     }
 
   private def checkForTrustEnrolmentForUTR[A](utr: String)(implicit request: DataRequest[A]): Boolean =
-    request.enrolments.enrolments
-      .find(_.key equals config.serviceName)
+    request.user.enrolments.enrolments
+      .find(_.key equals "HMRC-TERS-ORG")
       .flatMap(_.identifiers.find(_.key equals "SAUTR"))
       .exists(_.value equals utr)
 
