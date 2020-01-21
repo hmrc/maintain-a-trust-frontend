@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class WhatIsNextController @Inject()(
                                                override val messagesApi: MessagesApi,
-                                               sessionRepository: PlaybackRepository,
+                                               playbackRepository: PlaybackRepository,
                                                navigator: Navigator,
                                                identify: IdentifierAction,
                                                getData: DataRetrievalAction,
@@ -72,7 +72,7 @@ class WhatIsNextController @Inject()(
         value => {
           for {
 //            updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, value))
-//            _              <- sessionRepository.set(updatedAnswers)
+//            _              <- playbackRepository.set(updatedAnswers)
             _ <- Future[Boolean] { true }
           } yield Redirect(navigator.whatIsNextPage(updatedAnswers))
         }
