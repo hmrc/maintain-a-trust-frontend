@@ -36,7 +36,7 @@ class DeclarationController @Inject()(
                                        identify: IdentifierAction,
                                        getData: DataRetrievalAction,
                                        requireData: DataRequiredAction,
-//                                       playbackIdentify: PlaybackIdentifierAction,
+                                       playbackIdentify: PlaybackIdentifierAction,
                                        requiredAnswer: RequiredAnswerActionProvider,
                                        formProvider: DeclarationFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
@@ -45,7 +45,7 @@ class DeclarationController @Inject()(
 
   val form = formProvider()
 
-  def actions() = identify andThen getData andThen requireData // andThen playbackIdentify //andThen
+  def actions() = identify andThen getData andThen requireData andThen playbackIdentify //andThen
   //requiredAnswer(RequiredAnswer(DeclarationWhatNextPage, routes.DeclarationWhatNextController.onPageLoad()))
 
   def onPageLoad(): Action[AnyContent] = actions() {

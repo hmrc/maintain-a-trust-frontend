@@ -33,7 +33,10 @@ class IdentifierActionSpec extends PlaybackSpecBase {
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
-  val fakeAction: Action[AnyContent] = Action { _ => Results.Ok }
+
+  class Harness(authAction: IdentifierAction) {
+    def onPageLoad() = authAction { _ => Results.Ok }
+  }
   
   lazy val trustsAuth = new TrustsAuthorisedFunctions(mockAuthConnector, appConfig)
 
@@ -46,7 +49,9 @@ class IdentifierActionSpec extends PlaybackSpecBase {
 
 
   "invoking an AuthenticatedIdentifier" when {
+
     "an Agent user hasn't enrolled an Agent Services Account" must {
+
       "redirect the user to the create agent services page" in {
 
         val application = applicationBuilder(userAnswers = None).build()
@@ -54,7 +59,10 @@ class IdentifierActionSpec extends PlaybackSpecBase {
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
           .thenReturn(authRetrievals(AffinityGroup.Agent, noEnrollment))
 
-        val result = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers).invokeBlock(fakeRequest, _ => Future.successful(Results.Ok))
+        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(controllers.routes.CreateAgentServicesAccountController.onPageLoad().url)
@@ -70,7 +78,9 @@ class IdentifierActionSpec extends PlaybackSpecBase {
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
           .thenReturn(authRetrievals(AffinityGroup.Agent, agentEnrolment))
 
-        val result = new AffinityGroupIdentifierAction(fakeAction, trustsAuth).apply(fakeRequest)
+        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe OK
         application.stop()
@@ -85,7 +95,9 @@ class IdentifierActionSpec extends PlaybackSpecBase {
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
           .thenReturn(authRetrievals(AffinityGroup.Organisation, agentEnrolment))
 
-        val result = new AffinityGroupIdentifierAction(fakeAction, trustsAuth).apply(fakeRequest)
+        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe OK
         application.stop()
@@ -100,7 +112,9 @@ class IdentifierActionSpec extends PlaybackSpecBase {
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
           .thenReturn(authRetrievals(AffinityGroup.Individual, noEnrollment))
 
-        val result = new AffinityGroupIdentifierAction(fakeAction, trustsAuth).apply(fakeRequest)
+        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
@@ -116,7 +130,9 @@ class IdentifierActionSpec extends PlaybackSpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed MissingBearerToken())
 
-        val result = new AffinityGroupIdentifierAction(fakeAction, trustsAuth).apply(fakeRequest)
+        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -132,7 +148,9 @@ class IdentifierActionSpec extends PlaybackSpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed BearerTokenExpired())
 
-        val result = new AffinityGroupIdentifierAction(fakeAction, trustsAuth).apply(fakeRequest)
+        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -148,7 +166,9 @@ class IdentifierActionSpec extends PlaybackSpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed InsufficientEnrolments())
 
-        val result = new AffinityGroupIdentifierAction(fakeAction, trustsAuth).apply(fakeRequest)
+        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -164,7 +184,9 @@ class IdentifierActionSpec extends PlaybackSpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed InsufficientConfidenceLevel())
 
-        val result = new AffinityGroupIdentifierAction(fakeAction, trustsAuth).apply(fakeRequest)
+        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -180,7 +202,9 @@ class IdentifierActionSpec extends PlaybackSpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed UnsupportedAuthProvider())
 
-        val result = new AffinityGroupIdentifierAction(fakeAction, trustsAuth).apply(fakeRequest)
+        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -196,7 +220,9 @@ class IdentifierActionSpec extends PlaybackSpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed UnsupportedAffinityGroup())
 
-        val result = new AffinityGroupIdentifierAction(fakeAction, trustsAuth).apply(fakeRequest)
+        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -212,7 +238,9 @@ class IdentifierActionSpec extends PlaybackSpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed UnsupportedCredentialRole())
 
-        val result = new AffinityGroupIdentifierAction(fakeAction, trustsAuth).apply(fakeRequest)
+        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val controller = new Harness(action)
+        val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
