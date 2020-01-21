@@ -16,10 +16,12 @@
 
 package controllers
 
+import base.PlaybackSpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import views.html.CreateAgentServicesAccountView
 
-class CreateAgentServicesAccountControllerSpec extends RegistrationSpecBase {
+class CreateAgentServicesAccountControllerSpec extends PlaybackSpecBase {
 
   "Create Agent Services Account Controller" must {
 

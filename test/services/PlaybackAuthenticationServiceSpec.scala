@@ -18,7 +18,10 @@ package services
 
 import base.PlaybackSpecBase
 import config.FrontendAppConfig
+import connectors.EnrolmentStoreConnector
 import controllers.actions.TrustsAuthorisedFunctions
+import models.requests.{AgentUser, DataRequest, OrganisationUser}
+import models.requests.EnrolmentStoreResponse.{AlreadyClaimed, NotClaimed, ServerError}
 import org.mockito.Matchers.{any, eq => mEq}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -41,7 +44,7 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
   val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 
   private val agentEnrolment = Enrolment("HMRC-AS-AGENT", List(EnrolmentIdentifier("AgentReferenceNumber", "SomeVal")), "Activated", None)
-  private val trustsEnrolment = Enrolment(appConfig.serviceName, List(EnrolmentIdentifier("SAUTR", utr)), "Activated", None)
+  private val trustsEnrolment = Enrolment("HMRC-TERS-ORG", List(EnrolmentIdentifier("SAUTR", utr)), "Activated", None)
 
   val enrolments = Enrolments(Set(
     agentEnrolment,
@@ -49,7 +52,7 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
   ))
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
-  implicit val dataRequest = DataRequest[AnyContent](fakeRequest, "internalId", emptyUserAnswers, Agent, enrolments)
+  implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, "arn"))
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockEnrolmentStoreConnector: EnrolmentStoreConnector = mock[EnrolmentStoreConnector]
@@ -59,7 +62,7 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
   private def authRetrievals(affinityGroup: AffinityGroup, enrolment: Enrolments) =
     Future.successful(new ~(new ~(Some("id"), Some(affinityGroup)), enrolment))
 
-  lazy override val trustsAuth = new TrustsAuthorisedFunctions(mockAuthConnector, appConfig)
+  lazy val trustsAuth = new TrustsAuthorisedFunctions(mockAuthConnector, appConfig)
 
   "invoking the IdentifyForPlaybacks action builder" when {
 
@@ -109,7 +112,7 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
 
           whenReady(service.authenticate[AnyContent](utr)) {
             result =>
-              result.left.value.header.headers(HeaderNames.LOCATION) mustBe controllers.playback.routes.TrustNotClaimedController.onPageLoad().url
+              result.left.value.header.headers(HeaderNames.LOCATION) mustBe controllers.routes.TrustNotClaimedController.onPageLoad().url
           }
         }
       }
@@ -133,11 +136,11 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
 
           val service = app.injector.instanceOf[PlaybackAuthenticationService]
 
-          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, "internalId", emptyUserAnswers, Agent, enrolments)
+          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, "arn"))
 
           whenReady(service.authenticate[AnyContent](utr)) {
             result =>
-              result.left.value.header.headers(HeaderNames.LOCATION) mustBe controllers.playback.routes.AgentNotAuthorisedController.onPageLoad().url
+              result.left.value.header.headers(HeaderNames.LOCATION) mustBe controllers.routes.AgentNotAuthorisedController.onPageLoad().url
           }
 
         }
@@ -149,7 +152,7 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
 
           val enrolments = Enrolments(Set(
             agentEnrolment,
-            Enrolment(appConfig.serviceName, List(EnrolmentIdentifier("SAUTR", "1234567890")), "Activated", None)
+            Enrolment("HMRC-TERS-ORG", List(EnrolmentIdentifier("SAUTR", "1234567890")), "Activated", None)
           ))
 
           when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
@@ -165,11 +168,11 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
 
           val service = app.injector.instanceOf[PlaybackAuthenticationService]
 
-          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, "internalId", emptyUserAnswers, Agent, enrolments)
+          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, "arn"))
 
           whenReady(service.authenticate[AnyContent](utr)) {
             result =>
-              result.left.value.header.headers(HeaderNames.LOCATION) mustBe controllers.playback.routes.AgentNotAuthorisedController.onPageLoad().url
+              result.left.value.header.headers(HeaderNames.LOCATION) mustBe controllers.routes.AgentNotAuthorisedController.onPageLoad().url
           }
 
         }
@@ -201,7 +204,7 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
             val service = app.injector.instanceOf[PlaybackAuthenticationService]
 
             implicit val dataRequest =
-              DataRequest[AnyContent](fakeRequest, "internalId", emptyUserAnswers, Organisation, enrolments)
+              DataRequest[AnyContent](fakeRequest, emptyUserAnswers, OrganisationUser("internalId", enrolments))
 
             whenReady(service.authenticate[AnyContent](utr)) {
               result =>
@@ -231,7 +234,7 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
             val service = app.injector.instanceOf[PlaybackAuthenticationService]
 
             implicit val dataRequest =
-              DataRequest[AnyContent](fakeRequest, "internalId", emptyUserAnswers, Organisation, enrolments)
+              DataRequest[AnyContent](fakeRequest, emptyUserAnswers, OrganisationUser("internalId", enrolments))
 
             whenReady(service.authenticate[AnyContent](utr)) {
               result =>
@@ -264,7 +267,7 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
             val service = app.injector.instanceOf[PlaybackAuthenticationService]
 
             implicit val dataRequest =
-              DataRequest[AnyContent](fakeRequest, "internalId", emptyUserAnswers, Organisation, enrolments)
+              DataRequest[AnyContent](fakeRequest, emptyUserAnswers, OrganisationUser("internalId", enrolments))
 
             val result = service.authenticate(utr)
             val left = result.map(_.left.value)
@@ -294,12 +297,12 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
             val service = app.injector.instanceOf[PlaybackAuthenticationService]
 
             implicit val dataRequest =
-              DataRequest[AnyContent](fakeRequest, "internalId", emptyUserAnswers, Organisation, enrolments)
+              DataRequest[AnyContent](fakeRequest, emptyUserAnswers, OrganisationUser("internalId", enrolments))
 
             whenReady(service.authenticate[AnyContent](utr)) {
               result =>
                 result.left.value.header.headers(HeaderNames.LOCATION) mustBe
-                  controllers.playback.routes.TrustStatusController.alreadyClaimed().url
+                  "fix this"// controllers.playback.routes.TrustStatusController.alreadyClaimed().url
             }
           }
         }
@@ -325,7 +328,7 @@ class PlaybackAuthenticationServiceSpec extends PlaybackSpecBase with ScalaFutur
             val service = app.injector.instanceOf[PlaybackAuthenticationService]
 
             implicit val dataRequest =
-              DataRequest[AnyContent](fakeRequest, "internalId", emptyUserAnswers, Organisation, enrolments)
+              DataRequest[AnyContent](fakeRequest, emptyUserAnswers, OrganisationUser("internalId", enrolments))
 
             whenReady(service.authenticate[AnyContent](utr)) {
               result =>

@@ -18,11 +18,13 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import config.FrontendAppConfig
+import models.requests.EnrolmentStoreResponse.{AlreadyClaimed, BadRequest, Forbidden, NotClaimed, ServiceUnavailable}
 import org.scalatest.{AsyncFreeSpec, MustMatchers}
 import play.api.Application
 import play.api.http.Status
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.WireMockHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -54,7 +56,7 @@ class EnrolmentStoreConnectorSpec extends AsyncFreeSpec with MustMatchers with W
   private lazy val connector = app.injector.instanceOf[EnrolmentStoreConnector]
   private lazy val config = app.injector.instanceOf[FrontendAppConfig]
 
-  private lazy val serviceName = config.serviceName
+  private lazy val serviceName = "HMRC-TERS-ORG"
 
   private val identifierKey = "SAUTR"
   private val identifier = "0987654321"

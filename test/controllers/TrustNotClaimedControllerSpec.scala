@@ -17,8 +17,10 @@
 package controllers
 
 import base.PlaybackSpecBase
+import pages.UTRPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import views.html.TrustNotClaimedView
 
 class TrustNotClaimedControllerSpec extends PlaybackSpecBase {
 
@@ -29,7 +31,7 @@ class TrustNotClaimedControllerSpec extends PlaybackSpecBase {
       val utr = "0987654321"
 
       val answers = emptyUserAnswers
-        .set(WhatIsTheUTRVariationPage, utr)
+        .set(UTRPage, utr)
         .success.value
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
