@@ -1425,7 +1425,9 @@ confirmationPage.paragraph1 = Keep a note of your reference in case you need to 
 confirmationPage.paragraph2 = If any of the settlor, trustee or beneficiary details change (before you make your next declaration) you will need to update them using the online service.
 confirmationPage.subheading2 = Declaring the trust is up to date
 confirmationPage.paragraph3 = You need to declare every year the details we have are up to date. This needs to be done through the Trust Registration Service and Self Assessment online or the Trust and Estate Tax Return form (SA900).
-confirmationPage.paragraph4 = You can
+
+confirmationPage.agent.you.can = You can
+confirmationPage.agent.link = return to register and maintain a trust for a client.
 
 trustNotClaimed.title = Sorry, you cannot access this trust
 trustNotClaimed.heading = Sorry, you cannot access this trust

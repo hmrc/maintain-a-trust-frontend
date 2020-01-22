@@ -16,9 +16,11 @@
 
 package views
 
+import models.FullName
 import play.twirl.api.HtmlFormat
 import utils.AccessibilityHelper._
 import views.behaviours.ViewBehaviours
+import views.html.ConfirmationView
 
 class ConfirmationViewSpec extends ViewBehaviours {
 
@@ -26,13 +28,14 @@ class ConfirmationViewSpec extends ViewBehaviours {
   val fakeTvn = "XC TVN 000 000 4912"
   val accessibleRefNumber = formatReferenceNumber(fakeTvn)
 
-
-  private def variationsTrust(view: HtmlFormat.Appendable) : Unit = {
+  private def confirmationPage(view: HtmlFormat.Appendable) : Unit = {
 
     "assert content" in {
       val doc = asDocument(view)
 
-      assertContainsText(doc, s"Declaration received, your reference is: $fakeTvn")
+      assertContainsText(doc, s"Declaration received")
+      assertContainsText(doc, s"Your reference is:")
+      assertContainsText(doc, s"$fakeTvn")
       assertContainsText(doc, "Print or save a declared copy of the trust’s registration (opens in a new window or tab)")
 
       assertContainsText(doc, "What happens next")
@@ -48,7 +51,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
 
   }
 
-  private def agentVariationsTrust(view: HtmlFormat.Appendable) : Unit = {
+  private def confirmationPageForAgent(view: HtmlFormat.Appendable) : Unit = {
 
     "display return to agent overview link" in {
 
@@ -58,6 +61,32 @@ class ConfirmationViewSpec extends ViewBehaviours {
       assertContainsTextForId(doc, "agent-overview", "return to register and maintain a trust for a client.")
     }
 
+  }
+
+  "Confirmation view for an agent" must {
+    val view = viewFor[ConfirmationView](Some(emptyUserAnswers))
+
+    val applyView = view.apply(
+      fakeTvn = fakeTvn,
+      isAgent = true,
+      agentOverviewUrl = "#"
+    )(fakeRequest, messages)
+
+    behave like confirmationPage(applyView)
+
+    behave like confirmationPageForAgent(applyView)
+  }
+
+  "Confirmation view for an organisation" must {
+    val view = viewFor[ConfirmationView](Some(emptyUserAnswers))
+
+    val applyView = view.apply(
+      fakeTvn = fakeTvn,
+      isAgent = true,
+      agentOverviewUrl = "#"
+    )(fakeRequest, messages)
+
+    behave like confirmationPage(applyView)
   }
 
 }

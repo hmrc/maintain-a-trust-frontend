@@ -39,13 +39,14 @@ class InformationMaintainingThisTrustController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
     implicit request =>
-      request.userAnswers.flatMap(_.get(UTRPage)) match {
-        case Some(utr) =>
+      request.userAnswers.flatMap(_.get(UTRPage)).map {
+        utr =>
           request.user.affinityGroup match {
-            case Agent => Ok(agentCannotAccessTrustYetView(utr))
-            case _ => Ok(maintainingTrustView(utr))
+            case Agent if !config.playbackEnabled =>
+              Ok(agentCannotAccessTrustYetView(utr))
+            case _ =>
+              Ok(maintainingTrustView(utr))
           }
-        case None => Redirect(routes.UTRController.onPageLoad())
-      }
+      }.getOrElse(Redirect(routes.UTRController.onPageLoad()))
   }
 }

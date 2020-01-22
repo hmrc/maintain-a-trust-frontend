@@ -42,6 +42,6 @@ class ConfirmationController @Inject()(
 
       val fakeTvn = "XC TVN 000 000 4912"
 
-      Ok(view(fakeTvn, isAgent, agentOverviewUrl = ""))
+      Ok(view(fakeTvn, isAgent, agentOverviewUrl = "#"))
   }
 }
