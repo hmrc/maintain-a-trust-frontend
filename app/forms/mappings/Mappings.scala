@@ -30,12 +30,12 @@ trait Mappings extends Formatters with Constraints {
   protected def text(errorKey: String = "error.required"): FieldMapping[String] =
     of(stringFormatter(errorKey))
 
-  protected def postcode(requiredKey : String = "error.required",
-                         invalidKey : String = "error.postcodeInvalid") : FieldMapping[String] =
+  protected def postcode(requiredKey: String = "error.required",
+                         invalidKey: String = "error.postcodeInvalid"): FieldMapping[String] =
     of(postcodeFormatter(requiredKey, invalidKey))
 
-  protected def currency(requiredKey : String = "assetMoneyValue.error.required",
-                         invalidKey : String = "assetMoneyValue.error.invalidFormat") : FieldMapping[String] =
+  protected def currency(requiredKey: String = "assetMoneyValue.error.required",
+                         invalidKey: String = "assetMoneyValue.error.invalidFormat"): FieldMapping[String] =
     of(currencyFormatter(requiredKey, invalidKey))
 
   protected def int(requiredKey: String = "error.required",

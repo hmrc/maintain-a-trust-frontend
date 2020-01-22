@@ -23,7 +23,9 @@ sealed trait WhatIsNext
 object WhatIsNext extends Enumerable.Implicits {
 
   case object DeclareTheTrustIsUpToDate extends WithName("declare") with WhatIsNext
+
   case object MakeChanges extends WithName("makeChanges") with WhatIsNext
+
   case object CloseTrust extends WithName("closeTrust") with WhatIsNext
 
   val values: List[WhatIsNext] = List(

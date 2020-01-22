@@ -20,7 +20,7 @@ import base.SpecBase
 import config.FrontendAppConfig
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
-import play.api.mvc.{Action, AnyContent, Results}
+import play.api.mvc.Results
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
@@ -37,7 +37,7 @@ class IdentifierActionSpec extends SpecBase {
   class Harness(authAction: IdentifierAction) {
     def onPageLoad() = authAction { _ => Results.Ok }
   }
-  
+
   lazy val trustsAuth = new TrustsAuthorisedFunctions(mockAuthConnector, appConfig)
 
   private val noEnrollment = Enrolments(Set())

@@ -17,13 +17,14 @@
 package controllers
 
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import javax.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.AgentNotAuthorisedView
 
+@Singleton
 class AgentNotAuthorisedController @Inject()(
                                               val controllerComponents: MessagesControllerComponents,
                                               identify: IdentifierAction,
@@ -32,7 +33,7 @@ class AgentNotAuthorisedController @Inject()(
                                               view: AgentNotAuthorisedView
                                             ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData)  {
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
       request.userAnswers.get(UTRPage) map { utr =>
         Ok(view(utr))

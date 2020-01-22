@@ -18,18 +18,18 @@ package controllers
 
 import controllers.actions._
 import forms.DeclarationFormProvider
-import javax.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import pages.DeclarationPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.DeclarationView
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class DeclarationController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        playbackRepository: PlaybackRepository,

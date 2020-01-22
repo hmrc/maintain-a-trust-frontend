@@ -21,9 +21,9 @@ import com.typesafe.config.ConfigException
 import generators.Generators
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
+import org.scalatest.{FreeSpec, MustMatchers}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import org.scalatest.{FreeSpec, MustMatchers}
 import play.api.Configuration
 import play.api.mvc.Call
 
@@ -33,7 +33,7 @@ class WhitelistFilterSpec extends FreeSpec with MustMatchers with ScalaCheckProp
 
   val otherConfigGen = Gen.mapOf[String, String](
     for {
-      key   <- Gen.alphaNumStr suchThat (_.nonEmpty)
+      key <- Gen.alphaNumStr suchThat (_.nonEmpty)
       value <- arbitrary[String]
     } yield (key, value)
   )
@@ -52,8 +52,8 @@ class WhitelistFilterSpec extends FreeSpec with MustMatchers with ScalaCheckProp
               val config = Configuration(
                 (otherConfig +
                   ("filters.whitelist.destination" -> destination) +
-                  ("filters.whitelist.excluded"    -> excluded)
-                ).toSeq: _*
+                  ("filters.whitelist.excluded" -> excluded)
+                  ).toSeq: _*
               )
 
               assertThrows[ConfigException] {
@@ -74,15 +74,15 @@ class WhitelistFilterSpec extends FreeSpec with MustMatchers with ScalaCheckProp
             val config = Configuration(
               (otherConfig +
                 ("filters.whitelist.destination" -> destination) +
-                ("filters.whitelist.excluded"    -> excluded) +
-                ("filters.whitelist.ips"         -> "")
-              ).toSeq: _*
+                ("filters.whitelist.excluded" -> excluded) +
+                ("filters.whitelist.ips" -> "")
+                ).toSeq: _*
             )
 
             val whitelistFilter = new WhitelistFilter(config, mockMaterializer)
 
             whitelistFilter.whitelist mustBe empty
-          }
+        }
       }
     }
 
@@ -100,9 +100,9 @@ class WhitelistFilterSpec extends FreeSpec with MustMatchers with ScalaCheckProp
             val config = Configuration(
               (otherConfig +
                 ("filters.whitelist.destination" -> destination) +
-                ("filters.whitelist.excluded"    -> excluded) +
-                ("filters.whitelist.ips"         -> ipString)
-              ).toSeq: _*
+                ("filters.whitelist.excluded" -> excluded) +
+                ("filters.whitelist.ips" -> ipString)
+                ).toSeq: _*
             )
 
             val whitelistFilter = new WhitelistFilter(config, mockMaterializer)
@@ -126,7 +126,7 @@ class WhitelistFilterSpec extends FreeSpec with MustMatchers with ScalaCheckProp
 
               val config = Configuration(
                 (otherConfig +
-                  ("filters.whitelist.ips"      -> destination) +
+                  ("filters.whitelist.ips" -> destination) +
                   ("filters.whitelist.excluded" -> excluded)
                   ).toSeq: _*
               )
@@ -146,8 +146,8 @@ class WhitelistFilterSpec extends FreeSpec with MustMatchers with ScalaCheckProp
 
           val config = Configuration(
             (otherConfig +
-              ("filters.whitelist.ips"         -> destination) +
-              ("filters.whitelist.excluded"    -> excluded) +
+              ("filters.whitelist.ips" -> destination) +
+              ("filters.whitelist.excluded" -> excluded) +
               ("filters.whitelist.destination" -> destination)
               ).toSeq: _*
           )
@@ -173,7 +173,7 @@ class WhitelistFilterSpec extends FreeSpec with MustMatchers with ScalaCheckProp
               val config = Configuration(
                 (otherConfig +
                   ("filters.whitelist.destination" -> destination) +
-                  ("filters.whitelist.ips"    -> excluded)
+                  ("filters.whitelist.ips" -> excluded)
                   ).toSeq: _*
               )
 
@@ -199,8 +199,8 @@ class WhitelistFilterSpec extends FreeSpec with MustMatchers with ScalaCheckProp
             val config = Configuration(
               (otherConfig +
                 ("filters.whitelist.destination" -> destination) +
-                ("filters.whitelist.excluded"    -> excludedPathString) +
-                ("filters.whitelist.ips"         -> ips)
+                ("filters.whitelist.excluded" -> excludedPathString) +
+                ("filters.whitelist.ips" -> ips)
                 ).toSeq: _*
             )
 

@@ -28,13 +28,13 @@
 }
 
 .app-task-list__items {
-  font-family: "nta",Arial,sans-serif;
-  font-size:19px;
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
   @include govuk-responsive-margin(9, "bottom");
   list-style: none;
   padding-left: 0;
   @include media(tablet) {
-   padding-left: govuk-spacing(6);
+    padding-left: govuk-spacing(6);
   }
 }
 

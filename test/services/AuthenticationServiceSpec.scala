@@ -20,8 +20,8 @@ import base.SpecBase
 import config.FrontendAppConfig
 import connectors.EnrolmentStoreConnector
 import controllers.actions.TrustsAuthorisedFunctions
-import models.requests.{AgentUser, DataRequest, OrganisationUser}
 import models.requests.EnrolmentStoreResponse.{AlreadyClaimed, NotClaimed, ServerError}
+import models.requests.{AgentUser, DataRequest, OrganisationUser}
 import org.mockito.Matchers.{any, eq => mEq}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -30,7 +30,6 @@ import play.api.http.HeaderNames
 import play.api.inject.bind
 import play.api.mvc.AnyContent
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier

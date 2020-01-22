@@ -2,7 +2,7 @@ package controllers
 
 import controllers.actions._
 import forms.$className$FormProvider
-import javax.inject.Inject
+import com.google.inject.Inject
 import models.Mode
 import navigation.Navigator
 import pages.$className$Page

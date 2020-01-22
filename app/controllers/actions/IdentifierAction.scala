@@ -40,11 +40,11 @@ class AuthenticatedIdentifierAction @Inject()(
                                              )
                                              (implicit val executionContext: ExecutionContext) extends IdentifierAction {
 
-  private def authoriseAgent[A](request : Request[A],
-                             enrolments : Enrolments,
-                             internalId : String,
-                             block: IdentifierRequest[A] => Future[Result]
-                            ) = {
+  private def authoriseAgent[A](request: Request[A],
+                                enrolments: Enrolments,
+                                internalId: String,
+                                block: IdentifierRequest[A] => Future[Result]
+                               ) = {
 
     getAgentReferenceNumber(enrolments) match {
       case Some(arn) if arn.nonEmpty =>

@@ -16,8 +16,8 @@
 
 package controllers.actions
 
-import javax.inject.Inject
 import controllers.routes
+import com.google.inject.Inject
 import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}

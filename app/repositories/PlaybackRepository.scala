@@ -20,7 +20,7 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 
 import akka.stream.Materializer
-import javax.inject.Inject
+import com.google.inject.Inject
 import models.UserAnswers
 import play.api.Configuration
 import play.api.libs.json._
@@ -34,10 +34,10 @@ import utils.DateFormatter
 import scala.concurrent.{ExecutionContext, Future}
 
 class PlaybackRepository @Inject()(
-                                          mongo: ReactiveMongoApi,
-                                          config: Configuration,
-                                          dateFormatter: DateFormatter
-                                        )(implicit ec: ExecutionContext, m: Materializer) {
+                                    mongo: ReactiveMongoApi,
+                                    config: Configuration,
+                                    dateFormatter: DateFormatter
+                                  )(implicit ec: ExecutionContext, m: Materializer) {
 
   private val collectionName: String = "user-answers"
 
@@ -57,7 +57,7 @@ class PlaybackRepository @Inject()(
     name = Some("internal-auth-id-index")
   )
 
-  val started : Future[Unit] = {
+  val started: Future[Unit] = {
     Future.sequence {
       Seq(
         collection.map(_.indexesManager.ensure(lastUpdatedIndex)),
@@ -92,12 +92,12 @@ class PlaybackRepository @Inject()(
     )
 
     val modifier = Json.obj(
-      "$set" -> (userAnswers copy(updatedAt = LocalDateTime.now))
+      "$set" -> (userAnswers copy (updatedAt = LocalDateTime.now))
     )
 
     collection.flatMap {
       _.update(ordered = false).one(selector, modifier, upsert = true, multi = false).map {
-            result => result.ok
+        result => result.ok
       }
     }
   }

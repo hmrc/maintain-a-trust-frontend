@@ -17,7 +17,7 @@
 package controllers
 
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import javax.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -26,6 +26,7 @@ import views.html.TrustNotClaimedView
 
 import scala.concurrent.ExecutionContext
 
+@Singleton
 class TrustNotClaimedController @Inject()(
                                            override val messagesApi: MessagesApi,
                                            identify: IdentifierAction,
@@ -33,7 +34,7 @@ class TrustNotClaimedController @Inject()(
                                            requireData: DataRequiredAction,
                                            val controllerComponents: MessagesControllerComponents,
                                            view: TrustNotClaimedView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>

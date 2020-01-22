@@ -105,14 +105,14 @@ trait Constraints {
       case _ =>
         Invalid(errorKey, value)
     }
+
   protected def isNinoValid(value: String, errorKey: String): Constraint[String] =
     Constraint {
-      case str if Nino.isValid(str)=>
+      case str if Nino.isValid(str) =>
         Valid
       case _ =>
         Invalid(errorKey, value)
     }
-
 
 
   protected def maxDate(maximum: LocalDate, errorKey: String, args: Any*): Constraint[LocalDate] =
@@ -131,13 +131,13 @@ trait Constraints {
         Valid
     }
 
-  protected def wholeNumber(errorKey: String) : Constraint[String] = {
+  protected def wholeNumber(errorKey: String): Constraint[String] = {
 
     val regex: Regex = Validation.decimalCheck.r
 
     Constraint {
       case regex(_*) => Valid
-      case _ =>  Invalid(errorKey)
+      case _ => Invalid(errorKey)
     }
   }
 }
