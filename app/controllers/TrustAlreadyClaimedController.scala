@@ -18,28 +18,26 @@ package controllers
 
 import com.google.inject.Inject
 import controllers.actions.AuthenticateForPlayback
-import forms.DeclarationFormProvider
 import models.requests.DataRequest
 import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.DeclarationView
+import views.html.TrustClaimedView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustClaimedController @Inject()(
+class TrustAlreadyClaimedController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        playbackRepository: PlaybackRepository,
                                        actions: AuthenticateForPlayback,
-                                       formProvider: DeclarationFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: TrustClaimedView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
-  def alreadyClaimed(): Action[AnyContent] = actions.authWithData.async {
+  def onPageLoad(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
       enforceUtr() { utr =>
         Future.successful(Ok(view(utr)))

@@ -109,12 +109,12 @@ site.yes = Yes
 site.no = No
 site.confirm-send = Confirm and send
 
-trustClaimed.title = Sorry, you cannot access this trust
-trustClaimed.heading = Sorry, you cannot access this trust
-trustClaimed.subheading = This trust’s UTR: {0}
-trustClaimed.p1 = Another Government Gateway account is linked to it. Please sign in with that account.
-trustClaimed.p2 = If you are unable to do so,
-trustClaimed.p2.a = contact the trusts helpline (opens in a new window or tab)
+trustAlreadyClaimed.title = Sorry, you cannot access this trust
+trustAlreadyClaimed.heading = Sorry, you cannot access this trust
+trustAlreadyClaimed.subheading = This trust’s UTR: {0}
+trustAlreadyClaimed.p1 = Another Government Gateway account is linked to it. Please sign in with that account.
+trustAlreadyClaimed.p2 = If you are unable to do so,
+trustAlreadyClaimed.p2.a = contact the trusts helpline (opens in a new window or tab)
 
 trustNotClaimed.title = Sorry, you cannot access this trust
 trustNotClaimed.heading = Sorry, you cannot access this trust

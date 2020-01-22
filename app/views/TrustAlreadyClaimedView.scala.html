@@ -23,16 +23,16 @@ main_template: MainTemplate
 @(utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = messages("trustClaimed.title")
+title = messages("trustAlreadyClaimed.title")
 ) {
 
-<span class="govuk-caption-xl">@messages("trustClaimed.subheading", utr)</span>
+<span class="govuk-caption-xl">@messages("trustAlreadyClaimed.subheading", utr)</span>
 
-@components.heading("trustClaimed.heading")
+@components.heading("trustAlreadyClaimed.heading")
 
-<p>@messages("trustClaimed.p1")</p>
+<p>@messages("trustAlreadyClaimed.p1")</p>
 
-<p>@messages("trustClaimed.p2") <a id="help-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("trustClaimed.p2.a")</a>.</p>
+<p>@messages("trustAlreadyClaimed.p2") <a id="help-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("trustAlreadyClaimed.p2.a")</a>.</p>
 
 }
 
