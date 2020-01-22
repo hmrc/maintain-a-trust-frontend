@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,23 +12,28 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package views
+@import models.Mode
 
-import views.behaviours.ViewBehaviours
-import views.html.IndexView
+@this(
+main_template: MainTemplate
+)
 
-class IndexViewSpec extends ViewBehaviours {
+@(utr: String)(implicit request: Request[_], messages: Messages)
 
-  "Index view" must {
+@main_template(
+title = messages("trustClaimed.title")
+) {
 
-    val application = applicationBuilder().build()
+<span class="govuk-caption-xl">@messages("trustClaimed.subheading", utr)</span>
 
-    val view = application.injector.instanceOf[IndexView]
+@components.heading("trustClaimed.heading")
 
-    val applyView = view.apply()(fakeRequest, messages)
+<p>@messages("trustClaimed.p1")</p>
 
-    behave like normalPage(applyView, "index", "guidance")
-  }
+<p>@messages("trustClaimed.p2") <a id="help-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("trustClaimed.p2.a")</a>.</p>
+
 }
+
+

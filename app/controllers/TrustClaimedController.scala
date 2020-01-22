@@ -16,59 +16,41 @@
 
 package controllers
 
-import controllers.actions._
+import com.google.inject.Inject
+import controllers.actions.AuthenticateForPlayback
 import forms.DeclarationFormProvider
-import com.google.inject.{Inject, Singleton}
-import pages.DeclarationPage
-import play.api.data.Form
+import models.requests.DataRequest
+import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.DeclarationView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-class DeclarationController @Inject()(
+class TrustClaimedController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        playbackRepository: PlaybackRepository,
                                        actions: AuthenticateForPlayback,
                                        formProvider: DeclarationFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
-                                       view: DeclarationView
+                                       view: TrustClaimedView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def alreadyClaimed(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-
-      val preparedForm = request.userAnswers.get(DeclarationPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+      enforceUtr() { utr =>
+        Future.successful(Ok(view(utr)))
       }
-
-      Ok(view(preparedForm, request.user.affinityGroup, controllers.routes.DeclarationController.onSubmit()))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.user.affinityGroup, controllers.routes.DeclarationController.onSubmit()))),
-
-        // TODO: Check response for submission of no change data and redirect accordingly
-
-        value => {
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, value))
-            _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.routes.ConfirmationController.onPageLoad())
-        }
-      )
-
+  private def enforceUtr()(block: String => Future[Result])(implicit request: DataRequest[AnyContent]): Future[Result] = {
+    request.userAnswers.get(UTRPage) match {
+      case None => Future.successful(Redirect(routes.UTRController.onPageLoad()))
+      case Some(utr) => block(utr)
+    }
   }
 
 }
