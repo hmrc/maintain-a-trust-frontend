@@ -83,7 +83,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
             .overrides(bind[EnrolmentStoreConnector].toInstance(mockEnrolmentStoreConnector))
             .build()
 
-          val service = app.injector.instanceOf[PlaybackAuthenticationService]
+          val service = app.injector.instanceOf[AuthenticationService]
 
           whenReady(service.authenticate[AnyContent](utr)) {
             result =>
@@ -108,7 +108,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
             .overrides(bind[EnrolmentStoreConnector].toInstance(mockEnrolmentStoreConnector))
             .build()
 
-          val service = app.injector.instanceOf[PlaybackAuthenticationService]
+          val service = app.injector.instanceOf[AuthenticationService]
 
           whenReady(service.authenticate[AnyContent](utr)) {
             result =>
@@ -134,7 +134,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
             .overrides(bind[EnrolmentStoreConnector].toInstance(mockEnrolmentStoreConnector))
             .build()
 
-          val service = app.injector.instanceOf[PlaybackAuthenticationService]
+          val service = app.injector.instanceOf[AuthenticationService]
 
           implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, "arn"))
 
@@ -166,7 +166,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
             .overrides(bind[EnrolmentStoreConnector].toInstance(mockEnrolmentStoreConnector))
             .build()
 
-          val service = app.injector.instanceOf[PlaybackAuthenticationService]
+          val service = app.injector.instanceOf[AuthenticationService]
 
           implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, "arn"))
 
@@ -201,7 +201,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
               .overrides(bind[EnrolmentStoreConnector].toInstance(mockEnrolmentStoreConnector))
               .build()
 
-            val service = app.injector.instanceOf[PlaybackAuthenticationService]
+            val service = app.injector.instanceOf[AuthenticationService]
 
             implicit val dataRequest =
               DataRequest[AnyContent](fakeRequest, emptyUserAnswers, OrganisationUser("internalId", enrolments))
@@ -231,7 +231,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
               .overrides(bind[EnrolmentStoreConnector].toInstance(mockEnrolmentStoreConnector))
               .build()
 
-            val service = app.injector.instanceOf[PlaybackAuthenticationService]
+            val service = app.injector.instanceOf[AuthenticationService]
 
             implicit val dataRequest =
               DataRequest[AnyContent](fakeRequest, emptyUserAnswers, OrganisationUser("internalId", enrolments))
@@ -264,7 +264,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
               .overrides(bind[EnrolmentStoreConnector].toInstance(mockEnrolmentStoreConnector))
               .build()
 
-            val service = app.injector.instanceOf[PlaybackAuthenticationService]
+            val service = app.injector.instanceOf[AuthenticationService]
 
             implicit val dataRequest =
               DataRequest[AnyContent](fakeRequest, emptyUserAnswers, OrganisationUser("internalId", enrolments))
@@ -294,7 +294,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
               .overrides(bind[EnrolmentStoreConnector].toInstance(mockEnrolmentStoreConnector))
               .build()
 
-            val service = app.injector.instanceOf[PlaybackAuthenticationService]
+            val service = app.injector.instanceOf[AuthenticationService]
 
             implicit val dataRequest =
               DataRequest[AnyContent](fakeRequest, emptyUserAnswers, OrganisationUser("internalId", enrolments))
@@ -325,7 +325,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
               .overrides(bind[EnrolmentStoreConnector].toInstance(mockEnrolmentStoreConnector))
               .build()
 
-            val service = app.injector.instanceOf[PlaybackAuthenticationService]
+            val service = app.injector.instanceOf[AuthenticationService]
 
             implicit val dataRequest =
               DataRequest[AnyContent](fakeRequest, emptyUserAnswers, OrganisationUser("internalId", enrolments))
@@ -355,7 +355,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
       when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
         .thenReturn(Future failed BearerTokenExpired())
 
-      val service = app.injector.instanceOf[PlaybackAuthenticationService]
+      val service = app.injector.instanceOf[AuthenticationService]
 
       recoverToSucceededIf[BearerTokenExpired](service.authenticate[AnyContent](utr))
     }

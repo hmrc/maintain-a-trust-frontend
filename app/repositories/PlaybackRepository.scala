@@ -33,11 +33,11 @@ import utils.DateFormatter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DefaultPlaybackRepository @Inject()(
+class PlaybackRepository @Inject()(
                                           mongo: ReactiveMongoApi,
                                           config: Configuration,
                                           dateFormatter: DateFormatter
-                                        )(implicit ec: ExecutionContext, m: Materializer) extends PlaybackRepository {
+                                        )(implicit ec: ExecutionContext, m: Materializer) {
 
   private val collectionName: String = "user-answers"
 
@@ -66,7 +66,7 @@ class DefaultPlaybackRepository @Inject()(
     }.map(_ => ())
   }
 
-  override def get(internalId: String): Future[Option[UserAnswers]] = {
+  def get(internalId: String): Future[Option[UserAnswers]] = {
 
     val selector = Json.obj(
       "internalId" -> internalId
@@ -85,7 +85,7 @@ class DefaultPlaybackRepository @Inject()(
     }
   }
 
-  override def set(userAnswers: UserAnswers): Future[Boolean] = {
+  def set(userAnswers: UserAnswers): Future[Boolean] = {
 
     val selector = Json.obj(
       "internalId" -> userAnswers.internalAuthId
@@ -101,13 +101,4 @@ class DefaultPlaybackRepository @Inject()(
       }
     }
   }
-}
-
-trait PlaybackRepository {
-
-  val started: Future[Unit]
-
-  def get(internalId: String): Future[Option[UserAnswers]]
-
-  def set(userAnswers: UserAnswers): Future[Boolean]
 }

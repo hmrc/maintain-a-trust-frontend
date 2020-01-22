@@ -137,5 +137,4 @@ trait StringViewBehaviours extends QuestionViewBehaviours[String] {
     }
   }
 
-
 }

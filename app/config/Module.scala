@@ -18,8 +18,6 @@ package config
 
 import com.google.inject.AbstractModule
 import controllers.actions._
-import repositories.{DefaultPlaybackRepository, PlaybackRepository}
-import utils.{DateFormatter, TrustsDateFormatter}
 
 class Module extends AbstractModule {
 
@@ -30,9 +28,5 @@ class Module extends AbstractModule {
 
     // For session based storage instead of cred based, change to SessionIdentifierAction
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
-
-    bind(classOf[PlaybackRepository]).to(classOf[DefaultPlaybackRepository]).asEagerSingleton()
-
-    bind(classOf[DateFormatter]).to(classOf[TrustsDateFormatter])
   }
 }

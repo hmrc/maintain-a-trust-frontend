@@ -22,7 +22,7 @@ import models.requests.DataRequest
 import pages.UTRPage
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
-import services.PlaybackAuthenticationService
+import services.AuthenticationService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class PlaybackIdentifierActionImpl @Inject()(val parser: BodyParsers.Default,
                                              enrolmentStoreConnector: EnrolmentStoreConnector,
-                                             playbackAuthenticationService: PlaybackAuthenticationService
+                                             playbackAuthenticationService: AuthenticationService
                                   )(override implicit val executionContext: ExecutionContext) extends PlaybackIdentifierAction {
 
   override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {

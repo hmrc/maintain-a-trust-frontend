@@ -16,7 +16,6 @@
 
 package services
 
-import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import connectors.EnrolmentStoreConnector
 import controllers.routes
@@ -32,13 +31,13 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PlaybackAuthenticationServiceImpl @Inject()(
+class AuthenticationService @Inject()(
                                            enrolmentStoreConnector: EnrolmentStoreConnector,
                                            config: FrontendAppConfig,
                                            errorHandler: ErrorHandler,
                                            trustsIV: TrustsIV,
                                            implicit val ec: ExecutionContext
-                                         ) extends PlaybackAuthenticationService {
+                                         ) {
 
   def authenticate[A](utr: String)
                      (implicit request: DataRequest[A],
@@ -113,12 +112,4 @@ class PlaybackAuthenticationServiceImpl @Inject()(
       .flatMap(_.identifiers.find(_.key equals "SAUTR"))
       .exists(_.value equals utr)
 
-}
-
-@ImplementedBy(classOf[PlaybackAuthenticationServiceImpl])
-trait PlaybackAuthenticationService {
-
-  def authenticate[A](utr: String)
-                     (implicit request: DataRequest[A],
-                      hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]]
 }
