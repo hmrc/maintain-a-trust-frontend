@@ -28,4 +28,7 @@ class AuthenticateForPlayback @Inject()(
   def authWithData =
     identify andThen getData andThen requireData andThen playbackIdentifier
 
+  def authWithOptionalData =
+    identify andThen getData
+
 }

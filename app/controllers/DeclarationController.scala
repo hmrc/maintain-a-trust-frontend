@@ -33,10 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeclarationController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        playbackRepository: PlaybackRepository,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       playbackIdentify: PlaybackIdentifierAction,
+                                       actions: AuthenticateForPlayback,
                                        formProvider: DeclarationFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: DeclarationView
@@ -44,10 +41,7 @@ class DeclarationController @Inject()(
 
   val form = formProvider()
 
-  def actions() = identify andThen getData andThen requireData andThen playbackIdentify //andThen
-  //requiredAnswer(RequiredAnswer(DeclarationWhatNextPage, routes.DeclarationWhatNextController.onPageLoad()))
-
-  def onPageLoad(): Action[AnyContent] = actions() {
+  def onPageLoad(): Action[AnyContent] = actions.authWithData {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(DeclarationPage) match {
@@ -58,7 +52,7 @@ class DeclarationController @Inject()(
       Ok(view(preparedForm, request.user.affinityGroup, controllers.routes.DeclarationController.onSubmit()))
   }
 
-  def onSubmit(): Action[AnyContent] = actions().async {
+  def onSubmit(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
 
       form.bindFromRequest().fold(

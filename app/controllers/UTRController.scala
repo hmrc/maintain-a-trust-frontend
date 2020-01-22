@@ -16,11 +16,11 @@
 
 package controllers
 
+import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
-import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import controllers.actions.AuthenticateForPlayback
 import forms.UTRFormProvider
 import handlers.ErrorHandler
-import com.google.inject.{Inject, Singleton}
 import models.UserAnswers
 import pages.UTRPage
 import play.api.data.Form
@@ -35,8 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class UTRController @Inject()(
                                override val messagesApi: MessagesApi,
-                               identify: IdentifierAction,
-                               getData: DataRetrievalAction,
+                               actions: AuthenticateForPlayback,
                                playbackRepository: PlaybackRepository,
                                formProvider: UTRFormProvider,
                                val controllerComponents: MessagesControllerComponents,
@@ -47,7 +46,7 @@ class UTRController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(): Action[AnyContent] = actions.authWithOptionalData {
     implicit request =>
 
       val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.user.internalId)).get(UTRPage) match {
@@ -58,7 +57,7 @@ class UTRController @Inject()(
       Ok(view(preparedForm, routes.UTRController.onSubmit()))
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
