@@ -20,7 +20,7 @@ import config.FrontendAppConfig
 import controllers.actions.{DataRetrievalAction, IdentifierAction}
 import forms.UTRFormProvider
 import handlers.ErrorHandler
-import javax.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import models.UserAnswers
 import pages.UTRPage
 import play.api.data.Form
@@ -32,6 +32,7 @@ import views.html.UTRView
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class UTRController @Inject()(
                                override val messagesApi: MessagesApi,
                                identify: IdentifierAction,

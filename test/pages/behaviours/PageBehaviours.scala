@@ -20,8 +20,8 @@ import generators.Generators
 import models.UserAnswers
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalatest.{MustMatchers, OptionValues, TryValues, WordSpec}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.QuestionPage
 import play.api.libs.json._
 
@@ -37,7 +37,7 @@ trait PageBehaviours extends WordSpec with MustMatchers with ScalaCheckPropertyC
           "the question has not been answered" in {
 
             val gen = for {
-              page        <- genP
+              page <- genP
               userAnswers <- arbitrary[UserAnswers]
             } yield (page, userAnswers.remove(page).success.value)
 
@@ -57,8 +57,8 @@ trait PageBehaviours extends WordSpec with MustMatchers with ScalaCheckPropertyC
           "the question has been answered" in {
 
             val gen = for {
-              page        <- genP
-              savedValue  <- arbitrary[A]
+              page <- genP
+              savedValue <- arbitrary[A]
               userAnswers <- arbitrary[UserAnswers]
             } yield (page, savedValue, userAnswers.set(page, savedValue).success.value)
 
@@ -79,8 +79,8 @@ trait PageBehaviours extends WordSpec with MustMatchers with ScalaCheckPropertyC
       "be able to be set on UserAnswers" in {
 
         val gen = for {
-          page        <- genP
-          newValue    <- arbitrary[A]
+          page <- genP
+          newValue <- arbitrary[A]
           userAnswers <- arbitrary[UserAnswers]
         } yield (page, newValue, userAnswers)
 
@@ -100,8 +100,8 @@ trait PageBehaviours extends WordSpec with MustMatchers with ScalaCheckPropertyC
       "be able to be removed from UserAnswers" in {
 
         val gen = for {
-          page        <- genP
-          savedValue  <- arbitrary[A]
+          page <- genP
+          savedValue <- arbitrary[A]
           userAnswers <- arbitrary[UserAnswers]
         } yield (page, userAnswers.set(page, savedValue).success.value)
 

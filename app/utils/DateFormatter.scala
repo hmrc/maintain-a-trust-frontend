@@ -31,7 +31,7 @@ class DateFormatter @Inject()(config: FrontendAppConfig) {
     dateTime.format(dateFormatter)
   }
 
-  def savedUntil(date: LocalDateTime) : String = {
+  def savedUntil(date: LocalDateTime): String = {
     val ttlInSeconds = config.ttlInSeconds
     formatDate(date.plusSeconds(ttlInSeconds))
   }

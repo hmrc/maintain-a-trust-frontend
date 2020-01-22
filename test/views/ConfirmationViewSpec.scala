@@ -27,7 +27,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
   val accessibleRefNumber = formatReferenceNumber(fakeTvn)
 
 
-  private def variationsTrust(view: HtmlFormat.Appendable) : Unit = {
+  private def variationsTrust(view: HtmlFormat.Appendable): Unit = {
 
     "assert content" in {
       val doc = asDocument(view)
@@ -48,7 +48,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
 
   }
 
-  private def agentVariationsTrust(view: HtmlFormat.Appendable) : Unit = {
+  private def agentVariationsTrust(view: HtmlFormat.Appendable): Unit = {
 
     "display return to agent overview link" in {
 

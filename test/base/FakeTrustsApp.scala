@@ -39,7 +39,7 @@ trait FakeTrustsApp extends GuiceOneAppPerSuite {
 
   def injectedParsers = injector.instanceOf[BodyParsers.Default]
 
-//  def trustsAuth = injector.instanceOf[TrustsAuthorisedFunctions]
+  //  def trustsAuth = injector.instanceOf[TrustsAuthorisedFunctions]
 
   implicit def executionContext = injector.instanceOf[ExecutionContext]
 

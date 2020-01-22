@@ -23,7 +23,7 @@ import play.api.i18n.Lang
 import play.api.mvc.Call
 
 @Singleton
-class FrontendAppConfig @Inject() (configuration: Configuration) {
+class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "maintain-a-trust-frontend"
@@ -41,7 +41,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val betaFeedbackUrl = s"$contactHost/contact/beta-feedback"
   val betaFeedbackUnauthenticatedUrl = s"$contactHost/contact/beta-feedback-unauthenticated"
 
-  lazy val agentsSubscriptionsUrl : String = configuration.get[String]("urls.agentSubscriptions")
+  lazy val agentsSubscriptionsUrl: String = configuration.get[String]("urls.agentSubscriptions")
   lazy val agentServiceRegistrationUrl = s"$agentsSubscriptionsUrl?continue=$loginContinueUrl"
 
   lazy val agentInvitationsUrl: String = configuration.get[String]("urls.agentInvitations")
@@ -52,9 +52,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   lazy val loginUrl: String = configuration.get[String]("urls.login")
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
 
-  lazy val relationshipName : String =
+  lazy val relationshipName: String =
     configuration.get[String]("microservice.services.self.relationship-establishment.name")
-  lazy val relationshipIdentifier : String =
+  lazy val relationshipIdentifier: String =
     configuration.get[String]("microservice.services.self.relationship-establishment.identifier")
 
   lazy val enrolmentStoreProxyUrl = configuration.get[Service]("microservice.services.enrolment-store-proxy").baseUrl

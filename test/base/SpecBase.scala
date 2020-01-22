@@ -22,7 +22,7 @@ import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{BodyParsers, PlayBodyParsers}
+import play.api.mvc.BodyParsers
 import repositories.PlaybackRepository
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, Enrolments}
 import utils.TestUserAnswers

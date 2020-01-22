@@ -16,14 +16,14 @@
 
 package controllers.actions
 
-import javax.inject.Inject
+import com.google.inject.Inject
 
 class AuthenticateForPlayback @Inject()(
                                          identify: IdentifierAction,
                                          getData: DataRetrievalAction,
                                          requireData: DataRequiredAction,
                                          playbackIdentifier: PlaybackIdentifierAction
-                                       ){
+                                       ) {
 
   def authWithData =
     identify andThen getData andThen requireData andThen playbackIdentifier

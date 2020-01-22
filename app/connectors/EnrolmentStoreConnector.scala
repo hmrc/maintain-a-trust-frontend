@@ -17,21 +17,21 @@
 package connectors
 
 import config.FrontendAppConfig
-import javax.inject.Inject
+import com.google.inject.Inject
 import models.requests.EnrolmentStoreResponse
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EnrolmentStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
+class EnrolmentStoreConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
   private def enrolmentsEndpoint(identifier: String): String = {
     val identifierKey = "SAUTR"
     s"${config.enrolmentStoreProxyUrl}/enrolment-store-proxy/enrolment-store/enrolments/HMRC-TERS-ORG~$identifierKey~$identifier/users"
   }
 
-  def checkIfAlreadyClaimed(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[EnrolmentStoreResponse] =
+  def checkIfAlreadyClaimed(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EnrolmentStoreResponse] =
     http.GET[EnrolmentStoreResponse](enrolmentsEndpoint(utr))(EnrolmentStoreResponse.httpReads, hc, ec)
 
 }

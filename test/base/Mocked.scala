@@ -16,30 +16,28 @@
 
 package base
 
-import models.requests.IdentifierRequest
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
-import play.api.mvc.AnyContent
 import repositories.PlaybackRepository
 
 import scala.concurrent.Future
 
 trait Mocked extends MockitoSugar {
 
-//  val registrationsRepository : RegistrationsRepository = mock[RegistrationsRepository]
-  val playbackRepository : PlaybackRepository = mock[PlaybackRepository]
+  //  val registrationsRepository : RegistrationsRepository = mock[RegistrationsRepository]
+  val playbackRepository: PlaybackRepository = mock[PlaybackRepository]
 
-//  val mockSubmissionService : SubmissionService = mock[SubmissionService]
-//  val mockCreateDraftRegistrationService : CreateDraftRegistrationService = mock[CreateDraftRegistrationService]
+  //  val mockSubmissionService : SubmissionService = mock[SubmissionService]
+  //  val mockCreateDraftRegistrationService : CreateDraftRegistrationService = mock[CreateDraftRegistrationService]
 
-//  when(mockCreateDraftRegistrationService.create(any[OptionalRegistrationDataRequest[AnyContent]])(any()))
-//    .thenReturn(Future.successful(TestUserAnswers.draftId))
-//
-//  when(mockCreateDraftRegistrationService.create(any[IdentifierRequest[AnyContent]])(any()))
-//      .thenReturn(Future.successful(TestUserAnswers.draftId))
-//
-//  when(registrationsRepository.set(any())).thenReturn(Future.successful(true))
+  //  when(mockCreateDraftRegistrationService.create(any[OptionalRegistrationDataRequest[AnyContent]])(any()))
+  //    .thenReturn(Future.successful(TestUserAnswers.draftId))
+  //
+  //  when(mockCreateDraftRegistrationService.create(any[IdentifierRequest[AnyContent]])(any()))
+  //      .thenReturn(Future.successful(TestUserAnswers.draftId))
+  //
+  //  when(registrationsRepository.set(any())).thenReturn(Future.successful(true))
   when(playbackRepository.set(any())).thenReturn(Future.successful(true))
 
 }

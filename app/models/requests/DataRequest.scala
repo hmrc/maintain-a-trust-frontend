@@ -21,12 +21,12 @@ import play.api.mvc.{Request, WrappedRequest}
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolments}
 
 sealed trait User {
-  val internalId : String
-  val affinityGroup : AffinityGroup
-  val enrolments : Enrolments
+  val internalId: String
+  val affinityGroup: AffinityGroup
+  val enrolments: Enrolments
 }
 
-case class AgentUser(internalId: String, enrolments: Enrolments, agentReferenceNumber : String) extends User {
+case class AgentUser(internalId: String, enrolments: Enrolments, agentReferenceNumber: String) extends User {
   override val affinityGroup: AffinityGroup = AffinityGroup.Agent
 }
 
@@ -36,7 +36,7 @@ case class OrganisationUser(internalId: String, enrolments: Enrolments) extends 
 
 case class OptionalDataRequest[A](request: Request[A],
                                   userAnswers: Option[UserAnswers],
-                                  user : User) extends WrappedRequest[A](request)
+                                  user: User) extends WrappedRequest[A](request)
 
 case class DataRequest[A](request: Request[A],
                           userAnswers: UserAnswers,

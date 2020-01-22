@@ -16,7 +16,7 @@
 
 package controllers
 
-import com.google.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -25,6 +25,7 @@ import utils.CheckYourAnswersHelper
 import viewmodels.AnswerSection
 import views.html.CheckYourAnswersView
 
+@Singleton
 class CheckYourAnswersController @Inject()(
                                             override val messagesApi: MessagesApi,
                                             identify: IdentifierAction,

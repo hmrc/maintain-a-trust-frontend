@@ -18,7 +18,7 @@ package controllers
 
 import controllers.actions.AuthenticateForPlayback
 import forms.WhatIsNextFormProvider
-import javax.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import models.{Enumerable, WhatIsNext}
 import pages.WhatIsNextPage
 import play.api.data.Form
@@ -30,6 +30,7 @@ import views.html.WhatIsNextView
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class WhatIsNextController @Inject()(
                                       override val messagesApi: MessagesApi,
                                       playbackRepository: PlaybackRepository,
@@ -37,7 +38,7 @@ class WhatIsNextController @Inject()(
                                       formProvider: WhatIsNextFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: WhatIsNextView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
+                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
 
   val form = formProvider()
 
@@ -62,7 +63,7 @@ class WhatIsNextController @Inject()(
         value => {
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, value))
-            _              <- playbackRepository.set(updatedAnswers)
+            _ <- playbackRepository.set(updatedAnswers)
           } yield value match {
             case WhatIsNext.DeclareTheTrustIsUpToDate =>
               Redirect(controllers.routes.DeclarationController.onPageLoad())
