@@ -17,9 +17,9 @@
 package controllers
 
 import config.FrontendAppConfig
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import javax.inject.Inject
-import pages.WhatIsTheUTRVariationPage
+import controllers.actions.AuthenticateForPlayback
+import com.google.inject.{Inject, Singleton}
+import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -28,24 +28,23 @@ import views.html.{AgentCannotAccessTrustYetView, InformationMaintainingThisTrus
 
 import scala.concurrent.ExecutionContext
 
+@Singleton
 class InformationMaintainingThisTrustController @Inject()(
-                                                           identify: IdentifierAction,
-                                                           getData: DataRetrievalAction,
-                                                           requireData: DataRequiredAction,
+                                                           actions: AuthenticateForPlayback,
                                                            val controllerComponents: MessagesControllerComponents,
                                                            maintainingTrustView: InformationMaintainingThisTrustView,
                                                            agentCannotAccessTrustYetView: AgentCannotAccessTrustYetView
                                                          )(implicit ec: ExecutionContext, config: FrontendAppConfig) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      request.userAnswers.flatMap(_.get(WhatIsTheUTRVariationPage)) match {
+      request.userAnswers.get(UTRPage) match {
         case Some(utr) =>
-          request.affinityGroup match {
-            case Agent => Ok(agentCannotAccessTrustYetView(utr))
+          request.user.affinityGroup match {
+            case Agent if !config.playbackEnabled => Ok(agentCannotAccessTrustYetView(utr))
             case _ => Ok(maintainingTrustView(utr))
           }
-        case None => Redirect(routes.WhatIsTheUTRVariationsController.onPageLoad())
+        case None => Redirect(routes.UTRController.onPageLoad())
       }
   }
 }

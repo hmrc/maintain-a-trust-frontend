@@ -8,12 +8,10 @@ GET        /language/:lang                              controllers.LanguageSwit
 
 GET        /this-service-has-been-reset                 controllers.SessionExpiredController.onPageLoad
 
-GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
-
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
-GET        /trust-utr                                   controllers.WhatIsTheUTRVariationsController.onPageLoad()
-POST       /trust-utr                                   controllers.WhatIsTheUTRVariationsController.onSubmit()
+GET        /unique-taxpayer-reference                   controllers.UTRController.onPageLoad()
+POST       /unique-taxpayer-reference                   controllers.UTRController.onSubmit()
 
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
 
@@ -24,3 +22,10 @@ GET        /confirmation                                controllers.Confirmation
 
 GET        /declare-what-changed                        controllers.WhatIsNextController.onPageLoad()
 POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()
+
+GET        /create-agent-services-account               controllers.CreateAgentServicesAccountController.onPageLoad()
+
+GET        /trust-not-claimed                           controllers.TrustNotClaimedController.onPageLoad()
+GET        /agent-not-authorised                        controllers.AgentNotAuthorisedController.onPageLoad()
+
+GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()

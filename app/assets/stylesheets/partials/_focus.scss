@@ -15,18 +15,22 @@ details summary:focus {
   box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
   text-decoration: none;
 }
+
 details summary:focus .summary {
   text-decoration: none;
 }
+
 input:focus,
 textarea:focus,
 select:focus,
 #global-header input:focus {
   outline-color: #fd0;
 }
+
 .button {
   border: 2px solid transparent;
 }
+
 .button:focus:not(:active):not(:hover) {
   border-color: #fd0;
   color: #0b0c0c;
@@ -34,12 +38,14 @@ select:focus,
   -webkit-box-shadow: 0 2px 0 #0b0c0c;
   box-shadow: 0 2px 0 #0b0c0c;
 }
+
 .button:focus {
   border-color: #fd0;
   outline: 3px solid transparent;
   -webkit-box-shadow: inset 0 0 0 1px #fd0;
   box-shadow: inset 0 0 0 1px #fd0;
 }
+
 .autocomplete__input:focus,
 .form-control:focus {
   outline: 3px solid #fd0;
@@ -47,7 +53,8 @@ select:focus,
   -webkit-box-shadow: inset 0 0 0 2px;
   box-shadow: inset 0 0 0 2px;
 }
-.multiple-choice [type=checkbox]:focus+label::before {
+
+.multiple-choice [type=checkbox]:focus + label::before {
   border-width: 3px;
 }
 
@@ -59,9 +66,11 @@ select:focus,
 #global-header #logo:focus {
   color: #0b0c0c;
 }
+
 #global-header #logo:focus img {
   filter: invert(1);
 }
+
 .account-menu__link:focus,
 .is-smaller .account-menu__link--home:focus,
 .is-smaller .account-menu__link--menu:focus,
@@ -70,12 +79,14 @@ select:focus,
   color: #0b0c0c;
   background-color: #fd0;
 }
-@media (min-width: 641px){
+
+@media (min-width: 641px) {
   #footer .footer-meta .copyright a {
     background-position: 50% 0;
     float: right;
   }
 }
+
 #footer .footer-meta .copyright a:focus {
   background-color: #fd0;
 }
@@ -87,6 +98,7 @@ textarea:focus {
   -webkit-box-shadow: inset 0 0 0 2px;
   box-shadow: inset 0 0 0 2px;
 }
+
 // show focus on error fields
 .form-control-error:focus {
   border-color: #0b0c0c;

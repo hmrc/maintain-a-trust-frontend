@@ -16,18 +16,28 @@
 
 package models.requests
 
-import play.api.mvc.{Request, WrappedRequest}
 import models.UserAnswers
-import uk.gov.hmrc.auth.core.AffinityGroup
+import play.api.mvc.{Request, WrappedRequest}
+import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolments}
 
-case class OptionalDataRequest[A] (request: Request[A],
-                                   internalId: String,
-                                   userAnswers: Option[UserAnswers],
-                                   affinityGroup: AffinityGroup = AffinityGroup.Organisation
-                                  ) extends WrappedRequest[A](request)
+sealed trait User {
+  val internalId: String
+  val affinityGroup: AffinityGroup
+  val enrolments: Enrolments
+}
 
-case class DataRequest[A] (request: Request[A],
-                           internalId: String,
-                           userAnswers: UserAnswers,
-                           affinityGroup: AffinityGroup = AffinityGroup.Organisation
-                          ) extends WrappedRequest[A](request)
+case class AgentUser(internalId: String, enrolments: Enrolments, agentReferenceNumber: String) extends User {
+  override val affinityGroup: AffinityGroup = AffinityGroup.Agent
+}
+
+case class OrganisationUser(internalId: String, enrolments: Enrolments) extends User {
+  override val affinityGroup: AffinityGroup = AffinityGroup.Organisation
+}
+
+case class OptionalDataRequest[A](request: Request[A],
+                                  userAnswers: Option[UserAnswers],
+                                  user: User) extends WrappedRequest[A](request)
+
+case class DataRequest[A](request: Request[A],
+                          userAnswers: UserAnswers,
+                          user: User) extends WrappedRequest[A](request)

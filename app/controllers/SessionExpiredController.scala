@@ -16,12 +16,13 @@
 
 package controllers
 
-import javax.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.SessionExpiredView
 
+@Singleton
 class SessionExpiredController @Inject()(
                                           val controllerComponents: MessagesControllerComponents,
                                           view: SessionExpiredView

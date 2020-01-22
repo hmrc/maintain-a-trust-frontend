@@ -18,28 +18,22 @@ package controllers
 
 import controllers.actions._
 import forms.DeclarationFormProvider
-import javax.inject.Inject
-import navigation.Navigator
+import com.google.inject.{Inject, Singleton}
 import pages.DeclarationPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.DeclarationView
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class DeclarationController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        playbackRepository: PlaybackRepository,
-                                       navigator: Navigator,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-//                                       playbackIdentify: PlaybackIdentifierAction,
-                                       requiredAnswer: RequiredAnswerActionProvider,
+                                       actions: AuthenticateForPlayback,
                                        formProvider: DeclarationFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: DeclarationView
@@ -47,36 +41,31 @@ class DeclarationController @Inject()(
 
   val form = formProvider()
 
-  def actions() = identify andThen getData //andThen requireData // andThen playbackIdentify //andThen
-  //requiredAnswer(RequiredAnswer(DeclarationWhatNextPage, routes.DeclarationWhatNextController.onPageLoad()))
-
-  def onPageLoad(): Action[AnyContent] = actions() {
+  def onPageLoad(): Action[AnyContent] = actions.authWithData {
     implicit request =>
 
-//      val preparedForm = request.userAnswers.get(DeclarationPage) match {
-//        case None => form
-//        case Some(value) => form.fill(value)
-//      }
-      val preparedForm = form
+      val preparedForm = request.userAnswers.get(DeclarationPage) match {
+        case None => form
+        case Some(value) => form.fill(value)
+      }
 
-      Ok(view(preparedForm, AffinityGroup.Individual, controllers.routes.DeclarationController.onSubmit())) //TODO: change to request.affinityGroup when auth added
+      Ok(view(preparedForm, request.user.affinityGroup, controllers.routes.DeclarationController.onSubmit()))
   }
 
-  def onSubmit(): Action[AnyContent] = actions().async {
+  def onSubmit(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, AffinityGroup.Individual, controllers.routes.DeclarationController.onSubmit()))), //TODO: change to request.affinityGroup when auth added
+          Future.successful(BadRequest(view(formWithErrors, request.user.affinityGroup, controllers.routes.DeclarationController.onSubmit()))),
 
         // TODO: Check response for submission of no change data and redirect accordingly
 
         value => {
-//          for {
-//            updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, value))
-//            _ <- playbackRepository.set(updatedAnswers)
-//          } yield Redirect(controllers.routes.ConfirmationController.onPageLoad())
-          Future.successful(Redirect(controllers.routes.ConfirmationController.onPageLoad()))
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(DeclarationPage, value))
+            _ <- playbackRepository.set(updatedAnswers)
+          } yield Redirect(controllers.routes.ConfirmationController.onPageLoad())
         }
       )
 

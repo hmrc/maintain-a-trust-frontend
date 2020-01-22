@@ -22,14 +22,7 @@ import java.time.format.DateTimeFormatter
 import com.google.inject.Inject
 import config.FrontendAppConfig
 
-trait DateFormatter {
-
-  def formatDate(dateTime: LocalDateTime): String
-
-  def savedUntil(date: LocalDateTime) : String
-}
-
-class TrustsDateFormatter @Inject()(config: FrontendAppConfig) extends DateFormatter {
+class DateFormatter @Inject()(config: FrontendAppConfig) {
 
   private val format = "d MMMM yyyy"
 
@@ -38,7 +31,7 @@ class TrustsDateFormatter @Inject()(config: FrontendAppConfig) extends DateForma
     dateTime.format(dateFormatter)
   }
 
-  def savedUntil(date: LocalDateTime) : String = {
+  def savedUntil(date: LocalDateTime): String = {
     val ttlInSeconds = config.ttlInSeconds
     formatDate(date.plusSeconds(ttlInSeconds))
   }

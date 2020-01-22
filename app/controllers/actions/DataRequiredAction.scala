@@ -16,8 +16,8 @@
 
 package controllers.actions
 
-import javax.inject.Inject
 import controllers.routes
+import com.google.inject.Inject
 import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
@@ -35,7 +35,7 @@ class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionC
       case None =>
         Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad())))
       case Some(data) =>
-        Future.successful(Right(DataRequest(request.request, request.internalId, data, request.affinityGroup)))
+        Future.successful(Right(DataRequest(request.request, data, request.user)))
     }
   }
 }

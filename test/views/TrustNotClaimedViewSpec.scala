@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package pages
+package views
 
-import play.api.libs.json.JsPath
+import views.behaviours.ViewBehaviours
+import views.html.TrustNotClaimedView
 
-case object WhatIsTheUTRVariationPage extends QuestionPage[String] {
+class TrustNotClaimedViewSpec extends ViewBehaviours {
 
-  override def path: JsPath = JsPath \ toString
+  "TrustNotClaimed view" must {
 
-  override def toString: String = "whatIsTheUTRVariation"
+    val view = viewFor[TrustNotClaimedView](Some(emptyUserAnswers))
+
+    val applyView = view.apply("0987654321")(fakeRequest, messages)
+
+    behave like normalPage(applyView, "trustNotClaimed")
+
+    behave like pageWithBackLink(applyView)
+  }
 }

@@ -16,7 +16,7 @@
 
 package controllers.actions
 
-import javax.inject.Inject
+import com.google.inject.Inject
 import models.requests.DataRequest
 import play.api.libs.json.Reads
 import play.api.mvc.Results.Redirect
@@ -25,10 +25,10 @@ import queries.Gettable
 
 import scala.concurrent.{ExecutionContext, Future}
 
-final case class RequiredAnswer[T](answer : Gettable[T],
-                                   redirect : Call = controllers.routes.SessionExpiredController.onPageLoad())
+final case class RequiredAnswer[T](answer: Gettable[T],
+                                   redirect: Call = controllers.routes.SessionExpiredController.onPageLoad())
 
-class RequiredAnswerAction[T] @Inject()(required : RequiredAnswer[T])
+class RequiredAnswerAction[T] @Inject()(required: RequiredAnswer[T])
                                        (implicit val executionContext: ExecutionContext,
                                         val reads: Reads[T]) extends ActionRefiner[DataRequest, DataRequest] {
 
@@ -45,6 +45,6 @@ class RequiredAnswerAction[T] @Inject()(required : RequiredAnswer[T])
 
 class RequiredAnswerActionProvider @Inject()(implicit ec: ExecutionContext) {
 
-  def apply[T](required : RequiredAnswer[T])(implicit reads : Reads[T]) =
+  def apply[T](required: RequiredAnswer[T])(implicit reads: Reads[T]) =
     new RequiredAnswerAction(required)
 }

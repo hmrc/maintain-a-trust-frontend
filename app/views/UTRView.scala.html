@@ -22,7 +22,7 @@
 @(form: Form[_], onSubmit: Call)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("whatIsTheUTR.title")}"
+    title = s"${errorPrefix(form)} ${messages("utr.title")}"
     ) {
 
     @formHelper(action = onSubmit, 'autoComplete -> "off") {
@@ -33,10 +33,10 @@
 
         @components.input_text(
           field = form("value"),
-          label = messages("whatIsTheUTR.heading"),
+          label = messages("utr.heading"),
           labelAsHeading = true,
-          hint = Some(messages("whatIsTheUTR.hint")),
-          readerHint = Some(messages("whatIsTheUTR.hint.reader")),
+          hint = Some(messages("utr.hint")),
+          readerHint = Some(messages("utr.hint.reader")),
           labelClass = Some("heading-large"),
           ariaRequired = true
         )

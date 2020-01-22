@@ -38,7 +38,7 @@ final case class UserAnswers(
   }
 
 
-  def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A]) : Try[UserAnswers] = {
+  def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A]): Try[UserAnswers] = {
     value match {
       case Some(v) => setValue(page, v)
       case None =>
@@ -77,7 +77,7 @@ final case class UserAnswers(
 
     updatedData.flatMap {
       d =>
-        val updatedAnswers = copy (data = d)
+        val updatedAnswers = copy(data = d)
         query.cleanup(None, updatedAnswers)
     }
   }

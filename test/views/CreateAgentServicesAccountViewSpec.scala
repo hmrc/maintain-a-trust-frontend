@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package forms
+package views
 
-import forms.mappings.Mappings
-import javax.inject.Inject
-import play.api.data.Form
+import views.behaviours.ViewBehaviours
+import views.html.CreateAgentServicesAccountView
 
-class WhatIsTheUTRFormProvider @Inject() extends Mappings {
+class CreateAgentServicesAccountViewSpec extends ViewBehaviours {
 
-  def apply(): Form[String] =
-    Form(
-      "value" -> text("whatIsTheUTR.error.required")
-        .verifying(
-          firstError(
-            maxLength(10, "whatIsTheUTR.error.length"),
-            minLength(10, "whatIsTheUTR.error.length"),
-            regexp(Validation.utrRegex, "whatIsTheUTR.error.invalidCharacters"),
-            isNotEmpty("value", "whatIsTheUTR.error.required")
-          ))
-    )
+  "CreateAgentServicesAccount view" must {
+
+    val view = viewFor[CreateAgentServicesAccountView](Some(emptyUserAnswers))
+
+    val applyView = view.apply()(fakeRequest, messages)
+
+    behave like normalPage(applyView, "createAgentServicesAccount", "paragraph1", "insetText", "paragraph2", "paragraph3")
+
+
+  }
 }
-
-

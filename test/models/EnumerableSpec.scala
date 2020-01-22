@@ -16,13 +16,15 @@
 
 package models
 
-import org.scalatest.{EitherValues, OptionValues, MustMatchers, WordSpec}
+import org.scalatest.{EitherValues, MustMatchers, OptionValues, WordSpec}
 import play.api.libs.json._
 
 object EnumerableSpec {
 
   sealed trait Foo
+
   case object Bar extends Foo
+
   case object Baz extends Foo
 
   object Foo {
@@ -32,6 +34,7 @@ object EnumerableSpec {
     implicit val fooEnumerable: Enumerable[Foo] =
       Enumerable(values.toSeq.map(v => v.toString -> v): _*)
   }
+
 }
 
 class EnumerableSpec extends WordSpec with MustMatchers with EitherValues with OptionValues with Enumerable.Implicits {

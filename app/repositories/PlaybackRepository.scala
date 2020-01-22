@@ -20,7 +20,7 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 
 import akka.stream.Materializer
-import javax.inject.Inject
+import com.google.inject.Inject
 import models.UserAnswers
 import play.api.Configuration
 import play.api.libs.json._
@@ -33,13 +33,13 @@ import utils.DateFormatter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DefaultPlaybackRepository @Inject()(
-                                          mongo: ReactiveMongoApi,
-                                          config: Configuration,
-                                          dateFormatter: DateFormatter
-                                        )(implicit ec: ExecutionContext, m: Materializer) extends PlaybackRepository {
+class PlaybackRepository @Inject()(
+                                    mongo: ReactiveMongoApi,
+                                    config: Configuration,
+                                    dateFormatter: DateFormatter
+                                  )(implicit ec: ExecutionContext, m: Materializer) {
 
-  private val collectionName: String = "playback-answers"
+  private val collectionName: String = "user-answers"
 
   private val cacheTtl = config.get[Int]("mongodb.playback.ttlSeconds")
 
@@ -57,7 +57,7 @@ class DefaultPlaybackRepository @Inject()(
     name = Some("internal-auth-id-index")
   )
 
-  val started : Future[Unit] = {
+  val started: Future[Unit] = {
     Future.sequence {
       Seq(
         collection.map(_.indexesManager.ensure(lastUpdatedIndex)),
@@ -66,7 +66,7 @@ class DefaultPlaybackRepository @Inject()(
     }.map(_ => ())
   }
 
-  override def get(internalId: String): Future[Option[UserAnswers]] = {
+  def get(internalId: String): Future[Option[UserAnswers]] = {
 
     val selector = Json.obj(
       "internalId" -> internalId
@@ -85,29 +85,20 @@ class DefaultPlaybackRepository @Inject()(
     }
   }
 
-  override def set(userAnswers: UserAnswers): Future[Boolean] = {
+  def set(userAnswers: UserAnswers): Future[Boolean] = {
 
     val selector = Json.obj(
       "internalId" -> userAnswers.internalAuthId
     )
 
     val modifier = Json.obj(
-      "$set" -> (userAnswers copy(updatedAt = LocalDateTime.now))
+      "$set" -> (userAnswers copy (updatedAt = LocalDateTime.now))
     )
 
     collection.flatMap {
       _.update(ordered = false).one(selector, modifier, upsert = true, multi = false).map {
-            result => result.ok
+        result => result.ok
       }
     }
   }
-}
-
-trait PlaybackRepository {
-
-  val started: Future[Unit]
-
-  def get(internalId: String): Future[Option[UserAnswers]]
-
-  def set(userAnswers: UserAnswers): Future[Boolean]
 }

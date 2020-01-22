@@ -32,9 +32,9 @@ class DateBehaviours extends FieldBehaviours {
         date =>
 
           val data = Map(
-            s"$key.day"   -> date.getDayOfMonth.toString,
+            s"$key.day" -> date.getDayOfMonth.toString,
             s"$key.month" -> date.getMonthValue.toString,
-            s"$key.year"  -> date.getYear.toString
+            s"$key.year" -> date.getYear.toString
           )
 
           val result = form.bind(data)
@@ -54,9 +54,9 @@ class DateBehaviours extends FieldBehaviours {
         date =>
 
           val data = Map(
-            s"$key.day"   -> date.getDayOfMonth.toString,
+            s"$key.day" -> date.getDayOfMonth.toString,
             s"$key.month" -> date.getMonthValue.toString,
-            s"$key.year"  -> date.getYear.toString
+            s"$key.year" -> date.getYear.toString
           )
 
           val result = form.bind(data)
@@ -76,9 +76,9 @@ class DateBehaviours extends FieldBehaviours {
         date =>
 
           val data = Map(
-            s"$key.day"   -> date.getDayOfMonth.toString,
+            s"$key.day" -> date.getDayOfMonth.toString,
             s"$key.month" -> date.getMonthValue.toString,
-            s"$key.year"  -> date.getYear.toString
+            s"$key.year" -> date.getYear.toString
           )
 
           val result = form.bind(data)

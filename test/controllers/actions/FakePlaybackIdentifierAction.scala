@@ -16,10 +16,16 @@
 
 package controllers.actions
 
-import models.UserAnswers
-import play.api.mvc.{Request, WrappedRequest}
-import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolments}
+import com.google.inject.Inject
+import models.requests.DataRequest
+import play.api.mvc.Result
 
-case class OptionalPlaybackDataRequest[A](request: Request[A], internalId: String, userAnswers: Option[UserAnswers], affinityGroup: AffinityGroup, enrolments: Enrolments, agentARN: Option[String] = None) extends WrappedRequest[A](request)
+import scala.concurrent.{ExecutionContext, Future}
 
-case class PlaybackDataRequest[A](request: Request[A], internalId: String, userAnswers: UserAnswers, affinityGroup: AffinityGroup, enrolments: Enrolments, agentARN: Option[String] = None) extends WrappedRequest[A](request)
+class FakePlaybackIdentifierAction @Inject()(
+                                              implicit val executionContext: ExecutionContext
+                                            ) extends PlaybackIdentifierAction {
+
+  override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = Future.successful(Right(request))
+
+}
