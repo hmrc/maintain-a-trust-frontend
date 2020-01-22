@@ -41,7 +41,7 @@ class DeclarationController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithData {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(DeclarationPage) match {
@@ -52,7 +52,7 @@ class DeclarationController @Inject()(
       Ok(view(preparedForm, request.user.affinityGroup, controllers.routes.DeclarationController.onSubmit()))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.authWithData.async {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(

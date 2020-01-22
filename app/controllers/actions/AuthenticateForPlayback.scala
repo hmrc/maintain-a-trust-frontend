@@ -25,10 +25,12 @@ class AuthenticateForPlayback @Inject()(
                                          playbackIdentifier: PlaybackIdentifierAction
                                        ) {
 
-  def authWithData =
-    identify andThen getData andThen requireData andThen playbackIdentifier
-
-  def authWithOptionalData =
+  def authWithSession =
     identify andThen getData
 
+  def authWithData =
+    authWithSession andThen requireData
+
+  def verifiedForUtr =
+    authWithData andThen playbackIdentifier
 }

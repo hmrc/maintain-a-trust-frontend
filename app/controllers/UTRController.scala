@@ -46,7 +46,7 @@ class UTRController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithOptionalData {
+  def onPageLoad(): Action[AnyContent] = actions.authWithSession {
     implicit request =>
 
       val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.user.internalId)).get(UTRPage) match {
@@ -57,7 +57,7 @@ class UTRController @Inject()(
       Ok(view(preparedForm, routes.UTRController.onSubmit()))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.authWithOptionalData.async {
+  def onSubmit(): Action[AnyContent] = actions.authWithSession.async {
     implicit request =>
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>

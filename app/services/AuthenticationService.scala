@@ -73,7 +73,7 @@ class AuthenticationService @Inject()(
       enrolmentStoreConnector.checkIfAlreadyClaimed(utr) flatMap {
         case AlreadyClaimed =>
           Logger.info(s"[PlaybackAuthentication] user is not enrolled but the trust is already claimed")
-          Future.successful(Left(Redirect(controllers.routes.IndexController.onPageLoad())))
+          Future.successful(Left(Redirect(controllers.routes.TrustAlreadyClaimedController.onPageLoad())))
         case NotClaimed =>
           Logger.info(s"[PlaybackAuthentication] user is not enrolled and the trust is not claimed")
           Future.successful(Left(Redirect(config.claimATrustUrl(utr))))
