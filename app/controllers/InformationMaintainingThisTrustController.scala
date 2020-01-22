@@ -18,7 +18,7 @@ package controllers
 
 import config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import javax.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -28,6 +28,7 @@ import views.html.{AgentCannotAccessTrustYetView, InformationMaintainingThisTrus
 
 import scala.concurrent.ExecutionContext
 
+@Singleton
 class InformationMaintainingThisTrustController @Inject()(
                                                            identify: IdentifierAction,
                                                            getData: DataRetrievalAction,

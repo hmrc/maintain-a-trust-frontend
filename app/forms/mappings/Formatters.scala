@@ -17,9 +17,9 @@
 package forms.mappings
 
 import forms.Validation
+import models.Enumerable
 import play.api.data.FormError
 import play.api.data.format.Formatter
-import models.Enumerable
 
 import scala.util.control.Exception.nonFatalCatch
 
@@ -30,7 +30,7 @@ trait Formatters {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {
         case None | Some("") => Left(Seq(FormError(key, errorKey)))
-        case Some(s) => Right(s.trim().replace(" ","").toUpperCase())
+        case Some(s) => Right(s.trim().replace(" ", "").toUpperCase())
       }
 
     override def unbind(key: String, value: String): Map[String, String] =
@@ -51,7 +51,7 @@ trait Formatters {
       Map(key -> value)
   }
 
-  private[mappings] def postcodeFormatter(requiredKey: String, invalidKey : String): Formatter[String] = new Formatter[String] {
+  private[mappings] def postcodeFormatter(requiredKey: String, invalidKey: String): Formatter[String] = new Formatter[String] {
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {
@@ -68,7 +68,7 @@ trait Formatters {
       Map(key -> value)
   }
 
-  private[mappings] def currencyFormatter(requiredKey: String, invalidKey : String): Formatter[String] = new Formatter[String] {
+  private[mappings] def currencyFormatter(requiredKey: String, invalidKey: String): Formatter[String] = new Formatter[String] {
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {

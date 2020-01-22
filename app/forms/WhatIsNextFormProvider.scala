@@ -17,7 +17,7 @@
 package forms
 
 import forms.mappings.Mappings
-import javax.inject.Inject
+import com.google.inject.Inject
 import models.WhatIsNext
 import play.api.data.Form
 

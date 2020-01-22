@@ -16,8 +16,8 @@
 
 package controllers
 
-import controllers.actions.{AuthenticateForPlayback, DataRequiredAction, DataRetrievalAction, IdentifierAction, PlaybackIdentifierAction}
-import javax.inject.Inject
+import controllers.actions.AuthenticateForPlayback
+import com.google.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -26,19 +26,20 @@ import views.html.ConfirmationView
 
 import scala.concurrent.ExecutionContext
 
+@Singleton
 class ConfirmationController @Inject()(
-                                                  override val messagesApi: MessagesApi,
-                                                  actions : AuthenticateForPlayback,
-                                                  val controllerComponents: MessagesControllerComponents,
-                                                  view: ConfirmationView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                        override val messagesApi: MessagesApi,
+                                        actions: AuthenticateForPlayback,
+                                        val controllerComponents: MessagesControllerComponents,
+                                        view: ConfirmationView
+                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
   def onPageLoad() = actions.authWithData {
     implicit request =>
 
       val isAgent = request.user.affinityGroup == Agent
-//      val agentOverviewUrl = controllers.register.agents.routes.AgentOverviewController.onPageLoad().url
+      //      val agentOverviewUrl = controllers.register.agents.routes.AgentOverviewController.onPageLoad().url
 
       val fakeTvn = "XC TVN 000 000 4912"
 

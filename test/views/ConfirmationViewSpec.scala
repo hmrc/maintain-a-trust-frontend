@@ -16,7 +16,6 @@
 
 package views
 
-import models.FullName
 import play.twirl.api.HtmlFormat
 import utils.AccessibilityHelper._
 import views.behaviours.ViewBehaviours
@@ -52,7 +51,6 @@ class ConfirmationViewSpec extends ViewBehaviours {
   }
 
   private def confirmationPageForAgent(view: HtmlFormat.Appendable) : Unit = {
-
     "display return to agent overview link" in {
 
       val doc = asDocument(view)

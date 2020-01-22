@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class PlaybackIdentifierActionImpl @Inject()(val parser: BodyParsers.Default,
                                              enrolmentStoreConnector: EnrolmentStoreConnector,
                                              playbackAuthenticationService: AuthenticationService
-                                  )(override implicit val executionContext: ExecutionContext) extends PlaybackIdentifierAction {
+                                            )(override implicit val executionContext: ExecutionContext) extends PlaybackIdentifierAction {
 
   override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 

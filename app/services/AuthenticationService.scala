@@ -20,7 +20,7 @@ import config.FrontendAppConfig
 import connectors.EnrolmentStoreConnector
 import controllers.routes
 import handlers.ErrorHandler
-import javax.inject.Inject
+import com.google.inject.Inject
 import models.requests.DataRequest
 import models.requests.EnrolmentStoreResponse.{AlreadyClaimed, NotClaimed}
 import play.api.Logger
@@ -32,12 +32,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthenticationService @Inject()(
-                                           enrolmentStoreConnector: EnrolmentStoreConnector,
-                                           config: FrontendAppConfig,
-                                           errorHandler: ErrorHandler,
-                                           trustsIV: TrustsIV,
-                                           implicit val ec: ExecutionContext
-                                         ) {
+                                       enrolmentStoreConnector: EnrolmentStoreConnector,
+                                       config: FrontendAppConfig,
+                                       errorHandler: ErrorHandler,
+                                       trustsIV: TrustsIV,
+                                       implicit val ec: ExecutionContext
+                                     ) {
 
   def authenticate[A](utr: String)
                      (implicit request: DataRequest[A],
@@ -51,7 +51,7 @@ class AuthenticationService @Inject()(
 
   private def checkIfTrustIsClaimedAndTrustIV[A](utr: String)
                                                 (implicit request: DataRequest[A],
-                                                 hc : HeaderCarrier): Future[Either[Result, DataRequest[A]]] = {
+                                                 hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] = {
 
     val userEnrolled = checkForTrustEnrolmentForUTR(utr)
 
@@ -85,7 +85,7 @@ class AuthenticationService @Inject()(
 
   private def checkIfAgentAuthorised[A](utr: String)
                                        (implicit request: DataRequest[A],
-                                        hc : HeaderCarrier): Future[Either[Result, DataRequest[A]]] =
+                                        hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] =
 
     enrolmentStoreConnector.checkIfAlreadyClaimed(utr) map {
       case NotClaimed =>
