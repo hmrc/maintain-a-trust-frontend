@@ -23,17 +23,24 @@ main_template: MainTemplate
 @(utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = messages("trustAlreadyClaimed.title")
+title = messages("playbackProblemContactHMRC.title")
 ) {
 
-<span class="govuk-caption-xl">@messages("trustAlreadyClaimed.subheading", utr)</span>
+<span class="govuk-caption-xl">@messages("playbackProblemContactHMRC.subheading", utr)</span>
 
-@components.heading("trustAlreadyClaimed.heading")
+@components.heading("playbackProblemContactHMRC.heading")
 
-<p>@messages("trustAlreadyClaimed.p1")</p>
+<p>
+    @messages("playbackProblemContactHMRC.p1.beforeLink")
+    <a
+            id="help-link"
+            href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts"
+            target="_blank">
+        @messages("playbackProblemContactHMRC.p1.link")
+    </a>
+    @messages("playbackProblemContactHMRC.p1.afterLink")
+</p>
 
-<p>@messages("trustAlreadyClaimed.p2") <a id="help-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("trustAlreadyClaimed.p2.a")</a>.</p>
+<p>@messages("playbackProblemContactHMRC.p2")</p>
 
 }
-
-
