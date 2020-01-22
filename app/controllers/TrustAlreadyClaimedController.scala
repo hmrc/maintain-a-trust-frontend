@@ -24,7 +24,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.TrustClaimedView
+import views.html.TrustAlreadyClaimedView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,7 +33,7 @@ class TrustAlreadyClaimedController @Inject()(
                                        playbackRepository: PlaybackRepository,
                                        actions: AuthenticateForPlayback,
                                        val controllerComponents: MessagesControllerComponents,
-                                       view: TrustClaimedView
+                                       view: TrustAlreadyClaimedView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
