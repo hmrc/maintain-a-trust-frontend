@@ -32,6 +32,4 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfi
     http.GET[Option[TrustClaim]](url)(TrustClaim.httpReads(utr), hc, ec)
   }
 
-
-
 }

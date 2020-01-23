@@ -27,7 +27,7 @@ import repositories.PlaybackRepository
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, Enrolments}
 import utils.TestUserAnswers
 
-trait PlaybackSpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked with BeforeAndAfter with FakeTrustsApp {
+trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked with BeforeAndAfter with FakeTrustsApp {
   this: TestSuite =>
 
   def emptyUserAnswers = models.UserAnswers(TestUserAnswers.userInternalId)
@@ -48,4 +48,4 @@ trait PlaybackSpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mo
       )
 }
 
-trait SpecBase extends PlaySpec with PlaybackSpecBaseHelpers
+trait SpecBase extends PlaySpec with SpecBaseHelpers
