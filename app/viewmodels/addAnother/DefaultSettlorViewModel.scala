@@ -16,8 +16,8 @@
 
 package viewmodels.addAnother
 
-import models.enums.Status.InProgress
-import models.enums.{IndividualOrBusiness, Status}
+import models.pages.Status.InProgress
+import models.pages.{IndividualOrBusiness, Status}
 
 final case class DefaultSettlorViewModel(`type` : IndividualOrBusiness,
                                          override val status : Status

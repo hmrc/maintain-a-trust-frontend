@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package models.enums
+package models.pages
 
-import models.WithName
+import models.{Enumerable, WithName}
 
-sealed trait Status
+sealed trait DeedOfVariation
 
-object Status extends Enumerable.Implicits {
+object DeedOfVariation extends Enumerable.Implicits {
 
-  case object Completed extends WithName("completed") with Status
+  case object DeedOfVariation extends WithName("Previously there was only an absolute interest under the will") with DeedOfVariation
+  case object ReplacedWill extends WithName("Replaced the will trust") with DeedOfVariation
+  case object AdditionToWill extends WithName("Addition to the will trust") with DeedOfVariation
 
-  case object InProgress extends WithName("progress") with Status
-
-  val values: Set[Status] = Set(
-    Completed, InProgress
+  val values: Set[DeedOfVariation] = Set(
+    DeedOfVariation,
+    ReplacedWill
   )
 
-  implicit val enumerable: Enumerable[Status] =
+  implicit val enumerable: Enumerable[DeedOfVariation] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
 }

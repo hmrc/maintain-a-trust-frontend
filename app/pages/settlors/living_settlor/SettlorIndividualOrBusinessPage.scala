@@ -17,8 +17,8 @@
 package pages.settlors.living_settlor
 
 import models.UserAnswers
-import models.enums.IndividualOrBusiness
-import models.enums.IndividualOrBusiness._
+import models.pages.IndividualOrBusiness
+import models.pages.IndividualOrBusiness._
 import pages.QuestionPage
 import pages.entitystatus.LivingSettlorStatus
 import play.api.libs.json.JsPath

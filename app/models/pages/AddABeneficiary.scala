@@ -16,8 +16,7 @@
 
 package models.pages
 
-import models.enums.Enumerable
-import models.WithName
+import models.{Enumerable, WithName}
 import viewmodels.RadioOption
 
 sealed trait AddABeneficiary

@@ -19,7 +19,7 @@ package pages.trustees
 import models.MetaData
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.trustees.Trustees
+import sections.Trustees
 
 case class LeadTrusteeMetaData(index: Int) extends QuestionPage[MetaData] {
 

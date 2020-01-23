@@ -16,7 +16,7 @@
 
 package viewmodels.addAnother
 
-import models.enums.Status
+import models.pages.Status
 
 import scala.language.implicitConversions
 

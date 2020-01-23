@@ -17,8 +17,8 @@
 package pages.settlors.living_settlor.trust_type
 
 import models.UserAnswers
-import models.enums.KindOfTrust
-import models.enums.KindOfTrust.Intervivos
+import models.pages.KindOfTrust
+import models.pages.KindOfTrust.Intervivos
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.Settlors

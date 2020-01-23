@@ -16,7 +16,7 @@
 
 package pages.settlors.living_settlor
 
-import models.enums.KindOfBusiness
+import models.pages.KindOfBusiness
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.LivingSettlors

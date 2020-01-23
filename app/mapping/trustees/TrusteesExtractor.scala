@@ -19,10 +19,10 @@ package mapping.trustees
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorState, PlaybackExtractionError}
 import mapping.{PassportType, PlaybackExtractor, PlaybackImplicits}
-import models.enums.IndividualOrBusiness
-import models.enums.Status.Completed
-import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http._
+import models.pages.IndividualOrBusiness
+import models.pages.Status.Completed
+import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.entitystatus.TrusteeStatus
 import pages.trustees._
 import play.api.Logger
@@ -36,7 +36,8 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
   override def extract(answers: UserAnswers, data: Option[List[Trustees]]): Either[PlaybackExtractionError, UserAnswers] =
     {
       data match {
-        case None => Left(FailedToExtractData("No Trustees"))
+        case None =>
+          Left(FailedToExtractData("No Trustees"))
         case Some(trustees) =>
           val updated = trustees.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
             case (answers, (trustee, index)) =>
@@ -49,11 +50,11 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
               }
           }
           updated match {
-            case Success(a) => Right(a)
-            case Failure(exception) => {
+            case Success(a) =>
+              Right(a)
+            case Failure(exception) =>
               Logger.warn(s"[TrusteesExtractor] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustTrusteeType.toString))
-            }
           }
       }
     }

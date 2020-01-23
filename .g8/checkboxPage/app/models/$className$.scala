@@ -1,6 +1,5 @@
 package models
 
-import models.enums.Enumerable
 import viewmodels.RadioOption
 
 sealed trait $className$

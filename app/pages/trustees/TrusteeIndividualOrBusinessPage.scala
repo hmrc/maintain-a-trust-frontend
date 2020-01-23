@@ -17,11 +17,11 @@
 package pages.trustees
 
 import models.UserAnswers
-import models.enums.IndividualOrBusiness
-import models.enums.IndividualOrBusiness.Business
+import models.pages.IndividualOrBusiness
+import models.pages.IndividualOrBusiness.Business
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.trustees.Trustees
+import sections.Trustees
 
 import scala.util.Try
 

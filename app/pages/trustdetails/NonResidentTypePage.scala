@@ -16,7 +16,7 @@
 
 package pages.trustdetails
 
-import models.enums.NonResidentType
+import models.pages.NonResidentType
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.TrustDetails

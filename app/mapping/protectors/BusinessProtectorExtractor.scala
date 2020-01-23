@@ -17,12 +17,13 @@
 package mapping.protectors
 
 import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
-import models.enums.IndividualOrBusiness
 import models.http.DisplayTrustProtectorBusiness
 import pages.protectors._
 import pages.protectors.business._
+
 import scala.util.{Success, Try}
 import mapping.PlaybackImplicits._
+import models.pages.IndividualOrBusiness
 
 class BusinessProtectorExtractor {
 

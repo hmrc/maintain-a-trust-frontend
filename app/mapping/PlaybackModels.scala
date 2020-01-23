@@ -18,8 +18,8 @@ package mapping
 
 import java.time.LocalDate
 
-import models.enums.{DeedOfVariation, TypeOfTrust}
-import models.http.{AddressType, Asset, Correspondence, Declaration, NameType}
+import models.http._
+import models.pages.{DeedOfVariation, TypeOfTrust}
 import play.api.libs.json._
 
 case class Playback(matchData: Option[MatchData],

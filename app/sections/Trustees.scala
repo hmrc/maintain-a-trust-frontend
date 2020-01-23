@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package sections.trustees
+package sections
 
 import pages.QuestionPage
 import play.api.libs.json.{JsArray, JsPath}

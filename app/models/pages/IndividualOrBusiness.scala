@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-package models.enums
+package models.pages
 
-import models.WithName
+import models.{Enumerable, WithName}
+import viewmodels.RadioOption
 
-sealed trait DeedOfVariation
+sealed trait IndividualOrBusiness
 
-object DeedOfVariation extends Enumerable.Implicits {
+object IndividualOrBusiness extends Enumerable.Implicits {
 
-  case object DeedOfVariation extends WithName("Previously there was only an absolute interest under the will") with DeedOfVariation
-  case object ReplacedWill extends WithName("Replaced the will trust") with DeedOfVariation
-  case object AdditionToWill extends WithName("Addition to the will trust") with DeedOfVariation
+  case object Individual extends WithName("individual") with IndividualOrBusiness
+  case object Business extends WithName("business") with IndividualOrBusiness
 
-  val values: Set[DeedOfVariation] = Set(
-    DeedOfVariation,
-    ReplacedWill
+  val values: Set[IndividualOrBusiness] = Set(
+    Individual, Business
   )
 
-  implicit val enumerable: Enumerable[DeedOfVariation] =
+  val options: Set[RadioOption] = values.map {
+    value =>
+      RadioOption("individualOrBusiness", value.toString)
+  }
+
+  implicit val enumerable: Enumerable[IndividualOrBusiness] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
 }

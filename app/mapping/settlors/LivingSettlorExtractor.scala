@@ -18,17 +18,17 @@ package mapping.settlors
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
+import mapping.PlaybackImplicits._
 import mapping.{PassportType, PlaybackExtractor}
+import models.http._
+import models.pages.IndividualOrBusiness
+import models.pages.Status.Completed
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
-import models.enums.IndividualOrBusiness
-import models.http.{DisplayTrustIdentificationOrgType, DisplayTrustIdentificationType, DisplayTrustSettlor, DisplayTrustSettlorCompany, DisplayTrustSettlors, LivingSettlor}
+import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
 import play.api.Logger
 
 import scala.util.{Failure, Success, Try}
-import mapping.PlaybackImplicits._
-import models.enums.Status.Completed
-import pages.entitystatus.LivingSettlorStatus
 
 class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[LivingSettlor]]] {
 

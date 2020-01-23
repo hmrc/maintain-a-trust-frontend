@@ -17,8 +17,8 @@
 package pages.protectors
 
 import models.UserAnswers
-import models.enums.IndividualOrBusiness
-import models.enums.IndividualOrBusiness._
+import models.pages.IndividualOrBusiness
+import models.pages.IndividualOrBusiness._
 import pages.QuestionPage
 import pages.protectors.business._
 import pages.protectors.individual._

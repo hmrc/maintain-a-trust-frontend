@@ -16,7 +16,7 @@
 
 package pages
 
-import models.enums.WhatIsNext
+import models.pages.WhatIsNext
 import play.api.libs.json.JsPath
 
 case object WhatIsNextPage extends QuestionPage[WhatIsNext] {

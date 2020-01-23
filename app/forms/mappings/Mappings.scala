@@ -18,7 +18,7 @@ package forms.mappings
 
 import java.time.LocalDate
 
-import models.enums.Enumerable
+import models.Enumerable
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
 

@@ -18,7 +18,7 @@ package forms
 
 import forms.mappings.Mappings
 import com.google.inject.Inject
-import models.enums.WhatIsNext
+import models.pages.WhatIsNext
 import play.api.data.Form
 
 class WhatIsNextFormProvider @Inject() extends Mappings {

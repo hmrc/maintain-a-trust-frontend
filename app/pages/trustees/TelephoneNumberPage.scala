@@ -18,7 +18,7 @@ package pages.trustees
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.trustees.Trustees
+import sections.Trustees
 
 final case class TelephoneNumberPage(index : Int) extends QuestionPage[String] {
 

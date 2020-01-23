@@ -14,27 +14,22 @@
  * limitations under the License.
  */
 
-package models.enums
+package models.pages
 
-import models.WithName
-import viewmodels.RadioOption
+import models.{Enumerable, WithName}
 
-sealed trait IndividualOrBusiness
+sealed trait Status
 
-object IndividualOrBusiness extends Enumerable.Implicits {
+object Status extends Enumerable.Implicits {
 
-  case object Individual extends WithName("individual") with IndividualOrBusiness
-  case object Business extends WithName("business") with IndividualOrBusiness
+  case object Completed extends WithName("completed") with Status
 
-  val values: Set[IndividualOrBusiness] = Set(
-    Individual, Business
+  case object InProgress extends WithName("progress") with Status
+
+  val values: Set[Status] = Set(
+    Completed, InProgress
   )
 
-  val options: Set[RadioOption] = values.map {
-    value =>
-      RadioOption("individualOrBusiness", value.toString)
-  }
-
-  implicit val enumerable: Enumerable[IndividualOrBusiness] =
+  implicit val enumerable: Enumerable[Status] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
 }

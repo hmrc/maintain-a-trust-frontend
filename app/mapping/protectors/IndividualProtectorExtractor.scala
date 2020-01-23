@@ -19,7 +19,6 @@ package mapping.protectors
 import mapping.PassportType
 import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
-import models.enums.IndividualOrBusiness
 import models.http.{DisplayTrustIdentificationType, DisplayTrustProtector}
 import pages.protectors.ProtectorIndividualOrBusinessPage
 import pages.protectors.individual._
@@ -27,6 +26,7 @@ import play.api.Logger
 
 import scala.util.{Failure, Try}
 import mapping.PlaybackImplicits._
+import models.pages.IndividualOrBusiness
 
 class IndividualProtectorExtractor {
 

@@ -18,7 +18,7 @@ package models.http
 
 import mapping.{AssetMonetaryAmount, PassportType, PropertyLandType, TrustDetailsType}
 import models.Constant._
-import models.enums.{KindOfBusiness, RoleInCompany, ShareClass, ShareType}
+import models.pages.{KindOfBusiness, RoleInCompany, ShareClass, ShareType}
 import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json._

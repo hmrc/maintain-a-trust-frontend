@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package models.enums
+package models.pages
 
-import models.WithName
+import models.{Enumerable, WithName}
 import viewmodels.RadioOption
 
 sealed trait ShareType

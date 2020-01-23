@@ -16,10 +16,10 @@
 
 package pages.entitystatus
 
-import models.enums.Status
+import models.pages.Status
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.trustees.Trustees
+import sections.Trustees
 
 final case class TrusteeStatus(index : Int) extends QuestionPage[Status] {
 

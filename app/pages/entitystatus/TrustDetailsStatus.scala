@@ -16,7 +16,7 @@
 
 package pages.entitystatus
 
-import models.enums.Status
+import models.pages.Status
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.TrustDetails

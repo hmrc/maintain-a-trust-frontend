@@ -16,8 +16,8 @@
 
 package viewmodels.addAnother
 
-import models.enums.Status
-import models.enums.Status.{Completed, InProgress}
+import models.pages.Status
+import models.pages.Status._
 import play.api.libs.json.{Reads, __}
 
 

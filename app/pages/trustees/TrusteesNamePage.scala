@@ -19,7 +19,7 @@ package pages.trustees
 import models.FullName
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.trustees.Trustees
+import sections.Trustees
 
 final case class TrusteesNamePage(index : Int) extends QuestionPage[FullName] {
 

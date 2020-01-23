@@ -16,7 +16,7 @@
 
 package pages.beneficiaries.individual
 
-import models.enums.RoleInCompany
+import models.pages.RoleInCompany
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.beneficiaries.{Beneficiaries, IndividualBeneficiaries}

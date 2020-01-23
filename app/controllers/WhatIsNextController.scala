@@ -19,7 +19,8 @@ package controllers
 import controllers.actions.AuthenticateForPlayback
 import forms.WhatIsNextFormProvider
 import com.google.inject.{Inject, Singleton}
-import models.enums.{Enumerable, WhatIsNext}
+import models.Enumerable
+import models.pages.WhatIsNext
 import pages.WhatIsNextPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
