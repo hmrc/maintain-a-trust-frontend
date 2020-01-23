@@ -38,9 +38,9 @@ class TrustStatusController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        playbackRepository: PlaybackRepository,
                                        actions: AuthenticateForPlayback,
-                                       closedView: ClosedErrorView,
-                                       stillProcessingView: StillProcessingErrorView,
-                                       doesNotMatchView: DoesNotMatchErrorView,
+                                       closedView: TrustClosedView,
+                                       stillProcessingView: TrustStillProcessingView,
+                                       utrDoesNotMatchView: TrustUtrDoesNotMatchView,
                                        ivDownView: IVDownView,
                                        trustConnector: TrustConnector,
                                        trustStoreConnector: TrustsStoreConnector,
@@ -78,7 +78,7 @@ class TrustStatusController @Inject()(
   def notFound(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
       enforceUtr() { _ =>
-        Future.successful(Ok(doesNotMatchView(request.user.affinityGroup)))
+        Future.successful(Ok(utrDoesNotMatchView(request.user.affinityGroup)))
       }
   }
 

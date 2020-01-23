@@ -67,7 +67,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.closed().url)
 
-      val view: ClosedErrorView = application.injector.instanceOf[ClosedErrorView]
+      val view: TrustClosedView = application.injector.instanceOf[TrustClosedView]
 
       status(result) mustEqual OK
 
@@ -81,7 +81,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.processing().url)
 
-      val view: StillProcessingErrorView = application.injector.instanceOf[StillProcessingErrorView]
+      val view: TrustStillProcessingView = application.injector.instanceOf[TrustStillProcessingView]
 
       status(result) mustEqual OK
 
@@ -95,7 +95,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.notFound().url)
 
-      val view: DoesNotMatchErrorView = application.injector.instanceOf[DoesNotMatchErrorView]
+      val view: TrustUtrDoesNotMatchView = application.injector.instanceOf[TrustUtrDoesNotMatchView]
 
       status(result) mustEqual OK
 
