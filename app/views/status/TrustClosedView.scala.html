@@ -27,18 +27,18 @@
 @(affinityGroup: AffinityGroup, utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = messages("closedError.title")
+title = messages("trustClosed.title")
 ) {
 
-  <span class="govuk-caption-xl">@messages("closedError.subheading", utr)</span>
-  @components.heading("closedError.heading", headingSize = "heading-large heading-no-top-margin")
+  <span class="govuk-caption-xl">@messages("trustClosed.subheading", utr)</span>
+  @components.heading("trustClosed.heading", headingSize = "heading-large heading-no-top-margin")
 
-  <p>@messages("closedError.paragraph1")</p>
+  <p>@messages("trustClosed.p1")</p>
 
-  <p>@messages("closedError.paragraph2") <a id="help-link" target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("closedError.contact.link")</a> @messages("closedError.paragraph3")</p>
+  <p>@messages("trustClosed.p2") <a id="help-link" target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("trustClosed.contact.link")</a> @messages("trustClosed.p3")</p>
 
   @if(affinityGroup == AffinityGroup.Agent) {
-    <p>@messages("closedError.paragraph4") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("closedError.return.link")</a>.</p>
+    <p>@messages("trustClosed.p4") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("trustClosed.return.link")</a>.</p>
   } else {
     @components.button_link("site.try-again", controllers.routes.UTRController.onPageLoad().url)
   }

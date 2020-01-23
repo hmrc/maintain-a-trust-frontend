@@ -14,26 +14,30 @@
  * limitations under the License.
  */
 
-package views
+package views.status
 
+import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
-import views.html.TrustAlreadyClaimedView
+import views.html.status.IVDownView
 
-class TrustAlreadyClaimedViewSpec extends ViewBehaviours {
+class IVDownViewSpec extends ViewBehaviours {
 
   val utr = "0987654321"
 
-  "TrustAlreadyClaimed view" must {
+  "IVDown view" must {
 
-    val view = viewFor[TrustAlreadyClaimedView](Some(emptyUserAnswers))
+    val view = viewFor[IVDownView](Some(emptyUserAnswers))
 
-    val applyView = view.apply(utr)(fakeRequest, messages)
+    val applyView = view.apply(AffinityGroup.Agent)(fakeRequest, messages)
 
-    behave like normalPage(applyView, "trustAlreadyClaimed","p1", "p2","p2.a")
-
-    "display the correct subheading" in {
-      val doc = asDocument(applyView)
-      assertContainsText(doc, messages("trustAlreadyClaimed.subheading", utr))
-    }
+    behave like normalPage(applyView,
+      "ivDown",
+      "p1",
+      "p2",
+      "contact.link",
+      "p3",
+      "p2",
+      "return.link"
+    )
   }
 }

@@ -25,18 +25,18 @@ main_template: MainTemplate
 @(affinityGroup: AffinityGroup, utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = messages("stillProcessingError.title")
+title = messages("trustStillProcessing.title")
 ) {
 
- <span class="govuk-caption-xl">@messages("stillProcessingError.subheading", utr)</span>
- @components.heading("stillProcessingError.heading", headingSize = "heading-large heading-no-top-margin")
+ <span class="govuk-caption-xl">@messages("trustStillProcessing.subheading", utr)</span>
+ @components.heading("trustStillProcessing.heading", headingSize = "heading-large heading-no-top-margin")
 
- <p>@messages("stillProcessingError.paragraph1")</p>
+ <p>@messages("trustStillProcessing.p1")</p>
 
- <p>@messages("stillProcessingError.paragraph2")</p>
+ <p>@messages("trustStillProcessing.p2")</p>
 
- <p>@messages("stillProcessingError.paragraph3") <a id="help-link" target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("stillProcessingError.contact.link")</a>.</p>
+ <p>@messages("trustStillProcessing.p3") <a id="help-link" target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("trustStillProcessing.contact.link")</a>.</p>
   @if(affinityGroup == AffinityGroup.Agent) {
-   <p>@messages("stillProcessingError.paragraph4") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("stillProcessingError.return.link")</a>.</p>
+   <p>@messages("trustStillProcessing.p4") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("trustStillProcessing.return.link")</a>.</p>
   }
 }

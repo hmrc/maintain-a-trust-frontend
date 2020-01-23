@@ -27,21 +27,21 @@ main_template: MainTemplate
 @(affinityGroup: AffinityGroup)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = messages("doesNotMatchError.title")
+title = messages("trustUtrDoesNotMatch.title")
 ) {
 
- @components.heading("doesNotMatchError.heading", headingSize = "heading-large heading-with-top-margin")
+ @components.heading("trustUtrDoesNotMatch.heading", headingSize = "heading-large heading-with-top-margin")
 
- <p>@messages("doesNotMatchError.paragraph1")</p>
+ <p>@messages("trustUtrDoesNotMatch.p1")</p>
 
- <p>@messages("doesNotMatchError.paragraph2")</p>
+ <p>@messages("trustUtrDoesNotMatch.p2")</p>
 
- <p>@messages("doesNotMatchError.paragraph3")</p>
+ <p>@messages("trustUtrDoesNotMatch.p3")</p>
 
- <p>@messages("doesNotMatchError.paragraph4") <a id="help-link" target="_blank" href=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts>@messages("doesNotMatchError.contact.link")</a>.</p>
+ <p>@messages("trustUtrDoesNotMatch.p4") <a id="help-link" target="_blank" href=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts>@messages("trustUtrDoesNotMatch.contact.link")</a>.</p>
 
   @if(affinityGroup == AffinityGroup.Agent) {
-   <p>@messages("doesNotMatchError.paragraph5") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("doesNotMatchError.return.link")</a>.</p>
+   <p>@messages("trustUtrDoesNotMatch.p5") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("trustUtrDoesNotMatch.return.link")</a>.</p>
   } else {
    @components.button_link("site.try-again", controllers.routes.UTRController.onPageLoad().url)
   }
