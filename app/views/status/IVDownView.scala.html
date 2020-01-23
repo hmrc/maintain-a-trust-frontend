@@ -30,12 +30,12 @@
     ) {
     @components.heading("ivDown.heading", headingSize = "heading-large heading-with-top-margin")
 
-    <p>@messages("ivDown.paragraph1")</p>
+    <p>@messages("ivDown.p1")</p>
 
-    <p>@messages("ivDown.paragraph2") <a id="help-link" target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("ivDown.contact.link")</a> @messages("ivDown.paragraph3")</p>
+    <p>@messages("ivDown.p2") <a id="help-link" target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("ivDown.contact.link")</a> @messages("ivDown.p3")</p>
 
     @if(affinityGroup == AffinityGroup.Agent) {
-      <p>@messages("ivDown.paragraph2") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("ivDown.return.link")</a>.</p>
+      <p>@messages("ivDown.p2") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("ivDown.return.link")</a>.</p>
     } else {
       @components.button_link(messages("site.try-again"), controllers.routes.UTRController.onPageLoad().url)
     }
