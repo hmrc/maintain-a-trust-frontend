@@ -26,7 +26,15 @@ POST       /declare-what-changed                        controllers.WhatIsNextCo
 GET        /create-agent-services-account               controllers.CreateAgentServicesAccountController.onPageLoad()
 
 GET        /trust-not-claimed                           controllers.TrustNotClaimedController.onPageLoad()
-GET        /trust-already-claimed                       controllers.TrustAlreadyClaimedController.onPageLoad()
 GET        /agent-not-authorised                        controllers.AgentNotAuthorisedController.onPageLoad()
+
+GET        /status/closed                               controllers.TrustStatusController.closed()
+GET        /status/processing                           controllers.TrustStatusController.processing()
+GET        /status/not-found                            controllers.TrustStatusController.notFound()
+GET        /status/down                                 controllers.TrustStatusController.down()
+GET        /status/locked                               controllers.TrustStatusController.locked()
+GET        /status/already-claimed                      controllers.TrustStatusController.alreadyClaimed()
+GET        /status/sorry-there-has-been-a-problem       controllers.TrustStatusController.sorryThereHasBeenAProblem()
+GET        /status                                      controllers.TrustStatusController.status()
 
 GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()

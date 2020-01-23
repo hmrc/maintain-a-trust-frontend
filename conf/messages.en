@@ -28,6 +28,17 @@ checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
 checkYourAnswers.guidance = Guidance for check your answers
 
+closedError.title = Sorry, you cannot access this trust
+closedError.heading = Sorry, you cannot access this trust
+closedError.subheading = This trust’s UTR: {0}
+closedError.paragraph1 = You cannot make changes to this trust as it has been closed.
+closedError.paragraph2 = If this has been done in error or you need help with the service, please
+closedError.contact.link = contact the trusts helpline (opens in a new window or tab)
+closedError.paragraph3 = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
+closedError.paragraph4 = You can
+closedError.return.link = return to register and maintain a trust for a client
+closedError.link.paragraph = If you need help with the service
+
 confirmationPage.title = Declaration received
 confirmationPage.heading = Declaration received
 confirmationPage.heading2 = Your reference is:
@@ -72,6 +83,17 @@ declaration.individual.warning = I confirm that I have taken all reasonable step
 declaration.variation.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
 declaration.variation.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief. I will ensure it is regularly kept up to date as required including changes of address. If I discover that I have made an error or something has changed, I will update this register.
 
+doesNotMatchError.title = Sorry, you cannot access this trust
+doesNotMatchError.heading = Sorry, you cannot access this trust
+doesNotMatchError.subheading = This trust’s UTR: {0}
+doesNotMatchError.paragraph1 = The Unique Taxpayer Reference (UTR) entered does not match our records.
+doesNotMatchError.paragraph2 = Check you have entered the trust’s UTR correctly.
+doesNotMatchError.paragraph3 = If you do not have a UTR for the trust you will need to register the trust first.
+doesNotMatchError.paragraph4 = If you need help with the service
+doesNotMatchError.paragraph5 = You can
+doesNotMatchError.contact.link = contact the trusts helpline (opens in a new window or tab)
+doesNotMatchError.return.link = return to register and maintain a trust for a client
+
 error.browser.title.prefix = Error:
 error.summary.title = There is a problem
 
@@ -93,6 +115,22 @@ informationMaintainingThisTrust.paragraph2 = Any changes you make will not be sa
 informationMaintainingThisTrust.paragraph3 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
 informationMaintainingThisTrust.warning = Some questions may have changed since the trust was registered. You have a legal responsibility to make sure the details held on the register are accurate.
 
+ivDown.heading = Sorry, there is a problem with the service
+ivDown.title = Sorry, there is a problem with the service
+ivDown.paragraph1 = Try again later.
+ivDown.paragraph2 = You can
+ivDown.paragraph3 = if you need to speak to someone about registering and maintaining a trust.
+ivDown.contact.link = contact the trusts helpline (opens in a new window or tab)
+ivDown.return.link = return to register and maintain a trust for a client
+
+playbackProblemContactHMRC.title = Sorry, there has been a problem accessing your trust’s registration
+playbackProblemContactHMRC.heading = Sorry, there has been a problem accessing your trust’s registration
+playbackProblemContactHMRC.subheading = This trust’s UTR: {0}
+playbackProblemContactHMRC.p1.beforeLink = You need to
+playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
+playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
+playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment available when you contact HMRC.
+
 session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
@@ -109,12 +147,30 @@ site.yes = Yes
 site.no = No
 site.confirm-send = Confirm and send
 
+stillProcessingError.title = Sorry, you cannot access this trust
+stillProcessingError.heading = Sorry, you cannot access this trust
+stillProcessingError.subheading = This trust’s UTR: {0}
+stillProcessingError.paragraph1 = HMRC is still processing changes recently made to this trust.
+stillProcessingError.paragraph2 = Try again later.
+stillProcessingError.paragraph3 = If you need help with the service
+stillProcessingError.paragraph4 = You can
+stillProcessingError.contact.link = contact the trusts helpline (opens in a new window or tab)
+stillProcessingError.return.link = return to register and maintain a trust for a client
+
 trustAlreadyClaimed.title = Sorry, you cannot access this trust
 trustAlreadyClaimed.heading = Sorry, you cannot access this trust
 trustAlreadyClaimed.subheading = This trust’s UTR: {0}
 trustAlreadyClaimed.p1 = Another Government Gateway account is linked to it. Please sign in with that account.
 trustAlreadyClaimed.p2 = If you are unable to do so,
 trustAlreadyClaimed.p2.a = contact the trusts helpline (opens in a new window or tab)
+
+trustLocked.title = Sorry, you cannot access this trust
+trustLocked.heading = Sorry, you cannot access this trust
+trustLocked.p1 = You have not passed the security questions asked by HMRC.
+trustLocked.p2 = Try again in 30 minutes.
+trustLocked.p3 = If you need help with the service
+trustLocked.link1 = contact the trusts helpline (opens in a new window or tab)
+trustLocked.subheading = This trust’s UTR: {0}
 
 trustNotClaimed.title = Sorry, you cannot access this trust
 trustNotClaimed.heading = Sorry, you cannot access this trust

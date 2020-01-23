@@ -31,15 +31,15 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthenticationService @Inject()(
+class AuthenticationServiceImpl @Inject()(
                                        enrolmentStoreConnector: EnrolmentStoreConnector,
                                        config: FrontendAppConfig,
                                        errorHandler: ErrorHandler,
                                        trustsIV: TrustsIV,
                                        implicit val ec: ExecutionContext
-                                     ) {
+                                     ) extends AuthenticationService {
 
-  def authenticate[A](utr: String)
+  override def authenticate[A](utr: String)
                      (implicit request: DataRequest[A],
                       hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] =
     request.user.affinityGroup match {
@@ -73,7 +73,7 @@ class AuthenticationService @Inject()(
       enrolmentStoreConnector.checkIfAlreadyClaimed(utr) flatMap {
         case AlreadyClaimed =>
           Logger.info(s"[PlaybackAuthentication] user is not enrolled but the trust is already claimed")
-          Future.successful(Left(Redirect(controllers.routes.TrustAlreadyClaimedController.onPageLoad())))
+          Future.successful(Left(Redirect(controllers.routes.TrustStatusController.alreadyClaimed())))
         case NotClaimed =>
           Logger.info(s"[PlaybackAuthentication] user is not enrolled and the trust is not claimed")
           Future.successful(Left(Redirect(config.claimATrustUrl(utr))))
@@ -112,4 +112,10 @@ class AuthenticationService @Inject()(
       .flatMap(_.identifiers.find(_.key equals "SAUTR"))
       .exists(_.value equals utr)
 
+}
+
+trait AuthenticationService {
+  def authenticate[A](utr: String)
+                     (implicit request: DataRequest[A],
+                      hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]]
 }
