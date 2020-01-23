@@ -1,5 +1,6 @@
 package models
 
+import models.enums.Enumerable
 import play.api.libs.json._
 import viewmodels.RadioOption
 

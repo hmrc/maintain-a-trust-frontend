@@ -17,7 +17,7 @@
 package forms.mappings
 
 import forms.Validation
-import models.Enumerable
+import models.enums.Enumerable
 import play.api.data.FormError
 import play.api.data.format.Formatter
 

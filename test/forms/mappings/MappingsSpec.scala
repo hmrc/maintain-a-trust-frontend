@@ -16,7 +16,7 @@
 
 package forms.mappings
 
-import models.Enumerable
+import models.enums.Enumerable
 import org.scalatest.{MustMatchers, OptionValues, WordSpec}
 import play.api.data.{Form, FormError}
 
