@@ -16,30 +16,14 @@
 
 package pages.protectors.business
 
-import models.UserAnswers
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.Protectors
-
-import scala.util.Try
 
 final case class BusinessProtectorUtrYesNoPage(index : Int) extends QuestionPage[Boolean] {
 
   override def path: JsPath = Protectors.path \ index \ toString
 
   override def toString: String = "utrYesNo"
-
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
-    value match {
-      case Some(true) =>
-        userAnswers.remove(BusinessProtectorAddressYesNoPage(index))
-          .flatMap(_.remove(BusinessProtectorAddressUKYesNoPage(index)))
-          .flatMap(_.remove(BusinessProtectorAddressPage(index)))
-      case Some(false) =>
-        userAnswers.remove(BusinessProtectorUtrPage(index))
-      case _ =>
-        super.cleanup(value, userAnswers)
-    }
-  }
 
 }

@@ -16,13 +16,9 @@
 
 package pages.settlors
 
-import models.UserAnswers
 import pages.QuestionPage
-import pages.settlors.living_settlor.trust_type.{HoldoverReliefYesNoPage, KindOfTrustPage}
 import play.api.libs.json.JsPath
-import sections.settlors.{DeceasedSettlor, LivingSettlors, Settlors}
-
-import scala.util.Try
+import sections.settlors.Settlors
 
 case object SetUpAfterSettlorDiedYesNoPage extends QuestionPage[Boolean] {
 
@@ -30,15 +26,4 @@ case object SetUpAfterSettlorDiedYesNoPage extends QuestionPage[Boolean] {
 
   override def toString: String = "setUpAfterSettlorDiedYesNo"
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
-    value match {
-      case Some(false) =>
-        userAnswers.remove(DeceasedSettlor)
-      case Some(true) =>
-        userAnswers.remove(KindOfTrustPage)
-          .flatMap(_.remove(HoldoverReliefYesNoPage))
-          .flatMap(_.remove(LivingSettlors))
-      case _ => super.cleanup(value, userAnswers)
-    }
-  }
 }

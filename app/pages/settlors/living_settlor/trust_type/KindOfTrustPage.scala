@@ -16,14 +16,10 @@
 
 package pages.settlors.living_settlor.trust_type
 
-import models.UserAnswers
 import models.pages.KindOfTrust
-import models.pages.KindOfTrust.Intervivos
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.Settlors
-
-import scala.util.Try
 
 case object KindOfTrustPage extends QuestionPage[KindOfTrust] {
 
@@ -31,12 +27,4 @@ case object KindOfTrustPage extends QuestionPage[KindOfTrust] {
 
   override def toString: String = "kindOfTrust"
 
-  override def cleanup(value: Option[KindOfTrust], userAnswers: UserAnswers): Try[UserAnswers] = {
-    value match {
-      case Some(Intervivos) =>
-        super.cleanup(value, userAnswers)
-      case _ =>
-        userAnswers.remove(HoldoverReliefYesNoPage)
-    }
-  }
 }

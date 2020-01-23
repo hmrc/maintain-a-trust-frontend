@@ -16,12 +16,9 @@
 
 package pages.trustees
 
-import models.UserAnswers
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.Trustees
-
-import scala.util.Try
 
 final case class IsThisLeadTrusteePage(index : Int) extends QuestionPage[Boolean] {
 
@@ -29,16 +26,4 @@ final case class IsThisLeadTrusteePage(index : Int) extends QuestionPage[Boolean
 
   override def toString: String = "isThisLeadTrustee"
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
-    value match {
-      case Some(false) =>
-        userAnswers.remove(TrusteeAUKCitizenPage(index))
-          .flatMap(_.remove(TrusteesNinoPage(index)))
-          .flatMap(_.remove(TrusteesUkAddressPage(index)))
-          .flatMap(_.remove(TelephoneNumberPage(index)))
-          .flatMap(_.remove(TrusteeAddressInTheUKPage(index)))
-
-      case _ => super.cleanup(value, userAnswers)
-    }
-  }
 }

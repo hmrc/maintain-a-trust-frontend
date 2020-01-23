@@ -16,25 +16,14 @@
 
 package pages.settlors.living_settlor.trust_type
 
-import models.UserAnswers
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.Settlors
-
-import scala.util.Try
 
 case object SetUpInAdditionToWillTrustYesNoPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = Settlors.path \ toString
 
   override def toString: String = "setUpInAdditionToWillTrustYesNo"
-
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
-    value match {
-      case Some(true) =>
-        userAnswers.remove(HowDeedOfVariationCreatedPage)
-      case _ => super.cleanup(value, userAnswers)
-    }
-  }
 
 }

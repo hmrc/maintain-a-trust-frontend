@@ -16,13 +16,9 @@
 
 package pages.trustdetails
 
-import models.UserAnswers
 import pages.QuestionPage
-import pages.entitystatus.TrustDetailsStatus
 import play.api.libs.json.JsPath
 import sections.TrustDetails
-
-import scala.util.Try
 
 case object RegisteringTrustFor5APage extends QuestionPage[Boolean] {
 
@@ -30,17 +26,4 @@ case object RegisteringTrustFor5APage extends QuestionPage[Boolean] {
 
   override def toString: String = "registeringTrustFor5A"
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
-    value match {
-      case Some(false) =>
-        userAnswers.remove(NonResidentTypePage)
-          .flatMap(_.remove(TrustDetailsStatus))
-      case Some(true) =>
-        userAnswers.remove(InheritanceTaxActPage)
-          .flatMap(_.remove(AgentOtherThanBarristerPage))
-          .flatMap(_.remove(TrustDetailsStatus))
-      case _ =>
-        super.cleanup(value, userAnswers)
-    }
-  }
 }

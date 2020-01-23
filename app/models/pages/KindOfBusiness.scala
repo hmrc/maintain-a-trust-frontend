@@ -25,6 +25,7 @@ object KindOfBusiness extends Enumerable.Implicits {
 
   case object Trading extends WithName("Trading") with KindOfBusiness
   case object Investment extends WithName("Investment") with KindOfBusiness
+
   val values: List[KindOfBusiness] = List(
     Trading, Investment
   )

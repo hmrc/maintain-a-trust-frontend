@@ -16,12 +16,9 @@
 
 package pages.trustees
 
-import models.UserAnswers
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.Trustees
-
-import scala.util.Try
 
 final case class TrusteeAddressInTheUKPage(index : Int) extends QuestionPage[Boolean] {
 
@@ -29,12 +26,4 @@ final case class TrusteeAddressInTheUKPage(index : Int) extends QuestionPage[Boo
 
   override def toString: String = "addressUKYesNo"
 
-  // TODO this is incomplete
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
-    value match {
-      case Some(false) =>
-        userAnswers.remove(TrusteesUkAddressPage(index))
-      case _ => super.cleanup(value, userAnswers)
-    }
-  }
 }

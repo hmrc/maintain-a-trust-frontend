@@ -20,9 +20,10 @@ import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.{Address, InternationalAddress, UKAddress, UserAnswers}
 import models.http.Correspondence
-import pages.TrustNamePage
 import pages.correspondence._
+import pages.trustdetails.TrustNamePage
 import play.api.Logger
+
 import scala.util.{Failure, Success}
 
 class CorrespondenceExtractor @Inject() extends PlaybackExtractor[models.http.Correspondence] {

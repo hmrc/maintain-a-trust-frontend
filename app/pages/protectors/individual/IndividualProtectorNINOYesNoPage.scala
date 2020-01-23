@@ -16,12 +16,9 @@
 
 package pages.protectors.individual
 
-import models.UserAnswers
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.Protectors
-
-import scala.util.Try
 
 final case class IndividualProtectorNINOYesNoPage(index : Int) extends QuestionPage[Boolean] {
 
@@ -29,13 +26,4 @@ final case class IndividualProtectorNINOYesNoPage(index : Int) extends QuestionP
 
   override def toString: String = "ninoYesNo"
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
-    value match {
-      case Some(false) => userAnswers.remove(IndividualProtectorNINOPage(index))
-      case Some(true) => userAnswers.remove(IndividualProtectorAddressUKYesNoPage(index))
-        .flatMap(_.remove(IndividualProtectorAddressPage(index)))
-        .flatMap(_.remove(IndividualProtectorPassportIDCardYesNoPage(index)))
-        .flatMap(_.remove(IndividualProtectorPassportIDCardPage(index)))
-      case _ => super.cleanup(value, userAnswers)
-    }
 }

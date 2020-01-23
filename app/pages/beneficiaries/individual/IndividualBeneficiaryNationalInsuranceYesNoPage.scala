@@ -16,12 +16,9 @@
 
 package pages.beneficiaries.individual
 
-import models.UserAnswers
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.beneficiaries.{Beneficiaries, IndividualBeneficiaries}
-
-import scala.util.Try
 
 final case class IndividualBeneficiaryNationalInsuranceYesNoPage(index : Int) extends QuestionPage[Boolean] {
 
@@ -29,15 +26,4 @@ final case class IndividualBeneficiaryNationalInsuranceYesNoPage(index : Int) ex
 
   override def toString: String = "nationalInsuranceNumberYesNo"
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
-    value match {
-      case Some(false) =>
-        userAnswers.remove(IndividualBeneficiaryNationalInsuranceNumberPage(index))
-      case Some(true) =>
-        userAnswers.remove(IndividualBeneficiaryAddressYesNoPage(index))
-          .flatMap(_.remove(IndividualBeneficiaryAddressUKYesNoPage(index)))
-          .flatMap(_.remove(IndividualBeneficiaryAddressUKPage(index)))
-      case _ => super.cleanup(value, userAnswers)
-    }
-  }
 }

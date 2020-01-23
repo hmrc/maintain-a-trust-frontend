@@ -16,15 +16,10 @@
 
 package pages.settlors.living_settlor
 
-import models.UserAnswers
 import models.pages.IndividualOrBusiness
-import models.pages.IndividualOrBusiness._
 import pages.QuestionPage
-import pages.entitystatus.LivingSettlorStatus
 import play.api.libs.json.JsPath
 import sections.settlors.LivingSettlors
-
-import scala.util.Try
 
 final case class SettlorIndividualOrBusinessPage(index : Int) extends QuestionPage[IndividualOrBusiness] {
 
@@ -32,26 +27,4 @@ final case class SettlorIndividualOrBusinessPage(index : Int) extends QuestionPa
 
   override def toString: String = "individualOrBusiness"
 
-  override def cleanup(value: Option[IndividualOrBusiness], userAnswers: UserAnswers): Try[UserAnswers] = {
-    value match {
-      case Some(Individual) =>
-        userAnswers.remove(LivingSettlorStatus(index))
-      case Some(Business) =>
-        userAnswers.remove(SettlorIndividualDateOfBirthYesNoPage(index))
-          .flatMap(_.remove(SettlorIndividualDateOfBirthPage(index)))
-          .flatMap(_.remove(SettlorIndividualNINOYesNoPage(index)))
-          .flatMap(_.remove(SettlorIndividualNINOPage(index)))
-          .flatMap(_.remove(SettlorAddressYesNoPage(index)))
-          .flatMap(_.remove(SettlorAddressUKYesNoPage(index)))
-          .flatMap(_.remove(SettlorAddressUKPage(index)))
-          .flatMap(_.remove(SettlorAddressInternationalPage(index)))
-          .flatMap(_.remove(SettlorIndividualPassportYesNoPage(index)))
-          .flatMap(_.remove(SettlorIndividualPassportPage(index)))
-          .flatMap(_.remove(SettlorIndividualIDCardYesNoPage(index)))
-          .flatMap(_.remove(SettlorIndividualIDCardPage(index)))
-          .flatMap(_.remove(LivingSettlorStatus(index)))
-      case _ =>
-        super.cleanup(value, userAnswers)
-    }
-  }
 }

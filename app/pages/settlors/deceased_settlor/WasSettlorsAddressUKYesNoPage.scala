@@ -16,12 +16,9 @@
 
 package pages.settlors.deceased_settlor
 
-import models.UserAnswers
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.DeceasedSettlor
-
-import scala.util.Try
 
 case object WasSettlorsAddressUKYesNoPage extends QuestionPage[Boolean] {
 
@@ -29,13 +26,4 @@ case object WasSettlorsAddressUKYesNoPage extends QuestionPage[Boolean] {
 
   override def toString: String = "wasAddressUKYesNo"
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =  {
-    value match {
-      case Some(false) =>
-        userAnswers.remove(SettlorsUKAddressPage)
-      case Some(true) =>
-        userAnswers.remove(SettlorsInternationalAddressPage)
-      case _ => super.cleanup(value, userAnswers)
-    }
-  }
 }
