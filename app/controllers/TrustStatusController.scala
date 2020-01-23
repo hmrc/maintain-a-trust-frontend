@@ -49,7 +49,6 @@ class TrustStatusController @Inject()(
                                        lockedView: TrustLockedView,
                                        alreadyClaimedView: TrustAlreadyClaimedView,
                                        playbackProblemContactHMRCView: PlaybackProblemContactHMRCView,
-                                       //playbackExtractor: UserAnswersExtractor,
                                        authenticationService: AuthenticationService,
                                        val controllerComponents: MessagesControllerComponents
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
