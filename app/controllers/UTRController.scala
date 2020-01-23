@@ -69,7 +69,7 @@ class UTRController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(newUpdatedAnswerSession)
             _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.routes.InformationMaintainingThisTrustController.onPageLoad()) //controllers.routes.TrustStatusController.status()
+          } yield Redirect(controllers.routes.TrustStatusController.status())
         }
       )
   }

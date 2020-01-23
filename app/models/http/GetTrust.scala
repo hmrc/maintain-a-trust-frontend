@@ -18,7 +18,11 @@ package models.http
 
 import play.api.libs.json._
 
-case class GetTrust(matchData: MatchData)
+case class GetTrust(matchData: MatchData,
+                    correspondence: Correspondence,
+                    declaration: Declaration
+//                    ,trust: DisplayTrust
+                    )
 
 object GetTrust {
   implicit val writes: Writes[GetTrust] = Json.writes[GetTrust]
@@ -29,6 +33,43 @@ case class MatchData(utr: String)
 
 object MatchData {
   implicit val matchDataFormat: Format[MatchData] = Json.format[MatchData]
+}
+
+case class Correspondence(abroadIndicator: Boolean,
+                          name: String,
+                          address: AddressType,
+                          bpMatchStatus: Option[String],
+                          phoneNumber: String)
+
+object Correspondence {
+  implicit val correspondenceFormat : Format[Correspondence] = Json.format[Correspondence]
+
+}
+
+case class Declaration(name: NameType,
+                       address: AddressType)
+
+object Declaration {
+  implicit val declarationFormat: Format[Declaration] = Json.format[Declaration]
+}
+
+case class AddressType(line1: String,
+                       line2: String,
+                       line3: Option[String],
+                       line4: Option[String],
+                       postCode: Option[String],
+                       country: String)
+
+object AddressType {
+  implicit val addressTypeFormat: Format[AddressType] = Json.format[AddressType]
+}
+
+case class NameType(firstName: String,
+                    middleName: Option[String],
+                    lastName: String)
+
+object NameType {
+  implicit val nameTypeFormat: Format[NameType] = Json.format[NameType]
 }
 
 case class GetTrustDesResponse(getTrust: Option[GetTrust],

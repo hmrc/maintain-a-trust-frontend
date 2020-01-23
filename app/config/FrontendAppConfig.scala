@@ -51,7 +51,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
   lazy val authUrl: String = configuration.get[Service]("auth").baseUrl
   lazy val loginUrl: String = configuration.get[String]("urls.login")
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
-  lazy val trustsUrl = configuration.get[Service]("microservice.services.trusts").baseUrl
+  lazy val trustsUrl: String = configuration.get[Service]("microservice.services.trusts").baseUrl
   lazy val trustsStoreUrl: String = configuration.get[Service]("microservice.services.trusts-store").baseUrl + "/trusts-store"
   lazy val agentOverviewUrl: String = ""
 
@@ -60,9 +60,9 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
   lazy val relationshipIdentifier: String =
     configuration.get[String]("microservice.services.self.relationship-establishment.identifier")
 
-  lazy val enrolmentStoreProxyUrl = configuration.get[Service]("microservice.services.enrolment-store-proxy").baseUrl
+  lazy val enrolmentStoreProxyUrl: String = configuration.get[Service]("microservice.services.enrolment-store-proxy").baseUrl
 
-  lazy val ttlInSeconds = configuration.get[Int]("mongodb.registration.ttlSeconds")
+  lazy val ttlInSeconds: Int = configuration.get[Int]("mongodb.registration.ttlSeconds")
 
   lazy val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.welsh-translation")

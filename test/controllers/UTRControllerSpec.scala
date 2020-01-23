@@ -88,7 +88,7 @@ class UTRControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.routes.InformationMaintainingThisTrustController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.routes.TrustStatusController.status().url
 
       application.stop()
     }
@@ -133,7 +133,7 @@ class UTRControllerSpec extends SpecBase {
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe routes.InformationMaintainingThisTrustController.onPageLoad().url
+      redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
 
       application.stop()
     }
