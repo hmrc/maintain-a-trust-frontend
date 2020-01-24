@@ -29,15 +29,17 @@ object ClassOfBeneficiary {
            (implicit messages: Messages): Seq[AnswerSection] = {
 
     userAnswers.get(ClassOfBeneficiaryDescriptionPage(index)).map { name =>
-      Seq(AnswerSection(
-        headingKey = Some(messages("answerPage.section.classOfBeneficiary.subheading") + s" ${index + 1}"),
-        Seq(
-          stringQuestion(ClassOfBeneficiaryDescriptionPage(index), userAnswers, "classBeneficiaryDescription"),
-          yesNoQuestion(ClassOfBeneficiaryDiscretionYesNoPage(index), userAnswers, "classBeneficiaryShareOfIncomeYesNo", name),
-          stringQuestion(ClassOfBeneficiaryShareOfIncomePage(index), userAnswers, "classBeneficiaryShareOfIncome", name)
-        ).flatten,
-        sectionKey = None
-      ))
+      Seq(
+        AnswerSection(
+          headingKey = Some(messages("answerPage.section.classOfBeneficiary.subheading", index + 1)),
+          Seq(
+            stringQuestion(ClassOfBeneficiaryDescriptionPage(index), userAnswers, "classBeneficiaryDescription"),
+            yesNoQuestion(ClassOfBeneficiaryDiscretionYesNoPage(index), userAnswers, "classBeneficiaryShareOfIncomeYesNo", name),
+            stringQuestion(ClassOfBeneficiaryShareOfIncomePage(index), userAnswers, "classBeneficiaryShareOfIncome", name)
+          ).flatten,
+          sectionKey = None
+        )
+      )
     }.getOrElse(Nil)
   }
 

@@ -41,8 +41,8 @@ object SettlorIndividual {
               yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorIndividualAddressUKYesNo", name),
               addressQuestion(SettlorAddressUKPage(index), userAnswers, "settlorIndividualAddressUK", name, countryOptions),
               addressQuestion(SettlorAddressInternationalPage(index), userAnswers, "settlorIndividualAddressInternational", name, countryOptions),
-              yesNoQuestion(SettlorIndividualPassportIDCardYesNoPage(index), userAnswers, "settlorsPassportOrIdCardYesNo", name),
-              passportOrIdCardQuestion(SettlorIndividualPassportIDCardPage(index), userAnswers, "settlorsPassportOrIdCard", name, countryOptions)
+              yesNoQuestion(SettlorIndividualPassportIDCardYesNoPage(index), userAnswers, "settlorPassportOrIdCardYesNo", name),
+              passportOrIdCardQuestion(SettlorIndividualPassportIDCardPage(index), userAnswers, "settlorPassportOrIdCard", name, countryOptions)
             ).flatten,
             sectionKey = None
           )

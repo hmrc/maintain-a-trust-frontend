@@ -76,15 +76,15 @@ class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
         extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "org1"
         extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe true
-        extraction.right.value.get(TrusteesUtrPage(0)).get mustBe "1234567890"
+        extraction.right.value.get(TrusteeUtrPage(0)).get mustBe "1234567890"
         extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
-        extraction.right.value.get(TrusteesUkAddressPage(0)) must be(defined)
-        extraction.right.value.get(TrusteesUkAddressPage(0)).get.postcode mustBe "NE11NE"
-        extraction.right.value.get(TrusteesInternationalAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(TelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(EmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(LeadTrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteesSafeIdPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
+        extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
       }
 
       "which is not UK registered, return user answers updated" in {
@@ -111,14 +111,14 @@ class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
         extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "org1"
         extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe false
-        extraction.right.value.get(TrusteesUtrPage(0)) mustNot be(defined)
+        extraction.right.value.get(TrusteeUtrPage(0)) mustNot be(defined)
         extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
-        extraction.right.value.get(TrusteesUkAddressPage(0)) must not be defined
-        extraction.right.value.get(TrusteesInternationalAddressPage(0)) must be(defined)
-        extraction.right.value.get(TelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(EmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(LeadTrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteesSafeIdPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeUkAddressPage(0)) must not be defined
+        extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
       }
 
     }

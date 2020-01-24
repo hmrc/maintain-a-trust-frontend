@@ -30,22 +30,22 @@ object CharityBeneficiary {
             countryOptions: CountryOptions)
            (implicit messages: Messages): Seq[AnswerSection] = {
 
-    userAnswers.get(CharityBeneficiaryNamePage(index)).map { charityName =>
-        Seq(
-          AnswerSection(
-            headingKey = Some(messages("answerPage.section.charityBeneficiary.subheading", index + 1)),
-            Seq(
-              stringQuestion(CharityBeneficiaryNamePage(index), userAnswers, "charityBeneficiaryName"),
-              yesNoQuestion(CharityBeneficiaryDiscretionYesNoPage(index), userAnswers, "charityBeneficiaryShareOfIncomeYesNo", charityName),
-              stringQuestion(CharityBeneficiaryShareOfIncomePage(index), userAnswers, "charityBeneficiaryShareOfIncome", charityName),
-              yesNoQuestion(CharityBeneficiaryAddressYesNoPage(index), userAnswers, "charityBeneficiaryAddressYesNo", charityName),
-              yesNoQuestion(CharityBeneficiaryAddressUKYesNoPage(index), userAnswers, "charityBeneficiaryAddressUKYesNo", charityName),
-              addressQuestion(CharityBeneficiaryAddressPage(index), userAnswers, "charityBeneficiaryAddress", charityName, countryOptions),
-              utrQuestion(CharityBeneficiaryUtrPage(index), userAnswers, "charityBeneficiaryUtr", charityName)
-            ).flatten,
-            sectionKey = None
-          )
+    userAnswers.get(CharityBeneficiaryNamePage(index)).map { name =>
+      Seq(
+        AnswerSection(
+          headingKey = Some(messages("answerPage.section.charityBeneficiary.subheading", index + 1)),
+          Seq(
+            stringQuestion(CharityBeneficiaryNamePage(index), userAnswers, "charityBeneficiaryName"),
+            yesNoQuestion(CharityBeneficiaryDiscretionYesNoPage(index), userAnswers, "charityBeneficiaryShareOfIncomeYesNo", name),
+            stringQuestion(CharityBeneficiaryShareOfIncomePage(index), userAnswers, "charityBeneficiaryShareOfIncome", name),
+            yesNoQuestion(CharityBeneficiaryAddressYesNoPage(index), userAnswers, "charityBeneficiaryAddressYesNo", name),
+            yesNoQuestion(CharityBeneficiaryAddressUKYesNoPage(index), userAnswers, "charityBeneficiaryAddressUKYesNo", name),
+            addressQuestion(CharityBeneficiaryAddressPage(index), userAnswers, "charityBeneficiaryAddress", name, countryOptions),
+            utrQuestion(CharityBeneficiaryUtrPage(index), userAnswers, "charityBeneficiaryUtr", name)
+          ).flatten,
+          sectionKey = None
         )
+      )
     }.getOrElse(Nil)
   }
 

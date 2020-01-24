@@ -39,14 +39,14 @@ class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[Displa
             case (answers, deceasedSettlor) =>
 
             answers
-              .flatMap(_.set(SettlorsNamePage, deceasedSettlor.name.convert))
+              .flatMap(_.set(SettlorNamePage, deceasedSettlor.name.convert))
               .flatMap(answers => extractDateOfDeath(deceasedSettlor, answers))
               .flatMap(answers => extractDateOfBirth(deceasedSettlor, answers))
               .flatMap(answers => extractIdentification(deceasedSettlor.identification, answers))
-              .flatMap(_.set(SettlorsSafeIdPage, deceasedSettlor.identification.flatMap(_.safeId)))
+              .flatMap(_.set(SettlorSafeIdPage, deceasedSettlor.identification.flatMap(_.safeId)))
               .flatMap {
                 _.set(
-                  SettlorsMetaData,
+                  SettlorMetaData,
                   MetaData(
                     lineNo = deceasedSettlor.lineNo,
                     bpMatchStatus = deceasedSettlor.bpMatchStatus,
@@ -81,7 +81,7 @@ class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[Displa
     deceasedSettlor.dateOfBirth match {
       case Some(dateOfBirth) =>
         answers.set(SettlorDateOfBirthYesNoPage, true)
-          .flatMap(_.set(SettlorsDateOfBirthPage, dateOfBirth.convert))
+          .flatMap(_.set(SettlorDateOfBirthPage, dateOfBirth.convert))
       case None =>
         // Assumption that user answered no as the date of birth is not provided
         answers.set(SettlorDateOfBirthYesNoPage, false)
@@ -105,41 +105,41 @@ class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[Displa
 
       case _ =>
         // just a safeId returned
-        answers.set(SettlorsNationalInsuranceYesNoPage, false)
-          .flatMap(_.set(SettlorsLastKnownAddressYesNoPage, false))
+        answers.set(SettlorNationalInsuranceYesNoPage, false)
+          .flatMap(_.set(SettlorLastKnownAddressYesNoPage, false))
 
     } getOrElse {
-      answers.set(SettlorsNationalInsuranceYesNoPage, false)
-        .flatMap(_.set(SettlorsLastKnownAddressYesNoPage, false))
+      answers.set(SettlorNationalInsuranceYesNoPage, false)
+        .flatMap(_.set(SettlorLastKnownAddressYesNoPage, false))
     }
   }
 
   private def extractNino(nino: String, answers: UserAnswers) = {
     answers.set(SettlorNationalInsuranceNumberPage, nino)
-      .flatMap(_.set(SettlorsNationalInsuranceYesNoPage, true))
+      .flatMap(_.set(SettlorNationalInsuranceYesNoPage, true))
   }
 
   private def extractAddress(address: Address, answers: UserAnswers) = {
     address match {
       case uk: UKAddress =>
         answers
-          .set(SettlorsNationalInsuranceYesNoPage, false)
-          .flatMap(_.set(SettlorsUKAddressPage, uk))
-          .flatMap(_.set(SettlorsLastKnownAddressYesNoPage, true))
-          .flatMap(_.set(WasSettlorsAddressUKYesNoPage, true))
+          .set(SettlorNationalInsuranceYesNoPage, false)
+          .flatMap(_.set(SettlorUKAddressPage, uk))
+          .flatMap(_.set(SettlorLastKnownAddressYesNoPage, true))
+          .flatMap(_.set(SettlorLastKnownAddressUKYesNoPage, true))
       case nonUk: InternationalAddress =>
         answers
-          .set(SettlorsNationalInsuranceYesNoPage, false)
-          .flatMap(_.set(SettlorsInternationalAddressPage, nonUk))
-          .flatMap(_.set(SettlorsLastKnownAddressYesNoPage, true))
-          .flatMap(_.set(WasSettlorsAddressUKYesNoPage, false))
+          .set(SettlorNationalInsuranceYesNoPage, false)
+          .flatMap(_.set(SettlorInternationalAddressPage, nonUk))
+          .flatMap(_.set(SettlorLastKnownAddressYesNoPage, true))
+          .flatMap(_.set(SettlorLastKnownAddressUKYesNoPage, false))
     }
   }
 
   private def extractPassportIdCard(passport: PassportOrIdCardDetails, answers: UserAnswers) =
     answers
-      .set(SettlorsPassportIDCardPage, passport)
-      .flatMap(_.set(SettlorsNationalInsuranceYesNoPage, false))
-      .flatMap(_.set(SettlorsLastKnownAddressYesNoPage, false))
+      .set(SettlorPassportIDCardPage, passport)
+      .flatMap(_.set(SettlorNationalInsuranceYesNoPage, false))
+      .flatMap(_.set(SettlorLastKnownAddressYesNoPage, false))
 
 }

@@ -37,7 +37,7 @@ object IndividualBeneficiary {
     userAnswers.get(IndividualBeneficiaryNamePage(index)).map(CheckAnswersFormatters.fullName).map { name =>
       Seq(
         AnswerSection(
-          headingKey = Some(messages("answerPage.section.individualBeneficiary.subheading") + s" ${index + 1}"),
+          headingKey = Some(messages("answerPage.section.individualBeneficiary.subheading", index + 1)),
           Seq(
             fullNameQuestion(IndividualBeneficiaryNamePage(index), userAnswers, "individualBeneficiaryName"),
             roleInCompanyQuestion(IndividualBeneficiaryRoleInCompanyPage(index), userAnswers, "individualBeneficiaryRoleInCompany", name),

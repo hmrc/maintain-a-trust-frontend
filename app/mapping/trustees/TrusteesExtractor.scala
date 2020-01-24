@@ -63,15 +63,15 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
     answers
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
-      .flatMap(_.set(TrusteesNamePage(index), leadIndividual.name.convert))
-      .flatMap(_.set(TrusteesDateOfBirthPage(index), leadIndividual.dateOfBirth.convert))
+      .flatMap(_.set(TrusteeNamePage(index), leadIndividual.name.convert))
+      .flatMap(_.set(TrusteeDateOfBirthPage(index), leadIndividual.dateOfBirth.convert))
       .flatMap(answers => extractLeadIndividualIdentification(leadIndividual, index, answers))
       .flatMap(answers => extractEmail(leadIndividual.email, index, answers))
-      .flatMap(_.set(TelephoneNumberPage(index), leadIndividual.phoneNumber))
-      .flatMap(_.set(TrusteesSafeIdPage(index), leadIndividual.identification.safeId))
+      .flatMap(_.set(TrusteeTelephoneNumberPage(index), leadIndividual.phoneNumber))
+      .flatMap(_.set(TrusteeSafeIdPage(index), leadIndividual.identification.safeId))
       .flatMap {
         _.set(
-          LeadTrusteeMetaData(index),
+          TrusteeMetaData(index),
           MetaData(
             lineNo = leadIndividual.lineNo,
             bpMatchStatus = leadIndividual.bpMatchStatus,
@@ -88,11 +88,11 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
       .flatMap(_.set(TrusteeOrgNamePage(index), leadCompany.name))
       .flatMap(answers => extractLeadOrgIdentification(leadCompany, index, answers))
       .flatMap(answers => extractEmail(leadCompany.email, index, answers))
-      .flatMap(_.set(TelephoneNumberPage(index), leadCompany.phoneNumber))
-      .flatMap(_.set(TrusteesSafeIdPage(index), leadCompany.identification.safeId))
+      .flatMap(_.set(TrusteeTelephoneNumberPage(index), leadCompany.phoneNumber))
+      .flatMap(_.set(TrusteeSafeIdPage(index), leadCompany.identification.safeId))
       .flatMap {
         _.set(
-          LeadTrusteeMetaData(index),
+          TrusteeMetaData(index),
           MetaData(
             lineNo = leadCompany.lineNo,
             bpMatchStatus = leadCompany.bpMatchStatus,
@@ -106,9 +106,9 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
     answers
       .flatMap(_.set(IsThisLeadTrusteePage(index), false))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
-      .flatMap(_.set(TrusteesNamePage(index), individual.name.convert))
+      .flatMap(_.set(TrusteeNamePage(index), individual.name.convert))
       .flatMap(answers => extractDateOfBirth(individual, index, answers))
-      .flatMap(_.set(TelephoneNumberPage(index), individual.phoneNumber))
+      .flatMap(_.set(TrusteeTelephoneNumberPage(index), individual.phoneNumber))
       .flatMap(answers => extractIndividualIdentification(individual, index, answers))
       .flatMap {
         _.set(
@@ -120,7 +120,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
           )
         )
       }
-      .flatMap(_.set(TrusteesSafeIdPage(index), individual.identification.flatMap(_.safeId)))
+      .flatMap(_.set(TrusteeSafeIdPage(index), individual.identification.flatMap(_.safeId)))
       .flatMap(_.set(TrusteeStatus(index), Completed))
   }
 
@@ -130,9 +130,9 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(TrusteeOrgNamePage(index), company.name))
       .flatMap(answers => extractCompanyIdentification(company, index, answers))
-      .flatMap(_.set(TelephoneNumberPage(index), company.phoneNumber))
-      .flatMap(_.set(EmailPage(index), company.email))
-      .flatMap(_.set(TrusteesSafeIdPage(index), company.identification.flatMap(_.safeId)))
+      .flatMap(_.set(TrusteeTelephoneNumberPage(index), company.phoneNumber))
+      .flatMap(_.set(TrusteeEmailPage(index), company.email))
+      .flatMap(_.set(TrusteeSafeIdPage(index), company.identification.flatMap(_.safeId)))
       .flatMap {
         _.set(
           TrusteeMetaData(index),
@@ -151,7 +151,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
 
       case DisplayTrustIdentificationType(_, Some(nino), None, Some(address)) =>
         answers.set(TrusteeAUKCitizenPage(index), true)
-          .flatMap(_.set(TrusteesNinoPage(index), nino))
+          .flatMap(_.set(TrusteeNinoPage(index), nino))
           .flatMap(answers => extractAddress(address.convert, index, answers))
 
       case DisplayTrustIdentificationType(_, None, Some(passport), Some(address)) =>
@@ -165,7 +165,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
 
       case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
         answers.set(TrusteeAUKCitizenPage(index), true)
-          .flatMap(_.set(TrusteesNinoPage(index), nino))
+          .flatMap(_.set(TrusteeNinoPage(index), nino))
 
       case DisplayTrustIdentificationType(_, None, None, Some(address)) =>
         Logger.error(s"[TrusteesExtractor] only address identification for lead trustee individual returned in DisplayTrustOrEstate api")
@@ -183,7 +183,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
 
       case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
         answers.set(TrusteeNinoYesNoPage(index), true)
-          .flatMap(_.set(TrusteesNinoPage(index), nino))
+          .flatMap(_.set(TrusteeNinoPage(index), nino))
 
       case DisplayTrustIdentificationType(_, None, Some(passport), None) =>
         Logger.error(s"[TrusteesExtractor] only passport identification returned for trustee individual in DisplayTrustOrEstate api")
@@ -210,7 +210,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
 
       case DisplayTrustIdentificationOrgType(_, Some(utr), Some(address)) =>
         answers.set(TrusteeUtrYesNoPage(index), true)
-          .flatMap(_.set(TrusteesUtrPage(index), utr))
+          .flatMap(_.set(TrusteeUtrPage(index), utr))
           .flatMap(answers => extractAddress(address.convert, index, answers))
 
       case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
@@ -219,7 +219,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
 
       case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
         answers.set(TrusteeUtrYesNoPage(index), true)
-          .flatMap(_.set(TrusteesUtrPage(index), utr))
+          .flatMap(_.set(TrusteeUtrPage(index), utr))
 
       case DisplayTrustIdentificationOrgType(_, _, _) =>
         Logger.error(s"[TrusteesExtractor] no identification for lead trustee company returned in DisplayTrustOrEstate api")
@@ -232,7 +232,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
 
       case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
         answers.set(TrusteeUtrYesNoPage(index), true)
-          .flatMap(_.set(TrusteesUtrPage(index), utr))
+          .flatMap(_.set(TrusteeUtrPage(index), utr))
 
       case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
         answers.set(TrusteeUtrYesNoPage(index), false)
@@ -248,7 +248,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
     trusteeIndividual.dateOfBirth match {
       case Some(dob) =>
         answers.set(TrusteeDateOfBirthYesNoPage(index), true)
-          .flatMap(_.set(TrusteesDateOfBirthPage(index), dob.convert))
+          .flatMap(_.set(TrusteeDateOfBirthPage(index), dob.convert))
       case None =>
         // Assumption that user answered no as utr is not provided
         answers.set(TrusteeDateOfBirthYesNoPage(index), false)
@@ -277,7 +277,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
     email match {
       case Some(x) => {
         answers.set(TrusteeEmailYesNoPage(index), true)
-          .flatMap(_.set(EmailPage(index), x))
+          .flatMap(_.set(TrusteeEmailPage(index), x))
       }
       case _ =>  answers.set(TrusteeEmailYesNoPage(index), false)
     }

@@ -140,14 +140,14 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
           extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "Trustee Company 1"
           extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe false
-          extraction.right.value.get(TrusteesUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeUtrPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressYesNoPage(0)).get mustBe false
           extraction.right.value.get(TrusteeAddressInTheUKPage(0)) mustNot be(defined)
-          extraction.right.value.get(TrusteesUkAddressPage(0)) mustNot be(defined)
-          extraction.right.value.get(TrusteesInternationalAddressPage(0)) mustNot be(defined)
-          extraction.right.value.get(TelephoneNumberPage(0)) mustNot be(defined)
-          extraction.right.value.get(EmailPage(0)) mustNot be(defined)
-          extraction.right.value.get(TrusteesSafeIdPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeUkAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeEmailPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeSafeIdPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
         }
 
@@ -162,33 +162,33 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
           extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "Trustee Company 0"
           extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
-          extraction.right.value.get(TelephoneNumberPage(0)).get mustBe "01911112222"
-          extraction.right.value.get(EmailPage(0)).get mustBe "email@email.com"
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "01911112222"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "email@email.com"
           extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe false
-          extraction.right.value.get(TrusteesUtrPage(0)) mustNot be(defined)
-          extraction.right.value.get(TrusteesSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrusteeUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(TrusteeAddressYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "DE")
           extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
 
           extraction.right.value.get(TrusteeOrgNamePage(1)).get mustBe "Trustee Company 1"
           extraction.right.value.get(TrusteeMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-          extraction.right.value.get(TelephoneNumberPage(1)).get mustBe "01911112222"
-          extraction.right.value.get(EmailPage(1)).get mustBe "email@email.com"
+          extraction.right.value.get(TrusteeTelephoneNumberPage(1)).get mustBe "01911112222"
+          extraction.right.value.get(TrusteeEmailPage(1)).get mustBe "email@email.com"
           extraction.right.value.get(TrusteeUtrYesNoPage(1)).get mustBe true
-          extraction.right.value.get(TrusteesUtrPage(1)).get mustBe "1234567890"
-          extraction.right.value.get(TrusteesSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrusteeUtrPage(1)).get mustBe "1234567890"
+          extraction.right.value.get(TrusteeSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(TrusteeAddressYesNoPage(1)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressPage(1)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressInTheUKPage(1)) mustNot be(defined)
 
           extraction.right.value.get(TrusteeOrgNamePage(2)).get mustBe "Trustee Company 2"
           extraction.right.value.get(TrusteeMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
-          extraction.right.value.get(TelephoneNumberPage(2)) mustNot be(defined)
-          extraction.right.value.get(EmailPage(2)) mustNot be(defined)
+          extraction.right.value.get(TrusteeTelephoneNumberPage(2)) mustNot be(defined)
+          extraction.right.value.get(TrusteeEmailPage(2)) mustNot be(defined)
           extraction.right.value.get(TrusteeUtrYesNoPage(2)).get mustBe false
-          extraction.right.value.get(TrusteesUtrPage(2)) mustNot be(defined)
-          extraction.right.value.get(TrusteesSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrusteeUtrPage(2)) mustNot be(defined)
+          extraction.right.value.get(TrusteeSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(TrusteeAddressYesNoPage(2)).get mustBe true
           extraction.right.value.get(TrusteeAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
           extraction.right.value.get(TrusteeAddressInTheUKPage(2)).get mustBe true
@@ -235,17 +235,17 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
           extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe false
           extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-          extraction.right.value.get(TrusteesNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
           extraction.right.value.get(TrusteeDateOfBirthYesNoPage(0)).get mustBe false
-          extraction.right.value.get(TrusteesDateOfBirthPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeNinoYesNoPage(0)).get mustBe false
-          extraction.right.value.get(TrusteesNinoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressYesNoPage(0)).get mustBe false
           extraction.right.value.get(TrusteeAddressInTheUKPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteePassportIDCardYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteePassportIDCardPage(0)) mustNot be(defined)
-          extraction.right.value.get(TrusteesSafeIdPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeSafeIdPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
         }
 
@@ -258,44 +258,44 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
           extraction mustBe 'right
 
-          extraction.right.value.get(TrusteesNamePage(0)).get mustBe FullName("First Name 0", None, "Last Name 0")
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name 0", None, "Last Name 0")
           extraction.right.value.get(TrusteeDateOfBirthYesNoPage(0)).get mustBe false
-          extraction.right.value.get(TrusteesDateOfBirthPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
           extraction.right.value.get(TrusteeNinoYesNoPage(0)).get mustBe true
-          extraction.right.value.get(TrusteesNinoPage(0)).get mustBe "0234567890"
+          extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "0234567890"
           extraction.right.value.get(TrusteeAddressYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressInTheUKPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteePassportIDCardYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteePassportIDCardPage(0)) mustNot be(defined)
-          extraction.right.value.get(TrusteesSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrusteeSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
 
-          extraction.right.value.get(TrusteesNamePage(1)).get mustBe FullName("First Name 1", None, "Last Name 1")
+          extraction.right.value.get(TrusteeNamePage(1)).get mustBe FullName("First Name 1", None, "Last Name 1")
           extraction.right.value.get(TrusteeDateOfBirthYesNoPage(1)).get mustBe true
-          extraction.right.value.get(TrusteesDateOfBirthPage(1)).get mustBe LocalDate.of(1970,2,1)
+          extraction.right.value.get(TrusteeDateOfBirthPage(1)).get mustBe LocalDate.of(1970,2,1)
           extraction.right.value.get(TrusteeMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.right.value.get(TrusteeNinoYesNoPage(1)).get mustBe false
-          extraction.right.value.get(TrusteesNinoPage(1)) mustNot be(defined)
+          extraction.right.value.get(TrusteeNinoPage(1)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressYesNoPage(1)).get mustBe true
           extraction.right.value.get(TrusteeAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
           extraction.right.value.get(TrusteeAddressInTheUKPage(1)).get mustBe false
           extraction.right.value.get(TrusteePassportIDCardYesNoPage(1)).get mustBe false
           extraction.right.value.get(TrusteePassportIDCardPage(1)) mustNot be(defined)
-          extraction.right.value.get(TrusteesSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrusteeSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
 
-          extraction.right.value.get(TrusteesNamePage(2)).get mustBe FullName("First Name 2", None, "Last Name 2")
+          extraction.right.value.get(TrusteeNamePage(2)).get mustBe FullName("First Name 2", None, "Last Name 2")
           extraction.right.value.get(TrusteeDateOfBirthYesNoPage(2)).get mustBe false
-          extraction.right.value.get(TrusteesDateOfBirthPage(2)) mustNot be(defined)
+          extraction.right.value.get(TrusteeDateOfBirthPage(2)) mustNot be(defined)
           extraction.right.value.get(TrusteeMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
           extraction.right.value.get(TrusteeNinoYesNoPage(2)).get mustBe false
-          extraction.right.value.get(TrusteesNinoPage(2)) mustNot be(defined)
+          extraction.right.value.get(TrusteeNinoPage(2)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressYesNoPage(2)).get mustBe true
           extraction.right.value.get(TrusteeAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
           extraction.right.value.get(TrusteeAddressInTheUKPage(2)).get mustBe true
           extraction.right.value.get(TrusteePassportIDCardYesNoPage(2)).get mustBe true
           extraction.right.value.get(TrusteePassportIDCardPage(2)).get.country mustBe "DE"
-          extraction.right.value.get(TrusteesSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrusteeSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
 
         }
 
@@ -403,56 +403,56 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
           extraction mustBe 'right
 
-          extraction.right.value.get(TrusteesNamePage(0)).get mustBe FullName("individual", None, "trustee 1")
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("individual", None, "trustee 1")
           extraction.right.value.get(TrusteeDateOfBirthYesNoPage(0)).get mustBe true
-          extraction.right.value.get(TrusteesDateOfBirthPage(0)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(1970, 2, 1)
           extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("01", Some("01"), "2019-11-26")
           extraction.right.value.get(TrusteeNinoYesNoPage(0)).get mustBe false
-          extraction.right.value.get(TrusteesNinoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressYesNoPage(0)).get mustBe true
-          extraction.right.value.get(TrusteesInternationalAddressPage(0)) mustNot be(defined)
-          extraction.right.value.get(TrusteesUkAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeUkAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
           extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
           extraction.right.value.get(TrusteePassportIDCardYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteePassportIDCardPage(0)).get mustBe PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))
-          extraction.right.value.get(TrusteesSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrusteeSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
 
-          extraction.right.value.get(TrusteesNamePage(1)).get mustBe FullName("individual", None, "trustee 2")
+          extraction.right.value.get(TrusteeNamePage(1)).get mustBe FullName("individual", None, "trustee 2")
           extraction.right.value.get(TrusteeDateOfBirthYesNoPage(1)).get mustBe true
-          extraction.right.value.get(TrusteesDateOfBirthPage(1)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.right.value.get(TrusteeDateOfBirthPage(1)).get mustBe LocalDate.of(1970, 2, 1)
           extraction.right.value.get(TrusteeMetaData(1)).get mustBe MetaData("01", Some("01"), "2019-11-26")
           extraction.right.value.get(TrusteeNinoYesNoPage(1)).get mustBe true
-          extraction.right.value.get(TrusteesNinoPage(1)).get mustBe "1234567890"
+          extraction.right.value.get(TrusteeNinoPage(1)).get mustBe "1234567890"
           extraction.right.value.get(TrusteeAddressYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(TrusteesInternationalAddressPage(1)) mustNot be(defined)
-          extraction.right.value.get(TrusteesUkAddressPage(1)) mustNot be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(1)) mustNot be(defined)
+          extraction.right.value.get(TrusteeUkAddressPage(1)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressInTheUKPage(1)) mustNot be(defined)
           extraction.right.value.get(TrusteePassportIDCardYesNoPage(1)) mustNot be(defined)
           extraction.right.value.get(TrusteePassportIDCardPage(1)) mustNot be(defined)
-          extraction.right.value.get(TrusteesSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrusteeSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
 
           extraction.right.value.get(TrusteeOrgNamePage(2)).get mustBe "Trustee Company 1"
           extraction.right.value.get(TrusteeMetaData(2)).get mustBe MetaData("01", Some("01"), "2019-11-26")
-          extraction.right.value.get(TelephoneNumberPage(2)).get mustBe "01911112222"
-          extraction.right.value.get(EmailPage(2)).get mustBe "email@email.com"
+          extraction.right.value.get(TrusteeTelephoneNumberPage(2)).get mustBe "01911112222"
+          extraction.right.value.get(TrusteeEmailPage(2)).get mustBe "email@email.com"
           extraction.right.value.get(TrusteeUtrYesNoPage(2)).get mustBe false
-          extraction.right.value.get(TrusteesUtrPage(2)) mustNot be(defined)
-          extraction.right.value.get(TrusteesSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrusteeUtrPage(2)) mustNot be(defined)
+          extraction.right.value.get(TrusteeSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(TrusteeAddressYesNoPage(2)).get mustBe true
-          extraction.right.value.get(TrusteesInternationalAddressPage(2)).get mustBe InternationalAddress("line1", "line2", None, "DE")
-          extraction.right.value.get(TrusteesUkAddressPage(2)) mustNot be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(2)).get mustBe InternationalAddress("line1", "line2", None, "DE")
+          extraction.right.value.get(TrusteeUkAddressPage(2)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressInTheUKPage(2)).get mustBe false
 
           extraction.right.value.get(TrusteeOrgNamePage(3)).get mustBe "Trustee Company 2"
           extraction.right.value.get(TrusteeMetaData(3)).get mustBe MetaData("01", Some("01"), "2019-11-26")
-          extraction.right.value.get(TelephoneNumberPage(3)).get mustBe "01911112222"
-          extraction.right.value.get(EmailPage(3)).get mustBe "email@email.com"
+          extraction.right.value.get(TrusteeTelephoneNumberPage(3)).get mustBe "01911112222"
+          extraction.right.value.get(TrusteeEmailPage(3)).get mustBe "email@email.com"
           extraction.right.value.get(TrusteeUtrYesNoPage(3)).get mustBe true
-          extraction.right.value.get(TrusteesUtrPage(3)).get mustBe "1234567890"
-          extraction.right.value.get(TrusteesSafeIdPage(3)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrusteeUtrPage(3)).get mustBe "1234567890"
+          extraction.right.value.get(TrusteeSafeIdPage(3)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(TrusteeAddressYesNoPage(3)) mustNot be(defined)
-          extraction.right.value.get(TrusteesInternationalAddressPage(3)) mustNot be(defined)
-          extraction.right.value.get(TrusteesUkAddressPage(3)) mustNot be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(3)) mustNot be(defined)
+          extraction.right.value.get(TrusteeUkAddressPage(3)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressInTheUKPage(3)) mustNot be(defined)
 
         }

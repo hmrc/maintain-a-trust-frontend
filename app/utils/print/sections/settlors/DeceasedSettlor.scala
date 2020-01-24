@@ -26,23 +26,23 @@ import viewmodels.AnswerSection
 object DeceasedSettlor {
 
   def apply(userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] = {
-    userAnswers.get(SettlorsNamePage).map(CheckAnswersFormatters.fullName).map { name =>
+    userAnswers.get(SettlorNamePage).map(CheckAnswersFormatters.fullName).map { name =>
       Seq(
         AnswerSection(
           headingKey = None,
           rows = Seq(
-            fullNameQuestion(SettlorsNamePage, userAnswers, "settlorsName"),
+            fullNameQuestion(SettlorNamePage, userAnswers, "settlorName"),
             yesNoQuestion(SettlorDateOfDeathYesNoPage, userAnswers, "settlorDateOfDeathYesNo", name),
             dateQuestion(SettlorDateOfDeathPage, userAnswers, "settlorDateOfDeath", name),
             yesNoQuestion(SettlorDateOfBirthYesNoPage, userAnswers, "settlorDateOfBirthYesNo", name),
-            dateQuestion(SettlorsDateOfBirthPage, userAnswers, "settlorsDateOfBirth", name),
-            yesNoQuestion(SettlorsNationalInsuranceYesNoPage, userAnswers, "settlorsNationalInsuranceYesNo", name),
+            dateQuestion(SettlorDateOfBirthPage, userAnswers, "settlorDateOfBirth", name),
+            yesNoQuestion(SettlorNationalInsuranceYesNoPage, userAnswers, "settlorNationalInsuranceYesNo", name),
             ninoQuestion(SettlorNationalInsuranceNumberPage, userAnswers, "settlorNationalInsuranceNumber", name),
-            yesNoQuestion(SettlorsLastKnownAddressYesNoPage, userAnswers, "settlorsLastKnownAddressYesNo", name),
-            yesNoQuestion(WasSettlorsAddressUKYesNoPage, userAnswers, "wasSettlorsAddressUKYesNo", name),
-            ukAddressQuestion(SettlorsUKAddressPage, userAnswers, "settlorsUKAddress", name, countryOptions),
-            internationalAddressQuestion(SettlorsInternationalAddressPage, userAnswers, "settlorsInternationalAddress", name, countryOptions),
-            passportOrIdCardQuestion(SettlorsPassportIDCardPage, userAnswers, "settlorsPassportOrIdCard", name, countryOptions)
+            yesNoQuestion(SettlorLastKnownAddressYesNoPage, userAnswers, "settlorLastKnownAddressYesNo", name),
+            yesNoQuestion(SettlorLastKnownAddressUKYesNoPage, userAnswers, "settlorLastKnownAddressUKYesNo", name),
+            ukAddressQuestion(SettlorUKAddressPage, userAnswers, "settlorUKAddress", name, countryOptions),
+            internationalAddressQuestion(SettlorInternationalAddressPage, userAnswers, "settlorInternationalAddress", name, countryOptions),
+            passportOrIdCardQuestion(SettlorPassportIDCardPage, userAnswers, "settlorPassportOrIdCard", name, countryOptions)
           ).flatten,
           sectionKey = None
         )

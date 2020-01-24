@@ -35,11 +35,11 @@ trait LeadTrustee {
       case Some(_) =>
         Seq(
           yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
-          addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteesUkAddress", name, countryOptions)
+          addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name, countryOptions)
         )
       case _ =>
         Seq(
-          addressQuestion(CorrespondenceAddressPage, userAnswers, "trusteesUkAddress", name, countryOptions)
+          addressQuestion(CorrespondenceAddressPage, userAnswers, "trusteeUkAddress", name, countryOptions)
         )
     }
   }

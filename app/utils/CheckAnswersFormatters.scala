@@ -22,9 +22,9 @@ import models.pages.KindOfTrust
 import models.pages.KindOfTrust._
 import models.{Address, FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import pages.beneficiaries.individual.IndividualBeneficiaryNamePage
-import pages.settlors.deceased_settlor.SettlorsNamePage
+import pages.settlors.deceased_settlor.SettlorNamePage
 import pages.settlors.living_settlor.SettlorIndividualNamePage
-import pages.trustees.TrusteesNamePage
+import pages.trustees.TrusteeNamePage
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Nino
@@ -53,7 +53,7 @@ object CheckAnswersFormatters {
   def currency(value: String): Html = escape(s"£$value")
 
   def trusteeName(index: Int, userAnswers: UserAnswers): String =
-    userAnswers.get(TrusteesNamePage(index)).map(_.toString).getOrElse("")
+    userAnswers.get(TrusteeNamePage(index)).map(_.toString).getOrElse("")
 
   def answer[T](key: String, answer: T)(implicit messages: Messages): Html =
     HtmlFormat.escape(messages(s"$key.$answer"))
@@ -61,7 +61,7 @@ object CheckAnswersFormatters {
   def escape(x: String) = HtmlFormat.escape(x)
 
   def deceasedSettlorName(userAnswers: UserAnswers): String =
-    userAnswers.get(SettlorsNamePage).map(_.toString).getOrElse("")
+    userAnswers.get(SettlorNamePage).map(_.toString).getOrElse("")
 
   def indBeneficiaryName(index: Int, userAnswers: UserAnswers): String = {
     userAnswers.get(IndividualBeneficiaryNamePage(index)).map(_.toString).getOrElse("")

@@ -35,12 +35,12 @@ object LeadTrusteeBusiness extends LeadTrustee {
             Seq(
               yesNoQuestion(TrusteeUtrYesNoPage(index), userAnswers, "leadTrusteeUtrYesNo", name),
               stringQuestion(TrusteeOrgNamePage(index), userAnswers, "trusteeBusinessName"),
-              stringQuestion(TrusteesUtrPage(index), userAnswers, "trusteeUtr", name)
+              stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name)
             ).flatten ++
             addressAnswers(index, userAnswers, countryOptions, name).flatten ++
             Seq(yesNoQuestion(TrusteeEmailYesNoPage(index), userAnswers, "trusteeEmailAddressYesNo", name),
-              stringQuestion(EmailPage(index), userAnswers, "trusteeEmailAddress", name),
-              stringQuestion(TelephoneNumberPage(index), userAnswers, "trusteeTelephoneNumber", name)
+              stringQuestion(TrusteeEmailPage(index), userAnswers, "trusteeEmailAddress", name),
+              stringQuestion(TrusteeTelephoneNumberPage(index), userAnswers, "trusteeTelephoneNumber", name)
             ).flatten,
             sectionKey = Some(messages("answerPage.section.trustees.heading"))
           )

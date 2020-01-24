@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package sections.beneficiaries
+package pages.trustees
 
 import pages.QuestionPage
-import play.api.libs.json.{JsArray, JsPath}
+import play.api.libs.json.JsPath
+import sections.Trustees
 
-case object IndividualBeneficiaries extends QuestionPage[JsArray]{
+case class TrusteeSafeIdPage(index: Int) extends QuestionPage[String] {
 
-  override def path: JsPath = JsPath \ Beneficiaries \ toString
+  override def path: JsPath = Trustees.path \ index \ toString
 
-  override def toString: String = "individualBeneficiaries"
-
+  override def toString: String = "safeId"
 }

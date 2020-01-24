@@ -72,6 +72,9 @@ declaration.individual.warning = I confirm that I have taken all reasonable step
 declaration.variation.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
 declaration.variation.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief. I will ensure it is regularly kept up to date as required including changes of address. If I discover that I have made an error or something has changed, I will update this register.
 
+deedOfVariation.replaceAbsoluteInterestOverWill = to replace an absolute interest over a will
+deedOfVariation.replaceWillTrust = to replace a will trust
+
 error.browser.title.prefix = Error:
 error.summary.title = There is a problem
 
@@ -100,6 +103,12 @@ ivDown.p2 = You can
 ivDown.p3 = if you need to speak to someone about registering and maintaining a trust.
 ivDown.contact.link = contact the trusts helpline (opens in a new window or tab)
 ivDown.return.link = return to register and maintain a trust for a client
+
+kindOfTrust.Lifetime = A trust created during their lifetime to gift or transfer assets
+kindOfTrust.Deed = A trust through a Deed of Variation or family agreement
+kindOfTrust.Employees = A trust for the employees of a company
+kindOfTrust.Building = A trust for a building or building with tenants
+kindOfTrust.Repair = A trust for the repair of historic buildings
 
 playbackProblemContactHMRC.title = Sorry, there has been a problem accessing your trust’s registration
 playbackProblemContactHMRC.heading = Sorry, there has been a problem accessing your trust’s registration
@@ -169,6 +178,9 @@ trustNotClaimed.bullet.2.p3.a = contact the trusts helpline (opens in a new wind
 trustNotClaimed.bullet.2.p4 = You can
 trustNotClaimed.bullet.2.p4.a = return to register and maintain a trust for a client.
 
+trustResidentInTheUK.yes = Based on your answers, the trust is resident in the UK
+trustResidentInTheUK.no = Based on your answers, the trust is not resident in the UK
+
 trustStillProcessing.title = Sorry, you cannot access this trust
 trustStillProcessing.heading = Sorry, you cannot access this trust
 trustStillProcessing.subheading = This trust’s UTR: {0}
@@ -204,3 +216,204 @@ whatIsNext.declare = Declare the trust is up to date
 whatIsNext.makeChanges = Make changes to the trust and declare
 whatIsNext.closeTrust = Close the trust
 whatIsNext.error.required = Select what you want to do next
+
+
+answerPage.section.settlors.heading = Settlors
+answerPage.section.deceasedSettlor.heading = Settlor
+answerPage.section.settlor.subheading = Settlor {0}
+
+answerPage.section.trustees.heading = Trustees
+answerPage.section.leadTrustee.subheading = Lead trustee
+answerPage.section.trustee.subheading = Trustee {0}
+
+answerPage.section.beneficiaries.heading = Beneficiaries
+answerPage.section.charityBeneficiary.subheading = Charity beneficiary {0}
+answerPage.section.companyBeneficiary.subheading = Company beneficiary {0}
+answerPage.section.individualBeneficiary.subheading = Individual beneficiary {0}
+answerPage.section.classOfBeneficiary.subheading = Class of beneficiary {0}
+answerPage.section.trustBeneficiary.heading = Trust beneficiary {0}
+answerPage.section.otherBeneficiary.heading = Other beneficiary {0}
+answerPage.section.largeBeneficiary.subheading = Employment related beneficiary {0}
+
+answerPage.section.protectors.heading = Protectors
+answerPage.section.protectors.subheading = Protector {0}
+
+answerPage.section.other.individual.heading = Other individual
+
+answerPage.section.trustType.heading = Trust type
+
+answerPage.section.trustsDetails.heading = Trust details
+
+
+charityBeneficiaryName.checkYourAnswersLabel = What is the name of the charity?
+charityBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+charityBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+charityBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+charityBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+charityBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+charityBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+
+classBeneficiaryDescription.checkYourAnswersLabel = What is the description for the class of beneficiaries?
+classBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+classBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+
+companyBeneficiaryName.checkYourAnswersLabel = What is the name of the company?
+companyBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+companyBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+companyBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+companyBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+companyBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+companyBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+
+individualBeneficiaryName.checkYourAnswersLabel = What is the name of the individual?
+individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+individualBeneficiaryDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+individualBeneficiaryIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+individualBeneficiaryIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+individualBeneficiaryNationalInsuranceYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+individualBeneficiaryNationalInsuranceNumber.checkYourAnswersLabel = What is {0}’s National Insurance number?
+individualBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+individualBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Does {0} live in the UK?
+individualBeneficiaryAddressUK.checkYourAnswersLabel = What is {0}’s address?
+individualBeneficiaryPassportIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
+individualBeneficiaryPassportIDCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel = Has a vulnerable person election form (VPE1) been submitted to HMRC for {0}?
+
+largeBeneficiaryName.checkYourAnswersLabel = What is the business’s name?
+largeBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+largeBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+largeBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+largeBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+largeBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+largeBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+largeBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
+largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel = How many people are in this employment related beneficiary?
+
+otherBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
+otherBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+otherBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+otherBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+otherBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+otherBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+
+trustBeneficiaryName.checkYourAnswersLabel = What is the name of the trust?
+trustBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
+trustBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+trustBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+trustBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+trustBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+trustBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+
+otherIndividualName.checkYourAnswersLabel = What is the name of the individual?
+otherIndividualDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+otherIndividualDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+otherIndividualNINOYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+otherIndividualNINO.checkYourAnswersLabel = What is {0}’s National Insurance number?
+otherIndividualAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+otherIndividualAddressUKYesNo.checkYourAnswersLabel = Does {0} live in the UK?
+otherIndividualAddress.checkYourAnswersLabel = What is {0}’s address?
+otherIndividualPassportIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
+otherIndividualPassportIDCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+
+protectorIndividualOrBusiness.checkYourAnswersLabel = Is the protector an individual or a business?
+
+individualProtectorName.checkYourAnswersLabel = What is the protector's name?
+individualProtectorDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+individualProtectorDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+individualProtectorNINOYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+individualProtectorNINO.checkYourAnswersLabel = What is {0}’s National Insurance number?
+individualProtectorAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+individualProtectorAddressUkYesNo.checkYourAnswersLabel = Does {0} live in the UK?
+individualProtectorAddress.checkYourAnswersLabel = What is {0}’s address?
+individualProtectorPassportIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
+individualProtectorPassportIDCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+
+companyProtectorName.checkYourAnswersLabel = What is the business’s name?
+companyProtectorUtrYesNo.checkYourAnswersLabel = Do you know {0}’s Unique Taxpayer Reference (UTR) number?
+companyProtectorUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+companyProtectorAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+companyProtectorAddressUkYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+companyProtectorAddress.checkYourAnswersLabel = What is {0}’s address?
+
+setUpAfterSettlorDied.checkYourAnswersLabel = Was the trust set up after the settlor died?
+settlorName.checkYourAnswersLabel = What is the settlor’s name?
+settlorDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+settlorDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+settlorNationalInsuranceYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+settlorNationalInsuranceNumber.checkYourAnswersLabel = What is {0}’s National Insurance number?
+settlorPassportOrIdCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
+settlorPassportOrIdCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+
+settlorDateOfDeathYesNo.checkYourAnswersLabel = Do you know {0}’s date of death?
+settlorDateOfDeath.checkYourAnswersLabel = What is {0}’s date of death?
+settlorLastKnownAddressYesNo.checkYourAnswersLabel = Do you know {0}’s last known address?
+settlorLastKnownAddressUKYesNo.checkYourAnswersLabel = Was {0}’s last known address in the UK?
+settlorUKAddress.checkYourAnswersLabel = What is {0}’s last known address?
+settlorInternationalAddress.checkYourAnswersLabel = What is {0}’s last known address?
+
+settlorIndividualOrBusiness.checkYourAnswersLabel = Is the settlor an individual or a business?
+
+settlorBusinessName.checkYourAnswersLabel = What is the business’s name?
+settlorBusinessUtrYesNo.checkYourAnswersLabel = Do you know {0}’s Unique Taxpayer Reference (UTR) number?
+settlorBusinessUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+settlorBusinessAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+settlorBusinessAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+settlorBusinessAddressUK.checkYourAnswersLabel = What is {0}’s address?
+settlorBusinessAddressInternational.checkYourAnswersLabel = What is {0}’s address?
+settlorBusinessType.checkYourAnswersLabel = What kind of business is {0}?
+settlorBusinessTime.checkYourAnswersLabel = At the date of each contribution to the trust, had the business been in existence for at least 2 years?
+
+settlorIndividualName.checkYourAnswersLabel = What is the settlor’s name?
+settlorIndividualDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+settlorIndividualDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+settlorIndividualNINOYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+settlorIndividualNINO.checkYourAnswersLabel = What is {0}’s National Insurance number?
+settlorIndividualAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+settlorIndividualAddressUKYesNo.checkYourAnswersLabel = Does {0} live in the UK?
+settlorIndividualAddressUK.checkYourAnswersLabel = What is {0}’s address?
+settlorIndividualAddressInternational.checkYourAnswersLabel = What is {0}’s address?
+settlorIndividualPassportYesNo.checkYourAnswersLabel = Do you know {0}’s passport details?
+settlorIndividualPassport.checkYourAnswersLabel = What are {0}’s passport details?
+settlorIndividualIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s ID card details?
+settlorIndividualIDCard.checkYourAnswersLabel = What are {0}’s ID card details?
+
+isThisLeadTrustee.checkYourAnswersLabel = Is this the lead trustee?
+leadTrusteeIndividualOrBusiness.checkYourAnswersLabel = Is the lead trustee an individual or a business?
+leadTrusteeUtrYesNo.checkYourAnswersLabel = Is this trustee a UK registered company?
+leadTrusteeName.checkYourAnswersLabel = What is the lead trustee’s name?
+trusteeIndividualOrBusiness.checkYourAnswersLabel = Is the trustee an individual or a business?
+trusteeBusinessName.checkYourAnswersLabel = What is the business’s name?
+trusteeAUKCitizen.checkYourAnswersLabel = Is {0} a UK citizen?
+trusteeName.checkYourAnswersLabel = What is the trustee’s name?
+trusteeUtrYesNo.checkYourAnswersLabel = Do you know {0}’s Unique Taxpayer Reference (UTR) number?
+trusteeUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+trusteeDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+trusteeDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+trusteeNinoYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+trusteeNino.checkYourAnswersLabel = What is {0}’s National Insurance number?
+trusteeUkAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+trusteeLiveInTheUK.checkYourAnswersLabel = Does {0} live in the UK?
+trusteeUkAddress.checkYourAnswersLabel = What is {0}’s address?
+trusteeNonUkAddress.checkYourAnswersLabel = What is {0}’s address?
+trusteePassportOrIdCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
+trusteePassportOrIdCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+trusteeEmailAddressYesNo.checkYourAnswersLabel = Do you know {0}’s email address?
+trusteeEmailAddress.checkYourAnswersLabel = What is {0}’s email address?
+trusteeTelephoneNumber.checkYourAnswersLabel = What is {0}’s telephone number?
+
+governedInsideTheUK.checkYourAnswersLabel = Is the trust governed by UK law?
+countryGoverningTrust.checkYourAnswersLabel = What country governs the trust?
+administrationInsideUK.checkYourAnswersLabel = Is the trust’s general administration done in the UK?
+countryAdministeringTrust.checkYourAnswersLabel = In what country is the trust administered?
+trustResidentInUK.checkYourAnswersLabel = Is the trust resident in the UK?
+establishedUnderScotsLaw.checkYourAnswersLabel = Is the trust established under Scots Law?
+registeringTrustFor5A.checkYourAnswersLabel = Are you registering the trust because the settlor benefits from the trust’s assets?
+trustResidentOffshore.checkYourAnswersLabel = Has the trust ever been resident offshore?
+trustPreviouslyResident.checkYourAnswersLabel = In what country was the trust previously resident?
+
+kindOfTrust.checkYourAnswersLabel = What kind of trust did the settlor create?
+setupInAdditionToWillTrustYesNo.checkYourAnswersLabel = Was it set up in addition to a will trust?
+howDeedOfVariationCreated.checkYourAnswersLabel = How was the Deed of Variation created?
+holdoverReliefYesNo.checkYourAnswersLabel = Was holdover relief claimed on any assets put into the trust?
+employerFinancedRetirementBenefitsSchemeYesNo.checkYourAnswersLabel = Is this an employer-financed retirement benefits scheme?
+employerFinancedRetirementBenefitsSchemeStartDate.checkYourAnswersLabel = When did the employer-financed retirement benefits scheme start?

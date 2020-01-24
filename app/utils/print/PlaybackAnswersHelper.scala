@@ -119,7 +119,10 @@ class PlaybackAnswersHelper(countryOptions: CountryOptions, userAnswers: UserAns
   }
 
   private def classOfBeneficiaries : Seq[AnswerSection] = {
-    val size = userAnswers.get(_root_.sections.beneficiaries.ClassOfBeneficiaries).map(_.size).getOrElse(0)
+    val size = userAnswers
+      .get(_root_.sections.beneficiaries.ClassOfBeneficiaries)
+      .map(_.value.size)
+      .getOrElse(0)
 
     size match {
       case 0 => Nil
@@ -183,7 +186,7 @@ class PlaybackAnswersHelper(countryOptions: CountryOptions, userAnswers: UserAns
   private def individualBeneficiaries : Seq[AnswerSection] = {
     val size = userAnswers
       .get(_root_.sections.beneficiaries.IndividualBeneficiaries)
-      .map(_.size)
+      .map(_.value.size)
       .getOrElse(0)
 
     size match {

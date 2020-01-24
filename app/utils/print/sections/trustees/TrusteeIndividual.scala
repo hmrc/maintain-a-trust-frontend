@@ -30,19 +30,19 @@ object TrusteeIndividual {
             countryOptions: CountryOptions)
            (implicit messages: Messages): Option[Seq[AnswerSection]] = {
 
-    userAnswers.get(TrusteesNamePage(index)).map(CheckAnswersFormatters.fullName).flatMap { name =>
+    userAnswers.get(TrusteeNamePage(index)).map(CheckAnswersFormatters.fullName).flatMap { name =>
       Some(Seq(
         AnswerSection(
-          headingKey = Some(messages("answerPage.section.trustee.subheading") + s" ${index + 1}"),
+          headingKey = Some(messages("answerPage.section.trustee.subheading", index + 1)),
           Seq(
-            fullNameQuestion(TrusteesNamePage(index), userAnswers, "trusteesName"),
+            fullNameQuestion(TrusteeNamePage(index), userAnswers, "trusteeName"),
             yesNoQuestion(TrusteeDateOfBirthYesNoPage(index), userAnswers, "trusteeDateOfBirthYesNo", name),
-            dateQuestion(TrusteesDateOfBirthPage(index), userAnswers, "trusteesDateOfBirth", name),
+            dateQuestion(TrusteeDateOfBirthPage(index), userAnswers, "trusteeDateOfBirth", name),
             yesNoQuestion(TrusteeNinoYesNoPage(index), userAnswers, "trusteeNinoYesNo", name),
-            ninoQuestion(TrusteesNinoPage(index), userAnswers, "trusteesNino", name),
+            ninoQuestion(TrusteeNinoPage(index), userAnswers, "trusteeNino", name),
             yesNoQuestion(TrusteeAddressYesNoPage(index), userAnswers, "trusteeUkAddressYesNo", name),
             yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
-            addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteesUkAddress", name, countryOptions),
+            addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name, countryOptions),
             yesNoQuestion(TrusteePassportIDCardYesNoPage(index), userAnswers, "trusteePassportOrIdCardYesNo", name),
             passportOrIdCardQuestion(TrusteePassportIDCardPage(index), userAnswers, "trusteePassportOrIdCard", name, countryOptions)
           ).flatten,

@@ -78,18 +78,18 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-        extraction.right.value.get(TrusteesNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-        extraction.right.value.get(TrusteesDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
+        extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+        extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
         extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
-        extraction.right.value.get(TrusteesNinoPage(0)).get mustBe "NA1111111A"
+        extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
         extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
-        extraction.right.value.get(TrusteesUkAddressPage(0)) must be(defined)
-        extraction.right.value.get(TrusteesUkAddressPage(0)).get.postcode mustBe "NE11NE"
-        extraction.right.value.get(TrusteesInternationalAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(TelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(EmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(LeadTrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteesSafeIdPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
+        extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
       }
 
       "with nino and International address, return user answers updated" in {
@@ -116,18 +116,18 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-        extraction.right.value.get(TrusteesNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-        extraction.right.value.get(TrusteesDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
+        extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+        extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
         extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
-        extraction.right.value.get(TrusteesNinoPage(0)).get mustBe "NA1111111A"
+        extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
         extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
-        extraction.right.value.get(TrusteesUkAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrusteesInternationalAddressPage(0)) must be(defined)
-        extraction.right.value.get(TrusteesInternationalAddressPage(0)).get.country mustBe "DE"
-        extraction.right.value.get(TelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(EmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(LeadTrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteesSafeIdPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeUkAddressPage(0)) mustNot be(defined)
+        extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeInternationalAddressPage(0)).get.country mustBe "DE"
+        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
       }
 
       "with Passport/ID Card and UK address, return user answers updated" in {
@@ -154,19 +154,19 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-        extraction.right.value.get(TrusteesNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-        extraction.right.value.get(TrusteesDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
+        extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+        extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
         extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
-        extraction.right.value.get(TrusteesNinoPage(0)) mustNot be(defined)
+        extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
         extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
         extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
-        extraction.right.value.get(TrusteesUkAddressPage(0)) must be(defined)
-        extraction.right.value.get(TrusteesUkAddressPage(0)).get.postcode mustBe "NE11NE"
-        extraction.right.value.get(TrusteesInternationalAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(TelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(EmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(LeadTrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteesSafeIdPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
+        extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
       }
 
       "with Passport/ID Card and International address, return user answers updated" in {
@@ -193,19 +193,19 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-        extraction.right.value.get(TrusteesNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-        extraction.right.value.get(TrusteesDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
+        extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+        extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
         extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
-        extraction.right.value.get(TrusteesNinoPage(0)) mustNot be(defined)
+        extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
         extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
         extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
-        extraction.right.value.get(TrusteesUkAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrusteesInternationalAddressPage(0)) must be(defined)
-        extraction.right.value.get(TrusteesInternationalAddressPage(0)).get.country mustBe "DE"
-        extraction.right.value.get(TelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(EmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(LeadTrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteesSafeIdPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeUkAddressPage(0)) mustNot be(defined)
+        extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
+        extraction.right.value.get(TrusteeInternationalAddressPage(0)).get.country mustBe "DE"
+        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
       }
 
     }

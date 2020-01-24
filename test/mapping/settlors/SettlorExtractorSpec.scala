@@ -25,8 +25,9 @@ import models.http._
 import models.pages.KindOfBusiness.Trading
 import models.pages.{IndividualOrBusiness, KindOfBusiness}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
-import pages.settlors.deceased_settlor._
+import pages.settlors.deceased_settlor.{SettlorDateOfBirthPage, SettlorDateOfBirthYesNoPage, SettlorDateOfDeathPage, SettlorDateOfDeathYesNoPage, SettlorInternationalAddressPage, SettlorLastKnownAddressYesNoPage, SettlorNamePage, SettlorNationalInsuranceNumberPage, SettlorNationalInsuranceYesNoPage, SettlorPassportIDCardPage, SettlorUKAddressPage}
 import pages.settlors.living_settlor._
+
 
 class SettlorExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -128,17 +129,17 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val extraction = settlorExtractor.extract(ua, entities)
 
-        extraction.right.value.get(SettlorsNamePage).get mustBe FullName("First Name", None, "Last Name")
+        extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
         extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
         extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-        extraction.right.value.get(SettlorsDateOfBirthPage) mustNot be(defined)
-        extraction.right.value.get(SettlorsNationalInsuranceYesNoPage).get mustBe false
+        extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+        extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-        extraction.right.value.get(SettlorsLastKnownAddressYesNoPage).get mustBe false
-        extraction.right.value.get(SettlorsUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorsInternationalAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorsPassportIDCardPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
+        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
 
         extraction.right.value.get(SettlorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
         extraction.right.value.get(SettlorBusinessNamePage(0)).get mustBe "Company Settlor 1"

@@ -18,26 +18,15 @@ package base
 
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import repositories.PlaybackRepository
 
 import scala.concurrent.Future
 
 trait Mocked extends MockitoSugar {
 
-  //  val registrationsRepository : RegistrationsRepository = mock[RegistrationsRepository]
   val playbackRepository: PlaybackRepository = mock[PlaybackRepository]
 
-  //  val mockSubmissionService : SubmissionService = mock[SubmissionService]
-  //  val mockCreateDraftRegistrationService : CreateDraftRegistrationService = mock[CreateDraftRegistrationService]
-
-  //  when(mockCreateDraftRegistrationService.create(any[OptionalRegistrationDataRequest[AnyContent]])(any()))
-  //    .thenReturn(Future.successful(TestUserAnswers.draftId))
-  //
-  //  when(mockCreateDraftRegistrationService.create(any[IdentifierRequest[AnyContent]])(any()))
-  //      .thenReturn(Future.successful(TestUserAnswers.draftId))
-  //
-  //  when(registrationsRepository.set(any())).thenReturn(Future.successful(true))
   when(playbackRepository.set(any())).thenReturn(Future.successful(true))
 
 }

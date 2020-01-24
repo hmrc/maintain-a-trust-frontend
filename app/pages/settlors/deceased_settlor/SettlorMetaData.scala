@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package sections.beneficiaries
+package pages.settlors.deceased_settlor
 
+import models.MetaData
 import pages.QuestionPage
-import play.api.libs.json.{JsArray, JsPath}
+import play.api.libs.json.JsPath
+import sections.settlors.DeceasedSettlor
 
-case object IndividualBeneficiaries extends QuestionPage[JsArray]{
+case object SettlorMetaData extends QuestionPage[MetaData] {
 
-  override def path: JsPath = JsPath \ Beneficiaries \ toString
+  override def path: JsPath = DeceasedSettlor.path \ toString
 
-  override def toString: String = "individualBeneficiaries"
+  override def toString: String = "metaData"
 
 }

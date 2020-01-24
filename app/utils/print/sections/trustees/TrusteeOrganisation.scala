@@ -33,14 +33,14 @@ object TrusteeOrganisation {
     userAnswers.get(TrusteeOrgNamePage(index)).flatMap { name =>
       Some(Seq(
         AnswerSection(
-          headingKey = Some(messages("answerPage.section.trustee.subheading") + s" ${index + 1}"),
+          headingKey = Some(messages("answerPage.section.trustee.subheading", index + 1)),
           Seq(
             stringQuestion(TrusteeOrgNamePage(index), userAnswers, "trusteeBusinessName"),
             yesNoQuestion(TrusteeUtrYesNoPage(index), userAnswers, "trusteeUtrYesNo", name),
-            stringQuestion(TrusteesUtrPage(index), userAnswers, "trusteeUtr", name),
+            stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name),
             yesNoQuestion(TrusteeAddressYesNoPage(index), userAnswers, "trusteeUkAddressYesNo", name),
             yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
-            addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteesUkAddress", name, countryOptions)
+            addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name, countryOptions)
           ).flatten,
           sectionKey = None
         )
