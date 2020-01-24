@@ -37,14 +37,15 @@ class PlaybackRepository @Inject()(
                                     mongo: ReactiveMongoApi,
                                     config: Configuration,
                                     dateFormatter: DateFormatter
-                                  )(implicit ec: ExecutionContext, m: Materializer) {
+                                  )(implicit ec: ExecutionContext, m: Materializer) extends MongoRepository {
 
   private val collectionName: String = "user-answers"
 
   private val cacheTtl = config.get[Int]("mongodb.playback.ttlSeconds")
 
-  private def collection: Future[JSONCollection] =
-    mongo.database.map(_.collection[JSONCollection](collectionName))
+  private def collection: Future[JSONCollection] = {
+      mongo.database.map(_.collection[JSONCollection](collectionName))
+  }
 
   private val lastUpdatedIndex = Index(
     key = Seq("updatedAt" -> IndexType.Ascending),
@@ -57,16 +58,14 @@ class PlaybackRepository @Inject()(
     name = Some("internal-auth-id-index")
   )
 
-  val started: Future[Unit] = {
-    Future.sequence {
+  val started = Future.sequence {
       Seq(
         collection.map(_.indexesManager.ensure(lastUpdatedIndex)),
         collection.map(_.indexesManager.ensure(internalAuthIdIndex))
       )
-    }.map(_ => ())
-  }
+  }.map(_ => ())
 
-  def get(internalId: String): Future[Option[UserAnswers]] = {
+  override def get(internalId: String): Future[Option[UserAnswers]] = {
 
     val selector = Json.obj(
       "internalId" -> internalId
@@ -85,7 +84,7 @@ class PlaybackRepository @Inject()(
     }
   }
 
-  def set(userAnswers: UserAnswers): Future[Boolean] = {
+  override def set(userAnswers: UserAnswers): Future[Boolean] = {
 
     val selector = Json.obj(
       "internalId" -> userAnswers.internalAuthId
@@ -101,4 +100,13 @@ class PlaybackRepository @Inject()(
       }
     }
   }
+}
+
+trait MongoRepository {
+
+  val started: Future[Unit]
+
+  def get(internalId: String): Future[Option[UserAnswers]]
+
+  def set(userAnswers: UserAnswers): Future[Boolean]
 }
