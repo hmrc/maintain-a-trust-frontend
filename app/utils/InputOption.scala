@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 
-package sections.settlors
+package utils
 
-import pages.QuestionPage
-import play.api.libs.json.{JsArray, JsPath}
-
-case object LivingSettlors extends QuestionPage[JsArray]{
-
-  override def path: JsPath = Settlors.path \ toString
-
-  override def toString: String = "living"
-
-}
+case class InputOption(value: String, label: String, dataTarget: Option[String] = None)

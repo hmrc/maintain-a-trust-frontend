@@ -28,6 +28,8 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
   private val contactHost = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "maintain-a-trust-frontend"
 
+  private def loadConfig(key: String) = configuration.get[String](key)
+
   def claimATrustUrl(utr: String) =
     configuration.get[Service]("microservice.services.claim-a-trust-frontend").baseUrl + s"/claim-a-trust/save/$utr"
 
@@ -63,6 +65,8 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
   lazy val enrolmentStoreProxyUrl: String = configuration.get[Service]("microservice.services.enrolment-store-proxy").baseUrl
 
   lazy val ttlInSeconds: Int = configuration.get[Int]("mongodb.registration.ttlSeconds")
+
+  lazy val locationCanonicalList: String = loadConfig("location.canonical.list.all")
 
   lazy val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.welsh-translation")
