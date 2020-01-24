@@ -28,7 +28,7 @@ object IndividualProtector {
   def apply(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] =
     userAnswers.get(IndividualProtectorNamePage(index)).map(CheckAnswersFormatters.fullName).map { protectorName =>
       Seq(AnswerSection(
-        headingKey = Some(messages("answerPage.section.protectors.subheading", index + 1)),
+        headingKey = Some(messages("answerPage.section.protector.subheading", index + 1)),
         Seq(
           fullNameQuestion(IndividualProtectorNamePage(index), userAnswers, "individualProtectorName", protectorName),
           yesNoQuestion(IndividualProtectorDateOfBirthYesNoPage(index), userAnswers, "individualProtectorDateOfBirthYesNo", protectorName),

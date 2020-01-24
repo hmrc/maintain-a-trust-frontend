@@ -33,7 +33,7 @@ object OtherIndividual {
     userAnswers.get(OtherIndividualNamePage(index)).map(CheckAnswersFormatters.fullName).map { name =>
       Seq(
         AnswerSection(
-          headingKey = Some(messages("answerPage.section.other.individual.heading") + s" ${index + 1}"),
+          headingKey = Some(messages("answerPage.section.otherIndividual.subheading", index + 1)),
           Seq(
             fullNameQuestion(OtherIndividualNamePage(index), userAnswers, "otherIndividualName"),
             yesNoQuestion(OtherIndividualDateOfBirthYesNoPage(index), userAnswers, "otherIndividualDateOfBirthYesNo", name),

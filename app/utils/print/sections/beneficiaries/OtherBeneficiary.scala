@@ -30,7 +30,7 @@ object OtherBeneficiary {
 
     userAnswers.get(OtherBeneficiaryDescriptionPage(index)).map { name =>
       Seq(AnswerSection(
-        headingKey = Some(messages("answerPage.section.otherBeneficiary.heading", index + 1)),
+        headingKey = Some(messages("answerPage.section.otherBeneficiary.subheading", index + 1)),
         Seq(
           stringQuestion(OtherBeneficiaryDescriptionPage(index), userAnswers, "otherBeneficiaryDescription"),
           yesNoQuestion(OtherBeneficiaryDiscretionYesNoPage(index), userAnswers, "otherBeneficiaryShareOfIncomeYesNo", name),

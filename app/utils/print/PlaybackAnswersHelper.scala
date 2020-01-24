@@ -246,7 +246,7 @@ class PlaybackAnswersHelper(countryOptions: CountryOptions, userAnswers: UserAns
     size match {
       case 0 => Nil
       case _ =>
-        Seq(AnswerSection(sectionKey = Some(messages("answerPage.section.other.individual.heading")))) ++
+        Seq(AnswerSection(sectionKey = Some(messages("answerPage.section.otherIndividuals.heading")))) ++
           (for (index <- 0 to size) yield OtherIndividual(index, userAnswers, countryOptions)).flatten
     }
   }

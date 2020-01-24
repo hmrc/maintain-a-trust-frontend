@@ -110,6 +110,12 @@ kindOfTrust.Employees = A trust for the employees of a company
 kindOfTrust.Building = A trust for a building or building with tenants
 kindOfTrust.Repair = A trust for the repair of historic buildings
 
+playbackAnswers.title = Last declared copy of the trust’s registration
+playbackAnswers.heading = Last declared copy of the trust’s registration
+playbackAnswers.declareAnnually.warning = You only need to declare the trust is up to date every year if there is a tax liability.
+playbackAnswers.informationFirstRegistered = The following sections indicate what was entered when the trust was first registered. No further updates to trust details, assets and years of tax liability are required through this service.
+playbackAnswers.selfAssessmentOnline = If you need to update these sections, use Self Assessment for trusts.
+
 playbackProblemContactHMRC.title = Sorry, there has been a problem accessing your trust’s registration
 playbackProblemContactHMRC.heading = Sorry, there has been a problem accessing your trust’s registration
 playbackProblemContactHMRC.subheading = This trust’s UTR: {0}
@@ -235,16 +241,17 @@ answerPage.section.charityBeneficiary.subheading = Charity beneficiary {0}
 answerPage.section.companyBeneficiary.subheading = Company beneficiary {0}
 answerPage.section.individualBeneficiary.subheading = Individual beneficiary {0}
 answerPage.section.classOfBeneficiary.subheading = Class of beneficiary {0}
-answerPage.section.trustBeneficiary.heading = Trust beneficiary {0}
-answerPage.section.otherBeneficiary.heading = Other beneficiary {0}
+answerPage.section.trustBeneficiary.subheading = Trust beneficiary {0}
+answerPage.section.otherBeneficiary.subheading = Other beneficiary {0}
 answerPage.section.largeBeneficiary.subheading = Employment related beneficiary {0}
 
 ## Protectors
 answerPage.section.protectors.heading = Protectors
-answerPage.section.protectors.subheading = Protector {0}
+answerPage.section.protector.subheading = Protector {0}
 
 ## Other individuals
-answerPage.section.other.individual.heading = Other individual
+answerPage.section.otherIndividuals.heading = Other individuals
+answerPage.section.otherIndividual.subheading = Other individual {0}
 
 ## Trust details
 answerPage.section.trustsDetails.heading = Trust details
@@ -277,6 +284,7 @@ companyBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
 companyBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
 ### Individual
 individualBeneficiaryName.checkYourAnswersLabel = What is the name of the individual?
+individualBeneficiaryRoleInCompany.checkYourAnswersLabel = What is {0}’s role in the company that the trust was created for?
 individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
 individualBeneficiaryDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
 individualBeneficiaryIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?

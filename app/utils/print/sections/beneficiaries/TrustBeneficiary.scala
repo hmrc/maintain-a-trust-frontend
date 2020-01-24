@@ -30,7 +30,7 @@ object TrustBeneficiary {
 
     userAnswers.get(TrustBeneficiaryNamePage(index)).map { name =>
       Seq(AnswerSection(
-        headingKey = Some(messages("answerPage.section.trustBeneficiary.heading", index + 1)),
+        headingKey = Some(messages("answerPage.section.trustBeneficiary.subheading", index + 1)),
         Seq(
           stringQuestion(TrustBeneficiaryNamePage(index), userAnswers, "trustBeneficiaryName"),
           yesNoQuestion(TrustBeneficiaryDiscretionYesNoPage(index), userAnswers, "trustBeneficiaryShareOfIncomeYesNo", name),

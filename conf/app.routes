@@ -38,3 +38,5 @@ GET        /status/sorry-there-has-been-a-problem       controllers.TrustStatusC
 GET        /status                                      controllers.TrustStatusController.status()
 
 GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
+
+GET        /last-declaration                            controllers.PlaybackAnswersController.onPageLoad()

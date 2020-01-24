@@ -27,18 +27,20 @@ object BusinessProtector {
 
   def apply(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] =
     userAnswers.get(BusinessProtectorNamePage(index)).map { protectorName =>
-      Seq(AnswerSection(
-        headingKey = Some(messages("answerPage.section.protectors.subheading", index + 1)),
-        Seq(
-          stringQuestion(BusinessProtectorNamePage(index), userAnswers, "companyProtectorName", protectorName),
-          yesNoQuestion(BusinessProtectorUtrYesNoPage(index), userAnswers, "companyProtectorUtrYesNo", protectorName),
-          stringQuestion(BusinessProtectorUtrPage(index), userAnswers, "companyProtectorUtr", protectorName),
-          yesNoQuestion(BusinessProtectorAddressYesNoPage(index), userAnswers, "companyProtectorAddressYesNo", protectorName),
-          yesNoQuestion(BusinessProtectorAddressUKYesNoPage(index), userAnswers, "companyProtectorAddressUkYesNo", protectorName),
-          addressQuestion(BusinessProtectorAddressPage(index), userAnswers, "companyProtectorAddress", protectorName, countryOptions)
-        ).flatten,
-        None
-      ))
+      Seq(
+        AnswerSection(
+          headingKey = Some(messages("answerPage.section.protector.subheading", index + 1)),
+          Seq(
+            stringQuestion(BusinessProtectorNamePage(index), userAnswers, "companyProtectorName", protectorName),
+            yesNoQuestion(BusinessProtectorUtrYesNoPage(index), userAnswers, "companyProtectorUtrYesNo", protectorName),
+            stringQuestion(BusinessProtectorUtrPage(index), userAnswers, "companyProtectorUtr", protectorName),
+            yesNoQuestion(BusinessProtectorAddressYesNoPage(index), userAnswers, "companyProtectorAddressYesNo", protectorName),
+            yesNoQuestion(BusinessProtectorAddressUKYesNoPage(index), userAnswers, "companyProtectorAddressUkYesNo", protectorName),
+            addressQuestion(BusinessProtectorAddressPage(index), userAnswers, "companyProtectorAddress", protectorName, countryOptions)
+          ).flatten,
+          None
+        )
+      )
     }.getOrElse(Nil)
 
 }

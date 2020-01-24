@@ -68,7 +68,7 @@ class OtherIndividualPrintPlaybackHelperSpec extends SpecBase {
       val name4 = "Paul Chuckle"
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some(messages("answerPage.section.other.individual.heading"))),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.otherIndividuals.heading"))),
         AnswerSection(
           headingKey = Some("Other individual 1"),
           rows = Seq(
