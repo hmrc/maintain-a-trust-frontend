@@ -16,6 +16,8 @@
 
 package connectors
 
+import java.time.LocalDate
+
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.Generators
@@ -151,7 +153,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
       application.stop()
     }
 
-    "must return playback data inside a Processed trust" ignore {
+    "must return playback data inside a Processed trust" in {
       val utr = "1000000007"
       val payload = Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
 
@@ -183,21 +185,21 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
           data.declaration.name mustBe NameType("Agent", None, "Agency")
 
-//          data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe NameType("Lead", None, "Trustee")
-//
-//          data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
-//
-//          data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe "1"
-//          data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
-//          data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
-//
-//          data.trust.entities.settlors.value.settlorCompany.value.head.name mustBe "Settlor Org 01"
-//
-//          data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe "1"
-//          data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
-//          data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
-//
-//          data.trust.assets.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+          data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe NameType("Lead", None, "Trustee")
+
+          data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
+
+          data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe "1"
+          data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
+          data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
+
+          data.trust.entities.settlors.value.settlorCompany.value.head.name mustBe "Settlor Org 01"
+
+          data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe "1"
+          data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
+          data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
+
+          data.trust.assets.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
       }
 
       application.stop()

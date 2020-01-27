@@ -14,29 +14,30 @@
  * limitations under the License.
  */
 
-package models
+package models.pages
 
+import models.{Enumerable, WithName}
 import viewmodels.RadioOption
 
-sealed trait WhatIsNext
+sealed trait KindOfTrust
 
-object WhatIsNext extends Enumerable.Implicits {
+object KindOfTrust extends Enumerable.Implicits {
 
-  case object DeclareTheTrustIsUpToDate extends WithName("declare") with WhatIsNext
+  case object Intervivos extends WithName("Lifetime") with KindOfTrust
+  case object Deed extends WithName("Deed") with KindOfTrust
+  case object Employees extends WithName("Employees") with KindOfTrust
+  case object FlatManagement extends WithName("Building") with KindOfTrust
+  case object HeritageMaintenanceFund extends WithName("Repair") with KindOfTrust
 
-  case object MakeChanges extends WithName("makeChanges") with WhatIsNext
-
-  case object CloseTrust extends WithName("closeTrust") with WhatIsNext
-
-  val values: List[WhatIsNext] = List(
-    DeclareTheTrustIsUpToDate, MakeChanges, CloseTrust
+  val values: List[KindOfTrust] = List(
+    Intervivos, Deed, Employees, FlatManagement, HeritageMaintenanceFund
   )
 
   val options: List[RadioOption] = values.map {
     value =>
-      RadioOption("declarationWhatNext", value.toString)
+      RadioOption("kindOfTrust", value.toString)
   }
 
-  implicit val enumerable: Enumerable[WhatIsNext] =
+  implicit val enumerable: Enumerable[KindOfTrust] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

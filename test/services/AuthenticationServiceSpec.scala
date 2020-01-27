@@ -278,7 +278,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
 
         "utr is already claimed by a different org account" must {
 
-          "redirect to already claimed" ignore {
+          "redirect to already claimed" in {
 
             val enrolments = Enrolments(Set())
 
@@ -301,7 +301,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
             whenReady(service.authenticate[AnyContent](utr)) {
               result =>
                 result.left.value.header.headers(HeaderNames.LOCATION) mustBe
-                  "controllers.routes.TrustStatusController.alreadyClaimed().url"
+                  controllers.routes.TrustStatusController.alreadyClaimed().url
             }
           }
         }

@@ -21,11 +21,13 @@ import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.AuthenticateForPlayback
 import handlers.ErrorHandler
 import javax.inject.Inject
+import mapping.UserAnswersExtractor
 import models.http._
 import models.requests.DataRequest
 import pages.UTRPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
 import services.AuthenticationService
@@ -49,6 +51,7 @@ class TrustStatusController @Inject()(
                                        lockedView: TrustLockedView,
                                        alreadyClaimedView: TrustAlreadyClaimedView,
                                        playbackProblemContactHMRCView: PlaybackProblemContactHMRCView,
+                                       playbackExtractor: UserAnswersExtractor,
                                        authenticationService: AuthenticationService,
                                        val controllerComponents: MessagesControllerComponents
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
@@ -132,9 +135,7 @@ class TrustStatusController @Inject()(
       case Processed(playback, _) =>
         authenticationService.authenticate(utr) flatMap {
           case Left(failure) => Future.successful(failure)
-          case Right(_) =>
-//            extract(utr, playback)
-            Future(Redirect(routes.InformationMaintainingThisTrustController.onPageLoad()))
+          case Right(_) => extract(utr, playback)
         }
       case SorryThereHasBeenAProblem =>
         Logger.warn(s"[TrustStatusController][tryToPlayback] unable to retrieve trust due to status")
@@ -145,20 +146,20 @@ class TrustStatusController @Inject()(
     }
   }
 
-//  private def extract(utr: String, playback: GetTrust)(implicit request: DataRequest[AnyContent]) : Future[Result] = {
-//
-//    Logger.debug(s"[TrustStatusController] unpacking the following trust ${Json.stringify(Json.toJson(playback))}")
-//
-//    playbackExtractor.extract(request.userAnswers, playback) match {
-//      case Right(answers) =>
-//        playbackRepository.set(answers) map { _ =>
-//          Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
-//        }
-//      case Left(reason) =>
-//        Logger.warn(s"[TrustStatusController] unable to extract user answers due to $reason")
-//        Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-//    }
-//  }
+  private def extract(utr: String, playback: GetTrust)(implicit request: DataRequest[AnyContent]) : Future[Result] = {
+
+    Logger.debug(s"[TrustStatusController] unpacking the following trust ${Json.stringify(Json.toJson(playback))}")
+
+    playbackExtractor.extract(request.userAnswers, playback) match {
+      case Right(answers) =>
+        playbackRepository.set(answers) map { _ =>
+          Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
+        }
+      case Left(reason) =>
+        Logger.warn(s"[TrustStatusController] unable to extract user answers due to $reason")
+        Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+    }
+  }
 
   private def enforceUtr()(block: String => Future[Result])(implicit request: DataRequest[AnyContent]): Future[Result] = {
     request.userAnswers.get(UTRPage) match {

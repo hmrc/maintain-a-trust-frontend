@@ -19,6 +19,7 @@ package controllers
 import base.SpecBase
 import connector.TrustClaim
 import connectors.{TrustConnector, TrustsStoreConnector}
+import mapping.{FakeFailingUserAnswerExtractor, FakeUserAnswerExtractor, UserAnswersExtractor}
 import models.http._
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -53,7 +54,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
     val application: Application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(
       bind[TrustConnector].to(fakeTrustConnector),
       bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
-      bind[AuthenticationService].to(new FakeAuthenticationService())
+      bind[AuthenticationService].to(new FakeAuthenticationService()),
+      bind[UserAnswersExtractor].to[FakeUserAnswerExtractor]
     ).build()
 
     def request: FakeRequest[AnyContentAsEmpty.type]
@@ -277,7 +279,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
           "user answers is not extracted" must {
 
-            "render sorry there's been a problem" ignore {
+            "render sorry there's been a problem" in  {
 
               lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
@@ -289,7 +291,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               def application: Application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(
                 bind[TrustConnector].to(fakeTrustConnector),
                 bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
-//                bind[UserAnswersExtractor].to[FakeFailingUserAnswerExtractor],
+                bind[UserAnswersExtractor].to[FakeFailingUserAnswerExtractor],
                 bind[AuthenticationService].to(new FakeAuthenticationService())
               ).build()
 
