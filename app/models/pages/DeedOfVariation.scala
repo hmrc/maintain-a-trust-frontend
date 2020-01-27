@@ -28,7 +28,8 @@ object DeedOfVariation extends Enumerable.Implicits {
 
   val values: Set[DeedOfVariation] = Set(
     DeedOfVariation,
-    ReplacedWill
+    ReplacedWill,
+    AdditionToWill
   )
 
   implicit val enumerable: Enumerable[DeedOfVariation] =
