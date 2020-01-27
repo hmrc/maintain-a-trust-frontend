@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.declaration
 
 import java.time.LocalDateTime
 
 import controllers.actions.AuthenticateForPlayback
 import javax.inject.Inject
-import pages.{DeclarationPage, SubmissionDatePage, TVNPage}
+import pages.declaration.AgentDeclarationPage
+import pages.{SubmissionDatePage, TVNPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -49,7 +50,7 @@ class DeclarationConfirmationController @Inject()(
 
       val tvn = request.userAnswers.get(TVNPage).getOrElse("")
 
-      val crn = request.userAnswers.get(DeclarationPage).flatMap(_.crn).getOrElse("")
+      val crn = request.userAnswers.get(AgentDeclarationPage).map(_.crn).getOrElse("")
 
       val trnDateTime = request.userAnswers.get(SubmissionDatePage).getOrElse(LocalDateTime.now)
 

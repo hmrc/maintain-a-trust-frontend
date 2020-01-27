@@ -16,12 +16,44 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Json, OFormat, Reads, Writes}
 
-case class Declaration(name: FullName, crn: Option[String], email: Option[String])
+final case class AgentDeclaration(name: FullName, crn: String, email: Option[String]) extends Declaration
+
+object AgentDeclaration {
+
+  implicit lazy val formats: OFormat[AgentDeclaration] = Json.format[AgentDeclaration]
+}
+
+final case class IndividualDeclaration(name: FullName, email: Option[String]) extends Declaration
+
+object IndividualDeclaration {
+
+  implicit lazy val formats: OFormat[IndividualDeclaration] = Json.format[IndividualDeclaration]
+}
+
+sealed trait Declaration
 
 object Declaration {
 
-  implicit lazy val formats: OFormat[Declaration] = Json.format[Declaration]
+  implicit lazy val reads: Reads[Declaration] = {
 
+    implicit class ReadsWithContravariantOr[A](a: Reads[A]) {
+
+      def or[B >: A](b: Reads[B]): Reads[B] = {
+        a.map[B](identity).orElse(b)
+      }
+    }
+
+    implicit def convertToSupertype[A, B >: A](a: Reads[A]): Reads[B] =
+      a.map(identity)
+
+    AgentDeclaration.formats or
+      IndividualDeclaration.formats
+  }
+
+  implicit lazy val writes: Writes[Declaration] = Writes {
+    case declaration: AgentDeclaration => Json.toJson(declaration)(AgentDeclaration.formats)
+    case declaration: IndividualDeclaration => Json.toJson(declaration)(IndividualDeclaration.formats)
+  }
 }

@@ -16,8 +16,8 @@
 
 package views
 
-import forms.DeclarationFormProvider
-import models.Declaration
+import forms.declaration.IndividualDeclarationFormProvider
+import models.declaration.DeclarationIndividual
 import play.api.data.Form
 import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
@@ -25,11 +25,11 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.QuestionViewBehaviours
 import views.html.DeclarationView
 
-class DeclarationViewSpec extends QuestionViewBehaviours[Declaration] {
+class DeclarationIndividualViewSpec extends QuestionViewBehaviours[DeclarationIndividual] {
 
   val messageKeyPrefix = "declaration"
 
-  val form = new DeclarationFormProvider()()
+  val form = new IndividualDeclarationFormProvider()()
 
   "DeclarationView view for organisation or agent " ignore {
 
