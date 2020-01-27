@@ -28,7 +28,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.DeclarationView
+import views.html.declaration.AgentDeclarationView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,7 +39,7 @@ class AgentDeclarationController @Inject()(
                                             actions: AuthenticateForPlayback,
                                             formProvider: AgentDeclarationFormProvider,
                                             val controllerComponents: MessagesControllerComponents,
-                                            view: DeclarationView
+                                            view: AgentDeclarationView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
@@ -52,17 +52,17 @@ class AgentDeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, request.user.affinityGroup, controllers.declaration.routes.AgentDeclarationController.onSubmit()))
+      Ok(view(preparedForm, controllers.declaration.routes.AgentDeclarationController.onSubmit()))
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
-      val fakeTvn = "XC TVN 000 000 4912"
+      val fakeTvn = "XCTVN0000004912"
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.user.affinityGroup, controllers.declaration.routes.AgentDeclarationController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.AgentDeclarationController.onSubmit()))),
 
         // TODO: Check response for submission of no change data and redirect accordingly
 
@@ -75,7 +75,7 @@ class AgentDeclarationController @Inject()(
                 .flatMap(_.set(TVNPage, fakeTvn))
             )
             _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.routes.ConfirmationController.onPageLoad())
+          } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
         }
       )
 

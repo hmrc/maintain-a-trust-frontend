@@ -14,25 +14,35 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.declaration
+
+import java.time.LocalDateTime
 
 import base.SpecBase
-import models.{UKAddress, UserAnswers}
+import models.{AgentDeclaration, FullName, UKAddress, UserAnswers}
 import pages.beneficiaries.charity._
+import pages.declaration.AgentDeclarationPage
+import pages.{SubmissionDatePage, TVNPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup
 import utils.print.PrintPlaybackHelper
-import views.html.PlaybackAnswersView
+import views.html.declaration.PlaybackDeclaredAnswersView
 
-class PlaybackAnswersControllerSpec extends SpecBase {
+class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
-  val index = 0
+  val fakeTvn = "XC TRN 000 000 4912"
+  val fakeCrn = "123456"
 
-  "PlaybackAnswersController" must {
+  "PlaybackDeclaredAnswersController Controller" must {
 
     "return OK and the correct view for a GET" in {
 
       val playbackAnswers = UserAnswers("internalId")
+        .set(TVNPage, fakeTvn).success.value
+        .set(AgentDeclarationPage, AgentDeclaration(FullName("John", None, "Smith"), fakeCrn, None)).success.value
+        .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value
+
         .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value
         .set(CharityBeneficiaryDiscretionYesNoPage(0), true).success.value
         .set(CharityBeneficiaryShareOfIncomePage(0), "10").success.value
@@ -48,22 +58,28 @@ class PlaybackAnswersControllerSpec extends SpecBase {
 
       val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(playbackAnswers)
 
-      val application = applicationBuilder(Some(playbackAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(playbackAnswers), AffinityGroup.Agent).build()
 
-      val request = FakeRequest(GET, controllers.routes.PlaybackAnswersController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.PlaybackDeclaredAnswersController.onPageLoad().url)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[PlaybackAnswersView]
+      val view = application.injector.instanceOf[PlaybackDeclaredAnswersView]
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(entities, trustDetails)(fakeRequest, messages).toString
+        view(
+          entities,
+          trustDetails,
+          fakeTvn,
+          fakeCrn,
+          "27 January 2020",
+          isAgent = true
+        )(fakeRequest, messages).toString
 
       application.stop()
     }
-
   }
 
 }

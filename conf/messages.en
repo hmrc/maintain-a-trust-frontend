@@ -54,6 +54,7 @@ declaration.heading = Declaration
 declaration.firstName = Your first name
 declaration.middleName = Your middle names (optional)
 declaration.lastName = Your last name
+declaration.crn = Internal reference for this client
 declaration.paragraph1 = Please give us your email address to get a confirmation of your declaration.
 declaration.paragraph2 = If you do not enter your email address, you will not receive a confirmation email with the declaration reference number.
 declaration.email = Email address (optional)
@@ -74,13 +75,6 @@ declaration.agent.warning = I confirm that my client has taken all reasonable st
 declaration.individual.warning = I confirm that I have taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if I knowingly provide false information and I cannot demonstrate that I have taken all reasonable steps, I could be subject to penalties.
 declaration.variation.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
 declaration.variation.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief. I will ensure it is regularly kept up to date as required including changes of address. If I discover that I have made an error or something has changed, I will update this register.
-
-declarationConfirmation.title = Declared copy of updates to the trust
-declarationConfirmation.heading = Declared copy of updates to the trust
-declarationConfirmation.p1 = Declaration reference number is: {0}
-declarationConfirmation.p2 = Client reference number: {0}
-declarationConfirmation.p3 = The trust’s declaration was sent on {0}
-declarationConfirmation.warning = You only need to declare the trust is up to date every year if there is a tax liability.
 
 deedOfVariation.replaceAbsoluteInterestOverWill = to replace an absolute interest over a will
 deedOfVariation.replaceWillTrust = to replace a will trust
@@ -125,6 +119,13 @@ playbackAnswers.heading = Last declared copy of the trust’s registration
 playbackAnswers.declareAnnually.warning = You only need to declare the trust is up to date every year if there is a tax liability.
 playbackAnswers.informationFirstRegistered = The following sections indicate what was entered when the trust was first registered. No further updates to trust details, assets and years of tax liability are required through this service.
 playbackAnswers.selfAssessmentOnline = If you need to update these sections, use Self Assessment for trusts.
+
+playbackDeclarationAnswers.title = Declared copy of updates to the trust
+playbackDeclarationAnswers.heading = Declared copy of updates to the trust
+playbackDeclarationAnswers.p1 = Declaration reference number is: {0}
+playbackDeclarationAnswers.p2 = Client reference number: {0}
+playbackDeclarationAnswers.p3 = The trust’s declaration was sent on {0}
+playbackDeclarationAnswers.warning = You only need to declare the trust is up to date every year if there is a tax liability.
 
 playbackProblemContactHMRC.title = Sorry, there has been a problem accessing your trust’s registration
 playbackProblemContactHMRC.heading = Sorry, there has been a problem accessing your trust’s registration

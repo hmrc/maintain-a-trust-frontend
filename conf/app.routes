@@ -27,7 +27,7 @@ POST       /individual-declaration                      controllers.declaration.
 GET        /individual-declaration                      controllers.declaration.IndividualDeclarationController.onPageLoad()
 POST       /individual-declaration                      controllers.declaration.IndividualDeclarationController.onSubmit()
 
-GET        /confirmation                                controllers.ConfirmationController.onPageLoad()
+GET        /confirmation                                controllers.declaration.ConfirmationController.onPageLoad()
 
 GET        /declare-what-changed                        controllers.WhatIsNextController.onPageLoad()
 POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()
@@ -50,4 +50,4 @@ GET        /feature-not-available                       controllers.FeatureNotAv
 
 GET        /last-declaration                            controllers.PlaybackAnswersController.onPageLoad()
 
-GET        /declaration-confirmation                    controllers.declaration.DeclarationConfirmationController.onPageLoad()
+GET        /declared-updates                            controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad()

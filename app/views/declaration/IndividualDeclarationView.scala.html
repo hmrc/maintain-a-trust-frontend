@@ -26,7 +26,7 @@
         formHelper: FormWithCSRF
 )
 
-@(form: Form[_], affinityGroup : AffinityGroup, onSubmit: Call)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], onSubmit: Call)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)} ${messages("declaration.title")}"
@@ -57,7 +57,6 @@
             ariaRequired = true
         )
 
-
         @if(appConfig.declarationEmailEnabled) {
             <p>@messages("declaration.paragraph1")</p>
             <p>@messages("declaration.paragraph2")</p>
@@ -68,11 +67,7 @@
             )
         }
 
-        @if(affinityGroup == AffinityGroup.Agent) {
-            @components.warning("declaration.variation.agent")
-        } else {
-            @components.warning("declaration.variation.individual")
-        }
+        @components.warning("declaration.variation.individual")
 
         @components.submit_button(Some("site.confirm-send"))
     }

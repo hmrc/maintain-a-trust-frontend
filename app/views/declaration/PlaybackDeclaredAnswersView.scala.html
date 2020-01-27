@@ -31,32 +31,27 @@
     isAgent: Boolean
 )(implicit request: Request[_], messages: Messages)
 
-@printScript = {
-<script type="text/javascript" src='@routes.Assets.versioned("javascripts/print.js")'></script>
-}
-
 @main_template(
-    title = messages("declarationConfirmation.title"),
-    scriptElem = Some(printScript)
+    title = messages("playbackDeclarationAnswers.title")
     ) {
 
-    @components.heading("declarationConfirmation.heading", headingSize = "heading-xlarge")
+    @components.heading("playbackDeclarationAnswers.heading", headingSize = "heading-xlarge")
 
     <p class="declarationReferenceNumber">
-        <span aria-hidden=true>@messages("declarationConfirmation.p1", tvn)</span>
-        <span class="visually-hidden">@messages("declarationConfirmation.p1", formatReferenceNumber(tvn))</span>
+        <span aria-hidden=true>@messages("playbackDeclarationAnswers.p1", tvn)</span>
+        <span class="visually-hidden">@messages("playbackDeclarationAnswers.p1", formatReferenceNumber(tvn))</span>
     </p>
 
     @if(isAgent: Boolean) {
         <p class="agentClientRef">
-            <span aria-hidden=true>@messages("declarationConfirmation.p2", crn)</span>
-            <span class="visually-hidden">@messages("declarationConfirmation.p2", crn)</span>
+            <span aria-hidden=true>@messages("playbackDeclarationAnswers.p2", crn)</span>
+            <span class="visually-hidden">@messages("playbackDeclarationAnswers.p2", crn)</span>
         </p>
     }
 
-    <p>@messages("declarationConfirmation.p3", declarationSent)</p>
+    <p>@messages("playbackDeclarationAnswers.p3", declarationSent)</p>
 
-    @components.warning("declarationConfirmation")
+    @components.warning("playbackDeclarationAnswers")
 
     @for(section <- entities){
         @{

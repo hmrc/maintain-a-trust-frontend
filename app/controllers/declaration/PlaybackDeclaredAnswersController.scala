@@ -28,17 +28,17 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.DateFormatter
 import utils.print.PrintPlaybackHelper
-import views.html.DeclarationConfirmationView
+import views.html.declaration.PlaybackDeclaredAnswersView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeclarationConfirmationController @Inject()(
-                                           override val messagesApi: MessagesApi,
-                                           actions: AuthenticateForPlayback,
-                                           val controllerComponents: MessagesControllerComponents,
-                                           view: DeclarationConfirmationView,
-                                           printPlaybackAnswersHelper: PrintPlaybackHelper,
-                                           dateFormatter: DateFormatter
+class PlaybackDeclaredAnswersController @Inject()(
+                                                   override val messagesApi: MessagesApi,
+                                                   actions: AuthenticateForPlayback,
+                                                   val controllerComponents: MessagesControllerComponents,
+                                                   view: PlaybackDeclaredAnswersView,
+                                                   printPlaybackAnswersHelper: PrintPlaybackHelper,
+                                                   dateFormatter: DateFormatter
                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad() = actions.verifiedForUtr.async {
