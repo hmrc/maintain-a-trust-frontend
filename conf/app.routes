@@ -40,3 +40,5 @@ GET        /status                                      controllers.TrustStatusC
 GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
 
 GET        /last-declaration                            controllers.PlaybackAnswersController.onPageLoad()
+
+GET        /declaration-confirmation                    controllers.DeclarationConfirmationController.onPageLoad()

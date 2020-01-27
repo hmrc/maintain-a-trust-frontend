@@ -34,7 +34,7 @@ class WhatIsNextViewSpec extends ViewBehaviours {
   def applyView(form: Form[_]): HtmlFormat.Appendable =
     view.apply(form)(fakeRequest, messages)
 
-  "DeclarationWhatNextView" must {
+  "WhatIsNextView" must {
 
     behave like normalPage(applyView(form), messageKeyPrefix)
 

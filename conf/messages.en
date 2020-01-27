@@ -31,7 +31,7 @@ checkYourAnswers.guidance = Guidance for check your answers
 confirmationPage.title = Declaration received
 confirmationPage.heading = Declaration received
 confirmationPage.heading2 = Your reference is:
-confirmationPage.printsave.link = Print or save a declared copy of the trust’s registration (opens in a new window or tab)
+confirmationPage.printsave.link = Print or save a copy of your answers (opens in a new window or tab)
 confirmationPage.subheading1 = What happens next
 confirmationPage.paragraph1 = Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.
 confirmationPage.paragraph2 = If any of the settlor, trustee or beneficiary details change (before you make your next declaration) you will need to update them using the online service.
@@ -71,6 +71,13 @@ declaration.agent.warning = I confirm that my client has taken all reasonable st
 declaration.individual.warning = I confirm that I have taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if I knowingly provide false information and I cannot demonstrate that I have taken all reasonable steps, I could be subject to penalties.
 declaration.variation.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
 declaration.variation.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief. I will ensure it is regularly kept up to date as required including changes of address. If I discover that I have made an error or something has changed, I will update this register.
+
+declarationConfirmation.title = Declared copy of updates to the trust
+declarationConfirmation.heading = Declared copy of updates to the trust
+declarationConfirmation.p1 = Declaration reference number is: {0}
+declarationConfirmation.p2 = Client reference number: {0}
+declarationConfirmation.p3 = The trust’s declaration was sent on {0}
+declarationConfirmation.warning = You only need to declare the trust is up to date every year if there is a tax liability.
 
 deedOfVariation.replaceAbsoluteInterestOverWill = to replace an absolute interest over a will
 deedOfVariation.replaceWillTrust = to replace a will trust

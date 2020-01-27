@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package models
+package pages
 
-import play.api.libs.json.{Json, OFormat}
+import java.time.LocalDateTime
 
-case class Declaration(name: FullName, crn: Option[String], email: Option[String])
+import play.api.libs.json.JsPath
 
-object Declaration {
+case object SubmissionDatePage extends QuestionPage[LocalDateTime] {
 
-  implicit lazy val formats: OFormat[Declaration] = Json.format[Declaration]
+  override def path: JsPath = JsPath \  toString
 
+  override def toString: String = "submissionDate"
 }
