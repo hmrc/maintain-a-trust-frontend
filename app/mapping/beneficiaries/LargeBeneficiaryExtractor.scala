@@ -109,10 +109,10 @@ class LargeBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
 
   private def extractNumberOfBeneficiaries(numberOfBeneficiary: String, index: Int, answers: UserAnswers): Try[UserAnswers] = {
     numberOfBeneficiary.toInt match {
-      case x if 1 to 100 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "1 to 100")
+      case x if 0 to 100 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "1 to 100")
       case x if 101 to 200 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "101 to 200")
       case x if 201 to 500 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "201 to 500")
-      case x if 501 to 1000 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "501 to 1,000")
+      case x if 501 to 999 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "501 to 1,000")
       case _ => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "Over 1,001")
     }
   }
