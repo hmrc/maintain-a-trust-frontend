@@ -17,6 +17,7 @@
 package utils.print.sections
 
 import java.time.LocalDate
+
 import models.pages.{IndividualOrBusiness, KindOfTrust}
 import models.{Address, FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import play.api.i18n.Messages
@@ -98,6 +99,18 @@ object AnswerRowConverter {
       AnswerRow(
         messages(s"$labelKey.checkYourAnswersLabel", messageArg),
         CheckAnswersFormatters.currency(x),
+        None
+      )
+    }
+  }
+
+  def percentageQuestion(query: Gettable[String], userAnswers: UserAnswers, labelKey: String,
+                         messageArg: String = "", changeRoute: Option[Call] = None)
+                        (implicit messages:Messages) = {
+    userAnswers.get(query) map {x =>
+      AnswerRow(
+        messages(s"${labelKey}.checkYourAnswersLabel", messageArg),
+        CheckAnswersFormatters.percentage(x),
         None
       )
     }
