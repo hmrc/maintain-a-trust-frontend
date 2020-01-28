@@ -25,7 +25,7 @@ import views.html.WhatIsNextView
 
 class WhatIsNextViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "whatIsNext"
+  val messageKeyPrefix = "declarationWhatNext"
 
   val form = new WhatIsNextFormProvider()()
 

@@ -25,7 +25,7 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("whatIsNext.title")}"
+    title = s"${errorPrefix(form)} ${messages("declarationWhatNext.title")}"
     ) {
 
     @formHelper(action = WhatIsNextController.onSubmit(), 'autoComplete -> "off") {
@@ -34,11 +34,11 @@
 
         @components.error_summary(form.errors)
 
-        @components.heading("whatIsNext.heading")
+        @components.heading("declarationWhatNext.heading")
 
         @components.input_radio(
             field = form("value"),
-            legend = messages("whatIsNext.heading"),
+            legend = messages("declarationWhatNext.heading"),
             legendClass = Some("visually-hidden"),
             inputs = WhatIsNext.options
         )
