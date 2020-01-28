@@ -21,10 +21,12 @@ import java.time.LocalDate
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.Generators
+import models.http.DeclarationResponse.InternalServerError
 import models.http._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
 import play.api.http.Status
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.WireMockHelper
 
@@ -37,172 +39,239 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   private def playbackUrl(utr: String) : String = s"/trusts/$utr"
+  private def declareUrl(utr: String) : String = s"/trusts/no-change/$utr"
 
   "TrustConnector" - {
 
-    "return TrustFound response" in {
+    "playback data must" - {
 
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.trusts.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
+      "return TrustFound response" in {
 
-      val connector = application.injector.instanceOf[TrustConnector]
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
 
-      val utr = "10000000008"
+        val connector = application.injector.instanceOf[TrustConnector]
 
-      server.stubFor(
-        get(urlEqualTo(playbackUrl(utr)))
-          .willReturn(
-            aResponse()
-              .withStatus(Status.OK)
-              .withBody("""{
-                          |
-                          |  "responseHeader": {
-                          |    "status": "In Processing",
-                          |    "formBundleNo": "1"
-                          |  }
-                          |}""".stripMargin)
-          )
-      )
+        val utr = "10000000008"
 
-      val result  = Await.result(connector.playback(utr),Duration.Inf)
-      result mustBe Processing
+        server.stubFor(
+          get(urlEqualTo(playbackUrl(utr)))
+            .willReturn(
+              aResponse()
+                .withStatus(Status.OK)
+                .withBody("""{
+                            |
+                            |  "responseHeader": {
+                            |    "status": "In Processing",
+                            |    "formBundleNo": "1"
+                            |  }
+                            |}""".stripMargin)
+            )
+        )
 
-      application.stop()
-    }
+        val result  = Await.result(connector.playback(utr),Duration.Inf)
+        result mustBe Processing
 
-    "return NoContent response" in {
-
-      val utr = "6666666666"
-
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.trusts.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
-
-      val connector = application.injector.instanceOf[TrustConnector]
-
-      server.stubFor(
-        get(urlEqualTo(playbackUrl(utr)))
-          .willReturn(
-            aResponse()
-              .withStatus(Status.NO_CONTENT)))
-
-      val result  = Await.result(connector.playback(utr),Duration.Inf)
-      result mustBe SorryThereHasBeenAProblem
-
-      application.stop()
-    }
-
-    "return NotFound response" in {
-
-      val utr = "10000000008"
-
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.trusts.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
-
-      val connector = application.injector.instanceOf[TrustConnector]
-
-      server.stubFor(
-        get(urlEqualTo(playbackUrl(utr)))
-          .willReturn(
-            aResponse()
-              .withStatus(Status.NOT_FOUND)))
-
-      val result  = Await.result(connector.playback(utr),Duration.Inf)
-      result mustBe UtrNotFound
-
-      application.stop()
-    }
-
-    "return ServiceUnavailable response" in {
-
-      val utr = "10000000008"
-
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.trusts.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
-
-      val connector = application.injector.instanceOf[TrustConnector]
-
-      server.stubFor(
-        get(urlEqualTo(playbackUrl(utr)))
-          .willReturn(
-            aResponse()
-              .withStatus(Status.SERVICE_UNAVAILABLE)))
-
-      val result  = Await.result(connector.playback(utr), Duration.Inf)
-      result mustBe TrustServiceUnavailable
-
-      application.stop()
-    }
-
-    "must return playback data inside a Processed trust" in {
-      val utr = "1000000007"
-      val payload = Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
-
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.trusts.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
-
-      val connector = application.injector.instanceOf[TrustConnector]
-
-      server.stubFor(
-        get(urlEqualTo(playbackUrl(utr)))
-          .willReturn(okJson(payload))
-      )
-
-      val processed = Await.result(connector.playback(utr), Duration.Inf)
-
-      inside(processed) {
-        case Processed(data, bundleNumber) =>
-
-          bundleNumber mustBe "000012345678"
-
-          data.matchData.utr mustBe "1000000007"
-
-          data.correspondence.name mustBe "Trust of Brian Cloud"
-
-          data.declaration.name mustBe NameType("Agent", None, "Agency")
-
-          data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe NameType("Lead", None, "Trustee")
-
-          data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
-
-          data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe "1"
-          data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
-          data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
-
-          data.trust.entities.settlors.value.settlorCompany.value.head.name mustBe "Settlor Org 01"
-
-          data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe "1"
-          data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
-          data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
-
-          data.trust.assets.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+        application.stop()
       }
 
-      application.stop()
+      "return NoContent response" in {
+
+        val utr = "6666666666"
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(playbackUrl(utr)))
+            .willReturn(
+              aResponse()
+                .withStatus(Status.NO_CONTENT)))
+
+        val result  = Await.result(connector.playback(utr),Duration.Inf)
+        result mustBe SorryThereHasBeenAProblem
+
+        application.stop()
+      }
+
+      "return NotFound response" in {
+
+        val utr = "10000000008"
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(playbackUrl(utr)))
+            .willReturn(
+              aResponse()
+                .withStatus(Status.NOT_FOUND)))
+
+        val result  = Await.result(connector.playback(utr),Duration.Inf)
+        result mustBe UtrNotFound
+
+        application.stop()
+      }
+
+      "return ServiceUnavailable response" in {
+
+        val utr = "10000000008"
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(playbackUrl(utr)))
+            .willReturn(
+              aResponse()
+                .withStatus(Status.SERVICE_UNAVAILABLE)))
+
+        val result  = Await.result(connector.playback(utr), Duration.Inf)
+        result mustBe TrustServiceUnavailable
+
+        application.stop()
+      }
+
+      "must return playback data inside a Processed trust" in {
+        val utr = "1000000007"
+        val payload = Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(playbackUrl(utr)))
+            .willReturn(okJson(payload))
+        )
+
+        val processed = Await.result(connector.playback(utr), Duration.Inf)
+
+        inside(processed) {
+          case Processed(data, bundleNumber) =>
+
+            bundleNumber mustBe "000012345678"
+
+            data.matchData.utr mustBe "1000000007"
+
+            data.correspondence.name mustBe "Trust of Brian Cloud"
+
+            data.declaration.name mustBe NameType("Agent", None, "Agency")
+
+            data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe NameType("Lead", None, "Trustee")
+
+            data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
+
+            data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe "1"
+            data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
+            data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
+
+            data.trust.entities.settlors.value.settlorCompany.value.head.name mustBe "Settlor Org 01"
+
+            data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe "1"
+            data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
+            data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
+
+            data.trust.assets.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+        }
+
+        application.stop()
+      }
+    }
+
+    "declare no change must" - {
+
+      "return TVN on success" in {
+        val utr = "1000000007"
+        val response = Json.parse(
+          """
+            |{
+            | "tvn": "2345678"
+            |}
+            |""".stripMargin)
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(declareUrl(utr)))
+            .willReturn(okJson(Json.stringify(response)).withStatus(Status.OK))
+        )
+
+        val result = Await.result(connector.declare(utr), Duration.Inf)
+
+        result mustEqual TVNResponse("2345678")
+
+      }
+
+      "return an error for non-success response" in {
+        val utr = "1000000007"
+        val response = Json.parse(
+          """
+            |{
+            | "tvn": "2345678"
+            |}
+            |""".stripMargin)
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(declareUrl(utr)))
+            .willReturn(
+              aResponse()
+                .withStatus(Status.SERVICE_UNAVAILABLE)))
+
+        val result = Await.result(connector.declare(utr), Duration.Inf)
+
+        result mustEqual InternalServerError
+      }
     }
   }
 
