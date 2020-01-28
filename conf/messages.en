@@ -227,12 +227,12 @@ utr.hint = This is 10 numbers, for example 1234567890. It will be on the trust�
 utr.hint.reader = This is 10 numbers, for example one two three four five six seven eight nine zero. It will be on the trust’s Self Assessment notice to file (S A three one six). It may be called ‘reference’, ‘UTR’ or ‘official use’.
 utr.error.required = Enter the trust’s Unique Taxpayer Reference
 
-whatIsNext.title = What do you want to do next?
-whatIsNext.heading = What do you want to do next?
-whatIsNext.declare = Declare the trust is up to date
-whatIsNext.makeChanges = Make changes to the trust and declare
-whatIsNext.closeTrust = Close the trust
-whatIsNext.error.required = Select what you want to do next
+declarationWhatNext.title = What do you want to do next?
+declarationWhatNext.heading = What do you want to do next?
+declarationWhatNext.declare = Declare the trust is up to date
+declarationWhatNext.makeChanges = Make changes to the trust and declare
+declarationWhatNext.closeTrust = Close the trust
+declarationWhatNext.error.required = Select what you want to do next
 
 # SECTIONS
 
