@@ -15,22 +15,13 @@
  */
 
 package services
-
-import com.google.inject.{ImplementedBy, Inject}
-import connectors.TrustConnector
-import models.http.DeclarationResponse
+import models.http.{DeclarationResponse, TVNResponse}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends DeclarationService {
-
-  def declareNoChange(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
-    connector.declare(utr)
+class FakeDeclarationService extends DeclarationService {
+  override def declareNoChange(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+    Future.successful(TVNResponse("fakeTvn"))
   }
-}
-
-@ImplementedBy(classOf[DeclarationServiceImpl])
-trait DeclarationService {
-  def declareNoChange(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 }

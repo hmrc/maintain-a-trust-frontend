@@ -90,5 +90,5 @@ class IndividualDeclarationController @Inject()(
       )
 
   }
-  
+
 }
