@@ -82,8 +82,7 @@ class IndividualDeclarationController @Inject()(
                     _ <- playbackRepository.set(updatedAnswers)
                   } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
                 case _ =>
-                  // Todo richy failure page
-                  Future.successful(Redirect(controllers.declaration.routes.IndividualDeclarationController.onPageLoad()))
+                  Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
               }
           }
         }

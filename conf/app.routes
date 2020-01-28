@@ -39,7 +39,8 @@ GET        /status/locked                               controllers.TrustStatusC
 GET        /status/already-claimed                      controllers.TrustStatusController.alreadyClaimed()
 GET        /status/sorry-there-has-been-a-problem       controllers.TrustStatusController.sorryThereHasBeenAProblem()
 GET        /status                                      controllers.TrustStatusController.status()
-GET        /status/problem-declaring                    controllers.TrustStatusController.problemDecalring()
+
+GET        /problem-declaring                           controllers.declaration.ProblemDeclaringController.onPageLoad()
 
 GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
 

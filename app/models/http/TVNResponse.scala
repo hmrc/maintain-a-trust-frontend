@@ -33,19 +33,13 @@ object TVNResponse {
 
 object DeclarationResponse {
 
-  implicit object RegistrationResponseFormats extends Format[DeclarationResponse] {
+  implicit object RegistrationResponseFormats extends Reads[DeclarationResponse] {
 
     override def reads(json: JsValue): JsResult[DeclarationResponse] = json.validate[TVNResponse]
-
-    override def writes(o: DeclarationResponse): JsValue = o match {
-      case x : TVNResponse => Json.toJson(x)(TVNResponse.formats)
-    }
 
   }
 
   case object InternalServerError extends DeclarationResponse
-
-  final case class UnableToMaintain() extends Exception with DeclarationResponse
 
   implicit lazy val httpReads: HttpReads[DeclarationResponse] =
     new HttpReads[DeclarationResponse] {

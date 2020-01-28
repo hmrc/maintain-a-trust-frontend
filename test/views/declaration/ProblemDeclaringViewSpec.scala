@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.status
+package views.declaration
 
 import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
@@ -29,11 +29,11 @@ class ProblemDeclaringViewSpec extends ViewBehaviours {
     val applyView = view.apply(AffinityGroup.Agent)(fakeRequest, messages)
 
     behave like normalPage(applyView,
-      "problemDecalring",
+      "problemDeclaring",
       "p1",
-      "p3",
-      "contact.link",
       "p2",
+      "contact.link",
+      "p3",
       "return.link"
     )
   }

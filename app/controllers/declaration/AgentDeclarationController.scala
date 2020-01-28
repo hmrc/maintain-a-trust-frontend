@@ -21,12 +21,14 @@ import java.time.LocalDateTime
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
-import pages.declaration.AgentDeclarationPage
-import pages.{SubmissionDatePage, TVNPage}
+import models.http.TVNResponse
+import pages.declaration.{AgentDeclarationPage, IndividualDeclarationPage}
+import pages.{SubmissionDatePage, TVNPage, UTRPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
+import services.DeclarationService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.declaration.AgentDeclarationView
 
@@ -39,7 +41,8 @@ class AgentDeclarationController @Inject()(
                                             actions: AuthenticateForPlayback,
                                             formProvider: AgentDeclarationFormProvider,
                                             val controllerComponents: MessagesControllerComponents,
-                                            view: AgentDeclarationView
+                                            view: AgentDeclarationView,
+                                            service: DeclarationService
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
@@ -58,24 +61,30 @@ class AgentDeclarationController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
-      val fakeTvn = "XCTVN0000004912"
-
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.AgentDeclarationController.onSubmit()))),
 
-        // TODO: Check response for submission of no change data and redirect accordingly
-
         value => {
-          for {
-            updatedAnswers <- Future.fromTry(
-              request.userAnswers
-                .set(AgentDeclarationPage, value)
-                .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                .flatMap(_.set(TVNPage, fakeTvn))
-            )
-            _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+          request.userAnswers.get(UTRPage) match {
+            case None =>
+              Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
+            case Some(utr) =>
+              service.declareNoChange(utr, value) flatMap {
+                case TVNResponse(tvn) =>
+                  for {
+                    updatedAnswers <- Future.fromTry(
+                      request.userAnswers
+                        .set(AgentDeclarationPage, value)
+                        .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+                        .flatMap(_.set(TVNPage, tvn))
+                    )
+                    _ <- playbackRepository.set(updatedAnswers)
+                  } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+                case _ =>
+                  Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
+              }
+          }
         }
       )
 

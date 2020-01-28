@@ -36,8 +36,6 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
   def declareUrl(utr: String) = s"${config.trustsUrl}/trusts/no-change/$utr"
 
   def declare(utr: String, payload: JsValue)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
-//    http.POST[DeclarationResponse](declareUrl(utr))(DeclarationResponse.httpReads, hc, ec)
-
     http.POST[JsValue, DeclarationResponse](declareUrl(utr), payload)(implicitly[Writes[JsValue]], DeclarationResponse.httpReads, hc, ec)
   }
 }
