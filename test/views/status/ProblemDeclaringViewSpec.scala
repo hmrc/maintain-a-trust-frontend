@@ -22,9 +22,7 @@ import views.html.status.ProblemDeclaringView
 
 class ProblemDeclaringViewSpec extends ViewBehaviours {
 
-//  val utr = "0987654321"
-
-  "IVDown view" must {
+  "ProblemDeclaring view" must {
 
     val view = viewFor[ProblemDeclaringView](Some(emptyUserAnswers))
 
