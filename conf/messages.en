@@ -108,6 +108,14 @@ ivDown.p3 = if you need to speak to someone about registering and maintaining a 
 ivDown.contact.link = contact the trusts helpline (opens in a new window or tab)
 ivDown.return.link = return to register and maintain a trust for a client
 
+problemDecalring.heading = Sorry, there is a problem with the service
+problemDecalring.title = Sorry, there is a problem with the service
+problemDecalring.p1 = Try again later.
+problemDecalring.p2 = You can
+problemDecalring.p3 = If you need need help with the service
+problemDecalring.contact.link = contact the trusts helpline (opens in a new window or tab)
+problemDecalring.return.link = return to register and maintain a trust for a client
+
 kindOfTrust.Lifetime = A trust created during their lifetime to gift or transfer assets
 kindOfTrust.Deed = A trust through a Deed of Variation or family agreement
 kindOfTrust.Employees = A trust for the employees of a company
@@ -227,12 +235,12 @@ utr.hint = This is 10 numbers, for example 1234567890. It will be on the trust�
 utr.hint.reader = This is 10 numbers, for example one two three four five six seven eight nine zero. It will be on the trust’s Self Assessment notice to file (S A three one six). It may be called ‘reference’, ‘UTR’ or ‘official use’.
 utr.error.required = Enter the trust’s Unique Taxpayer Reference
 
-whatIsNext.title = What do you want to do next?
-whatIsNext.heading = What do you want to do next?
-whatIsNext.declare = Declare the trust is up to date
-whatIsNext.makeChanges = Make changes to the trust and declare
-whatIsNext.closeTrust = Close the trust
-whatIsNext.error.required = Select what you want to do next
+declarationWhatNext.title = What do you want to do next?
+declarationWhatNext.heading = What do you want to do next?
+declarationWhatNext.declare = Declare the trust is up to date
+declarationWhatNext.makeChanges = Make changes to the trust and declare
+declarationWhatNext.closeTrust = Close the trust
+declarationWhatNext.error.required = Select what you want to do next
 
 # SECTIONS
 

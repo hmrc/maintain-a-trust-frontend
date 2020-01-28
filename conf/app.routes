@@ -18,12 +18,6 @@ GET        /information                                 controllers.InformationM
 GET        /agent-declaration                           controllers.declaration.AgentDeclarationController.onPageLoad()
 POST       /agent-declaration                           controllers.declaration.AgentDeclarationController.onSubmit()
 
-GET        /agent-declaration                           controllers.declaration.AgentDeclarationController.onPageLoad()
-POST       /agent-declaration                           controllers.declaration.AgentDeclarationController.onSubmit()
-
-GET        /individual-declaration                      controllers.declaration.IndividualDeclarationController.onPageLoad()
-POST       /individual-declaration                      controllers.declaration.IndividualDeclarationController.onSubmit()
-
 GET        /individual-declaration                      controllers.declaration.IndividualDeclarationController.onPageLoad()
 POST       /individual-declaration                      controllers.declaration.IndividualDeclarationController.onSubmit()
 
@@ -45,6 +39,7 @@ GET        /status/locked                               controllers.TrustStatusC
 GET        /status/already-claimed                      controllers.TrustStatusController.alreadyClaimed()
 GET        /status/sorry-there-has-been-a-problem       controllers.TrustStatusController.sorryThereHasBeenAProblem()
 GET        /status                                      controllers.TrustStatusController.status()
+GET        /status/problem-declaring                    controllers.TrustStatusController.problemDecalring()
 
 GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
 
