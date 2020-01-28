@@ -50,6 +50,7 @@ class TrustStatusController @Inject()(
                                        errorHandler: ErrorHandler,
                                        lockedView: TrustLockedView,
                                        alreadyClaimedView: TrustAlreadyClaimedView,
+                                       problemDeclaringView: ProblemDeclaringView,
                                        playbackProblemContactHMRCView: PlaybackProblemContactHMRCView,
                                        playbackExtractor: UserAnswersExtractor,
                                        authenticationService: AuthenticationService,
@@ -167,4 +168,12 @@ class TrustStatusController @Inject()(
       case Some(utr) => block(utr)
     }
   }
+
+  def problemDecalring(): Action[AnyContent] = actions.authWithData.async {
+    implicit request =>
+      enforceUtr() { _ =>
+        Future.successful(Ok(problemDeclaringView(request.user.affinityGroup)))
+      }
+  }
+
 }

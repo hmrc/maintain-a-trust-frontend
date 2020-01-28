@@ -104,6 +104,14 @@ ivDown.p3 = if you need to speak to someone about registering and maintaining a 
 ivDown.contact.link = contact the trusts helpline (opens in a new window or tab)
 ivDown.return.link = return to register and maintain a trust for a client
 
+problemDecalring.heading = Sorry, there is a problem with the service
+problemDecalring.title = Sorry, there is a problem with the service
+problemDecalring.p1 = Try again later.
+problemDecalring.p2 = You can
+problemDecalring.p3 = If you need need help with the service
+problemDecalring.contact.link = contact the trusts helpline (opens in a new window or tab)
+problemDecalring.return.link = return to register and maintain a trust for a client
+
 kindOfTrust.Lifetime = A trust created during their lifetime to gift or transfer assets
 kindOfTrust.Deed = A trust through a Deed of Variation or family agreement
 kindOfTrust.Employees = A trust for the employees of a company
