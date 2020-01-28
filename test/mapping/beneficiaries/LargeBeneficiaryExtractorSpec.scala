@@ -174,7 +174,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(LargeBeneficiaryUtrPage(2)) mustNot be(defined)
         extraction.right.value.get(LargeBeneficiaryMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
         extraction.right.value.get(LargeBeneficiarySafeIdPage(2)).get mustBe "8947584-94759745-84758745"
-        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(2)).get mustBe "501 to 1,000"
+        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(2)).get mustBe "Over 1,001"
       }
 
     }
