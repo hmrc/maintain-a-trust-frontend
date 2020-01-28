@@ -23,7 +23,6 @@ import models.http.Correspondence
 import pages.correspondence._
 import pages.trustdetails.TrustNamePage
 import play.api.Logger
-
 import scala.util.{Failure, Success}
 
 class CorrespondenceExtractor @Inject() extends PlaybackExtractor[models.http.Correspondence] {
@@ -51,7 +50,9 @@ class CorrespondenceExtractor @Inject() extends PlaybackExtractor[models.http.Co
   private def extractAddress(address: Address, answers: UserAnswers) = {
     address match {
       case uk: UKAddress => answers.set(CorrespondenceAddressPage, uk)
+        .flatMap(_.set(CorrespondenceAddressInTheUKPage, true))
       case nonUk: InternationalAddress => answers.set(CorrespondenceAddressPage, nonUk)
+        .flatMap(_.set(CorrespondenceAddressInTheUKPage, false))
     }
   }
 

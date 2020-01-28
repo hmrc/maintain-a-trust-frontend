@@ -14,33 +14,40 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.declaration
 
 import base.SpecBase
+import forms.declaration.AgentDeclarationFormProvider
+import models.AgentDeclaration
+import play.api.data.Form
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.ConfirmationView
+import views.html.declaration.AgentDeclarationView
 
-class ConfirmationControllerSpec extends SpecBase {
+class AgentDeclarationControllerSpec extends SpecBase {
 
-  "Confirmation Controller" must {
+  val formProvider = new AgentDeclarationFormProvider()
+  val form: Form[AgentDeclaration] = formProvider()
 
-    "return OK and the correct view for a onPageLoad when TVN is available" in {
+  lazy val onSubmit: Call = routes.AgentDeclarationController.onSubmit()
 
-      val fakeTvn = "XC TVN 000 000 4912"
+  "Agent Declaration Controller" must {
+
+    "return OK and the correct view for a onPageLoad" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.AgentDeclarationController.onPageLoad().url)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[ConfirmationView]
+      val view = application.injector.instanceOf[AgentDeclarationView]
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(fakeTvn, isAgent = false, "#")(fakeRequest, messages).toString
+        view(form, onSubmit)(fakeRequest, messages).toString
 
       application.stop()
     }

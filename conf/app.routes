@@ -15,10 +15,13 @@ POST       /unique-taxpayer-reference                   controllers.UTRControlle
 
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
 
-GET        /declaration                                 controllers.DeclarationController.onPageLoad()
-POST       /declaration                                 controllers.DeclarationController.onSubmit()
+GET        /agent-declaration                           controllers.declaration.AgentDeclarationController.onPageLoad()
+POST       /agent-declaration                           controllers.declaration.AgentDeclarationController.onSubmit()
 
-GET        /confirmation                                controllers.ConfirmationController.onPageLoad()
+GET        /individual-declaration                      controllers.declaration.IndividualDeclarationController.onPageLoad()
+POST       /individual-declaration                      controllers.declaration.IndividualDeclarationController.onSubmit()
+
+GET        /confirmation                                controllers.declaration.ConfirmationController.onPageLoad()
 
 GET        /declare-what-changed                        controllers.WhatIsNextController.onPageLoad()
 POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()
@@ -41,3 +44,5 @@ GET        /status/problem-declaring                    controllers.TrustStatusC
 GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
 
 GET        /last-declaration                            controllers.PlaybackAnswersController.onPageLoad()
+
+GET        /declared-updates                            controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad()

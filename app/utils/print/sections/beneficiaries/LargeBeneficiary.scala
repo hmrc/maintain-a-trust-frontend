@@ -36,8 +36,6 @@ object LargeBeneficiary {
         headingKey = Some(messages("answerPage.section.largeBeneficiary.subheading", index + 1)),
         Seq(
           stringQuestion(LargeBeneficiaryNamePage(index), userAnswers, "largeBeneficiaryName"),
-          yesNoQuestion(LargeBeneficiaryDiscretionYesNoPage(index), userAnswers, "largeBeneficiaryShareOfIncomeYesNo", name),
-          stringQuestion(LargeBeneficiaryShareOfIncomePage(index), userAnswers, "largeBeneficiaryShareOfIncome", name),
           yesNoQuestion(LargeBeneficiaryAddressYesNoPage(index), userAnswers, "largeBeneficiaryAddressYesNo", name),
           yesNoQuestion(LargeBeneficiaryAddressUKYesNoPage(index), userAnswers, "largeBeneficiaryAddressUKYesNo", name),
           addressQuestion(LargeBeneficiaryAddressPage(index), userAnswers, "largeBeneficiaryAddress", countryOptions = countryOptions, messageArg = name),

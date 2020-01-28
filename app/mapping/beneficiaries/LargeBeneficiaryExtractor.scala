@@ -19,12 +19,13 @@ package mapping.beneficiaries
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorState, PlaybackExtractionError}
 import mapping.PlaybackExtractor
-import models.{Address, Description, InternationalAddress, MetaData, UKAddress, UserAnswers}
+import mapping.PlaybackImplicits._
 import models.http.{DisplayTrustCompanyType, DisplayTrustIdentificationOrgType, DisplayTrustLargeType}
+import models.{Address, Description, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.beneficiaries.large._
 import play.api.Logger
+
 import scala.util.{Failure, Success, Try}
-import mapping.PlaybackImplicits._
 
 class LargeBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustLargeType]]] {
 
@@ -53,7 +54,7 @@ class LargeBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
                     )
                   )
                 )
-                .flatMap(_.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), largeBeneficiary.numberOfBeneficiary))
+                .flatMap(answers => extractNumberOfBeneficiaries(largeBeneficiary.numberOfBeneficiary, index, answers))
                 .flatMap(_.set(LargeBeneficiarySafeIdPage(index), largeBeneficiary.identification.flatMap(_.safeId)))
                 .flatMap {
                   _.set(
@@ -103,6 +104,16 @@ class LargeBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
       case None =>
         // Assumption that user answered yes as the share of income is not provided
         answers.set(LargeBeneficiaryDiscretionYesNoPage(index), true)
+    }
+  }
+
+  private def extractNumberOfBeneficiaries(numberOfBeneficiary: String, index: Int, answers: UserAnswers): Try[UserAnswers] = {
+    numberOfBeneficiary.toInt match {
+      case x if 0 to 100 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "1 to 100")
+      case x if 101 to 200 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "101 to 200")
+      case x if 201 to 500 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "201 to 500")
+      case x if 501 to 999 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "501 to 1,000")
+      case _ => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "Over 1,001")
     }
   }
 
