@@ -23,12 +23,15 @@ import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import views.behaviours.QuestionViewBehaviours
 import views.html.declaration.AgentDeclarationView
+import config.FrontendAppConfig
 
 class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] {
 
   val messageKeyPrefix = "declaration"
 
   val form = new AgentDeclarationFormProvider()()
+
+  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 
   "DeclarationView view for agent" must {
 
@@ -37,15 +40,28 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, Call("POST", ""))(fakeRequest, messages)
 
-    behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1", "paragraph2")
+    if(appConfig.declarationEmailEnabled) {
+      behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1", "paragraph2")
+    }
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like pageWithTextFields(
-      form,
-      applyView,
-      messageKeyPrefix,
-      "firstName", "middleName", "lastName", "crn", "email"
-    )
+    if(appConfig.declarationEmailEnabled) {
+      behave like pageWithTextFields(
+        form,
+        applyView,
+        messageKeyPrefix,
+        "firstName", "middleName", "lastName", "crn", "email"
+      )
+    } else {
+      behave like pageWithTextFields(
+        form,
+        applyView,
+        messageKeyPrefix,
+        "firstName", "middleName", "lastName", "crn"
+      )
+    }
+
+
   }
 }

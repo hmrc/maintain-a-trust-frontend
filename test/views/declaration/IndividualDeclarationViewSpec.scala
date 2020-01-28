@@ -16,6 +16,7 @@
 
 package views.declaration
 
+import config.FrontendAppConfig
 import forms.declaration.IndividualDeclarationFormProvider
 import models.IndividualDeclaration
 import play.api.data.Form
@@ -30,6 +31,8 @@ class IndividualDeclarationViewSpec extends QuestionViewBehaviours[IndividualDec
 
   val form = new IndividualDeclarationFormProvider()()
 
+  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
+
   "DeclarationView view for individual or organisation" must {
 
     val view = viewFor[IndividualDeclarationView](Some(emptyUserAnswers))
@@ -37,15 +40,27 @@ class IndividualDeclarationViewSpec extends QuestionViewBehaviours[IndividualDec
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, Call("POST", ""))(fakeRequest, messages)
 
-    behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1", "paragraph2")
+    if(appConfig.declarationEmailEnabled) {
+      behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1", "paragraph2")
+    }
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like pageWithTextFields(
-      form,
-      applyView,
-      messageKeyPrefix,
-      "firstName", "middleName", "lastName", "email"
-    )
+    if(appConfig.declarationEmailEnabled) {
+      behave like pageWithTextFields(
+        form,
+        applyView,
+        messageKeyPrefix,
+        "firstName", "middleName", "lastName", "email"
+      )
+    } else {
+      behave like pageWithTextFields(
+        form,
+        applyView,
+        messageKeyPrefix,
+        "firstName", "middleName", "lastName"
+      )
+    }
+
   }
 }
