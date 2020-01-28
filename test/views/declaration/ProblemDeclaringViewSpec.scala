@@ -18,7 +18,7 @@ package views.declaration
 
 import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
-import views.html.status.ProblemDeclaringView
+import views.html.declaration.ProblemDeclaringView
 
 class ProblemDeclaringViewSpec extends ViewBehaviours {
 
