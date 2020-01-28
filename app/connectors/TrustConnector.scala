@@ -19,6 +19,7 @@ package connectors
 import config.FrontendAppConfig
 import javax.inject.Inject
 import models.http.{DeclarationResponse, TrustsResponse, TrustsStatusReads}
+import play.api.libs.json.{JsValue, Json, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -34,8 +35,10 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
   def declareUrl(utr: String) = s"${config.trustsUrl}/trusts/no-change/$utr"
 
-  def declare(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
-    http.GET[DeclarationResponse](declareUrl(utr))(DeclarationResponse.httpReads, hc, ec)
+  def declare(utr: String, payload: JsValue)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+//    http.POST[DeclarationResponse](declareUrl(utr))(DeclarationResponse.httpReads, hc, ec)
+
+    http.POST[JsValue, DeclarationResponse](declareUrl(utr), payload)(implicitly[Writes[JsValue]], DeclarationResponse.httpReads, hc, ec)
   }
 }
 

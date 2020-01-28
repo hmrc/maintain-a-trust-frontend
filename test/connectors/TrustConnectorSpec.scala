@@ -222,6 +222,22 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             |}
             |""".stripMargin)
 
+        val payload = Json.parse(
+          s"""
+             |{
+             | "name": {
+             |   "firstName": "John",
+             |   "lastName": "Smith"
+             | },
+             | "address": {
+             |   "line1": "Line 1",
+             |   "line2": "Line 2",
+             |   "postCode": "NE981ZZ",
+             |   "country": "GB"
+             | }
+             |}
+             |""".stripMargin)
+
         val application = applicationBuilder()
           .configure(
             Seq(
@@ -233,11 +249,11 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          get(urlEqualTo(declareUrl(utr)))
+          post(urlEqualTo(declareUrl(utr)))
             .willReturn(okJson(Json.stringify(response)).withStatus(Status.OK))
         )
 
-        val result = Await.result(connector.declare(utr), Duration.Inf)
+        val result = Await.result(connector.declare(utr, payload), Duration.Inf)
 
         result mustEqual TVNResponse("2345678")
 
@@ -245,12 +261,21 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
       "return an error for non-success response" in {
         val utr = "1000000007"
-        val response = Json.parse(
-          """
-            |{
-            | "tvn": "2345678"
-            |}
-            |""".stripMargin)
+        val payload = Json.parse(
+          s"""
+             |{
+             | "name": {
+             |   "firstName": "John",
+             |   "lastName": "Smith"
+             | },
+             | "address": {
+             |   "line1": "Line 1",
+             |   "line2": "Line 2",
+             |   "postCode": "NE981ZZ",
+             |   "country": "GB"
+             | }
+             |}
+             |""".stripMargin)
 
         val application = applicationBuilder()
           .configure(
@@ -263,12 +288,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          get(urlEqualTo(declareUrl(utr)))
+          post(urlEqualTo(declareUrl(utr)))
             .willReturn(
               aResponse()
                 .withStatus(Status.SERVICE_UNAVAILABLE)))
 
-        val result = Await.result(connector.declare(utr), Duration.Inf)
+        val result = Await.result(connector.declare(utr, payload), Duration.Inf)
 
         result mustEqual InternalServerError
       }

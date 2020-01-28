@@ -18,19 +18,43 @@ package services
 
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
+import models.{AgentDeclaration, Declaration, IndividualDeclaration}
 import models.http.DeclarationResponse
+import models.http.DeclarationResponse.InternalServerError
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends DeclarationService {
 
-  def declareNoChange(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
-    connector.declare(utr)
+  def declareNoChange(utr: String, payload : Declaration)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+    payload match {
+      case AgentDeclaration(name, crn, email) =>
+        Future.successful(InternalServerError)
+      case IndividualDeclaration(name, email) =>
+        val payload = Json.parse(
+          s"""
+            |{
+            | "name": {
+            |   "firstName": "${name.firstName}",
+            |   "lastName": "${name.lastName}"
+            | },
+            | "address": {
+            |   "line1": "Line 1",
+            |   "line2": "Line 2",
+            |   "postCode": "NE981ZZ",
+            |   "country": "GB"
+            | }
+            |}
+            |""".stripMargin)
+
+        connector.declare(utr, payload)
+    }
   }
 }
 
 @ImplementedBy(classOf[DeclarationServiceImpl])
 trait DeclarationService {
-  def declareNoChange(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
+  def declareNoChange(utr: String, payload : Declaration)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 }

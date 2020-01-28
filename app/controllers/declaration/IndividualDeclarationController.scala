@@ -70,7 +70,7 @@ class IndividualDeclarationController @Inject()(
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
-              service.declareNoChange(utr) flatMap {
+              service.declareNoChange(utr, value) flatMap {
                 case TVNResponse(tvn) =>
                   for {
                     updatedAnswers <- Future.fromTry(

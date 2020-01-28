@@ -15,13 +15,14 @@
  */
 
 package services
+import models.Declaration
 import models.http.{DeclarationResponse, TVNResponse}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDeclarationService extends DeclarationService {
-  override def declareNoChange(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+  override def declareNoChange(utr: String, payload: Declaration)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(TVNResponse("fakeTvn"))
   }
 }
