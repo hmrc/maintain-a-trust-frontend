@@ -35,7 +35,7 @@ object WhatIsNext extends Enumerable.Implicits {
 
   val options: List[RadioOption] = values.map {
     value =>
-      RadioOption("declarationWhatNext", value.toString)
+      RadioOption("whatIsNext", value.toString)
   }
 
   implicit val enumerable: Enumerable[WhatIsNext] =

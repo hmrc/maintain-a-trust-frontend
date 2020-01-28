@@ -14,29 +14,17 @@
  * limitations under the License.
  */
 
-package forms
+package forms.declaration
 
-import com.google.inject.Inject
+import forms.Validation
 import forms.mappings.Mappings
-import models.{Declaration, FullName}
-import play.api.data.Form
+import models.FullName
 import play.api.data.Forms.{mapping, optional}
+import play.api.data.Mapping
 
-class DeclarationFormProvider @Inject() extends Mappings {
+trait DeclarationFormProvider extends Mappings {
 
-  def apply(): Form[Declaration] =
-    Form(
-      mapping(
-        "" -> fullName,
-        "email" -> optional(text().verifying(
-          firstError(
-            maxLength(35, s"declaration.error.email.length"),
-            regexp(Validation.emailRegex, s"declaration.error.email.invalid"))
-        ))
-      )(Declaration.apply)(Declaration.unapply)
-    )
-
-  val fullName = mapping(
+  val fullName: Mapping[FullName] = mapping(
 
     "firstName" -> text("declaration.error.firstName.required")
       .verifying(

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package views
+package views.declaration
 
 import play.twirl.api.HtmlFormat
 import utils.AccessibilityHelper._
 import views.behaviours.ViewBehaviours
-import views.html.ConfirmationView
+import views.html.declaration.ConfirmationView
 
 class ConfirmationViewSpec extends ViewBehaviours {
 
@@ -35,7 +35,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
       assertContainsText(doc, s"Declaration received")
       assertContainsText(doc, s"Your reference is:")
       assertContainsText(doc, s"$fakeTvn")
-      assertContainsText(doc, "Print or save a declared copy of the trust’s registration (opens in a new window or tab)")
+      assertContainsText(doc, "Print or save a copy of your answers (opens in a new window or tab)")
 
       assertContainsText(doc, "What happens next")
 

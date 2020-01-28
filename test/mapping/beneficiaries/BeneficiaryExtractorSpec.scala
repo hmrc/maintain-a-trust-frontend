@@ -151,7 +151,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
                 description2 = None,
                 description3 = None,
                 description4 = None,
-                numberOfBeneficiary = "1",
+                numberOfBeneficiary = "100",
                 identification = Some(
                   DisplayTrustIdentificationOrgType(
                     safeId = Some("8947584-94759745-84758745"),
@@ -254,7 +254,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(LargeBeneficiaryUtrPage(0)) mustNot be(defined)
         extraction.right.value.get(LargeBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
         extraction.right.value.get(LargeBeneficiarySafeIdPage(0)) must be(defined)
-        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe "1"
+        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe "1 to 100"
 
       }
 

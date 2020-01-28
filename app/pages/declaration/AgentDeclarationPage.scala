@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package pages
+package pages.declaration
 
-import models.Declaration
+import models.AgentDeclaration
+import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object DeclarationPage extends QuestionPage[Declaration] {
+case object AgentDeclarationPage extends QuestionPage[AgentDeclaration] {
 
   override def path: JsPath = JsPath \ toString
 

@@ -52,6 +52,8 @@ object CheckAnswersFormatters {
 
   def currency(value: String): Html = escape(s"£$value")
 
+  def percentage(value: String): Html = escape(s"$value%")
+
   def trusteeName(index: Int, userAnswers: UserAnswers): String =
     userAnswers.get(TrusteeNamePage(index)).map(_.toString).getOrElse("")
 

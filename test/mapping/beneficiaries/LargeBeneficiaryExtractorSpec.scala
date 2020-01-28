@@ -36,7 +36,11 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
     description2 = None,
     description3 = None,
     description4 = None,
-    numberOfBeneficiary = s"$index",
+    numberOfBeneficiary = index match {
+      case 0 => "100"
+      case 1 => "500"
+      case _ => "1000"
+    },
     identification = Some(
       DisplayTrustIdentificationOrgType(
         safeId = Some("8947584-94759745-84758745"),
@@ -96,7 +100,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             description2 = None,
             description3 = None,
             description4 = None,
-            numberOfBeneficiary = "1",
+            numberOfBeneficiary = "100",
             identification = Some(
               DisplayTrustIdentificationOrgType(
                 safeId = Some("8947584-94759745-84758745"),
@@ -124,7 +128,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(LargeBeneficiaryUtrPage(0)) mustNot be(defined)
         extraction.right.value.get(LargeBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
         extraction.right.value.get(LargeBeneficiarySafeIdPage(0)) must be(defined)
-        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe "1"
+        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe "1 to 100"
       }
 
       "with full data must return user answers updated" in {
@@ -146,7 +150,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(LargeBeneficiaryUtrPage(0)) mustNot be(defined)
         extraction.right.value.get(LargeBeneficiaryMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
         extraction.right.value.get(LargeBeneficiarySafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe "0"
+        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe "1 to 100"
 
         extraction.right.value.get(LargeBeneficiaryNamePage(1)).get mustBe "Large 1"
         extraction.right.value.get(LargeBeneficiaryDescriptionPage(1)).get mustBe Description("Description 1", None, None, None, None)
@@ -158,7 +162,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(LargeBeneficiaryUtrPage(1)).get mustBe "1234567890"
         extraction.right.value.get(LargeBeneficiaryMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
         extraction.right.value.get(LargeBeneficiarySafeIdPage(1)).get mustBe "8947584-94759745-84758745"
-        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(1)).get mustBe "1"
+        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(1)).get mustBe "201 to 500"
 
         extraction.right.value.get(LargeBeneficiaryNamePage(2)).get mustBe "Large 2"
         extraction.right.value.get(LargeBeneficiaryDescriptionPage(2)).get mustBe Description("Description 2", None, None, None, None)
@@ -170,7 +174,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(LargeBeneficiaryUtrPage(2)) mustNot be(defined)
         extraction.right.value.get(LargeBeneficiaryMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
         extraction.right.value.get(LargeBeneficiarySafeIdPage(2)).get mustBe "8947584-94759745-84758745"
-        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(2)).get mustBe "2"
+        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(2)).get mustBe "Over 1,001"
       }
 
     }

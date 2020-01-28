@@ -26,6 +26,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
+import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.WhatIsNextView
 
@@ -57,6 +58,7 @@ class WhatIsNextController @Inject()(
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
+
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors))),
@@ -67,7 +69,12 @@ class WhatIsNextController @Inject()(
             _ <- playbackRepository.set(updatedAnswers)
           } yield value match {
             case WhatIsNext.DeclareTheTrustIsUpToDate =>
-              Redirect(controllers.routes.DeclarationController.onPageLoad())
+              request.user.affinityGroup match {
+                case Agent =>
+                  Redirect(controllers.declaration.routes.AgentDeclarationController.onPageLoad())
+                case _ =>
+                  Redirect(controllers.declaration.routes.IndividualDeclarationController.onPageLoad())
+              }
             case _ =>
               Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
           }

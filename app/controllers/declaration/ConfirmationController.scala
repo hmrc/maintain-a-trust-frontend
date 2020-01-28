@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.declaration
 
-import controllers.actions.AuthenticateForPlayback
 import com.google.inject.{Inject, Singleton}
+import controllers.actions.AuthenticateForPlayback
+import pages.TVNPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.ConfirmationView
+import views.html.declaration.ConfirmationView
 
 import scala.concurrent.ExecutionContext
 
@@ -41,8 +42,8 @@ class ConfirmationController @Inject()(
       val isAgent = request.user.affinityGroup == Agent
       //      val agentOverviewUrl = controllers.register.agents.routes.AgentOverviewController.onPageLoad().url
 
-      val fakeTvn = "XC TVN 000 000 4912"
+      val tvn = request.userAnswers.get(TVNPage).getOrElse("")
 
-      Ok(view(fakeTvn, isAgent, agentOverviewUrl = "#"))
+      Ok(view(tvn, isAgent, agentOverviewUrl = "#"))
   }
 }
