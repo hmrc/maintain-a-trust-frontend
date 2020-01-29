@@ -21,9 +21,9 @@ import play.api.http.Status._
 import play.api.libs.json._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-trait TrustResponse
+sealed trait DeclarationResponse
 
-final case class TVNResponse(tvn : String) extends TrustResponse
+final case class TVNResponse(tvn : String) extends DeclarationResponse
 
 object TVNResponse {
 
@@ -31,26 +31,19 @@ object TVNResponse {
 
 }
 
-object TrustResponse {
+object DeclarationResponse {
 
-  implicit object RegistrationResponseFormats extends Format[TrustResponse] {
+  implicit object RegistrationResponseFormats extends Reads[DeclarationResponse] {
 
-    override def reads(json: JsValue): JsResult[TrustResponse] = json.validate[TVNResponse]
-
-    override def writes(o: TrustResponse): JsValue = o match {
-      case x : TVNResponse => Json.toJson(x)(TVNResponse.formats)
-//      case x : ErrorAuditEvent => Json.toJson(x)(ErrorAuditEvent.formats)
-    }
+    override def reads(json: JsValue): JsResult[DeclarationResponse] = json.validate[TVNResponse]
 
   }
 
-  case object InternalServerError extends TrustResponse
+  case object InternalServerError extends DeclarationResponse
 
-  final case class UnableToMaintain() extends Exception with TrustResponse
-
-  implicit lazy val httpReads: HttpReads[TrustResponse] =
-    new HttpReads[TrustResponse] {
-      override def read(method: String, url: String, response: HttpResponse): TrustResponse = {
+  implicit lazy val httpReads: HttpReads[DeclarationResponse] =
+    new HttpReads[DeclarationResponse] {
+      override def read(method: String, url: String, response: HttpResponse): DeclarationResponse = {
         Logger.info(s"[TrustResponse] response status received from trusts api: ${response.status}")
 
         response.status match {

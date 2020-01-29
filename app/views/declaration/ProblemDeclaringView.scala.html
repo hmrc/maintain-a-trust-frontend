@@ -26,15 +26,15 @@
 @(affinityGroup: AffinityGroup)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("problemDecalring.title")
+    title = messages("problemDeclaring.title")
     ) {
-    @components.heading("problemDecalring.heading", headingSize = "heading-large heading-with-top-margin")
+    @components.heading("problemDeclaring.heading", headingSize = "heading-large heading-with-top-margin")
 
-    <p>@messages("problemDecalring.p1")</p>
+    <p>@messages("problemDeclaring.p1")</p>
 
-    <p>@messages("problemDecalring.p3") <a id="help-link" target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("problemDecalring.contact.link")</a>.</p>
+    <p>@messages("problemDeclaring.p2") <a id="help-link" target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("problemDeclaring.contact.link")</a>.</p>
 
     @if(affinityGroup == AffinityGroup.Agent) {
-      <p>@messages("problemDecalring.p2") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("problemDecalring.return.link")</a>.</p>
+      <p>@messages("problemDeclaring.p3") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("problemDeclaring.return.link")</a>.</p>
     }
 }
