@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends DeclarationService {
 
-  def declareNoChange(utr: String, payload : Declaration)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+  override def declareNoChange(utr: String, payload : Declaration)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
     payload match {
       case AgentDeclaration(name, crn, email) =>
         Future.successful(InternalServerError)

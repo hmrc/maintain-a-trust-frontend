@@ -17,25 +17,18 @@
 package controllers.declaration
 
 import base.SpecBase
-import connectors.TrustConnector
 import forms.declaration.IndividualDeclarationFormProvider
 import models.IndividualDeclaration
-import models.http.DeclarationResponse.InternalServerError
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
 import pages.UTRPage
-import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
-import play.api.libs.json.JsValue
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
+import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.{DeclarationService, FakeDeclarationService, FakeFailingDeclarationService}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.declaration.IndividualDeclarationView
-
-import scala.concurrent.Future
 
 class IndividualDeclarationControllerSpec extends SpecBase {
 
@@ -79,6 +72,8 @@ class IndividualDeclarationControllerSpec extends SpecBase {
           userAnswers = Some(userAnswers),
           affinityGroup = Organisation,
           enrolments = enrolments
+        ).overrides(
+          bind[DeclarationService].to(new FakeDeclarationService())
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -116,23 +111,29 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
     "render problem declaring when error retrieving TVN" in {
 
-      val fakeTrustConnector: TrustConnector = mock[TrustConnector]
+      val utr = "0987654321"
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
-        bind[TrustConnector].to(fakeTrustConnector)
-      ).build()
+      val enrolments = Enrolments(Set(Enrolment(
+        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
+      )))
 
-      val request = FakeRequest(POST, routes.IndividualDeclarationController.onPageLoad().url)
+      val userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
+
+      val application =
+        applicationBuilder(
+          userAnswers = Some(userAnswers),
+          affinityGroup = Organisation,
+          enrolments = enrolments
+        ).overrides(
+          bind[DeclarationService].to(new FakeFailingDeclarationService())
+        ).build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
         .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"))
-
-      when(fakeTrustConnector.declare(any[String], any[JsValue])(any(), any()))
-        .thenReturn(Future.successful(InternalServerError))
 
       val result = route(application, request).value
 
-      status(result) mustEqual INTERNAL_SERVER_ERROR
-
-      redirectLocation(result).value mustEqual "/maintain-trust/problem-declaring"
+      redirectLocation(result).value mustBe controllers.declaration.routes.ProblemDeclaringController.onPageLoad().url
 
       application.stop()
     }
