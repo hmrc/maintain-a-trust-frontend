@@ -18,49 +18,69 @@ package services
 
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
-import models.http.{AddressType, DeclarationResponse}
-import models.{Address, AgentDeclaration, Declaration, FullName, IndividualDeclaration, InternationalAddress, UKAddress}
+import models.http.DeclarationResponse.CannotDeclareError
+import models.http.{AddressType, DeclarationResponse, NameType}
+import models.{Address, AgentDeclaration, Declaration, IndividualDeclaration, InternationalAddress, UKAddress, UserAnswers}
+import pages.declaration.AgencyRegisteredAddressUkYesNoPage
+import pages.trustees.TrusteeAddressPage
+import pages.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage}
 import play.api.libs.json.{JsValue, Json}
+import sections.Trustees
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends DeclarationService {
 
-  override def declareNoChange(utr: String, declaration : Declaration, ukOrInternationalAddress: Address)
+  override def declareNoChange(utr: String, declaration : Declaration, userAnswers: UserAnswers)
                               (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
-
-    val address: AddressType = convertToAddressType(ukOrInternationalAddress)
 
     declaration match {
       case AgentDeclaration(name, _, _) =>
-        val payload = getPayload(name, address)
-        connector.declare(utr, payload)
+        val address = userAnswers.get(AgencyRegisteredAddressUkYesNoPage) map {
+          case true => userAnswers.get(AgencyRegisteredAddressUkPage)
+          case false => userAnswers.get(AgencyRegisteredAddressInternationalPage)
+        } getOrElse(None)
+
+        declare(name, address, utr)
+
       case IndividualDeclaration(name, _) =>
-        val payload = getPayload(name, address)
-        connector.declare(utr, payload)
+        declare(
+          name,
+          userAnswers.get(
+            TrusteeAddressPage(
+              getIndexOfLeadTrustee(userAnswers)
+            )
+          ),
+          utr
+        )
     }
   }
 
-  private def getPayload(name: FullName, address: AddressType): JsValue = {
-    Json.parse(
-      s"""
-         |{
-         | "name": {
-         |   "firstName": "${name.firstName}",
-         |   "middleName": "${name.middleName}",
-         |   "lastName": "${name.lastName}"
-         | },
-         | "address": {
-         |   "line1": "${address.line1}",
-         |   "line2": "${address.line2}",
-         |   "line3": "${address.line3}",
-         |   "line4": "${address.line4}",
-         |   "postCode": "${address.postCode}",
-         |   "country": "${address.country}"
-         | }
-         |}
-         |""".stripMargin)
+  private def getIndexOfLeadTrustee(userAnswers: UserAnswers): Int = {
+    userAnswers
+      .get(Trustees)
+      .get.as[List[JsValue]]
+      .map(x => x \ "isThisLeadTrustee")
+      .zipWithIndex
+      .filter(_._1.as[Boolean])
+      .map(_._2)
+      .head
+  }
+
+  private def declare(name: NameType, address: Option[Address], utr: String)
+                     (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+    address match {
+      case Some(address) =>
+        val payload = getPayload(name, convertToAddressType(address))
+        connector.declare(utr, payload)
+      case None =>
+        Future.successful(CannotDeclareError)
+    }
+  }
+
+  private def getPayload(name: NameType, address: AddressType): JsValue = {
+    Json.toJson(models.http.Declaration(name, address))
   }
 
   private def convertToAddressType(address: Address): AddressType = {
@@ -89,5 +109,6 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
 
 @ImplementedBy(classOf[DeclarationServiceImpl])
 trait DeclarationService {
-  def declareNoChange(utr: String, payload : Declaration, address: Address)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
+  def declareNoChange(utr: String, declaration: Declaration, userAnswers: UserAnswers)
+                     (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 }

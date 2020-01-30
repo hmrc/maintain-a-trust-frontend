@@ -29,6 +29,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.DeclarationService
+import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.declaration.AgentDeclarationView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -42,7 +43,7 @@ class AgentDeclarationController @Inject()(
                                             val controllerComponents: MessagesControllerComponents,
                                             view: AgentDeclarationView,
                                             service: DeclarationService
-                                     )(implicit ec: ExecutionContext) extends DeclarationController with I18nSupport {
+                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
 
@@ -69,29 +70,23 @@ class AgentDeclarationController @Inject()(
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
-              getAddress(request.userAnswers) match {
-                case None =>
+              service.declareNoChange(utr, value, request.userAnswers) flatMap {
+                case TVNResponse(tvn) =>
+                  for {
+                    updatedAnswers <- Future.fromTry(
+                      request.userAnswers
+                        .set(AgentDeclarationPage, value)
+                        .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+                        .flatMap(_.set(TVNPage, tvn))
+                    )
+                    _ <- playbackRepository.set(updatedAnswers)
+                  } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+                case _ =>
                   Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-                case Some(address) =>
-                  service.declareNoChange(utr, value, address) flatMap {
-                    case TVNResponse(tvn) =>
-                      for {
-                        updatedAnswers <- Future.fromTry(
-                          request.userAnswers
-                            .set(AgentDeclarationPage, value)
-                            .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                            .flatMap(_.set(TVNPage, tvn))
-                        )
-                        _ <- playbackRepository.set(updatedAnswers)
-                      } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-                    case _ =>
-                      Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-                  }
               }
           }
         }
       )
-
   }
 
 }
