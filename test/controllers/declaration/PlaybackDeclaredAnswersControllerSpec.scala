@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 
 import base.SpecBase
 import models.http.NameType
-import models.{AgentDeclaration, FullName, UKAddress, UserAnswers}
+import models.{AgentDeclaration, UKAddress, UserAnswers}
 import pages.beneficiaries.charity._
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
@@ -33,6 +33,7 @@ import views.html.declaration.PlaybackDeclaredAnswersView
 class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
   val fakeTvn = "XC TRN 000 000 4912"
+  val fakeTelephoneNumber = "01234567890"
   val fakeCrn = "123456"
 
   "PlaybackDeclaredAnswersController Controller" must {
@@ -41,7 +42,7 @@ class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
       val playbackAnswers = UserAnswers("internalId")
         .set(TVNPage, fakeTvn).success.value
-        .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeCrn, None)).success.value
+        .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeTelephoneNumber, fakeCrn, None)).success.value
         .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value
 
         .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value

@@ -82,7 +82,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("crn", "123456"))
+        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("telephoneNumber", "01234567890"), ("crn", "123456"))
 
       val result = route(application, request).value
 
@@ -98,9 +98,9 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
       val request =
         FakeRequest(POST, routes.AgentDeclarationController.onPageLoad().url)
-          .withFormUrlEncodedBody(("firstName", ""), ("lastName", ""), ("crn", ""))
+          .withFormUrlEncodedBody(("firstName", ""), ("lastName", ""), ("telephoneNumber", ""), ("crn", ""))
 
-      val boundForm = form.bind(Map("firstName" -> "", "lastName" -> "", "crn" -> ""))
+      val boundForm = form.bind(Map("firstName" -> "", "lastName" -> "", "telephoneNumber" -> "", "crn" -> ""))
 
       val view = application.injector.instanceOf[AgentDeclarationView]
 
@@ -137,7 +137,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("crn", "123456"))
+        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("telephoneNumber", "01234567890"), ("crn", "123456"))
 
       val result = route(application, request).value
 

@@ -36,7 +36,7 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
                               (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
 
     declaration match {
-      case AgentDeclaration(name, _, _) =>
+      case AgentDeclaration(name, _, _, _) =>
         val address = userAnswers.get(AgencyRegisteredAddressUkYesNoPage) map {
           case true => userAnswers.get(AgencyRegisteredAddressUkPage)
           case false => userAnswers.get(AgencyRegisteredAddressInternationalPage)

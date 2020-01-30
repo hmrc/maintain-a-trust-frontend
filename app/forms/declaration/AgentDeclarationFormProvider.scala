@@ -28,6 +28,12 @@ class AgentDeclarationFormProvider @Inject() extends DeclarationFormProvider {
     Form(
       mapping(
         "" -> fullName,
+        "telephoneNumber" -> text().verifying(
+          firstError(
+            isNotEmpty("crn", s"declaration.error.telephoneNumber.required"),
+            regexp(Validation.telephoneRegex, s"declaration.error.telephoneNumber.invalid")
+          )
+        ),
         "crn" -> text().verifying(
           firstError(
             maxLength(56, s"declaration.error.crn.length"),

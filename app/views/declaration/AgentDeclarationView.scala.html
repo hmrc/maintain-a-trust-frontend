@@ -58,6 +58,12 @@
         )
 
         @components.input_text(
+            field = form("telephoneNumber"),
+            label = messages("declaration.telephoneNumber"),
+            ariaRequired = true
+        )
+
+        @components.input_text(
             field = form("crn"),
             label = messages("declaration.crn"),
             ariaRequired = true

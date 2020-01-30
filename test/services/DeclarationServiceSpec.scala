@@ -45,6 +45,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
       None,
       "Last"
     ),
+    telephoneNumber = "01234567890",
     crn = "123456",
     email = None
   )
