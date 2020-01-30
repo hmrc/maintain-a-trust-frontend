@@ -176,7 +176,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual "/maintain-trust/status/closed"
+        redirectLocation(result).value mustEqual "/maintain-a-trust/status/closed"
 
         application.stop()
       }
@@ -192,7 +192,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual "/maintain-trust/status/processing"
+        redirectLocation(result).value mustEqual "/maintain-a-trust/status/processing"
 
         application.stop()
       }
@@ -208,7 +208,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual "/maintain-trust/status/not-found"
+        redirectLocation(result).value mustEqual "/maintain-a-trust/status/not-found"
 
         application.stop()
       }
@@ -222,7 +222,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual "/maintain-trust/status/locked"
+        redirectLocation(result).value mustEqual "/maintain-a-trust/status/locked"
 
         application.stop()
       }
@@ -238,7 +238,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual "/maintain-trust/status/down"
+        redirectLocation(result).value mustEqual "/maintain-a-trust/status/down"
 
         application.stop()
       }
