@@ -167,6 +167,21 @@ site.no = No
 site.confirm-send = Confirm and send
 site.try-again = Try again
 
+site.address.uk.title = What is the address?
+site.address.uk.heading = What is {0}’s address?
+site.address.uk.line1 = Address line 1
+site.address.uk.line2 = Address line 2
+site.address.uk.line3 = Address line 3 (optional)
+site.address.uk.line4 = Address line 4 (optional)
+site.address.uk.postcode = Postcode
+site.address.uk.postcode.hint = For example AB1 1AB
+site.address.international.title = What is the address?
+site.address.international.heading = What is {0}’s address?
+site.address.international.line1 = Address line 1
+site.address.international.line2 = Address line 2
+site.address.international.line3 = Address line 3 (optional)
+site.address.international.country = Country
+
 trustAlreadyClaimed.title = Sorry, you cannot access this trust
 trustAlreadyClaimed.heading = Sorry, you cannot access this trust
 trustAlreadyClaimed.subheading = This trust’s UTR: {0}

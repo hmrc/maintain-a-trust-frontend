@@ -18,43 +18,76 @@ package services
 
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
-import models.{AgentDeclaration, Declaration, IndividualDeclaration}
-import models.http.DeclarationResponse
-import models.http.DeclarationResponse.InternalServerError
-import play.api.libs.json.Json
+import models.http.{AddressType, DeclarationResponse}
+import models.{Address, AgentDeclaration, Declaration, FullName, IndividualDeclaration, InternationalAddress, UKAddress}
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends DeclarationService {
 
-  override def declareNoChange(utr: String, payload : Declaration)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
-    payload match {
-      case AgentDeclaration(name, crn, email) =>
-        Future.successful(InternalServerError)
-      case IndividualDeclaration(name, email) =>
-        val payload = Json.parse(
-          s"""
-            |{
-            | "name": {
-            |   "firstName": "${name.firstName}",
-            |   "lastName": "${name.lastName}"
-            | },
-            | "address": {
-            |   "line1": "Line 1",
-            |   "line2": "Line 2",
-            |   "postCode": "NE981ZZ",
-            |   "country": "GB"
-            | }
-            |}
-            |""".stripMargin)
+  override def declareNoChange(utr: String, declaration : Declaration, ukOrInternationalAddress: Address)
+                              (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
 
+    val address: AddressType = convertToAddressType(ukOrInternationalAddress)
+
+    declaration match {
+      case AgentDeclaration(name, _, _) =>
+        val payload = getPayload(name, address)
         connector.declare(utr, payload)
+      case IndividualDeclaration(name, _) =>
+        val payload = getPayload(name, address)
+        connector.declare(utr, payload)
+    }
+  }
+
+  private def getPayload(name: FullName, address: AddressType): JsValue = {
+    Json.parse(
+      s"""
+         |{
+         | "name": {
+         |   "firstName": "${name.firstName}",
+         |   "middleName": "${name.middleName}",
+         |   "lastName": "${name.lastName}"
+         | },
+         | "address": {
+         |   "line1": "${address.line1}",
+         |   "line2": "${address.line2}",
+         |   "line3": "${address.line3}",
+         |   "line4": "${address.line4}",
+         |   "postCode": "${address.postCode}",
+         |   "country": "${address.country}"
+         | }
+         |}
+         |""".stripMargin)
+  }
+
+  private def convertToAddressType(address: Address): AddressType = {
+    address match {
+      case UKAddress(line1, line2, line3, line4, postcode) =>
+        AddressType(
+          line1,
+          line2,
+          line3,
+          line4,
+          postCode = Some(postcode),
+          country = "GB"
+        )
+      case InternationalAddress(line1, line2, line3, country) =>
+        AddressType(
+          line1,
+          line2,
+          line3,
+          line4 = None,
+          postCode = None,
+          country = country
+        )
     }
   }
 }
 
 @ImplementedBy(classOf[DeclarationServiceImpl])
 trait DeclarationService {
-  def declareNoChange(utr: String, payload : Declaration)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
+  def declareNoChange(utr: String, payload : Declaration, address: Address)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 }
