@@ -49,7 +49,7 @@ class AgencyRegisteredAddressUkController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, controllers.declaration.routes.AgencyRegisteredAddressUkController.onSubmit()))
+      Ok(view(preparedForm))
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
@@ -57,7 +57,7 @@ class AgencyRegisteredAddressUkController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.AgencyRegisteredAddressUkController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors))),
 
         value => {
           for {

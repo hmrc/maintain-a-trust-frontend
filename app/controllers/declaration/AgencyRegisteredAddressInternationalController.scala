@@ -25,6 +25,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import utils.CountryOptions
 import views.html.declaration.AgencyRegisteredAddressInternationalView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,6 +36,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
                                                                 playbackRepository: PlaybackRepository,
                                                                 actions: AuthenticateForPlayback,
                                                                 formProvider: InternationalAddressFormProvider,
+                                                                countryOptions: CountryOptions,
                                                                 val controllerComponents: MessagesControllerComponents,
                                                                 view: AgencyRegisteredAddressInternationalView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
@@ -49,7 +51,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, controllers.declaration.routes.AgencyRegisteredAddressInternationalController.onSubmit()))
+      Ok(view(preparedForm, countryOptions.options))
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
@@ -57,7 +59,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.AgencyRegisteredAddressInternationalController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors, countryOptions.options))),
 
         value => {
           for {
