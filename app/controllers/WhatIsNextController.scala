@@ -71,7 +71,7 @@ class WhatIsNextController @Inject()(
             case WhatIsNext.DeclareTheTrustIsUpToDate =>
               request.user.affinityGroup match {
                 case Agent =>
-                  Redirect(controllers.declaration.routes.AgentDeclarationController.onPageLoad())
+                  Redirect(controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad())
                 case _ =>
                   Redirect(controllers.declaration.routes.IndividualDeclarationController.onPageLoad())
               }

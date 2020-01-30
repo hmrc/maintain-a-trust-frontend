@@ -26,6 +26,15 @@ GET        /confirmation                                controllers.declaration.
 GET        /declare-what-changed                        controllers.WhatIsNextController.onPageLoad()
 POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()
 
+GET        /is-agency-address-in-uk                     controllers.declaration.AgencyRegisteredAddressUkYesNoController.onPageLoad()
+POST       /is-agency-address-in-uk                     controllers.declaration.AgencyRegisteredAddressUkYesNoController.onSubmit()
+
+GET        /agency/address/uk                           controllers.declaration.AgencyRegisteredAddressUkController.onPageLoad()
+POST       /agency/address/uk                           controllers.declaration.AgencyRegisteredAddressUkController.onSubmit()
+
+GET        /agency/address/international                controllers.declaration.AgencyRegisteredAddressInternationalController.onPageLoad()
+POST       /agency/address/international                controllers.declaration.AgencyRegisteredAddressInternationalController.onSubmit()
+
 GET        /create-agent-services-account               controllers.CreateAgentServicesAccountController.onPageLoad()
 
 GET        /trust-not-claimed                           controllers.TrustNotClaimedController.onPageLoad()

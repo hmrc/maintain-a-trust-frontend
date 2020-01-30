@@ -1,3 +1,10 @@
+agencyRegisteredAddressUkYesNo.title = Is your agency’s registered address in the UK?
+agencyRegisteredAddressUkYesNo.heading = Is your agency’s registered address in the UK?
+agencyRegisteredAddressUk.title = What is your agency’s registered address?
+agencyRegisteredAddressUk.heading = Is your agency’s registered address?
+agencyRegisteredAddressInternational.title = What is your agency’s registered address?
+agencyRegisteredAddressInternational.heading = Is your agency’s registered address?
+
 agentCannotAccessTrustYet.title = You cannot access this trust yet
 agentCannotAccessTrustYet.heading = You cannot access this trust yet
 agentCannotAccessTrustYet.subHeading = This trust’s UTR: {0}
