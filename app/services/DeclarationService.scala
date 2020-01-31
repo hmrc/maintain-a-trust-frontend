@@ -24,6 +24,7 @@ import models.{Address, AgentDeclaration, Declaration, IndividualDeclaration, In
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import pages.trustees.TrusteeAddressPage
 import pages.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage}
+import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
 import sections.Trustees
 import uk.gov.hmrc.http.HeaderCarrier
@@ -45,27 +46,28 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
         declare(name, address, utr)
 
       case IndividualDeclaration(name, _) =>
-        declare(
-          name,
-          userAnswers.get(
-            TrusteeAddressPage(
-              getIndexOfLeadTrustee(userAnswers)
+        getIndexOfLeadTrustee(userAnswers) match {
+          case None =>
+            Logger.error("Cannot declare as no lead trustee found.")
+            Future.successful(CannotDeclareError)
+          case Some(index) =>
+            declare(
+              name,
+              userAnswers.get(
+                TrusteeAddressPage(index)
+              ),
+              utr
             )
-          ),
-          utr
-        )
+        }
     }
   }
 
-  private def getIndexOfLeadTrustee(userAnswers: UserAnswers): Int = {
-    userAnswers
-      .get(Trustees)
-      .get.as[List[JsValue]]
-      .map(x => x \ "isThisLeadTrustee")
-      .zipWithIndex
-      .filter(_._1.as[Boolean])
-      .map(_._2)
-      .head
+  def getIndexOfLeadTrustee(userAnswers: UserAnswers): Option[Int] = {
+    for {
+      trusteesAsJson <- userAnswers.get(Trustees)
+      zipped = trusteesAsJson.value.zipWithIndex
+      lead <- zipped.find(x => (x._1 \ "isThisLeadTrustee").as[Boolean])
+    } yield lead._2
   }
 
   private def declare(name: NameType, address: Option[Address], utr: String)
