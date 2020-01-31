@@ -23,13 +23,13 @@ import org.mockito.Mockito._
 import play.api.mvc.Results
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
+import uk.gov.hmrc.auth.core.retrieve.{AgentInformation, Retrieval, ~}
 
 import scala.concurrent.Future
 
 class IdentifierActionSpec extends SpecBase {
 
-  type RetrievalType = Option[String] ~ Option[AffinityGroup] ~ Enrolments
+  type RetrievalType = Option[String] ~ Option[AffinityGroup] ~ Enrolments ~ AgentInformation
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
@@ -42,8 +42,12 @@ class IdentifierActionSpec extends SpecBase {
 
   private val noEnrollment = Enrolments(Set())
 
-  private def authRetrievals(affinityGroup: AffinityGroup, enrolment: Enrolments): Future[Some[String] ~ Some[AffinityGroup] ~ Enrolments] =
-    Future.successful(new ~(new ~(Some("id"), Some(affinityGroup)), enrolment))
+  val agentInformation = AgentInformation(None, None, None)
+
+  private def authRetrievals(affinityGroup: AffinityGroup,
+                             enrolment: Enrolments,
+                             agentInformation: AgentInformation): Future[Some[String] ~ Some[AffinityGroup] ~ Enrolments ~ AgentInformation] =
+    Future.successful(new ~(new ~(new ~(Some("id"), Some(affinityGroup)), enrolment), agentInformation))
 
   private val agentEnrolment = Enrolments(Set(Enrolment("HMRC-AS-AGENT", List(EnrolmentIdentifier("AgentReferenceNumber", "SomeVal")), "Activated", None)))
 
@@ -57,7 +61,7 @@ class IdentifierActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
-          .thenReturn(authRetrievals(AffinityGroup.Agent, noEnrollment))
+          .thenReturn(authRetrievals(AffinityGroup.Agent, noEnrollment, agentInformation))
 
         val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
 
@@ -76,7 +80,7 @@ class IdentifierActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
-          .thenReturn(authRetrievals(AffinityGroup.Agent, agentEnrolment))
+          .thenReturn(authRetrievals(AffinityGroup.Agent, agentEnrolment, agentInformation))
 
         val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
         val controller = new Harness(action)
@@ -93,7 +97,7 @@ class IdentifierActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
-          .thenReturn(authRetrievals(AffinityGroup.Organisation, agentEnrolment))
+          .thenReturn(authRetrievals(AffinityGroup.Organisation, agentEnrolment, agentInformation))
 
         val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
         val controller = new Harness(action)
@@ -110,7 +114,7 @@ class IdentifierActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
-          .thenReturn(authRetrievals(AffinityGroup.Individual, noEnrollment))
+          .thenReturn(authRetrievals(AffinityGroup.Individual, noEnrollment, agentInformation))
 
         val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
         val controller = new Harness(action)

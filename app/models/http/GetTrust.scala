@@ -16,7 +16,7 @@
 
 package models.http
 
-import mapping.{AssetMonetaryAmount, PassportType, PropertyLandType, TrustDetailsType}
+import mapping.{AgentDetails, AssetMonetaryAmount, PassportType, PropertyLandType, TrustDetailsType}
 import models.Constant._
 import models.pages.{KindOfBusiness, RoleInCompany, ShareClass, ShareType}
 import org.joda.time.DateTime
@@ -52,9 +52,7 @@ object Correspondence {
 
 case class Declaration(name: NameType,
                        address: AddressType,
-                       arn: Option[String],
-                       crn: Option[String],
-                       telephoneNumber: Option[String])
+                       agentDetails: Option[AgentDetails])
 
 object Declaration {
   implicit val declarationFormat: Format[Declaration] = Json.format[Declaration]

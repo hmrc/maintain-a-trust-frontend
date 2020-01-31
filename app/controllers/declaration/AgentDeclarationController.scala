@@ -30,6 +30,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.DeclarationService
+import uk.gov.hmrc.auth.core.{EnrolmentIdentifier, Enrolments}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.declaration.AgentDeclarationView
 
@@ -71,35 +72,35 @@ class AgentDeclarationController @Inject()(
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
-              request.user.enrolments.getEnrolment("HMRC-AS-AGENT") match {
+              getAgentReferenceNumber(request.user.enrolments) match {
                 case None =>
-                  Logger.error("No agent enrolment found")
+                  Logger.error("No agent reference number found")
                   Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-                case Some(enrolment) =>
-                  enrolment.getIdentifier("AgentReferenceNumber") match {
-                    case None =>
-                      Logger.error("No arn found")
+                case Some(arn) =>
+                  service.declareNoChange(utr, value, request, Some(arn)) flatMap {
+                    case TVNResponse(tvn) =>
+                      for {
+                        updatedAnswers <- Future.fromTry(
+                          request.userAnswers
+                            .set(AgentDeclarationPage, value)
+                            .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+                            .flatMap(_.set(TVNPage, tvn))
+                        )
+                        _ <- playbackRepository.set(updatedAnswers)
+                      } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+                    case _ =>
                       Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-                    case Some(arn) =>
-                      service.declareNoChange(utr, value, request.userAnswers, Some(arn.value)) flatMap {
-                        case TVNResponse(tvn) =>
-                          for {
-                            updatedAnswers <- Future.fromTry(
-                              request.userAnswers
-                                .set(AgentDeclarationPage, value)
-                                .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                                .flatMap(_.set(TVNPage, tvn))
-                            )
-                            _ <- playbackRepository.set(updatedAnswers)
-                          } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-                        case _ =>
-                          Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-                      }
                   }
               }
           }
         }
       )
   }
+
+  private def getAgentReferenceNumber(enrolments: Enrolments): Option[String] =
+    enrolments.enrolments
+      .find(_.key equals "HMRC-AS-AGENT")
+      .flatMap(_.identifiers.find(_.key equals "AgentReferenceNumber"))
+      .collect { case EnrolmentIdentifier(_, value) => value }
 
 }

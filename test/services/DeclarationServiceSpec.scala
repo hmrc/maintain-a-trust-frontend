@@ -19,6 +19,7 @@ import base.SpecBase
 import connectors.TrustConnector
 import models.http.DeclarationResponse.{CannotDeclareError, InternalServerError}
 import models.http.{NameType, TVNResponse}
+import models.requests.{AgentUser, DataRequest, OrganisationUser}
 import models.{AgentDeclaration, IndividualDeclaration, UKAddress}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -29,6 +30,9 @@ import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
 import pages.{AgencyRegisteredAddressUkPage, UTRPage}
 import play.api.inject.bind
 import play.api.libs.json.JsValue
+import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.retrieve.AgentInformation
+import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -38,6 +42,12 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
   val utr = "0987654321"
   val address: UKAddress = UKAddress("Line 1", "Line 2", None, None, "NE11NE")
   val mockTrustConnector: TrustConnector = mock[TrustConnector]
+
+  val enrolments: Enrolments = Enrolments(Set(Enrolment(
+    "HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")), "Activated"
+  )))
+
+  val agentInformation: AgentInformation = AgentInformation(None, None, Some("agentFriendlyName"))
 
   val agentDeclaration: AgentDeclaration = AgentDeclaration(
     name = NameType(
@@ -79,9 +89,11 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
+        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation)))
+
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, agentDeclaration, userAnswers, Some("SARN1234567"))) {
+        whenReady(service.declareNoChange(utr, agentDeclaration, request, Some("SARN1234567"))) {
           result =>
             result mustBe TVNResponse("123456")
         }
@@ -101,9 +113,11 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
+        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation)))
+
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, agentDeclaration, userAnswers, Some("SARN1234567"))) {
+        whenReady(service.declareNoChange(utr, agentDeclaration, request, Some("SARN1234567"))) {
           result =>
             result mustBe InternalServerError
         }
@@ -117,9 +131,11 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
         val app = applicationBuilder()
           .build()
 
+        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation)))
+
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, agentDeclaration, userAnswers, Some("SARN1234567"))) {
+        whenReady(service.declareNoChange(utr, agentDeclaration, request, Some("SARN1234567"))) {
           result =>
             result mustBe CannotDeclareError
         }
@@ -145,9 +161,11 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
+        val request = DataRequest(FakeRequest(), userAnswers, OrganisationUser("id", enrolments))
+
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, individualDeclaration, userAnswers, None)) {
+        whenReady(service.declareNoChange(utr, individualDeclaration, request, None)) {
           result =>
             result mustBe TVNResponse("123456")
         }
@@ -167,9 +185,11 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
+        val request = DataRequest(FakeRequest(), userAnswers, OrganisationUser("id", enrolments))
+
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, individualDeclaration, userAnswers, None)) {
+        whenReady(service.declareNoChange(utr, individualDeclaration, request, None)) {
           result =>
             result mustBe InternalServerError
         }
@@ -184,9 +204,11 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
         val app = applicationBuilder()
           .build()
 
+        val request = DataRequest(FakeRequest(), userAnswers, OrganisationUser("id", enrolments))
+
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, individualDeclaration, userAnswers, None)) {
+        whenReady(service.declareNoChange(utr, individualDeclaration, request, None)) {
           result =>
             result mustBe CannotDeclareError
         }

@@ -18,6 +18,7 @@ package services
 
 import models.http.DeclarationResponse.InternalServerError
 import models.http.{DeclarationResponse, TVNResponse}
+import models.requests.DataRequest
 import models.{Declaration, UserAnswers}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -25,7 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDeclarationService extends DeclarationService {
 
-  override def declareNoChange(utr: String, declaration: Declaration, userAnswers: UserAnswers, arn: Option[String])
+  override def declareNoChange[A](utr: String, declaration: Declaration, request: DataRequest[A], arn: Option[String])
                               (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(TVNResponse("123456"))
   }
@@ -34,7 +35,7 @@ class FakeDeclarationService extends DeclarationService {
 
 class FakeFailingDeclarationService extends DeclarationService {
 
-  override def declareNoChange(utr: String, declaration: Declaration, userAnswers: UserAnswers, arn: Option[String])
+  override def declareNoChange[A](utr: String, declaration: Declaration, request: DataRequest[A], arn: Option[String])
                               (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(InternalServerError)
 

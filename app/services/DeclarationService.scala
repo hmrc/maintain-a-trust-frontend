@@ -18,8 +18,10 @@ package services
 
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
+import mapping.AgentDetails
 import models.http.DeclarationResponse.CannotDeclareError
 import models.http.{AddressType, DeclarationResponse, NameType}
+import models.requests.DataRequest
 import models.{Address, AgentDeclaration, Declaration, IndividualDeclaration, InternationalAddress, UKAddress, UserAnswers}
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import pages.trustees.TrusteeAddressPage
@@ -33,17 +35,28 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends DeclarationService {
 
-  override def declareNoChange(utr: String, declaration : Declaration, userAnswers: UserAnswers, arn: Option[String])
+  override def declareNoChange[A](utr: String, declaration: Declaration, request: DataRequest[A], arn: Option[String])
                               (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+
+    val userAnswers = request.userAnswers
 
     declaration match {
       case AgentDeclaration(name, telephoneNumber, crn, _) =>
-        val address = userAnswers.get(AgencyRegisteredAddressUkYesNoPage) map {
-          case true => userAnswers.get(AgencyRegisteredAddressUkPage)
-          case false => userAnswers.get(AgencyRegisteredAddressInternationalPage)
-        } getOrElse(None)
 
-        declare(name, address, utr, arn, Some(crn), Some(telephoneNumber))
+         getAgencyRegisteredAddress(userAnswers) match {
+          case None =>
+            Logger.error("Cannot declare as no agency address.")
+            Future.successful(CannotDeclareError)
+          case Some(address) =>
+            val agentDetails = AgentDetails(
+              arn.get,
+              request.user.agentInformation.flatMap(_.agentFriendlyName).get,
+              convertToAddressType(address),
+              telephoneNumber,
+              crn
+            )
+            declare(name, address, utr, Some(agentDetails))
+        }
 
       case IndividualDeclaration(name, _) =>
         getIndexOfLeadTrustee(userAnswers) match {
@@ -51,21 +64,25 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
             Logger.error("Cannot declare as no lead trustee found.")
             Future.successful(CannotDeclareError)
           case Some(index) =>
-            declare(
-              name,
-              userAnswers.get(
-                TrusteeAddressPage(index)
-              ),
-              utr,
-              None,
-              None,
-              None
-            )
+            userAnswers.get(TrusteeAddressPage(index)) match {
+              case None =>
+                Logger.error("Cannot declare as no lead trustee address.")
+                Future.successful(CannotDeclareError)
+              case Some(address) =>
+                declare(name, address, utr, None)
+            }
         }
     }
   }
 
-  def getIndexOfLeadTrustee(userAnswers: UserAnswers): Option[Int] = {
+  private def getAgencyRegisteredAddress(userAnswers: UserAnswers): Option[Address] = {
+    userAnswers.get(AgencyRegisteredAddressUkYesNoPage) flatMap {
+      case true => userAnswers.get(AgencyRegisteredAddressUkPage)
+      case false => userAnswers.get(AgencyRegisteredAddressInternationalPage)
+    }
+  }
+
+  private def getIndexOfLeadTrustee(userAnswers: UserAnswers): Option[Int] = {
     for {
       trusteesAsJson <- userAnswers.get(Trustees)
       zipped = trusteesAsJson.value.zipWithIndex
@@ -73,19 +90,15 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
     } yield lead._2
   }
 
-  private def declare(name: NameType, address: Option[Address], utr: String, arn: Option[String], crn: Option[String], telephoneNumber: Option[String])
+  private def declare(name: NameType, address: Address, utr: String, agentDetails: Option[AgentDetails])
                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
-    address match {
-      case Some(address) =>
-        val payload = getPayload(name, convertToAddressType(address), arn, crn, telephoneNumber)
-        connector.declare(utr, payload)
-      case None =>
-        Future.successful(CannotDeclareError)
-    }
+
+    val payload = getPayload(name, convertToAddressType(address), agentDetails)
+    connector.declare(utr, payload)
   }
 
-  private def getPayload(name: NameType, address: AddressType, arn: Option[String], crn: Option[String], telephoneNumber: Option[String]): JsValue = {
-    Json.toJson(models.http.Declaration(name, address, arn, crn, telephoneNumber))
+  private def getPayload(name: NameType, address: AddressType, agentDetails: Option[AgentDetails]): JsValue = {
+    Json.toJson(models.http.Declaration(name, address, agentDetails))
   }
 
   private def convertToAddressType(address: Address): AddressType = {
@@ -114,6 +127,6 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
 
 @ImplementedBy(classOf[DeclarationServiceImpl])
 trait DeclarationService {
-  def declareNoChange(utr: String, declaration: Declaration, userAnswers: UserAnswers, arn: Option[String])
+  def declareNoChange[A](utr: String, declaration: Declaration, request: DataRequest[A], arn: Option[String])
                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 }
