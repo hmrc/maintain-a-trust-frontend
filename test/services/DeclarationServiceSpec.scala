@@ -81,7 +81,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, agentDeclaration, userAnswers)) {
+        whenReady(service.declareNoChange(utr, agentDeclaration, userAnswers, Some("SARN1234567"))) {
           result =>
             result mustBe TVNResponse("123456")
         }
@@ -103,7 +103,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, agentDeclaration, userAnswers)) {
+        whenReady(service.declareNoChange(utr, agentDeclaration, userAnswers, Some("SARN1234567"))) {
           result =>
             result mustBe InternalServerError
         }
@@ -119,7 +119,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, agentDeclaration, userAnswers)) {
+        whenReady(service.declareNoChange(utr, agentDeclaration, userAnswers, Some("SARN1234567"))) {
           result =>
             result mustBe CannotDeclareError
         }
@@ -147,7 +147,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, individualDeclaration, userAnswers)) {
+        whenReady(service.declareNoChange(utr, individualDeclaration, userAnswers, None)) {
           result =>
             result mustBe TVNResponse("123456")
         }
@@ -169,7 +169,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, individualDeclaration, userAnswers)) {
+        whenReady(service.declareNoChange(utr, individualDeclaration, userAnswers, None)) {
           result =>
             result mustBe InternalServerError
         }
@@ -186,7 +186,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, individualDeclaration, userAnswers)) {
+        whenReady(service.declareNoChange(utr, individualDeclaration, userAnswers, None)) {
           result =>
             result mustBe CannotDeclareError
         }

@@ -24,6 +24,7 @@ import forms.declaration.AgentDeclarationFormProvider
 import models.http.TVNResponse
 import pages._
 import pages.declaration.AgentDeclarationPage
+import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -70,19 +71,31 @@ class AgentDeclarationController @Inject()(
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
-              service.declareNoChange(utr, value, request.userAnswers) flatMap {
-                case TVNResponse(tvn) =>
-                  for {
-                    updatedAnswers <- Future.fromTry(
-                      request.userAnswers
-                        .set(AgentDeclarationPage, value)
-                        .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                        .flatMap(_.set(TVNPage, tvn))
-                    )
-                    _ <- playbackRepository.set(updatedAnswers)
-                  } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-                case _ =>
+              request.user.enrolments.getEnrolment("HMRC-AS-AGENT") match {
+                case None =>
+                  Logger.error("No agent enrolment found")
                   Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
+                case Some(enrolment) =>
+                  enrolment.getIdentifier("AgentReferenceNumber") match {
+                    case None =>
+                      Logger.error("No arn found")
+                      Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
+                    case Some(arn) =>
+                      service.declareNoChange(utr, value, request.userAnswers, Some(arn.value)) flatMap {
+                        case TVNResponse(tvn) =>
+                          for {
+                            updatedAnswers <- Future.fromTry(
+                              request.userAnswers
+                                .set(AgentDeclarationPage, value)
+                                .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+                                .flatMap(_.set(TVNPage, tvn))
+                            )
+                            _ <- playbackRepository.set(updatedAnswers)
+                          } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+                        case _ =>
+                          Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
+                      }
+                  }
               }
           }
         }

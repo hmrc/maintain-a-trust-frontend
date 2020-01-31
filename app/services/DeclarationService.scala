@@ -33,17 +33,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends DeclarationService {
 
-  override def declareNoChange(utr: String, declaration : Declaration, userAnswers: UserAnswers)
+  override def declareNoChange(utr: String, declaration : Declaration, userAnswers: UserAnswers, arn: Option[String])
                               (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
 
     declaration match {
-      case AgentDeclaration(name, _, _, _) =>
+      case AgentDeclaration(name, telephoneNumber, crn, _) =>
         val address = userAnswers.get(AgencyRegisteredAddressUkYesNoPage) map {
           case true => userAnswers.get(AgencyRegisteredAddressUkPage)
           case false => userAnswers.get(AgencyRegisteredAddressInternationalPage)
         } getOrElse(None)
 
-        declare(name, address, utr)
+        declare(name, address, utr, arn, Some(crn), Some(telephoneNumber))
 
       case IndividualDeclaration(name, _) =>
         getIndexOfLeadTrustee(userAnswers) match {
@@ -56,7 +56,10 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
               userAnswers.get(
                 TrusteeAddressPage(index)
               ),
-              utr
+              utr,
+              None,
+              None,
+              None
             )
         }
     }
@@ -70,19 +73,19 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
     } yield lead._2
   }
 
-  private def declare(name: NameType, address: Option[Address], utr: String)
+  private def declare(name: NameType, address: Option[Address], utr: String, arn: Option[String], crn: Option[String], telephoneNumber: Option[String])
                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
     address match {
       case Some(address) =>
-        val payload = getPayload(name, convertToAddressType(address))
+        val payload = getPayload(name, convertToAddressType(address), arn, crn, telephoneNumber)
         connector.declare(utr, payload)
       case None =>
         Future.successful(CannotDeclareError)
     }
   }
 
-  private def getPayload(name: NameType, address: AddressType): JsValue = {
-    Json.toJson(models.http.Declaration(name, address))
+  private def getPayload(name: NameType, address: AddressType, arn: Option[String], crn: Option[String], telephoneNumber: Option[String]): JsValue = {
+    Json.toJson(models.http.Declaration(name, address, arn, crn, telephoneNumber))
   }
 
   private def convertToAddressType(address: Address): AddressType = {
@@ -111,6 +114,6 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
 
 @ImplementedBy(classOf[DeclarationServiceImpl])
 trait DeclarationService {
-  def declareNoChange(utr: String, declaration: Declaration, userAnswers: UserAnswers)
+  def declareNoChange(utr: String, declaration: Declaration, userAnswers: UserAnswers, arn: Option[String])
                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 }

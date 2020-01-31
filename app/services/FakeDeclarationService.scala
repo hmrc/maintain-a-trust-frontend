@@ -25,7 +25,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDeclarationService extends DeclarationService {
 
-  override def declareNoChange(utr: String, declaration: Declaration, userAnswers: UserAnswers)
+  override def declareNoChange(utr: String, declaration: Declaration, userAnswers: UserAnswers, arn: Option[String])
                               (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(TVNResponse("123456"))
   }
@@ -34,7 +34,7 @@ class FakeDeclarationService extends DeclarationService {
 
 class FakeFailingDeclarationService extends DeclarationService {
 
-  override def declareNoChange(utr: String, declaration: Declaration, userAnswers: UserAnswers)
+  override def declareNoChange(utr: String, declaration: Declaration, userAnswers: UserAnswers, arn: Option[String])
                               (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(InternalServerError)
 
