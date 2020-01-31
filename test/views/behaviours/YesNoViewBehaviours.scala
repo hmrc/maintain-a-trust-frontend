@@ -23,8 +23,7 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
 
   def yesNoPage(form: Form[Boolean],
                 createView: Form[Boolean] => HtmlFormat.Appendable,
-                messageKeyPrefix: String,
-                expectedFormAction: String): Unit = {
+                messageKeyPrefix: String): Unit = {
 
     "behave like a page with a Yes/No question" when {
 
@@ -77,12 +76,11 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
           assertRenderedById(doc, "error-summary-heading")
         }
 
-        "show an error associated with the value field" in {
+        "show an error in the value field's label" in {
 
           val doc = asDocument(createView(form.withError(error)))
           val errorSpan = doc.getElementsByClass("error-message").first
-          errorSpan.text mustBe (messages("error.browser.title.prefix") + " " + messages(errorMessage))
-          doc.getElementsByTag("fieldset").first.attr("aria-describedby") contains errorSpan.attr("id")
+          errorSpan.text mustBe messages(errorMessage)
         }
 
         "show an error prefix in the browser title" in {

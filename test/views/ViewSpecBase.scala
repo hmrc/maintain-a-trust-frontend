@@ -92,7 +92,7 @@ trait ViewSpecBase extends SpecBase {
     assert(label.text().contains(expectedText), s"\n\nLabel for $forElement was not $expectedText")
 
     if (expectedHintText.isDefined) {
-      assert(label.getElementsByClass("form-hint").first.text == expectedHintText.get,
+      assert(doc.getElementById(s"${forElement}_hint").getElementsByClass("form-hint").first.text == expectedHintText.get,
         s"\n\nLabel for $forElement did not contain hint text $expectedHintText")
     }
   }
