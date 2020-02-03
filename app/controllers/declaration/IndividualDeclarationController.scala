@@ -73,8 +73,8 @@ class IndividualDeclarationController @Inject()(
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
-              (getLeadTrusteeAddress(request.userAnswers) map { x =>
-                service.individualDeclareNoChange(utr, declaration, x) flatMap {
+              (getLeadTrusteeAddress(request.userAnswers) map { address =>
+                service.individualDeclareNoChange(utr, declaration, address) flatMap {
                   case TVNResponse(tvn) =>
                     for {
                       updatedAnswers <- Future.fromTry(

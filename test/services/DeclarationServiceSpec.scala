@@ -24,8 +24,6 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{EitherValues, RecoverMethods}
-import pages.UTRPage
-import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
 import play.api.inject.bind
 import play.api.libs.json.JsValue
 import uk.gov.hmrc.auth.core.retrieve.AgentInformation
@@ -131,11 +129,6 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         when(mockTrustConnector.declare(any[String], any[JsValue])(any(), any()))
           .thenReturn(Future.successful(InternalServerError))
-
-        val userAnswers = emptyUserAnswers
-          .set(UTRPage, utr).success.value
-          .set(IsThisLeadTrusteePage(0), true).success.value
-          .set(TrusteeAddressPage(0), address).success.value
 
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
