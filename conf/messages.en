@@ -2,9 +2,9 @@ agencyRegisteredAddressUkYesNo.title = Is your agency’s registered address in 
 agencyRegisteredAddressUkYesNo.heading = Is your agency’s registered address in the UK?
 agencyRegisteredAddressUkYesNo.error.required = Select yes if the agency’s registered address is in the UK
 agencyRegisteredAddressUk.title = What is your agency’s registered address?
-agencyRegisteredAddressUk.heading = Is your agency’s registered address?
+agencyRegisteredAddressUk.heading = What is your agency’s registered address?
 agencyRegisteredAddressInternational.title = What is your agency’s registered address?
-agencyRegisteredAddressInternational.heading = Is your agency’s registered address?
+agencyRegisteredAddressInternational.heading = What is your agency’s registered address?
 
 agentCannotAccessTrustYet.title = You cannot access this trust yet
 agentCannotAccessTrustYet.heading = You cannot access this trust yet
@@ -111,6 +111,16 @@ informationMaintainingThisTrust.paragraph2 = Any changes you make will not be sa
 informationMaintainingThisTrust.paragraph3 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
 informationMaintainingThisTrust.warning = Some questions may have changed since the trust was registered. You have a legal responsibility to make sure the details held on the register are accurate.
 
+internationalAddress.error.line1.required = Enter address line 1
+internationalAddress.error.line2.required = Enter address line 2
+internationalAddress.error.country.required = Select a country
+internationalAddress.error.line1.length = Address line 1 must be 35 characters or less
+internationalAddress.error.line2.length = Address line 2 must be 35 characters or less
+internationalAddress.error.line3.length = Address line 3 must be 35 characters or less
+internationalAddress.error.line1.invalidCharacters = Address line 1 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+internationalAddress.error.line2.invalidCharacters = Address line 2 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+internationalAddress.error.line3.invalidCharacters = Address line 3 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+
 ivDown.heading = Sorry, there is a problem with the service
 ivDown.title = Sorry, there is a problem with the service
 ivDown.p1 = Try again later.
@@ -185,6 +195,7 @@ site.address.international.line1 = Address line 1
 site.address.international.line2 = Address line 2
 site.address.international.line3 = Address line 3 (optional)
 site.address.international.country = Country
+site.address.international.country.select = Select a country
 
 trustAlreadyClaimed.title = Sorry, you cannot access this trust
 trustAlreadyClaimed.heading = Sorry, you cannot access this trust
@@ -251,6 +262,19 @@ trustUtrDoesNotMatch.p4 = If you need help with the service
 trustUtrDoesNotMatch.p5 = You can
 trustUtrDoesNotMatch.contact.link = contact the trusts helpline (opens in a new window or tab)
 trustUtrDoesNotMatch.return.link = return to register and maintain a trust for a client
+
+ukAddress.error.line1.required = Enter address line 1
+ukAddress.error.line2.required = Enter address line 2
+ukAddress.error.postcode.required = Enter a postcode
+ukAddress.error.line1.length = Address line 1 must be 35 characters or less
+ukAddress.error.line2.length = Address line 2 must be 35 characters or less
+ukAddress.error.line3.length = Address line 3 must be 35 characters or less
+ukAddress.error.line4.length = Address line 4 must be 35 characters or less
+ukAddress.error.line1.invalidCharacters = Address line 1 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line2.invalidCharacters = Address line 2 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line3.invalidCharacters = Address line 3 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line4.invalidCharacters = Address line 4 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.postcode.invalidCharacters = Enter a real postcode
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
