@@ -4,7 +4,7 @@ agencyRegisteredAddressUkYesNo.error.required = Select yes if the agency’s reg
 agencyRegisteredAddressUk.title = What is your agency’s registered address?
 agencyRegisteredAddressUk.heading = What is your agency’s registered address?
 agencyRegisteredAddressInternational.title = What is your agency’s registered address?
-agencyRegisteredAddressInternational.heading = Is your agency’s registered address?
+agencyRegisteredAddressInternational.heading = What is your agency’s registered address?
 
 agentCannotAccessTrustYet.title = You cannot access this trust yet
 agentCannotAccessTrustYet.heading = You cannot access this trust yet
