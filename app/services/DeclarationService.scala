@@ -48,14 +48,18 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
             Logger.error("Cannot declare as no agency address.")
             Future.successful(CannotDeclareError)
           case Some(address) =>
-            val agentDetails = AgentDetails(
-              arn.get,
-              request.user.agentInformation.flatMap(_.agentFriendlyName).get,
-              convertToAddressType(address),
-              telephoneNumber,
-              crn
-            )
-            declare(name, address, utr, Some(agentDetails))
+
+            val agentDetails = request.user.agentInformation.flatMap(_.agentFriendlyName) map { agentFriendlyName =>
+              AgentDetails(
+                arn.get,
+                agentFriendlyName,
+                convertToAddressType(address),
+                telephoneNumber,
+                crn
+              )
+            }
+
+            declare(name, address, utr, agentDetails)
         }
 
       case IndividualDeclaration(name, _) =>
@@ -98,7 +102,12 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
   }
 
   private def getPayload(name: NameType, address: AddressType, agentDetails: Option[AgentDetails]): JsValue = {
-    Json.toJson(models.http.Declaration(name, address, agentDetails))
+    Json.toJson(
+      models.http.DeclarationForApi(
+        models.http.Declaration(name, address),
+        agentDetails
+      )
+    )
   }
 
   private def convertToAddressType(address: Address): AddressType = {
