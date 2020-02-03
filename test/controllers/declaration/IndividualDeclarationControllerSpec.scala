@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.declaration.IndividualDeclarationFormProvider
 import models.{IndividualDeclaration, UKAddress}
 import pages.UTRPage
-import pages.trustees.TrusteeAddressPage
+import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
@@ -69,6 +69,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
       val userAnswers = emptyUserAnswers
         .set(UTRPage, utr).success.value
+        .set(IsThisLeadTrusteePage(0), true).success.value
         .set(TrusteeAddressPage(0), address).success.value
 
       val application =
@@ -123,6 +124,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
       val userAnswers = emptyUserAnswers
         .set(UTRPage, utr).success.value
+        .set(IsThisLeadTrusteePage(0), true).success.value
         .set(TrusteeAddressPage(0), address).success.value
 
       val application =

@@ -21,13 +21,16 @@ import java.time.LocalDateTime
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
+import models.UserAnswers
 import models.http.TVNResponse
 import pages.declaration.IndividualDeclarationPage
+import pages.trustees.TrusteeAddressPage
 import pages.{SubmissionDatePage, TVNPage, UTRPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
+import sections.Trustees
 import services.DeclarationService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.declaration.IndividualDeclarationView
@@ -65,28 +68,47 @@ class IndividualDeclarationController @Inject()(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.IndividualDeclarationController.onSubmit()))),
 
-        value => {
+        declaration => {
           request.userAnswers.get(UTRPage) match {
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
-              service.declareNoChange(utr, value, request, None) flatMap {
-                case TVNResponse(tvn) =>
-                  for {
-                    updatedAnswers <- Future.fromTry(
-                      request.userAnswers
-                        .set(IndividualDeclarationPage, value)
-                        .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                        .flatMap(_.set(TVNPage, tvn))
-                    )
-                    _ <- playbackRepository.set(updatedAnswers)
-                  } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-                case _ =>
-                  Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-              }
+              (getLeadTrusteeAddress(request.userAnswers) map { x =>
+                service.individualDeclareNoChange(utr, declaration, x) flatMap {
+                  case TVNResponse(tvn) =>
+                    for {
+                      updatedAnswers <- Future.fromTry(
+                        request.userAnswers
+                          .set(IndividualDeclarationPage, declaration)
+                          .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+                          .flatMap(_.set(TVNPage, tvn))
+                      )
+                      _ <- playbackRepository.set(updatedAnswers)
+                    } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+                  case _ =>
+                    Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
+                }
+              }).getOrElse(Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())))
           }
         }
       )
+  }
+
+  private def getLeadTrusteeAddress(userAnswers: UserAnswers) = {
+    for {
+      index <- getIndexOfLeadTrustee(userAnswers)
+      address <- userAnswers.get(TrusteeAddressPage(index))
+    } yield {
+      address
+    }
+  }
+
+  private def getIndexOfLeadTrustee(userAnswers: UserAnswers): Option[Int] = {
+    for {
+      trusteesAsJson <- userAnswers.get(Trustees)
+      zipped = trusteesAsJson.value.zipWithIndex
+      lead <- zipped.find(x => (x._1 \ "isThisLeadTrustee").as[Boolean])
+    } yield lead._2
   }
 
 }

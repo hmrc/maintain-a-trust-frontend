@@ -23,15 +23,15 @@ import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
 import models.http.TVNResponse
 import models.requests.AgentUser
+import models.{Address, UserAnswers}
 import pages._
-import pages.declaration.AgentDeclarationPage
+import pages.declaration.{AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
 import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.DeclarationService
-import uk.gov.hmrc.auth.core.{EnrolmentIdentifier, Enrolments}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.declaration.AgentDeclarationView
 
@@ -68,34 +68,47 @@ class AgentDeclarationController @Inject()(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.AgentDeclarationController.onSubmit()))),
 
-        value => {
+        declaration => {
           request.userAnswers.get(UTRPage) match {
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
               request.user match {
-                case AgentUser(_, _, _, arn) =>
-                  service.declareNoChange(utr, value, request, Some(arn)) flatMap {
-                    case TVNResponse(tvn) =>
-                      for {
-                        updatedAnswers <- Future.fromTry(
-                          request.userAnswers
-                            .set(AgentDeclarationPage, value)
-                            .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                            .flatMap(_.set(TVNPage, tvn))
-                        )
-                        _ <- playbackRepository.set(updatedAnswers)
-                      } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-                    case _ =>
-                      Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-                  }
+                case AgentUser(_, _, Some(agentInformation), arn) =>
+                  (for {
+                    agencyAddress <- getAgencyRegisteredAddress(request.userAnswers)
+                    agentFriendlyName <- agentInformation.agentFriendlyName
+                  } yield {
+                    service.agentDeclareNoChange(utr, declaration, arn, agencyAddress, agentFriendlyName) flatMap {
+                      case TVNResponse(tvn) =>
+                        for {
+                          updatedAnswers <- Future.fromTry(
+                            request.userAnswers
+                              .set(AgentDeclarationPage, declaration)
+                              .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+                              .flatMap(_.set(TVNPage, tvn))
+                          )
+                          _ <- playbackRepository.set(updatedAnswers)
+                        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+                      case _ =>
+                        Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
+                    }
+                  }).getOrElse(Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())))
+
                 case _ =>
-                  Logger.error("User was not an agent")
+                  Logger.error("User was either not an agent, or did not have agent information and/or arn")
                   Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
               }
           }
         }
       )
+  }
+
+  private def getAgencyRegisteredAddress(userAnswers: UserAnswers): Option[Address] = {
+    userAnswers.get(AgencyRegisteredAddressUkYesNoPage) flatMap {
+      case true => userAnswers.get(AgencyRegisteredAddressUkPage)
+      case false => userAnswers.get(AgencyRegisteredAddressInternationalPage)
+    }
   }
 
 }

@@ -17,20 +17,17 @@
 package services
 import base.SpecBase
 import connectors.TrustConnector
-import models.http.DeclarationResponse.{CannotDeclareError, InternalServerError}
+import models.http.DeclarationResponse.InternalServerError
 import models.http.{NameType, TVNResponse}
-import models.requests.{AgentUser, DataRequest, OrganisationUser}
 import models.{AgentDeclaration, IndividualDeclaration, UKAddress}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{EitherValues, RecoverMethods}
-import pages.declaration.AgencyRegisteredAddressUkYesNoPage
+import pages.UTRPage
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
-import pages.{AgencyRegisteredAddressUkPage, UTRPage}
 import play.api.inject.bind
 import play.api.libs.json.JsValue
-import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.retrieve.AgentInformation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -80,20 +77,13 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
         when(mockTrustConnector.declare(any[String], any[JsValue])(any(), any()))
           .thenReturn(Future.successful(TVNResponse("123456")))
 
-        val userAnswers = emptyUserAnswers
-          .set(UTRPage, utr).success.value
-          .set(AgencyRegisteredAddressUkYesNoPage, true).success.value
-          .set(AgencyRegisteredAddressUkPage, address).success.value
-
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
-        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation), "arn"))
-
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, agentDeclaration, request, Some("SARN1234567"))) {
+        whenReady(service.agentDeclareNoChange(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName")) {
           result =>
             result mustBe TVNResponse("123456")
         }
@@ -104,40 +94,15 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
         when(mockTrustConnector.declare(any[String], any[JsValue])(any(), any()))
           .thenReturn(Future.successful(InternalServerError))
 
-        val userAnswers = emptyUserAnswers
-          .set(UTRPage, utr).success.value
-          .set(AgencyRegisteredAddressUkYesNoPage, true).success.value
-          .set(AgencyRegisteredAddressUkPage, address).success.value
-
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
-        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation), "arn"))
-
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, agentDeclaration, request, Some("SARN1234567"))) {
+        whenReady(service.agentDeclareNoChange(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName")) {
           result =>
             result mustBe InternalServerError
-        }
-      }
-
-      "return cannot declare error when invalid data" in {
-
-        val userAnswers = emptyUserAnswers
-          .set(UTRPage, utr).success.value
-
-        val app = applicationBuilder()
-          .build()
-
-        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation), "arn"))
-
-        val service = app.injector.instanceOf[DeclarationService]
-
-        whenReady(service.declareNoChange(utr, agentDeclaration, request, Some("SARN1234567"))) {
-          result =>
-            result mustBe CannotDeclareError
         }
       }
 
@@ -150,22 +115,13 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
         when(mockTrustConnector.declare(any[String], any[JsValue])(any(), any()))
           .thenReturn(Future.successful(TVNResponse("123456")))
 
-        val userAnswers = emptyUserAnswers
-          .set(UTRPage, utr).success.value
-          .set(IsThisLeadTrusteePage(0), false).success.value
-          .set(TrusteeAddressPage(0), UKAddress("Line 1", "Line 2", None, None, "NE11NE")).success.value
-          .set(IsThisLeadTrusteePage(1), true).success.value
-          .set(TrusteeAddressPage(1), UKAddress("Line 1", "Line 2", None, None, "NE11NE")).success.value
-
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
-        val request = DataRequest(FakeRequest(), userAnswers, OrganisationUser("id", enrolments))
-
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, individualDeclaration, request, None)) {
+        whenReady(service.individualDeclareNoChange(utr, individualDeclaration, address)) {
           result =>
             result mustBe TVNResponse("123456")
         }
@@ -185,32 +141,11 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
-        val request = DataRequest(FakeRequest(), userAnswers, OrganisationUser("id", enrolments))
-
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.declareNoChange(utr, individualDeclaration, request, None)) {
+        whenReady(service.individualDeclareNoChange(utr, individualDeclaration, address)) {
           result =>
             result mustBe InternalServerError
-        }
-      }
-
-      "return cannot declare error when invalid data" in {
-
-        val userAnswers = emptyUserAnswers
-          .set(UTRPage, utr).success.value
-          .set(IsThisLeadTrusteePage(0), true).success.value
-
-        val app = applicationBuilder()
-          .build()
-
-        val request = DataRequest(FakeRequest(), userAnswers, OrganisationUser("id", enrolments))
-
-        val service = app.injector.instanceOf[DeclarationService]
-
-        whenReady(service.declareNoChange(utr, individualDeclaration, request, None)) {
-          result =>
-            result mustBe CannotDeclareError
         }
       }
 

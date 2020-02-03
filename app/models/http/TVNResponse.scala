@@ -41,8 +41,6 @@ object DeclarationResponse {
 
   case object InternalServerError extends DeclarationResponse
 
-  case object CannotDeclareError extends DeclarationResponse
-
   implicit lazy val httpReads: HttpReads[DeclarationResponse] =
     new HttpReads[DeclarationResponse] {
       override def read(method: String, url: String, response: HttpResponse): DeclarationResponse = {

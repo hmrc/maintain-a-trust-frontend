@@ -28,6 +28,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{DeclarationService, FakeDeclarationService, FakeFailingDeclarationService}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
+import uk.gov.hmrc.auth.core.retrieve.AgentInformation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.declaration.AgentDeclarationView
 
@@ -76,7 +77,8 @@ class AgentDeclarationControllerSpec extends SpecBase {
         applicationBuilder(
           userAnswers = Some(userAnswers),
           affinityGroup = Agent,
-          enrolments = enrolments
+          enrolments = enrolments,
+          agentInformation = Some(AgentInformation(None, None, Some("Agent Friendly Name")))
         ).overrides(
           bind[DeclarationService].to(new FakeDeclarationService())
         ).build()
@@ -131,7 +133,8 @@ class AgentDeclarationControllerSpec extends SpecBase {
         applicationBuilder(
           userAnswers = Some(userAnswers),
           affinityGroup = Agent,
-          enrolments = enrolments
+          enrolments = enrolments,
+          agentInformation = Some(AgentInformation(None, None, Some("Agent Friendly Name")))
         ).overrides(
           bind[DeclarationService].to(new FakeFailingDeclarationService())
         ).build()

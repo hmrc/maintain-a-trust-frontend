@@ -19,78 +19,33 @@ package services
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
 import mapping.AgentDetails
-import models.http.DeclarationResponse.CannotDeclareError
 import models.http.{AddressType, DeclarationResponse, NameType}
-import models.requests.DataRequest
-import models.{Address, AgentDeclaration, Declaration, IndividualDeclaration, InternationalAddress, UKAddress, UserAnswers}
-import pages.declaration.AgencyRegisteredAddressUkYesNoPage
-import pages.trustees.TrusteeAddressPage
-import pages.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage}
-import play.api.Logger
+import models.{Address, AgentDeclaration, IndividualDeclaration, InternationalAddress, UKAddress}
 import play.api.libs.json.{JsValue, Json}
-import sections.Trustees
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends DeclarationService {
 
-  override def declareNoChange[A](utr: String, declaration: Declaration, request: DataRequest[A], arn: Option[String])
+  override def agentDeclareNoChange[A](utr: String, declaration: AgentDeclaration, arn: String, agencyAddress: Address, agentFriendlyName: String)
                               (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
 
-    val userAnswers = request.userAnswers
+    val agentDetails = AgentDetails(
+      arn,
+      agentFriendlyName,
+      convertToAddressType(agencyAddress),
+      declaration.telephoneNumber,
+      declaration.crn
+    )
 
-    declaration match {
-      case AgentDeclaration(name, telephoneNumber, crn, _) =>
-
-         getAgencyRegisteredAddress(userAnswers) match {
-          case None =>
-            Logger.error("Cannot declare as no agency address.")
-            Future.successful(CannotDeclareError)
-          case Some(address) =>
-            val agentDetails = request.user.agentInformation.flatMap(_.agentFriendlyName) map { agentFriendlyName =>
-              AgentDetails(
-                arn.get,
-                agentFriendlyName,
-                convertToAddressType(address),
-                telephoneNumber,
-                crn
-              )
-            }
-
-            declare(name, address, utr, agentDetails)
-        }
-
-      case IndividualDeclaration(name, _) =>
-        getIndexOfLeadTrustee(userAnswers) match {
-          case None =>
-            Logger.error("Cannot declare as no lead trustee found.")
-            Future.successful(CannotDeclareError)
-          case Some(index) =>
-            userAnswers.get(TrusteeAddressPage(index)) match {
-              case None =>
-                Logger.error("Cannot declare as no lead trustee address.")
-                Future.successful(CannotDeclareError)
-              case Some(address) =>
-                declare(name, address, utr, None)
-            }
-        }
-    }
+    declare(declaration.name, agencyAddress, utr, Some(agentDetails))
   }
 
-  private def getAgencyRegisteredAddress(userAnswers: UserAnswers): Option[Address] = {
-    userAnswers.get(AgencyRegisteredAddressUkYesNoPage) flatMap {
-      case true => userAnswers.get(AgencyRegisteredAddressUkPage)
-      case false => userAnswers.get(AgencyRegisteredAddressInternationalPage)
-    }
-  }
+  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+                                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
 
-  private def getIndexOfLeadTrustee(userAnswers: UserAnswers): Option[Int] = {
-    for {
-      trusteesAsJson <- userAnswers.get(Trustees)
-      zipped = trusteesAsJson.value.zipWithIndex
-      lead <- zipped.find(x => (x._1 \ "isThisLeadTrustee").as[Boolean])
-    } yield lead._2
+    declare(declaration.name, leadTrusteeAddress, utr, None)
   }
 
   private def declare(name: NameType, address: Address, utr: String, agentDetails: Option[AgentDetails])
@@ -135,6 +90,9 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
 
 @ImplementedBy(classOf[DeclarationServiceImpl])
 trait DeclarationService {
-  def declareNoChange[A](utr: String, declaration: Declaration, request: DataRequest[A], arn: Option[String])
+  def agentDeclareNoChange[A](utr: String, declaration: AgentDeclaration, arn: String, agencyAddress: Address, agentFriendlyName: String)
                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
+
+  def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+                        (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 }
