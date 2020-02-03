@@ -10,6 +10,8 @@ GET        /this-service-has-been-reset                 controllers.SessionExpir
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
+GET        /logout                                      controllers.register.LogoutController.logout()
+
 GET        /unique-taxpayer-reference                   controllers.UTRController.onPageLoad()
 POST       /unique-taxpayer-reference                   controllers.UTRController.onSubmit()
 
