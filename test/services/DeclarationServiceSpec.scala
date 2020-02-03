@@ -89,7 +89,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
-        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation)))
+        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation), "arn"))
 
         val service = app.injector.instanceOf[DeclarationService]
 
@@ -113,7 +113,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
-        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation)))
+        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation), "arn"))
 
         val service = app.injector.instanceOf[DeclarationService]
 
@@ -131,7 +131,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
         val app = applicationBuilder()
           .build()
 
-        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation)))
+        val request = DataRequest(FakeRequest(), userAnswers, AgentUser("id", enrolments, Some(agentInformation), "arn"))
 
         val service = app.injector.instanceOf[DeclarationService]
 

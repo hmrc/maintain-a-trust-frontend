@@ -49,7 +49,7 @@ class AuthenticatedIdentifierAction @Inject()(
 
     getAgentReferenceNumber(enrolments) match {
       case Some(arn) if arn.nonEmpty =>
-        block(IdentifierRequest(request, AgentUser(internalId, enrolments, agentInformation)))
+        block(IdentifierRequest(request, AgentUser(internalId, enrolments, agentInformation, arn)))
       case _ =>
         Logger.info(s"[AuthenticatedIdentifierAction][authoriseAgent]: Not a valid agent service account")
         Future.successful(Redirect(controllers.routes.CreateAgentServicesAccountController.onPageLoad()))

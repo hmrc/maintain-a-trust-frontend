@@ -22,6 +22,7 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
 import models.http.TVNResponse
+import models.requests.AgentUser
 import pages._
 import pages.declaration.AgentDeclarationPage
 import play.api.Logger
@@ -72,11 +73,8 @@ class AgentDeclarationController @Inject()(
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
-              getAgentReferenceNumber(request.user.enrolments) match {
-                case None =>
-                  Logger.error("No agent reference number found")
-                  Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-                case Some(arn) =>
+              request.user match {
+                case AgentUser(_, _, _, arn) =>
                   service.declareNoChange(utr, value, request, Some(arn)) flatMap {
                     case TVNResponse(tvn) =>
                       for {
@@ -91,16 +89,13 @@ class AgentDeclarationController @Inject()(
                     case _ =>
                       Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
                   }
+                case _ =>
+                  Logger.error("User was not an agent")
+                  Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
               }
           }
         }
       )
   }
-
-  private def getAgentReferenceNumber(enrolments: Enrolments): Option[String] =
-    enrolments.enrolments
-      .find(_.key equals "HMRC-AS-AGENT")
-      .flatMap(_.identifiers.find(_.key equals "AgentReferenceNumber"))
-      .collect { case EnrolmentIdentifier(_, value) => value }
 
 }

@@ -51,7 +51,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
   ))
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
-  implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, Some(AgentInformation(None, None, None))))
+  implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, Some(AgentInformation(None, None, None)), "arn"))
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockEnrolmentStoreConnector: EnrolmentStoreConnector = mock[EnrolmentStoreConnector]
@@ -135,7 +135,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
 
           val service = app.injector.instanceOf[AuthenticationService]
 
-          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, Some(AgentInformation(None, None, None))))
+          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, Some(AgentInformation(None, None, None)), "arn"))
 
           whenReady(service.authenticate[AnyContent](utr)) {
             result =>
@@ -167,7 +167,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
 
           val service = app.injector.instanceOf[AuthenticationService]
 
-          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, Some(AgentInformation(None, None, None))))
+          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, Some(AgentInformation(None, None, None)), "arn"))
 
           whenReady(service.authenticate[AnyContent](utr)) {
             result =>

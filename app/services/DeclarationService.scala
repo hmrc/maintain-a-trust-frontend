@@ -48,7 +48,6 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
             Logger.error("Cannot declare as no agency address.")
             Future.successful(CannotDeclareError)
           case Some(address) =>
-
             val agentDetails = request.user.agentInformation.flatMap(_.agentFriendlyName) map { agentFriendlyName =>
               AgentDetails(
                 arn.get,

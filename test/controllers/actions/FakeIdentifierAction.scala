@@ -32,7 +32,7 @@ class FakeIdentifierAction @Inject()(bodyParsers: BodyParsers.Default,
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
     affinityGroup match {
       case AffinityGroup.Agent =>
-        block(IdentifierRequest(request, AgentUser("id", enrolments, agentInformation)))
+        block(IdentifierRequest(request, AgentUser("id", enrolments, agentInformation, "arn")))
       case _ =>
         block(IdentifierRequest(request, OrganisationUser("id", enrolments)))
     }

@@ -19,7 +19,7 @@ package models.requests
 import models.UserAnswers
 import play.api.mvc.{Request, WrappedRequest}
 import uk.gov.hmrc.auth.core.retrieve.AgentInformation
-import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolments}
+import uk.gov.hmrc.auth.core.{AffinityGroup, EnrolmentIdentifier, Enrolments}
 
 sealed trait User {
   val internalId: String
@@ -28,7 +28,7 @@ sealed trait User {
   val agentInformation: Option[AgentInformation]
 }
 
-case class AgentUser(internalId: String, enrolments: Enrolments, agentInformation: Option[AgentInformation]) extends User {
+case class AgentUser(internalId: String, enrolments: Enrolments, agentInformation: Option[AgentInformation], agentReferenceNumber: String) extends User {
   override val affinityGroup: AffinityGroup = AffinityGroup.Agent
 }
 
