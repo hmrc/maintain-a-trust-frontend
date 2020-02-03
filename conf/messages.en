@@ -260,6 +260,7 @@ utr.heading = What is the trust’s Unique Taxpayer Reference?
 utr.hint = This is 10 numbers, for example 1234567890. It will be on the trust’s Self Assessment notice to file (SA316). It may be called ‘reference’, ‘UTR’ or ‘official use’.
 utr.hint.reader = This is 10 numbers, for example one two three four five six seven eight nine zero. It will be on the trust’s Self Assessment notice to file (S A three one six). It may be called ‘reference’, ‘UTR’ or ‘official use’.
 utr.error.required = Enter the trust’s Unique Taxpayer Reference
+utr.error.length = Unique Taxpayer Reference must be a 10 digit number
 
 declarationWhatNext.title = What do you want to do next?
 declarationWhatNext.heading = What do you want to do next?
