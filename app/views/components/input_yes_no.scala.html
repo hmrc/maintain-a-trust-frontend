@@ -14,47 +14,72 @@
  * limitations under the License.
  *@
 
+@import viewmodels.Link
+
 @(
-        field: Field,
-        legend: String,
-        hint: Option[String] = None,
-        legendClass: Option[String] = None,
-        headingIsLegend: Boolean = false
+field: Field,
+label: String,
+secondaryLabel: Option[String] = None,
+inputClass: Option[String] = None,
+hint: Option[String] = None,
+readerHint: Option[String] = None,
+yesAssoc: Option[String] = None,
+noAssoc: Option[String] = None,
+legendClass: Option[String] = None,
+link : Option[Link] = None,
+legendAsHeading: Boolean = false
 )(implicit messages: Messages)
 
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
-    <fieldset class="inline" id="@{field.id}" @if(field.hasErrors || hint.nonEmpty){aria-describedby="@if(field.hasErrors){error-message-@{field.id}-input} @if(hint.nonEmpty){hint-@{field.id}}"}>
 
-        @if(headingIsLegend){
-            <legend>
-                <h1 @if(legendClass.nonEmpty){class="@legendClass" }else{class="heading-xlarge"}>@legend</h1>
-            </legend>
-        } else {
-            <legend @if(legendClass.nonEmpty){class="@legendClass" }>
-                @legend
-            </legend>
-        }
+    <fieldset class="inline" id="@{field.id}">
 
-        @if(hint.nonEmpty){
-            <div class="form-hint" id="hint-@{field.id}">@hint</div>
-        }
+        <legend id="@{field.id}-legend">
+            @if(legendAsHeading){<h1 class="legend-as-heading">}
+            <span id="@{field.id}-id" @if(legendClass.nonEmpty){class="@legendClass"}>@label</span>
+            @if(legendAsHeading){</h1>}
+        </legend>
+        @form_hint(hint = hint, readerHint = readerHint, link = link)
         @field.errors.map { error =>
-            <div class="error-message" id="error-message-@field.id-input">
-                <span class="visually-hidden">@messages("error.browser.title.prefix") </span>@messages(error.message, error.args: _*)
-            </div>
+        <span class="error-message" id="error-message-@{field.id}-input">@messages(error.message, error.args: _*)</span><span id="aria-period" class="visuallyhidden">.</span>
         }
-
-        <div class="multiple-choice">
-            <input id="@{field.id}-yes" type="radio" name="@{field.id}" value="true" @if(field.value.contains("true")){checked="checked"} />
-            <label class="block-label selection-button-radio" for="@{field.id}-yes">
+        <div class="multiple-choice first">
+            <input
+                    id="@{field.id}-yes"
+                    type="radio"
+                    name="@{field.id}"
+                    value="true"
+                    aria-required="true"
+                    @if(hint.nonEmpty) {
+                    aria-describedby="form-hint"
+                    }
+                    @if(field.hasErrors) {
+                    aria-labelledby="error-message-@{field.id}-input aria-period @{field.id}-yes-label"
+                    }
+                    @if(field.value.contains("true")){checked="checked"}
+            />
+            <label id="@{field.id}-yes-label" class="block-label selection-button-radio" for="@{field.id}-yes" data-target="@if(yesAssoc.nonEmpty){@yesAssoc}">
                 @messages("site.yes")
             </label>
         </div>
 
         <div class="multiple-choice">
-            <input id="@{field.id}-no" type="radio" name="@{field.id}" value="false" @if(field.value.contains("false")){checked="checked"} />
-            <label class="block-label selection-button-radio" for="@{field.id}-no">
+            <input
+                    id="@{field.id}-no"
+                    type="radio"
+                    name="@{field.id}"
+                    value="false"
+                    aria-required="true"
+                    @if(hint.nonEmpty) {
+                    aria-describedby="form-hint"
+                    }
+                    @if(field.hasErrors) {
+                    aria-labelledby="error-message-@{field.id}-input aria-period @{field.id}-no-label"
+                    }
+                    @if(field.value.contains("false")){checked="checked"}
+            />
+            <label id="@{field.id}-no-label"class="block-label selection-button-radio" for="@{field.id}-no" data-target="@if(noAssoc.nonEmpty){@noAssoc}">
                 @messages("site.no")
             </label>
         </div>

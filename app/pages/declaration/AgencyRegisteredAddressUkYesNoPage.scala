@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package services
-import models.Declaration
-import models.http.{DeclarationResponse, TVNResponse}
-import uk.gov.hmrc.http.HeaderCarrier
+package pages.declaration
 
-import scala.concurrent.{ExecutionContext, Future}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-class FakeDeclarationService extends DeclarationService {
-  override def declareNoChange(utr: String, payload: Declaration)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
-    Future.successful(TVNResponse("fakeTvn"))
-  }
+case object AgencyRegisteredAddressUkYesNoPage extends QuestionPage[Boolean] {
+
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "agencyRegisteredAddressInUkYesNo"
 }

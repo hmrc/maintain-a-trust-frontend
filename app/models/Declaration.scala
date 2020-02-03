@@ -16,16 +16,20 @@
 
 package models
 
+import models.http.NameType
 import play.api.libs.json.{Json, OFormat, Reads, Writes}
 
-final case class AgentDeclaration(name: FullName, crn: String, email: Option[String]) extends Declaration
+final case class AgentDeclaration(name: NameType,
+                                  telephoneNumber: String,
+                                  crn: String,
+                                  email: Option[String]) extends Declaration
 
 object AgentDeclaration {
 
   implicit lazy val formats: OFormat[AgentDeclaration] = Json.format[AgentDeclaration]
 }
 
-final case class IndividualDeclaration(name: FullName, email: Option[String]) extends Declaration
+final case class IndividualDeclaration(name: NameType, email: Option[String]) extends Declaration
 
 object IndividualDeclaration {
 

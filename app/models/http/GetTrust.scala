@@ -16,7 +16,7 @@
 
 package models.http
 
-import mapping.{AssetMonetaryAmount, PassportType, PropertyLandType, TrustDetailsType}
+import mapping.{AgentDetails, AssetMonetaryAmount, PassportType, PropertyLandType, TrustDetailsType}
 import models.Constant._
 import models.pages.{KindOfBusiness, RoleInCompany, ShareClass, ShareType}
 import org.joda.time.DateTime
@@ -55,6 +55,13 @@ case class Declaration(name: NameType,
 
 object Declaration {
   implicit val declarationFormat: Format[Declaration] = Json.format[Declaration]
+}
+
+case class DeclarationForApi(declaration: Declaration,
+                             agentDetails: Option[AgentDetails])
+
+object DeclarationForApi {
+  implicit val declarationForApiFormat: Format[DeclarationForApi] = Json.format[DeclarationForApi]
 }
 
 case class AddressType(line1: String,

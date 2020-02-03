@@ -18,8 +18,9 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.declaration.IndividualDeclarationFormProvider
-import models.IndividualDeclaration
+import models.{IndividualDeclaration, UKAddress}
 import pages.UTRPage
+import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
@@ -34,6 +35,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
   val formProvider = new IndividualDeclarationFormProvider()
   val form: Form[IndividualDeclaration] = formProvider()
+  val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
 
   lazy val onSubmit: Call = routes.IndividualDeclarationController.onSubmit()
 
@@ -65,7 +67,10 @@ class IndividualDeclarationControllerSpec extends SpecBase {
         "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
       )))
 
-      val userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
+      val userAnswers = emptyUserAnswers
+        .set(UTRPage, utr).success.value
+        .set(IsThisLeadTrusteePage(0), true).success.value
+        .set(TrusteeAddressPage(0), address).success.value
 
       val application =
         applicationBuilder(
@@ -117,7 +122,10 @@ class IndividualDeclarationControllerSpec extends SpecBase {
         "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
       )))
 
-      val userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
+      val userAnswers = emptyUserAnswers
+        .set(UTRPage, utr).success.value
+        .set(IsThisLeadTrusteePage(0), true).success.value
+        .set(TrusteeAddressPage(0), address).success.value
 
       val application =
         applicationBuilder(

@@ -18,43 +18,81 @@ package services
 
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
-import models.{AgentDeclaration, Declaration, IndividualDeclaration}
-import models.http.DeclarationResponse
-import models.http.DeclarationResponse.InternalServerError
-import play.api.libs.json.Json
+import mapping.AgentDetails
+import models.http.{AddressType, DeclarationResponse, NameType}
+import models.{Address, AgentDeclaration, IndividualDeclaration, InternationalAddress, UKAddress}
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends DeclarationService {
 
-  override def declareNoChange(utr: String, payload : Declaration)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
-    payload match {
-      case AgentDeclaration(name, crn, email) =>
-        Future.successful(InternalServerError)
-      case IndividualDeclaration(name, email) =>
-        val payload = Json.parse(
-          s"""
-            |{
-            | "name": {
-            |   "firstName": "${name.firstName}",
-            |   "lastName": "${name.lastName}"
-            | },
-            | "address": {
-            |   "line1": "Line 1",
-            |   "line2": "Line 2",
-            |   "postCode": "NE981ZZ",
-            |   "country": "GB"
-            | }
-            |}
-            |""".stripMargin)
+  override def agentDeclareNoChange[A](utr: String, declaration: AgentDeclaration, arn: String, agencyAddress: Address, agentFriendlyName: String)
+                              (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
 
-        connector.declare(utr, payload)
+    val agentDetails = AgentDetails(
+      arn,
+      agentFriendlyName,
+      convertToAddressType(agencyAddress),
+      declaration.telephoneNumber,
+      declaration.crn
+    )
+
+    declare(declaration.name, agencyAddress, utr, Some(agentDetails))
+  }
+
+  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+                                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+
+    declare(declaration.name, leadTrusteeAddress, utr, None)
+  }
+
+  private def declare(name: NameType, address: Address, utr: String, agentDetails: Option[AgentDetails])
+                     (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+
+    val payload = getPayload(name, convertToAddressType(address), agentDetails)
+    connector.declare(utr, payload)
+  }
+
+  private def getPayload(name: NameType, address: AddressType, agentDetails: Option[AgentDetails]): JsValue = {
+    Json.toJson(
+      models.http.DeclarationForApi(
+        models.http.Declaration(name, address),
+        agentDetails
+      )
+    )
+  }
+
+  private def convertToAddressType(address: Address): AddressType = {
+    address match {
+      case UKAddress(line1, line2, line3, line4, postcode) =>
+        AddressType(
+          line1,
+          line2,
+          line3,
+          line4,
+          postCode = Some(postcode),
+          country = "GB"
+        )
+      case InternationalAddress(line1, line2, line3, country) =>
+        AddressType(
+          line1,
+          line2,
+          line3,
+          line4 = None,
+          postCode = None,
+          country = country
+        )
     }
   }
 }
 
 @ImplementedBy(classOf[DeclarationServiceImpl])
 trait DeclarationService {
-  def declareNoChange(utr: String, payload : Declaration)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
+  def agentDeclareNoChange[A](utr: String, declaration: AgentDeclaration, arn: String, agencyAddress: Address, agentFriendlyName: String)
+                     (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
+
+  def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+                        (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 }

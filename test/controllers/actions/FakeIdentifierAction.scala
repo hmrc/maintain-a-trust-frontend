@@ -19,18 +19,22 @@ package controllers.actions
 import com.google.inject.Inject
 import models.requests.{AgentUser, IdentifierRequest, OrganisationUser}
 import play.api.mvc._
+import uk.gov.hmrc.auth.core.retrieve.AgentInformation
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolments}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierAction @Inject()(bodyParsers: BodyParsers.Default, affinityGroup: AffinityGroup) extends IdentifierAction {
+class FakeIdentifierAction @Inject()(bodyParsers: BodyParsers.Default,
+                                     affinityGroup: AffinityGroup,
+                                     enrolments: Enrolments,
+                                     agentInformation: Option[AgentInformation]) extends IdentifierAction {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
     affinityGroup match {
       case AffinityGroup.Agent =>
-        block(IdentifierRequest(request, AgentUser("id", Enrolments(Set()), "arn")))
+        block(IdentifierRequest(request, AgentUser("id", enrolments, agentInformation, "arn")))
       case _ =>
-        block(IdentifierRequest(request, OrganisationUser("id", Enrolments(Set()))))
+        block(IdentifierRequest(request, OrganisationUser("id", enrolments)))
     }
   }
 

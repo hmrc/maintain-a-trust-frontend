@@ -16,25 +16,37 @@
 
 package services
 
-import models.Declaration
 import models.http.DeclarationResponse.InternalServerError
 import models.http.{DeclarationResponse, TVNResponse}
+import models.{Address, AgentDeclaration, IndividualDeclaration}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDeclarationService extends DeclarationService {
 
-  override def declareNoChange(utr: String, payload: Declaration)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] =
+  override def agentDeclareNoChange[A](utr: String, declaration: AgentDeclaration, arn: String, agencyAddress: Address, agentFriendlyName: String)
+                                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(TVNResponse("123456"))
+  }
+
+  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+                                           (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+    Future.successful(TVNResponse("123456"))
+  }
 
 }
 
 class FakeFailingDeclarationService extends DeclarationService {
 
-  override def declareNoChange(utr: String, payload: Declaration)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+  override def agentDeclareNoChange[A](utr: String, declaration: AgentDeclaration, arn: String, agencyAddress: Address, agentFriendlyName: String)
+                                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(InternalServerError)
+  }
 
+  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+                                           (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+    Future.successful(InternalServerError)
   }
 
 }
