@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-package utils
+package utils.countryoptions
 
 import base.SpecBase
 import com.typesafe.config.ConfigException
 import org.scalatestplus.mockito.MockitoSugar
+import utils.InputOption
 
-class CountryOptionsSpec extends SpecBase with MockitoSugar {
+class CountryOptionsNonUKSpec extends SpecBase with MockitoSugar {
 
-  "Country Options" must {
+  "Country Options Non UK" must {
 
-    "build correctly the InputOptions with all country list and country code" in {
+    "build correctly the InputOptions with non-UK country list and country code" in {
 
       val application = applicationBuilder()
         .configure(Map(
-          "location.canonical.list.all" -> "countries-canonical-list-test.json"
+          "location.canonical.list.nonUK" -> "non-uk-countries-canonical-list-test.json"
         ))
         .build()
 
-        val countryOption: CountryOptions = application.injector.instanceOf[CountryOptions]
-        countryOption.options mustEqual Seq(InputOption("GB", "United Kingdom"), InputOption("SP", "Spain"))
+        val countryOption: CountryOptions = application.injector.instanceOf[CountryOptionsNonUK]
+        countryOption.options mustEqual Seq(InputOption("IE", "Ireland"), InputOption("BE", "Belgium"))
 
       application.stop()
     }
@@ -54,3 +55,6 @@ class CountryOptionsSpec extends SpecBase with MockitoSugar {
     }
   }
 }
+
+
+

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package utils
+package utils.countryoptions
 
 import com.typesafe.config.ConfigException
 import config.FrontendAppConfig
 import javax.inject.{Inject, Singleton}
 import play.api.Environment
 import play.api.libs.json.Json
+import utils.InputOption
 
 @Singleton
 class CountryOptions @Inject()(environment: Environment, config: FrontendAppConfig) {

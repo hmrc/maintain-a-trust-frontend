@@ -19,7 +19,8 @@ package utils.print.sections
 import models.UserAnswers
 import pages.individual._
 import play.api.i18n.Messages
-import utils.{CheckAnswersFormatters, CountryOptions}
+import utils.CheckAnswersFormatters
+import utils.countryoptions.CountryOptions
 import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
 

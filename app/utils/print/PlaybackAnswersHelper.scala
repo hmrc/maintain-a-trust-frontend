@@ -23,7 +23,7 @@ import pages.protectors.ProtectorIndividualOrBusinessPage
 import pages.settlors.living_settlor.SettlorIndividualOrBusinessPage
 import pages.trustees._
 import play.api.i18n.Messages
-import utils.CountryOptions
+import utils.countryoptions.CountryOptions
 import utils.print.sections.{OtherIndividual, TrustType}
 import utils.print.sections.beneficiaries._
 import utils.print.sections.protectors.{BusinessProtector, IndividualProtector}

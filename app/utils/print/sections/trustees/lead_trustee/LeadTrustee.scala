@@ -20,7 +20,7 @@ import models.UserAnswers
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees._
 import play.api.i18n.Messages
-import utils.CountryOptions
+import utils.countryoptions.CountryOptions
 import viewmodels.AnswerRow
 import utils.print.sections.AnswerRowConverter._
 

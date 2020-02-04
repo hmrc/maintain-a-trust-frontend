@@ -22,7 +22,7 @@ import base.SpecBase
 import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
 import pages.individual._
 import play.twirl.api.Html
-import utils.CountryOptions
+import utils.countryoptions.CountryOptions
 import viewmodels.{AnswerRow, AnswerSection}
 
 class OtherIndividualPrintPlaybackHelperSpec extends SpecBase {
