@@ -25,6 +25,6 @@ class WhatIsNextFormProvider @Inject() extends Mappings {
 
   def apply(): Form[WhatIsNext] =
     Form(
-      "value" -> enumerable[WhatIsNext]("whatIsNext.error.required")
+      "value" -> enumerable[WhatIsNext]("declarationWhatNext.error.required")
     )
 }
