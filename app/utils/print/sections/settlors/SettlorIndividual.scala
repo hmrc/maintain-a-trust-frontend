@@ -19,7 +19,8 @@ package utils.print.sections.settlors
 import models.UserAnswers
 import pages.settlors.living_settlor._
 import play.api.i18n.Messages
-import utils.{CheckAnswersFormatters, CountryOptions}
+import utils.CheckAnswersFormatters
+import utils.countryoptions.CountryOptions
 import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
 

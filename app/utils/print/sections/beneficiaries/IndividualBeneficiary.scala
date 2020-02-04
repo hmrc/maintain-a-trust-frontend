@@ -23,7 +23,8 @@ import play.api.i18n.Messages
 import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import queries.Gettable
-import utils.{CheckAnswersFormatters, CountryOptions}
+import utils.CheckAnswersFormatters
+import utils.countryoptions.CountryOptions
 import viewmodels.{AnswerRow, AnswerSection}
 import utils.print.sections.AnswerRowConverter._
 

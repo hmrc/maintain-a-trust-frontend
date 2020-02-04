@@ -92,6 +92,7 @@ deedOfVariation.replaceWillTrust = to replace a will trust
 
 error.browser.title.prefix = Error:
 error.summary.title = There is a problem
+error.postcodeInvalid = Enter a real postcode
 
 featureNotAvailable.title = This feature is currently not available
 featureNotAvailable.heading = This feature is currently not available

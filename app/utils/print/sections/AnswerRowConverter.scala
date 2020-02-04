@@ -25,7 +25,8 @@ import play.api.libs.json.Reads
 import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import queries.Gettable
-import utils.{CheckAnswersFormatters, CountryOptions}
+import utils.CheckAnswersFormatters
+import utils.countryoptions.CountryOptions
 import viewmodels.AnswerRow
 
 object AnswerRowConverter {

@@ -25,7 +25,7 @@ import pages.protectors._
 import pages.protectors.business._
 import pages.protectors.individual._
 import play.twirl.api.Html
-import utils.CountryOptions
+import utils.countryoptions.CountryOptions
 import viewmodels.{AnswerRow, AnswerSection}
 
 class ProtectorPrintPlaybackHelperSpec extends SpecBase {

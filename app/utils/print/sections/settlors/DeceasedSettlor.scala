@@ -20,7 +20,8 @@ import models.UserAnswers
 import pages.settlors.deceased_settlor._
 import play.api.i18n.Messages
 import utils.print.sections.AnswerRowConverter._
-import utils.{CheckAnswersFormatters, CountryOptions}
+import utils.CheckAnswersFormatters
+import utils.countryoptions.CountryOptions
 import viewmodels.AnswerSection
 
 object DeceasedSettlor {
