@@ -60,13 +60,15 @@
         @components.input_text(
             field = form("telephoneNumber"),
             label = messages("declaration.telephoneNumber"),
-            ariaRequired = true
+            ariaRequired = true,
+            inputClass = Some("form-control-3-4")
         )
 
         @components.input_text(
             field = form("crn"),
             label = messages("declaration.crn"),
-            ariaRequired = true
+            ariaRequired = true,
+            inputClass = Some("form-control-3-4")
         )
 
         @if(appConfig.declarationEmailEnabled) {
