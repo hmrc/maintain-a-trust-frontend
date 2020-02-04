@@ -1,6 +1,6 @@
 agencyRegisteredAddressUkYesNo.title = Is your agency’s registered address in the UK?
 agencyRegisteredAddressUkYesNo.heading = Is your agency’s registered address in the UK?
-agencyRegisteredAddressUkYesNo.error.required = Select yes if the agency’s registered address is in the UK
+agencyRegisteredAddressUkYesNo.error.required = Select yes if your agency’s registered address is in the UK
 agencyRegisteredAddressUk.title = What is your agency’s registered address?
 agencyRegisteredAddressUk.heading = What is your agency’s registered address?
 agencyRegisteredAddressInternational.title = What is your agency’s registered address?
