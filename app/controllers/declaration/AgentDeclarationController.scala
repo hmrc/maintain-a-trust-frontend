@@ -74,12 +74,11 @@ class AgentDeclarationController @Inject()(
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
               request.user match {
-                case AgentUser(_, _, Some(agentInformation), arn) =>
+                case agentUser: AgentUser =>
                   (for {
                     agencyAddress <- getAgencyRegisteredAddress(request.userAnswers)
-                    agentFriendlyName <- agentInformation.agentFriendlyName
                   } yield {
-                    service.agentDeclareNoChange(utr, declaration, arn, agencyAddress, agentFriendlyName) flatMap {
+                    service.agentDeclareNoChange(utr, declaration, agentUser.agentReferenceNumber, agencyAddress, declaration.agencyName) flatMap {
                       case TVNResponse(tvn) =>
                         for {
                           updatedAnswers <- Future.fromTry(

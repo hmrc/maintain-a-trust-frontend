@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class IdentifierActionSpec extends SpecBase {
 
-  type RetrievalType = Option[String] ~ Option[AffinityGroup] ~ Enrolments ~ AgentInformation
+  type RetrievalType = Option[String] ~ Option[AffinityGroup] ~ Enrolments
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
@@ -46,8 +46,8 @@ class IdentifierActionSpec extends SpecBase {
 
   private def authRetrievals(affinityGroup: AffinityGroup,
                              enrolment: Enrolments,
-                             agentInformation: AgentInformation): Future[Some[String] ~ Some[AffinityGroup] ~ Enrolments ~ AgentInformation] =
-    Future.successful(new ~(new ~(new ~(Some("id"), Some(affinityGroup)), enrolment), agentInformation))
+                             agentInformation: AgentInformation): Future[Some[String] ~ Some[AffinityGroup] ~ Enrolments] =
+    Future.successful(new ~(new ~(Some("id"), Some(affinityGroup)), enrolment))
 
   private val agentEnrolment = Enrolments(Set(Enrolment("HMRC-AS-AGENT", List(EnrolmentIdentifier("AgentReferenceNumber", "SomeVal")), "Activated", None)))
 
