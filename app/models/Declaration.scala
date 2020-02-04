@@ -20,6 +20,7 @@ import models.http.NameType
 import play.api.libs.json.{Json, OFormat, Reads, Writes}
 
 final case class AgentDeclaration(name: NameType,
+                                  agencyName: String,
                                   telephoneNumber: String,
                                   crn: String,
                                   email: Option[String]) extends Declaration

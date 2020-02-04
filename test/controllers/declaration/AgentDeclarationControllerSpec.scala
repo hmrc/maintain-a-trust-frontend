@@ -28,7 +28,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{DeclarationService, FakeDeclarationService, FakeFailingDeclarationService}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
-import uk.gov.hmrc.auth.core.retrieve.AgentInformation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.declaration.AgentDeclarationView
 
@@ -77,14 +76,13 @@ class AgentDeclarationControllerSpec extends SpecBase {
         applicationBuilder(
           userAnswers = Some(userAnswers),
           affinityGroup = Agent,
-          enrolments = enrolments,
-          agentInformation = Some(AgentInformation(None, None, Some("Agent Friendly Name")))
+          enrolments = enrolments
         ).overrides(
           bind[DeclarationService].to(new FakeDeclarationService())
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("telephoneNumber", "01234567890"), ("crn", "123456"))
+        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("agencyName", "Agency Name"), ("telephoneNumber", "01234567890"), ("crn", "123456"))
 
       val result = route(application, request).value
 
@@ -100,9 +98,9 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
       val request =
         FakeRequest(POST, routes.AgentDeclarationController.onPageLoad().url)
-          .withFormUrlEncodedBody(("firstName", ""), ("lastName", ""), ("telephoneNumber", ""), ("crn", ""))
+          .withFormUrlEncodedBody(("firstName", ""), ("lastName", ""), ("agencyName", ""), ("telephoneNumber", ""), ("crn", ""))
 
-      val boundForm = form.bind(Map("firstName" -> "", "lastName" -> "", "telephoneNumber" -> "", "crn" -> ""))
+      val boundForm = form.bind(Map("firstName" -> "", "lastName" -> "", "agencyName" -> "", "telephoneNumber" -> "", "crn" -> ""))
 
       val view = application.injector.instanceOf[AgentDeclarationView]
 
@@ -133,14 +131,13 @@ class AgentDeclarationControllerSpec extends SpecBase {
         applicationBuilder(
           userAnswers = Some(userAnswers),
           affinityGroup = Agent,
-          enrolments = enrolments,
-          agentInformation = Some(AgentInformation(None, None, Some("Agent Friendly Name")))
+          enrolments = enrolments
         ).overrides(
           bind[DeclarationService].to(new FakeFailingDeclarationService())
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("telephoneNumber", "01234567890"), ("crn", "123456"))
+        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("agencyName", "Agency Name"), ("telephoneNumber", "01234567890"), ("crn", "123456"))
 
       val result = route(application, request).value
 

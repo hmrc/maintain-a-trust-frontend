@@ -31,7 +31,7 @@ import play.api.inject.bind
 import play.api.mvc.AnyContent
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.{AgentInformation, EmptyRetrieval, Retrieval, ~}
+import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -51,7 +51,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
   ))
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
-  implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, Some(AgentInformation(None, None, None)), "arn"))
+  implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, "arn"))
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockEnrolmentStoreConnector: EnrolmentStoreConnector = mock[EnrolmentStoreConnector]
@@ -135,7 +135,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
 
           val service = app.injector.instanceOf[AuthenticationService]
 
-          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, Some(AgentInformation(None, None, None)), "arn"))
+          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, "arn"))
 
           whenReady(service.authenticate[AnyContent](utr)) {
             result =>
@@ -167,7 +167,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
 
           val service = app.injector.instanceOf[AuthenticationService]
 
-          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, Some(AgentInformation(None, None, None)), "arn"))
+          implicit val dataRequest = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, "arn"))
 
           whenReady(service.authenticate[AnyContent](utr)) {
             result =>

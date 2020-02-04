@@ -51,14 +51,14 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
         form,
         applyView,
         messageKeyPrefix,
-        "firstName", "middleName", "lastName", "telephoneNumber", "crn", "email"
+        "firstName", "middleName", "lastName", "agencyName", "telephoneNumber", "crn", "email"
       )
     } else {
       behave like pageWithTextFields(
         form,
         applyView,
         messageKeyPrefix,
-        "firstName", "middleName", "lastName", "telephoneNumber", "crn"
+        "firstName", "middleName", "lastName", "agencyName", "telephoneNumber", "crn"
       )
     }
 

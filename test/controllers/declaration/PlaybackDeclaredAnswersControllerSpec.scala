@@ -33,6 +33,7 @@ import views.html.declaration.PlaybackDeclaredAnswersView
 class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
   val fakeTvn = "XC TRN 000 000 4912"
+  val fakeAgencyName = "Agency Name"
   val fakeTelephoneNumber = "01234567890"
   val fakeCrn = "123456"
 
@@ -42,7 +43,7 @@ class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
       val playbackAnswers = UserAnswers("internalId")
         .set(TVNPage, fakeTvn).success.value
-        .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeTelephoneNumber, fakeCrn, None)).success.value
+        .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
         .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value
 
         .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value
