@@ -40,10 +40,11 @@
    <p>@messages("informationMaintainingThisTrust.paragraph1")</p>
 
    <ol class="govuk-list govuk-list--number">
-      <li>@messages("informationMaintainingThisTrust.list1")</li>
-      <ul>
-          <li class="panel-indent">@components.link(controllers.routes.PlaybackAnswersController.onPageLoad().url, "print-and-save","informationMaintainingThisTrust.printsave.link", openInNewWindow = true).</li>
-      </ul>
+      <li>@messages("informationMaintainingThisTrust.list1")
+          <ul>
+              <li class="panel-indent">@components.link(controllers.routes.PlaybackAnswersController.onPageLoad().url, "print-and-save","informationMaintainingThisTrust.printsave.link", openInNewWindow = true).</li>
+          </ul>
+      </li>
       <li>@messages("informationMaintainingThisTrust.list2")</li>
       <li>@messages("informationMaintainingThisTrust.list3")</li>
       <li>@messages("informationMaintainingThisTrust.list4")</li>
