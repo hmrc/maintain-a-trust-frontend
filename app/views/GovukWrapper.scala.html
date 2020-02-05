@@ -45,6 +45,7 @@
     @head(
       linkElem = None,
       headScripts = None)
+    <script src='@routes.Assets.versioned("javascripts/gtm.js")'></script>
     <meta name="format-detection" content="telephone=no" />
     <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/maintainatrustfrontend-app.css")' />
 }
@@ -52,6 +53,11 @@
 @headerNavLinks = {}
 
 @insideHeader = {
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript aria-hidden="true"><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NDJKHWK" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     @header_nav(
       navTitle = Some(messages("site.service_name")),
       navTitleLink = None,
