@@ -18,6 +18,7 @@ package controllers.testOnlyDoNotUseInAppConf
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
+import play.api.Logger
 import play.api.libs.json.JsValue
 import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -45,6 +46,7 @@ class EnrolmentStoreStubController @Inject()(
 
   def insertTestUserIntoEnrolmentStore = Action.async(parse.json) {
     implicit request =>
+      Logger.info(s"[EnrolmentStoreStubController] inserting test user: ${request.body}")
       connector.insert(request.body).map(_ => Ok)
   }
 
