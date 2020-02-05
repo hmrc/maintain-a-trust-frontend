@@ -18,9 +18,8 @@ package controllers.testOnlyDoNotUseInAppConf
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import models.requests.EnrolmentStoreResponse
 import play.api.libs.json.JsValue
-import play.api.mvc.{ControllerComponents, Results}
+import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.controller.BackendBaseController
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
