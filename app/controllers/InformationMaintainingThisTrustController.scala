@@ -34,7 +34,8 @@ class InformationMaintainingThisTrustController @Inject()(
                                                            val controllerComponents: MessagesControllerComponents,
                                                            maintainingTrustView: InformationMaintainingThisTrustView,
                                                            agentCannotAccessTrustYetView: AgentCannotAccessTrustYetView
-                                                         )(implicit ec: ExecutionContext, config: FrontendAppConfig) extends FrontendBaseController with I18nSupport {
+                                                         )(implicit ec: ExecutionContext, config: FrontendAppConfig)
+  extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>

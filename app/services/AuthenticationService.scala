@@ -78,6 +78,7 @@ class AuthenticationServiceImpl @Inject()(
           Logger.info(s"[PlaybackAuthentication] user is not enrolled and the trust is not claimed")
           Future.successful(Left(Redirect(config.claimATrustUrl(utr))))
         case _ =>
+          Logger.warn(s"[PlaybackAuthentication] unable to determine if the trust is already claimed")
           Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
       }
     }
@@ -103,6 +104,7 @@ class AuthenticationServiceImpl @Inject()(
           Left(Redirect(routes.AgentNotAuthorisedController.onPageLoad()))
         }
       case _ =>
+        Logger.warn(s"[PlaybackAuthentication] unable to determine if the trust has been claimed")
         Left(InternalServerError(errorHandler.internalServerErrorTemplate))
     }
 
