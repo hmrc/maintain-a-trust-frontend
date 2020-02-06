@@ -49,13 +49,15 @@
 
     <logger name="application" level="DEBUG"/>
 
-    <logger name="org.asynchttpclient.netty" level="INFO"/>
-    <logger name="io.netty.buffer" level="INFO"/>
-    <logger name="play.core.netty" level="INFO"/>
+    <logger name="org.asynchttpclient.netty" level="OFF"/>
+    <logger name="io.netty.buffer" level="OFF"/>
+    <logger name="play.core.netty" level="OFF"/>
 
     <logger name="uk.gov" level="INFO"/>
 
-    <logger name="reactivemongo.core" level="INFO"/>
+    <logger name="reactivemongo.core" level="OFF"/>
+    <logger name="reactivemongo.api" level="OFF"/>
+
     <logger name="akka" level="INFO"/>
     <logger name="play" level="INFO"/>
     <logger name="org.jose4j" level="INFO"/>
@@ -63,15 +65,18 @@
 
     <logger name="javax.management" level="INFO"/>
 
-    <logger name="org.eclipse.jetty" level="INFO"/>
+    <logger name="play.api.mvc.LegacySessionCookieBaker" level="OFF"/>
+    <logger name="uk.gov.hmrc.play.bootstrap.audit.DefaultAuditConnector" level="OFF"/>
 
-    <logger name="org.apache.http" level="INFO"/>
+    <logger name="org.eclipse.jetty" level="OFF"/>
 
-    <logger name="org.jboss" level="INFO"/>
+    <logger name="org.apache.http" level="OFF"/>
+
+    <logger name="org.jboss" level="OFF"/>
     <logger name="io.netty" level="INFO"/>
     <logger name="sun.net.www.protocol.http" level="INFO"/>
 
-    <logger name="connector" level="TRACE">
+    <logger name="connector" level="DEBUG">
         <appender-ref ref="STDOUT"/>
     </logger>
 
