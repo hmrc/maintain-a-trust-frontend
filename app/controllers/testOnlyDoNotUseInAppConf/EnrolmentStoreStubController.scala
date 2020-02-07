@@ -29,13 +29,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TestUserConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
-  private val insertDataUrl: String = s"${config.enrolmentStoreProxyUrl}/enrolment-store-stub/data"
+  private val dataUrl: String = s"${config.enrolmentStoreProxyUrl}/enrolment-store-stub/data"
 
   def insert(user: JsValue)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     val headers = Seq(
       ("content-type", "application/json")
     )
-    http.POST[JsValue, HttpResponse](insertDataUrl, user, headers)
+    http.POST[JsValue, HttpResponse](dataUrl, user, headers)
+  }
+
+  def delete()(implicit hc: HeaderCarrier, ec: ExecutionContext) : Future[HttpResponse] = {
+    http.DELETE[HttpResponse](dataUrl)
   }
 }
 
@@ -48,6 +52,12 @@ class EnrolmentStoreStubController @Inject()(
     implicit request =>
       Logger.info(s"[EnrolmentStoreStubController] inserting test user: ${request.body}")
       connector.insert(request.body).map(_ => Ok)
+  }
+
+  def flush = Action.async {
+    implicit request =>
+    Logger.info(s"[EnrolmentStoreStubController] flushing test users from enrolment-store")
+    connector.delete().map(_ => Ok)
   }
 
 }
