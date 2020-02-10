@@ -22,17 +22,11 @@ readerHint: Option[String] = None,
 link: Option[Link] = None
 )(implicit messages: Messages)
 
+
 @if(hint.nonEmpty) {
-  <span id="form-hint" class="form-hint form-field" @if(readerHint.nonEmpty){aria-hidden="true"}>@hint
+<span id="form-hint" class="form-hint form-field" @if(readerHint.nonEmpty){aria-label="@readerHint"}>@hint
   @link.map { l =>
     <a id="link" href="@l.url" target="_blank">@l.text</a>
   }
   </span>
-  @if(readerHint.nonEmpty){
-    <span class="visuallyhidden" aria-hidden="false">@readerHint
-    @link.map { l =>
-      <a id="hidden-link" href="@l.url" target="_blank">@l.text</a>
-    }
-    </span>
-  }
 }
