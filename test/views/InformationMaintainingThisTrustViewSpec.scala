@@ -39,14 +39,14 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
     behave like normalPage(applyView, "informationMaintainingThisTrust",
       "warning",
-      "h3",
+      "keepTrustUpdated",
       "paragraph1",
       "list1",
       "list2",
       "printsave.link",
       "list3",
       "list4",
-      "h2",
+      "changesToTrust",
       "paragraph2",
       "paragraph3"
     )
