@@ -57,7 +57,8 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   lazy val trustsUrl: String = configuration.get[Service]("microservice.services.trusts").baseUrl
   lazy val trustsStoreUrl: String = configuration.get[Service]("microservice.services.trusts-store").baseUrl + "/trusts-store"
-  lazy val agentOverviewUrl: String = ""
+
+  lazy val agentOverviewUrl: String = configuration.get[String]("urls.agentOverview")
 
   lazy val relationshipName: String =
     configuration.get[String]("microservice.services.self.relationship-establishment.name")
