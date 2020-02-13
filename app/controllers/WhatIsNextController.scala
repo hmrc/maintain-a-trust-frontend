@@ -19,12 +19,13 @@ package controllers
 import controllers.actions.AuthenticateForPlayback
 import forms.WhatIsNextFormProvider
 import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
 import models.Enumerable
 import models.pages.WhatIsNext
 import pages.WhatIsNextPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
@@ -39,7 +40,8 @@ class WhatIsNextController @Inject()(
                                       actions: AuthenticateForPlayback,
                                       formProvider: WhatIsNextFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
-                                      view: WhatIsNextView
+                                      view: WhatIsNextView,
+                                      config: FrontendAppConfig
                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
 
   val form = formProvider()
@@ -75,6 +77,8 @@ class WhatIsNextController @Inject()(
                 case _ =>
                   Redirect(controllers.declaration.routes.IndividualDeclarationController.onPageLoad())
               }
+            case WhatIsNext.MakeChanges if (config.maintainTrusteeEnabled) =>
+              Redirect(Call("GET", config.maintainATrusteeFrontendUrl))
             case _ =>
               Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
           }
