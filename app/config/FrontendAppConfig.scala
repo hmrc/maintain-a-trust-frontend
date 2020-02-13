@@ -81,4 +81,8 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
     (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
 
   lazy val playbackEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.playback.enabled")
+  lazy val maintainTrusteeEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-trustee.enabled")
+
+  lazy val maintainATrusteeFrontendUrl : String =
+    configuration.get[String]("urls.maintainATrustee")
 }
