@@ -14,8 +14,11 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
+
 @this(
-    main_template: MainTemplate
+    main_template: MainTemplate,
+    appConfig: FrontendAppConfig
 )
 
 @(utr: String)(implicit request: Request[_], messages: Messages)
@@ -42,7 +45,7 @@
             <p>@messages("trustNotClaimed.bullet.2.p1")</p>
             <p>@messages("trustNotClaimed.bullet.2.p2")</p>
             <p>@messages("trustNotClaimed.bullet.2.p3") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("trustNotClaimed.bullet.2.p3.a")</a></p>
-            <p>@messages("trustNotClaimed.bullet.2.p4") <a href="@controllers.routes.IndexController.onPageLoad()">@messages("trustNotClaimed.bullet.2.p4.a")</a></p>
+            <p>@messages("trustNotClaimed.bullet.2.p4") <a href="@{appConfig.agentOverviewUrl}">@messages("trustNotClaimed.bullet.2.p4.a")</a></p>
         </li>
     </ol>
 

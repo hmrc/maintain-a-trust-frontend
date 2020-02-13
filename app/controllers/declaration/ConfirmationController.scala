@@ -17,6 +17,7 @@
 package controllers.declaration
 
 import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
 import pages.TVNPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -32,7 +33,8 @@ class ConfirmationController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         actions: AuthenticateForPlayback,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: ConfirmationView
+                                        view: ConfirmationView,
+                                        config: FrontendAppConfig
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
@@ -40,10 +42,9 @@ class ConfirmationController @Inject()(
     implicit request =>
 
       val isAgent = request.user.affinityGroup == Agent
-      //      val agentOverviewUrl = controllers.register.agents.routes.AgentOverviewController.onPageLoad().url
 
       val tvn = request.userAnswers.get(TVNPage).getOrElse("")
 
-      Ok(view(tvn, isAgent, agentOverviewUrl = "#"))
+      Ok(view(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl))
   }
 }
