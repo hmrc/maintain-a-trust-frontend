@@ -16,13 +16,12 @@
 
 package services
 
-import controllers.actions.TrustsAuthorisedFunctions
 import com.google.inject.Inject
+import controllers.actions.TrustsAuthorisedFunctions
 import models.requests.DataRequest
 import play.api.Logger
 import play.api.mvc.Result
-import play.api.mvc.Results._
-import uk.gov.hmrc.auth.core.{BusinessKey, Enrolment, FailedRelationship, InsufficientEnrolments, Relationship}
+import uk.gov.hmrc.auth.core.{BusinessKey, FailedRelationship, Relationship}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -47,30 +46,3 @@ class TrustsIV @Inject()(trustsAuth: TrustsAuthorisedFunctions) {
   }
 
 }
-
-class AgentAuthorisedForDelegatedEnrolment @Inject()(trustsAuth: TrustsAuthorisedFunctions) {
-
-  def authenticate[A](utr: String)
-                     (implicit hc: HeaderCarrier,
-                      ec: ExecutionContext,
-                      request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
-
-    val predicate = Enrolment("HMRC-TERS-ORG")
-        .withIdentifier("SAUTR", utr)
-        .withDelegatedAuthRule("trust-auth")
-
-    trustsAuth.authorised(predicate) {
-      Logger.info(s"[AgentAuthorisedForDelegatedEnrolment] agent is authorised for delegated enrolment")
-      Future.successful(Right(request))
-    } recover {
-      case _ : InsufficientEnrolments =>
-        Logger.info(s"[AgentAuthorisedForDelegatedEnrolment] agent is not authorised for delegated enrolment")
-        Left(Redirect(controllers.routes.AgentNotAuthorisedController.onPageLoad()))
-      case _ =>
-        Logger.info(s"[AgentAuthorisedForDelegatedEnrolment] agent is not authorised")
-        Left(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
-    }
-  }
-
-}
-
