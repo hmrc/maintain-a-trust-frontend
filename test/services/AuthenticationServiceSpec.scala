@@ -74,6 +74,15 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
           when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
             .thenReturn(authRetrievals(AffinityGroup.Agent, enrolments))
 
+          val predicatedMatcher = mEq(
+            Enrolment("HMRC-TERS-ORG")
+              .withIdentifier("SAUTR", utr)
+              .withDelegatedAuthRule("trust-auth")
+          )
+
+          when(mockAuthConnector.authorise(predicatedMatcher, mEq(EmptyRetrieval))(any(), any()))
+              .thenReturn(Future.successful(()))
+
           when(mockEnrolmentStoreConnector.checkIfAlreadyClaimed(mEq(utr))(any(), any()))
             .thenReturn(Future.successful(AlreadyClaimed))
 
@@ -125,6 +134,15 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
           when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
             .thenReturn(authRetrievals(AffinityGroup.Agent, enrolments))
 
+          val predicatedMatcher = mEq(
+            Enrolment("HMRC-TERS-ORG")
+              .withIdentifier("SAUTR", utr)
+              .withDelegatedAuthRule("trust-auth")
+          )
+
+          when(mockAuthConnector.authorise(predicatedMatcher, mEq(EmptyRetrieval))(any(), any()))
+            .thenReturn(Future.failed(InsufficientEnrolments()))
+
           when(mockEnrolmentStoreConnector.checkIfAlreadyClaimed(mEq(utr))(any(), any()))
             .thenReturn(Future.successful(AlreadyClaimed))
 
@@ -156,6 +174,16 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
 
           when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
             .thenReturn(authRetrievals(AffinityGroup.Agent, enrolments))
+
+          val predicatedMatcher = mEq(
+            Enrolment("HMRC-TERS-ORG")
+              .withIdentifier("SAUTR", utr)
+              .withDelegatedAuthRule("trust-auth")
+          )
+
+          when(mockAuthConnector.authorise(predicatedMatcher, mEq(EmptyRetrieval))(any(), any()))
+            .thenReturn(Future.failed(InsufficientEnrolments()))
+
 
           when(mockEnrolmentStoreConnector.checkIfAlreadyClaimed(mEq(utr))(any(), any()))
             .thenReturn(Future.successful(AlreadyClaimed))
