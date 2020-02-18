@@ -63,7 +63,7 @@ class AgentAuthorisedForDelegatedEnrolment @Inject()(trustsAuth: TrustsAuthorise
       Logger.info(s"[AgentAuthorisedForDelegatedEnrolment] agent is authorised for delegated enrolment")
       Future.successful(Right(request))
     } recover {
-      case InsufficientEnrolments(msg) =>
+      case _ : InsufficientEnrolments =>
         Logger.info(s"[AgentAuthorisedForDelegatedEnrolment] agent is not authorised for delegated enrolment")
         Left(Redirect(controllers.routes.AgentNotAuthorisedController.onPageLoad()))
       case _ =>
