@@ -16,8 +16,8 @@
 
 package services
 
-import controllers.actions.TrustsAuthorisedFunctions
 import com.google.inject.Inject
+import controllers.actions.TrustsAuthorisedFunctions
 import models.requests.DataRequest
 import play.api.Logger
 import play.api.mvc.Result

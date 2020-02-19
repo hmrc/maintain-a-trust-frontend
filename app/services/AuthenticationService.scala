@@ -16,11 +16,10 @@
 
 package services
 
+import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.EnrolmentStoreConnector
-import controllers.routes
 import handlers.ErrorHandler
-import com.google.inject.Inject
 import models.requests.DataRequest
 import models.requests.EnrolmentStoreResponse.{AlreadyClaimed, NotClaimed}
 import play.api.Logger
@@ -36,6 +35,7 @@ class AuthenticationServiceImpl @Inject()(
                                        config: FrontendAppConfig,
                                        errorHandler: ErrorHandler,
                                        trustsIV: TrustsIV,
+                                       delegatedEnrolment: AgentAuthorisedForDelegatedEnrolment,
                                        implicit val ec: ExecutionContext
                                      ) extends AuthenticationService {
 
@@ -74,9 +74,11 @@ class AuthenticationServiceImpl @Inject()(
         case AlreadyClaimed =>
           Logger.info(s"[PlaybackAuthentication] user is not enrolled but the trust is already claimed")
           Future.successful(Left(Redirect(controllers.routes.TrustStatusController.alreadyClaimed())))
+
         case NotClaimed =>
           Logger.info(s"[PlaybackAuthentication] user is not enrolled and the trust is not claimed")
           Future.successful(Left(Redirect(config.claimATrustUrl(utr))))
+
         case _ =>
           Logger.warn(s"[PlaybackAuthentication] unable to determine if the trust is already claimed")
           Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
@@ -88,24 +90,17 @@ class AuthenticationServiceImpl @Inject()(
                                        (implicit request: DataRequest[A],
                                         hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] =
 
-    enrolmentStoreConnector.checkIfAlreadyClaimed(utr) map {
+    enrolmentStoreConnector.checkIfAlreadyClaimed(utr) flatMap {
       case NotClaimed =>
         Logger.info(s"[PlaybackAuthentication] trust is not claimed")
-        Left(Redirect(controllers.routes.TrustNotClaimedController.onPageLoad()))
+        Future.successful(Left(Redirect(controllers.routes.TrustNotClaimedController.onPageLoad())))
+
       case AlreadyClaimed =>
+        delegatedEnrolment.authenticate(utr)
 
-        val agentEnrolled = checkForTrustEnrolmentForUTR(utr)
-
-        if (agentEnrolled) {
-          Logger.info(s"[PlaybackAuthentication] agent is authorised")
-          Right(request)
-        } else {
-          Logger.info(s"[PlaybackAuthentication] agent is not authorised")
-          Left(Redirect(routes.AgentNotAuthorisedController.onPageLoad()))
-        }
       case _ =>
         Logger.warn(s"[PlaybackAuthentication] unable to determine if the trust has been claimed")
-        Left(InternalServerError(errorHandler.internalServerErrorTemplate))
+        Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
     }
 
   private def checkForTrustEnrolmentForUTR[A](utr: String)(implicit request: DataRequest[A]): Boolean =
