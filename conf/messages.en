@@ -296,7 +296,7 @@ utr.error.length = Unique Taxpayer Reference must be a 10 digit number
 declarationWhatNext.title = What do you want to do next?
 declarationWhatNext.heading = What do you want to do next?
 declarationWhatNext.declare = Declare the trust is up to date
-declarationWhatNext.makeChanges = Make changes to the trust and declare
+declarationWhatNext.makeChanges = Make changes to the trustees and declare
 declarationWhatNext.closeTrust = Close the trust
 declarationWhatNext.error.required = Select what you want to do next
 
