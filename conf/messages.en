@@ -186,6 +186,7 @@ site.no = No
 site.confirm-send = Confirm and send
 site.try-again = Try again
 site.sign_out = Sign out
+site.warning = Warning
 
 site.address.uk.title = What is the address?
 site.address.uk.heading = What is {0}’s address?
