@@ -22,7 +22,8 @@ import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import models.Enumerable
 import models.pages.WhatIsNext
-import pages.WhatIsNextPage
+import models.requests.DataRequest
+import pages.{UTRPage, WhatIsNextPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
@@ -55,7 +56,6 @@ class WhatIsNextController @Inject()(
       }
 
       Ok(view(preparedForm))
-
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
@@ -71,18 +71,34 @@ class WhatIsNextController @Inject()(
             _ <- playbackRepository.set(updatedAnswers)
           } yield value match {
             case WhatIsNext.DeclareTheTrustIsUpToDate =>
-              request.user.affinityGroup match {
-                case Agent =>
-                  Redirect(controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad())
-                case _ =>
-                  Redirect(controllers.declaration.routes.IndividualDeclarationController.onPageLoad())
-              }
+              redirectToDeclaration()
+
             case WhatIsNext.MakeChanges if (config.maintainTrusteeEnabled) =>
-              Redirect(Call("GET", config.maintainATrusteeFrontendUrl))
+              redirectToMaintainTrustees()
+
             case _ =>
               Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
           }
         }
       )
+  }
+
+  private def redirectToMaintainTrustees()(implicit request: DataRequest[AnyContent]) = {
+    request.userAnswers.get(UTRPage) map {
+      utr =>
+        val url = s"${config.maintainATrusteeFrontendUrl}/$utr"
+        Redirect(Call("GET", url))
+    } getOrElse {
+      Redirect(routes.UTRController.onPageLoad())
+    }
+  }
+
+  private def redirectToDeclaration()(implicit request: DataRequest[AnyContent]) = {
+    request.user.affinityGroup match {
+      case Agent =>
+        Redirect(controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad())
+      case _ =>
+        Redirect(controllers.declaration.routes.IndividualDeclarationController.onPageLoad())
+    }
   }
 }
