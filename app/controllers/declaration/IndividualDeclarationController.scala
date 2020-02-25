@@ -75,7 +75,7 @@ class IndividualDeclarationController @Inject()(
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
-              (getLeadTrusteeAddress(request.userAnswers).orElse(getCorrespondenceAddress(request.userAnswers)) map { address =>
+              (getLeadTrusteeAddress(request.userAnswers).orElse(request.userAnswers.get(CorrespondenceAddressPage)) map { address =>
                 service.individualDeclareNoChange(utr, declaration, address) flatMap {
                   case TVNResponse(tvn) =>
                     for {
@@ -100,14 +100,6 @@ class IndividualDeclarationController @Inject()(
     for {
       index <- getIndexOfLeadTrustee(userAnswers)
       address <- userAnswers.get(TrusteeAddressPage(index))
-    } yield {
-      address
-    }
-  }
-
-  private def getCorrespondenceAddress(userAnswers: UserAnswers) = {
-    for {
-      address <- userAnswers.get(CorrespondenceAddressPage)
     } yield {
       address
     }
