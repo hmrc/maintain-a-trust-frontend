@@ -23,9 +23,11 @@ import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
 import models.UserAnswers
 import models.http.TVNResponse
+import pages.correspondence.CorrespondenceAddressPage
 import pages.declaration.IndividualDeclarationPage
 import pages.trustees.TrusteeAddressPage
 import pages.{SubmissionDatePage, TVNPage, UTRPage}
+import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -73,7 +75,7 @@ class IndividualDeclarationController @Inject()(
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
-              (getLeadTrusteeAddress(request.userAnswers) map { address =>
+              (getLeadTrusteeAddress(request.userAnswers).orElse(getCorrespondenceAddress(request.userAnswers)) map { address =>
                 service.individualDeclareNoChange(utr, declaration, address) flatMap {
                   case TVNResponse(tvn) =>
                     for {
@@ -98,6 +100,14 @@ class IndividualDeclarationController @Inject()(
     for {
       index <- getIndexOfLeadTrustee(userAnswers)
       address <- userAnswers.get(TrusteeAddressPage(index))
+    } yield {
+      address
+    }
+  }
+
+  private def getCorrespondenceAddress(userAnswers: UserAnswers) = {
+    for {
+      address <- userAnswers.get(CorrespondenceAddressPage)
     } yield {
       address
     }
