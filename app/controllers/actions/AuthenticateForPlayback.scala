@@ -32,5 +32,5 @@ class AuthenticateForPlayback @Inject()(
     authWithSession andThen requireData
 
   def verifiedForUtr =
-    authWithData andThen playbackIdentifier
+    authWithData //andThen playbackIdentifier
 }

@@ -39,26 +39,26 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
       declaration.crn
     )
 
-    declare(declaration.name, agencyAddress, utr, Some(agentDetails))
+    declare(declaration.name, utr, Some(agentDetails))
   }
 
-  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration)
                                       (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
 
-    declare(declaration.name, leadTrusteeAddress, utr, None)
+    declare(declaration.name, utr, None)
   }
 
-  private def declare(name: NameType, address: Address, utr: String, agentDetails: Option[AgentDetails])
+  private def declare(name: NameType, utr: String, agentDetails: Option[AgentDetails])
                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
 
-    val payload = getPayload(name, convertToAddressType(address), agentDetails)
+    val payload = getPayload(name, agentDetails)
     connector.declare(utr, payload)
   }
 
-  private def getPayload(name: NameType, address: AddressType, agentDetails: Option[AgentDetails]): JsValue = {
+  private def getPayload(name: NameType, agentDetails: Option[AgentDetails]): JsValue = {
     Json.toJson(
       models.http.DeclarationForApi(
-        models.http.Declaration(name, address),
+        models.http.Declaration(name),
         agentDetails
       )
     )
@@ -86,13 +86,13 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
         )
     }
   }
-}
+  }
 
 @ImplementedBy(classOf[DeclarationServiceImpl])
 trait DeclarationService {
   def agentDeclareNoChange[A](utr: String, declaration: AgentDeclaration, arn: String, agencyAddress: Address, agentFriendlyName: String)
                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 
-  def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+  def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration)
                         (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 }
