@@ -19,8 +19,9 @@ package services
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
 import mapping.AgentDetails
-import models.http.{AddressType, DeclarationResponse, NameType}
-import models.{Address, AgentDeclaration, IndividualDeclaration, InternationalAddress, UKAddress}
+import mapping.PlaybackImplicits._
+import models.http.{DeclarationResponse, NameType}
+import models.{Address, AgentDeclaration, IndividualDeclaration}
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -34,7 +35,7 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
     val agentDetails = AgentDetails(
       arn,
       agentFriendlyName,
-      convertToAddressType(agencyAddress),
+      agencyAddress.convert,
       declaration.telephoneNumber,
       declaration.crn
     )
@@ -63,30 +64,7 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
       )
     )
   }
-
-  private def convertToAddressType(address: Address): AddressType = {
-    address match {
-      case UKAddress(line1, line2, line3, line4, postcode) =>
-        AddressType(
-          line1,
-          line2,
-          line3,
-          line4,
-          postCode = Some(postcode),
-          country = "GB"
-        )
-      case InternationalAddress(line1, line2, line3, country) =>
-        AddressType(
-          line1,
-          line2,
-          line3,
-          line4 = None,
-          postCode = None,
-          country = country
-        )
-    }
-  }
-  }
+}
 
 @ImplementedBy(classOf[DeclarationServiceImpl])
 trait DeclarationService {
