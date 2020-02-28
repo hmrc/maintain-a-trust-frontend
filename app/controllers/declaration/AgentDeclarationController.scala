@@ -61,7 +61,7 @@ class AgentDeclarationController @Inject()(
       Ok(view(preparedForm, controllers.declaration.routes.AgentDeclarationController.onSubmit()))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.refreshedData.async {
     implicit request =>
 
       form.bindFromRequest().fold(

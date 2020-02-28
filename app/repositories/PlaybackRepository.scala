@@ -25,6 +25,7 @@ import models.UserAnswers
 import play.api.Configuration
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoApi
+import reactivemongo.api.WriteConcern
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.BSONDocument
 import reactivemongo.play.json.ImplicitBSONHandlers.JsObjectDocumentWriter
@@ -99,6 +100,16 @@ class PlaybackRepository @Inject()(
         result => result.ok
       }
     }
+  }
+
+  def resetCache(internalId: String): Future[Option[JsObject]] = {
+      val selector = Json.obj(
+        "internalId" -> internalId
+      )
+
+      collection.flatMap(_.findAndRemove(selector, None, None, WriteConcern.Default, None, None, Seq.empty).map(
+        _.value
+      ))
   }
 }
 
