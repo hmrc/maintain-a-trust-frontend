@@ -39,7 +39,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   private def playbackUrl(utr: String) : String = s"/trusts/$utr"
-  private def declareUrl(utr: String) : String = s"/trusts/no-change/$utr"
+  private def declareUrl(utr: String) : String = s"/trusts/declare/$utr"
 
   "TrustConnector" - {
 
