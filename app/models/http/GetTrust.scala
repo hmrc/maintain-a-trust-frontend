@@ -50,8 +50,7 @@ object Correspondence {
 
 }
 
-case class Declaration(name: NameType,
-                       address: AddressType)
+case class Declaration(name: NameType)
 
 object Declaration {
   implicit val declarationFormat: Format[Declaration] = Json.format[Declaration]

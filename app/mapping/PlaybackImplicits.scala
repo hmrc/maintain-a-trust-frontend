@@ -42,6 +42,29 @@ object PlaybackImplicits {
       )
   }
 
+  private def convertAddress(address: Address) : AddressType = {
+    address match {
+      case UKAddress(line1, line2, line3, line4, postcode) =>
+        AddressType(
+          line1,
+          line2,
+          line3,
+          line4,
+          postCode = Some(postcode),
+          country = "GB"
+        )
+      case InternationalAddress(line1, line2, line3, country) =>
+        AddressType(
+          line1,
+          line2,
+          line3,
+          line4 = None,
+          postCode = None,
+          country = country
+        )
+    }
+  }
+
   implicit class FullNameConverter(name: NameType) {
     def convert : FullName = FullName(name.firstName, name.middleName, name.lastName)
   }
@@ -61,6 +84,10 @@ object PlaybackImplicits {
 
   implicit class AddressConverter(address : AddressType) {
     def convert : Address = convertAddress(address)
+  }
+
+  implicit class UkOrNonUkAddressConverter(address: Address) {
+    def convert : AddressType = convertAddress(address)
   }
 
 }

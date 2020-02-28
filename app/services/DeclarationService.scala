@@ -19,8 +19,9 @@ package services
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
 import mapping.AgentDetails
-import models.http.{AddressType, DeclarationResponse, NameType}
-import models.{Address, AgentDeclaration, IndividualDeclaration, InternationalAddress, UKAddress}
+import mapping.PlaybackImplicits._
+import models.http.{DeclarationResponse, NameType}
+import models.{Address, AgentDeclaration, IndividualDeclaration}
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -34,57 +35,34 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
     val agentDetails = AgentDetails(
       arn,
       agentFriendlyName,
-      convertToAddressType(agencyAddress),
+      agencyAddress.convert,
       declaration.telephoneNumber,
       declaration.crn
     )
 
-    declare(declaration.name, agencyAddress, utr, Some(agentDetails))
+    declare(declaration.name, utr, Some(agentDetails))
   }
 
-  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration)
                                       (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
 
-    declare(declaration.name, leadTrusteeAddress, utr, None)
+    declare(declaration.name, utr, None)
   }
 
-  private def declare(name: NameType, address: Address, utr: String, agentDetails: Option[AgentDetails])
+  private def declare(name: NameType, utr: String, agentDetails: Option[AgentDetails])
                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
 
-    val payload = getPayload(name, convertToAddressType(address), agentDetails)
+    val payload = getPayload(name, agentDetails)
     connector.declare(utr, payload)
   }
 
-  private def getPayload(name: NameType, address: AddressType, agentDetails: Option[AgentDetails]): JsValue = {
+  private def getPayload(name: NameType, agentDetails: Option[AgentDetails]): JsValue = {
     Json.toJson(
       models.http.DeclarationForApi(
-        models.http.Declaration(name, address),
+        models.http.Declaration(name),
         agentDetails
       )
     )
-  }
-
-  private def convertToAddressType(address: Address): AddressType = {
-    address match {
-      case UKAddress(line1, line2, line3, line4, postcode) =>
-        AddressType(
-          line1,
-          line2,
-          line3,
-          line4,
-          postCode = Some(postcode),
-          country = "GB"
-        )
-      case InternationalAddress(line1, line2, line3, country) =>
-        AddressType(
-          line1,
-          line2,
-          line3,
-          line4 = None,
-          postCode = None,
-          country = country
-        )
-    }
   }
 }
 
@@ -93,6 +71,6 @@ trait DeclarationService {
   def agentDeclareNoChange[A](utr: String, declaration: AgentDeclaration, arn: String, agencyAddress: Address, agentFriendlyName: String)
                      (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 
-  def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+  def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration)
                         (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 }
