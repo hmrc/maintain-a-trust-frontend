@@ -93,7 +93,9 @@ class AddOtherIndividualsYesNoController @Inject()(
           redirectToMaintainTrustees()
         case UpdateFilterQuestions(false, false, false, false, false) =>
           redirectToDeclaration()
-        case _ => ???
+        case _ =>
+          // TODO: Redirect to an unavailable sections page. Waiting on design.
+          Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
       }
     }).getOrElse(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
   }
