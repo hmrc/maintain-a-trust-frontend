@@ -50,23 +50,26 @@ class WhatIsNextViewSpec extends ViewBehaviours {
         val doc = asDocument(applyView(form))
 
         for (option <- WhatIsNext.options) {
-          assertContainsRadioButton(doc, option.id, "value", option.value, false)
+          assertContainsRadioButton(doc, option._1.id, "value", option._1.value, false)
+          assertRadioButtonContainsHint(doc, option._1.id + ".hint", messages(option._2))
         }
       }
     }
 
     for (option <- WhatIsNext.options) {
 
-      s"rendered with a value of '${option.value}'" must {
+      s"rendered with a value of '${option._1.value}'" must {
 
-        s"have the '${option.value}' radio button selected" in {
+        s"have the '${option._1.value}' radio button selected" in {
 
-          val doc = asDocument(applyView(form.bind(Map("value" -> s"${option.value}"))))
+          val doc = asDocument(applyView(form.bind(Map("value" -> s"${option._1.value}"))))
 
-          assertContainsRadioButton(doc, option.id, "value", option.value, true)
+          assertContainsRadioButton(doc, option._1.id, "value", option._1.value, true)
+          assertRadioButtonContainsHint(doc, option._1.id + ".hint", messages(option._2))
 
           for (unselectedOption <- WhatIsNext.options.filterNot(o => o == option)) {
-            assertContainsRadioButton(doc, unselectedOption.id, "value", unselectedOption.value, false)
+            assertContainsRadioButton(doc, unselectedOption._1.id, "value", unselectedOption._1.value, false)
+            assertRadioButtonContainsHint(doc, unselectedOption._1.id + ".hint", messages(unselectedOption._2))
           }
         }
       }
