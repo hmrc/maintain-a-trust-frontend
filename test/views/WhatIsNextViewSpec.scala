@@ -16,6 +16,7 @@
 
 package views
 
+import controllers.routes
 import forms.WhatIsNextFormProvider
 import models.pages.WhatIsNext
 import play.api.data.Form
@@ -39,6 +40,8 @@ class WhatIsNextViewSpec extends ViewBehaviours {
     behave like normalPage(applyView(form), messageKeyPrefix)
 
     behave like pageWithBackLink(applyView(form))
+
+    behave like pageWithASubmitButton(applyView(form))
   }
 
   "WhatIsNextView" when {
