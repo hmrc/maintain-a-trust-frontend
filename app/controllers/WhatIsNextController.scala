@@ -74,7 +74,7 @@ class WhatIsNextController @Inject()(
               redirectToDeclaration()
 
             case WhatIsNext.MakeChanges if (config.maintainTrusteeEnabled) =>
-              redirectToMaintainTrustees()
+              Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
 
             case _ =>
               Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())

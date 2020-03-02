@@ -58,3 +58,9 @@ GET        /feature-not-available                       controllers.FeatureNotAv
 GET        /last-declaration                            controllers.PlaybackAnswersController.onPageLoad()
 
 GET        /declared-updates                            controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad()
+
+GET        /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad()
+POST       /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onSubmit()
+
+GET        /update-beneficiaries                        controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad()
+POST       /update-beneficiaries                        controllers.makechanges.UpdateTrusteesYesNoController.onSubmit()
