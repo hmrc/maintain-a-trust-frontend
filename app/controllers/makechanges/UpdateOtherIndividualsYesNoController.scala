@@ -19,32 +19,32 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
-import pages.makechanges.UpdateProtectorsYesNoPage
+import pages.makechanges.UpdateOtherIndividualsYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.makechanges.UpdateProtectorsYesNoView
+import views.html.makechanges.UpdateOtherIndividualsYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UpdateProtectorsYesNoController @Inject()(
+class UpdateOtherIndividualsYesNoController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         playbackRepository: PlaybackRepository,
                                         actions: AuthenticateForPlayback,
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateProtectorsYesNoView
+                                        view: UpdateOtherIndividualsYesNoView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateProtectors")
+  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateOtherIndividuals")
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(UpdateProtectorsYesNoPage) match {
+      val preparedForm = request.userAnswers.get(UpdateOtherIndividualsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -63,11 +63,11 @@ class UpdateProtectorsYesNoController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(
               request.userAnswers
-                .set(UpdateProtectorsYesNoPage, value)
+                .set(UpdateOtherIndividualsYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
-            Redirect(controllers.makechanges.routes.UpdateProtectorsYesNoController.onPageLoad())
+            Redirect(controllers.makechanges.routes.UpdateOtherIndividualsYesNoController.onPageLoad())
           }
         }
       )
