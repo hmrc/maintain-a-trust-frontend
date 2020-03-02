@@ -21,13 +21,13 @@ import config.FrontendAppConfig
 import controllers.actions._
 import forms.YesNoFormProvider
 import models.requests.DataRequest
+import navigation.DeclareNoChange
 import pages.UTRPage
-import pages.makechanges.AddOtherIndividualsYesNoPage
+import pages.makechanges._
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
+import play.api.mvc._
 import repositories.PlaybackRepository
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.makechanges.AddOtherIndividualsYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,7 +41,7 @@ class AddOtherIndividualsYesNoController @Inject()(
                                         val controllerComponents: MessagesControllerComponents,
                                         view: AddOtherIndividualsYesNoView,
                                         config: FrontendAppConfig
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                     )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("addOtherIndividuals")
 
@@ -71,13 +71,34 @@ class AddOtherIndividualsYesNoController @Inject()(
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
-            redirectToMaintainTrustees()
+            redirect()
           }
         }
       )
   }
 
-  private def redirectToMaintainTrustees()(implicit request: DataRequest[AnyContent]) = {
+  private def redirect()(implicit request: DataRequest[AnyContent]): Result = {
+
+    case class UpdateFilterQuestions(trustees: Boolean, beneficiaries: Boolean, settlors: Boolean, protectors: Boolean, natural: Boolean)
+
+    (for {
+      t <- request.userAnswers.get(UpdateTrusteesYesNoPage)
+      b <- request.userAnswers.get(UpdateBeneficiariesYesNoPage)
+      s <- request.userAnswers.get(UpdateSettlorsYesNoPage)
+      p <- request.userAnswers.get(AddProtectorYesNoPage)
+      n <- request.userAnswers.get(AddOtherIndividualsYesNoPage)
+    } yield {
+      UpdateFilterQuestions(t, b, s, p, n) match {
+        case UpdateFilterQuestions(true, false, false, false, false) =>
+          redirectToMaintainTrustees()
+        case UpdateFilterQuestions(false, false, false, false, false) =>
+          redirectToDeclaration()
+        case _ => ???
+      }
+    }).getOrElse(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
+  }
+
+  private def redirectToMaintainTrustees()(implicit request: DataRequest[AnyContent]): Result = {
     request.userAnswers.get(UTRPage) map {
       utr =>
         val url = s"${config.maintainATrusteeFrontendUrl}/$utr"

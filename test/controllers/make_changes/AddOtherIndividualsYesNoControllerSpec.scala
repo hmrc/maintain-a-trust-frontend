@@ -20,8 +20,7 @@ import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
 import pages.UTRPage
-import pages.makechanges.AddOtherIndividualsYesNoPage
-import play.api.mvc.AnyContentAsFormUrlEncoded
+import pages.makechanges.{AddOtherIndividualsYesNoPage, AddProtectorYesNoPage, UpdateBeneficiariesYesNoPage, UpdateSettlorsYesNoPage, UpdateTrusteesYesNoPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.makechanges.AddOtherIndividualsYesNoView
@@ -33,7 +32,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   lazy val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad().url
 
-  "AddProtectorsYesNo Controller" must {
+  "AddOtherIndividualsYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
@@ -73,12 +72,45 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to maintain-trustees when valid data is submitted" in {
+    "redirect to individual declaration when valid data is submitted and no has been selected for all the questions" in {
 
       val utr = "0987654321"
 
       val userAnswers = emptyUserAnswers
         .set(UTRPage, utr).success.value
+        .set(UpdateTrusteesYesNoPage, false).success.value
+        .set(UpdateBeneficiariesYesNoPage, false).success.value
+        .set(UpdateSettlorsYesNoPage, false).success.value
+        .set(AddProtectorYesNoPage, false).success.value
+        .set(AddOtherIndividualsYesNoPage, false).success.value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      val request =
+        FakeRequest(POST, addOtherIndividualsYesNoRoute)
+          .withFormUrlEncodedBody(("value", "true"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to maintain trustees when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
+
+      val utr = "0987654321"
+
+      val userAnswers = emptyUserAnswers
+        .set(UTRPage, utr).success.value
+        .set(UpdateTrusteesYesNoPage, true).success.value
+        .set(UpdateBeneficiariesYesNoPage, false).success.value
+        .set(UpdateSettlorsYesNoPage, false).success.value
+        .set(AddProtectorYesNoPage, false).success.value
+        .set(AddOtherIndividualsYesNoPage, false).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers)).build()

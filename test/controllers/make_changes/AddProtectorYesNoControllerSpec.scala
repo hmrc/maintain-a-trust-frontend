@@ -19,10 +19,10 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import pages.makechanges.{AddProtectorYesNoPage, UpdateSettlorsYesNoPage}
+import pages.makechanges.AddProtectorYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.makechanges.{AddProtectorYesNoView, UpdateSettlorsYesNoView}
+import views.html.makechanges.AddProtectorYesNoView
 
 class AddProtectorYesNoControllerSpec extends SpecBase {
 
@@ -31,7 +31,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
 
   lazy val addProtectorYesNoRoute = routes.AddProtectorYesNoController.onPageLoad().url
 
-  "AddProtectorsYesNo Controller" must {
+  "AddProtectorYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 

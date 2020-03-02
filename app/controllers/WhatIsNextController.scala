@@ -16,20 +16,18 @@
 
 package controllers
 
-import controllers.actions.AuthenticateForPlayback
-import forms.WhatIsNextFormProvider
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
+import controllers.actions.AuthenticateForPlayback
+import forms.WhatIsNextFormProvider
 import models.Enumerable
 import models.pages.WhatIsNext
-import models.requests.DataRequest
-import pages.{UTRPage, WhatIsNextPage}
+import navigation.DeclareNoChange
+import pages.WhatIsNextPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.auth.core.AffinityGroup.Agent
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.WhatIsNextView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -43,7 +41,7 @@ class WhatIsNextController @Inject()(
                                       val controllerComponents: MessagesControllerComponents,
                                       view: WhatIsNextView,
                                       config: FrontendAppConfig
-                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
+                                    )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
 
   val form = formProvider()
 
@@ -73,7 +71,7 @@ class WhatIsNextController @Inject()(
             case WhatIsNext.DeclareTheTrustIsUpToDate =>
               redirectToDeclaration()
 
-            case WhatIsNext.MakeChanges if (config.maintainTrusteeEnabled) =>
+            case WhatIsNext.MakeChanges =>
               Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
 
             case _ =>
@@ -81,14 +79,5 @@ class WhatIsNextController @Inject()(
           }
         }
       )
-  }
-
-  private def redirectToDeclaration()(implicit request: DataRequest[AnyContent]) = {
-    request.user.affinityGroup match {
-      case Agent =>
-        Redirect(controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad())
-      case _ =>
-        Redirect(controllers.declaration.routes.IndividualDeclarationController.onPageLoad())
-    }
   }
 }
