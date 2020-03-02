@@ -132,9 +132,7 @@ class WhatIsNextControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value must include(
-        s"/maintain-a-trust/trustees/$utr"
-      )
+      redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
 
       application.stop()
     }
