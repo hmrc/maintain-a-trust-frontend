@@ -58,7 +58,7 @@ class IndividualDeclarationController @Inject()(
       Ok(view(preparedForm, controllers.declaration.routes.IndividualDeclarationController.onSubmit()))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.refreshedData.async {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(

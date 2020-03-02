@@ -20,6 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
 import pages.TVNPage
+import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -38,13 +39,17 @@ class ConfirmationController @Inject()(
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
-  def onPageLoad() = actions.verifiedForUtr {
+  def onPageLoad() = actions.refreshedData {
     implicit request =>
 
       val isAgent = request.user.affinityGroup == Agent
 
-      val tvn = request.userAnswers.get(TVNPage).getOrElse("")
-
-      Ok(view(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl))
+      request.userAnswers.get(TVNPage).fold {
+        Logger.error(s"[ConfirmationController] no TVN in user answers, cannot render confirmation")
+        Redirect(controllers.routes.TrustStatusController.sorryThereHasBeenAProblem())
+      }{
+        tvn =>
+          Ok(view(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl))
+      }
   }
 }
