@@ -64,3 +64,6 @@ POST       /update-trustees                             controllers.makechanges.
 
 GET        /update-beneficiaries                        controllers.makechanges.UpdateBeneficiariesYesNoController.onPageLoad()
 POST       /update-beneficiaries                        controllers.makechanges.UpdateBeneficiariesYesNoController.onSubmit()
+
+GET        /update-settlors                             controllers.makechanges.UpdateSettlorsYesNoController.onPageLoad()
+POST       /update-settlors                             controllers.makechanges.UpdateSettlorsYesNoController.onSubmit()

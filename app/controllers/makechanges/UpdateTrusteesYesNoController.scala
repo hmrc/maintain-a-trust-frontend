@@ -19,7 +19,6 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
-import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import pages.makechanges.UpdateTrusteesYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}

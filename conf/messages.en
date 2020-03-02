@@ -294,6 +294,10 @@ updateBeneficiaries.title = Do you need to update details for the beneficiaries?
 updateBeneficiaries.heading = Do you need to update details for the beneficiaries?
 updateBeneficiaries.error.required = Select yes if you need to update details for the beneficiaries
 
+updateSettlors.title = Do you need to update details for the settlors?
+updateSettlors.heading = Do you need to update details for the settlors?
+updateSettlors.error.required = Select yes if you need to update details for the settlors
+
 utr.title = What is the trust’s Unique Taxpayer Reference?
 utr.heading = What is the trust’s Unique Taxpayer Reference?
 utr.hint = This is 10 numbers, for example 1234567890. It will be on the trust’s Self Assessment notice to file (SA316). It may be called ‘reference’, ‘UTR’ or ‘official use’.
