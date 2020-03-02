@@ -67,7 +67,7 @@ class UpdateSettlorsYesNoController @Inject()(
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
-            Redirect(controllers.makechanges.routes.UpdateSettlorsYesNoController.onPageLoad())
+            Redirect(controllers.makechanges.routes.UpdateProtectorsYesNoController.onPageLoad())
           }
         }
       )
