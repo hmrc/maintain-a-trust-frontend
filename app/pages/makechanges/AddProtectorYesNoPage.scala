@@ -22,7 +22,7 @@ import sections.Protectors
 
 object AddProtectorYesNoPage extends QuestionPage[Boolean] {
 
-  override def path: JsPath = Protectors.path \ toString
+  override def path: JsPath = JsPath \ toString
 
   override def toString: String = "addProtectorYesNo"
 }

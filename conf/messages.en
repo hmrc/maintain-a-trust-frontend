@@ -303,7 +303,7 @@ addProtector.heading = Do you need to add a protector?
 addProtector.error.required = Select yes if you need to add a protector
 
 addOtherIndividuals.title = Do you need to add any other individuals associated with the trust?
-addOtherIndividuals.heading = Do you need to add other individuals associated with the trust?
+addOtherIndividuals.heading = Do you need to add any other individuals associated with the trust?
 addOtherIndividuals.error.required = Select yes if you need to add any other individuals associated with the trust
 
 utr.title = What is the trust’s Unique Taxpayer Reference?

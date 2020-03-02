@@ -22,7 +22,7 @@ import sections.natural.Individual
 
 object AddOtherIndividualsYesNoPage extends QuestionPage[Boolean] {
 
-  override def path: JsPath = Individual.path \ toString
+  override def path: JsPath = JsPath \ toString
 
   override def toString: String = "addOtherIndividualsYesNo"
 }
