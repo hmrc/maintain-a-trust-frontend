@@ -19,18 +19,18 @@
 @import controllers.makechanges.routes._
 
 @this(
-        appConfig: FrontendAppConfig,
-        main_template: MainTemplate,
-        formHelper: FormWithCSRF
+    appConfig: FrontendAppConfig,
+    main_template: MainTemplate,
+    formHelper: FormWithCSRF
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("updateOtherIndividuals.title")}"
+    title = s"${errorPrefix(form)} ${messages("addProtector.title")}"
 ) {
 
-    @formHelper(action = UpdateOtherIndividualsYesNoController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = AddProtectorYesNoController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -38,7 +38,7 @@
 
         @components.input_yes_no(
             field = form("value"),
-            label = messages("updateOtherIndividuals.heading"),
+            label = messages("addProtector.heading"),
             legendClass = Some("heading-large"),
             legendAsHeading = true
         )

@@ -83,16 +83,6 @@ class WhatIsNextController @Inject()(
       )
   }
 
-  private def redirectToMaintainTrustees()(implicit request: DataRequest[AnyContent]) = {
-    request.userAnswers.get(UTRPage) map {
-      utr =>
-        val url = s"${config.maintainATrusteeFrontendUrl}/$utr"
-        Redirect(Call("GET", url))
-    } getOrElse {
-      Redirect(routes.UTRController.onPageLoad())
-    }
-  }
-
   private def redirectToDeclaration()(implicit request: DataRequest[AnyContent]) = {
     request.user.affinityGroup match {
       case Agent =>

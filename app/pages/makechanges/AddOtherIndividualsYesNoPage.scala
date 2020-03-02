@@ -18,11 +18,11 @@ package pages.makechanges
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.Protectors
+import sections.natural.Individual
 
-object UpdateProtectorsYesNoPage extends QuestionPage[Boolean] {
+object AddOtherIndividualsYesNoPage extends QuestionPage[Boolean] {
 
-  override def path: JsPath = Protectors.path \ toString
+  override def path: JsPath = Individual.path \ toString
 
-  override def toString: String = "updateProtectorsYesNo"
+  override def toString: String = "addOtherIndividualsYesNo"
 }

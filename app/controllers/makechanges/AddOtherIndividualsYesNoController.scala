@@ -17,34 +17,38 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
 import controllers.actions._
 import forms.YesNoFormProvider
-import pages.makechanges.UpdateOtherIndividualsYesNoPage
+import models.requests.DataRequest
+import pages.UTRPage
+import pages.makechanges.AddOtherIndividualsYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.makechanges.UpdateOtherIndividualsYesNoView
+import views.html.makechanges.AddOtherIndividualsYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UpdateOtherIndividualsYesNoController @Inject()(
+class AddOtherIndividualsYesNoController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         playbackRepository: PlaybackRepository,
                                         actions: AuthenticateForPlayback,
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateOtherIndividualsYesNoView
+                                        view: AddOtherIndividualsYesNoView,
+                                        config: FrontendAppConfig
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateOtherIndividuals")
+  val form: Form[Boolean] = yesNoFormProvider.withPrefix("addOtherIndividuals")
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(UpdateOtherIndividualsYesNoPage) match {
+      val preparedForm = request.userAnswers.get(AddOtherIndividualsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -63,15 +67,24 @@ class UpdateOtherIndividualsYesNoController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(
               request.userAnswers
-                .set(UpdateOtherIndividualsYesNoPage, value)
+                .set(AddOtherIndividualsYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
-            Redirect(controllers.makechanges.routes.UpdateOtherIndividualsYesNoController.onPageLoad())
+            redirectToMaintainTrustees()
           }
         }
       )
+  }
 
+  private def redirectToMaintainTrustees()(implicit request: DataRequest[AnyContent]) = {
+    request.userAnswers.get(UTRPage) map {
+      utr =>
+        val url = s"${config.maintainATrusteeFrontendUrl}/$utr"
+        Redirect(Call("GET", url))
+    } getOrElse {
+      Redirect(controllers.routes.UTRController.onPageLoad())
+    }
   }
 
 }

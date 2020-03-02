@@ -19,29 +19,29 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import pages.makechanges.UpdateSettlorsYesNoPage
+import pages.makechanges.{AddProtectorYesNoPage, UpdateSettlorsYesNoPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.makechanges.UpdateSettlorsYesNoView
+import views.html.makechanges.{AddProtectorYesNoView, UpdateSettlorsYesNoView}
 
-class UpdateSettlorsYesNoControllerSpec extends SpecBase {
+class AddProtectorYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("updateSettlors")
+  val form = formProvider.withPrefix("addProtector")
 
-  lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad().url
+  lazy val addProtectorYesNoRoute = routes.AddProtectorYesNoController.onPageLoad().url
 
-  "UpdateSettlorsYesNo Controller" must {
+  "AddProtectorsYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(GET, updateSettlorsYesNoRoute)
+      val request = FakeRequest(GET, addProtectorYesNoRoute)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
+      val view = application.injector.instanceOf[AddProtectorYesNoView]
 
       status(result) mustEqual OK
 
@@ -53,13 +53,13 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(UpdateSettlorsYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(AddProtectorYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, updateSettlorsYesNoRoute)
+      val request = FakeRequest(GET, addProtectorYesNoRoute)
 
-      val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
+      val view = application.injector.instanceOf[AddProtectorYesNoView]
 
       val result = route(application, request).value
 
@@ -77,14 +77,14 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, updateSettlorsYesNoRoute)
+        FakeRequest(POST, addProtectorYesNoRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AddProtectorYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.AddOtherIndividualsYesNoController.onPageLoad().url
 
       application.stop()
     }
@@ -94,12 +94,12 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, updateSettlorsYesNoRoute)
+        FakeRequest(POST, addProtectorYesNoRoute)
           .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
+      val view = application.injector.instanceOf[AddProtectorYesNoView]
 
       val result = route(application, request).value
 

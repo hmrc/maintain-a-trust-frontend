@@ -116,7 +116,7 @@ class WhatIsNextControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to maintain-trustees when user selects 'Make changes'" in {
+    "redirect to do you need to update details for the trustees when user selects 'Make changes'" in {
 
       val utr = "0987654321"
 
