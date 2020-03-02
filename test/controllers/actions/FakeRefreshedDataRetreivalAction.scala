@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package base
+package controllers.actions
 
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
-import play.api.libs.json.Json
-import repositories.PlaybackRepository
+import com.google.inject.Inject
+import models.requests.DataRequest
+import play.api.mvc.Result
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-trait Mocked extends MockitoSugar {
+class FakeRefreshedDataRetrievalAction @Inject()(
+                                              implicit val executionContext: ExecutionContext
+                                            ) extends RefreshedDataRetrievalAction {
 
-  val playbackRepository: PlaybackRepository = mock[PlaybackRepository]
+  override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = Future.successful(Right(request))
 
-  when(playbackRepository.set(any())).thenReturn(Future.successful(true))
-
-  when(playbackRepository.resetCache(any())).thenReturn(Future.successful(Some(Json.obj())))
 }

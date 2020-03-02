@@ -27,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
-  def playbackUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr"
+  def playbackUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/transformed"
 
   def playback(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[TrustsResponse] = {
     http.GET[TrustsResponse](playbackUrl(utr))(TrustsStatusReads.httpReads, hc, ec)
