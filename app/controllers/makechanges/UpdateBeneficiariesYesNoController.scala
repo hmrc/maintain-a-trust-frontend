@@ -19,33 +19,32 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
-import pages.declaration.AgencyRegisteredAddressUkYesNoPage
-import pages.makechanges.UpdateTrusteesYesNoPage
+import pages.makechanges.UpdateBeneficiariesYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.makechanges.UpdateTrusteesYesNoView
+import views.html.makechanges.UpdateBeneficiariesYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UpdateTrusteesYesNoController @Inject()(
+class UpdateBeneficiariesYesNoController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         playbackRepository: PlaybackRepository,
                                         actions: AuthenticateForPlayback,
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateTrusteesYesNoView
+                                        view: UpdateBeneficiariesYesNoView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateTrustees")
+  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateBeneficiaries")
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(UpdateTrusteesYesNoPage) match {
+      val preparedForm = request.userAnswers.get(UpdateBeneficiariesYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -64,7 +63,7 @@ class UpdateTrusteesYesNoController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(
               request.userAnswers
-                .set(UpdateTrusteesYesNoPage, value)
+                .set(UpdateBeneficiariesYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {

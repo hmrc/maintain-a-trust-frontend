@@ -62,5 +62,5 @@ GET        /declared-updates                            controllers.declaration.
 GET        /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad()
 POST       /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onSubmit()
 
-GET        /update-beneficiaries                        controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad()
-POST       /update-beneficiaries                        controllers.makechanges.UpdateTrusteesYesNoController.onSubmit()
+GET        /update-beneficiaries                        controllers.makechanges.UpdateBeneficiariesYesNoController.onPageLoad()
+POST       /update-beneficiaries                        controllers.makechanges.UpdateBeneficiariesYesNoController.onSubmit()

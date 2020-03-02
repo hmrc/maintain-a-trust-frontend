@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package pages.beneficiaries
+package pages.makechanges
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.Trustees
 
-object UpdateBeneficiariesYesNoPage extends QuestionPage[Boolean] {
+object UpdateTrusteesYesNoPage extends QuestionPage[Boolean] {
 
-  override def path: JsPath = Trustees.path \ toString
+  override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "updateBeneficiariesYesNo"
+  override def toString: String = "updateTrusteesYesNo"
 }
