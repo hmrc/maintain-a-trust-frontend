@@ -22,8 +22,8 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
 import models.http.TVNResponse
-import models.requests.AgentUser
-import models.{Address, UserAnswers}
+import models.requests.{AgentUser, DataRequest}
+import models.{Address, AgentDeclaration, UserAnswers}
 import pages._
 import pages.declaration.{AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
 import play.api.Logger
@@ -61,7 +61,7 @@ class AgentDeclarationController @Inject()(
       Ok(view(preparedForm, controllers.declaration.routes.AgentDeclarationController.onSubmit()))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.refreshedData.async {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(
@@ -75,20 +75,7 @@ class AgentDeclarationController @Inject()(
                 utr <- request.userAnswers.get(UTRPage)
                 agencyAddress <- getAgencyRegisteredAddress(request.userAnswers)
               } yield {
-                service.agentDeclareNoChange(utr, declaration, agentUser.agentReferenceNumber, agencyAddress, declaration.agencyName) flatMap {
-                  case TVNResponse(tvn) =>
-                    for {
-                      updatedAnswers <- Future.fromTry(
-                        request.userAnswers
-                          .set(AgentDeclarationPage, declaration)
-                          .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                          .flatMap(_.set(TVNPage, tvn))
-                      )
-                      _ <- playbackRepository.set(updatedAnswers)
-                    } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-                  case _ =>
-                    handleError("Failed to declare")
-                }
+                submitDeclaration(declaration, agentUser, utr, agencyAddress)
               }).getOrElse(handleError("Failed to get UTR or agency address"))
 
             case _ =>
@@ -96,6 +83,33 @@ class AgentDeclarationController @Inject()(
           }
         }
       )
+  }
+
+  private def submitDeclaration(declaration: AgentDeclaration,
+                                agentUser: AgentUser,
+                                utr: String,
+                                agencyAddress: Address)
+                               (implicit request: DataRequest[AnyContent]) = {
+
+    service.agentDeclareNoChange(utr,
+      declaration,
+      agentUser.agentReferenceNumber,
+      agencyAddress,
+      declaration.agencyName
+    ) flatMap {
+      case TVNResponse(tvn) =>
+        for {
+          updatedAnswers <- Future.fromTry(
+            request.userAnswers
+              .set(AgentDeclarationPage, declaration)
+              .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+              .flatMap(_.set(TVNPage, tvn))
+          )
+          _ <- playbackRepository.set(updatedAnswers)
+        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+      case _ =>
+        handleError("Failed to declare")
+    }
   }
 
   private def handleError(message: String) = {
