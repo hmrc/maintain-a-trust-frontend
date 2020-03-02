@@ -70,3 +70,6 @@ POST       /update-beneficiaries                        controllers.makechanges.
 
 GET        /update-settlors                             controllers.makechanges.UpdateSettlorsYesNoController.onPageLoad()
 POST       /update-settlors                             controllers.makechanges.UpdateSettlorsYesNoController.onSubmit()
+
+GET        /update-other-individuals                    controllers.makechanges.UpdateOtherIndividualsYesNoController.onPageLoad()
+POST       /update-other-individuals                    controllers.makechanges.UpdateOtherIndividualsYesNoController.onSubmit()
