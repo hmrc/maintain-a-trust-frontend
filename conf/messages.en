@@ -306,6 +306,7 @@ addProtector.error.required = Select yes if you need to add a protector
 
 addOtherIndividuals.title = Do you need to add any other individuals associated with the trust?
 addOtherIndividuals.heading = Do you need to add any other individuals associated with the trust?
+addOtherIndividuals.hint = They might not be named in the trust deed. For example, friends, family members or third parties.
 addOtherIndividuals.error.required = Select yes if you need to add any other individuals associated with the trust
 
 unavailableSections.title = You can only update the details for {0} online at the moment
