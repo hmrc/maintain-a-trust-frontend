@@ -25,7 +25,6 @@ import models.requests.DataRequest
 import navigation.DeclareNoChange
 import pages.UTRPage
 import pages.makechanges._
-import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
