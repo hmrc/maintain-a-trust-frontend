@@ -187,6 +187,8 @@ site.confirm-send = Confirm and send
 site.try-again = Try again
 site.sign_out = Sign out
 site.warning = Warning
+site.or = or
+site.and = and
 
 site.address.uk.title = What is the address?
 site.address.uk.heading = What is {0}’s address?
@@ -304,7 +306,17 @@ addProtector.error.required = Select yes if you need to add a protector
 
 addOtherIndividuals.title = Do you need to add any other individuals associated with the trust?
 addOtherIndividuals.heading = Do you need to add any other individuals associated with the trust?
+addOtherIndividuals.hint = They might not be named in the trust deed. For example, friends, family members or third parties.
 addOtherIndividuals.error.required = Select yes if you need to add any other individuals associated with the trust
+
+unavailableSections.title = You can only update the details for {0} online at the moment
+unavailableSections.heading = You can only update the details for {0} online at the moment
+unavailableSections.p1 = You cannot update the details for {0} online. If you need to update these details you can
+unavailableSections.p1.a = contact the trusts helpline (opens in a new window or tab)
+unavailableSections.p2 = You will be able to update the details for {0} online in the future.
+unavailableSections.p3.start = You can also
+unavailableSections.p3.link = return to information about maintaining this trust
+unavailableSections.p3.end = to view the trust’s last declaration.
 
 utr.title = What is the trust’s Unique Taxpayer Reference?
 utr.heading = What is the trust’s Unique Taxpayer Reference?

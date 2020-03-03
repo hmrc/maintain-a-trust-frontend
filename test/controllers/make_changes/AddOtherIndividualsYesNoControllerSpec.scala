@@ -82,14 +82,13 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
         .set(AddProtectorYesNoPage, false).success.value
-        .set(AddOtherIndividualsYesNoPage, false).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
         FakeRequest(POST, addOtherIndividualsYesNoRoute)
-          .withFormUrlEncodedBody(("value", "true"))
+          .withFormUrlEncodedBody(("value", "false"))
 
       val result = route(application, request).value
 
@@ -110,14 +109,13 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
         .set(AddProtectorYesNoPage, false).success.value
-        .set(AddOtherIndividualsYesNoPage, false).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
         FakeRequest(POST, addOtherIndividualsYesNoRoute)
-          .withFormUrlEncodedBody(("value", "true"))
+          .withFormUrlEncodedBody(("value", "false"))
 
       val result = route(application, request).value
 
