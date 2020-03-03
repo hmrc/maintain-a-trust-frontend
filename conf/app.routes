@@ -58,3 +58,18 @@ GET        /feature-not-available                       controllers.FeatureNotAv
 GET        /last-declaration                            controllers.PlaybackAnswersController.onPageLoad()
 
 GET        /declared-updates                            controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad()
+
+GET        /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad()
+POST       /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onSubmit()
+
+GET        /update-beneficiaries                        controllers.makechanges.UpdateBeneficiariesYesNoController.onPageLoad()
+POST       /update-beneficiaries                        controllers.makechanges.UpdateBeneficiariesYesNoController.onSubmit()
+
+GET        /update-settlors                             controllers.makechanges.UpdateSettlorsYesNoController.onPageLoad()
+POST       /update-settlors                             controllers.makechanges.UpdateSettlorsYesNoController.onSubmit()
+
+GET        /add-protector                               controllers.makechanges.AddProtectorYesNoController.onPageLoad()
+POST       /add-protector                               controllers.makechanges.AddProtectorYesNoController.onSubmit()
+
+GET        /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad()
+POST       /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit()
