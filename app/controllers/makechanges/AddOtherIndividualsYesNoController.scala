@@ -20,10 +20,12 @@ import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions._
 import forms.YesNoFormProvider
+import models.UserAnswers
 import models.requests.DataRequest
 import navigation.DeclareNoChange
 import pages.UTRPage
 import pages.makechanges._
+import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
@@ -71,31 +73,30 @@ class AddOtherIndividualsYesNoController @Inject()(
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
-            redirect()
+            redirect(updatedAnswers)
           }
         }
       )
   }
 
-  private def redirect()(implicit request: DataRequest[AnyContent]): Result = {
+  private def redirect(userAnswers: UserAnswers)(implicit request: DataRequest[AnyContent]): Result = {
 
     case class UpdateFilterQuestions(trustees: Boolean, beneficiaries: Boolean, settlors: Boolean, protectors: Boolean, natural: Boolean)
 
     (for {
-      t <- request.userAnswers.get(UpdateTrusteesYesNoPage)
-      b <- request.userAnswers.get(UpdateBeneficiariesYesNoPage)
-      s <- request.userAnswers.get(UpdateSettlorsYesNoPage)
-      p <- request.userAnswers.get(AddProtectorYesNoPage)
-      n <- request.userAnswers.get(AddOtherIndividualsYesNoPage)
+      t <- userAnswers.get(UpdateTrusteesYesNoPage)
+      b <- userAnswers.get(UpdateBeneficiariesYesNoPage)
+      s <- userAnswers.get(UpdateSettlorsYesNoPage)
+      p <- userAnswers.get(AddProtectorYesNoPage)
+      n <- userAnswers.get(AddOtherIndividualsYesNoPage)
     } yield {
       UpdateFilterQuestions(t, b, s, p, n) match {
-        case UpdateFilterQuestions(true, false, false, false, false) =>
-          redirectToMaintainTrustees()
         case UpdateFilterQuestions(false, false, false, false, false) =>
           redirectToDeclaration()
+        case UpdateFilterQuestions(true, false, false, false, false) if config.maintainTrusteesEnabled =>
+          redirectToMaintainTrustees()
         case _ =>
-          // TODO: Redirect to an unavailable sections page. Waiting on design.
-          Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+          Redirect(controllers.makechanges.routes.UnavailableSectionsController.onPageLoad())
       }
     }).getOrElse(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
   }
