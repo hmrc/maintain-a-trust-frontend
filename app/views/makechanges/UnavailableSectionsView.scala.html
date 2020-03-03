@@ -36,6 +36,8 @@
         @messages("unavailableSections.p2", unavailableSections)
     </p>
 
+    @components.button_link(messages("site.sign_out"), controllers.routes.LogoutController.logout().url)
+
     <p>
         @messages("unavailableSections.p3.start") <a id="information-about-maintaining-link" href=@controllers.routes.InformationMaintainingThisTrustController.onPageLoad().url>@messages("unavailableSections.p3.link")</a> @messages("unavailableSections.p3.end")
     </p>
