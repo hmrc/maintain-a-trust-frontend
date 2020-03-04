@@ -47,7 +47,11 @@ class UnavailableSectionsControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view("trustees", "settlors, beneficiaries, protectors or any other individuals")(fakeRequest, messages).toString
+        view(
+          "trustees",
+          "settlors, beneficiaries, protectors or other individuals",
+          "settlors, beneficiaries, protectors and other individuals"
+        )(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -73,7 +77,11 @@ class UnavailableSectionsControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view("trustees and beneficiaries", "settlors, protectors or any other individuals")(fakeRequest, messages).toString
+        view(
+          "trustees and beneficiaries",
+          "settlors, protectors or other individuals",
+          "settlors, protectors and other individuals"
+        )(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -99,7 +107,11 @@ class UnavailableSectionsControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view("settlors, trustees and beneficiaries", "protectors or any other individuals")(fakeRequest, messages).toString
+        view(
+          "settlors, trustees and beneficiaries",
+          "protectors or other individuals",
+          "protectors and other individuals"
+        )(fakeRequest, messages).toString
 
       application.stop()
     }

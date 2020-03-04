@@ -71,7 +71,14 @@ class UnavailableSectionsController @Inject()(
         }
       )
 
-      Ok(view(availableSections, unavailableSections))
+      val futureSections = commaSeparate(
+        request.messages(messagesApi)("site.and"),
+        sections.collect {
+          case (false, x) => x
+        }
+      )
+
+      Ok(view(availableSections, unavailableSections, futureSections))
   }
 
   @scala.annotation.tailrec

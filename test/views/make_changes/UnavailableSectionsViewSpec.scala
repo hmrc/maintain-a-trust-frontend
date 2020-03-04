@@ -25,16 +25,17 @@ class UnavailableSectionsViewSpec extends ViewBehaviours {
 
     val available = "available section"
     val unavailable = "unavailable section"
+    val future = "future section"
     val messageKeyPrefix = "unavailableSections"
 
     val view = viewFor[UnavailableSectionsView](Some(emptyUserAnswers))
 
-    val applyView = view.apply(available, unavailable)(fakeRequest, messages)
+    val applyView = view.apply(available, unavailable, future)(fakeRequest, messages)
 
     "Have dynamic content" in {
       val doc = asDocument(applyView)
       assertContainsText(doc, messages(s"$messageKeyPrefix.p1", unavailable))
-      assertContainsText(doc, messages(s"$messageKeyPrefix.p2", unavailable))
+      assertContainsText(doc, messages(s"$messageKeyPrefix.p2", future))
     }
 
     behave like dynamicTitlePage(applyView, s"$messageKeyPrefix",

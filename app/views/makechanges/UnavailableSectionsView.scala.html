@@ -18,7 +18,7 @@
     main_template: MainTemplate
 )
 
-@(availableSections: String, unavailableSections: String)(implicit request: Request[_], messages: Messages)
+@(availableSections: String, unavailableSections: String, futureSections: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("unavailableSections.title", availableSections)
@@ -33,7 +33,7 @@
     </p>
 
     <p>
-        @messages("unavailableSections.p2", unavailableSections)
+        @messages("unavailableSections.p2", futureSections)
     </p>
 
     @components.button_link(messages("site.sign_out"), controllers.routes.LogoutController.logout().url)
