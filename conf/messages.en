@@ -331,7 +331,7 @@ declarationWhatNext.declare = Declare the trust is up to date
 declarationWhatNext.declare.hint = Confirm the current information held by HMRC is up to date and declare as part of the trust’s self assessment.
 declarationWhatNext.makeChanges = Make changes to the trust and declare
 declarationWhatNext.makeChanges.hint = Add, remove and/or update any details for trustees.
-declarationWhatNext.closeTrust = Close the trust
+declarationWhatNext.closeTrust = Close the trust and declare
 declarationWhatNext.closeTrust.hint = Tell HMRC the end date for the trust and apply any changes before a final declaration.
 declarationWhatNext.error.required = Select what you want to do next
 
