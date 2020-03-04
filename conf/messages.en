@@ -309,14 +309,14 @@ addOtherIndividuals.heading = Do you need to add any other individuals associate
 addOtherIndividuals.hint = They might not be named in the trust deed. For example, friends, family members or third parties.
 addOtherIndividuals.error.required = Select yes if you need to add any other individuals associated with the trust
 
-unavailableSections.title = You can only update the details for {0} online at the moment
-unavailableSections.heading = You can only update the details for {0} online at the moment
-unavailableSections.p1 = You cannot update the details for {0} online. If you need to update these details you can
+unavailableSections.title = You can only update {0} online at the moment
+unavailableSections.heading = You can only update {0} online at the moment
+unavailableSections.p1 = You cannot update the details for {0} online. If you need to update these details, you can
 unavailableSections.p1.a = contact the trusts helpline (opens in a new window or tab)
-unavailableSections.p2 = You will be able to update the details for {0} online in the future.
+unavailableSections.p2 = You will be able to update {0} online in the future.
 unavailableSections.p3.start = You can also
 unavailableSections.p3.link = return to information about maintaining this trust
-unavailableSections.p3.end = to view the trust’s last declaration.
+unavailableSections.p3.end = to view the trust’s latest declaration.
 
 utr.title = What is the trust’s Unique Taxpayer Reference?
 utr.heading = What is the trust’s Unique Taxpayer Reference?
@@ -341,7 +341,7 @@ section.settlors = settlors
 section.trustees = trustees
 section.beneficiaries = beneficiaries
 section.protectors = protectors
-section.natural = any other individuals
+section.natural = other individuals
 
 ## Settlors
 answerPage.section.settlors.heading = Settlors
