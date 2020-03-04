@@ -172,7 +172,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         when(fakeTrustStoreConnector.get(any[String], any[String])(any(), any()))
           .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
 
-        when(fakeTrustConnector.playback(any[String])(any(), any())).thenReturn(Future.successful(Closed))
+        when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(Closed))
 
         status(result) mustEqual SEE_OTHER
 
@@ -188,7 +188,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         when(fakeTrustStoreConnector.get(any[String], any[String])(any(), any()))
           .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
 
-        when(fakeTrustConnector.playback(any[String])(any(), any())).thenReturn(Future.successful(Processing))
+        when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(Processing))
 
         status(result) mustEqual SEE_OTHER
 
@@ -204,7 +204,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         when(fakeTrustStoreConnector.get(any[String], any[String])(any(), any()))
           .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
 
-        when(fakeTrustConnector.playback(any[String])(any(), any())).thenReturn(Future.successful(UtrNotFound))
+        when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(UtrNotFound))
 
         status(result) mustEqual SEE_OTHER
 
@@ -234,7 +234,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         when(fakeTrustStoreConnector.get(any[String], any[String])(any(), any()))
           .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
 
-        when(fakeTrustConnector.playback(any[String])(any(), any())).thenReturn(Future.successful(TrustServiceUnavailable))
+        when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(TrustServiceUnavailable))
 
         status(result) mustEqual SEE_OTHER
 
@@ -263,7 +263,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               when(fakeTrustStoreConnector.get(any[String], any[String])(any(), any()))
                 .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
 
-              when(fakeTrustConnector.playback(any[String])(any(), any()))
+              when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
@@ -305,7 +305,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               when(fakeTrustStoreConnector.get(any[String], any[String])(any(), any()))
                 .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
 
-              when(fakeTrustConnector.playback(any[String])(any(), any()))
+              when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(playbackRepository.set(any())).thenReturn(Future.successful(true))
@@ -354,7 +354,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
             when(fakeTrustStoreConnector.get(any[String], any[String])(any(), any()))
               .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
 
-            when(fakeTrustConnector.playback(any[String])(any(), any()))
+            when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any()))
               .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
             when(playbackRepository.set(any())).thenReturn(Future.successful(true))
