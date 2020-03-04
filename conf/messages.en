@@ -337,6 +337,12 @@ declarationWhatNext.error.required = Select what you want to do next
 
 # SECTIONS
 
+section.settlors = settlors
+section.trustees = trustees
+section.beneficiaries = beneficiaries
+section.protectors = protectors
+section.natural = any other individuals
+
 ## Settlors
 answerPage.section.settlors.heading = Settlors
 answerPage.section.deceasedSettlor.heading = Settlor

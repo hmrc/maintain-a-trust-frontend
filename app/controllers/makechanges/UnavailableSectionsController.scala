@@ -50,11 +50,11 @@ class UnavailableSectionsController @Inject()(
                                   )
 
       val sections = List(
-        (config.maintainSettlorsEnabled, "settlors"),
-        (config.maintainTrusteesEnabled, "trustees"),
-        (config.maintainBeneficiariesEnabled, "beneficiaries"),
-        (config.maintainProtectorsEnabled, "protectors"),
-        (config.maintainOtherIndividualsEnabled, "any other individuals")
+        (config.maintainSettlorsEnabled, request.messages(messagesApi)("section.settlors")),
+        (config.maintainTrusteesEnabled, request.messages(messagesApi)("section.trustees")),
+        (config.maintainBeneficiariesEnabled, request.messages(messagesApi)("section.beneficiaries")),
+        (config.maintainProtectorsEnabled, request.messages(messagesApi)("section.protectors")),
+        (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.natural"))
       )
 
       val availableSections = commaSeparate(
