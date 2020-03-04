@@ -122,7 +122,7 @@ class TrustStatusController @Inject()(
   }
 
   private def tryToPlayback(utr: String)(implicit request: DataRequest[AnyContent]): Future[Result] = {
-    trustConnector.playback(utr) flatMap {
+    trustConnector.playbackfromEtmp(utr) flatMap {
       case Closed =>
         Logger.info(s"[TrustStatusController][tryToPlayback] unable to retrieve trust due it being closed")
         Future.successful(Redirect(controllers.routes.TrustStatusController.closed()))
