@@ -231,3 +231,12 @@
 .clearfix {
   @include govuk-clearfix;
 }
+
+.radios-hint {
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.radios-label {
+  margin: 0 10px 0px 0 !important;
+}

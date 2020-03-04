@@ -27,7 +27,7 @@
 )(implicit messages: Messages)
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
-    <fieldset id="@{field.id}" @if(field.hasErrors || hint.nonEmpty){aria-describedby="@if(field.hasErrors){error-message-@{field.id}-input} @if(hint.nonEmpty){hint-@{field.id}}"}>
+    <fieldset class="inline" id="@{field.id}" @if(field.hasErrors || hint.nonEmpty){aria-describedby="@if(field.hasErrors){error-message-@{field.id}-input} @if(hint.nonEmpty){hint-@{field.id}}"}>
         @if(headingIsLegend){
             <legend>
                 <h1 @if(legendClass.nonEmpty){class="@legendClass" }else{class="heading-xlarge"}>@legend</h1>
@@ -50,12 +50,12 @@
             <div class="multiple-choice">
                 <input id="@{input._1.id}" type="radio" name="@{field.id}" value="@{input._1.value}" @if(field.value == Some(input._1.value)){checked="checked"} @if(trackGa){data-journey-click="maintain-a-trust-frontend:click:@{input._1.id}"} />
 
-                <label class="block-label selection-button-radio" for="@{input._1.id}">
+                <label class="radios-label block-label selection-button-radio bold" for="@{input._1.id}">
                     @messages(input._1.messageKey)
-                    <span id="@{input._1.id}.hint" class="form-hint form-field" aria-label="@messages(input._2)">
-                        @messages(input._2)
-                    </span>
                 </label>
+                <span id="@{input._1.id}.hint" class="radios-hint form-hint form-field" aria-label="@messages(input._2)">
+                        @messages(input._2)
+                </span>
             </div>
         }
     </fieldset>
