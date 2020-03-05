@@ -126,7 +126,7 @@ class WhatIsNextControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "makeChanges"))
+        .withFormUrlEncodedBody(("value", "make-changes"))
 
       val result = route(application, request).value
 
@@ -147,7 +147,7 @@ class WhatIsNextControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "closeTrust"))
+        .withFormUrlEncodedBody(("value", "close-trust"))
 
       val result = route(application, request).value
 
