@@ -179,31 +179,32 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
 
 
   private def extractIndividualIdentification(individual: DisplayTrustTrusteeIndividualType, index: Int, answers: UserAnswers) = {
-      individual.identification map {
-        case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
-          answers.set(TrusteeNinoYesNoPage(index), true)
-            .flatMap(_.set(TrusteeNinoPage(index), nino))
+    individual.identification map {
 
-        case DisplayTrustIdentificationType(_, None, Some(passport), None) =>
-          Logger.error(s"[TrusteesExtractor] only passport identification returned for trustee individual in DisplayTrustOrEstate api")
-          Failure(InvalidExtractorState)
+      case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
+        answers.set(TrusteeNinoYesNoPage(index), true)
+          .flatMap(_.set(TrusteeNinoPage(index), nino))
 
-        case DisplayTrustIdentificationType(_, None, None, Some(address)) =>
-          answers.set(TrusteeNinoYesNoPage(index), false)
-            .flatMap(_.set(TrusteePassportIDCardYesNoPage(index), false))
-            .flatMap(answers => extractAddress(address.convert, index, answers))
+      case DisplayTrustIdentificationType(_, None, Some(passport), None) =>
+        Logger.error(s"[TrusteesExtractor] only passport identification returned for trustee individual in DisplayTrustOrEstate api")
+        Failure(InvalidExtractorState)
 
-        case DisplayTrustIdentificationType(_, None, Some(passport), Some(address)) =>
-          answers.set(TrusteeNinoYesNoPage(index), false)
-            .flatMap(answers => extractAddress(address.convert, index, answers))
-            .flatMap(answers => extractPassportIdCard(passport, index, answers))
-
-        case DisplayTrustIdentificationType(_, _, _, _) => Success(answers)
-
-      } getOrElse {
+      case DisplayTrustIdentificationType(_, None, None, Some(address)) =>
         answers.set(TrusteeNinoYesNoPage(index), false)
-          .flatMap(_.set(TrusteeAddressYesNoPage(index), false))
-      }
+          .flatMap(_.set(TrusteePassportIDCardYesNoPage(index), false))
+          .flatMap(answers => extractAddress(address.convert, index, answers))
+
+      case DisplayTrustIdentificationType(_, None, Some(passport), Some(address)) =>
+        answers.set(TrusteeNinoYesNoPage(index), false)
+          .flatMap(answers => extractAddress(address.convert, index, answers))
+          .flatMap(answers => extractPassportIdCard(passport, index, answers))
+
+      case DisplayTrustIdentificationType(_, _, _, _) => Success(answers)
+
+    } getOrElse {
+      answers.set(TrusteeNinoYesNoPage(index), false)
+        .flatMap(_.set(TrusteeAddressYesNoPage(index), false))
+    }
   }
 
   private def extractLeadOrgIdentification(leadIndividual: DisplayTrustLeadTrusteeOrgType, index: Int, answers: UserAnswers) = {
