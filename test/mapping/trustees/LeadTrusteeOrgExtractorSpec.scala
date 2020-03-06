@@ -54,7 +54,7 @@ class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
 
       "which is UK registered, return user answers updated" in {
         val leadTrustee = List(DisplayTrustLeadTrusteeOrgType(
-          lineNo = s"1",
+          lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = "org1",
           phoneNumber = "+441234567890",
@@ -89,7 +89,7 @@ class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
 
       "which is not UK registered, return user answers updated" in {
         val leadTrustee = List(DisplayTrustLeadTrusteeOrgType(
-          lineNo = s"1",
+          lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = "org1",
           phoneNumber = "+441234567890",

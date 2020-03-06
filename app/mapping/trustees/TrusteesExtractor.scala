@@ -73,7 +73,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
         _.set(
           TrusteeMetaData(index),
           MetaData(
-            lineNo = leadIndividual.lineNo,
+            lineNo = leadIndividual.lineNo.getOrElse(""),
             bpMatchStatus = leadIndividual.bpMatchStatus,
             entityStart = leadIndividual.entityStart
           )
@@ -94,7 +94,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
         _.set(
           TrusteeMetaData(index),
           MetaData(
-            lineNo = leadCompany.lineNo,
+            lineNo = leadCompany.lineNo.getOrElse(""),
             bpMatchStatus = leadCompany.bpMatchStatus,
             entityStart = leadCompany.entityStart
           )

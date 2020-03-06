@@ -56,7 +56,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
       "with nino and UK address, return user answers updated" in {
         val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
-          lineNo = s"1",
+          lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = NameType("First Name", None, "Last Name"),
           dateOfBirth = DateTime.parse("2018-02-01"),
@@ -94,7 +94,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
       "with nino and International address, return user answers updated" in {
         val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
-          lineNo = s"1",
+          lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = NameType("First Name", None, "Last Name"),
           dateOfBirth = DateTime.parse("2018-02-01"),
@@ -132,7 +132,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
       "with Passport/ID Card and UK address, return user answers updated" in {
         val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
-          lineNo = s"1",
+          lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = NameType("First Name", None, "Last Name"),
           dateOfBirth = DateTime.parse("2018-02-01"),
@@ -171,7 +171,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
       "with Passport/ID Card and International address, return user answers updated" in {
         val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
-          lineNo = s"1",
+          lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = NameType("First Name", None, "Last Name"),
           dateOfBirth = DateTime.parse("2018-02-01"),
