@@ -179,9 +179,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
 
 
   private def extractIndividualIdentification(individual: DisplayTrustTrusteeIndividualType, index: Int, answers: UserAnswers) = {
-
       individual.identification map {
-
         case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
           answers.set(TrusteeNinoYesNoPage(index), true)
             .flatMap(_.set(TrusteeNinoPage(index), nino))
