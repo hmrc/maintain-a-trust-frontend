@@ -90,8 +90,6 @@ class PlaybackRepository @Inject()(
 
   override def set(userAnswers: UserAnswers): Future[Boolean] = {
 
-    logger.debug(s"UserAnswer Persisted as $userAnswers")
-
     val selector = Json.obj(
       "internalId" -> userAnswers.internalAuthId
     )
@@ -108,14 +106,13 @@ class PlaybackRepository @Inject()(
   }
 
   def resetCache(internalId: String): Future[Option[JsObject]] = {
-    logger.debug(s"UserAnswer Reset")
-    val selector = Json.obj(
-      "internalId" -> internalId
-    )
+      val selector = Json.obj(
+        "internalId" -> internalId
+      )
 
-    collection.flatMap(_.findAndRemove(selector, None, None, WriteConcern.Default, None, None, Seq.empty).map(
-      _.value
-    ))
+      collection.flatMap(_.findAndRemove(selector, None, None, WriteConcern.Default, None, None, Seq.empty).map(
+        _.value
+      ))
   }
 }
 
