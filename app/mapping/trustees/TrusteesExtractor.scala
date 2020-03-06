@@ -199,6 +199,8 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
           .flatMap(answers => extractAddress(address.convert, index, answers))
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
+      case DisplayTrustIdentificationType(_, _, _, _) => Success(answers)
+
     } getOrElse {
       answers.set(TrusteeNinoYesNoPage(index), false)
         .flatMap(_.set(TrusteeAddressYesNoPage(index), false))

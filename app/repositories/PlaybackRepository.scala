@@ -22,6 +22,7 @@ import java.time.LocalDateTime
 import akka.stream.Materializer
 import com.google.inject.Inject
 import models.UserAnswers
+import org.slf4j.LoggerFactory
 import play.api.Configuration
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoApi
@@ -39,6 +40,8 @@ class PlaybackRepository @Inject()(
                                     config: Configuration,
                                     dateFormatter: DateFormatter
                                   )(implicit ec: ExecutionContext, m: Materializer) extends MongoRepository {
+
+  private val logger = LoggerFactory.getLogger("application." + this.getClass.getCanonicalName)
 
   private val collectionName: String = "user-answers"
 

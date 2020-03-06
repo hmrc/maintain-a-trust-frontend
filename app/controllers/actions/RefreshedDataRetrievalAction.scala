@@ -54,28 +54,22 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
       utr <- request.userAnswers.get(UTRPage)
       tvn <- request.userAnswers.get(TVNPage)
       submissionDate <- request.userAnswers.get(SubmissionDatePage)
+      optionalAgentInformation = request.userAnswers.get(AgentDeclarationPage)
     } yield {
 
-      val optionalAgentInformation = request.userAnswers.get(AgentDeclarationPage)
+      val submissionData = SubmissionData(utr, tvn, submissionDate, optionalAgentInformation)
 
-      val persistSubmissionData = SubmissionData(utr, tvn, submissionDate, optionalAgentInformation)
-
-      playbackRepository.resetCache(request.user.internalId).flatMap{ _ =>
-        trustConnector.playback(utr) flatMap {
-          case Processed(playback, _) =>
-            extract(persistSubmissionData, playback)(request)
-          case _ =>
-            Logger.warn(s"[RefreshedDataRetrievalAction] unable to retrieve trust due to an error")
-            Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
-        }
+      trustConnector.playback(utr).flatMap {
+        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, playback)(request)
+        case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
-      Logger.error(s"[RefreshedDataRetrievalAction] unable to get data from user answers")
-      Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+            Logger.error(s"[RefreshedDataRetrievalAction] unable to get data from user answers")
+            Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
   }
 
-  private def extract[A](data: SubmissionData, playback: GetTrust)
+  private def extractAndRefreshUserAnswers[A](data: SubmissionData, playback: GetTrust)
                         (implicit request: DataRequest[A]) : Future[Either[Result, DataRequest[A]]] = {
 
     playbackExtractor.extract(UserAnswers(request.user.internalId), playback) match {
