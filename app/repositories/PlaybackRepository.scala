@@ -22,6 +22,7 @@ import java.time.LocalDateTime
 import akka.stream.Materializer
 import com.google.inject.Inject
 import models.UserAnswers
+import org.slf4j.LoggerFactory
 import play.api.Configuration
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoApi
@@ -39,6 +40,8 @@ class PlaybackRepository @Inject()(
                                     config: Configuration,
                                     dateFormatter: DateFormatter
                                   )(implicit ec: ExecutionContext, m: Materializer) extends MongoRepository {
+
+  private val logger = LoggerFactory.getLogger("application." + this.getClass.getCanonicalName)
 
   private val collectionName: String = "user-answers"
 
@@ -87,6 +90,8 @@ class PlaybackRepository @Inject()(
 
   override def set(userAnswers: UserAnswers): Future[Boolean] = {
 
+    logger.debug(s"UserAnswer Persisted as $userAnswers")
+
     val selector = Json.obj(
       "internalId" -> userAnswers.internalAuthId
     )
@@ -103,13 +108,14 @@ class PlaybackRepository @Inject()(
   }
 
   def resetCache(internalId: String): Future[Option[JsObject]] = {
-      val selector = Json.obj(
-        "internalId" -> internalId
-      )
+    logger.debug(s"UserAnswer Reset")
+    val selector = Json.obj(
+      "internalId" -> internalId
+    )
 
-      collection.flatMap(_.findAndRemove(selector, None, None, WriteConcern.Default, None, None, Seq.empty).map(
-        _.value
-      ))
+    collection.flatMap(_.findAndRemove(selector, None, None, WriteConcern.Default, None, None, Seq.empty).map(
+      _.value
+    ))
   }
 }
 
