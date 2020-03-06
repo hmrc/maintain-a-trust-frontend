@@ -60,7 +60,7 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
       val submissionData = SubmissionData(utr, tvn, submissionDate, optionalAgentInformation)
 
       trustConnector.playback(utr).flatMap {
-        case Processed(playback, _) => extract(submissionData, playback)(request)
+        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, playback)(request)
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
@@ -69,7 +69,7 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
     }
   }
 
-  private def extract[A](data: SubmissionData, playback: GetTrust)
+  private def extractAndRefreshUserAnswers[A](data: SubmissionData, playback: GetTrust)
                         (implicit request: DataRequest[A]) : Future[Either[Result, DataRequest[A]]] = {
 
     playbackExtractor.extract(UserAnswers(request.user.internalId), playback) match {
