@@ -137,7 +137,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
         _.set(
           TrusteeMetaData(index),
           MetaData(
-            lineNo = company.lineNo,
+            lineNo = company.lineNo.getOrElse(""),
             bpMatchStatus = company.bpMatchStatus,
             entityStart = company.entityStart
           )

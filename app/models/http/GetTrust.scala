@@ -311,7 +311,7 @@ object DisplayTrustTrusteeType {
 
 sealed trait Trustees
 
-case class DisplayTrustTrusteeOrgType(lineNo: String,
+case class DisplayTrustTrusteeOrgType(lineNo: Option[String],
                                       bpMatchStatus: Option[String],
                                       name: String,
                                       phoneNumber: Option[String] = None,
