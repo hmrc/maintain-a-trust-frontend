@@ -54,6 +54,8 @@ class TrustAuthConnectorImpl @Inject()(http: HttpClient, config: FrontendAppConf
     http.GET[TrustAuthResponseBody](baseUrl + utr).map {
       case TrustAuthResponseBody(Some(redirectUrl)) => TrustAuthDenied(redirectUrl)
       case _ => TrustAuthAllowed
+    }.recoverWith {
+      case _ => Future.successful(TrustAuthInternalServerError)
     }
   }
 }

@@ -61,7 +61,7 @@ class TrustAuthConnectorSpec extends AsyncFreeSpec with MustMatchers with WireMo
   "TrustAuthConnector" - {
 
     "returns 'Allowed' when" - {
-      "service returns OK" in {
+      "service returns with no redirect url" in {
 
         wiremock(utr, allowedResponse)
 
@@ -71,12 +71,22 @@ class TrustAuthConnectorSpec extends AsyncFreeSpec with MustMatchers with WireMo
       }
     }
     "returns 'Denied' when" - {
-      "service returns SEE_OTHER" in {
+      "service returns a redirect url" in {
 
         wiremock(utr, redirectResponse("redirect-url"))
 
         connector.authorised(utr) map { result =>
           result mustEqual TrustAuthDenied("redirect-url")
+        }
+      }
+    }
+    "returns 'Internal server error' when" - {
+      "service returns something not OK" in {
+
+        wiremock(utr, aResponse().withStatus(Status.INTERNAL_SERVER_ERROR))
+
+        connector.authorised(utr) map { result =>
+          result mustEqual TrustAuthInternalServerError
         }
       }
     }
