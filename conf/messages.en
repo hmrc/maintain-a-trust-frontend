@@ -335,6 +335,23 @@ declarationWhatNext.close-trust = Close the trust
 declarationWhatNext.close-trust.hint = Tell HMRC the end date for the trust and apply any changes before a final declaration.
 declarationWhatNext.error.required = Select what you want to do next
 
+
+variationProgress.title = Trust overview
+variationProgress.heading = Trust overview
+variationProgress.subHeading.1 = This trust’s UTR: {0}
+variationProgress.p1 = You can change information about the trust and make a declaration once you have confirmed each section is up to date.
+variationProgress.p2 = Any changes you make without declaring will not be saved.
+variationsProgress.return.link = Return to register and maintain a trust for a client
+variationProgress.warning = You need to declare the trust details are up to date. Some questions may have changed since the trust was registered.
+variationProgress.subHeading.2 = Sections to be completed
+variationProgress.subHeading.3 = Additional sections to be completed
+
+taskList.settlors.label = Settlors
+taskList.trustees.label = Trustees
+taskList.beneficiaries.label = Beneficiaries
+taskList.natural.label = Other representatives
+taskList.summary.continue = Continue
+
 # SECTIONS
 
 section.settlors = settlors

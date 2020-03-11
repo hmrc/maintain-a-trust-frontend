@@ -1,0 +1,56 @@
+/*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package controllers
+
+import base.SpecBase
+import pages.UTRPage
+import play.api.mvc.Call
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+
+class VariationProgressControllerSpec extends SpecBase {
+
+
+
+
+  lazy val onPageLoad: String = routes.WhatIsNextController.onPageLoad().url
+
+  lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
+
+  val fakeUTR = "1234567890"
+
+  "VariationProgress Controller" must {
+
+    "redirect to RegisteredOnline when no required answer" in {
+
+        val answers = emptyUserAnswers.set(UTRPage, fakeUTR).success.value
+
+        val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+        val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.VariationProgressController.onPageLoad().url
+
+        application.stop()
+    }
+
+  }
+}
