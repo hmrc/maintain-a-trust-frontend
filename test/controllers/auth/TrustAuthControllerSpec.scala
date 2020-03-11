@@ -18,7 +18,7 @@ package controllers.auth
 
 import base.SpecBase
 import config.FrontendAppConfig
-import connectors.EnrolmentStoreConnector
+import connectors.{EnrolmentStoreConnector, TrustAuthAllowed, TrustAuthResponse, TrustAuthResponseBody}
 import controllers.actions.TrustsAuthorisedFunctions
 import models.requests.EnrolmentStoreResponse.{AlreadyClaimed, NotClaimed, ServerError}
 import org.mockito.Matchers.{any, eq => mEq}
@@ -92,8 +92,10 @@ class TrustAuthControllerSpec extends SpecBase with ScalaFutures with EitherValu
           val request = FakeRequest(GET, controllers.auth.routes.TrustAuthController.authorised(utr).url)
 
           val result = route(app, request).value
-
           status(result) mustBe OK
+
+          val responseBody = contentAsJson(result).as[TrustAuthResponseBody]
+          responseBody.redirectUrl mustBe None
         }
       }
 
@@ -112,8 +114,10 @@ class TrustAuthControllerSpec extends SpecBase with ScalaFutures with EitherValu
           val request = FakeRequest(GET, controllers.auth.routes.TrustAuthController.authorised(utr).url)
 
           val result = route(app, request).value
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.TrustNotClaimedController.onPageLoad().url
+          status(result) mustBe OK
+
+          val responseBody = contentAsJson(result).as[TrustAuthResponseBody]
+          responseBody.redirectUrl mustBe Some(controllers.routes.TrustNotClaimedController.onPageLoad().url)
         }
       }
 
@@ -143,8 +147,10 @@ class TrustAuthControllerSpec extends SpecBase with ScalaFutures with EitherValu
           val request = FakeRequest(GET, controllers.auth.routes.TrustAuthController.authorised(utr).url)
 
           val result = route(app, request).value
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.AgentNotAuthorisedController.onPageLoad().url
+          status(result) mustBe OK
+
+          val responseBody = contentAsJson(result).as[TrustAuthResponseBody]
+          responseBody.redirectUrl mustBe Some(controllers.routes.AgentNotAuthorisedController.onPageLoad().url)
         }
       }
 
@@ -178,8 +184,10 @@ class TrustAuthControllerSpec extends SpecBase with ScalaFutures with EitherValu
           val request = FakeRequest(GET, controllers.auth.routes.TrustAuthController.authorised(utr).url)
 
           val result = route(app, request).value
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.AgentNotAuthorisedController.onPageLoad().url
+          status(result) mustBe OK
+
+          val responseBody = contentAsJson(result).as[TrustAuthResponseBody]
+          responseBody.redirectUrl mustBe Some(controllers.routes.AgentNotAuthorisedController.onPageLoad().url)
         }
       }
 
@@ -206,8 +214,10 @@ class TrustAuthControllerSpec extends SpecBase with ScalaFutures with EitherValu
             val request = FakeRequest(GET, controllers.auth.routes.TrustAuthController.authorised(utr).url)
 
             val result = route(app, request).value
-            status(result) mustBe SEE_OTHER
-            redirectLocation(result).value must include("/verify-your-identity-for-a-trust")
+            status(result) mustBe OK
+
+            val responseBody = contentAsJson(result).as[TrustAuthResponseBody]
+            responseBody.redirectUrl.get must include("/verify-your-identity-for-a-trust")
           }
 
         }
@@ -230,6 +240,9 @@ class TrustAuthControllerSpec extends SpecBase with ScalaFutures with EitherValu
 
             val result = route(app, request).value
             status(result) mustBe OK
+
+            val responseBody = contentAsJson(result).as[TrustAuthResponseBody]
+            responseBody.redirectUrl mustBe None
           }
         }
       }
@@ -273,8 +286,10 @@ class TrustAuthControllerSpec extends SpecBase with ScalaFutures with EitherValu
             val request = FakeRequest(GET, controllers.auth.routes.TrustAuthController.authorised(utr).url)
 
             val result = route(app, request).value
-            status(result) mustBe SEE_OTHER
-            redirectLocation(result).value mustBe controllers.routes.TrustStatusController.alreadyClaimed().url
+            status(result) mustBe OK
+
+            val responseBody = contentAsJson(result).as[TrustAuthResponseBody]
+            responseBody.redirectUrl mustBe Some(controllers.routes.TrustStatusController.alreadyClaimed().url)
           }
         }
 
@@ -295,8 +310,10 @@ class TrustAuthControllerSpec extends SpecBase with ScalaFutures with EitherValu
             val request = FakeRequest(GET, controllers.auth.routes.TrustAuthController.authorised(utr).url)
 
             val result = route(app, request).value
-            status(result) mustBe SEE_OTHER
-            redirectLocation(result).value must include("/claim-a-trust")
+            status(result) mustBe OK
+
+            val responseBody = contentAsJson(result).as[TrustAuthResponseBody]
+            responseBody.redirectUrl.get must include("/claim-a-trust")
           }
         }
       }

@@ -17,6 +17,7 @@
 package services
 
 import com.google.inject.Inject
+import connectors.TrustAuthResponse
 import controllers.actions.TrustsAuthorisedFunctions
 import play.api.Logger
 import play.api.mvc.{Request, Result}
@@ -28,9 +29,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class TrustsIV @Inject()(trustsAuth: TrustsAuthorisedFunctions) {
 
   def authenticate[A](utr: String,
-                      onIVRelationshipExisting: Future[Either[Result, Request[A]]],
-                      onIVRelationshipNotExisting: Future[Either[Result, Request[A]]]
-                     )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[Result, Request[A]]] = {
+                      onIVRelationshipExisting: Future[TrustAuthResponse],
+                      onIVRelationshipNotExisting: Future[TrustAuthResponse]
+                     )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
 
     val trustIVRelationship =
       Relationship(trustsAuth.config.relationshipName, Set(BusinessKey(trustsAuth.config.relationshipIdentifier, utr)))

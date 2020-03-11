@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class TrustAuthResponseBody(redirectUrl: Option[String])
+case class TrustAuthResponseBody(redirectUrl: Option[String] = None)
 
 object TrustAuthResponseBody {
   implicit val format: Format[TrustAuthResponseBody] = Json.format[TrustAuthResponseBody]
@@ -37,6 +37,7 @@ trait TrustAuthResponse
 
 object TrustAuthAllowed extends TrustAuthResponse
 case class TrustAuthDenied(redirectUrl: String) extends TrustAuthResponse
+object TrustAuthInternalServerError extends TrustAuthResponse
 
 @ImplementedBy(classOf[TrustAuthConnectorImpl])
 trait TrustAuthConnector {

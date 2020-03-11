@@ -18,13 +18,14 @@ package controllers.auth
 
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
-import connectors.EnrolmentStoreConnector
+import connectors.{EnrolmentStoreConnector, TrustAuthAllowed, TrustAuthDenied, TrustAuthInternalServerError, TrustAuthResponse, TrustAuthResponseBody}
 import controllers.actions.IdentifierAction
 import handlers.ErrorHandler
 import models.requests.EnrolmentStoreResponse.{AlreadyClaimed, NotClaimed}
 import models.requests.IdentifierRequest
 import play.api.Logger
 import play.api.i18n.I18nSupport
+import play.api.libs.json.Json
 import play.api.mvc._
 import services.{AgentAuthorisedForDelegatedEnrolment, TrustsIV}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -51,15 +52,17 @@ class TrustAuthController @Inject()(val controllerComponents: MessagesController
         case _ =>
           checkIfTrustIsClaimedAndTrustIV(utr)
       }
-      result flatMap {
-        case Right(_) => Future.successful(Ok)
-        case Left(result) => Future.successful(result)
+
+      result map {
+        case TrustAuthAllowed => Ok(Json.toJson(TrustAuthResponseBody()))
+        case TrustAuthDenied(redirectUrl) => Ok(Json.toJson(TrustAuthResponseBody(Some(redirectUrl))))
+        case TrustAuthInternalServerError => InternalServerError
       }
   }
 
   private def checkIfTrustIsClaimedAndTrustIV[A](utr: String)
                                                 (implicit request: IdentifierRequest[A],
-                                                 hc: HeaderCarrier): Future[Either[Result, Request[A]]] = {
+                                                 hc: HeaderCarrier): Future[TrustAuthResponse] = {
 
     val userEnrolled = checkForTrustEnrolmentForUTR(utr)
 
@@ -70,41 +73,40 @@ class TrustAuthController @Inject()(val controllerComponents: MessagesController
         utr = utr,
         onIVRelationshipExisting = {
           Logger.info(s"[PlaybackAuthentication] user is enrolled, redirecting to maintain")
-          Future.successful(Right(request))
+          Future.successful(TrustAuthAllowed)
         },
         onIVRelationshipNotExisting = {
           Logger.info(s"[PlaybackAuthentication] user is enrolled, redirecting to /verify-identity-for-a-trust")
-          Future.successful(Left(Redirect(config.verifyIdentityForATrustUrl(utr))))
+          Future.successful(TrustAuthDenied(config.verifyIdentityForATrustUrl(utr)))
         }
       )
     } else {
       enrolmentStoreConnector.checkIfAlreadyClaimed(utr) flatMap {
         case AlreadyClaimed =>
           Logger.info(s"[PlaybackAuthentication] user is not enrolled but the trust is already claimed")
-          Future.successful(Left(Redirect(controllers.routes.TrustStatusController.alreadyClaimed())))  // different
+          Future.successful(TrustAuthDenied(controllers.routes.TrustStatusController.alreadyClaimed().url))
 
         case NotClaimed =>
           Logger.info(s"[PlaybackAuthentication] user is not enrolled and the trust is not claimed")
-          Future.successful(Left(Redirect(config.claimATrustUrl(utr))))
+          Future.successful(TrustAuthDenied(config.claimATrustUrl(utr)))
         case _ =>
-          Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
+          Future.successful(TrustAuthInternalServerError)
       }
     }
   }
 
   private def checkIfAgentAuthorised[A](utr: String)
                                        (implicit request: Request[A],
-                                        hc: HeaderCarrier): Future[Either[Result, Request[A]]] =
+                                        hc: HeaderCarrier): Future[TrustAuthResponse] =
 
     enrolmentStoreConnector.checkIfAlreadyClaimed(utr) flatMap {
       case NotClaimed =>
         Logger.info(s"[PlaybackAuthentication] trust is not claimed")
-        Future.successful(Left(Redirect(controllers.routes.TrustNotClaimedController.onPageLoad())))
+        Future.successful(TrustAuthDenied(controllers.routes.TrustNotClaimedController.onPageLoad().url))
       case AlreadyClaimed =>
-
         delegatedEnrolment.authenticate(utr)
       case _ =>
-        Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
+        Future.successful(TrustAuthInternalServerError)
     }
 
   private def checkForTrustEnrolmentForUTR[A](utr: String)(implicit request: IdentifierRequest[A]): Boolean =

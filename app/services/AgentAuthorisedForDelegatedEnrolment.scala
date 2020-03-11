@@ -17,10 +17,9 @@
 package services
 
 import com.google.inject.Inject
+import connectors.{TrustAuthAllowed, TrustAuthDenied, TrustAuthResponse}
 import controllers.actions.TrustsAuthorisedFunctions
 import play.api.Logger
-import play.api.mvc.Results.Redirect
-import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.auth.core.{Enrolment, InsufficientEnrolments}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -30,8 +29,7 @@ class AgentAuthorisedForDelegatedEnrolment @Inject()(trustsAuth: TrustsAuthorise
 
   def authenticate[A](utr: String)
                      (implicit hc: HeaderCarrier,
-                      ec: ExecutionContext,
-                      request: Request[A]): Future[Either[Result, Request[A]]] = {
+                      ec: ExecutionContext): Future[TrustAuthResponse] = {
 
     val predicate = Enrolment("HMRC-TERS-ORG")
       .withIdentifier("SAUTR", utr)
@@ -39,14 +37,14 @@ class AgentAuthorisedForDelegatedEnrolment @Inject()(trustsAuth: TrustsAuthorise
 
     trustsAuth.authorised(predicate) {
       Logger.info(s"[AgentAuthorisedForDelegatedEnrolment] agent is authorised for delegated enrolment")
-      Future.successful(Right(request))
+      Future.successful(TrustAuthAllowed)
     } recover {
       case _ : InsufficientEnrolments =>
         Logger.info(s"[AgentAuthorisedForDelegatedEnrolment] agent is not authorised for delegated enrolment")
-        Left(Redirect(controllers.routes.AgentNotAuthorisedController.onPageLoad()))
+        TrustAuthDenied(controllers.routes.AgentNotAuthorisedController.onPageLoad().url)
       case _ =>
         Logger.info(s"[AgentAuthorisedForDelegatedEnrolment] agent is not authorised")
-        Left(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
+        TrustAuthDenied(controllers.routes.UnauthorisedController.onPageLoad().url)
     }
   }
 
