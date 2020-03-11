@@ -18,9 +18,8 @@ package services
 
 import com.google.inject.Inject
 import controllers.actions.TrustsAuthorisedFunctions
-import models.requests.DataRequest
 import play.api.Logger
-import play.api.mvc.Result
+import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.auth.core.{BusinessKey, FailedRelationship, Relationship}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -29,9 +28,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class TrustsIV @Inject()(trustsAuth: TrustsAuthorisedFunctions) {
 
   def authenticate[A](utr: String,
-                      onIVRelationshipExisting: Future[Either[Result, DataRequest[A]]],
-                      onIVRelationshipNotExisting: Future[Either[Result, DataRequest[A]]]
-                     )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[Result, DataRequest[A]]] = {
+                      onIVRelationshipExisting: Future[Either[Result, Request[A]]],
+                      onIVRelationshipNotExisting: Future[Either[Result, Request[A]]]
+                     )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[Result, Request[A]]] = {
 
     val trustIVRelationship =
       Relationship(trustsAuth.config.relationshipName, Set(BusinessKey(trustsAuth.config.relationshipIdentifier, utr)))

@@ -18,10 +18,9 @@ package services
 
 import com.google.inject.Inject
 import controllers.actions.TrustsAuthorisedFunctions
-import models.requests.DataRequest
 import play.api.Logger
-import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
+import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.auth.core.{Enrolment, InsufficientEnrolments}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -32,7 +31,7 @@ class AgentAuthorisedForDelegatedEnrolment @Inject()(trustsAuth: TrustsAuthorise
   def authenticate[A](utr: String)
                      (implicit hc: HeaderCarrier,
                       ec: ExecutionContext,
-                      request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
+                      request: Request[A]): Future[Either[Result, Request[A]]] = {
 
     val predicate = Enrolment("HMRC-TERS-ORG")
       .withIdentifier("SAUTR", utr)

@@ -75,3 +75,5 @@ GET        /add-other-individuals                       controllers.makechanges.
 POST       /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit()
 
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
+
+GET        /authorised/:utr                             controllers.auth.TrustAuthController.authorised(utr: String)
