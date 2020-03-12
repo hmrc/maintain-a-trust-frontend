@@ -21,11 +21,10 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
 import models.Enumerable
-import models.requests.DataRequest
 import navigation.DeclareNoChange
 import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
@@ -50,9 +49,9 @@ class VariationProgressController @Inject()(
       request.userAnswers.get(UTRPage) match {
         case Some(utr) =>
           val mandatorySections = List(
-            Task(Link(SettlorsVariationDetails, redirectToMaintainTrustees()),None),
-            Task(Link(TrusteeVariationDetails, ""),None),
-            Task(Link(BeneficiariesVariationDetails, ""),None)
+            Task(Link(SettlorsVariationDetails, ""), None),
+            Task(Link(TrusteeVariationDetails, config.maintainTrusteesUrl(utr)), None),
+            Task(Link(BeneficiariesVariationDetails, ""), None)
           )
 
           val optionalSections = List(
@@ -63,15 +62,5 @@ class VariationProgressController @Inject()(
 
         case _ => Redirect(routes.UTRController.onPageLoad())
       }
-  }
-
-  private def redirectToMaintainTrustees()(implicit request: DataRequest[AnyContent]): Result = {
-    request.userAnswers.get(UTRPage) map {
-      utr =>
-        val url = s"${config.maintainATrusteeFrontendUrl}/$utr"
-        Redirect(Call("GET", url))
-    } getOrElse {
-      Redirect(controllers.routes.UTRController.onPageLoad())
-    }
   }
 }

@@ -16,37 +16,46 @@
 
 package views
 
-import views.behaviours.ViewBehaviours
+import Sections.{BeneficiariesVariationDetails, NaturalPeople, SettlorsVariationDetails, TrusteeVariationDetails}
+import pages.UTRPage
+import views.behaviours.{VariationsProgressViewBehaviours, ViewBehaviours}
 import views.html.VariationProgressView
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
+import viewmodels.{Link, Task}
 
-class VariationProgressViewSpec extends ViewBehaviours {
+class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressViewBehaviours {
 
   "VariationProgress view" must {
 
     val utr = "1234545678"
 
-    val sections = Nil
+    val mandatorySections = List(
+      Task(Link(SettlorsVariationDetails, ""), None),
+      Task(Link(TrusteeVariationDetails, ""), None),
+      Task(Link(BeneficiariesVariationDetails, ""), None)
+    )
+    val optionalSections = List(
+      Task(Link(NaturalPeople, ""),None))
 
-    val view = viewFor[VariationProgressView](Some(emptyUserAnswers))
+    val group = Organisation
 
-    val applyView = view.apply(utr, sections)(fakeRequest, messages)
+    val userAnswers = emptyUserAnswers
+      .set(UTRPage, utr).success.value
+
+    val view = viewFor[VariationProgressView](Some(userAnswers))
+
+    val applyView = view.apply(utr, mandatorySections, optionalSections, group)(fakeRequest, messages)
 
     "Have a dynamic utr in the subheading" in {
       val doc = asDocument(applyView)
       assertContainsText(doc, s"This trust’s UTR: $utr")
     }
 
-    behave like normalPage(applyView, "variationProgress",
-      "subHeading.1",
-      "p1",
-      "p2",
-      "return.link",
-      "warning",
-      "subHeading.2",
-      "subHeading.3"
-    )
+    behave like normalPage(applyView, "variationProgress")
 
     behave like pageWithBackLink(applyView)
+
+    behave like taskList(applyView)
 
   }
 }

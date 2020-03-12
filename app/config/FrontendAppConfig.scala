@@ -36,6 +36,8 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
   def verifyIdentityForATrustUrl(utr: String) =
     configuration.get[Service]("microservice.services.verify-your-identity-for-a-trust-frontend").baseUrl + s"/verify-your-identity-for-a-trust/save/$utr"
 
+  def maintainTrusteesUrl(utr: String) = s"$maintainATrusteeFrontendUrl/$utr"
+
   val analyticsToken: String = configuration.get[String](s"google-analytics.token")
   val analyticsHost: String = configuration.get[String](s"google-analytics.host")
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"

@@ -16,16 +16,17 @@
 
 package controllers
 
+import Sections.{BeneficiariesVariationDetails, NaturalPeople, SettlorsVariationDetails, TrusteeVariationDetails}
 import base.SpecBase
 import pages.UTRPage
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
+import viewmodels.{Link, Task}
+import views.html.VariationProgressView
 
 class VariationProgressControllerSpec extends SpecBase {
-
-
-
 
   lazy val onPageLoad: String = routes.WhatIsNextController.onPageLoad().url
 
@@ -33,13 +34,39 @@ class VariationProgressControllerSpec extends SpecBase {
 
   val fakeUTR = "1234567890"
 
+  val mandatorySections = List(
+    Task(Link(SettlorsVariationDetails, ""), None),
+    Task(Link(TrusteeVariationDetails, "http://localhost:9792/maintain-a-trust/trustees/1234567890"), None),
+    Task(Link(BeneficiariesVariationDetails, ""), None)
+  )
+  val optionalSections = List(
+    Task(Link(NaturalPeople, ""),None))
+
   "VariationProgress Controller" must {
 
-    "redirect to RegisteredOnline when no required answer" in {
+    "return OK and the correct view for a GET" in {
 
-        val answers = emptyUserAnswers.set(UTRPage, fakeUTR).success.value
+      val answers = emptyUserAnswers.set(UTRPage, fakeUTR).success.value
 
-        val application = applicationBuilder(userAnswers = Some(answers)).build()
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
+
+      val result = route(application, request).value
+
+      val view = application.injector.instanceOf[VariationProgressView]
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(fakeUTR, mandatorySections, optionalSections, Organisation)(fakeRequest, messages).toString
+
+      application.stop()
+    }
+
+    "redirect to UTR page when no utr is found" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
         val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
 
@@ -47,10 +74,11 @@ class VariationProgressControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.VariationProgressController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.UTRController.onPageLoad().url
 
         application.stop()
     }
+
 
   }
 }
