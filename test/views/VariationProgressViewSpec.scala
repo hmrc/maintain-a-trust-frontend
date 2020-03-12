@@ -55,7 +55,10 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
     behave like pageWithBackLink(applyView)
 
-    behave like taskList(applyView)
+    behave like taskListHeading(applyView)
+
+    behave like taskList(applyView, mandatorySections)
+    behave like taskList(applyView, optionalSections)
 
   }
 }

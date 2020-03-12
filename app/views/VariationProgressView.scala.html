@@ -34,31 +34,28 @@
 
    @components.back_link()
 
-<span class="govuk-caption-xl">@messages("variationProgress.subHeading.1", utr)</span>
-   @components.heading("variationProgress.heading", headingSize = "heading-large govuk-fieldset__heading")
+    <span class="govuk-caption-xl">@messages("variationProgress.subHeading.1", utr)</span>
+
+    @components.heading("variationProgress.heading", headingSize = "heading-large govuk-fieldset__heading")
 
     <p>@messages("variationProgress.p1")</p>
 
     <p>@messages("variationProgress.p2")</p>
 
-@if(affinityGroup == AffinityGroup.Agent) {
-    <p>
-        <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>.
-    </p>
-}
+    @if(affinityGroup == AffinityGroup.Agent) {
+        <p>
+            <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>.
+        </p>
+    }
 
     @components.warning("variationProgress")
 
-    <h2>@messages("variationProgress.subHeading.2")</h2>
+    @components.task_list(mandatory, messages("variationProgress.subHeading.2"))
 
-    @components.task_list(mandatory)
+    @components.task_list(optional, messages("variationProgress.subHeading.3"))
 
-    <h2>@messages("variationProgress.subHeading.3")</h2>
+    <p>@messages("variationProgress.print.info")</p>
 
-    @components.task_list(optional)
-
-<p>@messages("variationProgress.print.info")</p>
-
-@components.button_link(messages("taskList.summary.continue"), ConfirmationController.onPageLoad().url)
+    @components.button_link(messages("taskList.summary.continue"), ConfirmationController.onPageLoad().url)
 }
 
