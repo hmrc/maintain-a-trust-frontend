@@ -49,13 +49,13 @@ class VariationProgressController @Inject()(
       request.userAnswers.get(UTRPage) match {
         case Some(utr) =>
           val mandatorySections = List(
-            Task(Link(SettlorsVariationDetails, ""), None),
+            Task(Link(SettlorsVariationDetails, controllers.routes.FeatureNotAvailableController.onPageLoad().url), None),
             Task(Link(TrusteeVariationDetails, config.maintainTrusteesUrl(utr)), None),
-            Task(Link(BeneficiariesVariationDetails, ""), None)
+            Task(Link(BeneficiariesVariationDetails, controllers.routes.FeatureNotAvailableController.onPageLoad().url), None)
           )
 
           val optionalSections = List(
-            Task(Link(NaturalPeople, ""),None)
+            Task(Link(NaturalPeople, controllers.routes.FeatureNotAvailableController.onPageLoad().url),None)
           )
 
           Ok(view(utr, mandatorySections, optionalSections, request.user.affinityGroup))

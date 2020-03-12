@@ -35,12 +35,12 @@ class VariationProgressControllerSpec extends SpecBase {
   val fakeUTR = "1234567890"
 
   val mandatorySections = List(
-    Task(Link(SettlorsVariationDetails, ""), None),
+    Task(Link(SettlorsVariationDetails, controllers.routes.FeatureNotAvailableController.onPageLoad().url), None),
     Task(Link(TrusteeVariationDetails, "http://localhost:9792/maintain-a-trust/trustees/1234567890"), None),
-    Task(Link(BeneficiariesVariationDetails, ""), None)
+    Task(Link(BeneficiariesVariationDetails, controllers.routes.FeatureNotAvailableController.onPageLoad().url), None)
   )
   val optionalSections = List(
-    Task(Link(NaturalPeople, ""),None))
+    Task(Link(NaturalPeople, controllers.routes.FeatureNotAvailableController.onPageLoad().url),None))
 
   "VariationProgress Controller" must {
 
