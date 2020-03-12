@@ -26,7 +26,11 @@
     main_template: MainTemplate
 )
 
-@(utr: String, mandatory : List[Task], optional: List[Task], affinityGroup : AffinityGroup)(implicit request: Request[_], messages: Messages)
+@(utr: String,
+    mandatory : List[Task],
+    optional: List[Task],
+    affinityGroup : AffinityGroup,
+    nextUrl : String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("variationProgress.title")
@@ -56,6 +60,6 @@
 
     <p>@messages("variationProgress.print.info")</p>
 
-    @components.button_link(messages("taskList.summary.continue"), ConfirmationController.onPageLoad().url)
+    @components.button_link(messages("taskList.summary.continue"), nextUrl)
 }
 

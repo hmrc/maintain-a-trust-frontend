@@ -34,6 +34,8 @@ class VariationProgressControllerSpec extends SpecBase {
 
   val fakeUTR = "1234567890"
 
+  val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+
   val mandatorySections = List(
     Task(Link(Settlors, controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url), None),
     Task(Link(Trustees, "http://localhost:9792/maintain-a-trust/trustees/1234567890"), None),
@@ -59,7 +61,7 @@ class VariationProgressControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(fakeUTR, mandatorySections, optionalSections, Organisation)(fakeRequest, messages).toString
+        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl)(fakeRequest, messages).toString
 
       application.stop()
     }

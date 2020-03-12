@@ -25,6 +25,8 @@ import views.html.VariationProgressView
 
 class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressViewBehaviours {
 
+  val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+
   "VariationProgress view" must {
 
     val utr = "1234545678"
@@ -44,7 +46,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
     val view = viewFor[VariationProgressView](Some(userAnswers))
 
-    val applyView = view.apply(utr, mandatorySections, optionalSections, group)(fakeRequest, messages)
+    val applyView = view.apply(utr, mandatorySections, optionalSections, group, expectedContinueUrl)(fakeRequest, messages)
 
     "Have a dynamic utr in the subheading" in {
       val doc = asDocument(applyView)

@@ -25,6 +25,7 @@ import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
+import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
@@ -60,7 +61,13 @@ class VariationProgressController @Inject()(
             Task(Link(NaturalPeople, notYetAvailable),None)
           )
 
-          Ok(view(utr, mandatorySections, optionalSections, request.user.affinityGroup))
+          val next = if (request.user.affinityGroup == Agent) {
+            controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+          } else {
+            controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+          }
+
+          Ok(view(utr, mandatorySections, optionalSections, request.user.affinityGroup, next))
 
         case _ => Redirect(routes.UTRController.onPageLoad())
       }
