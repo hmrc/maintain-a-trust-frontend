@@ -16,13 +16,13 @@
 
 package controllers
 
-import Sections.{BeneficiariesVariationDetails, NaturalPeople, SettlorsVariationDetails, TrusteeVariationDetails}
 import base.SpecBase
 import pages.UTRPage
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
+import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
 
@@ -35,12 +35,12 @@ class VariationProgressControllerSpec extends SpecBase {
   val fakeUTR = "1234567890"
 
   val mandatorySections = List(
-    Task(Link(SettlorsVariationDetails, controllers.routes.FeatureNotAvailableController.onPageLoad().url), None),
-    Task(Link(TrusteeVariationDetails, "http://localhost:9792/maintain-a-trust/trustees/1234567890"), None),
-    Task(Link(BeneficiariesVariationDetails, controllers.routes.FeatureNotAvailableController.onPageLoad().url), None)
+    Task(Link(Settlors, controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url), None),
+    Task(Link(Trustees, "http://localhost:9792/maintain-a-trust/trustees/1234567890"), None),
+    Task(Link(Beneficiaries, controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url), None)
   )
   val optionalSections = List(
-    Task(Link(NaturalPeople, controllers.routes.FeatureNotAvailableController.onPageLoad().url),None))
+    Task(Link(NaturalPeople, controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url),None))
 
   "VariationProgress Controller" must {
 

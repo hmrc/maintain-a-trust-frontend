@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package Sections
+package viewmodels.tasks
 
 import pages.Page
 
-case object BeneficiariesVariationDetails extends Page {
+case object Settlors extends Page {
 
-  override def toString: String = "beneficiaries"
+  override def toString: String = "settlors"
 
 }

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package Sections
+package viewmodels.tasks
 
 import pages.Page
 
-case object TrusteeVariationDetails extends Page {
+case object Trustees extends Page {
 
   override def toString: String = "trustees"
 

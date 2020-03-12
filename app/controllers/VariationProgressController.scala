@@ -16,7 +16,6 @@
 
 package controllers
 
-import Sections.{BeneficiariesVariationDetails, NaturalPeople, SettlorsVariationDetails, TrusteeVariationDetails}
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
@@ -26,6 +25,7 @@ import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
+import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
 
@@ -46,16 +46,18 @@ class VariationProgressController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
+      val notYetAvailable = controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url
+
       request.userAnswers.get(UTRPage) match {
         case Some(utr) =>
           val mandatorySections = List(
-            Task(Link(SettlorsVariationDetails, controllers.routes.FeatureNotAvailableController.onPageLoad().url), None),
-            Task(Link(TrusteeVariationDetails, config.maintainTrusteesUrl(utr)), None),
-            Task(Link(BeneficiariesVariationDetails, controllers.routes.FeatureNotAvailableController.onPageLoad().url), None)
+            Task(Link(Settlors, notYetAvailable), None),
+            Task(Link(Trustees, config.maintainTrusteesUrl(utr)), None),
+            Task(Link(Beneficiaries, notYetAvailable), None)
           )
 
           val optionalSections = List(
-            Task(Link(NaturalPeople, controllers.routes.FeatureNotAvailableController.onPageLoad().url),None)
+            Task(Link(NaturalPeople, notYetAvailable),None)
           )
 
           Ok(view(utr, mandatorySections, optionalSections, request.user.affinityGroup))

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package Sections
+package viewmodels.tasks
 
 import pages.Page
 

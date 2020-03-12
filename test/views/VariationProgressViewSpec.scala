@@ -16,12 +16,12 @@
 
 package views
 
-import Sections.{BeneficiariesVariationDetails, NaturalPeople, SettlorsVariationDetails, TrusteeVariationDetails}
 import pages.UTRPage
+import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
+import viewmodels.tasks._
+import viewmodels.{Link, Task}
 import views.behaviours.{VariationsProgressViewBehaviours, ViewBehaviours}
 import views.html.VariationProgressView
-import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
-import viewmodels.{Link, Task}
 
 class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressViewBehaviours {
 
@@ -30,9 +30,9 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
     val utr = "1234545678"
 
     val mandatorySections = List(
-      Task(Link(SettlorsVariationDetails, ""), None),
-      Task(Link(TrusteeVariationDetails, ""), None),
-      Task(Link(BeneficiariesVariationDetails, ""), None)
+      Task(Link(Settlors, ""), None),
+      Task(Link(Trustees, ""), None),
+      Task(Link(Beneficiaries, ""), None)
     )
     val optionalSections = List(
       Task(Link(NaturalPeople, ""),None))
