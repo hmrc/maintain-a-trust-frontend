@@ -26,7 +26,6 @@ import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import sections.natural.Natural
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
 
@@ -59,7 +58,7 @@ class VariationProgressController @Inject()(
             Task(Link(NaturalPeople, ""),None)
           )
 
-          Ok(view(utr, mandatorySections, optionalSections))
+          Ok(view(utr, mandatorySections, optionalSections, request.user.affinityGroup))
 
         case _ => Redirect(routes.UTRController.onPageLoad())
       }

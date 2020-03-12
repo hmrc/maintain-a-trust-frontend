@@ -345,6 +345,7 @@ variationsProgress.return.link = Return to register and maintain a trust for a c
 variationProgress.warning = You need to declare the trust details are up to date. Some questions may have changed since the trust was registered.
 variationProgress.subHeading.2 = Sections to be completed
 variationProgress.subHeading.3 = Additional sections to be completed
+variationProgress.print.info = You can save or print a copy of your saved answers once all selections are up to date, as well as a declared copy after you have made a declaration.
 
 taskList.settlors.label = Settlors
 taskList.trustees.label = Trustees
