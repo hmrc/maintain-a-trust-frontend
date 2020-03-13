@@ -12,6 +12,9 @@ GET        /unauthorised                                controllers.Unauthorised
 
 GET        /logout                                      controllers.LogoutController.logout()
 
+GET        /keep-alive                                  controllers.SessionTimeoutController.keepAlive
+GET        /timeout                                     controllers.SessionTimeoutController.timeout
+
 GET        /unique-taxpayer-reference                   controllers.UTRController.onPageLoad()
 POST       /unique-taxpayer-reference                   controllers.UTRController.onSubmit()
 
