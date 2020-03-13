@@ -99,7 +99,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to maintain trustees when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
+    "redirect to overview when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
 
       val utr = "0987654321"
 
@@ -122,7 +122,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value must include(
-        s"/maintain-a-trust/trustees/$utr"
+        s"/maintain-a-trust/overview"
       )
 
       application.stop()
