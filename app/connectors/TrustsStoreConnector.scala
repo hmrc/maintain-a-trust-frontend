@@ -19,6 +19,7 @@ package connectors
 import config.FrontendAppConfig
 import connector.TrustClaim
 import javax.inject.Inject
+import models.MaintainTasks
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -26,10 +27,16 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
-  val url: String = config.trustsStoreUrl + "/claim"
+  val trustLockedUrl: String = config.trustsStoreUrl + "/claim"
+
+  private def maintainTasksUrl(utr: String) = s"${config.trustsStoreUrl}/maintain/tasks/$utr"
 
   def get(internalId: String, utr : String)(implicit hc : HeaderCarrier, ec : ExecutionContext): Future[Option[TrustClaim]] = {
-    http.GET[Option[TrustClaim]](url)(TrustClaim.httpReads(utr), hc, ec)
+    http.GET[Option[TrustClaim]](trustLockedUrl)(TrustClaim.httpReads(utr), hc, ec)
+  }
+
+  def getStatusOfTasks(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[MaintainTasks] = {
+    http.GET[MaintainTasks](maintainTasksUrl(utr)).recover{ case _ => MaintainTasks() }
   }
 
 }
