@@ -63,7 +63,11 @@ class AuthenticatedIdentifierAction @Inject()(
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier =
+      HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session)) match {
+        case hc if hc.authorization.isDefined => hc
+        case _ => HeaderCarrierConverter.fromHeadersAndSession(request.headers)
+      }
 
     val retrievals = Retrievals.internalId and
       Retrievals.affinityGroup and

@@ -30,6 +30,7 @@ import play.api.mvc._
 import services.{AgentAuthorisedForDelegatedEnrolment, TrustsIV}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -46,6 +47,8 @@ class TrustAuthController @Inject()(val controllerComponents: MessagesController
 
   def authorised(utr: String): Action[AnyContent] = identifierAction.async {
     implicit request =>
+      implicit val hc : HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers)
+
       val result = request.user.affinityGroup match {
         case Agent =>
           checkIfAgentAuthorised(utr)
