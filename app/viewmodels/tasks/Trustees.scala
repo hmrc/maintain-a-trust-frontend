@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-    main_template: MainTemplate
-)
+package viewmodels.tasks
 
-@()(implicit request: Request[_], messages: Messages)
+import pages.Page
 
-@main_template(
-    title = messages("session_expired.title"),
-    timeoutEnabled = false
-    ) {
+case object Trustees extends Page {
 
-    @components.heading("session_expired.heading")
+  override def toString: String = "trustees"
 
-    <p>@messages("session_expired.guidance")</p>
 }

@@ -36,6 +36,8 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
   def verifyIdentityForATrustUrl(utr: String) =
     configuration.get[Service]("microservice.services.verify-your-identity-for-a-trust-frontend").baseUrl + s"/verify-your-identity-for-a-trust/save/$utr"
 
+  def maintainTrusteesUrl(utr: String) = s"$maintainATrusteeFrontendUrl/$utr"
+
   val analyticsToken: String = configuration.get[String](s"google-analytics.token")
   val analyticsHost: String = configuration.get[String](s"google-analytics.host")
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
@@ -73,6 +75,9 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   lazy val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.welsh-translation")
+
+  lazy val countdownLength: String = configuration.get[String]("timeout.countdown")
+  lazy val timeoutLength: String = configuration.get[String]("timeout.length")
 
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),

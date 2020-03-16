@@ -200,7 +200,6 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
       case DisplayTrustIdentificationType(_, None, None, None) =>
-        Logger.debug("ALLLLLLLL nones" * 20)
         answers.set(TrusteeNinoYesNoPage(index), false)
           .flatMap(_.set(TrusteeAddressYesNoPage(index), false))
 

@@ -92,22 +92,12 @@ class AddOtherIndividualsYesNoController @Inject()(
       UpdateFilterQuestions(t, b, s, p, n) match {
         case UpdateFilterQuestions(false, false, false, false, false) =>
           redirectToDeclaration()
-        case UpdateFilterQuestions(true, false, false, false, false) if config.maintainTrusteesEnabled =>
-          redirectToMaintainTrustees()
+        case UpdateFilterQuestions(true, false, false, false, false) =>
+          Redirect(controllers.routes.VariationProgressController.onPageLoad())
         case _ =>
           Redirect(controllers.makechanges.routes.UnavailableSectionsController.onPageLoad())
       }
     }).getOrElse(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
-  }
-
-  private def redirectToMaintainTrustees()(implicit request: DataRequest[AnyContent]): Result = {
-    request.userAnswers.get(UTRPage) map {
-      utr =>
-        val url = s"${config.maintainATrusteeFrontendUrl}/$utr"
-        Redirect(Call("GET", url))
-    } getOrElse {
-      Redirect(controllers.routes.UTRController.onPageLoad())
-    }
   }
 
 }

@@ -14,18 +14,18 @@
  * limitations under the License.
  *@
 
-@this(
-    main_template: MainTemplate
-)
+@import viewmodels.Task
+@import views.html._
 
-@()(implicit request: Request[_], messages: Messages)
+@(sections: List[Task], heading: String)(implicit messages: Messages)
 
-@main_template(
-    title = messages("session_expired.title"),
-    timeoutEnabled = false
-    ) {
-
-    @components.heading("session_expired.heading")
-
-    <p>@messages("session_expired.guidance")</p>
-}
+<ol role="list" class="app-task-list">
+    <li>
+        <h2 id="task-list--heading" class="app-task-list__section">@heading</h2>
+        <ul class="app-task-list__items">
+            @for(task <- sections){
+                @components.task(task)
+            }
+        </ul>
+    </li>
+</ol>
