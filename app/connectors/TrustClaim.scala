@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package connector
+package connectors
 
 import play.api.Logger
 import play.api.http.Status.OK

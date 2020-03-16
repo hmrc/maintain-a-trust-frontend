@@ -18,18 +18,26 @@ package models.pages
 
 import models.{Enumerable, WithName}
 
-sealed trait Status
+sealed trait Tag
 
-object Status extends Enumerable.Implicits {
+object Tag extends Enumerable.Implicits {
 
-  case object Completed extends WithName("completed") with Status
+  case object UpToDate extends WithName("up-to-date") with Tag
 
-  case object InProgress extends WithName("progress") with Status
+  case object InProgress extends WithName("in-progress") with Tag
 
-  val values: Set[Status] = Set(
-    Completed, InProgress
+  val values: Set[Tag] = Set(
+    UpToDate, InProgress
   )
 
-  implicit val enumerable: Enumerable[Status] =
+  implicit val enumerable: Enumerable[Tag] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
+
+  def tagFor(upToDate: Boolean) : Tag = {
+    if(upToDate) {
+      UpToDate
+    } else {
+      InProgress
+    }
+  }
 }
