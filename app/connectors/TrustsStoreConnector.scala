@@ -19,7 +19,7 @@ package connectors
 import config.FrontendAppConfig
 import connector.TrustClaim
 import javax.inject.Inject
-import models.MaintainTasks
+import models.CompletedMaintenanceTasks
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -35,8 +35,8 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfi
     http.GET[Option[TrustClaim]](trustLockedUrl)(TrustClaim.httpReads(utr), hc, ec)
   }
 
-  def getStatusOfTasks(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[MaintainTasks] = {
-    http.GET[MaintainTasks](maintainTasksUrl(utr)).recover{ case _ => MaintainTasks() }
+  def getStatusOfTasks(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[CompletedMaintenanceTasks] = {
+    http.GET[CompletedMaintenanceTasks](maintainTasksUrl(utr)).recover{ case _ => CompletedMaintenanceTasks() }
   }
 
 }

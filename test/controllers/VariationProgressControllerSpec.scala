@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import connectors.TrustsStoreConnector
-import models.MaintainTasks
+import models.CompletedMaintenanceTasks
 import models.pages.Tag.{InProgress, UpToDate}
 import pages.UTRPage
 import play.api.mvc.Call
@@ -68,7 +68,7 @@ class VariationProgressControllerSpec extends SpecBase {
         )
         .build()
 
-      when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(MaintainTasks()))
+      when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
       val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
 
