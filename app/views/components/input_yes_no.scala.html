@@ -79,7 +79,7 @@ legendAsHeading: Boolean = false
                     }
                     @if(field.value.contains("false")){checked="checked"}
             />
-            <label id="@{field.id}-no-label"class="block-label selection-button-radio" for="@{field.id}-no" data-target="@if(noAssoc.nonEmpty){@noAssoc}">
+            <label id="@{field.id}-no-label" class="block-label selection-button-radio" for="@{field.id}-no" data-target="@if(noAssoc.nonEmpty){@noAssoc}">
                 @messages("site.no")
             </label>
         </div>
