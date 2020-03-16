@@ -18,8 +18,11 @@ package controllers
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
+import connectors.TrustsStoreConnector
 import controllers.actions.AuthenticateForPlayback
 import models.Enumerable
+import models.pages.Tag
+import models.pages.Tag.UpToDate
 import navigation.DeclareNoChange
 import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -30,7 +33,7 @@ import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 
 class VariationProgressController @Inject()(
@@ -39,37 +42,50 @@ class VariationProgressController @Inject()(
                                       actions: AuthenticateForPlayback,
                                       view: VariationProgressView,
                                       val controllerComponents: MessagesControllerComponents,
-                                      config: FrontendAppConfig
+                                      config: FrontendAppConfig,
+                                      storeConnector: TrustsStoreConnector
                                     )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
 
 
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       val notYetAvailable = controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url
 
       request.userAnswers.get(UTRPage) match {
         case Some(utr) =>
-          val mandatorySections = List(
-            Task(Link(Settlors, notYetAvailable), None),
-            Task(Link(Trustees, config.maintainTrusteesUrl(utr)), None),
-            Task(Link(Beneficiaries, notYetAvailable), None)
-          )
 
-          val optionalSections = List(
-            Task(Link(NaturalPeople, notYetAvailable),None)
-          )
+          storeConnector.getStatusOfTasks(utr) map {
+            tasks =>
 
-          val next = if (request.user.affinityGroup == Agent) {
-            controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
-          } else {
-            controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+              val mandatorySections = List(
+                Task(Link(Settlors, notYetAvailable), Some(UpToDate)),
+                Task(Link(Trustees, config.maintainTrusteesUrl(utr)), Some(Tag.tagFor(tasks.trustees))),
+                Task(Link(Beneficiaries, notYetAvailable), Some(UpToDate))
+              )
+
+              val optionalSections = List(
+                Task(Link(NaturalPeople, notYetAvailable), Some(UpToDate))
+              )
+
+              val next = if (request.user.affinityGroup == Agent) {
+                controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+              } else {
+                controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+              }
+
+              Ok(view(utr,
+                mandatorySections,
+                optionalSections,
+                request.user.affinityGroup,
+                next,
+                isAbleToDeclare = tasks.trustees
+              ))
+
           }
-
-          Ok(view(utr, mandatorySections, optionalSections, request.user.affinityGroup, next))
-
-        case _ => Redirect(routes.UTRController.onPageLoad())
+        case _ =>
+          Future.successful(Redirect(routes.UTRController.onPageLoad()))
       }
   }
 }

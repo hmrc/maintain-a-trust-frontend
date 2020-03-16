@@ -589,3 +589,8 @@ howDeedOfVariationCreated.checkYourAnswersLabel = How was the Deed of Variation 
 holdoverReliefYesNo.checkYourAnswersLabel = Was holdover relief claimed on any assets put into the trust?
 employerFinancedRetirementBenefitsSchemeYesNo.checkYourAnswersLabel = Is this an employer-financed retirement benefits scheme?
 employerFinancedRetirementBenefitsSchemeStartDate.checkYourAnswersLabel = When did the employer-financed retirement benefits scheme start?
+
+
+# Task List
+taskList.up-to-date = Up to date
+taskList.in-progress = In progress
