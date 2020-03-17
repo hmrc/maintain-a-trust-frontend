@@ -16,6 +16,6 @@
 
 package viewmodels
 
-import models.pages.Status
+import models.pages.Tag
 
-case class Task(link : Link, tag : Option[Status])
+case class Task(link : Link, tag : Option[Tag])

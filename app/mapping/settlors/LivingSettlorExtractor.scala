@@ -22,7 +22,7 @@ import mapping.PlaybackImplicits._
 import mapping.{PassportType, PlaybackExtractor}
 import models.http._
 import models.pages.IndividualOrBusiness
-import models.pages.Status.Completed
+import models.pages.Tag.UpToDate
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
@@ -75,7 +75,7 @@ class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[Liv
         )
       }
       .flatMap(_.set(SettlorSafeIdPage(index), individual.identification.flatMap(_.safeId)))
-      .flatMap(_.set(LivingSettlorStatus(index), Completed))
+      .flatMap(_.set(LivingSettlorStatus(index), UpToDate))
   }
 
   def extractSettlorCompany(answers: Try[UserAnswers], index: Int, company : DisplayTrustSettlorCompany) = {
@@ -96,7 +96,7 @@ class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[Liv
       .flatMap(_.set(SettlorCompanyTypePage(index), company.companyType))
       .flatMap(_.set(SettlorCompanyTimePage(index), company.companyTime))
       .flatMap(_.set(SettlorSafeIdPage(index), company.identification.flatMap(_.safeId)))
-      .flatMap(_.set(LivingSettlorStatus(index), Completed))
+      .flatMap(_.set(LivingSettlorStatus(index), UpToDate))
   }
 
   private def extractIndividualIdentification(individual: DisplayTrustSettlor, index: Int, answers: UserAnswers) = {
