@@ -100,5 +100,5 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
     configuration.get[String]("urls.maintainATrustee")
 
   lazy val maintainBeneficiariesFrontendUrl : String =
-    configuration.get[String]("urls.maintainABeneficiarie")
+    configuration.get[String]("urls.maintainABeneficiary")
 }
