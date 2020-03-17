@@ -38,6 +38,8 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   def maintainTrusteesUrl(utr: String) = s"$maintainATrusteeFrontendUrl/$utr"
 
+  def maintainBeneficiariesUrl(utr: String) = s"$maintainBeneficiariesFrontendUrl/$utr"
+
   val analyticsToken: String = configuration.get[String](s"google-analytics.token")
   val analyticsHost: String = configuration.get[String](s"google-analytics.host")
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
@@ -96,4 +98,7 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   lazy val maintainATrusteeFrontendUrl : String =
     configuration.get[String]("urls.maintainATrustee")
+
+  lazy val maintainBeneficiariesFrontendUrl : String =
+    configuration.get[String]("urls.maintainABeneficiarie")
 }
