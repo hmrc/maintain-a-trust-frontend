@@ -55,7 +55,7 @@ class VariationProgressController @Inject()(
       notYetAvailable
     }
   }
-
+  
   case class TaskList(mandatory: List[Task], optional: List[Task]) {
     val isAbleToDeclare : Boolean = !(mandatory ::: optional).exists(_.tag.contains(InProgress))
   }
@@ -85,7 +85,6 @@ class VariationProgressController @Inject()(
 
     TaskList(mandatorySections, optionalSections)
   }
-
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
