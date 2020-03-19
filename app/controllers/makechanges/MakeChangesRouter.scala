@@ -24,7 +24,6 @@ object MakeChangesRouter {
   sealed trait ChangesRouter
   case object Declaration extends ChangesRouter
   case object TaskList extends ChangesRouter
-  case object UnavailableSections extends ChangesRouter
   case object UnableToDecide extends ChangesRouter
 
   def decide(userAnswers: UserAnswers): ChangesRouter = {
@@ -33,9 +32,7 @@ object MakeChangesRouter {
                                      beneficiaries: Boolean,
                                      settlors: Boolean,
                                      protectors: Boolean,
-                                     natural: Boolean) {
-      val canShowTaskList : Boolean = trustees || beneficiaries
-    }
+                                     natural: Boolean)
 
     (for {
       t <- userAnswers.get(UpdateTrusteesYesNoPage)
@@ -47,10 +44,8 @@ object MakeChangesRouter {
       UpdateFilterQuestions(t, b, s, p, n) match {
         case UpdateFilterQuestions(false, false, false, false, false) =>
           Declaration
-        case filter @ UpdateFilterQuestions(_, _, false, false, false) if filter.canShowTaskList =>
-          TaskList
         case _ =>
-          UnavailableSections
+          TaskList
       }
     }).getOrElse(UnableToDecide)
   }
