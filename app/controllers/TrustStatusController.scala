@@ -113,7 +113,7 @@ class TrustStatusController @Inject()(
   }
 
   private def checkIfLocked(utr: String)(implicit request: DataRequest[AnyContent]): Future[Result] = {
-    trustStoreConnector.get(request.userAnswers.internalAuthId, utr).flatMap {
+    trustStoreConnector.get(utr).flatMap {
       case Some(claim) if claim.trustLocked =>
         Future.successful(Redirect(controllers.routes.TrustStatusController.locked()))
       case _ =>

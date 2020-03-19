@@ -30,7 +30,8 @@
     mandatory : List[Task],
     optional: List[Task],
     affinityGroup : AffinityGroup,
-    nextUrl : String)(implicit request: Request[_], messages: Messages)
+    nextUrl : String,
+    isAbleToDeclare: Boolean)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("variationProgress.title")
@@ -40,7 +41,7 @@
 
     <span class="govuk-caption-xl">@messages("variationProgress.subHeading.1", utr)</span>
 
-    @components.heading("variationProgress.heading", headingSize = "heading-large govuk-fieldset__heading")
+    @components.heading("variationProgress.heading", headingSize = "heading-large")
 
     <p>@messages("variationProgress.p1")</p>
 
@@ -48,7 +49,7 @@
 
     @if(affinityGroup == AffinityGroup.Agent) {
         <p>
-            <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>.
+            <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>
         </p>
     }
 
@@ -58,8 +59,8 @@
 
     @components.task_list(optional, messages("variationProgress.subHeading.3"))
 
-    <p>@messages("variationProgress.print.info")</p>
-
-    @components.button_link(messages("taskList.summary.continue"), nextUrl)
+    @if(isAbleToDeclare) {
+        @components.button_link(messages("taskList.summary.continue"), nextUrl)
+    }
 }
 

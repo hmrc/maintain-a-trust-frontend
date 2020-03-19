@@ -22,35 +22,35 @@ import org.scalatest.{MustMatchers, OptionValues, WordSpec}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.libs.json.{JsError, JsString, Json}
 
-class StatusSpec extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with OptionValues {
+class TagSpec extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with OptionValues {
 
   "Status" must {
 
     "deserialise valid values" in {
 
-      val gen = Gen.oneOf(Status.values.toSeq)
+      val gen = Gen.oneOf(Tag.values.toSeq)
 
       forAll(gen) {
         status =>
 
-          JsString(status.toString).validate[Status].asOpt.value mustEqual status
+          JsString(status.toString).validate[Tag].asOpt.value mustEqual status
       }
     }
 
     "fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!Status.values.map(_.toString).contains(_))
+      val gen = arbitrary[String] suchThat (!Tag.values.map(_.toString).contains(_))
 
       forAll(gen) {
         invalidValue =>
 
-          JsString(invalidValue).validate[Status] mustEqual JsError("error.invalid")
+          JsString(invalidValue).validate[Tag] mustEqual JsError("error.invalid")
       }
     }
 
     "serialise" in {
 
-      val gen = Gen.oneOf(Status.values.toSeq)
+      val gen = Gen.oneOf(Tag.values.toSeq)
 
       forAll(gen) {
         status =>

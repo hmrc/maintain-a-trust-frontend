@@ -46,7 +46,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
     val view = viewFor[VariationProgressView](Some(userAnswers))
 
-    val applyView = view.apply(utr, mandatorySections, optionalSections, group, expectedContinueUrl)(fakeRequest, messages)
+    val applyView = view.apply(utr, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = false)(fakeRequest, messages)
 
     "Have a dynamic utr in the subheading" in {
       val doc = asDocument(applyView)
