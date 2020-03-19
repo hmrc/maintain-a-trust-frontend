@@ -21,7 +21,7 @@ import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorSt
 import mapping.{PassportType, PlaybackExtractor, PlaybackImplicits}
 import models.http._
 import models.pages.IndividualOrBusiness
-import models.pages.Status.Completed
+import models.pages.Tag.UpToDate
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.entitystatus.TrusteeStatus
 import pages.trustees._
@@ -121,7 +121,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
         )
       }
       .flatMap(_.set(TrusteeSafeIdPage(index), individual.identification.flatMap(_.safeId)))
-      .flatMap(_.set(TrusteeStatus(index), Completed))
+      .flatMap(_.set(TrusteeStatus(index), UpToDate))
   }
 
   def extractTrusteeCompany(answers: Try[UserAnswers], index: Int, company: DisplayTrustTrusteeOrgType) = {
@@ -143,7 +143,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
           )
         )
       }
-      .flatMap(_.set(TrusteeStatus(index), Completed))
+      .flatMap(_.set(TrusteeStatus(index), UpToDate))
   }
 
   private def extractLeadIndividualIdentification(leadIndividual: DisplayTrustLeadTrusteeIndType, index: Int, answers: UserAnswers) = {
@@ -200,7 +200,6 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
       case DisplayTrustIdentificationType(_, None, None, None) =>
-        Logger.debug("ALLLLLLLL nones" * 20)
         answers.set(TrusteeNinoYesNoPage(index), false)
           .flatMap(_.set(TrusteeAddressYesNoPage(index), false))
 

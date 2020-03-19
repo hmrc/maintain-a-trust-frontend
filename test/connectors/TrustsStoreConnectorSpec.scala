@@ -20,7 +20,7 @@ import base.SpecBase
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.{get, okJson, urlEqualTo, _}
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import models.MaintainTasks
+import models.CompletedMaintenanceTasks
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import play.api.libs.json.Json
@@ -79,7 +79,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       val result = connector.getStatusOfTasks("123456789")
 
       result.futureValue mustBe
-        MaintainTasks(trustees = true, beneficiaries = false, settlors = false, protectors = false, other = false)
+        CompletedMaintenanceTasks(trustees = true, beneficiaries = false, settlors = false, protectors = false, other = false)
 
       application.stop()
     }
@@ -103,7 +103,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       val result = connector.getStatusOfTasks("123456789")
 
       result.futureValue mustBe
-        MaintainTasks(trustees = false, beneficiaries = false, settlors = false, protectors = false, other = false)
+        CompletedMaintenanceTasks(trustees = false, beneficiaries = false, settlors = false, protectors = false, other = false)
 
       application.stop()
     }

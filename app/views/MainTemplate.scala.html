@@ -39,16 +39,16 @@
 
 @defaultScriptElem = {
     @if(timeoutEnabled) {
-        <script id="timeoutScript" role="dialog" tabindex="-1">
-                            window.GOVUK.timeoutDialog({
-                            timeout: @appConfig.timeoutLength,
-                            countdown: @appConfig.countdownLength,
-                            title: '@messages("timeout.title")',
-                            message: '@messages("timeout.message")',
-                            keepAliveUrl: '@sessionTimeoutController.keepAlive.url',
-                            signOutUrl: '@sessionTimeoutController.timeout.url',
-                            keepAliveButtonText: '@messages("timeout.keep-alive-button")'
-                            });
+        <script>
+            window.GOVUK.timeoutDialog({
+            timeout: @appConfig.timeoutLength,
+            countdown: @appConfig.countdownLength,
+            title: '@messages("timeout.title")',
+            message: '@messages("timeout.message")',
+            keepAliveUrl: '@sessionTimeoutController.keepAlive.url',
+            signOutUrl: '@sessionTimeoutController.timeout.url',
+            keepAliveButtonText: '@messages("timeout.keep-alive-button")'
+            });
          </script>
     }
     @scriptElem.getOrElse(HtmlFormat.empty)

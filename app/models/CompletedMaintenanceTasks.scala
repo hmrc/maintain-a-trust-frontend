@@ -18,16 +18,16 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-case class MaintainTasks(trustees: Boolean,
-                         beneficiaries: Boolean,
-                         settlors: Boolean,
-                         protectors: Boolean,
-                         other: Boolean)
+case class CompletedMaintenanceTasks(trustees: Boolean,
+                                     beneficiaries: Boolean,
+                                     settlors: Boolean,
+                                     protectors: Boolean,
+                                     other: Boolean)
 
-object MaintainTasks {
-  implicit val formats : Format[MaintainTasks] = Json.format[MaintainTasks]
+object CompletedMaintenanceTasks {
+  implicit val formats : Format[CompletedMaintenanceTasks] = Json.format[CompletedMaintenanceTasks]
 
-  def apply() : MaintainTasks = MaintainTasks(
+  def apply() : CompletedMaintenanceTasks = CompletedMaintenanceTasks(
     trustees = false,
     beneficiaries = false,
     settlors = false,
