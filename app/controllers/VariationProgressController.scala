@@ -46,12 +46,19 @@ class VariationProgressController @Inject()(
                                       storeConnector: TrustsStoreConnector
                                     )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
 
+  private val notYetAvailable = controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url
+
+  def beneficiariesRouteEnabled(utr: String) = {
+    if (config.maintainBeneficiariesEnabled) {
+      config.maintainBeneficiariesUrl(utr)
+    } else {
+      notYetAvailable
+    }
+  }
 
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
-
-      val notYetAvailable = controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url
 
       request.userAnswers.get(UTRPage) match {
         case Some(utr) =>
@@ -62,7 +69,7 @@ class VariationProgressController @Inject()(
               val mandatorySections = List(
                 Task(Link(Settlors, notYetAvailable), Some(UpToDate)),
                 Task(Link(Trustees, config.maintainTrusteesUrl(utr)), Some(Tag.tagFor(tasks.trustees))),
-                Task(Link(Beneficiaries, notYetAvailable), Some(UpToDate))
+                Task(Link(Beneficiaries, beneficiariesRouteEnabled(utr)), Some(UpToDate))
               )
 
               val optionalSections = List(
