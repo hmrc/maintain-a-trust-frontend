@@ -17,9 +17,9 @@
 package connectors
 
 import config.FrontendAppConfig
-import connectors.TrustClaim
 import javax.inject.Inject
-import models.CompletedMaintenanceTasks
+import models.{CompletedMaintenanceTasks, UserAnswers}
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -35,8 +35,20 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfi
     http.GET[Option[TrustClaim]](trustLockedUrl)(TrustClaim.httpReads(utr), hc, ec)
   }
 
+  def set(utr: String, userAnswers : UserAnswers)(implicit hc : HeaderCarrier, ec : ExecutionContext) = {
+    CompletedMaintenanceTasks.from(userAnswers) match {
+      case Some(x) =>
+        http.POST(maintainTasksUrl(utr), Json.toJson(x)).map(_ => x)
+      case None =>
+        Future.failed(new RuntimeException("Unable to set tasks status"))
+    }
+  }
+
   def getStatusOfTasks(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[CompletedMaintenanceTasks] = {
-    http.GET[CompletedMaintenanceTasks](maintainTasksUrl(utr)).recover{ case _ => CompletedMaintenanceTasks() }
+    http.GET[CompletedMaintenanceTasks](maintainTasksUrl(utr))
+      .recover {
+        case _ => CompletedMaintenanceTasks()
+      }
   }
 
 }

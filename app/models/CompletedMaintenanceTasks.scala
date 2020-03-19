@@ -17,6 +17,7 @@
 package models
 
 import play.api.libs.json.{Format, Json}
+import _root_.pages.makechanges._
 
 case class CompletedMaintenanceTasks(trustees: Boolean,
                                      beneficiaries: Boolean,
@@ -34,4 +35,15 @@ object CompletedMaintenanceTasks {
     protectors = false,
     other = false
   )
+
+  def from(userAnswers: UserAnswers) : Option[CompletedMaintenanceTasks] = for {
+    t <- userAnswers.get(UpdateTrusteesYesNoPage)
+    b <- userAnswers.get(UpdateBeneficiariesYesNoPage)
+    s <- userAnswers.get(UpdateSettlorsYesNoPage)
+    p <- userAnswers.get(AddProtectorYesNoPage)
+    n <- userAnswers.get(AddOtherIndividualsYesNoPage)
+  } yield {
+    CompletedMaintenanceTasks(!t, !b, !s, !p, !n)
+  }
+
 }

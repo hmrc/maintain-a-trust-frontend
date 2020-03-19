@@ -34,14 +34,10 @@ object Tag extends Enumerable.Implicits {
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
 
   def tagFor(upToDate: Boolean, featureEnabled : Boolean) : Tag = {
-    if (!featureEnabled) {
+    if (upToDate || !featureEnabled) {
       UpToDate
     } else {
-      if (upToDate) {
-        UpToDate
-      } else {
-        InProgress
-      }
+      InProgress
     }
   }
 }

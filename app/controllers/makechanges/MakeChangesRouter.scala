@@ -16,8 +16,7 @@
 
 package controllers.makechanges
 
-import models.UserAnswers
-import pages.makechanges._
+import models.{UpdateFilterQuestions, UserAnswers}
 
 object MakeChangesRouter {
 
@@ -27,27 +26,12 @@ object MakeChangesRouter {
   case object UnableToDecide extends ChangesRouter
 
   def decide(userAnswers: UserAnswers): ChangesRouter = {
-
-    case class UpdateFilterQuestions(trustees: Boolean,
-                                     beneficiaries: Boolean,
-                                     settlors: Boolean,
-                                     protectors: Boolean,
-                                     natural: Boolean)
-
-    (for {
-      t <- userAnswers.get(UpdateTrusteesYesNoPage)
-      b <- userAnswers.get(UpdateBeneficiariesYesNoPage)
-      s <- userAnswers.get(UpdateSettlorsYesNoPage)
-      p <- userAnswers.get(AddProtectorYesNoPage)
-      n <- userAnswers.get(AddOtherIndividualsYesNoPage)
-    } yield {
-      UpdateFilterQuestions(t, b, s, p, n) match {
+    UpdateFilterQuestions.from(userAnswers).map {
         case UpdateFilterQuestions(false, false, false, false, false) =>
           Declaration
         case _ =>
           TaskList
-      }
-    }).getOrElse(UnableToDecide)
+    }.getOrElse(UnableToDecide)
   }
 
 }

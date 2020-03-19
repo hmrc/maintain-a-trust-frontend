@@ -55,9 +55,9 @@ class VariationProgressController @Inject()(
       notYetAvailable
     }
   }
-  
-  case class TaskList(mandatory: List[Task], optional: List[Task]) {
-    val isAbleToDeclare : Boolean = !(mandatory ::: optional).exists(_.tag.contains(InProgress))
+
+  case class TaskList(mandatory: List[Task], other: List[Task]) {
+    val isAbleToDeclare : Boolean = !(mandatory ::: other).exists(_.tag.contains(InProgress))
   }
 
   private def taskList(tasks : CompletedMaintenanceTasks, utr: String) : TaskList = {
@@ -105,7 +105,7 @@ class VariationProgressController @Inject()(
 
               Ok(view(utr,
                 sections.mandatory,
-                sections.optional,
+                sections.other,
                 request.user.affinityGroup,
                 next,
                 isAbleToDeclare = sections.isAbleToDeclare
