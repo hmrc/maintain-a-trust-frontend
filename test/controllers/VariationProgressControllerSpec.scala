@@ -47,7 +47,7 @@ class VariationProgressControllerSpec extends SpecBase {
   val mandatorySections = List(
     Task(Link(Settlors, controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url), Some(UpToDate)),
     Task(Link(Trustees, "http://localhost:9792/maintain-a-trust/trustees/1234567890"), Some(InProgress)),
-    Task(Link(Beneficiaries, controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url), Some(UpToDate))
+    Task(Link(Beneficiaries, "http://localhost:9788/maintain-a-trust/beneficiaries/1234567890"), Some(UpToDate))
   )
   val optionalSections = List(
     Task(Link(NaturalPeople, controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url), Some(UpToDate)))
