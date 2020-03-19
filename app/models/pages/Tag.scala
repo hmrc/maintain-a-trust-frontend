@@ -33,11 +33,15 @@ object Tag extends Enumerable.Implicits {
   implicit val enumerable: Enumerable[Tag] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
 
-  def tagFor(upToDate: Boolean) : Tag = {
-    if(upToDate) {
+  def tagFor(upToDate: Boolean, featureEnabled : Boolean) : Tag = {
+    if (!featureEnabled) {
       UpToDate
     } else {
-      InProgress
+      if (upToDate) {
+        UpToDate
+      } else {
+        InProgress
+      }
     }
   }
 }
