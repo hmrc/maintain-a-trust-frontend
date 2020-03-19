@@ -72,32 +72,19 @@ class AddOtherIndividualsYesNoController @Inject()(
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
-            redirect(updatedAnswers)
+            MakeChangesRouter.decide(updatedAnswers) match {
+              case MakeChangesRouter.Declaration =>
+                redirectToDeclaration()
+              case MakeChangesRouter.TaskList =>
+                Redirect(controllers.routes.VariationProgressController.onPageLoad())
+              case MakeChangesRouter.UnavailableSections =>
+                Redirect(controllers.makechanges.routes.UnavailableSectionsController.onPageLoad())
+              case MakeChangesRouter.UnableToDecide =>
+                Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
+            }
           }
         }
       )
-  }
-
-  private def redirect(userAnswers: UserAnswers)(implicit request: DataRequest[AnyContent]): Result = {
-
-    case class UpdateFilterQuestions(trustees: Boolean, beneficiaries: Boolean, settlors: Boolean, protectors: Boolean, natural: Boolean)
-
-    (for {
-      t <- userAnswers.get(UpdateTrusteesYesNoPage)
-      b <- userAnswers.get(UpdateBeneficiariesYesNoPage)
-      s <- userAnswers.get(UpdateSettlorsYesNoPage)
-      p <- userAnswers.get(AddProtectorYesNoPage)
-      n <- userAnswers.get(AddOtherIndividualsYesNoPage)
-    } yield {
-      UpdateFilterQuestions(t, b, s, p, n) match {
-        case UpdateFilterQuestions(false, false, false, false, false) =>
-          redirectToDeclaration()
-        case UpdateFilterQuestions(true, false, false, false, false) =>
-          Redirect(controllers.routes.VariationProgressController.onPageLoad())
-        case _ =>
-          Redirect(controllers.makechanges.routes.UnavailableSectionsController.onPageLoad())
-      }
-    }).getOrElse(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
   }
 
 }
