@@ -77,8 +77,6 @@ class AddOtherIndividualsYesNoController @Inject()(
                 redirectToDeclaration()
               case MakeChangesRouter.TaskList =>
                 Redirect(controllers.routes.VariationProgressController.onPageLoad())
-              case MakeChangesRouter.UnavailableSections =>
-                Redirect(controllers.makechanges.routes.UnavailableSectionsController.onPageLoad())
               case MakeChangesRouter.UnableToDecide =>
                 Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
             }

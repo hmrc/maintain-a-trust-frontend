@@ -56,7 +56,6 @@ class VariationProgressController @Inject()(
     }
   }
 
-
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
