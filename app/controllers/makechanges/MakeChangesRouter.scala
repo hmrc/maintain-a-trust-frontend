@@ -33,9 +33,7 @@ object MakeChangesRouter {
                                      beneficiaries: Boolean,
                                      settlors: Boolean,
                                      protectors: Boolean,
-                                     natural: Boolean) {
-      val canShowTaskList : Boolean = trustees || beneficiaries
-    }
+                                     natural: Boolean)
 
     (for {
       t <- userAnswers.get(UpdateTrusteesYesNoPage)
@@ -47,7 +45,7 @@ object MakeChangesRouter {
       UpdateFilterQuestions(t, b, s, p, n) match {
         case UpdateFilterQuestions(false, false, false, false, false) =>
           Declaration
-        case filter @ UpdateFilterQuestions(_, _, false, false, false) if filter.canShowTaskList =>
+        case UpdateFilterQuestions(_, _, false, false, false) =>
           TaskList
         case _ =>
           UnavailableSections
