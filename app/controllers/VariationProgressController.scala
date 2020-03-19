@@ -69,7 +69,7 @@ class VariationProgressController @Inject()(
               val mandatorySections = List(
                 Task(Link(Settlors, notYetAvailable), Some(UpToDate)),
                 Task(Link(Trustees, config.maintainTrusteesUrl(utr)), Some(Tag.tagFor(tasks.trustees))),
-                Task(Link(Beneficiaries, beneficiariesRouteEnabled(utr)), Some(UpToDate))
+                Task(Link(Beneficiaries, beneficiariesRouteEnabled(utr)), Some(Tag.tagFor(tasks.beneficiaries)))
               )
 
               val optionalSections = List(
