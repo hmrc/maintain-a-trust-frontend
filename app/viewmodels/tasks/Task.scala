@@ -16,10 +16,4 @@
 
 package viewmodels.tasks
 
-import pages.Page
-
-case object Trustees extends Page with Task {
-
-  override def toString: String = "trustees"
-
-}
+trait Task

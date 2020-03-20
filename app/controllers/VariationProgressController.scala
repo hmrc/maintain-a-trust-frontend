@@ -20,9 +20,9 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions.AuthenticateForPlayback
-import models.Enumerable
+import models.{CompletedMaintenanceTasks, Enumerable}
 import models.pages.Tag
-import models.pages.Tag.UpToDate
+import models.pages.Tag.{InProgress, UpToDate}
 import navigation.DeclareNoChange
 import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -46,14 +46,44 @@ class VariationProgressController @Inject()(
                                       storeConnector: TrustsStoreConnector
                                     )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
 
-  private val notYetAvailable = controllers.routes.FeatureNotAvailableController.onPageLoad().url
+  lazy val notYetAvailable : String = controllers.routes.FeatureNotAvailableController.onPageLoad().url
 
   def beneficiariesRouteEnabled(utr: String) = {
-    if (config.maintainBeneficiariesEnabled)
+    if (config.maintainBeneficiariesEnabled) {
       config.maintainBeneficiariesUrl(utr)
-    else {
+    } else {
       notYetAvailable
     }
+  }
+
+  case class TaskList(mandatory: List[Task], other: List[Task]) {
+    val isAbleToDeclare : Boolean = !(mandatory ::: other).exists(_.tag.contains(InProgress))
+  }
+
+  private def taskList(tasks : CompletedMaintenanceTasks, utr: String) : TaskList = {
+    val mandatorySections = List(
+      Task(
+        Link(Settlors, notYetAvailable),
+        Some(Tag.tagFor(tasks.settlors, config.maintainSettlorsEnabled))
+      ),
+      Task(
+        Link(Trustees, config.maintainTrusteesUrl(utr)),
+        Some(Tag.tagFor(tasks.trustees, config.maintainTrusteesEnabled))
+      ),
+      Task(
+        Link(Beneficiaries, beneficiariesRouteEnabled(utr)),
+        Some(Tag.tagFor(tasks.beneficiaries, config.maintainBeneficiariesEnabled))
+      )
+    )
+
+    val optionalSections = List(
+      Task(
+        Link(NaturalPeople, notYetAvailable),
+        Some(Tag.tagFor(tasks.other, config.maintainOtherIndividualsEnabled))
+      )
+    )
+
+    TaskList(mandatorySections, optionalSections)
   }
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
@@ -65,15 +95,7 @@ class VariationProgressController @Inject()(
           storeConnector.getStatusOfTasks(utr) map {
             tasks =>
 
-              val mandatorySections = List(
-                Task(Link(Settlors, notYetAvailable), Some(UpToDate)),
-                Task(Link(Trustees, config.maintainTrusteesUrl(utr)), Some(Tag.tagFor(tasks.trustees))),
-                Task(Link(Beneficiaries, beneficiariesRouteEnabled(utr)), Some(Tag.tagFor(tasks.beneficiaries)))
-              )
-
-              val optionalSections = List(
-                Task(Link(NaturalPeople, notYetAvailable), Some(UpToDate))
-              )
+              val sections = taskList(tasks, utr)
 
               val next = if (request.user.affinityGroup == Agent) {
                 controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
@@ -82,11 +104,11 @@ class VariationProgressController @Inject()(
               }
 
               Ok(view(utr,
-                mandatorySections,
-                optionalSections,
+                sections.mandatory,
+                sections.other,
                 request.user.affinityGroup,
                 next,
-                isAbleToDeclare = tasks.trustees
+                isAbleToDeclare = sections.isAbleToDeclare
               ))
 
           }

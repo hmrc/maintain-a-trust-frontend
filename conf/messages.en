@@ -360,7 +360,7 @@ taskList.summary.continue = Continue to declaration
 featureNotAvailable.title = This part of the online service is not available yet
 featureNotAvailable.heading = This part of the online service is not available yet
 featureNotAvailable.p1 = If you need to make any changes to the trust you can
-featureNotAvailable.link = contact our trusts helpline(opens in a new window or tab)
+featureNotAvailable.link = contact the trusts helpline (opens in a new window or tab)
 featureNotAvailable.p2 = You will be able to update these details online in the future.
 
 # SECTIONS

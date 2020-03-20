@@ -23,8 +23,11 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import models.CompletedMaintenanceTasks
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
+import pages.makechanges.{AddOtherIndividualsYesNoPage, AddProtectorYesNoPage, UpdateBeneficiariesYesNoPage, UpdateSettlorsYesNoPage, UpdateTrusteesYesNoPage}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
+import play.api.http.HeaderNames._
+import play.api.http.MimeTypes._
 
 class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach with ScalaFutures with IntegrationPatience {
 
@@ -80,6 +83,50 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
 
       result.futureValue mustBe
         CompletedMaintenanceTasks(trustees = true, beneficiaries = false, settlors = false, protectors = false, other = false)
+
+      application.stop()
+    }
+
+    "return OK response with current tasks when setting tasks" in {
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts-store.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsStoreConnector]
+
+      val userAnswers = emptyUserAnswers
+        .set(UpdateTrusteesYesNoPage, true).success.value
+        .set(UpdateBeneficiariesYesNoPage, false).success.value
+        .set(UpdateSettlorsYesNoPage, false).success.value
+        .set(AddProtectorYesNoPage, false).success.value
+        .set(AddOtherIndividualsYesNoPage, false).success.value
+
+      val json = Json.parse(
+        """
+          |{
+          |  "trustees": false,
+          |  "beneficiaries": true,
+          |  "settlors": true,
+          |  "protectors": true,
+          |  "other": true
+          |}
+          |""".stripMargin)
+
+      server.stubFor(
+        post(urlEqualTo("/trusts-store/maintain/tasks/123456789"))
+          .withHeader(CONTENT_TYPE, containing(JSON))
+          .withRequestBody(equalTo(json.toString))
+          .willReturn(okJson(json.toString))
+      )
+
+      val result = connector.set("123456789", userAnswers)
+
+      result.futureValue mustBe
+        CompletedMaintenanceTasks(trustees = false, beneficiaries = true, settlors = true, protectors = true, other = true)
 
       application.stop()
     }

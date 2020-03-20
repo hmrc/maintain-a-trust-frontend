@@ -8,7 +8,6 @@
 @import 'partials/_utilities';
 @import 'partials/_shame';
 @import 'partials/heading';
-@import 'patterns/tag';
 @import 'conditionals';
 @import 'colours/palette';
 @import 'partials/_focus';
@@ -18,6 +17,7 @@
 
 @import 'partials/task-list';
 @import 'partials/_modal';
+@import 'patterns/tag';
 
 .push-text-top--3 {
   padding-top: govuk-spacing(3);
