@@ -28,7 +28,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateClassOfBeneficiary(index: Int) = DisplayTrustUnidentifiedType(
-    lineNo = s"$index",
+    lineNo = Some(s"$index"),
     bpMatchStatus = index match {
       case 0 => Some("01")
       case _ => None
@@ -70,7 +70,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "with minimum data must return user answers updated" in {
         val classOfBeneficiary = List(DisplayTrustUnidentifiedType(
-          lineNo = s"1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           description = s"Class Of Beneficiary 1",
           beneficiaryDiscretion = None,

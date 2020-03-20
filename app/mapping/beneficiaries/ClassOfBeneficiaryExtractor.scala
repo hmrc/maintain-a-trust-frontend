@@ -44,7 +44,7 @@ class ClassOfBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
                 _.set(
                   ClassOfBeneficiaryMetaData(index),
                   MetaData(
-                    lineNo = classOfBeneficiary.lineNo,
+                    lineNo = classOfBeneficiary.lineNo.getOrElse(""),
                     bpMatchStatus = classOfBeneficiary.bpMatchStatus.fold(Some("98"))(x => Some(x)),
                     entityStart = classOfBeneficiary.entityStart
                   )
