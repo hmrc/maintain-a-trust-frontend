@@ -23,14 +23,16 @@ object MakeChangesRouter {
   sealed trait ChangesRouter
   case object Declaration extends ChangesRouter
   case object TaskList extends ChangesRouter
+  case object UnavailableSections extends ChangesRouter
   case object UnableToDecide extends ChangesRouter
 
   def decide(userAnswers: UserAnswers): ChangesRouter = {
     UpdateFilterQuestions.from(userAnswers).map {
         case UpdateFilterQuestions(false, false, false, false, false) =>
           Declaration
-        case _ =>
+        case UpdateFilterQuestions(_, _, false, false, false) =>
           TaskList
+        case _ => UnavailableSections
     }.getOrElse(UnableToDecide)
   }
 

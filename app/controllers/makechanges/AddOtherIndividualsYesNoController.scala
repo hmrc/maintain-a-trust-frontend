@@ -74,7 +74,7 @@ class AddOtherIndividualsYesNoController @Inject()(
             route
           }
         }
-      )
+    )
   }
 
   private def determineRoute(updatedAnswers: UserAnswers)(implicit request: DataRequest[AnyContent]) : Future[Result] = {
@@ -94,6 +94,8 @@ class AddOtherIndividualsYesNoController @Inject()(
         }
       case MakeChangesRouter.UnableToDecide =>
         Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
+      case MakeChangesRouter.UnavailableSections =>
+        Future.successful(Redirect(controllers.makechanges.routes.UnavailableSectionsController.onPageLoad()))
     }
   }
 }
