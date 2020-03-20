@@ -18,6 +18,7 @@ package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
+import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import models.UserAnswers
@@ -41,7 +42,8 @@ class AddOtherIndividualsYesNoController @Inject()(
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: AddOtherIndividualsYesNoView,
-                                        config: FrontendAppConfig
+                                        config: FrontendAppConfig,
+                                        trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("addOtherIndividuals")
@@ -63,26 +65,35 @@ class AddOtherIndividualsYesNoController @Inject()(
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors))),
-
         value => {
           for {
-            updatedAnswers <- Future.fromTry(
-              request.userAnswers
-                .set(AddOtherIndividualsYesNoPage, value)
-            )
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
+            route <- determineRoute(updatedAnswers)
           } yield {
-            MakeChangesRouter.decide(updatedAnswers) match {
-              case MakeChangesRouter.Declaration =>
-                redirectToDeclaration()
-              case MakeChangesRouter.TaskList =>
-                Redirect(controllers.routes.VariationProgressController.onPageLoad())
-              case MakeChangesRouter.UnableToDecide =>
-                Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
-            }
+            route
           }
         }
       )
   }
 
+  private def determineRoute(updatedAnswers: UserAnswers)(implicit request: DataRequest[AnyContent]) : Future[Result] = {
+    MakeChangesRouter.decide(updatedAnswers) match {
+      case MakeChangesRouter.Declaration =>
+        Future.successful(redirectToDeclaration())
+      case MakeChangesRouter.TaskList =>
+        request.userAnswers.get(UTRPage).map {
+          utr =>
+            for {
+              _ <- trustStoreConnector.set(utr, updatedAnswers)
+            } yield {
+              Redirect(controllers.routes.VariationProgressController.onPageLoad())
+            }
+        }.getOrElse {
+          Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
+        }
+      case MakeChangesRouter.UnableToDecide =>
+        Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
+    }
+  }
 }
