@@ -26,6 +26,7 @@ case class CompletedMaintenanceTasks(trustees: Boolean,
                                      other: Boolean)
 
 object CompletedMaintenanceTasks {
+
   implicit val formats : Format[CompletedMaintenanceTasks] = Json.format[CompletedMaintenanceTasks]
 
   def apply() : CompletedMaintenanceTasks = CompletedMaintenanceTasks(
