@@ -46,12 +46,12 @@ class VariationProgressController @Inject()(
                                       storeConnector: TrustsStoreConnector
                                     )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
 
-  private val notYetAvailable = controllers.makechanges.routes.UnavailableSectionsController.onPageLoad().url
+  private val notYetAvailable = controllers.routes.FeatureNotAvailableController.onPageLoad().url
 
   def beneficiariesRouteEnabled(utr: String) = {
-    if (config.maintainBeneficiariesEnabled) {
+    if (config.maintainBeneficiariesEnabled)
       config.maintainBeneficiariesUrl(utr)
-    } else {
+    else {
       notYetAvailable
     }
   }
