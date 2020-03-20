@@ -24,7 +24,12 @@
     title = messages("featureNotAvailable.title")
     ) {
 
-    @components.back_link()
+@components.back_link()
 
-    @components.heading("featureNotAvailable.heading")
+<h1>@components.heading("featureNotAvailable.heading")</h1>
+
+<p>@messages("featureNotAvailable.p1") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("featureNotAvailable.link")</a></p>
+
+<p>@messages("featureNotAvailable.p2")</p>
+
 }
