@@ -28,6 +28,7 @@ import play.api.test.Helpers._
 import views.html.makechanges.AddOtherIndividualsYesNoView
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
+import play.api.inject.bind
 
 import scala.concurrent.Future
 
@@ -119,7 +120,9 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
         .set(AddProtectorYesNoPage, false).success.value
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers)).build()
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
+          .build()
 
       val request =
         FakeRequest(POST, addOtherIndividualsYesNoRoute)
