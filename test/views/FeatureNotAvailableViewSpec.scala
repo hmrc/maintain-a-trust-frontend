@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,24 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-    main_template: MainTemplate
-)
+package views
 
-@()(implicit request: Request[_], messages: Messages)
+import views.behaviours.ViewBehaviours
+import views.html.FeatureNotAvailableView
 
-@main_template(
-    title = messages("featureNotAvailable.title")
-    ) {
+class FeatureNotAvailableViewSpec extends ViewBehaviours {
 
-@components.back_link()
+  "FeatureNotAvailableView view" must {
 
-@components.heading("featureNotAvailable.heading")
+    val application = applicationBuilder().build()
 
-<p>@messages("featureNotAvailable.p1") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("featureNotAvailable.link")</a></p>
+    val view = application.injector.instanceOf[FeatureNotAvailableView]
 
-<p>@messages("featureNotAvailable.p2")</p>
+    val applyView = view.apply()(fakeRequest, messages)
 
+    behave like normalPage(applyView, "featureNotAvailable")
+  }
 }
