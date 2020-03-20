@@ -30,7 +30,8 @@ trait VariationsProgressViewBehaviours extends ViewSpecBase {
 
         "contain a heading" in {
           val doc = asDocument(view)
-          assertRenderedById(doc, "task-list--heading")
+          assertRenderedById(doc, "task-list--heading--mandatory")
+          assertRenderedById(doc, "task-list--heading--additional")
         }
       }
     }
