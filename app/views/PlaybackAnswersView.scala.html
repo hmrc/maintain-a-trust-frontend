@@ -39,7 +39,7 @@
     @for(section <- entities){
         @{
             section match {
-                case a: AnswerSection => components.answer_section(a)
+                case a: AnswerSection => components.summary_answer_section(a)
                 case r: RepeaterAnswerSection => components.repeater_answer_section(r)
             }
         }
@@ -51,7 +51,7 @@
     @for(section <- trustDetails){
         @{
             section match {
-                case a: AnswerSection => components.answer_section(a)
+                case a: AnswerSection => components.summary_answer_section(a)
                 case r: RepeaterAnswerSection => components.repeater_answer_section(r)
             }
         }
