@@ -16,7 +16,6 @@
 
 package views
 
-import config.FrontendAppConfig
 import views.behaviours.ViewBehaviours
 import views.html.InformationMaintainingThisTrustView
 
@@ -30,8 +29,6 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(utr)(fakeRequest, messages)
 
-    val config = app.injector.instanceOf[FrontendAppConfig]
-
     "Have a dynamic utr in the subheading" in {
       val doc = asDocument(applyView)
       assertContainsText(doc, s"This trust’s UTR: $utr")
@@ -39,21 +36,18 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
     behave like normalPage(applyView, "informationMaintainingThisTrust",
       "warning",
-      "keepTrustUpdated",
+      "viewLastDeclaration",
       "paragraph1",
-      "list1",
-      "list2",
       "printsave.link",
-      "list3",
-      "list4",
-      "changesToTrust",
+      "updateDetails",
       "paragraph2",
-      "paragraph3"
+      "paragraph3",
+      "paragraph4"
     )
 
     behave like pageWithBackLink(applyView)
 
-    behave like pageWithContinueButton(applyView, controllers.routes.WhatIsNextController.onPageLoad().url)
+    behave like pageWithContinueButton(applyView, controllers.routes.WhatIsNextController.onPageLoad().url, Some("site.startMaintaining"))
 
   }
 }
