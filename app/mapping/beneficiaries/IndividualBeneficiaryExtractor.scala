@@ -49,7 +49,7 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
                 _.set(
                   IndividualBeneficiaryMetaData(index),
                   MetaData(
-                    lineNo = individualBeneficiary.lineNo,
+                    lineNo = individualBeneficiary.lineNo.getOrElse(""),
                     bpMatchStatus = individualBeneficiary.bpMatchStatus,
                     entityStart = individualBeneficiary.entityStart
                   )

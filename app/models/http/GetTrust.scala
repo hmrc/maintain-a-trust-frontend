@@ -195,7 +195,7 @@ object DisplayTrustBeneficiaryType {
 }
 
 
-case class DisplayTrustIndividualDetailsType(lineNo: String,
+case class DisplayTrustIndividualDetailsType(lineNo: Option[String],
                                              bpMatchStatus: Option[String],
                                              name: NameType,
                                              dateOfBirth: Option[DateTime],

@@ -60,7 +60,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
       "must return user answers updated" in {
         val beneficiary = DisplayTrustBeneficiaryType(
           individualDetails = Some(List(DisplayTrustIndividualDetailsType(
-            lineNo = s"1",
+            lineNo = Some("1"),
             bpMatchStatus = Some("01"),
             name = NameType("First Name", None, "Last Name"),
             dateOfBirth = None,
