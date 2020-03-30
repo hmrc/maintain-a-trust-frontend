@@ -32,7 +32,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateIndividual(index: Int) = DisplayTrustIndividualDetailsType(
-    lineNo = s"$index",
+    lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     name = NameType(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = index match {
@@ -99,7 +99,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "with minimum data must return user answers updated" in {
         val individual = List(DisplayTrustIndividualDetailsType(
-          lineNo = s"1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = NameType("First Name", None, "Last Name"),
           dateOfBirth = None,
