@@ -101,4 +101,6 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   lazy val maintainBeneficiariesFrontendUrl : String =
     configuration.get[String]("urls.maintainABeneficiary")
+
+  lazy val accessibilityLinkUrl: String = configuration.get[String]("urls.accessibility")
 }
