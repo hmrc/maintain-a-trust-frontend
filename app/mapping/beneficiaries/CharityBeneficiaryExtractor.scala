@@ -48,7 +48,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
               _.set(
                 CharityBeneficiaryMetaData(index),
                 MetaData(
-                  lineNo = charityBeneficiary.lineNo,
+                  lineNo = charityBeneficiary.lineNo.getOrElse(""),
                   bpMatchStatus = charityBeneficiary.bpMatchStatus,
                   entityStart = charityBeneficiary.entityStart
                 )
