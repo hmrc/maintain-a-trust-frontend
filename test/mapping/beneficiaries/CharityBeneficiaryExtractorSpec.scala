@@ -28,7 +28,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateCharity(index: Int) = DisplayTrustCharityType(
-    lineNo = s"$index",
+    lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     organisationName = s"Charity $index",
     beneficiaryDiscretion = index match {
@@ -81,7 +81,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "with minimum data must return user answers updated" in {
         val charity = List(DisplayTrustCharityType(
-          lineNo = s"1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           organisationName = s"Charity 1",
           beneficiaryDiscretion = None,
