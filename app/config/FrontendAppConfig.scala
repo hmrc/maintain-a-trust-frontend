@@ -26,7 +26,7 @@ import play.api.mvc.Call
 class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
-  private val contactFormServiceIdentifier = "maintain-a-trust-frontend"
+  private val contactFormServiceIdentifier = "trusts"
 
   private def loadConfig(key: String) = configuration.get[String](key)
 
