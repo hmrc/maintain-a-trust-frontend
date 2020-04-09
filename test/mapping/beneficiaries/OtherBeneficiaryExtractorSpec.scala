@@ -28,7 +28,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateOther(index: Int) = DisplayTrustOtherType(
-    lineNo = s"$index",
+    lineNo = Some(s"$index"),
     bpMatchStatus = index match {
       case 0 => Some("01")
       case _ => None
@@ -75,7 +75,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "with minimum data must return user answers updated" in {
         val other = List(DisplayTrustOtherType(
-          lineNo = s"1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           description = s"Other 1",
           beneficiaryDiscretion = None,
