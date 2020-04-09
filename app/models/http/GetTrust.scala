@@ -290,7 +290,7 @@ object DisplayTrustLargeType {
   implicit val largeTypeFormat: Format[DisplayTrustLargeType] = Json.format[DisplayTrustLargeType]
 }
 
-case class DisplayTrustOtherType(lineNo: String,
+case class DisplayTrustOtherType(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  description: String,
                                  address: Option[AddressType],
