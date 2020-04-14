@@ -211,7 +211,7 @@ object DisplayTrustIndividualDetailsType {
   implicit val individualDetailsTypeFormat: Format[DisplayTrustIndividualDetailsType] = Json.format[DisplayTrustIndividualDetailsType]
 }
 
-case class DisplayTrustCompanyType(lineNo: String,
+case class DisplayTrustCompanyType(lineNo: Option[String],
                                    bpMatchStatus: Option[String], organisationName: String,
                                    beneficiaryDiscretion: Option[Boolean],
                                    beneficiaryShareOfIncome: Option[String],
