@@ -28,7 +28,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateCompany(index: Int) = DisplayTrustCompanyType(
-    lineNo = s"$index",
+    lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     organisationName = s"Company $index",
     beneficiaryDiscretion = index match {
@@ -81,7 +81,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "with minimum data must return user answers updated" in {
         val company = List(DisplayTrustCompanyType(
-          lineNo = s"1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           organisationName = s"Company 1",
           beneficiaryDiscretion = None,

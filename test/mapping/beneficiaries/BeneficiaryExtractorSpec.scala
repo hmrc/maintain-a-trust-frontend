@@ -74,7 +74,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           company = Some(
             List(
               DisplayTrustCompanyType(
-                lineNo = s"1",
+                lineNo = Some("1"),
                 bpMatchStatus = Some("01"),
                 organisationName = s"Company 1",
                 beneficiaryDiscretion = Some(false),
