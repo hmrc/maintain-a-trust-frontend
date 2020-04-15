@@ -93,7 +93,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           trust = Some(
             List(
               DisplayTrustBeneficiaryTrustType(
-                lineNo = s"1",
+                lineNo = Some(s"1"),
                 bpMatchStatus = Some("01"),
                 organisationName = s"Trust 1",
                 beneficiaryDiscretion = Some(false),
