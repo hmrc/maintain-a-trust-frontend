@@ -46,7 +46,7 @@ class TrustBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
                 _.set(
                   TrustBeneficiaryMetaData(index),
                   MetaData(
-                    lineNo = trustBeneficiary.lineNo,
+                    lineNo = trustBeneficiary.lineNo.getOrElse(""),
                     bpMatchStatus = trustBeneficiary.bpMatchStatus,
                     entityStart = trustBeneficiary.entityStart
                   )

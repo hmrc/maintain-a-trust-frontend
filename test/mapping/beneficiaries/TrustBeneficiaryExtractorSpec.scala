@@ -28,7 +28,7 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateTrust(index: Int) = DisplayTrustBeneficiaryTrustType(
-    lineNo = s"$index",
+    lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     organisationName = s"Trust $index",
     beneficiaryDiscretion = index match {
@@ -81,7 +81,7 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "with minimum data must return user answers updated" in {
         val trust = List(DisplayTrustBeneficiaryTrustType(
-          lineNo = s"1",
+          lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           organisationName = s"Trust 1",
           beneficiaryDiscretion = None,
