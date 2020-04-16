@@ -170,7 +170,7 @@ session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
 
-site.service_name = Maintain a trust
+site.service_name = Register and Maintain a Trust
 site.save.continue = Save and continue
 site.back = Back
 site.edit = Change
