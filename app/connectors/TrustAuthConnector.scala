@@ -47,7 +47,7 @@ trait TrustAuthConnector {
 class TrustAuthConnectorImpl @Inject()(http: HttpClient, config: FrontendAppConfig)
   extends TrustAuthConnector {
 
-  val baseUrl: String = config.trustAuthUrl + "/maintain-a-trust/authorised/"
+  val baseUrl: String = config.trustAuthUrl + "/trusts-auth/authorised/"
 
   override def authorised(utr: String)
                          (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
