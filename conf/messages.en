@@ -104,17 +104,14 @@ featureNotAvailable.heading = This feature is currently not available
 informationMaintainingThisTrust.title = Information about maintaining this trust
 informationMaintainingThisTrust.heading = Information about maintaining this trust
 informationMaintainingThisTrust.subHeading = This trust’s UTR: {0}
-informationMaintainingThisTrust.keepTrustUpdated = Keep the trust updated
-informationMaintainingThisTrust.paragraph1 = You can make changes to the register, declare it’s up to date or close the trust by following these steps:
-informationMaintainingThisTrust.list1 = You can find out what details we hold about the trust by checking its last declaration.
-informationMaintainingThisTrust.list2 = If the trust is up to date you can continue to make a declaration. If you have written in with changes, these may not have been updated so you will need to update them now.
-informationMaintainingThisTrust.printsave.link = You can save or print a copy of this trust’s last declaration (opens in a new window or tab)
-informationMaintainingThisTrust.list3 = If details about the settlors, trustees or beneficiaries have changed, you can update them through this service.
-informationMaintainingThisTrust.list4 = If you need to close the trust, you will need to declare the details we have are up to date.
-informationMaintainingThisTrust.changesToTrust = Changes to the trust
-informationMaintainingThisTrust.paragraph2 = Any changes you make will not be saved unless you make a declaration. You can print a draft copy of your answers as well as a declared copy. You will not be able to save and come back later.
-informationMaintainingThisTrust.paragraph3 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
-informationMaintainingThisTrust.warning = Some questions may have changed since the trust was registered. You have a legal responsibility to make sure the details held on the register are accurate.
+informationMaintainingThisTrust.warning = Some questions may have changed since the trust was registered. You have a legal responsibility to make sure the details held on the register are accurate. You only need to declare the trust is up to date if there is a tax liability.
+informationMaintainingThisTrust.viewLastDeclaration = View the last declaration
+informationMaintainingThisTrust.paragraph1 = You can view the trust’s last declaration before you continue.
+informationMaintainingThisTrust.printsave.link = You can view the trust’s last declaration before you continue (opens in a new window or tab)
+informationMaintainingThisTrust.updateDetails = Update trust details and make declaration
+informationMaintainingThisTrust.paragraph2 = You can make changes to the trust, confirm it is up to date or close the trust, and then make a declaration.
+informationMaintainingThisTrust.paragraph3 = Any changes you make will not be saved until you make a declaration. You will not be able to save and continue later. You can print a copy of your draft answers as well as a copy of the declaration.
+informationMaintainingThisTrust.paragraph4 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
 
 internationalAddress.error.line1.required = Enter address line 1
 internationalAddress.error.line2.required = Enter address line 2
@@ -173,7 +170,7 @@ session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
 
-site.service_name = Maintain a trust
+site.service_name = Register and Maintain a Trust
 site.save.continue = Save and continue
 site.back = Back
 site.edit = Change
@@ -189,6 +186,7 @@ site.sign_out = Sign out
 site.warning = Warning
 site.or = or
 site.and = and
+site.startMaintaining = Start maintaining this trust
 
 site.address.uk.title = What is the address?
 site.address.uk.heading = What is {0}’s address?
@@ -326,7 +324,7 @@ unavailableSections.p3.end = to view the trust’s latest declaration.
 utr.title = What is the trust’s Unique Taxpayer Reference?
 utr.heading = What is the trust’s Unique Taxpayer Reference?
 utr.hint = This is 10 numbers, for example 1234567890. It will be on the trust’s Self Assessment notice to file (SA316). It may be called ‘reference’, ‘UTR’ or ‘official use’.
-utr.hint.reader = This is 10 numbers, for example one two three four five six seven eight nine zero. It will be on the trust’s Self Assessment notice to file (S A three one six). It may be called ‘reference’, ‘UTR’ or ‘official use’.
+utr.hint.reader = This is 10 numbers, for example 1 2 3 4 5 6 7 8 9 0. It will be on the trust’s Self Assessment notice to file (S A 3 1 6). It may be called ‘reference’, ‘UTR’ or ‘official use’.
 utr.error.required = Enter the trust’s Unique Taxpayer Reference
 utr.error.length = Unique Taxpayer Reference must be a 10 digit number
 
@@ -356,6 +354,12 @@ taskList.trustees.label = Trustees
 taskList.beneficiaries.label = Beneficiaries
 taskList.natural.label = Other representatives
 taskList.summary.continue = Continue to declaration
+
+featureNotAvailable.title = This part of the online service is not available yet
+featureNotAvailable.heading = This part of the online service is not available yet
+featureNotAvailable.p1 = If you need to make any changes to the trust you can
+featureNotAvailable.link = contact the trusts helpline (opens in a new window or tab)
+featureNotAvailable.p2 = You will be able to update these details online in the future.
 
 # SECTIONS
 

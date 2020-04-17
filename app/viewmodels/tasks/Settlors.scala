@@ -18,7 +18,7 @@ package viewmodels.tasks
 
 import pages.Page
 
-case object Settlors extends Page {
+case object Settlors extends Page with Task {
 
   override def toString: String = "settlors"
 

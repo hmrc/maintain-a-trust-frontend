@@ -18,7 +18,7 @@ package viewmodels.tasks
 
 import pages.Page
 
-case object NaturalPeople extends Page {
+case object NaturalPeople extends Page with Task {
 
   override def toString: String = "natural"
 

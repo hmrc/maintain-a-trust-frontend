@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package viewmodels.tasks
+@import viewmodels.AnswerRow
 
-import pages.Page
+@(row: AnswerRow)(implicit messages: Messages)
 
-case object Trustees extends Page with Task {
-
-  override def toString: String = "trustees"
-
-}
+<li>
+    <div class="cya-question">@messages(row.label, row.labelArg)</div>
+    <div class="cya-answer">@row.answer</div>
+</li>

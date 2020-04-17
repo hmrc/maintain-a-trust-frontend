@@ -35,9 +35,9 @@ legendAsHeading: Boolean = false
 
     <fieldset class="inline" id="@{field.id}">
 
-        <legend id="@{field.id}-legend">
-            @if(legendAsHeading){<h1 class="legend-as-heading">}
-            <span id="@{field.id}-id" @if(legendClass.nonEmpty){class="@legendClass"}>@label</span>
+        <legend class="form-field" id="@{field.id}-legend">
+            @if(legendAsHeading){<h1 id="@{field.id}-id" class="legend-as-heading heading-large">}
+            @label
             @if(legendAsHeading){</h1>}
         </legend>
         @form_hint(hint = hint, readerHint = readerHint, link = link)

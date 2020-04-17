@@ -18,8 +18,8 @@ package controllers.make_changes
 
 import base.SpecBase
 import controllers.makechanges.MakeChangesRouter
-import controllers.makechanges.MakeChangesRouter.{Declaration, UnableToDecide, TaskList, UnavailableSections}
-import pages.makechanges.{AddOtherIndividualsYesNoPage, AddProtectorYesNoPage, UpdateBeneficiariesYesNoPage, UpdateSettlorsYesNoPage, UpdateTrusteesYesNoPage}
+import controllers.makechanges.MakeChangesRouter.{Declaration, TaskList, UnableToDecide, UnavailableSections}
+import pages.makechanges._
 
 class MakeChangesRouterSpec extends SpecBase {
 
@@ -38,7 +38,7 @@ class MakeChangesRouterSpec extends SpecBase {
       filter.decide(userAnswers) mustBe Declaration
     }
 
-    "allow user to navigate to the task list when selection options that are available" in {
+    "allow user to navigate to the task list when selected options are available" in {
       val filter = MakeChangesRouter
 
       val userAnswers = emptyUserAnswers
@@ -51,7 +51,7 @@ class MakeChangesRouterSpec extends SpecBase {
       filter.decide(userAnswers) mustBe TaskList
     }
 
-    "not allow user to navigate to the task list when selection options that are unavailable" in {
+    "send user to the sections unavailable page when selected options are not available" in {
       val filter = MakeChangesRouter
 
       val userAnswers = emptyUserAnswers

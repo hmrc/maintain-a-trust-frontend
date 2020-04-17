@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package viewmodels.tasks
+@import viewmodels.AnswerSection
+@import views.html._
 
-import pages.Page
+@(answerSection: AnswerSection)(implicit messages: Messages)
 
-case object Trustees extends Page with Task {
+@if(answerSection.sectionKey.isDefined){
+<h2 class="heading-large">@messages(answerSection.sectionKey.get)</h2>
+}
 
-  override def toString: String = "trustees"
+@if(answerSection.headingKey.isDefined){
+<h3 class="heading-medium">@messages(answerSection.headingKey.get)</h3>
+}
 
+@if(answerSection.rows) {
+<ul role="list" class="govuk-check-your-answers cya-questions-long section">
+    @for(row <- answerSection.rows){
+    @components.summary_answer_row_without_actions(row)
+    }
+</ul>
 }

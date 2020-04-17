@@ -55,9 +55,9 @@
 
     @components.warning("variationProgress")
 
-    @components.task_list(mandatory, messages("variationProgress.subHeading.2"))
+    @components.task_list("mandatory", mandatory, messages("variationProgress.subHeading.2"))
 
-    @components.task_list(optional, messages("variationProgress.subHeading.3"))
+    @components.task_list("additional", optional, messages("variationProgress.subHeading.3"))
 
     @if(isAbleToDeclare) {
         @components.button_link(messages("taskList.summary.continue"), nextUrl)

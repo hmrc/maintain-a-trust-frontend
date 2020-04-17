@@ -195,7 +195,7 @@ object DisplayTrustBeneficiaryType {
 }
 
 
-case class DisplayTrustIndividualDetailsType(lineNo: String,
+case class DisplayTrustIndividualDetailsType(lineNo: Option[String],
                                              bpMatchStatus: Option[String],
                                              name: NameType,
                                              dateOfBirth: Option[DateTime],
@@ -211,7 +211,7 @@ object DisplayTrustIndividualDetailsType {
   implicit val individualDetailsTypeFormat: Format[DisplayTrustIndividualDetailsType] = Json.format[DisplayTrustIndividualDetailsType]
 }
 
-case class DisplayTrustCompanyType(lineNo: String,
+case class DisplayTrustCompanyType(lineNo: Option[String],
                                    bpMatchStatus: Option[String], organisationName: String,
                                    beneficiaryDiscretion: Option[Boolean],
                                    beneficiaryShareOfIncome: Option[String],
@@ -235,7 +235,7 @@ object DisplayTrustWillType {
   implicit val willTypeFormat: Format[DisplayTrustWillType] = Json.format[DisplayTrustWillType]
 }
 
-case class DisplayTrustBeneficiaryTrustType(lineNo: String,
+case class DisplayTrustBeneficiaryTrustType(lineNo: Option[String],
                                             bpMatchStatus: Option[String],
                                             organisationName: String,
                                             beneficiaryDiscretion: Option[Boolean],
@@ -247,7 +247,7 @@ object DisplayTrustBeneficiaryTrustType {
   implicit val beneficiaryTrustTypeFormat: Format[DisplayTrustBeneficiaryTrustType] = Json.format[DisplayTrustBeneficiaryTrustType]
 }
 
-case class DisplayTrustCharityType(lineNo: String,
+case class DisplayTrustCharityType(lineNo: Option[String],
                                    bpMatchStatus: Option[String],
                                    organisationName: String,
                                    beneficiaryDiscretion: Option[Boolean],
@@ -260,7 +260,7 @@ object DisplayTrustCharityType {
 }
 
 
-case class DisplayTrustUnidentifiedType(lineNo: String,
+case class DisplayTrustUnidentifiedType(lineNo: Option[String],
                                         bpMatchStatus: Option[String],
                                         description: String,
                                         beneficiaryDiscretion: Option[Boolean],
@@ -290,7 +290,7 @@ object DisplayTrustLargeType {
   implicit val largeTypeFormat: Format[DisplayTrustLargeType] = Json.format[DisplayTrustLargeType]
 }
 
-case class DisplayTrustOtherType(lineNo: String,
+case class DisplayTrustOtherType(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  description: String,
                                  address: Option[AddressType],

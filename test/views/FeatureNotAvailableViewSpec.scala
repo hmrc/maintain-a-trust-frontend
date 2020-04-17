@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package viewmodels.tasks
+package views
 
-import pages.Page
+import views.behaviours.ViewBehaviours
+import views.html.FeatureNotAvailableView
 
-case object Trustees extends Page with Task {
+class FeatureNotAvailableViewSpec extends ViewBehaviours {
 
-  override def toString: String = "trustees"
+  "FeatureNotAvailableView view" must {
 
+    val application = applicationBuilder().build()
+
+    val view = application.injector.instanceOf[FeatureNotAvailableView]
+
+    val applyView = view.apply()(fakeRequest, messages)
+
+    behave like normalPage(applyView, "featureNotAvailable")
+  }
 }

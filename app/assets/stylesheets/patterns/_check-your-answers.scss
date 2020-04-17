@@ -1,0 +1,24 @@
+.cya-question, .cya-answer, .cya-change {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.govuk-check-your-answers.cya-questions-long .cya-question {
+    width: 100%;
+
+    @include media(desktop) {
+        width: 60%;
+    }
+}
+
+.govuk-check-your-answers.cya-questions-long .cya-answer {
+    width: 100%;
+
+    @include media(desktop) {
+        width: 40%;
+    }
+}
+
+.govuk-check-your-answers {
+    table-layout: fixed;
+}

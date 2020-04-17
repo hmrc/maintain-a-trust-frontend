@@ -47,7 +47,7 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
                 _.set(
                   CompanyBeneficiaryMetaData(index),
                   MetaData(
-                    lineNo = companyBeneficiary.lineNo,
+                    lineNo = companyBeneficiary.lineNo.getOrElse(""),
                     bpMatchStatus = companyBeneficiary.bpMatchStatus,
                     entityStart = companyBeneficiary.entityStart
                   )
