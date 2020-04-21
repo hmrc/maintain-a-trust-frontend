@@ -37,24 +37,30 @@
 
         @components.error_summary(form.errors)
 
-        @components.heading("declaration.heading")
+        <fieldset>
 
-        @components.input_text(
-            field = form("firstName"),
-            label = messages("declaration.firstName"),
-            ariaRequired = true
-        )
+            <legend>
+                @components.heading("declaration.heading")
+            </legend>
 
-        @components.input_text(
-            field = form("middleName"),
-            label = messages("declaration.middleName")
-        )
+            @components.input_text(
+                field = form("firstName"),
+                label = messages("declaration.firstName"),
+                ariaRequired = true
+            )
 
-        @components.input_text(
-            field = form("lastName"),
-            label = messages("declaration.lastName"),
-            ariaRequired = true
-        )
+            @components.input_text(
+                field = form("middleName"),
+                label = messages("declaration.middleName")
+            )
+
+            @components.input_text(
+                field = form("lastName"),
+                label = messages("declaration.lastName"),
+                ariaRequired = true
+            )
+
+        </fieldset>
 
         @if(appConfig.declarationEmailEnabled) {
             <p>@messages("declaration.paragraph1")</p>
