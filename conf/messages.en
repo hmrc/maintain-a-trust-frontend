@@ -428,7 +428,13 @@ companyBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
 companyBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
 ### Individual
 individualBeneficiaryName.checkYourAnswersLabel = What is the name of the individual?
+
 individualBeneficiaryRoleInCompany.checkYourAnswersLabel = What is {0}’s role in the company that the trust was created for?
+individualBeneficiary.roleInCompany.Director = Director
+individualBeneficiary.roleInCompany.Employee = Employee
+individualBeneficiary.roleInCompany.NA = None of these
+individualBeneficiary.roleInCompany.checkYourAnswersLabel.na = Not a director or employee
+
 individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
 individualBeneficiaryDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
 individualBeneficiaryIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
