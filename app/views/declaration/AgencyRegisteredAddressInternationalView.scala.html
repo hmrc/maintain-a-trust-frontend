@@ -34,9 +34,15 @@
 
         @components.error_summary(form.errors)
 
-        @components.heading("agencyRegisteredAddressInternational.heading")
+        <fieldset>
 
-        @components.international_address(form, countryOptions)
+            <legend>
+                @components.heading("agencyRegisteredAddressInternational.heading")
+            </legend>
+
+            @components.international_address(form, countryOptions)
+
+        </fieldset>
 
         @components.submit_button()
     }
