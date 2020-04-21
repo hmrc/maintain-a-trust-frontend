@@ -18,6 +18,7 @@ package utils.print.sections.beneficiaries
 
 import models.UserAnswers
 import models.pages.RoleInCompany
+import models.pages.RoleInCompany.NA
 import pages.beneficiaries.individual._
 import play.api.i18n.Messages
 import play.api.mvc.Call
@@ -61,16 +62,23 @@ object IndividualBeneficiary {
     }.getOrElse(Nil)
   }
 
-  private def roleInCompanyQuestion(query: Gettable[RoleInCompany], userAnswers: UserAnswers, labelKey: String,
-                            messageArg: String = "", changeRoute: Option[Call] = None)
-                           (implicit messages:Messages) = {
+  private def roleInCompanyQuestion(query: Gettable[RoleInCompany],
+                                    userAnswers: UserAnswers,
+                                    labelKey: String,
+                                    messageArg: String = "",
+                                    changeRoute: Option[Call] = None)(implicit messages:Messages) =
+  {
     userAnswers.get(query) map {x =>
       AnswerRow(
         messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        HtmlFormat.escape(x.toString),
+        x match {
+          case NA => HtmlFormat.escape(messages("individualBeneficiary.roleInCompany.checkYourAnswersLabel.na"))
+          case _ => HtmlFormat.escape(messages(s"individualBeneficiary.roleInCompany.$x"))
+        },
         None
       )
     }
   }
+
 
 }
