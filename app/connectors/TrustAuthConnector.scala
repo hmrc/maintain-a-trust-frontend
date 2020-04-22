@@ -33,7 +33,7 @@ object TrustAuthResponseBody {
   implicit val format: Format[TrustAuthResponseBody] = Json.format[TrustAuthResponseBody]
 }
 
-trait TrustAuthResponse
+sealed trait TrustAuthResponse
 
 object TrustAuthAllowed extends TrustAuthResponse
 case class TrustAuthDenied(redirectUrl: String) extends TrustAuthResponse
@@ -41,7 +41,7 @@ object TrustAuthInternalServerError extends TrustAuthResponse
 
 @ImplementedBy(classOf[TrustAuthConnectorImpl])
 trait TrustAuthConnector {
-  def authorised(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse]
+  def authorisedForUtr(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse]
 }
 
 class TrustAuthConnectorImpl @Inject()(http: HttpClient, config: FrontendAppConfig)
@@ -49,8 +49,8 @@ class TrustAuthConnectorImpl @Inject()(http: HttpClient, config: FrontendAppConf
 
   val baseUrl: String = config.trustAuthUrl + "/trusts-auth/authorised/"
 
-  override def authorised(utr: String)
-                         (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
+  override def authorisedForUtr(utr: String)
+                               (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
     http.GET[TrustAuthResponseBody](baseUrl + utr).map {
       case TrustAuthResponseBody(Some(redirectUrl)) => TrustAuthDenied(redirectUrl)
       case _ => TrustAuthAllowed

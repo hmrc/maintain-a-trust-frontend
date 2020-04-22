@@ -65,7 +65,7 @@ class TrustAuthConnectorSpec extends AsyncFreeSpec with MustMatchers with WireMo
 
         wiremock(utr, allowedResponse)
 
-        connector.authorised(utr) map { result =>
+        connector.authorisedForUtr(utr) map { result =>
           result mustEqual TrustAuthAllowed
         }
       }
@@ -75,7 +75,7 @@ class TrustAuthConnectorSpec extends AsyncFreeSpec with MustMatchers with WireMo
 
         wiremock(utr, redirectResponse("redirect-url"))
 
-        connector.authorised(utr) map { result =>
+        connector.authorisedForUtr(utr) map { result =>
           result mustEqual TrustAuthDenied("redirect-url")
         }
       }
@@ -85,7 +85,7 @@ class TrustAuthConnectorSpec extends AsyncFreeSpec with MustMatchers with WireMo
 
         wiremock(utr, aResponse().withStatus(Status.INTERNAL_SERVER_ERROR))
 
-        connector.authorised(utr) map { result =>
+        connector.authorisedForUtr(utr) map { result =>
           result mustEqual TrustAuthInternalServerError
         }
       }

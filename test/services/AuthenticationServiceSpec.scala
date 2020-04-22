@@ -54,7 +54,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
 
       "continue processing the request" in {
 
-        when(mockTrustAuthConnector.authorised(any())(any(), any()))
+        when(mockTrustAuthConnector.authorisedForUtr(any())(any(), any()))
           .thenReturn(Future.successful(TrustAuthAllowed))
 
         val app = applicationBuilder()
@@ -75,7 +75,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
 
         val connectorResult = TrustAuthDenied("redirect-url")
 
-        when(mockTrustAuthConnector.authorised(any())(any(), any()))
+        when(mockTrustAuthConnector.authorisedForUtr(any())(any(), any()))
           .thenReturn(Future.successful(connectorResult))
 
         val app = applicationBuilder()
