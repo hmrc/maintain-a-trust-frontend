@@ -272,7 +272,7 @@ object DisplayTrustUnidentifiedType {
 }
 
 
-case class DisplayTrustLargeType(lineNo: String,
+case class DisplayTrustLargeType(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  organisationName: String,
                                  description: String,
