@@ -143,7 +143,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           large = Some(
             List(
               DisplayTrustLargeType(
-                lineNo = s"1",
+                lineNo = Some("1"),
                 bpMatchStatus = Some("01"),
                 organisationName = "Large 1",
                 description = s"Description",
