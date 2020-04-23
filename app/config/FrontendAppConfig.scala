@@ -30,12 +30,6 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   private def loadConfig(key: String) = configuration.get[String](key)
 
-  def claimATrustUrl(utr: String) =
-    configuration.get[Service]("microservice.services.claim-a-trust-frontend").baseUrl + s"/claim-a-trust/save/$utr"
-
-  def verifyIdentityForATrustUrl(utr: String) =
-    configuration.get[Service]("microservice.services.verify-your-identity-for-a-trust-frontend").baseUrl + s"/verify-your-identity-for-a-trust/save/$utr"
-
   def maintainTrusteesUrl(utr: String) = s"$maintainATrusteeFrontendUrl/$utr"
 
   def maintainBeneficiariesUrl(utr: String) = s"$maintainBeneficiariesFrontendUrl/$utr"
@@ -61,13 +55,9 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   lazy val trustsUrl: String = configuration.get[Service]("microservice.services.trusts").baseUrl
   lazy val trustsStoreUrl: String = configuration.get[Service]("microservice.services.trusts-store").baseUrl + "/trusts-store"
+  lazy val trustAuthUrl: String = configuration.get[Service]("microservice.services.trusts-auth").baseUrl
 
   lazy val agentOverviewUrl: String = configuration.get[String]("urls.agentOverview")
-
-  lazy val relationshipName: String =
-    configuration.get[String]("microservice.services.self.relationship-establishment.name")
-  lazy val relationshipIdentifier: String =
-    configuration.get[String]("microservice.services.self.relationship-establishment.identifier")
 
   lazy val enrolmentStoreProxyUrl: String = configuration.get[Service]("microservice.services.enrolment-store-proxy").baseUrl
 
