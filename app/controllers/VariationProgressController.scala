@@ -20,14 +20,13 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions.AuthenticateForPlayback
-import models.{CompletedMaintenanceTasks, Enumerable}
 import models.pages.Tag
-import models.pages.Tag.{InProgress, UpToDate}
+import models.pages.Tag.InProgress
+import models.{CompletedMaintenanceTasks, Enumerable}
 import navigation.DeclareNoChange
 import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.PlaybackRepository
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
 import viewmodels.{Link, Task}
@@ -35,10 +34,8 @@ import views.html.VariationProgressView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-
 class VariationProgressController @Inject()(
                                       override val messagesApi: MessagesApi,
-                                      playbackRepository: PlaybackRepository,
                                       actions: AuthenticateForPlayback,
                                       view: VariationProgressView,
                                       val controllerComponents: MessagesControllerComponents,
@@ -48,9 +45,17 @@ class VariationProgressController @Inject()(
 
   lazy val notYetAvailable : String = controllers.routes.FeatureNotAvailableController.onPageLoad().url
 
-  def beneficiariesRouteEnabled(utr: String) = {
+  def beneficiariesRouteEnabled(utr: String): String = {
     if (config.maintainBeneficiariesEnabled) {
       config.maintainBeneficiariesUrl(utr)
+    } else {
+      notYetAvailable
+    }
+  }
+
+  def settlorsRouteEnabled(utr: String): String = {
+    if (config.maintainSettlorsEnabled) {
+      config.maintainSettlorsUrl(utr)
     } else {
       notYetAvailable
     }
@@ -63,7 +68,7 @@ class VariationProgressController @Inject()(
   private def taskList(tasks : CompletedMaintenanceTasks, utr: String) : TaskList = {
     val mandatorySections = List(
       Task(
-        Link(Settlors, notYetAvailable),
+        Link(Settlors, settlorsRouteEnabled(utr)),
         Some(Tag.tagFor(tasks.settlors, config.maintainSettlorsEnabled))
       ),
       Task(
