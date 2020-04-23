@@ -30,7 +30,7 @@ object MakeChangesRouter {
     UpdateFilterQuestions.from(userAnswers).map {
         case UpdateFilterQuestions(false, false, false, false, false) =>
           Declaration
-        case UpdateFilterQuestions(_, _, false, false, false) =>
+        case UpdateFilterQuestions(_, _, _, false, false) =>
           TaskList
         case _ => UnavailableSections
     }.getOrElse(UnableToDecide)
