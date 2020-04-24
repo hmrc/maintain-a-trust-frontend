@@ -321,8 +321,8 @@ unavailableSections.p3.start = You can also
 unavailableSections.p3.link = return to information about maintaining this trust
 unavailableSections.p3.end = to view the trust’s latest declaration.
 
-utr.title = What is the trust’s Unique Taxpayer Reference?
-utr.heading = What is the trust’s Unique Taxpayer Reference?
+utr.title = What is the trust’s Unique Taxpayer Reference (UTR)?
+utr.heading = What is the trust’s Unique Taxpayer Reference (UTR)?
 utr.hint = This is 10 numbers, for example 1234567890. It will be on the trust’s Self Assessment notice to file (SA316). It may be called ‘reference’, ‘UTR’ or ‘official use’.
 utr.hint.reader = This is 10 numbers, for example 1 2 3 4 5 6 7 8 9 0. It will be on the trust’s Self Assessment notice to file (S A 3 1 6). It may be called ‘reference’, ‘UTR’ or ‘official use’.
 utr.error.required = Enter the trust’s Unique Taxpayer Reference
