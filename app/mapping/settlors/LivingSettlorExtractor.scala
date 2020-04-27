@@ -68,7 +68,7 @@ class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[Liv
         _.set(
           SettlorMetaData(index),
           MetaData(
-            lineNo = individual.lineNo,
+            lineNo = individual.lineNo.getOrElse(""),
             bpMatchStatus = individual.bpMatchStatus,
             entityStart = individual.entityStart
           )
@@ -87,7 +87,7 @@ class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[Liv
         _.set(
           SettlorMetaData(index),
           MetaData(
-            lineNo = company.lineNo,
+            lineNo = company.lineNo.getOrElse(""),
             bpMatchStatus = company.bpMatchStatus,
             entityStart = company.entityStart
           )
