@@ -149,8 +149,8 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
         .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
-        .set(UpdateSettlorsYesNoPage, true).success.value
-        .set(AddProtectorYesNoPage, false).success.value
+        .set(UpdateSettlorsYesNoPage, false).success.value
+        .set(AddProtectorYesNoPage, true).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
