@@ -327,7 +327,7 @@ utr.hint.reader = This is 10 numbers, for example 1 2 3 4 5 6 7 8 9 0. It will b
 utr.error.required = Enter the trust’s Unique Taxpayer Reference
 utr.error.length = Unique Taxpayer Reference must be a 10 digit number
 utr.linkMessage = You can
-utr.linkText = find a lost UTR number (opens in a new window or tab)
+utr.linkText = find a lost UTR (opens in a new window or tab)
 
 declarationWhatNext.title = What do you want to do next?
 declarationWhatNext.heading = What do you want to do next?
