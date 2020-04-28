@@ -19,9 +19,9 @@ package controllers.testOnlyDoNotUseInAppConf
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import play.api.Logger
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsValue, Writes}
 import play.api.mvc.ControllerComponents
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.controller.BackendBaseController
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -31,11 +31,21 @@ class TestUserConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
   private val dataUrl: String = s"${config.enrolmentStoreProxyUrl}/enrolment-store-stub/data"
 
-  def insert(user: JsValue)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
+  object InsertedReads {
+    implicit lazy val httpReads: HttpReads[Unit] =
+      new HttpReads[Unit] {
+        override def read(method: String, url: String, response: HttpResponse) = {
+          // Ignore the response from enrolment-store-stub
+          ()
+        }
+      }
+  }
+
+  def insert(user: JsValue)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
     val headers = Seq(
       ("content-type", "application/json")
     )
-    http.POST[JsValue, HttpResponse](dataUrl, user, headers)
+    http.POST[JsValue, Unit](dataUrl, user, headers)(implicitly[Writes[JsValue]], InsertedReads.httpReads, hc, ec)
   }
 
   def delete()(implicit hc: HeaderCarrier, ec: ExecutionContext) : Future[HttpResponse] = {
