@@ -36,9 +36,8 @@ class TrustUtrDoesNotMatchViewSpec extends ViewBehaviours {
       "p1",
       "p2",
       "p3",
-      "p4",
       "contact.link",
-      "p5",
+      "p4",
       "return.link")
 
   }
