@@ -158,13 +158,13 @@ playbackDeclarationAnswers.p2 = Client reference number: {0}
 playbackDeclarationAnswers.p3 = The trust’s declaration was sent on {0}
 playbackDeclarationAnswers.warning = You only need to declare the trust is up to date every year if there is a tax liability.
 
-playbackProblemContactHMRC.title = Sorry, there has been a problem accessing your trust’s registration
-playbackProblemContactHMRC.heading = Sorry, there has been a problem accessing your trust’s registration
+playbackProblemContactHMRC.title = Sorry, there is a problem accessing your trust’s registration
+playbackProblemContactHMRC.heading = Sorry, there is a problem accessing your trust’s registration
 playbackProblemContactHMRC.subheading = This trust’s UTR: {0}
 playbackProblemContactHMRC.p1.beforeLink = You need to
 playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
 playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
-playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment available when you contact HMRC.
+playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment ready when you contact HMRC.
 
 session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
@@ -229,23 +229,23 @@ trustLocked.p3 = If you need help with the service
 trustLocked.link1 = contact the trusts helpline (opens in a new window or tab)
 trustLocked.subheading = This trust’s UTR: {0}
 
-trustNotClaimed.title = Sorry, you cannot access this trust
-trustNotClaimed.heading = Sorry, you cannot access this trust
+trustNotClaimed.title = Your client must claim the trust and authorise your access
+trustNotClaimed.heading = Your client must claim the trust and authorise your access
 trustNotClaimed.subheading = This trust’s UTR: {0}
-trustNotClaimed.p1 = One of the trustees will need to complete the next two steps so you can maintain the trust online on their behalf.
-trustNotClaimed.bullet.1.title = Trustee needs to claim the trust
+trustNotClaimed.p1 = One of the trustees must complete these 2 steps so you can maintain the trust online on their behalf.
+trustNotClaimed.bullet.1.title = Trustee must claim the trust
 trustNotClaimed.bullet.1.p1 = A trustee needs to log onto the Trust Registration Service using their Government Gateway account. The account they use must be an organisation account, not an individual account.
 trustNotClaimed.bullet.1.p2 = If they do not have an account, they can
-trustNotClaimed.bullet.1.p2.a = register for one here (opens in a new tab).
+trustNotClaimed.bullet.1.p2.a = register for one here (opens in a new tab)
 trustNotClaimed.bullet.1.p3 = The trustee needs to correctly answer questions about the trust so HMRC can prove the connection between the trustee and the trust.
 trustNotClaimed.bullet.1.p4 = The trustee must complete this step before you can request authorisation from them to maintain the trust.
-trustNotClaimed.bullet.2.title = Trustee needs to authorise your online access the trust
+trustNotClaimed.bullet.2.title = Trustee must authorise your online access the trust
 trustNotClaimed.bullet.2.p1 = Through Agent Services you can create an authorisation link to send to the trustee.
 trustNotClaimed.bullet.2.p2 = The trustee needs to use the same Government Gateway organisation account used to claim the trust to approve your request.
 trustNotClaimed.bullet.2.p3 = If you need help with the service
-trustNotClaimed.bullet.2.p3.a = contact the trusts helpline (opens in a new window or tab).
+trustNotClaimed.bullet.2.p3.a = contact the trusts helpline (opens in a new window or tab)
 trustNotClaimed.bullet.2.p4 = You can
-trustNotClaimed.bullet.2.p4.a = return to register and maintain a trust for a client.
+trustNotClaimed.bullet.2.p4.a = return to register and maintain a trust for a client
 
 trustResidentInTheUK.yes = Based on your answers, the trust is resident in the UK
 trustResidentInTheUK.no = Based on your answers, the trust is not resident in the UK
@@ -260,14 +260,13 @@ trustStillProcessing.p4 = You can
 trustStillProcessing.contact.link = contact the trusts helpline (opens in a new window or tab)
 trustStillProcessing.return.link = return to register and maintain a trust for a client
 
-trustUtrDoesNotMatch.title = Sorry, you cannot access this trust
-trustUtrDoesNotMatch.heading = Sorry, you cannot access this trust
-trustUtrDoesNotMatch.p1 = The Unique Taxpayer Reference (UTR) entered does not match our records.
-trustUtrDoesNotMatch.p2 = Check you have entered the trust’s UTR correctly.
-trustUtrDoesNotMatch.p3 = If you do not have a UTR for the trust you will need to register the trust first.
-trustUtrDoesNotMatch.p4 = If you need help with the service
-trustUtrDoesNotMatch.p5 = You can
+trustUtrDoesNotMatch.title = The Unique Taxpayer Reference (UTR) you gave for the trust does not match our records
+trustUtrDoesNotMatch.heading = The Unique Taxpayer Reference (UTR) you gave for the trust does not match our records
+trustUtrDoesNotMatch.p1 = Check you have entered the trust’s UTR correctly.
+trustUtrDoesNotMatch.p2 = If you do not have a UTR for the trust you will need to register the trust first.
+trustUtrDoesNotMatch.p3 = If you need help with this service
 trustUtrDoesNotMatch.contact.link = contact the trusts helpline (opens in a new window or tab)
+trustUtrDoesNotMatch.p4 = You can
 trustUtrDoesNotMatch.return.link = return to register and maintain a trust for a client
 
 ukAddress.error.line1.required = Enter address line 1
@@ -327,6 +326,8 @@ utr.hint = This is 10 numbers, for example 1234567890. It will be on the trust�
 utr.hint.reader = This is 10 numbers, for example 1 2 3 4 5 6 7 8 9 0. It will be on the trust’s Self Assessment notice to file (S A 3 1 6). It may be called ‘reference’, ‘UTR’ or ‘official use’.
 utr.error.required = Enter the trust’s Unique Taxpayer Reference
 utr.error.length = Unique Taxpayer Reference must be a 10 digit number
+utr.linkMessage = You can
+utr.linkText = find a lost UTR (opens in a new window or tab)
 
 declarationWhatNext.title = What do you want to do next?
 declarationWhatNext.heading = What do you want to do next?
@@ -337,7 +338,6 @@ declarationWhatNext.make-changes.hint = Add, remove and/or update any details fo
 declarationWhatNext.close-trust = Close the trust
 declarationWhatNext.close-trust.hint = Tell HMRC the end date for the trust and apply any changes before a final declaration.
 declarationWhatNext.error.required = Select what you want to do next
-
 
 variationProgress.title = Trust overview
 variationProgress.heading = Trust overview

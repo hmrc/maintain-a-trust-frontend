@@ -36,12 +36,10 @@ title = messages("trustUtrDoesNotMatch.title")
 
  <p>@messages("trustUtrDoesNotMatch.p2")</p>
 
- <p>@messages("trustUtrDoesNotMatch.p3")</p>
-
- <p>@messages("trustUtrDoesNotMatch.p4") <a id="help-link" target="_blank" href=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts>@messages("trustUtrDoesNotMatch.contact.link")</a>.</p>
+ <p>@messages("trustUtrDoesNotMatch.p3") <a id="help-link" target="_blank" href=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts>@messages("trustUtrDoesNotMatch.contact.link")</a>.</p>
 
   @if(affinityGroup == AffinityGroup.Agent) {
-   <p>@messages("trustUtrDoesNotMatch.p5") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("trustUtrDoesNotMatch.return.link")</a>.</p>
+   <p>@messages("trustUtrDoesNotMatch.p4") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("trustUtrDoesNotMatch.return.link")</a>.</p>
   } else {
    @components.button_link("site.try-again", controllers.routes.UTRController.onPageLoad().url)
   }
