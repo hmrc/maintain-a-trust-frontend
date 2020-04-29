@@ -36,7 +36,7 @@ class PlaybackIdentifierActionImpl @Inject()(val parser: BodyParsers.Default,
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     request.userAnswers.get(UTRPage) map { utr =>
-      playbackAuthenticationService.authenticate(utr)(request, hc)
+      playbackAuthenticationService.authenticateForUtr(utr)(request, hc)
     } getOrElse Future.successful(Left(Redirect(controllers.routes.IndexController.onPageLoad())))
 
   }
