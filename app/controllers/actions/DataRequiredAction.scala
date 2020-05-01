@@ -19,6 +19,7 @@ package controllers.actions
 import controllers.routes
 import com.google.inject.Inject
 import models.requests.{DataRequest, OptionalDataRequest}
+import play.api.Logger
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
 import uk.gov.hmrc.play.HeaderCarrierConverter
@@ -33,8 +34,10 @@ class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionC
 
     request.userAnswers match {
       case None =>
+        Logger.debug(s"[DataRequiredAction] no user answers in request")
         Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad())))
       case Some(data) =>
+        Logger.debug(s"[DataRequiredAction] user answers in request, continuing with request")
         Future.successful(Right(DataRequest(request.request, data, request.user)))
     }
   }

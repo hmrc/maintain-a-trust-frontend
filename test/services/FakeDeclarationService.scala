@@ -30,7 +30,7 @@ class FakeDeclarationService extends DeclarationService {
     Future.successful(TVNResponse("123456"))
   }
 
-  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration)
                                            (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(TVNResponse("123456"))
   }
@@ -44,7 +44,7 @@ class FakeFailingDeclarationService extends DeclarationService {
     Future.successful(InternalServerError)
   }
 
-  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration, leadTrusteeAddress: Address)
+  override def individualDeclareNoChange[A](utr: String, declaration: IndividualDeclaration)
                                            (implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(InternalServerError)
   }

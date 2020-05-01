@@ -26,15 +26,15 @@ import play.api.mvc.Call
 class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
-  private val contactFormServiceIdentifier = "maintain-a-trust-frontend"
+  private val contactFormServiceIdentifier = "trusts"
 
   private def loadConfig(key: String) = configuration.get[String](key)
 
-  def claimATrustUrl(utr: String) =
-    configuration.get[Service]("microservice.services.claim-a-trust-frontend").baseUrl + s"/claim-a-trust/save/$utr"
+  def maintainTrusteesUrl(utr: String) = s"$maintainATrusteeFrontendUrl/$utr"
 
-  def verifyIdentityForATrustUrl(utr: String) =
-    configuration.get[Service]("microservice.services.verify-your-identity-for-a-trust-frontend").baseUrl + s"/verify-your-identity-for-a-trust/save/$utr"
+  def maintainBeneficiariesUrl(utr: String) = s"$maintainBeneficiariesFrontendUrl/$utr"
+
+  def maintainSettlorsUrl(utr: String) = s"$maintainSettlorsFrontendUrl/$utr"
 
   val analyticsToken: String = configuration.get[String](s"google-analytics.token")
   val analyticsHost: String = configuration.get[String](s"google-analytics.host")
@@ -57,19 +57,20 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   lazy val trustsUrl: String = configuration.get[Service]("microservice.services.trusts").baseUrl
   lazy val trustsStoreUrl: String = configuration.get[Service]("microservice.services.trusts-store").baseUrl + "/trusts-store"
-  lazy val agentOverviewUrl: String = ""
+  lazy val trustAuthUrl: String = configuration.get[Service]("microservice.services.trusts-auth").baseUrl
 
-  lazy val relationshipName: String =
-    configuration.get[String]("microservice.services.self.relationship-establishment.name")
-  lazy val relationshipIdentifier: String =
-    configuration.get[String]("microservice.services.self.relationship-establishment.identifier")
+  lazy val agentOverviewUrl: String = configuration.get[String]("urls.agentOverview")
 
   lazy val enrolmentStoreProxyUrl: String = configuration.get[Service]("microservice.services.enrolment-store-proxy").baseUrl
 
   lazy val locationCanonicalList: String = loadConfig("location.canonical.list.all")
+  lazy val locationCanonicalListNonUK: String = loadConfig("location.canonical.list.nonUK")
 
   lazy val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.welsh-translation")
+
+  lazy val countdownLength: String = configuration.get[String]("timeout.countdown")
+  lazy val timeoutLength: String = configuration.get[String]("timeout.length")
 
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
@@ -80,4 +81,21 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
     (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
 
   lazy val playbackEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.playback.enabled")
+
+  lazy val maintainTrusteesEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-trustees.enabled")
+  lazy val maintainBeneficiariesEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-beneficiaries.enabled")
+  lazy val maintainSettlorsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-settlors.enabled")
+  lazy val maintainProtectorsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-protectors.enabled")
+  lazy val maintainOtherIndividualsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-other-individuals.enabled")
+
+  lazy val maintainATrusteeFrontendUrl : String =
+    configuration.get[String]("urls.maintainATrustee")
+
+  lazy val maintainBeneficiariesFrontendUrl : String =
+    configuration.get[String]("urls.maintainABeneficiary")
+
+  lazy val maintainSettlorsFrontendUrl : String =
+    configuration.get[String]("urls.maintainASettlor")
+
+  lazy val accessibilityLinkUrl: String = configuration.get[String]("urls.accessibility")
 }

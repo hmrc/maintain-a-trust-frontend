@@ -38,7 +38,7 @@ title = messages("trustClosed.title")
   <p>@messages("trustClosed.p2") <a id="help-link" target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("trustClosed.contact.link")</a> @messages("trustClosed.p3")</p>
 
   @if(affinityGroup == AffinityGroup.Agent) {
-    <p>@messages("trustClosed.p4") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("trustClosed.return.link")</a>.</p>
+    <p>@messages("trustClosed.p4") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("trustClosed.return.link")</a>.</p>
   } else {
     @components.button_link("site.try-again", controllers.routes.UTRController.onPageLoad().url)
   }

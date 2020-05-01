@@ -43,8 +43,7 @@
     @if(optionalHtmlContent.nonEmpty){@optionalHtmlContent}
     @if(hint.nonEmpty){
         <div id="@{field.id}_hint">
-            <span class="form-hint form-field" @if(readerHint.nonEmpty){aria-hidden="true"}>@hint</span>
-            @if(readerHint.nonEmpty){<span class="visuallyhidden">@readerHint</span>}
+            <span class="form-hint form-field" @if(readerHint.nonEmpty){aria-label="@readerHint"}>@hint</span>
         </div>
     }
     @field.errors.map { error =>

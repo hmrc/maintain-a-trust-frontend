@@ -11,3 +11,9 @@
 
 # Add all the application routes to the prod.routes file
 ->         /                          prod.Routes
+
++ nocsrf
+POST       /maintain-a-trust/test-only/insert-test-user       controllers.testOnlyDoNotUseInAppConf.EnrolmentStoreStubController.insertTestUserIntoEnrolmentStore
+
++ nocsrf
+DELETE     /maintain-a-trust/test-only/test-users   controllers.testOnlyDoNotUseInAppConf.EnrolmentStoreStubController.flush

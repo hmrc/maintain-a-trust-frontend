@@ -28,6 +28,7 @@ import pages.trustees.TrusteeNamePage
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Nino
+import utils.countryoptions.CountryOptions
 
 object CheckAnswersFormatters {
 

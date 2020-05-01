@@ -17,9 +17,11 @@
 @import models.Mode
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
+@import config.FrontendAppConfig
 
 @this(
-main_template: MainTemplate
+main_template: MainTemplate,
+appConfig: FrontendAppConfig
 )
 
 @(affinityGroup: AffinityGroup, utr: String)(implicit request: Request[_], messages: Messages)
@@ -37,6 +39,6 @@ title = messages("trustStillProcessing.title")
 
  <p>@messages("trustStillProcessing.p3") <a id="help-link" target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("trustStillProcessing.contact.link")</a>.</p>
   @if(affinityGroup == AffinityGroup.Agent) {
-   <p>@messages("trustStillProcessing.p4") <a id="register-and-maintain-link" href=appConfig.agentOverviewUrl>@messages("trustStillProcessing.return.link")</a>.</p>
+   <p>@messages("trustStillProcessing.p4") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("trustStillProcessing.return.link")</a>.</p>
   }
 }

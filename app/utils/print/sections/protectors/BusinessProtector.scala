@@ -19,7 +19,7 @@ package utils.print.sections.protectors
 import models.UserAnswers
 import pages.protectors.business._
 import play.api.i18n.Messages
-import utils.CountryOptions
+import utils.countryoptions.CountryOptions
 import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
 

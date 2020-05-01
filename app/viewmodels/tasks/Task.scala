@@ -14,22 +14,6 @@
  * limitations under the License.
  */
 
-package models.pages
+package viewmodels.tasks
 
-import models.{Enumerable, WithName}
-
-sealed trait Status
-
-object Status extends Enumerable.Implicits {
-
-  case object Completed extends WithName("completed") with Status
-
-  case object InProgress extends WithName("progress") with Status
-
-  val values: Set[Status] = Set(
-    Completed, InProgress
-  )
-
-  implicit val enumerable: Enumerable[Status] =
-    Enumerable(values.toSeq.map(v => v.toString -> v): _*)
-}
+trait Task

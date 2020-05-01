@@ -60,7 +60,7 @@ class LargeBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
                   _.set(
                     LargeBeneficiaryMetaData(index),
                     MetaData(
-                      lineNo = largeBeneficiary.lineNo,
+                      lineNo = largeBeneficiary.lineNo.getOrElse(""),
                       bpMatchStatus = largeBeneficiary.bpMatchStatus,
                       entityStart = largeBeneficiary.entityStart
                     )

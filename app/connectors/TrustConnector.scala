@@ -27,13 +27,18 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
-  def playbackUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr"
+  def playbackUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/transformed"
+  def playbackFromEtmpUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/refresh"
 
   def playback(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[TrustsResponse] = {
     http.GET[TrustsResponse](playbackUrl(utr))(TrustsStatusReads.httpReads, hc, ec)
   }
 
-  def declareUrl(utr: String) = s"${config.trustsUrl}/trusts/no-change/$utr"
+  def playbackfromEtmp(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[TrustsResponse] = {
+    http.GET[TrustsResponse](playbackFromEtmpUrl(utr))(TrustsStatusReads.httpReads, hc, ec)
+  }
+
+  def declareUrl(utr: String) = s"${config.trustsUrl}/trusts/declare/$utr"
 
   def declare(utr: String, payload: JsValue)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
     http.POST[JsValue, DeclarationResponse](declareUrl(utr), payload)(implicitly[Writes[JsValue]], DeclarationResponse.httpReads, hc, ec)

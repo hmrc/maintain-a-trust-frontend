@@ -42,7 +42,7 @@ class UserAnswersExtractorImpl @Inject()(beneficiary: BeneficiaryExtractor,
 
   override def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionError, UserAnswers] = {
 
-    val answersCombined = for {
+    def answersCombined = for {
       ua <- correspondenceExtractor.extract(answers, data.correspondence).right
       ua1 <- beneficiary.extract(answers, data.trust.entities.beneficiary).right
       ua2 <- settlors.extract(answers, data.trust.entities).right

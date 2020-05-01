@@ -60,7 +60,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
       "must return user answers updated" in {
         val beneficiary = DisplayTrustBeneficiaryType(
           individualDetails = Some(List(DisplayTrustIndividualDetailsType(
-            lineNo = s"1",
+            lineNo = Some("1"),
             bpMatchStatus = Some("01"),
             name = NameType("First Name", None, "Last Name"),
             dateOfBirth = None,
@@ -74,7 +74,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           company = Some(
             List(
               DisplayTrustCompanyType(
-                lineNo = s"1",
+                lineNo = Some("1"),
                 bpMatchStatus = Some("01"),
                 organisationName = s"Company 1",
                 beneficiaryDiscretion = Some(false),
@@ -93,7 +93,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           trust = Some(
             List(
               DisplayTrustBeneficiaryTrustType(
-                lineNo = s"1",
+                lineNo = Some(s"1"),
                 bpMatchStatus = Some("01"),
                 organisationName = s"Trust 1",
                 beneficiaryDiscretion = Some(false),
@@ -112,7 +112,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           charity = Some(
             List(
               DisplayTrustCharityType(
-                lineNo = s"1",
+                lineNo = Some("1"),
                 bpMatchStatus = Some("01"),
                 organisationName = s"Charity 1",
                 beneficiaryDiscretion = Some(false),
@@ -131,7 +131,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           unidentified = Some(
             List(
               DisplayTrustUnidentifiedType(
-                lineNo = s"1",
+                lineNo = Some("1"),
                 bpMatchStatus = Some("01"),
                 description = s"Class Of Beneficiary 1",
                 beneficiaryDiscretion = Some(false),
@@ -143,7 +143,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           large = Some(
             List(
               DisplayTrustLargeType(
-                lineNo = s"1",
+                lineNo = Some("1"),
                 bpMatchStatus = Some("01"),
                 organisationName = "Large 1",
                 description = s"Description",
@@ -168,7 +168,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           other = Some(
             List(
               DisplayTrustOtherType(
-                lineNo = s"1",
+                lineNo = Some("1"),
                 bpMatchStatus = Some("01"),
                 description = s"Other 1",
                 beneficiaryDiscretion = Some(false),

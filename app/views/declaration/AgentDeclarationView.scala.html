@@ -38,36 +38,50 @@
 
         @components.error_summary(form.errors)
 
-        @components.heading("declaration.heading")
+        <fieldset>
 
-        @components.input_text(
-            field = form("firstName"),
-            label = messages("declaration.firstName"),
-            ariaRequired = true
-        )
+            <legend>
+                @components.heading("declaration.heading")
+            </legend>
 
-        @components.input_text(
-            field = form("middleName"),
-            label = messages("declaration.middleName")
-        )
+            @components.input_text(
+                field = form("firstName"),
+                label = messages("declaration.firstName"),
+                ariaRequired = true
+            )
 
-        @components.input_text(
-            field = form("lastName"),
-            label = messages("declaration.lastName"),
-            ariaRequired = true
-        )
+            @components.input_text(
+                field = form("middleName"),
+                label = messages("declaration.middleName")
+            )
 
-        @components.input_text(
-            field = form("telephoneNumber"),
-            label = messages("declaration.telephoneNumber"),
-            ariaRequired = true
-        )
+            @components.input_text(
+                field = form("lastName"),
+                label = messages("declaration.lastName"),
+                ariaRequired = true
+            )
 
-        @components.input_text(
-            field = form("crn"),
-            label = messages("declaration.crn"),
-            ariaRequired = true
-        )
+            @components.input_text(
+                field = form("agencyName"),
+                label = messages("declaration.agencyName"),
+                ariaRequired = true
+            )
+
+            @components.input_text(
+                field = form("telephoneNumber"),
+                label = messages("declaration.telephoneNumber"),
+                ariaRequired = true,
+                inputClass = Some("form-control-3-4")
+            )
+
+            @components.input_text(
+                field = form("crn"),
+                label = messages("declaration.crn"),
+                ariaRequired = true,
+                inputClass = Some("form-control-3-4")
+            )
+
+        </fieldset>
 
         @if(appConfig.declarationEmailEnabled) {
             <p>@messages("declaration.paragraph1")</p>

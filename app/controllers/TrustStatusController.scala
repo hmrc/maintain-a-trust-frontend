@@ -113,7 +113,7 @@ class TrustStatusController @Inject()(
   }
 
   private def checkIfLocked(utr: String)(implicit request: DataRequest[AnyContent]): Future[Result] = {
-    trustStoreConnector.get(request.userAnswers.internalAuthId, utr).flatMap {
+    trustStoreConnector.get(utr).flatMap {
       case Some(claim) if claim.trustLocked =>
         Future.successful(Redirect(controllers.routes.TrustStatusController.locked()))
       case _ =>
@@ -122,7 +122,7 @@ class TrustStatusController @Inject()(
   }
 
   private def tryToPlayback(utr: String)(implicit request: DataRequest[AnyContent]): Future[Result] = {
-    trustConnector.playback(utr) flatMap {
+    trustConnector.playbackfromEtmp(utr) flatMap {
       case Closed =>
         Logger.info(s"[TrustStatusController][tryToPlayback] unable to retrieve trust due it being closed")
         Future.successful(Redirect(controllers.routes.TrustStatusController.closed()))
@@ -133,7 +133,7 @@ class TrustStatusController @Inject()(
         Logger.info(s"[TrustStatusController][tryToPlayback] unable to retrieve trust due to UTR not found")
         Future.successful(Redirect(controllers.routes.TrustStatusController.notFound()))
       case Processed(playback, _) =>
-        authenticationService.authenticate(utr) flatMap {
+        authenticationService.authenticateForUtr(utr) flatMap {
           case Left(failure) => Future.successful(failure)
           case Right(_) => extract(utr, playback)
         }

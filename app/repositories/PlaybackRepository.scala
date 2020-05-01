@@ -22,9 +22,11 @@ import java.time.LocalDateTime
 import akka.stream.Materializer
 import com.google.inject.Inject
 import models.UserAnswers
+import org.slf4j.LoggerFactory
 import play.api.Configuration
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoApi
+import reactivemongo.api.WriteConcern
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.BSONDocument
 import reactivemongo.play.json.ImplicitBSONHandlers.JsObjectDocumentWriter
@@ -38,6 +40,8 @@ class PlaybackRepository @Inject()(
                                     config: Configuration,
                                     dateFormatter: DateFormatter
                                   )(implicit ec: ExecutionContext, m: Materializer) extends MongoRepository {
+
+  private val logger = LoggerFactory.getLogger("application." + this.getClass.getCanonicalName)
 
   private val collectionName: String = "user-answers"
 
@@ -99,6 +103,16 @@ class PlaybackRepository @Inject()(
         result => result.ok
       }
     }
+  }
+
+  def resetCache(internalId: String): Future[Option[JsObject]] = {
+      val selector = Json.obj(
+        "internalId" -> internalId
+      )
+
+      collection.flatMap(_.findAndRemove(selector, None, None, WriteConcern.Default, None, None, Seq.empty).map(
+        _.value
+      ))
   }
 }
 

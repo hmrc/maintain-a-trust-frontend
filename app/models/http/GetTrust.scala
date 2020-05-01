@@ -50,8 +50,7 @@ object Correspondence {
 
 }
 
-case class Declaration(name: NameType,
-                       address: AddressType)
+case class Declaration(name: NameType)
 
 object Declaration {
   implicit val declarationFormat: Format[Declaration] = Json.format[Declaration]
@@ -138,7 +137,7 @@ object DisplayTrustNaturalPersonType {
 }
 
 case class DisplayTrustLeadTrusteeIndType(
-                                           lineNo: String,
+                                           lineNo: Option[String],
                                            bpMatchStatus: Option[String],
                                            name: NameType,
                                            dateOfBirth: DateTime,
@@ -156,7 +155,7 @@ object DisplayTrustLeadTrusteeIndType {
 }
 
 case class DisplayTrustLeadTrusteeOrgType(
-                                           lineNo: String,
+                                           lineNo: Option[String],
                                            bpMatchStatus: Option[String],
                                            name: String,
                                            phoneNumber: String,
@@ -196,7 +195,7 @@ object DisplayTrustBeneficiaryType {
 }
 
 
-case class DisplayTrustIndividualDetailsType(lineNo: String,
+case class DisplayTrustIndividualDetailsType(lineNo: Option[String],
                                              bpMatchStatus: Option[String],
                                              name: NameType,
                                              dateOfBirth: Option[DateTime],
@@ -212,7 +211,7 @@ object DisplayTrustIndividualDetailsType {
   implicit val individualDetailsTypeFormat: Format[DisplayTrustIndividualDetailsType] = Json.format[DisplayTrustIndividualDetailsType]
 }
 
-case class DisplayTrustCompanyType(lineNo: String,
+case class DisplayTrustCompanyType(lineNo: Option[String],
                                    bpMatchStatus: Option[String], organisationName: String,
                                    beneficiaryDiscretion: Option[Boolean],
                                    beneficiaryShareOfIncome: Option[String],
@@ -236,7 +235,7 @@ object DisplayTrustWillType {
   implicit val willTypeFormat: Format[DisplayTrustWillType] = Json.format[DisplayTrustWillType]
 }
 
-case class DisplayTrustBeneficiaryTrustType(lineNo: String,
+case class DisplayTrustBeneficiaryTrustType(lineNo: Option[String],
                                             bpMatchStatus: Option[String],
                                             organisationName: String,
                                             beneficiaryDiscretion: Option[Boolean],
@@ -248,7 +247,7 @@ object DisplayTrustBeneficiaryTrustType {
   implicit val beneficiaryTrustTypeFormat: Format[DisplayTrustBeneficiaryTrustType] = Json.format[DisplayTrustBeneficiaryTrustType]
 }
 
-case class DisplayTrustCharityType(lineNo: String,
+case class DisplayTrustCharityType(lineNo: Option[String],
                                    bpMatchStatus: Option[String],
                                    organisationName: String,
                                    beneficiaryDiscretion: Option[Boolean],
@@ -261,7 +260,7 @@ object DisplayTrustCharityType {
 }
 
 
-case class DisplayTrustUnidentifiedType(lineNo: String,
+case class DisplayTrustUnidentifiedType(lineNo: Option[String],
                                         bpMatchStatus: Option[String],
                                         description: String,
                                         beneficiaryDiscretion: Option[Boolean],
@@ -273,7 +272,7 @@ object DisplayTrustUnidentifiedType {
 }
 
 
-case class DisplayTrustLargeType(lineNo: String,
+case class DisplayTrustLargeType(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  organisationName: String,
                                  description: String,
@@ -291,7 +290,7 @@ object DisplayTrustLargeType {
   implicit val largeTypeFormat: Format[DisplayTrustLargeType] = Json.format[DisplayTrustLargeType]
 }
 
-case class DisplayTrustOtherType(lineNo: String,
+case class DisplayTrustOtherType(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  description: String,
                                  address: Option[AddressType],
@@ -312,7 +311,7 @@ object DisplayTrustTrusteeType {
 
 sealed trait Trustees
 
-case class DisplayTrustTrusteeOrgType(lineNo: String,
+case class DisplayTrustTrusteeOrgType(lineNo: Option[String],
                                       bpMatchStatus: Option[String],
                                       name: String,
                                       phoneNumber: Option[String] = None,
@@ -324,7 +323,7 @@ object DisplayTrustTrusteeOrgType {
   implicit val trusteeOrgTypeFormat: Format[DisplayTrustTrusteeOrgType] = Json.format[DisplayTrustTrusteeOrgType]
 }
 
-case class DisplayTrustTrusteeIndividualType(lineNo: String,
+case class DisplayTrustTrusteeIndividualType(lineNo: Option[String],
                                              bpMatchStatus: Option[String],
                                              name: NameType,
                                              dateOfBirth: Option[DateTime],
@@ -387,7 +386,7 @@ object DisplayTrustSettlors {
   implicit val settlorsFormat: Format[DisplayTrustSettlors] = Json.format[DisplayTrustSettlors]
 }
 
-case class DisplayTrustSettlor(lineNo: String,
+case class DisplayTrustSettlor(lineNo: Option[String],
                                bpMatchStatus: Option[String],
                                name: NameType,
                                dateOfBirth: Option[DateTime],
@@ -399,7 +398,7 @@ object DisplayTrustSettlor {
   implicit val settlorFormat: Format[DisplayTrustSettlor] = Json.format[DisplayTrustSettlor]
 }
 
-case class DisplayTrustSettlorCompany(lineNo: String,
+case class DisplayTrustSettlorCompany(lineNo: Option[String],
                                       bpMatchStatus: Option[String],
                                       name: String,
                                       companyType: Option[KindOfBusiness],

@@ -21,7 +21,7 @@ import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorSt
 import mapping.{PassportType, PlaybackExtractor, PlaybackImplicits}
 import models.http._
 import models.pages.IndividualOrBusiness
-import models.pages.Status.Completed
+import models.pages.Tag.UpToDate
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.entitystatus.TrusteeStatus
 import pages.trustees._
@@ -73,7 +73,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
         _.set(
           TrusteeMetaData(index),
           MetaData(
-            lineNo = leadIndividual.lineNo,
+            lineNo = leadIndividual.lineNo.getOrElse(""),
             bpMatchStatus = leadIndividual.bpMatchStatus,
             entityStart = leadIndividual.entityStart
           )
@@ -94,7 +94,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
         _.set(
           TrusteeMetaData(index),
           MetaData(
-            lineNo = leadCompany.lineNo,
+            lineNo = leadCompany.lineNo.getOrElse(""),
             bpMatchStatus = leadCompany.bpMatchStatus,
             entityStart = leadCompany.entityStart
           )
@@ -114,14 +114,14 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
         _.set(
           TrusteeMetaData(index),
           MetaData(
-            lineNo = individual.lineNo,
+            lineNo = individual.lineNo.getOrElse(""),
             bpMatchStatus = individual.bpMatchStatus,
             entityStart = individual.entityStart
           )
         )
       }
       .flatMap(_.set(TrusteeSafeIdPage(index), individual.identification.flatMap(_.safeId)))
-      .flatMap(_.set(TrusteeStatus(index), Completed))
+      .flatMap(_.set(TrusteeStatus(index), UpToDate))
   }
 
   def extractTrusteeCompany(answers: Try[UserAnswers], index: Int, company: DisplayTrustTrusteeOrgType) = {
@@ -137,13 +137,13 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
         _.set(
           TrusteeMetaData(index),
           MetaData(
-            lineNo = company.lineNo,
+            lineNo = company.lineNo.getOrElse(""),
             bpMatchStatus = company.bpMatchStatus,
             entityStart = company.entityStart
           )
         )
       }
-      .flatMap(_.set(TrusteeStatus(index), Completed))
+      .flatMap(_.set(TrusteeStatus(index), UpToDate))
   }
 
   private def extractLeadIndividualIdentification(leadIndividual: DisplayTrustLeadTrusteeIndType, index: Int, answers: UserAnswers) = {
@@ -181,11 +181,11 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
   private def extractIndividualIdentification(individual: DisplayTrustTrusteeIndividualType, index: Int, answers: UserAnswers) = {
     individual.identification map {
 
-      case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
+      case DisplayTrustIdentificationType(_, Some(nino), _, _) =>
         answers.set(TrusteeNinoYesNoPage(index), true)
           .flatMap(_.set(TrusteeNinoPage(index), nino))
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), None) =>
+      case DisplayTrustIdentificationType(_, None, Some(_), None) =>
         Logger.error(s"[TrusteesExtractor] only passport identification returned for trustee individual in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
 
@@ -198,6 +198,10 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
         answers.set(TrusteeNinoYesNoPage(index), false)
           .flatMap(answers => extractAddress(address.convert, index, answers))
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
+
+      case DisplayTrustIdentificationType(_, None, None, None) =>
+        answers.set(TrusteeNinoYesNoPage(index), false)
+          .flatMap(_.set(TrusteeAddressYesNoPage(index), false))
 
     } getOrElse {
       answers.set(TrusteeNinoYesNoPage(index), false)

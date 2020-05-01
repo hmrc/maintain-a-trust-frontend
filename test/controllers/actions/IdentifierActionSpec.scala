@@ -20,37 +20,44 @@ import base.SpecBase
 import config.FrontendAppConfig
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
-import play.api.mvc.Results
+import play.api.Application
+import play.api.mvc.Results.Redirect
+import play.api.mvc.{Action, AnyContent, Results}
 import play.api.test.Helpers._
+import services.{AuthenticationService, FakeAuthenticationService}
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.{AgentInformation, Retrieval, ~}
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 
 import scala.concurrent.Future
 
 class IdentifierActionSpec extends SpecBase {
 
-  type RetrievalType = Option[String] ~ Option[AffinityGroup] ~ Enrolments ~ AgentInformation
+  type RetrievalType = Option[String] ~ Option[AffinityGroup] ~ Enrolments
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 
   class Harness(authAction: IdentifierAction) {
-    def onPageLoad() = authAction { _ => Results.Ok }
+    def onPageLoad(): Action[AnyContent] = authAction { _ => Results.Ok }
+  }
+
+  class ThrowingHarness(authAction: IdentifierAction) {
+    def onPageLoad(): Action[AnyContent] = authAction { _ => throw new IllegalStateException("Thrown by test") }
   }
 
   lazy val trustsAuth = new TrustsAuthorisedFunctions(mockAuthConnector, appConfig)
 
   private val noEnrollment = Enrolments(Set())
 
-  val agentInformation = AgentInformation(None, None, None)
-
-  private def authRetrievals(affinityGroup: AffinityGroup,
-                             enrolment: Enrolments,
-                             agentInformation: AgentInformation): Future[Some[String] ~ Some[AffinityGroup] ~ Enrolments ~ AgentInformation] =
-    Future.successful(new ~(new ~(new ~(Some("id"), Some(affinityGroup)), enrolment), agentInformation))
+  private def authRetrievals(affinityGroup: AffinityGroup, enrolment: Enrolments): Future[Some[String] ~ Some[AffinityGroup] ~ Enrolments] =
+    Future.successful(new ~(new ~(Some("id"), Some(affinityGroup)), enrolment))
 
   private val agentEnrolment = Enrolments(Set(Enrolment("HMRC-AS-AGENT", List(EnrolmentIdentifier("AgentReferenceNumber", "SomeVal")), "Activated", None)))
 
+  private def actionToTest(application: Application,
+                           authService: AuthenticationService = new FakeAuthenticationService) = {
+    new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers, authService)
+  }
 
   "invoking an AuthenticatedIdentifier" when {
 
@@ -61,15 +68,18 @@ class IdentifierActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
-          .thenReturn(authRetrievals(AffinityGroup.Agent, noEnrollment, agentInformation))
+          .thenReturn(authRetrievals(AffinityGroup.Agent, noEnrollment))
 
-        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val mockAuthService = mock[AuthenticationService]
+        when (mockAuthService.authenticateAgent()(any())).thenReturn(Future.successful(Left(Redirect("test-redirect-url"))))
+
+        val action = actionToTest(application, mockAuthService)
 
         val controller = new Harness(action)
         val result = controller.onPageLoad()(fakeRequest)
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.routes.CreateAgentServicesAccountController.onPageLoad().url)
+        redirectLocation(result) mustBe Some("test-redirect-url")
         application.stop()
       }
     }
@@ -80,9 +90,9 @@ class IdentifierActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
-          .thenReturn(authRetrievals(AffinityGroup.Agent, agentEnrolment, agentInformation))
+          .thenReturn(authRetrievals(AffinityGroup.Agent, agentEnrolment))
 
-        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val action = actionToTest(application)
         val controller = new Harness(action)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -97,9 +107,9 @@ class IdentifierActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
-          .thenReturn(authRetrievals(AffinityGroup.Organisation, agentEnrolment, agentInformation))
+          .thenReturn(authRetrievals(AffinityGroup.Organisation, agentEnrolment))
 
-        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val action = actionToTest(application)
         val controller = new Harness(action)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -114,9 +124,9 @@ class IdentifierActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
-          .thenReturn(authRetrievals(AffinityGroup.Individual, noEnrollment, agentInformation))
+          .thenReturn(authRetrievals(AffinityGroup.Individual, noEnrollment))
 
-        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val action = actionToTest(application)
         val controller = new Harness(action)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -134,7 +144,7 @@ class IdentifierActionSpec extends SpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed MissingBearerToken())
 
-        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val action = actionToTest(application)
         val controller = new Harness(action)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -152,7 +162,7 @@ class IdentifierActionSpec extends SpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed BearerTokenExpired())
 
-        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val action = actionToTest(application)
         val controller = new Harness(action)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -170,7 +180,7 @@ class IdentifierActionSpec extends SpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed InsufficientEnrolments())
 
-        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val action = actionToTest(application)
         val controller = new Harness(action)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -188,7 +198,7 @@ class IdentifierActionSpec extends SpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed InsufficientConfidenceLevel())
 
-        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val action = actionToTest(application)
         val controller = new Harness(action)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -206,7 +216,7 @@ class IdentifierActionSpec extends SpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed UnsupportedAuthProvider())
 
-        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val action = actionToTest(application)
         val controller = new Harness(action)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -224,7 +234,7 @@ class IdentifierActionSpec extends SpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed UnsupportedAffinityGroup())
 
-        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val action = actionToTest(application)
         val controller = new Harness(action)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -242,7 +252,7 @@ class IdentifierActionSpec extends SpecBase {
 
         when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any())) thenReturn (Future failed UnsupportedCredentialRole())
 
-        val action = new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers)
+        val action = actionToTest(application)
         val controller = new Harness(action)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -251,6 +261,23 @@ class IdentifierActionSpec extends SpecBase {
         redirectLocation(result) mustBe Some(controllers.routes.UnauthorisedController.onPageLoad().url)
         application.stop()
       }
+    }
+  }
+
+  "the invoked block throws an exception" must {
+    "propagate the exception" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      when(mockAuthConnector.authorise(any(), any[Retrieval[RetrievalType]]())(any(), any()))
+        .thenReturn(authRetrievals(AffinityGroup.Organisation, agentEnrolment))
+
+      val action = actionToTest(application)
+      val controller = new ThrowingHarness(action)
+      val result = controller.onPageLoad()(fakeRequest)
+
+      assertThrows[IllegalStateException](status(result))
+      application.stop()
     }
   }
 }

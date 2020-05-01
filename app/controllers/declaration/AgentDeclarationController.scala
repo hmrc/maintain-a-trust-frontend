@@ -22,8 +22,8 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
 import models.http.TVNResponse
-import models.requests.AgentUser
-import models.{Address, UserAnswers}
+import models.requests.{AgentUser, DataRequest}
+import models.{Address, AgentDeclaration, UserAnswers}
 import pages._
 import pages.declaration.{AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
 import play.api.Logger
@@ -69,39 +69,52 @@ class AgentDeclarationController @Inject()(
           Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.AgentDeclarationController.onSubmit()))),
 
         declaration => {
-          request.userAnswers.get(UTRPage) match {
-            case None =>
-              Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
-            case Some(utr) =>
-              request.user match {
-                case AgentUser(_, _, Some(agentInformation), arn) =>
-                  (for {
-                    agencyAddress <- getAgencyRegisteredAddress(request.userAnswers)
-                    agentFriendlyName <- agentInformation.agentFriendlyName
-                  } yield {
-                    service.agentDeclareNoChange(utr, declaration, arn, agencyAddress, agentFriendlyName) flatMap {
-                      case TVNResponse(tvn) =>
-                        for {
-                          updatedAnswers <- Future.fromTry(
-                            request.userAnswers
-                              .set(AgentDeclarationPage, declaration)
-                              .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                              .flatMap(_.set(TVNPage, tvn))
-                          )
-                          _ <- playbackRepository.set(updatedAnswers)
-                        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-                      case _ =>
-                        Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-                    }
-                  }).getOrElse(Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())))
+          request.user match {
+            case agentUser: AgentUser =>
+              (for {
+                utr <- request.userAnswers.get(UTRPage)
+                agencyAddress <- getAgencyRegisteredAddress(request.userAnswers)
+              } yield {
+                submitDeclaration(declaration, agentUser, utr, agencyAddress)
+              }).getOrElse(handleError("Failed to get UTR or agency address"))
 
-                case _ =>
-                  Logger.error("User was either not an agent, or did not have agent information and/or arn")
-                  Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-              }
+            case _ =>
+              handleError("User was not an agent")
           }
         }
       )
+  }
+
+  private def submitDeclaration(declaration: AgentDeclaration,
+                                agentUser: AgentUser,
+                                utr: String,
+                                agencyAddress: Address)
+                               (implicit request: DataRequest[AnyContent]) = {
+
+    service.agentDeclareNoChange(utr,
+      declaration,
+      agentUser.agentReferenceNumber,
+      agencyAddress,
+      declaration.agencyName
+    ) flatMap {
+      case TVNResponse(tvn) =>
+        for {
+          updatedAnswers <- Future.fromTry(
+            request.userAnswers
+              .set(AgentDeclarationPage, declaration)
+              .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+              .flatMap(_.set(TVNPage, tvn))
+          )
+          _ <- playbackRepository.set(updatedAnswers)
+        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+      case _ =>
+        handleError("Failed to declare")
+    }
+  }
+
+  private def handleError(message: String) = {
+    Logger.error(message)
+    Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
   }
 
   private def getAgencyRegisteredAddress(userAnswers: UserAnswers): Option[Address] = {

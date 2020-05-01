@@ -19,6 +19,7 @@ package controllers.actions
 import com.google.inject.Inject
 import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
+import play.api.Logger
 import play.api.mvc.ActionTransformer
 import repositories.PlaybackRepository
 
@@ -40,8 +41,10 @@ class DataRetrievalActionImpl @Inject()(
 
     playbackRepository.get(request.user.internalId) map {
       case None =>
+        Logger.debug(s"[DataRetrievalAction] no user answers returned for internal id")
         createdOptionalDataRequest(request, None)
       case Some(userAnswers) =>
+        Logger.debug(s"[DataRetrievalAction] user answers returned for internal id")
         createdOptionalDataRequest(request, Some(userAnswers))
     }
   }

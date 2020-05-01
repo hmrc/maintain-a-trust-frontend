@@ -50,6 +50,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
       None,
       "Last"
     ),
+    agencyName = "Agency Name",
     telephoneNumber = "01234567890",
     crn = "123456",
     email = None
@@ -119,7 +120,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.individualDeclareNoChange(utr, individualDeclaration, address)) {
+        whenReady(service.individualDeclareNoChange(utr, individualDeclaration)) {
           result =>
             result mustBe TVNResponse("123456")
         }
@@ -136,7 +137,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.individualDeclareNoChange(utr, individualDeclaration, address)) {
+        whenReady(service.individualDeclareNoChange(utr, individualDeclaration)) {
           result =>
             result mustBe InternalServerError
         }

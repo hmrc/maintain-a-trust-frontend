@@ -25,17 +25,17 @@ object WhatIsNext extends Enumerable.Implicits {
 
   case object DeclareTheTrustIsUpToDate extends WithName("declare") with WhatIsNext
 
-  case object MakeChanges extends WithName("makeChanges") with WhatIsNext
+  case object MakeChanges extends WithName("make-changes") with WhatIsNext
 
-  case object CloseTrust extends WithName("closeTrust") with WhatIsNext
+  case object CloseTrust extends WithName("close-trust") with WhatIsNext
 
   val values: List[WhatIsNext] = List(
     DeclareTheTrustIsUpToDate, MakeChanges, CloseTrust
   )
 
-  val options: List[RadioOption] = values.map {
+  val options: List[(RadioOption, String)] = values.map {
     value =>
-      RadioOption("declarationWhatNext", value.toString)
+      (RadioOption("declarationWhatNext", value.toString), s"declarationWhatNext.${value.toString}.hint")
   }
 
   implicit val enumerable: Enumerable[WhatIsNext] =

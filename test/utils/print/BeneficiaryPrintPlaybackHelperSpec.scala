@@ -168,7 +168,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
           headingKey = Some("Individual beneficiary 3"),
           rows = Seq(
             AnswerRow(label = messages("individualBeneficiaryName.checkYourAnswersLabel"), answer = Html(name3), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryRoleInCompany.checkYourAnswersLabel", name3), answer = Html("NA"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryRoleInCompany.checkYourAnswersLabel", name3), answer = Html("Not a director or employee"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryIncomeYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryNationalInsuranceYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),

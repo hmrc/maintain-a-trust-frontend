@@ -1,6 +1,6 @@
 agencyRegisteredAddressUkYesNo.title = Is your agency’s registered address in the UK?
 agencyRegisteredAddressUkYesNo.heading = Is your agency’s registered address in the UK?
-agencyRegisteredAddressUkYesNo.error.required = Select yes if the agency’s registered address is in the UK
+agencyRegisteredAddressUkYesNo.error.required = Select yes if your agency’s registered address is in the UK
 agencyRegisteredAddressUk.title = What is your agency’s registered address?
 agencyRegisteredAddressUk.heading = What is your agency’s registered address?
 agencyRegisteredAddressInternational.title = What is your agency’s registered address?
@@ -62,6 +62,7 @@ declaration.heading = Declaration
 declaration.firstName = Your first name
 declaration.middleName = Your middle names (optional)
 declaration.lastName = Your last name
+declaration.agencyName = Your agency name
 declaration.telephoneNumber = Your agency telephone
 declaration.crn = Internal reference for this client
 declaration.paragraph1 = Please give us your email address to get a confirmation of your declaration.
@@ -75,9 +76,12 @@ declaration.error.firstName.length = Your first name must be 35 characters or le
 declaration.error.middleName.length = Your middle names must be 35 characters or less
 declaration.error.middleName.invalid = Your middle names must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
 declaration.error.lastName.length = Your last name must be 35 characters or less
+declaration.error.agencyName.required = Enter your agency name
+declaration.error.agencyName.invalid = Your agency name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+declaration.error.agencyName.length = Your agency name must be 56 characters or less
 declaration.error.telephoneNumber.required = Enter your agency telephone
 declaration.error.telephoneNumber.invalid = Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
-declaration.error.crn.required = Enter Internal reference for this client
+declaration.error.crn.required = Enter internal reference for this client
 declaration.error.crn.invalid = Internal reference for this client must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
 declaration.error.crn.length = Internal reference for this client must be 56 characters or less
 declaration.error.email.length = Your email must be 35 characters or less
@@ -92,6 +96,7 @@ deedOfVariation.replaceWillTrust = to replace a will trust
 
 error.browser.title.prefix = Error:
 error.summary.title = There is a problem
+error.postcodeInvalid = Enter a real postcode
 
 featureNotAvailable.title = This feature is currently not available
 featureNotAvailable.heading = This feature is currently not available
@@ -99,17 +104,14 @@ featureNotAvailable.heading = This feature is currently not available
 informationMaintainingThisTrust.title = Information about maintaining this trust
 informationMaintainingThisTrust.heading = Information about maintaining this trust
 informationMaintainingThisTrust.subHeading = This trust’s UTR: {0}
-informationMaintainingThisTrust.h3 = Keep the trust updated
-informationMaintainingThisTrust.paragraph1 = You can make changes to the register, declare it’s up to date or close the trust by following these steps:
-informationMaintainingThisTrust.list1 = You can find out what details we hold about the trust by checking its last declaration.
-informationMaintainingThisTrust.list2 = If the trust is up to date you can continue to make a declaration. If you have written in with changes, these may not have been updated so you will need to update them now.
-informationMaintainingThisTrust.printsave.link = You can save or print a copy of this trust’s last declaration (opens in a new window or tab)
-informationMaintainingThisTrust.list3 = If details about the settlors, trustees or beneficiaries have changed, you can update them through this service.
-informationMaintainingThisTrust.list4 = If you need to close the trust, you will need to declare the details we have are up to date.
-informationMaintainingThisTrust.h2 = Changes to the trust
-informationMaintainingThisTrust.paragraph2 = Any changes you make will not be saved unless you make a declaration. You can print a draft copy of your answers as well as a declared copy. You will not be able to save and come back later.
-informationMaintainingThisTrust.paragraph3 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
-informationMaintainingThisTrust.warning = Some questions may have changed since the trust was registered. You have a legal responsibility to make sure the details held on the register are accurate.
+informationMaintainingThisTrust.warning = Some questions may have changed since the trust was registered. You have a legal responsibility to make sure the details held on the register are accurate. You only need to declare the trust is up to date if there is a tax liability.
+informationMaintainingThisTrust.viewLastDeclaration = View the last declaration
+informationMaintainingThisTrust.paragraph1 = You can view the trust’s last declaration before you continue.
+informationMaintainingThisTrust.printsave.link = You can view the trust’s last declaration before you continue (opens in a new window or tab)
+informationMaintainingThisTrust.updateDetails = Update trust details and make declaration
+informationMaintainingThisTrust.paragraph2 = You can make changes to the trust, confirm it is up to date or close the trust, and then make a declaration.
+informationMaintainingThisTrust.paragraph3 = Any changes you make will not be saved until you make a declaration. You will not be able to save and continue later. You can print a copy of your draft answers as well as a copy of the declaration.
+informationMaintainingThisTrust.paragraph4 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
 
 internationalAddress.error.line1.required = Enter address line 1
 internationalAddress.error.line2.required = Enter address line 2
@@ -156,13 +158,13 @@ playbackDeclarationAnswers.p2 = Client reference number: {0}
 playbackDeclarationAnswers.p3 = The trust’s declaration was sent on {0}
 playbackDeclarationAnswers.warning = You only need to declare the trust is up to date every year if there is a tax liability.
 
-playbackProblemContactHMRC.title = Sorry, there has been a problem accessing your trust’s registration
-playbackProblemContactHMRC.heading = Sorry, there has been a problem accessing your trust’s registration
+playbackProblemContactHMRC.title = Sorry, there is a problem accessing your trust’s registration
+playbackProblemContactHMRC.heading = Sorry, there is a problem accessing your trust’s registration
 playbackProblemContactHMRC.subheading = This trust’s UTR: {0}
 playbackProblemContactHMRC.p1.beforeLink = You need to
 playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
 playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
-playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment available when you contact HMRC.
+playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment ready when you contact HMRC.
 
 maintainThisTrust.title = Maintain this trust
 maintainThisTrust.heading = Maintain this trust
@@ -176,7 +178,7 @@ session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
 
-site.service_name = Maintain a trust
+site.service_name = Register and Maintain a Trust
 site.save.continue = Save and continue
 site.back = Back
 site.edit = Change
@@ -189,6 +191,10 @@ site.no = No
 site.confirm-send = Confirm and send
 site.try-again = Try again
 site.sign_out = Sign out
+site.warning = Warning
+site.or = or
+site.and = and
+site.startMaintaining = Start maintaining this trust
 
 site.address.uk.title = What is the address?
 site.address.uk.heading = What is {0}’s address?
@@ -231,23 +237,23 @@ trustLocked.p3 = If you need help with the service
 trustLocked.link1 = contact the trusts helpline (opens in a new window or tab)
 trustLocked.subheading = This trust’s UTR: {0}
 
-trustNotClaimed.title = Sorry, you cannot access this trust
-trustNotClaimed.heading = Sorry, you cannot access this trust
+trustNotClaimed.title = Your client must claim the trust and authorise your access
+trustNotClaimed.heading = Your client must claim the trust and authorise your access
 trustNotClaimed.subheading = This trust’s UTR: {0}
-trustNotClaimed.p1 = One of the trustees will need to complete the next two steps so you can maintain the trust online on their behalf.
-trustNotClaimed.bullet.1.title = Trustee needs to claim the trust
+trustNotClaimed.p1 = One of the trustees must complete these 2 steps so you can maintain the trust online on their behalf.
+trustNotClaimed.bullet.1.title = Trustee must claim the trust
 trustNotClaimed.bullet.1.p1 = A trustee needs to log onto the Trust Registration Service using their Government Gateway account. The account they use must be an organisation account, not an individual account.
 trustNotClaimed.bullet.1.p2 = If they do not have an account, they can
-trustNotClaimed.bullet.1.p2.a = register for one here (opens in a new tab).
+trustNotClaimed.bullet.1.p2.a = register for one here (opens in a new tab)
 trustNotClaimed.bullet.1.p3 = The trustee needs to correctly answer questions about the trust so HMRC can prove the connection between the trustee and the trust.
 trustNotClaimed.bullet.1.p4 = The trustee must complete this step before you can request authorisation from them to maintain the trust.
-trustNotClaimed.bullet.2.title = Trustee needs to authorise your online access the trust
+trustNotClaimed.bullet.2.title = Trustee must authorise your online access the trust
 trustNotClaimed.bullet.2.p1 = Through Agent Services you can create an authorisation link to send to the trustee.
 trustNotClaimed.bullet.2.p2 = The trustee needs to use the same Government Gateway organisation account used to claim the trust to approve your request.
 trustNotClaimed.bullet.2.p3 = If you need help with the service
-trustNotClaimed.bullet.2.p3.a = contact the trusts helpline (opens in a new window or tab).
+trustNotClaimed.bullet.2.p3.a = contact the trusts helpline (opens in a new window or tab)
 trustNotClaimed.bullet.2.p4 = You can
-trustNotClaimed.bullet.2.p4.a = return to register and maintain a trust for a client.
+trustNotClaimed.bullet.2.p4.a = return to register and maintain a trust for a client
 
 trustResidentInTheUK.yes = Based on your answers, the trust is resident in the UK
 trustResidentInTheUK.no = Based on your answers, the trust is not resident in the UK
@@ -262,14 +268,13 @@ trustStillProcessing.p4 = You can
 trustStillProcessing.contact.link = contact the trusts helpline (opens in a new window or tab)
 trustStillProcessing.return.link = return to register and maintain a trust for a client
 
-trustUtrDoesNotMatch.title = Sorry, you cannot access this trust
-trustUtrDoesNotMatch.heading = Sorry, you cannot access this trust
-trustUtrDoesNotMatch.p1 = The Unique Taxpayer Reference (UTR) entered does not match our records.
-trustUtrDoesNotMatch.p2 = Check you have entered the trust’s UTR correctly.
-trustUtrDoesNotMatch.p3 = If you do not have a UTR for the trust you will need to register the trust first.
-trustUtrDoesNotMatch.p4 = If you need help with the service
-trustUtrDoesNotMatch.p5 = You can
+trustUtrDoesNotMatch.title = The Unique Taxpayer Reference (UTR) you gave for the trust does not match our records
+trustUtrDoesNotMatch.heading = The Unique Taxpayer Reference (UTR) you gave for the trust does not match our records
+trustUtrDoesNotMatch.p1 = Check you have entered the trust’s UTR correctly.
+trustUtrDoesNotMatch.p2 = If you do not have a UTR for the trust you will need to register the trust first.
+trustUtrDoesNotMatch.p3 = If you need help with this service
 trustUtrDoesNotMatch.contact.link = contact the trusts helpline (opens in a new window or tab)
+trustUtrDoesNotMatch.p4 = You can
 trustUtrDoesNotMatch.return.link = return to register and maintain a trust for a client
 
 ukAddress.error.line1.required = Enter address line 1
@@ -288,21 +293,89 @@ ukAddress.error.postcode.invalidCharacters = Enter a real postcode
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-utr.title = What is the trust’s Unique Taxpayer Reference?
-utr.heading = What is the trust’s Unique Taxpayer Reference?
+#timeout dialog
+timeout.title=Your application will time out soon
+timeout.message=We will reset your application if you do not respond in
+timeout.keep-alive-button=Continue application
+
+updateTrustees.title = Do you need to update details for the trustees?
+updateTrustees.heading = Do you need to update details for the trustees?
+updateTrustees.error.required = Select yes if you need to update details for the trustees
+
+updateBeneficiaries.title = Do you need to update details for the beneficiaries?
+updateBeneficiaries.heading = Do you need to update details for the beneficiaries?
+updateBeneficiaries.error.required = Select yes if you need to update details for the beneficiaries
+
+updateSettlors.title = Do you need to update details for the settlors?
+updateSettlors.heading = Do you need to update details for the settlors?
+updateSettlors.error.required = Select yes if you need to update details for the settlors
+
+addProtector.title = Do you need to add a protector?
+addProtector.heading = Do you need to add a protector?
+addProtector.error.required = Select yes if you need to add a protector
+
+addOtherIndividuals.title = Do you need to add any other individuals associated with the trust?
+addOtherIndividuals.heading = Do you need to add any other individuals associated with the trust?
+addOtherIndividuals.hint = They might not be named in the trust deed. For example, friends, family members or third parties.
+addOtherIndividuals.error.required = Select yes if you need to add any other individuals associated with the trust
+
+unavailableSections.title = You can only update {0} online at the moment
+unavailableSections.heading = You can only update {0} online at the moment
+unavailableSections.p1 = You cannot update the details for {0} online. If you need to update these details, you can
+unavailableSections.p1.a = contact the trusts helpline (opens in a new window or tab)
+unavailableSections.p2 = You will be able to update {0} online in the future.
+unavailableSections.p3.start = You can also
+unavailableSections.p3.link = return to information about maintaining this trust
+unavailableSections.p3.end = to view the trust’s latest declaration.
+
+utr.title = What is the trust’s Unique Taxpayer Reference (UTR)?
+utr.heading = What is the trust’s Unique Taxpayer Reference (UTR)?
 utr.hint = This is 10 numbers, for example 1234567890. It will be on the trust’s Self Assessment notice to file (SA316). It may be called ‘reference’, ‘UTR’ or ‘official use’.
-utr.hint.reader = This is 10 numbers, for example one two three four five six seven eight nine zero. It will be on the trust’s Self Assessment notice to file (S A three one six). It may be called ‘reference’, ‘UTR’ or ‘official use’.
+utr.hint.reader = This is 10 numbers, for example 1 2 3 4 5 6 7 8 9 0. It will be on the trust’s Self Assessment notice to file (S A 3 1 6). It may be called ‘reference’, ‘UTR’ or ‘official use’.
 utr.error.required = Enter the trust’s Unique Taxpayer Reference
 utr.error.length = Unique Taxpayer Reference must be a 10 digit number
+utr.linkMessage = You can
+utr.linkText = find a lost UTR (opens in a new window or tab)
 
 declarationWhatNext.title = What do you want to do next?
 declarationWhatNext.heading = What do you want to do next?
 declarationWhatNext.declare = Declare the trust is up to date
-declarationWhatNext.makeChanges = Make changes to the trust and declare
-declarationWhatNext.closeTrust = Close the trust
+declarationWhatNext.declare.hint = Confirm the current information held by HMRC is up to date and declare as part of the trust’s self assessment.
+declarationWhatNext.make-changes = Make changes to the trust and declare
+declarationWhatNext.make-changes.hint = Add, remove and/or update any details for trustees.
+declarationWhatNext.close-trust = Close the trust
+declarationWhatNext.close-trust.hint = Tell HMRC the end date for the trust and apply any changes before a final declaration.
 declarationWhatNext.error.required = Select what you want to do next
 
+variationProgress.title = Trust overview
+variationProgress.heading = Trust overview
+variationProgress.subHeading.1 = This trust’s UTR: {0}
+variationProgress.p1 = You can change information about the trust and make a declaration once you have confirmed each section is up to date.
+variationProgress.p2 = Any changes you make without declaring will not be saved.
+variationsProgress.return.link = Return to register and maintain a trust for a client
+variationProgress.warning = You need to declare the trust details are up to date. Some questions may have changed since the trust was registered.
+variationProgress.subHeading.2 = Sections to be completed
+variationProgress.subHeading.3 = Additional sections to be completed
+
+taskList.settlors.label = Settlors
+taskList.trustees.label = Trustees
+taskList.beneficiaries.label = Beneficiaries
+taskList.natural.label = Other representatives
+taskList.summary.continue = Continue to declaration
+
+featureNotAvailable.title = This part of the online service is not available yet
+featureNotAvailable.heading = This part of the online service is not available yet
+featureNotAvailable.p1 = If you need to make any changes to the trust you can
+featureNotAvailable.link = contact the trusts helpline (opens in a new window or tab)
+featureNotAvailable.p2 = You will be able to update these details online in the future.
+
 # SECTIONS
+
+section.settlors = settlors
+section.trustees = trustees
+section.beneficiaries = beneficiaries
+section.protectors = protectors
+section.natural = other individuals
 
 ## Settlors
 answerPage.section.settlors.heading = Settlors
@@ -363,7 +436,13 @@ companyBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
 companyBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
 ### Individual
 individualBeneficiaryName.checkYourAnswersLabel = What is the name of the individual?
+
 individualBeneficiaryRoleInCompany.checkYourAnswersLabel = What is {0}’s role in the company that the trust was created for?
+individualBeneficiary.roleInCompany.Director = Director
+individualBeneficiary.roleInCompany.Employee = Employee
+individualBeneficiary.roleInCompany.NA = None of these
+individualBeneficiary.roleInCompany.checkYourAnswersLabel.na = Not a director or employee
+
 individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
 individualBeneficiaryDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
 individualBeneficiaryIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
@@ -527,3 +606,8 @@ howDeedOfVariationCreated.checkYourAnswersLabel = How was the Deed of Variation 
 holdoverReliefYesNo.checkYourAnswersLabel = Was holdover relief claimed on any assets put into the trust?
 employerFinancedRetirementBenefitsSchemeYesNo.checkYourAnswersLabel = Is this an employer-financed retirement benefits scheme?
 employerFinancedRetirementBenefitsSchemeStartDate.checkYourAnswersLabel = When did the employer-financed retirement benefits scheme start?
+
+
+# Task List
+taskList.up-to-date = Up to date
+taskList.in-progress = In progress

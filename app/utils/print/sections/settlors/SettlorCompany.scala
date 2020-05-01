@@ -22,7 +22,7 @@ import pages.settlors.living_settlor._
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import queries.Gettable
-import utils.CountryOptions
+import utils.countryoptions.CountryOptions
 import viewmodels.{AnswerRow, AnswerSection}
 import utils.print.sections.AnswerRowConverter._
 

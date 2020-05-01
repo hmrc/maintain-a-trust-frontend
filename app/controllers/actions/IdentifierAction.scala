@@ -22,10 +22,11 @@ import models.requests.{AgentUser, IdentifierRequest, OrganisationUser}
 import play.api.Logger
 import play.api.mvc.Results._
 import play.api.mvc._
+import services.AuthenticationService
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import uk.gov.hmrc.auth.core.retrieve.{AgentInformation, ~}
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
@@ -36,31 +37,21 @@ trait IdentifierAction extends ActionBuilder[IdentifierRequest, AnyContent] with
 class AuthenticatedIdentifierAction @Inject()(
                                                config: FrontendAppConfig,
                                                trustsAuthFunctions: TrustsAuthorisedFunctions,
-                                               val parser: BodyParsers.Default
+                                               val parser: BodyParsers.Default,
+                                               playbackAuthenticationService: AuthenticationService
                                              )
                                              (implicit val executionContext: ExecutionContext) extends IdentifierAction {
 
-  private def authoriseAgent[A](request: Request[A],
+  private def authoriseAgent[A](internalId: String,
                                 enrolments: Enrolments,
-                                agentInformation: Option[AgentInformation],
-                                internalId: String,
-                                block: IdentifierRequest[A] => Future[Result]
-                               ) = {
+                                block: IdentifierRequest[A] => Future[Result])
+                               (implicit request: Request[A], hc: HeaderCarrier) = {
 
-    getAgentReferenceNumber(enrolments) match {
-      case Some(arn) if arn.nonEmpty =>
-        block(IdentifierRequest(request, AgentUser(internalId, enrolments, agentInformation, arn)))
-      case _ =>
-        Logger.info(s"[AuthenticatedIdentifierAction][authoriseAgent]: Not a valid agent service account")
-        Future.successful(Redirect(controllers.routes.CreateAgentServicesAccountController.onPageLoad()))
+    playbackAuthenticationService.authenticateAgent() flatMap {
+      case Right(arn) => block(IdentifierRequest(request, AgentUser(internalId, enrolments, arn)))
+      case Left(result: Result) => Future.successful(result)
     }
   }
-
-  private def getAgentReferenceNumber(enrolments: Enrolments) =
-    enrolments.enrolments
-      .find(_.key equals "HMRC-AS-AGENT")
-      .flatMap(_.identifiers.find(_.key equals "AgentReferenceNumber"))
-      .collect { case EnrolmentIdentifier(_, value) => value }
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
@@ -68,17 +59,16 @@ class AuthenticatedIdentifierAction @Inject()(
 
     val retrievals = Retrievals.internalId and
       Retrievals.affinityGroup and
-      Retrievals.allEnrolments and
-      Retrievals.agentInformation
+      Retrievals.allEnrolments
 
     trustsAuthFunctions.authorised().retrieve(retrievals) {
-      case Some(internalId) ~ Some(Agent) ~ enrolments ~ agentInformation =>
+      case Some(internalId) ~ Some(Agent) ~ enrolments =>
         Logger.info(s"[AuthenticatedIdentifierAction] successfully identified as an Agent")
-        authoriseAgent(request, enrolments, Some(agentInformation), internalId, block)
-      case Some(internalId) ~ Some(Organisation) ~ enrolments ~ _ =>
+        authoriseAgent(internalId, enrolments, block)(request, hc)
+      case Some(internalId) ~ Some(Organisation) ~ enrolments =>
         Logger.info(s"[AuthenticatedIdentifierAction] successfully identified as Organisation")
         block(IdentifierRequest(request, OrganisationUser(internalId, enrolments)))
-      case Some(_) ~ _ ~ _ ~ _ =>
+      case Some(_) ~ _ ~ _ =>
         Logger.info(s"[AuthenticatedIdentifierAction] Unauthorised due to affinityGroup being Individual")
         Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
       case _ =>

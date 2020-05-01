@@ -19,7 +19,7 @@ package utils.print
 import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
-import utils.CountryOptions
+import utils.countryoptions.CountryOptions
 import utils.print.sections.TrustDetails
 import viewmodels.AnswerSection
 

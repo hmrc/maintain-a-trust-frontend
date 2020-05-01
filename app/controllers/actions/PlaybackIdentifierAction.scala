@@ -17,7 +17,6 @@
 package controllers.actions
 
 import com.google.inject.{ImplementedBy, Inject}
-import connectors.EnrolmentStoreConnector
 import models.requests.DataRequest
 import pages.UTRPage
 import play.api.mvc.Results.Redirect
@@ -29,7 +28,6 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
 class PlaybackIdentifierActionImpl @Inject()(val parser: BodyParsers.Default,
-                                             enrolmentStoreConnector: EnrolmentStoreConnector,
                                              playbackAuthenticationService: AuthenticationService
                                             )(override implicit val executionContext: ExecutionContext) extends PlaybackIdentifierAction {
 
@@ -38,7 +36,7 @@ class PlaybackIdentifierActionImpl @Inject()(val parser: BodyParsers.Default,
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     request.userAnswers.get(UTRPage) map { utr =>
-      playbackAuthenticationService.authenticate(utr)(request, hc)
+      playbackAuthenticationService.authenticateForUtr(utr)(request, hc)
     } getOrElse Future.successful(Left(Redirect(controllers.routes.IndexController.onPageLoad())))
 
   }

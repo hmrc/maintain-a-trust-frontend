@@ -25,7 +25,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import utils.CountryOptions
+import utils.countryoptions.CountryOptionsNonUK
 import views.html.declaration.AgencyRegisteredAddressInternationalView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,7 +36,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
                                                                 playbackRepository: PlaybackRepository,
                                                                 actions: AuthenticateForPlayback,
                                                                 formProvider: InternationalAddressFormProvider,
-                                                                countryOptions: CountryOptions,
+                                                                countryOptions: CountryOptionsNonUK,
                                                                 val controllerComponents: MessagesControllerComponents,
                                                                 view: AgencyRegisteredAddressInternationalView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {

@@ -17,8 +17,9 @@
 package connectors
 
 import config.FrontendAppConfig
-import connector.TrustClaim
 import javax.inject.Inject
+import models.{CompletedMaintenanceTasks, UserAnswers}
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -26,10 +27,29 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
-  val url: String = config.trustsStoreUrl + "/claim"
+  private val trustLockedUrl: String = config.trustsStoreUrl + "/claim"
 
-  def get(internalId: String, utr : String)(implicit hc : HeaderCarrier, ec : ExecutionContext): Future[Option[TrustClaim]] = {
-    http.GET[Option[TrustClaim]](url)(TrustClaim.httpReads(utr), hc, ec)
+  private def maintainTasksUrl(utr: String) = s"${config.trustsStoreUrl}/maintain/tasks/$utr"
+
+  def get(utr : String)(implicit hc : HeaderCarrier, ec : ExecutionContext): Future[Option[TrustClaim]] = {
+    http.GET[Option[TrustClaim]](trustLockedUrl)(TrustClaim.httpReads(utr), hc, ec)
+  }
+
+  def set(utr: String, userAnswers : UserAnswers)
+         (implicit hc : HeaderCarrier, ec : ExecutionContext): Future[CompletedMaintenanceTasks] = {
+    CompletedMaintenanceTasks.from(userAnswers) match {
+      case Some(x) =>
+        http.POST[JsValue, CompletedMaintenanceTasks](maintainTasksUrl(utr), Json.toJson(x))
+      case None =>
+        Future.failed(new RuntimeException("Unable to set tasks status"))
+    }
+  }
+
+  def getStatusOfTasks(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[CompletedMaintenanceTasks] = {
+    http.GET[CompletedMaintenanceTasks](maintainTasksUrl(utr))
+      .recover {
+        case _ => CompletedMaintenanceTasks()
+      }
   }
 
 }

@@ -28,7 +28,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateLargeBeneficiary(index: Int) = DisplayTrustLargeType(
-    lineNo = s"$index",
+    lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     organisationName = s"Large $index",
     description = s"Description $index",
@@ -92,7 +92,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
       "with minimum data must return user answers updated" in {
         val largeBeneficiary = List(
           DisplayTrustLargeType(
-            lineNo = s"1",
+            lineNo = Some("1"),
             bpMatchStatus = Some("01"),
             organisationName = "Large 1",
             description = s"Description",

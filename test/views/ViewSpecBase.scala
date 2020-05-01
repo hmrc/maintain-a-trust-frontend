@@ -36,8 +36,8 @@ trait ViewSpecBase extends SpecBase {
 
   def asDocument(html: Html): Document = Jsoup.parse(html.toString())
 
-  def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String) =
-    assertEqualsValue(doc, cssSelector, messages(expectedMessageKey))
+  def assertEqualsMessage(doc: Document, cssSelector: String, expectedMessageKey: String, args: Any*): Assertion =
+    assertEqualsValue(doc, cssSelector, messages(expectedMessageKey, args: _*))
 
   def assertEqualsValue(doc: Document, cssSelector: String, expectedValue: String) = {
     val elements = doc.select(cssSelector)
@@ -110,5 +110,11 @@ trait ViewSpecBase extends SpecBase {
       case true => assert(radio.attr("checked") == "checked", s"\n\nElement $id is not checked")
       case _ => assert(!radio.hasAttr("checked") && radio.attr("checked") != "checked", s"\n\nElement $id is checked")
     }
+  }
+
+  def assertRadioButtonContainsHint(doc: Document, id: String, text: String) = {
+    assertRenderedById(doc, id)
+    val hint = doc.getElementById(id)
+    assert(hint.text() == text, s"\n\nElement $id does not have text $text")
   }
 }

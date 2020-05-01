@@ -33,7 +33,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateSettlorCompany(index: Int) = DisplayTrustSettlorCompany(
-    lineNo = s"$index",
+    lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     name = s"Company Settlor $index",
     companyType = index match {
@@ -64,7 +64,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
   )
 
   def generateSettlorIndividual(index: Int) = DisplayTrustSettlor(
-    lineNo = s"$index",
+    lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     name = NameType(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = Some(DateTime.parse("1970-02-01")),
@@ -117,7 +117,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         "with minimum data must return user answers updated" in {
           val trust = List(DisplayTrustSettlorCompany(
-            lineNo = s"1",
+            lineNo = Some(s"1"),
             bpMatchStatus = Some("01"),
             name = s"Company Settlor 1",
             companyType = None,
@@ -217,7 +217,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         "with minimum data must return user answers updated" in {
           val trust = List(DisplayTrustSettlor(
-            lineNo = s"1",
+            lineNo = Some(s"1"),
             bpMatchStatus = Some("01"),
             name = NameType("First Name", None, "Last Name"),
             dateOfBirth = None,

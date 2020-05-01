@@ -84,7 +84,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
           protectors = None,
           settlors = Some(DisplayTrustSettlors(
             settlor = Some(List(DisplayTrustSettlor(
-              lineNo = s"1",
+              lineNo = Some(s"1"),
               bpMatchStatus = Some("01"),
               name = NameType("individual", Some("living"), "settlor"),
               dateOfBirth = None,
@@ -92,7 +92,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
               entityStart = "2019-11-26"
             ))),
             settlorCompany = Some(List(DisplayTrustSettlorCompany(
-              lineNo = s"1",
+              lineNo = Some(s"1"),
               bpMatchStatus = Some("01"),
               name = s"Company Settlor 1",
               companyType = Some(KindOfBusiness.Trading),
@@ -107,7 +107,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
               entityStart = "2019-11-26"
             ),
               DisplayTrustSettlorCompany(
-                lineNo = s"1",
+                lineNo = Some(s"1"),
                 bpMatchStatus = Some("01"),
                 name = s"Company Settlor 2",
                 companyType = Some(KindOfBusiness.Trading),

@@ -16,12 +16,36 @@
 
 package pages
 
+import models.UserAnswers
 import models.pages.WhatIsNext
+import models.pages.WhatIsNext._
+import pages.declaration.{AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage, IndividualDeclarationPage}
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "whatIsNext"
+
+  override def cleanup(value: Option[WhatIsNext], userAnswers: UserAnswers): Try[UserAnswers] = {
+    value match {
+      case Some(MakeChanges) =>
+        removeDeclareNoChangeData(userAnswers)
+      case Some(CloseTrust) =>
+        removeDeclareNoChangeData(userAnswers)
+      case _ =>
+        super.cleanup(value, userAnswers)
+    }
+  }
+
+  private def removeDeclareNoChangeData(userAnswers: UserAnswers): Try[UserAnswers] = {
+    userAnswers.remove(AgencyRegisteredAddressUkYesNoPage)
+      .flatMap(_.remove(AgencyRegisteredAddressUkPage))
+      .flatMap(_.remove(AgencyRegisteredAddressInternationalPage))
+      .flatMap(_.remove(AgentDeclarationPage))
+      .flatMap(_.remove(IndividualDeclarationPage))
+  }
 }

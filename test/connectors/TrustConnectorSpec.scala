@@ -38,8 +38,8 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
   with OptionValues with Generators with SpecBaseHelpers with WireMockHelper with ScalaFutures with Inside {
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  private def playbackUrl(utr: String) : String = s"/trusts/$utr"
-  private def declareUrl(utr: String) : String = s"/trusts/no-change/$utr"
+  private def playbackUrl(utr: String) : String = s"/trusts/$utr/transformed"
+  private def declareUrl(utr: String) : String = s"/trusts/declare/$utr"
 
   "TrustConnector" - {
 
@@ -194,7 +194,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
             data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
 
-            data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe "1"
+            data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe Some("1")
             data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
             data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
 

@@ -32,7 +32,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateTrusteeCompany(index: Int) = DisplayTrustTrusteeOrgType(
-    lineNo = s"$index",
+    lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     name = s"Trustee Company $index",
     phoneNumber = index match {
@@ -63,7 +63,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
   )
 
   def generateTrusteeIndividual(index: Int) = DisplayTrustTrusteeIndividualType(
-    lineNo = s"$index",
+    lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     name = NameType(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = index match {
@@ -123,7 +123,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
         "with minimum data must return user answers updated" in {
           val trust = List(DisplayTrustTrusteeOrgType(
-            lineNo = s"1",
+            lineNo = Some("1"),
             bpMatchStatus = Some("01"),
             name = s"Trustee Company 1",
             phoneNumber = None,
@@ -220,7 +220,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
         "with minimum data must return user answers updated" in {
           val trust = List(DisplayTrustTrusteeIndividualType(
-            lineNo = s"1",
+            lineNo = Some(s"1"),
             bpMatchStatus = Some("01"),
             name = NameType("First Name", None, "Last Name"),
             dateOfBirth = None,
@@ -327,7 +327,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
           val trusts = List(
             DisplayTrustTrusteeIndividualType(
-              lineNo = "01",
+              lineNo = Some("01"),
               bpMatchStatus = Some("01"),
               name = NameType("individual", None, "trustee 1"),
               dateOfBirth = Some(DateTime.parse("1970-02-01")),
@@ -352,7 +352,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
               entityStart = "2019-11-26"
             ),
             DisplayTrustTrusteeIndividualType(
-              lineNo = "01",
+              lineNo = Some("01"),
               bpMatchStatus = Some("01"),
               name = NameType("individual", None, "trustee 2"),
               dateOfBirth = Some(DateTime.parse("1970-02-01")),
@@ -366,7 +366,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
               entityStart = "2019-11-26"
             ),
             DisplayTrustTrusteeOrgType(
-              lineNo = "01",
+              lineNo = Some("01"),
               bpMatchStatus = Some("01"),
               name = "Trustee Company 1",
               phoneNumber = Some("01911112222"),
@@ -381,7 +381,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
               entityStart = "2019-11-26"
             ),
             DisplayTrustTrusteeOrgType(
-              lineNo = "01",
+              lineNo = Some("01"),
               bpMatchStatus = Some("01"),
               name = "Trustee Company 2",
               phoneNumber = Some("01911112222"),

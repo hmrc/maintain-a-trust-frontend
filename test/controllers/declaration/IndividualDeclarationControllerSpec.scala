@@ -20,6 +20,7 @@ import base.SpecBase
 import forms.declaration.IndividualDeclarationFormProvider
 import models.{IndividualDeclaration, UKAddress}
 import pages.UTRPage
+import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
 import play.api.data.Form
 import play.api.inject.bind
@@ -59,7 +60,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to confirmation for a POST" in {
+    "redirect to confirmation for a POST when there is a lead trustee address" in {
 
       val utr = "0987654321"
 
@@ -71,6 +72,39 @@ class IndividualDeclarationControllerSpec extends SpecBase {
         .set(UTRPage, utr).success.value
         .set(IsThisLeadTrusteePage(0), true).success.value
         .set(TrusteeAddressPage(0), address).success.value
+
+      val application =
+        applicationBuilder(
+          userAnswers = Some(userAnswers),
+          affinityGroup = Organisation,
+          enrolments = enrolments
+        ).overrides(
+          bind[DeclarationService].to(new FakeDeclarationService())
+        ).build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe controllers.declaration.routes.ConfirmationController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to confirmation for a POST when there is a correspondence address" in {
+
+      val utr = "0987654321"
+
+      val enrolments = Enrolments(Set(Enrolment(
+        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
+      )))
+
+      val userAnswers = emptyUserAnswers
+        .set(UTRPage, utr).success.value
+        .set(IsThisLeadTrusteePage(0), true).success.value
+        .set(CorrespondenceAddressPage, address).success.value
 
       val application =
         applicationBuilder(

@@ -31,31 +31,29 @@
    @components.back_link()
 
    <span class="govuk-caption-xl">@messages("informationMaintainingThisTrust.subHeading", utr)</span>
-   @components.heading("informationMaintainingThisTrust.heading", headingSize = "heading-large govuk-fieldset__heading")
+   @components.heading("informationMaintainingThisTrust.heading", headingSize = "heading-xlarge govuk-fieldset__heading")
+
+   <h2></h2>
 
    @components.warning("informationMaintainingThisTrust")
 
-   <h3>@messages("informationMaintainingThisTrust.h3")</h3>
+   <h2>@messages("informationMaintainingThisTrust.viewLastDeclaration")</h2>
 
    <p>@messages("informationMaintainingThisTrust.paragraph1")</p>
 
-   <ol class="govuk-list govuk-list--number">
-      <li>@messages("informationMaintainingThisTrust.list1")</li>
-      <ul>
-          <li class="panel-indent">@components.link(controllers.routes.PlaybackAnswersController.onPageLoad().url, "print-and-save","informationMaintainingThisTrust.printsave.link", openInNewWindow = true).</li>
-      </ul>
-      <li>@messages("informationMaintainingThisTrust.list2")</li>
-      <li>@messages("informationMaintainingThisTrust.list3")</li>
-      <li>@messages("informationMaintainingThisTrust.list4")</li>
-   </ol>
+    <ul>
+        <li class="panel-indent">@components.link(controllers.routes.PlaybackAnswersController.onPageLoad().url, "print-and-save","informationMaintainingThisTrust.printsave.link", openInNewWindow = true).</li>
+    </ul>
 
-   <h2>@messages("informationMaintainingThisTrust.h2")</h2>
+    <h2>@messages("informationMaintainingThisTrust.updateDetails")</h2>
 
    <p>@messages("informationMaintainingThisTrust.paragraph2")</p>
 
    <p>@messages("informationMaintainingThisTrust.paragraph3")</p>
 
-    @components.button_link(messages("site.onlyContinue"), controllers.routes.WhatIsNextController.onPageLoad().url)
+   <p>@messages("informationMaintainingThisTrust.paragraph4")</p>
+
+    @components.button_link(messages("site.startMaintaining"), controllers.routes.WhatIsNextController.onPageLoad().url)
 
 }
 
