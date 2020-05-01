@@ -58,3 +58,5 @@ GET        /feature-not-available                       controllers.FeatureNotAv
 GET        /last-declaration                            controllers.PlaybackAnswersController.onPageLoad()
 
 GET        /declared-updates                            controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad()
+
+GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad()
