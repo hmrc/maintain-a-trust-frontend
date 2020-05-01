@@ -80,3 +80,5 @@ POST       /add-other-individuals                       controllers.makechanges.
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
 GET        /overview                                    controllers.VariationProgressController.onPageLoad()
+
+GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad()

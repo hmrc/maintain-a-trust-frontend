@@ -166,6 +166,14 @@ playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new
 playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
 playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment ready when you contact HMRC.
 
+maintainThisTrust.title = Maintain this trust
+maintainThisTrust.heading = Maintain this trust
+maintainThisTrust.p1 = The trust with the Unique Taxpayer Reference (UTR) 1234567890 has been linked with this account.
+maintainThisTrust.p2 = You can add, remove and update the settlor, trustees, beneficiaries, protectors and any other individual in this trust. Your changes will not be saved until you have declared.
+maintainThisTrust.p3 = If you need to register or maintain another trust, you will need to use another Government Gateway account.
+maintainThisTrust.p4 = If you need help using this service
+maintainThisTrust.p4.a = contact the trust helpline (opens in a new window or tab).
+
 session_expired.title = For your security, this service has been reset
 session_expired.heading = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
