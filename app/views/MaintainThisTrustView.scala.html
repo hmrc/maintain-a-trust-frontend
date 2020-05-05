@@ -14,8 +14,11 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
+
 @this(
-    main_template: MainTemplate
+    main_template: MainTemplate,
+    config: FrontendAppConfig
 )
 
 @(utr: String)(implicit request: Request[_], messages: Messages)
@@ -29,13 +32,15 @@
     <span class="govuk-caption-xl">@messages("maintainThisTrust.subheading", utr)</span>
     @components.heading("maintainThisTrust.heading")
 
-    <p>@messages("maintainThisTrust.p1.a") <b>@utr</b> @messages("maintainThisTrust.p1.b")</p>
+    <p>@messages("maintainThisTrust.p1.a") <strong>@utr</strong> @messages("maintainThisTrust.p1.b")</p>
 
     <p>@messages("maintainThisTrust.p2")</p>
 
     <p>@messages("maintainThisTrust.p3")</p>
 
     <p>@messages("maintainThisTrust.p4") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("maintainThisTrust.p4.a")</a></p>
+
+    <p>@components.button_link("site.onlyContinue", config.claimATrustUrl(utr))</p>
 
 }
 

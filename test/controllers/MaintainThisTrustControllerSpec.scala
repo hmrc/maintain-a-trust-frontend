@@ -36,7 +36,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad(utr).url)
 
       val result = route(application, request).value
 
@@ -45,7 +45,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view()(fakeRequest, messages).toString
+        view(utr)(fakeRequest, messages).toString
 
       application.stop()
     }

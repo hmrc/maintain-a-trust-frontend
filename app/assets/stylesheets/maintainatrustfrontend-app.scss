@@ -24,6 +24,10 @@
   padding-top: govuk-spacing(3);
 }
 
+strong {
+    font-weight: bold;
+}
+
 .field-error {
   border: 4px solid #b10e1e !important;
 }
