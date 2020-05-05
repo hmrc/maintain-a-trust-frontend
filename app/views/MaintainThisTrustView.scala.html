@@ -40,7 +40,7 @@
 
     <p>@messages("maintainThisTrust.p4") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("maintainThisTrust.p4.a")</a></p>
 
-    <p>@components.button_link("site.onlyContinue", config.claimATrustUrl(utr))</p>
+    <p>@components.button_link("site.onlyContinue", controllers.routes.TrustStatusController.status().url)</p>
 
 }
 

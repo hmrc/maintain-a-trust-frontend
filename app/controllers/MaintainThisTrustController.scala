@@ -18,9 +18,11 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.AuthenticateForPlayback
+import models.UserAnswers
 import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.MaintainThisTrustView
 
@@ -30,11 +32,21 @@ import scala.concurrent.{ExecutionContext, Future}
 class MaintainThisTrustController @Inject()(
                                              actions: AuthenticateForPlayback,
                                              val controllerComponents: MessagesControllerComponents,
+                                             playbackRepository: PlaybackRepository,
                                              view: MaintainThisTrustView
                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(utr: String) = actions.authWithSession {
+  def onPageLoad(utr: String) = actions.authWithSession.async {
     implicit request =>
-      Ok(view(utr))
+
+        val userAnswers = request.userAnswers
+          .getOrElse(UserAnswers(request.user.internalId))
+          .set(UTRPage, utr)
+
+        for {
+          updatedAnswers <- Future.fromTry(userAnswers)
+          _ <- playbackRepository.set(updatedAnswers)
+        } yield Ok(view(utr))
+
   }
 }
