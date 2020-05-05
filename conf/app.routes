@@ -62,6 +62,8 @@ GET        /last-declaration                            controllers.PlaybackAnsw
 
 GET        /declared-updates                            controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad()
 
+GET        /maintain-this-trust/:utr                    controllers.MaintainThisTrustController.onPageLoad(utr: String)
+
 GET        /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad()
 POST       /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onSubmit()
 
@@ -80,5 +82,3 @@ POST       /add-other-individuals                       controllers.makechanges.
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
 GET        /overview                                    controllers.VariationProgressController.onPageLoad()
-
-GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad()
