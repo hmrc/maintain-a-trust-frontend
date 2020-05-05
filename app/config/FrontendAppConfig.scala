@@ -36,6 +36,9 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
 
   def maintainSettlorsUrl(utr: String) = s"$maintainSettlorsFrontendUrl/$utr"
 
+  def claimATrustUrl(utr: String) =
+    configuration.get[Service]("microservice.services.claim-a-trust-frontend").baseUrl + s"/claim-a-trust/save/$utr"
+
   val analyticsToken: String = configuration.get[String](s"google-analytics.token")
   val analyticsHost: String = configuration.get[String](s"google-analytics.host")
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
