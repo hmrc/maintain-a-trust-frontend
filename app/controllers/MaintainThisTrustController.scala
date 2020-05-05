@@ -33,8 +33,8 @@ class MaintainThisTrustController @Inject()(
                                              view: MaintainThisTrustView
                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad() = actions.verifiedForUtr {
+  def onPageLoad(utr: String) = actions.authWithSession {
     implicit request =>
-      Ok(view())
+      Ok(view(utr))
   }
 }

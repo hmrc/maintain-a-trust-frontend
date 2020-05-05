@@ -18,7 +18,7 @@
     main_template: MainTemplate
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("maintainThisTrust.title")
@@ -26,9 +26,10 @@
 
     @components.back_link()
 
+    <span class="govuk-caption-xl">@messages("maintainThisTrust.subheading", utr)</span>
     @components.heading("maintainThisTrust.heading")
 
-    <p>@messages("maintainThisTrust.p1")</p>
+    <p>@messages("maintainThisTrust.p1.a") <b>@utr</b> @messages("maintainThisTrust.p1.b")</p>
 
     <p>@messages("maintainThisTrust.p2")</p>
 
