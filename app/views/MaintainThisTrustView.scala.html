@@ -21,7 +21,7 @@
     config: FrontendAppConfig
 )
 
-@(utr: String)(implicit request: Request[_], messages: Messages)
+@(utr: String, availableSections: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("maintainThisTrust.title")
@@ -34,7 +34,7 @@
 
     <p>@messages("maintainThisTrust.p1.a") <span class="weight-bold">@utr</span> @messages("maintainThisTrust.p1.b")</p>
 
-    <p>@messages("maintainThisTrust.p2")</p>
+    <p>@messages("maintainThisTrust.p2", availableSections)</p>
 
     <p>@messages("maintainThisTrust.p3")</p>
 

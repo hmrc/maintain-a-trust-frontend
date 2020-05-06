@@ -17,10 +17,12 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
 import models.UserAnswers
+import models.requests.{DataRequest, OptionalDataRequest}
 import pages.UTRPage
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
@@ -30,9 +32,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class MaintainThisTrustController @Inject()(
+                                             override val messagesApi: MessagesApi,
                                              actions: AuthenticateForPlayback,
                                              val controllerComponents: MessagesControllerComponents,
                                              playbackRepository: PlaybackRepository,
+                                             config: FrontendAppConfig,
                                              view: MaintainThisTrustView
                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
@@ -46,7 +50,37 @@ class MaintainThisTrustController @Inject()(
         for {
           updatedAnswers <- Future.fromTry(userAnswers)
           _ <- playbackRepository.set(updatedAnswers)
-        } yield Ok(view(utr))
+        } yield {
+
+          @scala.annotation.tailrec
+          def commaSeparate(connective: String, list: List[String], acc: String = "")
+                           (implicit request: OptionalDataRequest[AnyContent]): String = {
+            list.size match {
+              case 0 => acc
+              case 1 if !acc.isEmpty => commaSeparate(connective, list.tail, acc + " " + connective + " " + list.head)
+              case 1 | 2 => commaSeparate(connective, list.tail, acc + list.head)
+              case _ => commaSeparate(connective, list.tail, acc + list.head + ", ")
+            }
+          }
+
+          val sections: List[(Boolean, String)] = List(
+            (config.maintainSettlorsEnabled, request.messages(messagesApi)("section.settlors")),
+            (config.maintainTrusteesEnabled, request.messages(messagesApi)("section.trustees")),
+            (config.maintainBeneficiariesEnabled, request.messages(messagesApi)("section.beneficiaries")),
+            (config.maintainProtectorsEnabled, request.messages(messagesApi)("section.protectors")),
+            (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.natural"))
+          )
+
+          val availableSections = commaSeparate(
+            request.messages(messagesApi)("site.and"),
+            sections.collect {
+              case (true, x) => x
+            }
+          )
+
+          Ok(view(utr, availableSections))
+        }
 
   }
+
 }
