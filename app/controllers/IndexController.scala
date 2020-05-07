@@ -51,6 +51,7 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
 
             for {
               updatedAnswers <- Future.fromTry(userAnswers)
+              _ <- playbackRepository.resetCache(request.user.internalId)
               _ <- playbackRepository.set(updatedAnswers)
             } yield {
               Redirect(controllers.routes.TrustStatusController.status())

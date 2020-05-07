@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import models.UserAnswers
 import pages.UTRPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -31,7 +32,10 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
       val utr = "0987654321"
 
+      val ua = UserAnswers("id").set(UTRPage, utr).success.value
+
       val application = applicationBuilder(
+        userAnswers = Some(ua),
         enrolments = Enrolments(Set(Enrolment("HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated")))
       ).build()
 
