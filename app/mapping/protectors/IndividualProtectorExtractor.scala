@@ -42,7 +42,7 @@ class IndividualProtectorExtractor {
           _.set(
             IndividualProtectorMetaData(index),
             MetaData(
-              lineNo = individualProtector.lineNo,
+              lineNo = individualProtector.lineNo.getOrElse(""),
               bpMatchStatus = individualProtector.bpMatchStatus,
               entityStart = individualProtector.entityStart
             )
