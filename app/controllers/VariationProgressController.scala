@@ -27,6 +27,7 @@ import navigation.DeclareNoChange
 import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import sections.Protectors
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
 import viewmodels.{Link, Task}
@@ -61,6 +62,14 @@ class VariationProgressController @Inject()(
     }
   }
 
+  def protectorsRouteEnabled(utr: String): String = {
+    if (config.maintainProtectorsEnabled) {
+      config.maintainProtectorsUrl(utr)
+    } else {
+      notYetAvailable
+    }
+  }
+
   case class TaskList(mandatory: List[Task], other: List[Task]) {
     val isAbleToDeclare : Boolean = !(mandatory ::: other).exists(_.tag.contains(InProgress))
   }
@@ -85,6 +94,10 @@ class VariationProgressController @Inject()(
       Task(
         Link(NaturalPeople, notYetAvailable),
         Some(Tag.tagFor(tasks.other, config.maintainOtherIndividualsEnabled))
+      ),
+        Task(
+        Link(Protectors, protectorsRouteEnabled(utr)),
+        Some(Tag.tagFor(tasks.protectors, config.maintainProtectorsEnabled))
       )
     )
 
