@@ -200,7 +200,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
             data.trust.entities.settlors.value.settlorCompany.value.head.name mustBe "Settlor Org 01"
 
-            data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe "1"
+            data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe Some("1")
             data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
             data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
 

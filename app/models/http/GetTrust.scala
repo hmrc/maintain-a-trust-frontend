@@ -354,7 +354,7 @@ object DisplayTrustProtectorsType {
 
 }
 
-case class DisplayTrustProtector(lineNo: String,
+case class DisplayTrustProtector(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  name: NameType,
                                  dateOfBirth: Option[DateTime],
@@ -366,7 +366,7 @@ object DisplayTrustProtector {
   implicit val protectorFormat: Format[DisplayTrustProtector] = Json.format[DisplayTrustProtector]
 }
 
-case class DisplayTrustProtectorBusiness(lineNo: String,
+case class DisplayTrustProtectorBusiness(lineNo: Option[String],
                                          bpMatchStatus: Option[String],
                                          name: String,
                                          identification: Option[DisplayTrustIdentificationOrgType],

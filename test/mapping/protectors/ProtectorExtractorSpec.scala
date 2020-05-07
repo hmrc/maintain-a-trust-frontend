@@ -67,7 +67,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
         val protectors = DisplayTrustProtectorsType(
           protector = List(
             DisplayTrustProtector(
-              lineNo = s"1",
+              lineNo = Some("1"),
               bpMatchStatus = Some("01"),
               name = NameType(s"First Name", None, s"Last Name"),
               dateOfBirth = Some(DateTime.parse("1970-02-01")),
@@ -82,7 +82,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
               entityStart = "2019-11-26"
             ),
             DisplayTrustProtector(
-              lineNo = s"2",
+              lineNo = Some("2"),
               bpMatchStatus = Some("02"),
               name = NameType(s"First Name", None, s"Last Name"),
               dateOfBirth = Some(DateTime.parse("1980-02-01")),
@@ -141,7 +141,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
           protector = Nil,
           protectorCompany = List(
             DisplayTrustProtectorBusiness(
-              lineNo = s"1",
+              lineNo = Some("1"),
               bpMatchStatus = Some("01"),
               name = s"Business 1",
               identification = Some(
@@ -154,7 +154,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
               entityStart = "2019-11-26"
             ),
             DisplayTrustProtectorBusiness(
-              lineNo = s"2",
+              lineNo = Some("2"),
               bpMatchStatus = Some("02"),
               name = s"Business 2",
               identification = Some(
@@ -203,7 +203,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
         val protectors = DisplayTrustProtectorsType(
           protector = List(
             DisplayTrustProtector(
-              lineNo = s"1",
+              lineNo = Some("1"),
               bpMatchStatus = Some("01"),
               name = NameType(s"First Name", None, s"Last Name"),
               dateOfBirth = Some(DateTime.parse("1970-02-01")),
@@ -220,7 +220,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
           ),
           protectorCompany = List(
             DisplayTrustProtectorBusiness(
-              lineNo = s"1",
+              lineNo = Some("1"),
               bpMatchStatus = Some("01"),
               name = s"Business 1",
               identification = Some(
