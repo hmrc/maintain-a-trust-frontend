@@ -35,7 +35,6 @@ import scala.concurrent.{ExecutionContext, Future}
 trait IdentifierAction extends ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest]
 
 class AuthenticatedIdentifierAction @Inject()(
-                                               config: FrontendAppConfig,
                                                trustsAuthFunctions: TrustsAuthorisedFunctions,
                                                val parser: BodyParsers.Default,
                                                playbackAuthenticationService: AuthenticationService

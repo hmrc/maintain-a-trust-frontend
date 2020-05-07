@@ -26,6 +26,7 @@ import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.makechanges.UnavailableSectionsView
 
+import scala.collection.immutable
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -40,14 +41,6 @@ class UnavailableSectionsController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
-
-      case class AvailableSections(
-                                  trustees: (Boolean, String),
-                                  beneficiaries: (Boolean, String),
-                                  settlors: (Boolean, String),
-                                  protectors: (Boolean, String),
-                                  natural: (Boolean, String)
-                                  )
 
       val sections = List(
         (config.maintainSettlorsEnabled, request.messages(messagesApi)("section.settlors")),
