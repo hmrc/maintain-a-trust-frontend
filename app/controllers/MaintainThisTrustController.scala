@@ -40,54 +40,40 @@ class MaintainThisTrustController @Inject()(
                                              view: MaintainThisTrustView
                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad() = actions.authWithSession.async {
+  def onPageLoad() = actions.authWithData {
     implicit request =>
 
-      request.user.enrolments.enrolments
-        .find(_.key equals "HMRC-TERS-ORG")
-        .flatMap(_.identifiers.find(_.key equals "SAUTR"))
-        .map(_.value)
-        .fold(Future.successful(Redirect(routes.SessionExpiredController.onPageLoad()))) {
-          utr =>
+      request.userAnswers.get(UTRPage).map { utr =>
 
-            val userAnswers = request.userAnswers
-              .getOrElse(UserAnswers(request.user.internalId))
-              .set(UTRPage, utr)
-
-            for {
-              updatedAnswers <- Future.fromTry(userAnswers)
-              _ <- playbackRepository.set(updatedAnswers)
-            } yield {
-
-              @scala.annotation.tailrec
-              def commaSeparate(connective: String, list: List[String], acc: String = "")
-                               (implicit request: OptionalDataRequest[AnyContent]): String = {
-                list.size match {
-                  case 0 => acc
-                  case 1 if !acc.isEmpty => commaSeparate(connective, list.tail, acc + " " + connective + " " + list.head)
-                  case 1 | 2 => commaSeparate(connective, list.tail, acc + list.head)
-                  case _ => commaSeparate(connective, list.tail, acc + list.head + ", ")
-                }
-              }
-
-              val sections: List[(Boolean, String)] = List(
-                (config.maintainSettlorsEnabled, request.messages(messagesApi)("section.settlors")),
-                (config.maintainTrusteesEnabled, request.messages(messagesApi)("section.trustees")),
-                (config.maintainBeneficiariesEnabled, request.messages(messagesApi)("section.beneficiaries")),
-                (config.maintainProtectorsEnabled, request.messages(messagesApi)("section.protectors")),
-                (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.natural"))
-              )
-
-              val availableSections = commaSeparate(
-                request.messages(messagesApi)("site.and"),
-                sections.collect {
-                  case (true, x) => x
-                }
-              )
-
-              Ok(view(utr, availableSections))
-            }
+        @scala.annotation.tailrec
+        def commaSeparate(connective: String, list: List[String], acc: String = "")
+                         (implicit request: DataRequest[AnyContent]): String = {
+          list.size match {
+            case 0 => acc
+            case 1 if !acc.isEmpty => commaSeparate(connective, list.tail, acc + " " + connective + " " + list.head)
+            case 1 | 2 => commaSeparate(connective, list.tail, acc + list.head)
+            case _ => commaSeparate(connective, list.tail, acc + list.head + ", ")
+          }
         }
+
+        val sections: List[(Boolean, String)] = List(
+          (config.maintainSettlorsEnabled, request.messages(messagesApi)("section.settlors")),
+          (config.maintainTrusteesEnabled, request.messages(messagesApi)("section.trustees")),
+          (config.maintainBeneficiariesEnabled, request.messages(messagesApi)("section.beneficiaries")),
+          (config.maintainProtectorsEnabled, request.messages(messagesApi)("section.protectors")),
+          (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.natural"))
+        )
+
+        val availableSections = commaSeparate(
+          request.messages(messagesApi)("site.and"),
+          sections.collect {
+            case (true, x) => x
+          }
+        )
+
+        Ok(view(utr, availableSections))
+      } getOrElse Redirect(routes.SessionExpiredController.onPageLoad())
+
   }
 
 }
