@@ -72,6 +72,9 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
   lazy val countdownLength: String = configuration.get[String]("timeout.countdown")
   lazy val timeoutLength: String = configuration.get[String]("timeout.length")
 
+  def verifyIdentityForATrustUrl(utr: String) =
+    s"${configuration.get[String]("urls.startVerifyIdentity")}/$utr"
+
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy")
