@@ -92,12 +92,12 @@ class VariationProgressController @Inject()(
 
     val optionalSections = List(
       Task(
-        Link(NaturalPeople, notYetAvailable),
-        Some(Tag.tagFor(tasks.other, config.maintainOtherIndividualsEnabled))
-      ),
-        Task(
         Link(Protectors, protectorsRouteEnabled(utr)),
         Some(Tag.tagFor(tasks.protectors, config.maintainProtectorsEnabled))
+      ),
+      Task(
+        Link(NaturalPeople, notYetAvailable),
+        Some(Tag.tagFor(tasks.other, config.maintainOtherIndividualsEnabled))
       )
     )
 
