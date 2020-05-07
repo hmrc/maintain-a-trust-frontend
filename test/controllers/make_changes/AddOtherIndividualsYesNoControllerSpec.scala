@@ -150,7 +150,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddProtectorYesNoPage, true).success.value
+        .set(AddProtectorYesNoPage, false).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -159,7 +159,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       val request =
         FakeRequest(POST, addOtherIndividualsYesNoRoute)
-          .withFormUrlEncodedBody(("value", "false"))
+          .withFormUrlEncodedBody(("value", "true"))
 
       when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 

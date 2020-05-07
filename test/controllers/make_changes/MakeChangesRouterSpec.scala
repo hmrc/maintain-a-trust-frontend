@@ -59,7 +59,7 @@ class MakeChangesRouterSpec extends SpecBase {
         .set(UpdateBeneficiariesYesNoPage, true).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
         .set(AddProtectorYesNoPage, true).success.value
-        .set(AddOtherIndividualsYesNoPage, false).success.value
+        .set(AddOtherIndividualsYesNoPage, true).success.value
 
       filter.decide(userAnswers) mustBe UnavailableSections
     }
