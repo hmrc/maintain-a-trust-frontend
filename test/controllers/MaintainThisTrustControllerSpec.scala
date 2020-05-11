@@ -44,7 +44,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr, "settlors, trustees and beneficiaries")(fakeRequest, messages).toString
+        view(utr, "settlors, trustees, beneficiaries and protectors")(fakeRequest, messages).toString
 
       application.stop()
     }
