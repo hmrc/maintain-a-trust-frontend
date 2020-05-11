@@ -360,6 +360,7 @@ variationProgress.subHeading.2 = Sections to be completed
 variationProgress.subHeading.3 = Additional sections to be completed
 
 taskList.settlors.label = Settlors
+taskList.protectors.label = Protectors
 taskList.trustees.label = Trustees
 taskList.beneficiaries.label = Beneficiaries
 taskList.natural.label = Other representatives

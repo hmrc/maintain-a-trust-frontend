@@ -22,7 +22,6 @@ import controllers.actions._
 import models.requests.DataRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.makechanges.UnavailableSectionsView
 
@@ -32,7 +31,6 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class UnavailableSectionsController @Inject()(
                                         override val messagesApi: MessagesApi,
-                                        playbackRepository: PlaybackRepository,
                                         actions: AuthenticateForPlayback,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: UnavailableSectionsView,

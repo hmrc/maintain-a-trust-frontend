@@ -31,6 +31,7 @@ import views.html.VariationProgressView
 import play.api.inject.bind
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
+import sections.Protectors
 
 import scala.concurrent.Future
 
@@ -48,7 +49,9 @@ class VariationProgressControllerSpec extends SpecBase {
     Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$utr"), Some(InProgress))
   )
   val optionalSections = List(
-    Task(Link(NaturalPeople, controllers.routes.FeatureNotAvailableController.onPageLoad().url), Some(UpToDate)))
+    Task(Link(Protectors, "http://localhost:9796/maintain-a-trust/protectors/1234567890"), Some(InProgress)),
+    Task(Link(NaturalPeople, controllers.routes.FeatureNotAvailableController.onPageLoad().url), Some(UpToDate))
+  )
 
   "VariationProgress Controller" must {
 

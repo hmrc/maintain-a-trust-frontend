@@ -39,7 +39,7 @@ class BusinessProtectorExtractor {
           _.set(
             BusinessProtectorMetaData(index),
             MetaData(
-              lineNo = businessProtector.lineNo,
+              lineNo = businessProtector.lineNo.getOrElse(""),
               bpMatchStatus = businessProtector.bpMatchStatus,
               entityStart = businessProtector.entityStart
             )
