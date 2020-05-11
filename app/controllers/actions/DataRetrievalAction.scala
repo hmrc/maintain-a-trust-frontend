@@ -32,10 +32,17 @@ class DataRetrievalActionImpl @Inject()(
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
 
     def createdOptionalDataRequest(request: IdentifierRequest[A], userAnswers: Option[UserAnswers]) = {
+
+      val utr = request.user.enrolments.enrolments
+        .find(_.key equals "HMRC-TERS-ORG")
+        .flatMap(_.identifiers.find(_.key equals "SAUTR"))
+        .map(_.value)
+
       OptionalDataRequest(
         request.request,
         userAnswers,
-        request.user
+        request.user,
+        utr
       )
     }
 

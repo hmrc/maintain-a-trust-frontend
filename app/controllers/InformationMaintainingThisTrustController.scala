@@ -19,7 +19,6 @@ package controllers
 import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
 import com.google.inject.{Inject, Singleton}
-import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -39,13 +38,9 @@ class InformationMaintainingThisTrustController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
-      request.userAnswers.get(UTRPage) match {
-        case Some(utr) =>
-          request.user.affinityGroup match {
-            case Agent if !config.playbackEnabled => Ok(agentCannotAccessTrustYetView(utr))
-            case _ => Ok(maintainingTrustView(utr))
-          }
-        case None => Redirect(routes.UTRController.onPageLoad())
+      request.user.affinityGroup match {
+        case Agent if !config.playbackEnabled => Ok(agentCannotAccessTrustYetView(request.utr))
+        case _ => Ok(maintainingTrustView(request.utr))
       }
   }
 }

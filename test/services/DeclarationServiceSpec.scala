@@ -34,7 +34,6 @@ import scala.concurrent.Future
 
 class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValues with RecoverMethods {
 
-  val utr = "0987654321"
   val address: UKAddress = UKAddress("Line 1", "Line 2", None, None, "NE11NE")
   val mockTrustConnector: TrustConnector = mock[TrustConnector]
 

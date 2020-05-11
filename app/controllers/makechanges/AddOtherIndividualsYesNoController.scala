@@ -24,7 +24,6 @@ import forms.YesNoFormProvider
 import models.UserAnswers
 import models.requests.DataRequest
 import navigation.DeclareNoChange
-import pages.UTRPage
 import pages.makechanges._
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -82,16 +81,11 @@ class AddOtherIndividualsYesNoController @Inject()(
       case MakeChangesRouter.Declaration =>
         Future.successful(redirectToDeclaration())
       case MakeChangesRouter.TaskList =>
-        request.userAnswers.get(UTRPage).map {
-          utr =>
             for {
-              _ <- trustStoreConnector.set(utr, updatedAnswers)
+              _ <- trustStoreConnector.set(request.utr, updatedAnswers)
             } yield {
               Redirect(controllers.routes.VariationProgressController.onPageLoad())
             }
-        }.getOrElse {
-          Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
-        }
       case MakeChangesRouter.UnableToDecide =>
         Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
       case MakeChangesRouter.UnavailableSections =>

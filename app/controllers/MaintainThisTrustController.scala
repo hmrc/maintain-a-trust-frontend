@@ -19,35 +19,32 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
-import models.UserAnswers
 import models.requests.{DataRequest, OptionalDataRequest}
-import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.MaintainThisTrustView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class MaintainThisTrustController @Inject()(
                                              override val messagesApi: MessagesApi,
                                              actions: AuthenticateForPlayback,
                                              val controllerComponents: MessagesControllerComponents,
-                                             playbackRepository: PlaybackRepository,
                                              config: FrontendAppConfig,
                                              view: MaintainThisTrustView
                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad() = actions.authWithData {
+  def onPageLoad() = actions.authWithSession {
     implicit request =>
 
-      request.userAnswers.get(UTRPage).map { utr =>
+      request.utr.map { utr =>
 
         @scala.annotation.tailrec
         def commaSeparate(connective: String, list: List[String], acc: String = "")
-                         (implicit request: DataRequest[AnyContent]): String = {
+                         (implicit request: OptionalDataRequest[AnyContent]): String = {
           list.size match {
             case 0 => acc
             case 1 if !acc.isEmpty => commaSeparate(connective, list.tail, acc + " " + connective + " " + list.head)
@@ -72,7 +69,8 @@ class MaintainThisTrustController @Inject()(
         )
 
         Ok(view(utr, availableSections))
-      } getOrElse Redirect(routes.SessionExpiredController.onPageLoad())
+
+      } getOrElse Redirect(routes.UTRController.onPageLoad())
 
   }
 

@@ -19,6 +19,7 @@ package controllers.actions
 import controllers.routes
 import com.google.inject.Inject
 import models.requests.{DataRequest, OptionalDataRequest}
+import pages.UTRPage
 import play.api.Logger
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
@@ -38,7 +39,18 @@ class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionC
         Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad())))
       case Some(data) =>
         Logger.debug(s"[DataRequiredAction] user answers in request, continuing with request")
-        Future.successful(Right(DataRequest(request.request, data, request.user)))
+
+        request.utr
+          .orElse {
+            data.get(UTRPage)
+          }
+          .map { utr =>
+            Future.successful(Right(DataRequest(request.request, data, request.user, utr)))
+          }
+          .getOrElse {
+            Future.successful(Left(Redirect(routes.UTRController.onPageLoad())))
+          }
+
     }
   }
 }

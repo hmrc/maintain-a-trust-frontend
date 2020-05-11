@@ -22,8 +22,6 @@ import views.html.status.TrustUtrDoesNotMatchView
 
 class TrustUtrDoesNotMatchViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
-
   "TrustUtrDoesNotMatch view" must {
 
     val view = viewFor[TrustUtrDoesNotMatchView](Some(emptyUserAnswers))

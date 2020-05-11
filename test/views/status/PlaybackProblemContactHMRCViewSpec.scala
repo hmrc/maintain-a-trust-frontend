@@ -21,8 +21,6 @@ import views.html.status.PlaybackProblemContactHMRCView
 
 class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
-
   "PlaybackProblemContactHMRC view" must {
 
     val view = viewFor[PlaybackProblemContactHMRCView](Some(emptyUserAnswers))

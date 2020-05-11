@@ -22,8 +22,6 @@ import views.html.status.TrustStillProcessingView
 
 class TrustStillProcessingViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
-
   "TrustStillProcessing view" must {
 
     val view = viewFor[TrustStillProcessingView](Some(emptyUserAnswers))

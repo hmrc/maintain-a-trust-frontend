@@ -22,8 +22,6 @@ import views.html.status.TrustClosedView
 
 class TrustClosedViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
-
   "TrustClosed view" must {
 
     val view = viewFor[TrustClosedView](Some(emptyUserAnswers))

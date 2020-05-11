@@ -51,15 +51,14 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     (for {
-      utr <- request.userAnswers.get(UTRPage)
       tvn <- request.userAnswers.get(TVNPage)
       submissionDate <- request.userAnswers.get(SubmissionDatePage)
       optionalAgentInformation = request.userAnswers.get(AgentDeclarationPage)
     } yield {
 
-      val submissionData = SubmissionData(utr, tvn, submissionDate, optionalAgentInformation)
+      val submissionData = SubmissionData(request.utr, tvn, submissionDate, optionalAgentInformation)
 
-      trustConnector.playback(utr).flatMap {
+      trustConnector.playback(request.utr).flatMap {
         case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, playback)(request)
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
@@ -84,7 +83,7 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
           _ <- playbackRepository.set(updatedAnswers)
         } yield {
           Logger.debug(s"[RefreshedDataRetrievalAction] Set updated user answers in db")
-          Right(DataRequest(request.request, updatedAnswers, request.user))
+          Right(DataRequest(request.request, updatedAnswers, request.user, data.utr))
         }
       case Left(reason) =>
         Logger.warn(s"[RefreshedDataRetrievalAction] unable to extract user answers due to $reason")

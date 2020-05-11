@@ -23,7 +23,7 @@ import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
 import models.http.TVNResponse
 import pages.declaration.IndividualDeclarationPage
-import pages.{SubmissionDatePage, TVNPage, UTRPage}
+import pages.{SubmissionDatePage, TVNPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -66,24 +66,19 @@ class IndividualDeclarationController @Inject()(
           Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.IndividualDeclarationController.onSubmit()))),
 
         declaration => {
-          request.userAnswers.get(UTRPage) match {
-            case None =>
-              Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
-            case Some(utr) =>
-              service.individualDeclareNoChange(utr, declaration) flatMap {
-                case TVNResponse(tvn) =>
-                  for {
-                    updatedAnswers <- Future.fromTry(
-                      request.userAnswers
-                        .set(IndividualDeclarationPage, declaration)
-                        .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                        .flatMap(_.set(TVNPage, tvn))
-                    )
-                    _ <- playbackRepository.set(updatedAnswers)
-                  } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-                case _ =>
-                  Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-              }
+          service.individualDeclareNoChange(request.utr, declaration) flatMap {
+            case TVNResponse(tvn) =>
+              for {
+                updatedAnswers <- Future.fromTry(
+                  request.userAnswers
+                    .set(IndividualDeclarationPage, declaration)
+                    .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+                    .flatMap(_.set(TVNPage, tvn))
+                )
+                _ <- playbackRepository.set(updatedAnswers)
+              } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+            case _ =>
+              Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
           }
         }
       )

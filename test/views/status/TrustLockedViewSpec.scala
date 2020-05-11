@@ -21,8 +21,6 @@ import views.html.status.TrustLockedView
 
 class TrustLockedViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
-
   "TrustLocked view" must {
 
     val view = viewFor[TrustLockedView](Some(emptyUserAnswers))

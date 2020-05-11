@@ -21,8 +21,6 @@ import views.html.status.TrustAlreadyClaimedView
 
 class TrustAlreadyClaimedViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
-
   "TrustAlreadyClaimed view" must {
 
     val view = viewFor[TrustAlreadyClaimedView](Some(emptyUserAnswers))

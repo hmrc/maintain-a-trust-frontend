@@ -72,10 +72,9 @@ class AgentDeclarationController @Inject()(
           request.user match {
             case agentUser: AgentUser =>
               (for {
-                utr <- request.userAnswers.get(UTRPage)
                 agencyAddress <- getAgencyRegisteredAddress(request.userAnswers)
               } yield {
-                submitDeclaration(declaration, agentUser, utr, agencyAddress)
+                submitDeclaration(declaration, agentUser, request.utr, agencyAddress)
               }).getOrElse(handleError("Failed to get UTR or agency address"))
 
             case _ =>

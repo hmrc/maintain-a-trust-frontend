@@ -36,8 +36,10 @@ case class OrganisationUser(internalId: String, enrolments: Enrolments) extends 
 
 case class OptionalDataRequest[A](request: Request[A],
                                   userAnswers: Option[UserAnswers],
-                                  user: User) extends WrappedRequest[A](request)
+                                  user: User,
+                                  utr: Option[String]) extends WrappedRequest[A](request)
 
 case class DataRequest[A](request: Request[A],
                           userAnswers: UserAnswers,
-                          user: User) extends WrappedRequest[A](request)
+                          user: User,
+                          utr: String) extends WrappedRequest[A](request)

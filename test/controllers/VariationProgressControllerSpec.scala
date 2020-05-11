@@ -40,14 +40,12 @@ class VariationProgressControllerSpec extends SpecBase {
 
   lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
 
-  val fakeUTR = "1234567890"
-
   val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
   val mandatorySections = List(
-    Task(Link(Settlors, "http://localhost:9795/maintain-a-trust/settlors/1234567890"), Some(InProgress)),
-    Task(Link(Trustees, "http://localhost:9792/maintain-a-trust/trustees/1234567890"), Some(InProgress)),
-    Task(Link(Beneficiaries, "http://localhost:9793/maintain-a-trust/beneficiaries/1234567890"), Some(InProgress))
+    Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$utr"), Some(InProgress)),
+    Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$utr"), Some(InProgress)),
+    Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$utr"), Some(InProgress))
   )
   val optionalSections = List(
     Task(Link(NaturalPeople, controllers.routes.FeatureNotAvailableController.onPageLoad().url), Some(UpToDate)))
@@ -58,7 +56,7 @@ class VariationProgressControllerSpec extends SpecBase {
 
       val mockConnector = mock[TrustsStoreConnector]
 
-      val answers = emptyUserAnswers.set(UTRPage, fakeUTR).success.value
+      val answers = emptyUserAnswers.set(UTRPage, utr).success.value
 
       val application = applicationBuilder(userAnswers = Some(answers))
         .overrides(
@@ -79,26 +77,10 @@ class VariationProgressControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false)(fakeRequest, messages).toString
+        view(utr, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false)(fakeRequest, messages).toString
 
       application.stop()
     }
-
-    "redirect to UTR page when no utr is found" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-        val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value mustEqual routes.UTRController.onPageLoad().url
-
-        application.stop()
-    }
-
 
   }
 }

@@ -42,8 +42,6 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
   trait LocalSetup {
 
-    def utr = "1234567890"
-
     def userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
 
     val fakeTrustConnector: TrustConnector = mock[TrustConnector]

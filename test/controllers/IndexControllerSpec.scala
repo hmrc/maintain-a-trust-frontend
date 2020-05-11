@@ -26,7 +26,7 @@ class IndexControllerSpec extends SpecBase {
 
   "Index Controller" must {
 
-    "redirect to UTR controller for a GET" in {
+    "redirect to Trust Status controller for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
@@ -36,7 +36,7 @@ class IndexControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustBe controllers.routes.UTRController.onPageLoad().url
+      redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
 
       application.stop()
     }

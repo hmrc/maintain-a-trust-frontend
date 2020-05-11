@@ -22,8 +22,6 @@ import views.html.status.IVDownView
 
 class IVDownViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
-
   "IVDown view" must {
 
     val view = viewFor[IVDownView](Some(emptyUserAnswers))

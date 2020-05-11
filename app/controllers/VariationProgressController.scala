@@ -24,7 +24,6 @@ import models.pages.Tag
 import models.pages.Tag.InProgress
 import models.{CompletedMaintenanceTasks, Enumerable}
 import navigation.DeclareNoChange
-import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -32,7 +31,7 @@ import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class VariationProgressController @Inject()(
                                       override val messagesApi: MessagesApi,
@@ -94,13 +93,10 @@ class VariationProgressController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
-      request.userAnswers.get(UTRPage) match {
-        case Some(utr) =>
-
-          storeConnector.getStatusOfTasks(utr) map {
+          storeConnector.getStatusOfTasks(request.utr) map {
             tasks =>
 
-              val sections = taskList(tasks, utr)
+              val sections = taskList(tasks, request.utr)
 
               val next = if (request.user.affinityGroup == Agent) {
                 controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
@@ -108,7 +104,7 @@ class VariationProgressController @Inject()(
                 controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
               }
 
-              Ok(view(utr,
+              Ok(view(request.utr,
                 sections.mandatory,
                 sections.other,
                 request.user.affinityGroup,
@@ -117,8 +113,5 @@ class VariationProgressController @Inject()(
               ))
 
           }
-        case _ =>
-          Future.successful(Redirect(routes.UTRController.onPageLoad()))
-      }
   }
 }

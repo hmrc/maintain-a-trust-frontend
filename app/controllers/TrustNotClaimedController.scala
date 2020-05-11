@@ -18,7 +18,6 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.AuthenticateForPlayback
-import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
@@ -36,8 +35,6 @@ class TrustNotClaimedController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      request.userAnswers.get(UTRPage) map { utr =>
-        Ok(view(utr))
-      } getOrElse Redirect(controllers.routes.SessionExpiredController.onPageLoad())
+      Ok(view(request.utr))
   }
 }

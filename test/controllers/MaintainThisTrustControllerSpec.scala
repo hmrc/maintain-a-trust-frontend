@@ -29,17 +29,15 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val utr = "0987654321"
-
-      val application = applicationBuilder(
-        enrolments = Enrolments(Set(Enrolment("HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated")))
-      ).build()
+      val application = applicationBuilder().build()
 
       val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad().url)
 
       val result = route(application, request).value
 
       val view = application.injector.instanceOf[MaintainThisTrustView]
+
+      println(">>>" + redirectLocation(result))
 
       status(result) mustEqual OK
 
@@ -49,18 +47,5 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to Session Expired if UTR cannot be found in enrolments" in {
-
-      val application = applicationBuilder().build()
-
-      val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad().url)
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
-    }
   }
 }

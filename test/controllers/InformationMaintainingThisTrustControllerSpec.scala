@@ -26,8 +26,6 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
 
   "InformationMaintainingThisTrustPage Controller" must {
 
-    val utr = "1234545678"
-
     "return OK and the correct view for a GET" in {
 
       val userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
@@ -48,19 +46,5 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to UTR page when UTR page is not answered" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation (result).value mustEqual routes.UTRController.onPageLoad().url
-
-      application.stop()
-    }
   }
 }

@@ -16,15 +16,12 @@
 
 package controllers
 
-import config.FrontendAppConfig
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.AuthenticateForPlayback
-import handlers.ErrorHandler
 import javax.inject.Inject
 import mapping.UserAnswersExtractor
 import models.http._
 import models.requests.DataRequest
-import pages.UTRPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
@@ -46,8 +43,6 @@ class TrustStatusController @Inject()(
                                        ivDownView: IVDownView,
                                        trustConnector: TrustConnector,
                                        trustStoreConnector: TrustsStoreConnector,
-                                       config: FrontendAppConfig,
-                                       errorHandler: ErrorHandler,
                                        lockedView: TrustLockedView,
                                        alreadyClaimedView: TrustAlreadyClaimedView,
                                        playbackProblemContactHMRCView: PlaybackProblemContactHMRCView,
@@ -56,60 +51,44 @@ class TrustStatusController @Inject()(
                                        val controllerComponents: MessagesControllerComponents
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def closed(): Action[AnyContent] = actions.authWithData.async {
+  def closed(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      enforceUtr() { utr =>
-        Future.successful(Ok(closedView(request.user.affinityGroup, utr)))
-      }
+      Ok(closedView(request.user.affinityGroup, request.utr))
   }
 
-  def processing(): Action[AnyContent] = actions.authWithData.async {
+  def processing(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      enforceUtr() { utr =>
-        Future.successful(Ok(stillProcessingView(request.user.affinityGroup, utr)))
-      }
+      Ok(stillProcessingView(request.user.affinityGroup, request.utr))
   }
 
-  def sorryThereHasBeenAProblem(): Action[AnyContent] = actions.authWithData.async {
+  def sorryThereHasBeenAProblem(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      enforceUtr() { utr =>
-        Future.successful(Ok(playbackProblemContactHMRCView(utr)))
-      }
+      Ok(playbackProblemContactHMRCView(request.utr))
   }
 
-  def notFound(): Action[AnyContent] = actions.authWithData.async {
+  def notFound(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      enforceUtr() { _ =>
-        Future.successful(Ok(utrDoesNotMatchView(request.user.affinityGroup)))
-      }
+      Ok(utrDoesNotMatchView(request.user.affinityGroup))
   }
 
-  def locked(): Action[AnyContent] = actions.authWithData.async {
+  def locked(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      enforceUtr() { utr =>
-        Future.successful(Ok(lockedView(utr)))
-      }
+      Ok(lockedView(request.utr))
   }
 
-  def down(): Action[AnyContent] = actions.authWithData.async {
+  def down(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      enforceUtr() { _ =>
-        Future.successful(ServiceUnavailable(ivDownView(request.user.affinityGroup)))
-      }
+      ServiceUnavailable(ivDownView(request.user.affinityGroup))
   }
 
-  def alreadyClaimed(): Action[AnyContent] = actions.authWithData.async {
+  def alreadyClaimed(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      enforceUtr() { utr =>
-        Future.successful(Ok(alreadyClaimedView(utr)))
-      }
+      Ok(alreadyClaimedView(request.utr))
   }
 
   def status(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      enforceUtr() { utr =>
-        checkIfLocked(utr)
-      }
+      checkIfLocked(request.utr)
   }
 
   private def checkIfLocked(utr: String)(implicit request: DataRequest[AnyContent]): Future[Result] = {
@@ -158,13 +137,6 @@ class TrustStatusController @Inject()(
       case Left(reason) =>
         Logger.warn(s"[TrustStatusController] unable to extract user answers due to $reason")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-    }
-  }
-
-  private def enforceUtr()(block: String => Future[Result])(implicit request: DataRequest[AnyContent]): Future[Result] = {
-    request.userAnswers.get(UTRPage) match {
-      case None => Future.successful(Redirect(routes.UTRController.onPageLoad()))
-      case Some(utr) => block(utr)
     }
   }
 

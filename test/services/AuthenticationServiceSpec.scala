@@ -35,8 +35,6 @@ import scala.concurrent.Future
 
 class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherValues with RecoverMethods {
 
-  private val utr = "0987654321"
-
   private val agentEnrolment = Enrolment("HMRC-AS-AGENT", List(EnrolmentIdentifier("AgentReferenceNumber", "SomeVal")), "Activated", None)
   private val trustsEnrolment = Enrolment("HMRC-TERS-ORG", List(EnrolmentIdentifier("SAUTR", utr)), "Activated", None)
 
@@ -47,7 +45,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
   private implicit val dataRequest: DataRequest[AnyContent]
-  = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, "SomeVal"))
+  = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, "SomeVal"), utr)
 
   type RetrievalType = Option[String] ~ Option[AffinityGroup] ~ Enrolments
 
