@@ -43,7 +43,8 @@ class AuthenticationServiceImpl @Inject()(trustAuthConnector: TrustAuthConnector
                                     (implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] = {
     trustAuthConnector.authorisedForUtr(utr).flatMap {
       case _: TrustAuthAllowed => Future.successful(Right(request))
-      case TrustAuthDenied(redirectUrl) => Future.successful(Left(Redirect(redirectUrl)))
+      case TrustAuthDenied(redirectUrl) =>
+        Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
         Logger.warn(s"Unable to authenticate for utr with trusts-auth")
         Future.successful(Left(InternalServerError))

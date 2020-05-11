@@ -39,9 +39,7 @@ class UTRController @Inject()(
                                playbackRepository: PlaybackRepository,
                                formProvider: UTRFormProvider,
                                val controllerComponents: MessagesControllerComponents,
-                               view: UTRView,
-                               config: FrontendAppConfig,
-                               errorHandler: ErrorHandler
+                               view: UTRView
                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()

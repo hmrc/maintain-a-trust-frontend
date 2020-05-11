@@ -62,6 +62,8 @@ GET        /last-declaration                            controllers.PlaybackAnsw
 
 GET        /declared-updates                            controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad()
 
+GET        /maintain-this-trust                        controllers.MaintainThisTrustController.onPageLoad()
+
 GET        /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad()
 POST       /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onSubmit()
 
