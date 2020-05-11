@@ -62,9 +62,9 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
         case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, playback)(request)
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
-    }).getOrElse {
-            Logger.error(s"[RefreshedDataRetrievalAction] unable to get data from user answers")
-            Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+    }) getOrElse {
+      Logger.error(s"[RefreshedDataRetrievalAction] unable to get data from user answers")
+      Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
   }
 

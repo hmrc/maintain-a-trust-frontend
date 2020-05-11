@@ -19,12 +19,12 @@ package controllers
 import base.SpecBase
 import forms.WhatIsNextFormProvider
 import models.pages.WhatIsNext
-import pages.{UTRPage, WhatIsNextPage}
+import pages.WhatIsNextPage
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.{UTRView, WhatIsNextView}
+import views.html.WhatIsNextView
 
 class WhatIsNextControllerSpec extends SpecBase {
 
@@ -39,7 +39,7 @@ class WhatIsNextControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val userAnswers = emptyUserAnswers.set(UTRPage, "1234567892").success.value
+      val userAnswers = emptyUserAnswers
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -60,7 +60,6 @@ class WhatIsNextControllerSpec extends SpecBase {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, "0987654321").success.value
         .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -99,7 +98,6 @@ class WhatIsNextControllerSpec extends SpecBase {
       val utr = "0987654321"
 
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -121,7 +119,6 @@ class WhatIsNextControllerSpec extends SpecBase {
       val utr = "0987654321"
 
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -142,7 +139,6 @@ class WhatIsNextControllerSpec extends SpecBase {
       val utr = "0987654321"
 
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -160,7 +156,7 @@ class WhatIsNextControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val userAnswers = emptyUserAnswers.set(UTRPage, "1234567892").success.value
+      val userAnswers = emptyUserAnswers
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

@@ -20,7 +20,6 @@ import base.SpecBase
 import connectors.TrustsStoreConnector
 import models.CompletedMaintenanceTasks
 import models.pages.Tag.{InProgress, UpToDate}
-import pages.UTRPage
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -49,7 +48,7 @@ class VariationProgressControllerSpec extends SpecBase {
     Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$utr"), Some(InProgress))
   )
   val optionalSections = List(
-    Task(Link(Protectors, "http://localhost:9796/maintain-a-trust/protectors/1234567890"), Some(InProgress)),
+    Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$utr"), Some(InProgress)),
     Task(Link(NaturalPeople, controllers.routes.FeatureNotAvailableController.onPageLoad().url), Some(UpToDate))
   )
 
@@ -59,7 +58,7 @@ class VariationProgressControllerSpec extends SpecBase {
 
       val mockConnector = mock[TrustsStoreConnector]
 
-      val answers = emptyUserAnswers.set(UTRPage, utr).success.value
+      val answers = emptyUserAnswers
 
       val application = applicationBuilder(userAnswers = Some(answers))
         .overrides(

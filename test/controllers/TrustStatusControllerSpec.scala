@@ -23,7 +23,6 @@ import models.http._
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
-import pages.UTRPage
 import play.api.Application
 import play.api.inject.bind
 import play.api.libs.json._
@@ -42,7 +41,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
   trait LocalSetup {
 
-    def userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
+    def userAnswers = emptyUserAnswers
 
     val fakeTrustConnector: TrustConnector = mock[TrustConnector]
     val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
@@ -283,7 +282,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val fakeTrustConnector: TrustConnector = mock[TrustConnector]
               val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
 
-              val userAnswers = emptyUserAnswers.set(UTRPage, "1234567890").success.value
+              val userAnswers = emptyUserAnswers
 
               def application: Application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(
                 bind[TrustConnector].to(fakeTrustConnector),
@@ -328,7 +327,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
             def utr = "1234567890"
 
-            def userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
+            def userAnswers = emptyUserAnswers
 
             val fakeTrustConnector: TrustConnector = mock[TrustConnector]
             val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]

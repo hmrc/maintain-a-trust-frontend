@@ -16,7 +16,6 @@
 
 package views
 
-import pages.UTRPage
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.tasks._
 import viewmodels.{Link, Task}
@@ -29,8 +28,6 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
   "VariationProgress view" must {
 
-    val utr = "1234545678"
-
     val mandatorySections = List(
       Task(Link(Settlors, ""), None),
       Task(Link(Trustees, ""), None),
@@ -42,7 +39,6 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
     val group = Organisation
 
     val userAnswers = emptyUserAnswers
-      .set(UTRPage, utr).success.value
 
     val view = viewFor[VariationProgressView](Some(userAnswers))
 

@@ -20,7 +20,7 @@ import base.SpecBase
 import forms.declaration.AgentDeclarationFormProvider
 import models.{AgentDeclaration, UKAddress}
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
-import pages.{AgencyRegisteredAddressUkPage, UTRPage}
+import pages.AgencyRegisteredAddressUkPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
@@ -68,7 +68,6 @@ class AgentDeclarationControllerSpec extends SpecBase {
       )))
 
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
         .set(AgencyRegisteredAddressUkYesNoPage, true).success.value
         .set(AgencyRegisteredAddressUkPage, address).success.value
 
@@ -123,7 +122,6 @@ class AgentDeclarationControllerSpec extends SpecBase {
       )))
 
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
         .set(AgencyRegisteredAddressUkYesNoPage, true).success.value
         .set(AgencyRegisteredAddressUkPage, address).success.value
 

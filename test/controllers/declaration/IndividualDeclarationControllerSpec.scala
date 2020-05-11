@@ -19,7 +19,6 @@ package controllers.declaration
 import base.SpecBase
 import forms.declaration.IndividualDeclarationFormProvider
 import models.{IndividualDeclaration, UKAddress}
-import pages.UTRPage
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
 import play.api.data.Form
@@ -29,7 +28,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{DeclarationService, FakeDeclarationService, FakeFailingDeclarationService}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
-import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.declaration.IndividualDeclarationView
 
 class IndividualDeclarationControllerSpec extends SpecBase {
@@ -62,22 +60,14 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
     "redirect to confirmation for a POST when there is a lead trustee address" in {
 
-      val utr = "0987654321"
-
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
-      )))
-
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
         .set(IsThisLeadTrusteePage(0), true).success.value
         .set(TrusteeAddressPage(0), address).success.value
 
       val application =
         applicationBuilder(
           userAnswers = Some(userAnswers),
-          affinityGroup = Organisation,
-          enrolments = enrolments
+          affinityGroup = Organisation
         ).overrides(
           bind[DeclarationService].to(new FakeDeclarationService())
         ).build()
@@ -95,22 +85,14 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
     "redirect to confirmation for a POST when there is a correspondence address" in {
 
-      val utr = "0987654321"
-
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
-      )))
-
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
         .set(IsThisLeadTrusteePage(0), true).success.value
         .set(CorrespondenceAddressPage, address).success.value
 
       val application =
         applicationBuilder(
           userAnswers = Some(userAnswers),
-          affinityGroup = Organisation,
-          enrolments = enrolments
+          affinityGroup = Organisation
         ).overrides(
           bind[DeclarationService].to(new FakeDeclarationService())
         ).build()
@@ -150,22 +132,14 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
     "render problem declaring when error retrieving TVN" in {
 
-      val utr = "0987654321"
-
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
-      )))
-
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
         .set(IsThisLeadTrusteePage(0), true).success.value
         .set(TrusteeAddressPage(0), address).success.value
 
       val application =
         applicationBuilder(
           userAnswers = Some(userAnswers),
-          affinityGroup = Organisation,
-          enrolments = enrolments
+          affinityGroup = Organisation
         ).overrides(
           bind[DeclarationService].to(new FakeFailingDeclarationService())
         ).build()
