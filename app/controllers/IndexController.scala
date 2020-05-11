@@ -20,17 +20,21 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions.AuthenticateForPlayback
 import play.api.i18n.I18nSupport
 import play.api.mvc.MessagesControllerComponents
+import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class IndexController @Inject()(val controllerComponents: MessagesControllerComponents,
-                                actions: AuthenticateForPlayback
+                                actions: AuthenticateForPlayback,
+                                playbackRepository: PlaybackRepository
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad() = actions.authWithSession {
+  def onPageLoad() = actions.authWithSession.async {
     implicit request =>
-      Redirect(controllers.routes.TrustStatusController.status())
+      playbackRepository.resetCache(request.user.internalId) map { _ =>
+        Redirect(controllers.routes.TrustStatusController.status())
+      }
   }
 }

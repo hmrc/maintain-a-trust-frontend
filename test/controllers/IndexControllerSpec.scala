@@ -19,6 +19,8 @@ package controllers
 import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, route, status, _}
+import repositories.PlaybackRepository
+import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, EnrolmentIdentifier, Enrolments}
 
 class IndexControllerSpec extends SpecBase {
 
@@ -29,6 +31,30 @@ class IndexControllerSpec extends SpecBase {
     "redirect to Trust Status controller for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      val request = FakeRequest(GET, onPageLoad)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+      application.stop()
+    }
+
+    "redirect to status controller when user is a returning user who is enrolled" in {
+      val application = applicationBuilder(
+        userAnswers = Some(emptyUserAnswers),
+        affinityGroup = AffinityGroup.Organisation,
+        enrolments = Enrolments(Set(
+          Enrolment(
+            key = "HMRC-TERS-ORG",
+            identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = "1234567892")),
+            state = "Activated"
+          )
+        ))
+      ).build()
 
       val request = FakeRequest(GET, onPageLoad)
 

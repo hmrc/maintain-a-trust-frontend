@@ -47,9 +47,11 @@ class UTRController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.authWithSession.async {
     implicit request =>
       playbackRepository.resetCache(request.user.internalId).map { _ =>
-        val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.user.internalId)).get(UTRPage) match {
-          case None => form
-          case Some(value) => form.fill(value)
+        val preparedForm = request.userAnswers
+          .getOrElse(UserAnswers(request.user.internalId))
+          .get(UTRPage) match {
+            case None => form
+            case Some(value) => form.fill(value)
         }
 
         Ok(view(preparedForm, routes.UTRController.onSubmit()))
