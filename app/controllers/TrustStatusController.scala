@@ -115,8 +115,10 @@ class TrustStatusController @Inject()(
   private def checkIfLocked(utr: String)(implicit request: DataRequest[AnyContent]): Future[Result] = {
     trustStoreConnector.get(utr).flatMap {
       case Some(claim) if claim.trustLocked =>
+        Logger.info(s"[TrustStatusController] user has failed IV 3 times, locked out for 30 minutes")
         Future.successful(Redirect(controllers.routes.TrustStatusController.locked()))
       case _ =>
+        Logger.info(s"[TrustStatusController] user has not been locked out from IV")
         tryToPlayback(utr)
     }
   }
@@ -133,6 +135,7 @@ class TrustStatusController @Inject()(
         Logger.info(s"[TrustStatusController][tryToPlayback] unable to retrieve trust due to UTR not found")
         Future.successful(Redirect(controllers.routes.TrustStatusController.notFound()))
       case Processed(playback, _) =>
+        Logger.info(s"[TrustStatusController][tryToPlayback] $utr trust is in a processing state")
         authenticationService.authenticateForUtr(utr) flatMap {
           case Left(failure) => Future.successful(failure)
           case Right(_) => extract(utr, playback)
@@ -153,6 +156,7 @@ class TrustStatusController @Inject()(
     playbackExtractor.extract(request.userAnswers, playback) match {
       case Right(answers) =>
         playbackRepository.set(answers) map { _ =>
+          Logger.info(s"[TrustStatusController][extract] $utr successfully extracted, showing information about maintaining")
           Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
         }
       case Left(reason) =>
@@ -163,8 +167,12 @@ class TrustStatusController @Inject()(
 
   private def enforceUtr()(block: String => Future[Result])(implicit request: DataRequest[AnyContent]): Future[Result] = {
     request.userAnswers.get(UTRPage) match {
-      case None => Future.successful(Redirect(routes.UTRController.onPageLoad()))
-      case Some(utr) => block(utr)
+      case None =>
+        Logger.info(s"[TrustStatusController] no UTR is user answers, redirecting to ask for it")
+        Future.successful(Redirect(routes.UTRController.onPageLoad()))
+      case Some(utr) =>
+        Logger.info(s"[TrustStatusController] checking status of trust for $utr")
+        block(utr)
     }
   }
 
