@@ -137,8 +137,15 @@ class TrustStatusController @Inject()(
       case Processed(playback, _) =>
         Logger.info(s"[TrustStatusController][tryToPlayback] $utr trust is in a processing state")
         authenticationService.authenticateForUtr(utr) flatMap {
-          case Left(failure) => Future.successful(failure)
-          case Right(_) => extract(utr, playback)
+          case Left(failure) =>
+            val location = failure.header.headers.getOrElse(LOCATION, "no location header")
+            val failureStatus = failure.header.status
+            Logger.info(s"[TrustStatusController][tryToPlayback] unable to authenticate user for $utr, " +
+              s"due to $failureStatus status, sending user to $location")
+
+            Future.successful(failure)
+          case Right(_) =>
+            extract(utr, playback)
         }
       case SorryThereHasBeenAProblem =>
         Logger.warn(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due to status")
@@ -151,7 +158,7 @@ class TrustStatusController @Inject()(
 
   private def extract(utr: String, playback: GetTrust)(implicit request: DataRequest[AnyContent]) : Future[Result] = {
 
-    Logger.debug(s"[TrustStatusController] unpacking the following trust ${Json.stringify(Json.toJson(playback))}")
+    Logger.info(s"[TrustStatusController][extract] user authenticated for $utr, attempting to extract to user answers")
 
     playbackExtractor.extract(request.userAnswers, playback) match {
       case Right(answers) =>
