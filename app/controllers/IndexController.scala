@@ -20,8 +20,9 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions.AuthenticateForPlayback
 import models.UserAnswers
 import pages.UTRPage
+import play.api.Logger
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.MessagesControllerComponents
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
@@ -41,6 +42,7 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
         .flatMap(_.identifiers.find(_.key equals "SAUTR"))
         .map(_.value)
         .fold {
+          Logger.info(s"[IndexController] user is not enrolled, starting maintain journey, redirect to ask for UTR")
           Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
         } {
           utr =>
@@ -53,6 +55,7 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
               updatedAnswers <- Future.fromTry(userAnswers)
               _ <- playbackRepository.set(updatedAnswers)
             } yield {
+              Logger.info(s"[IndexController] $utr user is enrolled, storing UTR in user answers, checking status of trust")
               Redirect(controllers.routes.TrustStatusController.status())
             }
         }
