@@ -55,7 +55,7 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
               updatedAnswers <- Future.fromTry(userAnswers)
               _ <- playbackRepository.set(updatedAnswers)
             } yield {
-              Logger.info(s"[IndexController] user is enrolled, storing UTR in user answers, checking status of trust")
+              Logger.info(s"[IndexController] $utr user is enrolled, storing UTR in user answers, checking status of trust")
               Redirect(controllers.routes.TrustStatusController.status())
             }
         }

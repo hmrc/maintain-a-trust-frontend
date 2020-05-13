@@ -115,10 +115,10 @@ class TrustStatusController @Inject()(
   private def checkIfLocked(utr: String)(implicit request: DataRequest[AnyContent]): Future[Result] = {
     trustStoreConnector.get(utr).flatMap {
       case Some(claim) if claim.trustLocked =>
-        Logger.info(s"[TrustStatusController] user has failed IV 3 times, locked out for 30 minutes")
+        Logger.info(s"[TrustStatusController] $utr user has failed IV 3 times, locked out for 30 minutes")
         Future.successful(Redirect(controllers.routes.TrustStatusController.locked()))
       case _ =>
-        Logger.info(s"[TrustStatusController] user has not been locked out from IV")
+        Logger.info(s"[TrustStatusController] $utr user has not been locked out from IV")
         tryToPlayback(utr)
     }
   }
@@ -126,13 +126,13 @@ class TrustStatusController @Inject()(
   private def tryToPlayback(utr: String)(implicit request: DataRequest[AnyContent]): Future[Result] = {
     trustConnector.playbackfromEtmp(utr) flatMap {
       case Closed =>
-        Logger.info(s"[TrustStatusController][tryToPlayback] unable to retrieve trust due it being closed")
+        Logger.info(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due it being closed")
         Future.successful(Redirect(controllers.routes.TrustStatusController.closed()))
       case Processing =>
-        Logger.info(s"[TrustStatusController][tryToPlayback] unable to retrieve trust due to trust change processing")
+        Logger.info(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due to trust change processing")
         Future.successful(Redirect(controllers.routes.TrustStatusController.processing()))
       case UtrNotFound =>
-        Logger.info(s"[TrustStatusController][tryToPlayback] unable to retrieve trust due to UTR not found")
+        Logger.info(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due to UTR not found")
         Future.successful(Redirect(controllers.routes.TrustStatusController.notFound()))
       case Processed(playback, _) =>
         Logger.info(s"[TrustStatusController][tryToPlayback] $utr trust is in a processing state")
@@ -141,10 +141,10 @@ class TrustStatusController @Inject()(
           case Right(_) => extract(utr, playback)
         }
       case SorryThereHasBeenAProblem =>
-        Logger.warn(s"[TrustStatusController][tryToPlayback] unable to retrieve trust due to status")
+        Logger.warn(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due to status")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
       case _ =>
-        Logger.warn(s"[TrustStatusController][tryToPlayback] unable to retrieve trust due to an error")
+        Logger.warn(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due to an error")
         Future.successful(Redirect(routes.TrustStatusController.down()))
     }
   }
@@ -160,7 +160,7 @@ class TrustStatusController @Inject()(
           Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
         }
       case Left(reason) =>
-        Logger.warn(s"[TrustStatusController] unable to extract user answers due to $reason")
+        Logger.warn(s"[TrustStatusController] $utr unable to extract user answers due to $reason")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
     }
   }
