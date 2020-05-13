@@ -17,18 +17,44 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import controllers.actions.AuthenticateForPlayback
+import models.UserAnswers
+import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IndexController @Inject()(val controllerComponents: MessagesControllerComponents
+class IndexController @Inject()(val controllerComponents: MessagesControllerComponents,
+                                actions: AuthenticateForPlayback,
+                                playbackRepository: PlaybackRepository
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = Action.async {
+  def onPageLoad() = actions.authWithSession.async {
     implicit request =>
-      Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
+
+      request.user.enrolments.enrolments
+        .find(_.key equals "HMRC-TERS-ORG")
+        .flatMap(_.identifiers.find(_.key equals "SAUTR"))
+        .map(_.value)
+        .fold {
+          Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
+        } {
+          utr =>
+
+            val userAnswers = request.userAnswers
+              .getOrElse(UserAnswers(request.user.internalId))
+              .set(UTRPage, utr)
+
+            for {
+              updatedAnswers <- Future.fromTry(userAnswers)
+              _ <- playbackRepository.set(updatedAnswers)
+            } yield {
+              Redirect(controllers.routes.TrustStatusController.status())
+            }
+        }
   }
 }
