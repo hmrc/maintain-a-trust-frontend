@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
@@ -29,6 +30,7 @@ class SessionExpiredController @Inject()(
                                         ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
+    Logger.info(s"[SessionExpiredController] session has expired due to inactivity, sent here from ${request.headers.get(REFERER).getOrElse("no referer heading")}")
     Ok(view())
   }
 }
