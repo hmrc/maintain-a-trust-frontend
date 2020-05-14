@@ -135,7 +135,7 @@ class TrustStatusController @Inject()(
         Logger.info(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due to UTR not found")
         Future.successful(Redirect(controllers.routes.TrustStatusController.notFound()))
       case Processed(playback, _) =>
-        Logger.info(s"[TrustStatusController][tryToPlayback] $utr trust is in a processing state")
+        Logger.info(s"[TrustStatusController][tryToPlayback] $utr trust is in a processed state")
         authenticationService.authenticateForUtr(utr) flatMap {
           case Left(failure) =>
             val location = failure.header.headers.getOrElse(LOCATION, "no location header")
