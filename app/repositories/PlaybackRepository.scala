@@ -88,7 +88,11 @@ class PlaybackRepositoryImpl @Inject()(
     )
 
     collection.flatMap {
-      _.findAndUpdate(selector, modifier, fetchNewObject = true, upsert = false).map(_.result[UserAnswers])
+      _.findAndUpdate(selector, modifier, fetchNewObject = true, upsert = false).map {
+        r =>
+          logger.debug(s"[PlaybackRepository][get] last mongo error ${r.lastError}")
+          r.result[UserAnswers]
+      }
     }
   }
 
