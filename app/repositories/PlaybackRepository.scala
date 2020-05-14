@@ -71,6 +71,8 @@ class PlaybackRepository @Inject()(
 
   override def get(internalId: String): Future[Option[UserAnswers]] = {
 
+    logger.debug(s"PlaybackRepository getting user answers for $internalId")
+
     val selector = Json.obj(
       "internalId" -> internalId
     )
@@ -106,13 +108,16 @@ class PlaybackRepository @Inject()(
   }
 
   def resetCache(internalId: String): Future[Option[JsObject]] = {
-      val selector = Json.obj(
-        "internalId" -> internalId
-      )
 
-      collection.flatMap(_.findAndRemove(selector, None, None, WriteConcern.Default, None, None, Seq.empty).map(
-        _.value
-      ))
+    logger.debug(s"PlaybackRepository resetting cache for $internalId")
+
+    val selector = Json.obj(
+      "internalId" -> internalId
+    )
+
+    collection.flatMap(_.findAndRemove(selector, None, None, WriteConcern.Default, None, None, Seq.empty).map(
+      _.value
+    ))
   }
 }
 

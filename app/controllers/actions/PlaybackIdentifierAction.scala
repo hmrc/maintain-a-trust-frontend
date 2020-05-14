@@ -19,6 +19,7 @@ package controllers.actions
 import com.google.inject.{ImplementedBy, Inject}
 import models.requests.DataRequest
 import pages.UTRPage
+import play.api.Logger
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
 import services.AuthenticationService
@@ -34,6 +35,8 @@ class PlaybackIdentifierActionImpl @Inject()(val parser: BodyParsers.Default,
   override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+
+    Logger.debug(s"[PlaybackIdentifierAction] debugging header carrier $hc")
 
     request.userAnswers.get(UTRPage) map { utr =>
       playbackAuthenticationService.authenticateForUtr(utr)(request, hc)
