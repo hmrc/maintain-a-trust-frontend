@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 
 import akka.stream.Materializer
 import com.google.inject.Inject
-import models.UserAnswers
+import models.{MongoDateTimeFormats, UserAnswers}
 import org.slf4j.LoggerFactory
 import play.api.Configuration
 import play.api.libs.json._
@@ -79,9 +79,7 @@ class PlaybackRepository @Inject()(
 
     val modifier = Json.obj(
       "$set" -> Json.obj(
-        "updatedAt" -> Json.obj(
-          "$date" -> Timestamp.valueOf(LocalDateTime.now)
-        )
+        "updatedAt" -> MongoDateTimeFormats.localDateTimeWrite.writes(LocalDateTime.now)
       )
     )
 
