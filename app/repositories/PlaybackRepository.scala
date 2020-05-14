@@ -19,7 +19,7 @@ package repositories
 import java.time.LocalDateTime
 
 import akka.stream.Materializer
-import com.google.inject.Inject
+import javax.inject.{Inject, Singleton}
 import models.{MongoDateTimeFormats, UserAnswers}
 import org.slf4j.LoggerFactory
 import play.api.Configuration
@@ -34,11 +34,12 @@ import utils.DateFormatter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PlaybackRepository @Inject()(
+@Singleton
+class PlaybackRepositoryImpl @Inject()(
                                     mongo: ReactiveMongoApi,
                                     config: Configuration,
                                     dateFormatter: DateFormatter
-                                  )(implicit ec: ExecutionContext, m: Materializer) extends MongoRepository {
+                                  )(implicit ec: ExecutionContext, m: Materializer) extends PlaybackRepository {
 
   private val logger = LoggerFactory.getLogger("application." + this.getClass.getCanonicalName)
 
@@ -108,7 +109,7 @@ class PlaybackRepository @Inject()(
     }
   }
 
-  def resetCache(internalId: String): Future[Option[JsObject]] = {
+  override def resetCache(internalId: String): Future[Option[JsObject]] = {
 
     logger.debug(s"PlaybackRepository resetting cache for $internalId")
 
@@ -122,9 +123,11 @@ class PlaybackRepository @Inject()(
   }
 }
 
-trait MongoRepository {
+trait PlaybackRepository {
 
   def get(internalId: String): Future[Option[UserAnswers]]
 
   def set(userAnswers: UserAnswers): Future[Boolean]
+
+  def resetCache(internalId: String): Future[Option[JsObject]]
 }
