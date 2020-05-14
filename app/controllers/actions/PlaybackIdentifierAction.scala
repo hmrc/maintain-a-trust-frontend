@@ -36,11 +36,12 @@ class PlaybackIdentifierActionImpl @Inject()(val parser: BodyParsers.Default,
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    Logger.debug(s"[PlaybackIdentifierAction] debugging header carrier $hc")
-
     request.userAnswers.get(UTRPage) map { utr =>
       playbackAuthenticationService.authenticateForUtr(utr)(request, hc)
-    } getOrElse Future.successful(Left(Redirect(controllers.routes.IndexController.onPageLoad())))
+    } getOrElse {
+      Logger.info(s"[PlaybackIdentifierAction] cannot authenticate user due to no utr in action")
+      Future.successful(Left(Redirect(controllers.routes.IndexController.onPageLoad())))
+    }
 
   }
 

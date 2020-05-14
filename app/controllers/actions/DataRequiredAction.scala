@@ -29,9 +29,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionContext) extends DataRequiredAction {
 
   override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
-
-    implicit val hc = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
     request.userAnswers match {
       case None =>
         Logger.debug(s"[DataRequiredAction] no user answers in request")
