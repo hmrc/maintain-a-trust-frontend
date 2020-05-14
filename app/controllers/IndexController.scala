@@ -47,11 +47,11 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
         } {
           utr =>
 
-            val userAnswers = request.userAnswers
-              .getOrElse(UserAnswers(request.user.internalId))
+            val userAnswers = UserAnswers(request.user.internalId)
               .set(UTRPage, utr)
 
             for {
+              _ <- playbackRepository.resetCache(request.user.internalId)
               updatedAnswers <- Future.fromTry(userAnswers)
               _ <- playbackRepository.set(updatedAnswers)
             } yield {
