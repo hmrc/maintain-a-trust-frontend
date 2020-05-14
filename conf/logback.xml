@@ -55,8 +55,7 @@
 
     <logger name="uk.gov" level="INFO"/>
 
-    <logger name="reactivemongo.core" level="OFF"/>
-    <logger name="reactivemongo.api" level="OFF"/>
+    <logger name="reactivemongo" level="TRACE"/>
 
     <logger name="akka" level="INFO"/>
     <logger name="play" level="INFO"/>
