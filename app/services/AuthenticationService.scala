@@ -29,20 +29,28 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AuthenticationServiceImpl @Inject()(trustAuthConnector: TrustAuthConnector) extends AuthenticationService {
+
   override def authenticateAgent()
-                                (implicit hc: HeaderCarrier): Future[Either[Result, String]] = {
+                                (implicit hc: HeaderCarrier): Future[Either[Result, String]] =
+  {
     trustAuthConnector.agentIsAuthorised().flatMap {
-      case TrustAuthAgentAllowed(arn) => Future.successful(Right(arn))
-      case TrustAuthDenied(redirectUrl) => Future.successful(Left(Redirect(redirectUrl)))
+      case TrustAuthAgentAllowed(arn) =>
+        Future.successful(Right(arn))
+      case TrustAuthDenied(redirectUrl) =>
+        Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
         Logger.warn(s"Unable to authenticate agent with trusts-auth")
         Future.successful(Left(InternalServerError))
-    }  }
+    }
+  }
 
   override def authenticateForUtr[A](utr: String)
-                                    (implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] = {
+                                    (implicit request: DataRequest[A],
+                                     hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] =
+  {
     trustAuthConnector.authorisedForUtr(utr).flatMap {
-      case _: TrustAuthAllowed => Future.successful(Right(request))
+      case _: TrustAuthAllowed =>
+        Future.successful(Right(request))
       case TrustAuthDenied(redirectUrl) =>
         Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
@@ -54,8 +62,10 @@ class AuthenticationServiceImpl @Inject()(trustAuthConnector: TrustAuthConnector
 }
 
 trait AuthenticationService {
+
   def authenticateAgent()
                        (implicit hc: HeaderCarrier): Future[Either[Result, String]]
+
   def authenticateForUtr[A](utr: String)
                            (implicit request: DataRequest[A],
                             hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]]
