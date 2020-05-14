@@ -135,24 +135,29 @@ class TrustStatusController @Inject()(
         Logger.info(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due to UTR not found")
         Future.successful(Redirect(controllers.routes.TrustStatusController.notFound()))
       case Processed(playback, _) =>
-        Logger.info(s"[TrustStatusController][tryToPlayback] $utr trust is in a processed state")
-        authenticationService.authenticateForUtr(utr) flatMap {
-          case Left(failure) =>
-            val location = failure.header.headers.getOrElse(LOCATION, "no location header")
-            val failureStatus = failure.header.status
-            Logger.info(s"[TrustStatusController][tryToPlayback] unable to authenticate user for $utr, " +
-              s"due to $failureStatus status, sending user to $location")
-
-            Future.successful(failure)
-          case Right(_) =>
-            extract(utr, playback)
-        }
+        authenticateForUtrAndExtract(utr, playback)
       case SorryThereHasBeenAProblem =>
         Logger.warn(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due to status")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
       case _ =>
         Logger.warn(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due to an error")
         Future.successful(Redirect(routes.TrustStatusController.down()))
+    }
+  }
+
+  private def authenticateForUtrAndExtract(utr: String, playback : GetTrust)
+                                          (implicit request: DataRequest[AnyContent]) = {
+    Logger.info(s"[TrustStatusController][tryToPlayback] $utr trust is in a processed state")
+    authenticationService.authenticateForUtr(utr) flatMap {
+      case Left(failure) =>
+        val location = failure.header.headers.getOrElse(LOCATION, "no location header")
+        val failureStatus = failure.header.status
+        Logger.info(s"[TrustStatusController][tryToPlayback] unable to authenticate user for $utr, " +
+          s"due to $failureStatus status, sending user to $location")
+
+        Future.successful(failure)
+      case Right(_) =>
+        extract(utr, playback)
     }
   }
 
