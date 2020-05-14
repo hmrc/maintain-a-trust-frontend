@@ -24,7 +24,6 @@ import models.{MongoDateTimeFormats, UserAnswers}
 import org.slf4j.LoggerFactory
 import play.api.Configuration
 import play.api.libs.json._
-import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.WriteConcern
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.BSONDocument
@@ -36,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PlaybackRepositoryImpl @Inject()(
-                                    mongo: ReactiveMongoApi,
+                                    mongo: MongoDriver,
                                     config: Configuration,
                                     dateFormatter: DateFormatter
                                   )(implicit ec: ExecutionContext, m: Materializer) extends PlaybackRepository {
@@ -50,7 +49,7 @@ class PlaybackRepositoryImpl @Inject()(
   private def collection: Future[JSONCollection] =
     for {
       _ <- ensureIndexes
-      res <- mongo.database.map(_.collection[JSONCollection](collectionName))
+      res <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
     } yield res
 
   private val lastUpdatedIndex = Index(
@@ -67,7 +66,7 @@ class PlaybackRepositoryImpl @Inject()(
   private lazy val ensureIndexes = {
     logger.info("Ensuring collection indexes")
     for {
-      collection              <- mongo.database.map(_.collection[JSONCollection](collectionName))
+      collection              <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
       createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
       createdIdIndex          <- collection.indexesManager.ensure(internalAuthIdIndex)
     } yield createdLastUpdatedIndex && createdIdIndex
