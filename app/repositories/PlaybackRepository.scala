@@ -16,7 +16,6 @@
 
 package repositories
 
-import java.sql.Timestamp
 import java.time.LocalDateTime
 
 import akka.stream.Materializer
@@ -47,9 +46,11 @@ class PlaybackRepository @Inject()(
 
   private val cacheTtl = config.get[Int]("mongodb.playback.ttlSeconds")
 
-  private def collection: Future[JSONCollection] = {
-      mongo.database.map(_.collection[JSONCollection](collectionName))
-  }
+  private def collection: Future[JSONCollection] =
+    for {
+      _ <- ensureIndexes
+      res <- mongo.database.map(_.collection[JSONCollection](collectionName))
+    } yield res
 
   private val lastUpdatedIndex = Index(
     key = Seq("updatedAt" -> IndexType.Ascending),
@@ -62,12 +63,14 @@ class PlaybackRepository @Inject()(
     name = Some("internal-auth-id-index")
   )
 
-  val started = Future.sequence {
-      Seq(
-        collection.map(_.indexesManager.ensure(lastUpdatedIndex)),
-        collection.map(_.indexesManager.ensure(internalAuthIdIndex))
-      )
-  }.map(_ => ())
+  private lazy val ensureIndexes = {
+    logger.info("Ensuring collection indexes")
+    for {
+      collection              <- mongo.database.map(_.collection[JSONCollection](collectionName))
+      createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
+      createdIdIndex          <- collection.indexesManager.ensure(internalAuthIdIndex)
+    } yield createdLastUpdatedIndex && createdIdIndex
+  }
 
   override def get(internalId: String): Future[Option[UserAnswers]] = {
 
@@ -120,8 +123,6 @@ class PlaybackRepository @Inject()(
 }
 
 trait MongoRepository {
-
-  val started: Future[Unit]
 
   def get(internalId: String): Future[Option[UserAnswers]]
 
