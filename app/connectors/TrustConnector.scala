@@ -19,7 +19,7 @@ package connectors
 import config.FrontendAppConfig
 import javax.inject.Inject
 import models.http.{DeclarationResponse, TrustsResponse, TrustsStatusReads}
-import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.libs.json.{JsBoolean, JsValue, Json, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -36,6 +36,12 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
   def playbackfromEtmp(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[TrustsResponse] = {
     http.GET[TrustsResponse](playbackFromEtmpUrl(utr))(TrustsStatusReads.httpReads, hc, ec)
+  }
+
+  private def getDoProtectorsAlreadyExistUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/transformed/protectors-already-exist"
+
+  def getDoProtectorsAlreadyExist(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[JsBoolean] = {
+    http.GET[JsBoolean](getDoProtectorsAlreadyExistUrl(utr))
   }
 
   def declareUrl(utr: String) = s"${config.trustsUrl}/trusts/declare/$utr"

@@ -17,37 +17,34 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
-import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import pages.UTRPage
-import pages.makechanges.UpdateSettlorsYesNoPage
+import pages.makechanges.AddProtectorYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.makechanges.UpdateSettlorsYesNoView
+import views.html.makechanges.UpdateProtectorYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UpdateSettlorsYesNoController @Inject()(
+class UpdateProtectorYesNoController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         playbackRepository: PlaybackRepository,
-                                        trustConnector: TrustConnector,
                                         actions: AuthenticateForPlayback,
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateSettlorsYesNoView
+                                        view: UpdateProtectorYesNoView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateSettlors")
+  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateProtector")
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(UpdateSettlorsYesNoPage) match {
+      val preparedForm = request.userAnswers.get(AddProtectorYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -66,16 +63,11 @@ class UpdateSettlorsYesNoController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(
               request.userAnswers
-                .set(UpdateSettlorsYesNoPage, value)
+                .set(AddProtectorYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-            protectorsExist <- trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.get(UTRPage).get)
           } yield {
-              if(protectorsExist.value) {
-                Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
-              } else {
-                Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
-              }
+            Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
           }
         }
       )
