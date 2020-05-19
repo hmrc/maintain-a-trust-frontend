@@ -27,7 +27,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
   "MaintainThisTrust Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "return OK and the correct view for a GET when needs IV" in {
 
       val utr = "0987654321"
 
@@ -35,7 +35,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
         userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).success.value)
       ).build()
 
-      val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad(needsIv = true).url)
 
       val result = route(application, request).value
 
@@ -44,7 +44,35 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr, "settlors, trustees, beneficiaries and protectors")(fakeRequest, messages).toString
+        view(utr,
+          "settlors, trustees, beneficiaries and protectors",
+          frontendAppConfig.verifyIdentityForATrustUrl(utr)
+        )(fakeRequest, messages).toString
+
+      application.stop()
+    }
+
+    "return OK and the correct view for a GET when doesn't need IV" in {
+
+      val utr = "0987654321"
+
+      val application = applicationBuilder(
+        userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).success.value)
+      ).build()
+
+      val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad(needsIv = false).url)
+
+      val result = route(application, request).value
+
+      val view = application.injector.instanceOf[MaintainThisTrustView]
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(utr,
+          "settlors, trustees, beneficiaries and protectors",
+          routes.InformationMaintainingThisTrustController.onPageLoad().url
+        )(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -53,7 +81,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
       val application = applicationBuilder().build()
 
-      val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad(needsIv = true).url)
 
       val result = route(application, request).value
 
