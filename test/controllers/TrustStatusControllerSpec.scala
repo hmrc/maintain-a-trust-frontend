@@ -26,6 +26,7 @@ import org.scalatest.BeforeAndAfterEach
 import pages.UTRPage
 import play.api.Application
 import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json._
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
@@ -41,7 +42,8 @@ import scala.io.Source
 class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
   trait BaseSetup {
-    val application: Application
+
+    val builder: GuiceApplicationBuilder
 
     def utr = "1234567890"
 
@@ -51,32 +53,27 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
     val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
     val fakePlaybackRepository: PlaybackRepository = mock[PlaybackRepository]
 
-
     def request: FakeRequest[AnyContentAsEmpty.type]
 
     def result: Future[Result] = route(application, request).value
 
+    lazy val application: Application = builder.overrides(
+      bind[TrustConnector].to(fakeTrustConnector),
+      bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
+      bind[AuthenticationService].to(new FakeAuthenticationService()),
+      bind[UserAnswersExtractor].to[FakeUserAnswerExtractor]
+    ).build()
   }
 
   trait LocalSetup extends BaseSetup {
-    override val application: Application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(
-      bind[TrustConnector].to(fakeTrustConnector),
-      bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
-      bind[AuthenticationService].to(new FakeAuthenticationService()),
-      bind[UserAnswersExtractor].to[FakeUserAnswerExtractor]
-    ).build()
+    override val builder: GuiceApplicationBuilder = applicationBuilder(userAnswers = Some(userAnswers))
   }
 
   trait LocalSetupForAgent extends BaseSetup {
-    override val application: Application = applicationBuilder(
+    override val builder: GuiceApplicationBuilder = applicationBuilder(
       userAnswers = Some(userAnswers),
       affinityGroup = AffinityGroup.Agent
-    ).overrides(
-      bind[TrustConnector].to(fakeTrustConnector),
-      bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
-      bind[AuthenticationService].to(new FakeAuthenticationService()),
-      bind[UserAnswersExtractor].to[FakeUserAnswerExtractor]
-    ).build()
+    )
   }
 
   "TrustStatus Controller" when {
