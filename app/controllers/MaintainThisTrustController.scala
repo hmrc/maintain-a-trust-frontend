@@ -69,7 +69,7 @@ class MaintainThisTrustController @Inject()(
             case (true, x) => x
           }
         )
-        
+
         val continueUrl: String = if (needsIv) {
           config.verifyIdentityForATrustUrl(utr)
         } else {

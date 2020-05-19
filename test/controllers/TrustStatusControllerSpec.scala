@@ -40,7 +40,8 @@ import scala.io.Source
 
 class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
-  trait LocalSetup {
+  trait BaseSetup {
+    val application: Application
 
     def utr = "1234567890"
 
@@ -50,16 +51,32 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
     val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
     val fakePlaybackRepository: PlaybackRepository = mock[PlaybackRepository]
 
-    val application: Application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(
+
+    def request: FakeRequest[AnyContentAsEmpty.type]
+
+    def result: Future[Result] = route(application, request).value
+
+  }
+
+  trait LocalSetup extends BaseSetup {
+    override val application: Application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(
       bind[TrustConnector].to(fakeTrustConnector),
       bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
       bind[AuthenticationService].to(new FakeAuthenticationService()),
       bind[UserAnswersExtractor].to[FakeUserAnswerExtractor]
     ).build()
+  }
 
-    def request: FakeRequest[AnyContentAsEmpty.type]
-
-    def result: Future[Result] = route(application, request).value
+  trait LocalSetupForAgent extends BaseSetup {
+    override val application: Application = applicationBuilder(
+      userAnswers = Some(userAnswers),
+      affinityGroup = AffinityGroup.Agent
+    ).overrides(
+      bind[TrustConnector].to(fakeTrustConnector),
+      bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
+      bind[AuthenticationService].to(new FakeAuthenticationService()),
+      bind[UserAnswersExtractor].to[FakeUserAnswerExtractor]
+    ).build()
   }
 
   "TrustStatus Controller" when {
@@ -248,7 +265,33 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
           "user answers is extracted" must {
 
-            "redirect to maintain a trust" in new LocalSetup {
+            "redirect to maintain this trust for organisation" in new LocalSetup {
+
+              override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+
+              val payload : String =
+                Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+
+              val json : JsValue = Json.parse(payload)
+
+              val getTrust = json.as[GetTrustDesResponse].getTrust.value
+
+              when(fakeTrustStoreConnector.get(any[String])(any(), any()))
+                .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
+
+              when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any()))
+                .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
+
+              when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
+
+              status(result) mustEqual SEE_OTHER
+
+              redirectLocation(result).value mustEqual routes.MaintainThisTrustController.onPageLoad(needsIv=false).url
+
+              application.stop()
+            }
+
+            "redirect to information maintaining this trust for agent" in new LocalSetupForAgent {
 
               override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
@@ -273,7 +316,6 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
               application.stop()
             }
-
           }
 
           "user answers is not extracted" must {
