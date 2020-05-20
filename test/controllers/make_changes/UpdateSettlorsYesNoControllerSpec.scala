@@ -17,12 +17,20 @@
 package controllers.make_changes
 
 import base.SpecBase
+import connectors.TrustConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
 import pages.makechanges.UpdateSettlorsYesNoPage
+import play.api.inject.bind
+import play.api.libs.json.JsBoolean
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.makechanges.UpdateSettlorsYesNoView
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import pages.UTRPage
+
+import scala.concurrent.Future
 
 class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
@@ -71,20 +79,56 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted" in {
+    "redirect to the add a protector page when valid data is submitted and no protectors exist" in {
+
+      val utr = "1000000008"
+
+      val  mockTrustConnector = mock[TrustConnector]
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).get)).overrides(
+          bind[TrustConnector].toInstance(mockTrustConnector)
+        ).build()
 
       val request =
         FakeRequest(POST, updateSettlorsYesNoRoute)
           .withFormUrlEncodedBody(("value", "true"))
+
+      when(mockTrustConnector.getDoProtectorsAlreadyExist(any())(any(), any()))
+        .thenReturn(Future.successful(JsBoolean(false)))
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual routes.AddProtectorYesNoController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to the update protectors page when valid data is submitted and no protectors exist" in {
+
+      val utr = "1000000008"
+
+      val  mockTrustConnector = mock[TrustConnector]
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).get)).overrides(
+          bind[TrustConnector].toInstance(mockTrustConnector)
+        ).build()
+
+      val request =
+        FakeRequest(POST, updateSettlorsYesNoRoute)
+          .withFormUrlEncodedBody(("value", "true"))
+
+      when(mockTrustConnector.getDoProtectorsAlreadyExist(any())(any(), any()))
+        .thenReturn(Future.successful(JsBoolean(true)))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.UpdateProtectorYesNoController.onPageLoad().url
 
       application.stop()
     }

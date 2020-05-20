@@ -319,7 +319,6 @@ addProtector.error.required = Select yes if you need to add a protector
 
 updateProtector.title = Do you need to update details for the protectors?
 updateProtector.heading = Do you need to update details for the protectors?
-updateProtector.hint = A protector is an individual or business named in the trust who can influence the way the trustees manage the trust.
 updateProtector.error.required = Select yes if you need to update details for the protectors
 
 addOtherIndividuals.title = Do you need to add any other individuals associated with the trust?
