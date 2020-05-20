@@ -52,7 +52,8 @@ GET        /status/down                                 controllers.TrustStatusC
 GET        /status/locked                               controllers.TrustStatusController.locked()
 GET        /status/already-claimed                      controllers.TrustStatusController.alreadyClaimed()
 GET        /status/sorry-there-has-been-a-problem       controllers.TrustStatusController.sorryThereHasBeenAProblem()
-GET        /status                                      controllers.TrustStatusController.status()
+GET        /status/start                                controllers.TrustStatusController.status()
+GET        /status                                      controllers.TrustStatusController.statusAfterVerify()
 
 GET        /problem-declaring                           controllers.declaration.ProblemDeclaringController.onPageLoad()
 
