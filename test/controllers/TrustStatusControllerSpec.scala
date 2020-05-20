@@ -176,7 +176,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       application.stop()
     }
 
-    "must redirect to the correct route for GET ../status" when {
+    "must redirect to the correct route for GET ../status/start" when {
 
       "a Closed status is received from the trust connector" in new LocalSetup {
 
@@ -404,6 +404,42 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         }
 
+      }
+    }
+    "must redirect to the correct route for GET ../status" when {
+      "a Processed status is received from the trust connector" when {
+
+        "user is authenticated for playback" when {
+
+          "user answers is extracted" must {
+
+            "redirect to maintain this trust for organisation" in new LocalSetup {
+
+              override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.statusAfterVerify().url)
+
+              val payload: String =
+                Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+
+              val json: JsValue = Json.parse(payload)
+
+              val getTrust = json.as[GetTrustDesResponse].getTrust.value
+
+              when(fakeTrustStoreConnector.get(any[String])(any(), any()))
+                .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
+
+              when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any()))
+                .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
+
+              when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
+
+              status(result) mustEqual SEE_OTHER
+
+              redirectLocation(result).value mustEqual routes.InformationMaintainingThisTrustController.onPageLoad().url
+
+              application.stop()
+            }
+          }
+        }
       }
     }
   }
