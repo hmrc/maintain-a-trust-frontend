@@ -39,7 +39,7 @@ class MaintainThisTrustController @Inject()(
                                              view: MaintainThisTrustView
                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad() = actions.authWithData {
+  def onPageLoad(needsIv: Boolean) = actions.authWithData {
     implicit request =>
 
       request.userAnswers.get(UTRPage).map { utr =>
@@ -70,7 +70,13 @@ class MaintainThisTrustController @Inject()(
           }
         )
 
-        Ok(view(utr, availableSections))
+        val continueUrl: String = if (needsIv) {
+          config.verifyIdentityForATrustUrl(utr)
+        } else {
+          routes.InformationMaintainingThisTrustController.onPageLoad().url
+        }
+
+        Ok(view(utr, availableSections, continueUrl))
       } getOrElse Redirect(routes.SessionExpiredController.onPageLoad())
 
   }

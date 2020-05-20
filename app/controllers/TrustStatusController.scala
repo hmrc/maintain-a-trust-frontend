@@ -31,6 +31,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
 import services.AuthenticationService
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.status._
 
@@ -169,7 +170,11 @@ class TrustStatusController @Inject()(
       case Right(answers) =>
         playbackRepository.set(answers) map { _ =>
           Logger.info(s"[TrustStatusController][extract] $utr successfully extracted, showing information about maintaining")
-          Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
+          if (request.user.affinityGroup == AffinityGroup.Organisation) {
+            Redirect(routes.MaintainThisTrustController.onPageLoad(needsIv = false))
+          } else {
+            Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
+          }
         }
       case Left(reason) =>
         Logger.warn(s"[TrustStatusController] $utr unable to extract user answers due to $reason")
