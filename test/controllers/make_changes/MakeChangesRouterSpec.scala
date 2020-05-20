@@ -32,8 +32,8 @@ class MakeChangesRouterSpec extends SpecBase {
         .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddProtectorYesNoPage, false).success.value
-        .set(AddOtherIndividualsYesNoPage, false).success.value
+        .set(AddOrUpdateProtectorYesNoPage, false).success.value
+        .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
 
       filter.decide(userAnswers) mustBe Declaration
     }
@@ -45,8 +45,8 @@ class MakeChangesRouterSpec extends SpecBase {
           .set(UpdateTrusteesYesNoPage, true).success.value
           .set(UpdateBeneficiariesYesNoPage, true).success.value
           .set(UpdateSettlorsYesNoPage, false).success.value
-          .set(AddProtectorYesNoPage, false).success.value
-          .set(AddOtherIndividualsYesNoPage, false).success.value
+          .set(AddOrUpdateProtectorYesNoPage, false).success.value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
 
       filter.decide(userAnswers) mustBe TaskList
     }
@@ -58,8 +58,8 @@ class MakeChangesRouterSpec extends SpecBase {
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, true).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddProtectorYesNoPage, true).success.value
-        .set(AddOtherIndividualsYesNoPage, true).success.value
+        .set(AddOrUpdateProtectorYesNoPage, true).success.value
+        .set(AddOrUpdateOtherIndividualsYesNoPage, true).success.value
 
       filter.decide(userAnswers) mustBe UnavailableSections
     }

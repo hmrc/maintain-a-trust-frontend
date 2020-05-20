@@ -17,8 +17,10 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
+import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
+import pages.UTRPage
 import pages.makechanges.UpdateSettlorsYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -33,6 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class UpdateSettlorsYesNoController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         playbackRepository: PlaybackRepository,
+                                        trustConnector: TrustConnector,
                                         actions: AuthenticateForPlayback,
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
@@ -66,8 +69,13 @@ class UpdateSettlorsYesNoController @Inject()(
                 .set(UpdateSettlorsYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
+            protectorsExist <- trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.get(UTRPage).get)
           } yield {
-            Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
+              if(protectorsExist.value) {
+                Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
+              } else {
+                Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
+              }
           }
         }
       )

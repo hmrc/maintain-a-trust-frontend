@@ -63,7 +63,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(AddOtherIndividualsYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -90,7 +90,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
         .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddProtectorYesNoPage, false).success.value
+        .set(AddOrUpdateProtectorYesNoPage, false).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -117,7 +117,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddProtectorYesNoPage, false).success.value
+        .set(AddOrUpdateProtectorYesNoPage, false).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -150,7 +150,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddProtectorYesNoPage, false).success.value
+        .set(AddOrUpdateProtectorYesNoPage, false).success.value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))

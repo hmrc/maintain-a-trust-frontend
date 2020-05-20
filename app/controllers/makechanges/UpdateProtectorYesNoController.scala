@@ -25,21 +25,21 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.makechanges.AddProtectorYesNoView
+import views.html.makechanges.UpdateProtectorYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddProtectorYesNoController @Inject()(
+class UpdateProtectorYesNoController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         playbackRepository: PlaybackRepository,
                                         actions: AuthenticateForPlayback,
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: AddProtectorYesNoView
+                                        view: UpdateProtectorYesNoView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("addProtector")
+  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateProtector")
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>

@@ -26,7 +26,7 @@ import models.http._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
 import play.api.http.Status
-import play.api.libs.json.Json
+import play.api.libs.json.{JsBoolean, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.WireMockHelper
 
@@ -296,6 +296,39 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val result = Await.result(connector.declare(utr, payload), Duration.Inf)
 
         result mustEqual InternalServerError
+      }
+    }
+
+    "get whether protectors already exist must" - {
+
+      "Return true or false when the request is successful" in {
+
+        val utr = "1000000008"
+        val json = JsBoolean(true)
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(s"/trusts/$utr/transformed/protectors-already-exist"))
+            .willReturn(okJson(json.toString))
+        )
+
+        val processed = connector.getDoProtectorsAlreadyExist(utr)
+
+        whenReady(processed) {
+          result =>
+            result.value mustBe true
+        }
+
+        application.stop()
       }
     }
   }

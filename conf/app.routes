@@ -77,6 +77,9 @@ POST       /update-settlors                             controllers.makechanges.
 GET        /add-protector                               controllers.makechanges.AddProtectorYesNoController.onPageLoad()
 POST       /add-protector                               controllers.makechanges.AddProtectorYesNoController.onSubmit()
 
+GET        /update-protector                            controllers.makechanges.UpdateProtectorYesNoController.onPageLoad()
+POST       /update-protector                            controllers.makechanges.UpdateProtectorYesNoController.onSubmit()
+
 GET        /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad()
 POST       /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit()
 
