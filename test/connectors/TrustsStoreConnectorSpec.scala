@@ -23,7 +23,7 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import models.CompletedMaintenanceTasks
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
-import pages.makechanges.{AddOtherIndividualsYesNoPage, AddProtectorYesNoPage, UpdateBeneficiariesYesNoPage, UpdateSettlorsYesNoPage, UpdateTrusteesYesNoPage}
+import pages.makechanges.{AddOrUpdateOtherIndividualsYesNoPage, AddOrUpdateProtectorYesNoPage, UpdateBeneficiariesYesNoPage, UpdateSettlorsYesNoPage, UpdateTrusteesYesNoPage}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import play.api.http.HeaderNames._
@@ -102,8 +102,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddProtectorYesNoPage, false).success.value
-        .set(AddOtherIndividualsYesNoPage, false).success.value
+        .set(AddOrUpdateProtectorYesNoPage, false).success.value
+        .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
 
       val json = Json.parse(
         """

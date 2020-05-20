@@ -31,8 +31,8 @@ object UpdateFilterQuestions {
       t <- userAnswers.get(UpdateTrusteesYesNoPage)
       b <- userAnswers.get(UpdateBeneficiariesYesNoPage)
       s <- userAnswers.get(UpdateSettlorsYesNoPage)
-      p <- userAnswers.get(AddProtectorYesNoPage)
-      n <- userAnswers.get(AddOtherIndividualsYesNoPage)
+      p <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
+      n <- userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage)
     } yield {
       UpdateFilterQuestions(t, b, s, p, n)
     }

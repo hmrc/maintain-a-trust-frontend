@@ -19,7 +19,7 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
-import pages.makechanges.AddProtectorYesNoPage
+import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -44,7 +44,7 @@ class AddProtectorYesNoController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(AddProtectorYesNoPage) match {
+      val preparedForm = request.userAnswers.get(AddOrUpdateProtectorYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -63,7 +63,7 @@ class AddProtectorYesNoController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(
               request.userAnswers
-                .set(AddProtectorYesNoPage, value)
+                .set(AddOrUpdateProtectorYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {

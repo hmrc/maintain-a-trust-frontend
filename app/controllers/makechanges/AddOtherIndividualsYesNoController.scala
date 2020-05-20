@@ -51,7 +51,7 @@ class AddOtherIndividualsYesNoController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(AddOtherIndividualsYesNoPage) match {
+      val preparedForm = request.userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -67,7 +67,7 @@ class AddOtherIndividualsYesNoController @Inject()(
           Future.successful(BadRequest(view(formWithErrors))),
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOtherIndividualsYesNoPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
             route <- determineRoute(updatedAnswers)
           } yield {

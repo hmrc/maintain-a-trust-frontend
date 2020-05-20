@@ -19,7 +19,7 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import pages.makechanges.AddProtectorYesNoPage
+import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.makechanges.AddProtectorYesNoView
@@ -53,7 +53,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(AddProtectorYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswers.set(AddOrUpdateProtectorYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
