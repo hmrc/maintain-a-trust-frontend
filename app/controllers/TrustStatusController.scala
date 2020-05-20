@@ -109,29 +109,29 @@ class TrustStatusController @Inject()(
   def status(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
       enforceUtr() { utr =>
-        checkIfLocked(utr, routes.MaintainThisTrustController.onPageLoad(needsIv = false).url)
+        checkIfLocked(utr, fromVerify = false )
       }
   }
 
   def statusAfterVerify(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
     enforceUtr() { utr =>
-        checkIfLocked(utr, routes.InformationMaintainingThisTrustController.onPageLoad().url)
+        checkIfLocked(utr, fromVerify = true)
       }
   }
 
-  private def checkIfLocked(utr: String, orgContinueUrl: String)(implicit request: DataRequest[AnyContent]): Future[Result] = {
+  private def checkIfLocked(utr: String, fromVerify: Boolean)(implicit request: DataRequest[AnyContent]): Future[Result] = {
     trustStoreConnector.get(utr).flatMap {
       case Some(claim) if claim.trustLocked =>
         Logger.info(s"[TrustStatusController] $utr user has failed IV 3 times, locked out for 30 minutes")
         Future.successful(Redirect(controllers.routes.TrustStatusController.locked()))
       case _ =>
         Logger.info(s"[TrustStatusController] $utr user has not been locked out from IV")
-        tryToPlayback(utr, orgContinueUrl)
+        tryToPlayback(utr, fromVerify)
     }
   }
 
-  private def tryToPlayback(utr: String, orgContinueUrl: String)(implicit request: DataRequest[AnyContent]): Future[Result] = {
+  private def tryToPlayback(utr: String, fromVerify: Boolean)(implicit request: DataRequest[AnyContent]): Future[Result] = {
     trustConnector.playbackfromEtmp(utr) flatMap {
       case Closed =>
         Logger.info(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due it being closed")
@@ -143,7 +143,7 @@ class TrustStatusController @Inject()(
         Logger.info(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due to UTR not found")
         Future.successful(Redirect(controllers.routes.TrustStatusController.notFound()))
       case Processed(playback, _) =>
-        authenticateForUtrAndExtract(utr, playback, orgContinueUrl)
+        authenticateForUtrAndExtract(utr, playback, fromVerify)
       case SorryThereHasBeenAProblem =>
         Logger.warn(s"[TrustStatusController][tryToPlayback] $utr unable to retrieve trust due to status")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
@@ -153,7 +153,7 @@ class TrustStatusController @Inject()(
     }
   }
 
-  private def authenticateForUtrAndExtract(utr: String, playback : GetTrust, orgContinueUrl: String)
+  private def authenticateForUtrAndExtract(utr: String, playback : GetTrust, fromVerify: Boolean)
                                           (implicit request: DataRequest[AnyContent]) = {
     Logger.info(s"[TrustStatusController][tryToPlayback] $utr trust is in a processed state")
     authenticationService.authenticateForUtr(utr) flatMap {
@@ -165,11 +165,11 @@ class TrustStatusController @Inject()(
 
         Future.successful(failure)
       case Right(_) =>
-        extract(utr, playback, orgContinueUrl)
+        extract(utr, playback, fromVerify)
     }
   }
 
-  private def extract(utr: String, playback: GetTrust, orgContinueUrl: String)
+  private def extract(utr: String, playback: GetTrust, fromVerify: Boolean)
                      (implicit request: DataRequest[AnyContent]) : Future[Result] = {
 
     Logger.info(s"[TrustStatusController][extract] user authenticated for $utr, attempting to extract to user answers")
@@ -178,10 +178,9 @@ class TrustStatusController @Inject()(
       case Right(answers) =>
         playbackRepository.set(answers) map { _ =>
           Logger.info(s"[TrustStatusController][extract] $utr successfully extracted, showing information about maintaining")
-          if (request.user.affinityGroup == AffinityGroup.Organisation) {
-            Redirect(orgContinueUrl)
-          } else {
-            Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
+          (request.user.affinityGroup, fromVerify) match {
+            case (AffinityGroup.Organisation, false) => Redirect(routes.MaintainThisTrustController.onPageLoad(needsIv = false))
+            case (_,_) => Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
           }
         }
       case Left(reason) =>
