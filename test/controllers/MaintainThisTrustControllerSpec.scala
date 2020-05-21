@@ -20,8 +20,7 @@ import base.SpecBase
 import pages.UTRPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
-import views.html.{AgentNotAuthorisedView, MaintainThisTrustView}
+import views.html.MaintainThisTrustView
 
 class MaintainThisTrustControllerSpec extends SpecBase {
 
@@ -45,7 +44,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
       contentAsString(result) mustEqual
         view(utr,
-          "settlors, trustees, beneficiaries and protectors",
+          "settlors, trustees, beneficiaries, protectors and other individuals",
           frontendAppConfig.verifyIdentityForATrustUrl(utr)
         )(fakeRequest, messages).toString
 
@@ -70,7 +69,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
       contentAsString(result) mustEqual
         view(utr,
-          "settlors, trustees, beneficiaries and protectors",
+          "settlors, trustees, beneficiaries, protectors and other individuals",
           routes.InformationMaintainingThisTrustController.onPageLoad().url
         )(fakeRequest, messages).toString
 
