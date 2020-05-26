@@ -75,7 +75,7 @@ class AgentDeclarationController @Inject()(
                 utr <- request.userAnswers.get(UTRPage)
                 agencyAddress <- getAgencyRegisteredAddress(request.userAnswers)
               } yield {
-                submitDeclaration(declaration, agentUser, utr, agencyAddress)
+                submitDeclaration(declaration, agentUser, utr, agencyAddress, mode)
               }).getOrElse(handleError("Failed to get UTR or agency address"))
 
             case _ =>
@@ -88,8 +88,9 @@ class AgentDeclarationController @Inject()(
   private def submitDeclaration(declaration: AgentDeclaration,
                                 agentUser: AgentUser,
                                 utr: String,
-                                agencyAddress: Address)
-                               (implicit request: DataRequest[AnyContent]) = {
+                                agencyAddress: Address,
+                                mode: WhatNextMode
+                               )(implicit request: DataRequest[AnyContent]) = {
 
     service.agentDeclareNoChange(utr,
       declaration,
@@ -106,7 +107,7 @@ class AgentDeclarationController @Inject()(
               .flatMap(_.set(TVNPage, tvn))
           )
           _ <- playbackRepository.set(updatedAnswers)
-        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad(mode))
       case _ =>
         handleError("Failed to declare")
     }

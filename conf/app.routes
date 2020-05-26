@@ -30,7 +30,8 @@ POST       /make-changes/individual-declaration         controllers.declaration.
 GET        /close/individual-declaration                controllers.declaration.IndividualDeclarationController.onPageLoad(mode: WhatNextMode = CloseMode)
 POST       /close/individual-declaration                controllers.declaration.IndividualDeclarationController.onSubmit(mode: WhatNextMode = CloseMode)
 
-GET        /confirmation                                controllers.declaration.ConfirmationController.onPageLoad()
+GET        /make-changes/confirmation                   controllers.declaration.ConfirmationController.onPageLoad(mode: WhatNextMode = UpdateMode)
+GET        /close/confirmation                          controllers.declaration.ConfirmationController.onPageLoad(mode: WhatNextMode = CloseMode)
 
 GET        /declare-what-changed                        controllers.WhatIsNextController.onPageLoad()
 POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()

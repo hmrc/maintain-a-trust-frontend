@@ -17,7 +17,7 @@
 package controllers.declaration
 
 import base.SpecBase
-import models.UserAnswers
+import models.{UpdateMode, UserAnswers}
 import pages.TVNPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -36,7 +36,7 @@ class ConfirmationControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(playbackAnswers)).build()
 
-      val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad(UpdateMode).url)
 
       val result = route(application, request).value
 
