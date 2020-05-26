@@ -74,7 +74,7 @@ class WhatIsNextController @Inject()(
               Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(MakeChangesMode))
 
             case _ =>
-              Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+              Redirect(controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad())
           }
         }
       )

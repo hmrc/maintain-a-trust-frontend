@@ -1,0 +1,74 @@
+/*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package controllers.close
+
+import java.time.LocalDate
+
+import controllers.actions.AuthenticateForPlayback
+import forms.DateFormProvider
+import javax.inject.Inject
+import models.CloseMode
+import pages.close.DateLastAssetSharedOutPage
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import repositories.PlaybackRepository
+import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import views.html.close.DateLastAssetSharedOutView
+
+import scala.concurrent.{ExecutionContext, Future}
+
+class DateLastAssetSharedOutController @Inject()(
+                                       override val messagesApi: MessagesApi,
+                                       playbackRepository: PlaybackRepository,
+                                       actions: AuthenticateForPlayback,
+                                       formProvider: DateFormProvider,
+                                       val controllerComponents: MessagesControllerComponents,
+                                       view: DateLastAssetSharedOutView
+                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+
+  // TODO: update userAnswers model to retrieve trust start date and pass date into form
+
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+    implicit request =>
+
+      val form = formProvider.withPrefix("dateLastAssetSharedOut", LocalDate.of(1500,1,1))
+
+      val preparedForm = request.userAnswers.get(DateLastAssetSharedOutPage) match {
+        case None => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm))
+  }
+
+  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+    implicit request =>
+
+      val form = formProvider.withPrefix("dateLastAssetSharedOut", LocalDate.of(1500,1,1))
+
+      form.bindFromRequest().fold(
+        formWithErrors =>
+          Future.successful(BadRequest(view(formWithErrors))),
+
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(DateLastAssetSharedOutPage, value))
+            _ <- playbackRepository.set(updatedAnswers)
+          } yield Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(CloseMode))
+      )
+  }
+}

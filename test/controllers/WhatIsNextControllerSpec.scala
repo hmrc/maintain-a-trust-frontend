@@ -138,7 +138,7 @@ class WhatIsNextControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to FeatureNotAvailable when user selects 'Close'" in {
+    "redirect to Do you know the date the last asset in the trust was shared out when user selects 'Close'" in {
 
       val utr = "0987654321"
 
@@ -154,7 +154,7 @@ class WhatIsNextControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
+      redirectLocation(result).value mustBe controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
 
       application.stop()
     }
