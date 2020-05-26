@@ -18,7 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.InternationalAddressFormProvider
-import models.InternationalAddress
+import models.{InternationalAddress, UpdateMode, WhatNextMode}
 import pages.AgencyRegisteredAddressInternationalPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -29,8 +29,8 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
   val formProvider = new InternationalAddressFormProvider()
   val form = formProvider()
-
-  lazy val agencyRegisteredAddressInternationalRoute = routes.AgencyRegisteredAddressInternationalController.onPageLoad().url
+  val mode: WhatNextMode = UpdateMode
+  lazy val agencyRegisteredAddressInternationalRoute = routes.AgencyRegisteredAddressInternationalController.onPageLoad(mode).url
 
   "AgencyRegisteredAddressInternational Controller" must {
 
@@ -48,7 +48,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, countryOptions)(request, messages).toString
+        view(form, mode, countryOptions)(request, messages).toString
 
       application.stop()
     }
@@ -70,7 +70,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(InternationalAddress("line 1","line 2", Some("line 3"), "country")), countryOptions)(fakeRequest, messages).toString
+        view(form.fill(InternationalAddress("line 1","line 2", Some("line 3"), "country")), mode, countryOptions)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -88,7 +88,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AgentDeclarationController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.AgentDeclarationController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -111,7 +111,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, countryOptions)(fakeRequest, messages).toString
+        view(boundForm, mode, countryOptions)(fakeRequest, messages).toString
 
       application.stop()
     }

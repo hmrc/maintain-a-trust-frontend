@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.TrustConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.{MakeChangesMode, WhatNextMode}
+import models.{UpdateMode, WhatNextMode}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import pages.UTRPage
@@ -37,7 +37,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
   val form = formProvider.withPrefix("updateSettlors")
-  val mode: WhatNextMode = MakeChangesMode
+  val mode: WhatNextMode = UpdateMode
   lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad(mode).url
 
   "UpdateSettlorsYesNo Controller" must {

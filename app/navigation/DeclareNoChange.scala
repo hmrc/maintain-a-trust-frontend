@@ -16,19 +16,20 @@
 
 package navigation
 
+import models.WhatNextMode
 import models.requests.DataRequest
-import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import play.api.mvc._
+import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 trait DeclareNoChange extends FrontendBaseController {
 
-  def redirectToDeclaration()(implicit request: DataRequest[AnyContent]): Result = {
+  def redirectToDeclaration(mode: WhatNextMode)(implicit request: DataRequest[AnyContent]): Result = {
     request.user.affinityGroup match {
       case Agent =>
-        Redirect(controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad())
+        Redirect(controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad(mode))
       case _ =>
-        Redirect(controllers.declaration.routes.IndividualDeclarationController.onPageLoad())
+        Redirect(controllers.declaration.routes.IndividualDeclarationController.onPageLoad(mode))
     }
   }
 

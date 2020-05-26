@@ -21,6 +21,7 @@ import java.time.LocalDateTime
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
+import models.WhatNextMode
 import models.http.TVNResponse
 import pages.declaration.IndividualDeclarationPage
 import pages.{SubmissionDatePage, TVNPage, UTRPage}
@@ -47,7 +48,7 @@ class IndividualDeclarationController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(IndividualDeclarationPage) match {
@@ -55,15 +56,15 @@ class IndividualDeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, controllers.declaration.routes.IndividualDeclarationController.onSubmit()))
+      Ok(view(preparedForm, controllers.declaration.routes.IndividualDeclarationController.onSubmit(mode)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.IndividualDeclarationController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.IndividualDeclarationController.onSubmit(mode)))),
 
         declaration => {
           request.userAnswers.get(UTRPage) match {

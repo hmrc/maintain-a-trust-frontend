@@ -16,6 +16,7 @@
 
 package views
 
+import models.UpdateMode
 import pages.UTRPage
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.tasks._
@@ -25,7 +26,7 @@ import views.html.VariationProgressView
 
 class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressViewBehaviours {
 
-  val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+  val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad(UpdateMode).url
 
   "VariationProgress view" must {
 

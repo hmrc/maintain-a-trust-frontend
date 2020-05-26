@@ -57,6 +57,10 @@ createAgentServicesAccount.paragraph2 = to find out what you will need to create
 createAgentServicesAccount.paragraph3 = Once you have created your agent services account, you can carry on with your trust registration.
 createAgentServicesAccount.cta = Create an agent services account
 
+date.day = Day
+date.month = Month
+date.year = Year
+
 declaration.title = Declaration
 declaration.heading = Declaration
 declaration.firstName = Your first name

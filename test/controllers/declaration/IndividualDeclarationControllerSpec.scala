@@ -18,7 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.declaration.IndividualDeclarationFormProvider
-import models.{IndividualDeclaration, UKAddress}
+import models.{IndividualDeclaration, UKAddress, UpdateMode, WhatNextMode}
 import pages.UTRPage
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
@@ -37,8 +37,8 @@ class IndividualDeclarationControllerSpec extends SpecBase {
   val formProvider = new IndividualDeclarationFormProvider()
   val form: Form[IndividualDeclaration] = formProvider()
   val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
-
-  lazy val onSubmit: Call = routes.IndividualDeclarationController.onSubmit()
+  val mode: WhatNextMode = UpdateMode
+  lazy val onSubmit: Call = routes.IndividualDeclarationController.onSubmit(mode)
 
   "Individual Declaration Controller" must {
 
@@ -46,7 +46,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(GET, routes.IndividualDeclarationController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.IndividualDeclarationController.onPageLoad(mode).url)
 
       val result = route(application, request).value
 
@@ -131,7 +131,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, routes.IndividualDeclarationController.onPageLoad().url)
+        FakeRequest(POST, routes.IndividualDeclarationController.onPageLoad(mode).url)
           .withFormUrlEncodedBody(("firstName", ""), ("lastName", ""))
 
       val boundForm = form.bind(Map("firstName" -> "", "lastName" -> ""))

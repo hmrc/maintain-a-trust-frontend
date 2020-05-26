@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.WhatIsNextFormProvider
-import models.MakeChangesMode
+import models.UpdateMode
 import models.pages.WhatIsNext
 import pages.{UTRPage, WhatIsNextPage}
 import play.api.data.Form
@@ -112,7 +112,7 @@ class WhatIsNextControllerSpec extends SpecBase {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustBe
-        controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+        controllers.declaration.routes.IndividualDeclarationController.onPageLoad(UpdateMode).url
 
       application.stop()
     }
@@ -133,7 +133,7 @@ class WhatIsNextControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(MakeChangesMode).url
+      redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(UpdateMode).url
 
       application.stop()
     }

@@ -20,7 +20,7 @@ import play.api.mvc.JavascriptLiteral
 
 sealed trait WhatNextMode
 
-case object MakeChangesMode extends WhatNextMode
+case object UpdateMode extends WhatNextMode
 
 case object CloseMode extends WhatNextMode
 
@@ -28,7 +28,7 @@ object WhatNextMode {
 
   implicit val jsLiteral: JavascriptLiteral[WhatNextMode] = new JavascriptLiteral[WhatNextMode] {
     override def to(value: WhatNextMode): String = value match {
-      case MakeChangesMode => "MakeChangesMode"
+      case UpdateMode => "UpdateMode"
       case CloseMode => "CloseMode"
     }
   }

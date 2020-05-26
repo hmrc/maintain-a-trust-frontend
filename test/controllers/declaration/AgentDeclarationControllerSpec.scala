@@ -18,7 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.declaration.AgentDeclarationFormProvider
-import models.{AgentDeclaration, UKAddress}
+import models.{AgentDeclaration, UKAddress, UpdateMode, WhatNextMode}
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import pages.{AgencyRegisteredAddressUkPage, UTRPage}
 import play.api.data.Form
@@ -36,8 +36,8 @@ class AgentDeclarationControllerSpec extends SpecBase {
   val formProvider = new AgentDeclarationFormProvider()
   val form: Form[AgentDeclaration] = formProvider()
   val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
-
-  lazy val onSubmit: Call = routes.AgentDeclarationController.onSubmit()
+  val mode: WhatNextMode = UpdateMode
+  lazy val onSubmit: Call = routes.AgentDeclarationController.onSubmit(mode)
 
   "Agent Declaration Controller" must {
 
@@ -45,7 +45,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(GET, routes.AgentDeclarationController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.AgentDeclarationController.onPageLoad(mode).url)
 
       val result = route(application, request).value
 
@@ -97,7 +97,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, routes.AgentDeclarationController.onPageLoad().url)
+        FakeRequest(POST, routes.AgentDeclarationController.onPageLoad(mode).url)
           .withFormUrlEncodedBody(("firstName", ""), ("lastName", ""), ("agencyName", ""), ("telephoneNumber", ""), ("crn", ""))
 
       val boundForm = form.bind(Map("firstName" -> "", "lastName" -> "", "agencyName" -> "", "telephoneNumber" -> "", "crn" -> ""))

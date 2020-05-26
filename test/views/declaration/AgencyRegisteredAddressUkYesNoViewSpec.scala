@@ -18,6 +18,7 @@ package views.declaration
 
 import controllers.declaration.routes
 import forms.YesNoFormProvider
+import models.UpdateMode
 import play.api.data.Form
 import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
@@ -28,7 +29,7 @@ class AgencyRegisteredAddressUkYesNoViewSpec extends YesNoViewBehaviours {
 
   val messageKeyPrefix = "agencyRegisteredAddressUkYesNo"
   val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-  lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit()
+  lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit(UpdateMode)
 
   "AgencyRegisteredAddressUKYesNo view" must {
 

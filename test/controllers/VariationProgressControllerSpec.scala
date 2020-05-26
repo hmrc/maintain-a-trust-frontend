@@ -18,9 +18,10 @@ package controllers
 
 import base.SpecBase
 import connectors.TrustsStoreConnector
-import models.CompletedMaintenanceTasks
+import models.{CompletedMaintenanceTasks, UpdateMode}
 import models.pages.Tag.{InProgress, UpToDate}
-import pages.UTRPage
+import models.pages.WhatIsNext
+import pages.{UTRPage, WhatIsNextPage}
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -43,7 +44,7 @@ class VariationProgressControllerSpec extends SpecBase {
 
   val fakeUTR = "1234567890"
 
-  val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+  val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad(UpdateMode).url
 
   val mandatorySections = List(
     Task(Link(Settlors, "http://localhost:9795/maintain-a-trust/settlors/1234567890"), Some(InProgress)),
@@ -61,7 +62,9 @@ class VariationProgressControllerSpec extends SpecBase {
 
       val mockConnector = mock[TrustsStoreConnector]
 
-      val answers = emptyUserAnswers.set(UTRPage, fakeUTR).success.value
+      val answers = emptyUserAnswers
+        .set(UTRPage, fakeUTR).success.value
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
       val application = applicationBuilder(userAnswers = Some(answers))
         .overrides(

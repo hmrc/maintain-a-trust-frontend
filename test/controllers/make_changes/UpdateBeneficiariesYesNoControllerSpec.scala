@@ -19,7 +19,7 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.{MakeChangesMode, WhatNextMode}
+import models.{UpdateMode, WhatNextMode}
 import pages.makechanges.UpdateBeneficiariesYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -29,7 +29,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
   val form = formProvider.withPrefix("updateBeneficiaries")
-  val mode: WhatNextMode = MakeChangesMode
+  val mode: WhatNextMode = UpdateMode
   lazy val updateBeneficiariesYesNoRoute = routes.UpdateBeneficiariesYesNoController.onPageLoad(mode).url
 
   "UpdateBeneficiariesYesNo Controller" must {

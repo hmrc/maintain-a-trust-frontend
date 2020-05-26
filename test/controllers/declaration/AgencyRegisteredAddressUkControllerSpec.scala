@@ -18,7 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.UKAddressFormProvider
-import models.UKAddress
+import models.{UKAddress, UpdateMode, WhatNextMode}
 import pages.AgencyRegisteredAddressUkPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -28,8 +28,8 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
   val formProvider = new UKAddressFormProvider()
   val form = formProvider()
-
-  lazy val agencyRegisteredAddressUkRoute = routes.AgencyRegisteredAddressUkController.onPageLoad().url
+  val mode: WhatNextMode = UpdateMode
+  lazy val agencyRegisteredAddressUkRoute = routes.AgencyRegisteredAddressUkController.onPageLoad(mode).url
 
   "AgencyRegisteredAddressUk Controller" must {
 
@@ -46,7 +46,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(request, messages).toString
+        view(form, mode)(request, messages).toString
 
       application.stop()
     }
@@ -67,7 +67,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(UKAddress("line 1","line 2", Some("line 3"), Some("line 4"),"line 5")))(fakeRequest, messages).toString
+        view(form.fill(UKAddress("line 1","line 2", Some("line 3"), Some("line 4"),"line 5")), mode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -85,7 +85,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AgentDeclarationController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.AgentDeclarationController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -107,7 +107,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, mode)(fakeRequest, messages).toString
 
       application.stop()
     }

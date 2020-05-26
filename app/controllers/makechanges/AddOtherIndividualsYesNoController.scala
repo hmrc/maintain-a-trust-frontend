@@ -81,7 +81,7 @@ class AddOtherIndividualsYesNoController @Inject()(
                             (implicit request: DataRequest[AnyContent]) : Future[Result] = {
     MakeChangesRouter.decide(updatedAnswers) match {
       case MakeChangesRouter.Declaration =>
-        Future.successful(redirectToDeclaration())
+        Future.successful(redirectToDeclaration(mode))
       case MakeChangesRouter.TaskList =>
         request.userAnswers.get(UTRPage).map {
           utr =>
