@@ -36,6 +36,19 @@ checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
 checkYourAnswers.guidance = Guidance for check your answers
 
+closeTrustConfirmation.title = Declaration received
+closeTrustConfirmation.heading = Declaration received
+closeTrustConfirmation.heading2 = Your reference is:
+closeTrustConfirmation.printsave.link = Print or save a declared copy of the trust’s registration (opens in a new window or tab)
+closeTrustConfirmation.subheading = What happens next
+closeTrustConfirmation.paragraph1 = Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.
+closeTrustConfirmation.paragraph2 = Your request to close this trust will be processed and access to its online register will now be removed.
+closeTrustConformation.paragraph3.beforeLink = If this has been done in error, please
+closeTrustConformation.paragraph3.link = contact HMRC
+closeTrustConformation.paragraph3.afterLink = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
+closeTrustConformation.agent.you.can = You can
+closeTrustConformation.agent.link = return to register and maintain a trust for a client.
+
 confirmationPage.title = Declaration received
 confirmationPage.heading = Declaration received
 confirmationPage.heading2 = Your reference is:

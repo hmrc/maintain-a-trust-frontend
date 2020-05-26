@@ -19,14 +19,14 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
-import models.WhatNextMode
+import models.{CloseMode, UpdateMode, WhatNextMode}
 import pages.TVNPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.declaration.ConfirmationView
+import views.html.declaration.{CloseTrustConfirmationView, ConfirmationView}
 
 import scala.concurrent.ExecutionContext
 
@@ -35,7 +35,8 @@ class ConfirmationController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         actions: AuthenticateForPlayback,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: ConfirmationView,
+                                        confirmationView: ConfirmationView,
+                                        closeTrustConfirmationView: CloseTrustConfirmationView,
                                         config: FrontendAppConfig
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
@@ -50,7 +51,14 @@ class ConfirmationController @Inject()(
         Redirect(controllers.routes.TrustStatusController.sorryThereHasBeenAProblem())
       }{
         tvn =>
-          Ok(view(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl))
+          mode match {
+            case UpdateMode =>
+              Ok(confirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl))
+            case CloseMode =>
+              Ok(closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl))
+
+          }
+
       }
   }
 }
