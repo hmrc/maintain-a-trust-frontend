@@ -18,7 +18,7 @@ package controllers.make_changes
 
 import base.SpecBase
 import controllers.makechanges.MakeChangesRouter
-import controllers.makechanges.MakeChangesRouter.{Declaration, TaskList, UnableToDecide, UnavailableSections}
+import controllers.makechanges.MakeChangesRouter.{Declaration, TaskList, UnableToDecide}
 import pages.makechanges._
 
 class MakeChangesRouterSpec extends SpecBase {
@@ -49,19 +49,6 @@ class MakeChangesRouterSpec extends SpecBase {
           .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
 
       filter.decide(userAnswers) mustBe TaskList
-    }
-
-    "send user to the sections unavailable page when selected options are not available" in {
-      val filter = MakeChangesRouter
-
-      val userAnswers = emptyUserAnswers
-        .set(UpdateTrusteesYesNoPage, true).success.value
-        .set(UpdateBeneficiariesYesNoPage, true).success.value
-        .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddOrUpdateProtectorYesNoPage, true).success.value
-        .set(AddOrUpdateOtherIndividualsYesNoPage, true).success.value
-
-      filter.decide(userAnswers) mustBe UnavailableSections
     }
 
     "return an error when there is a problem deciding" in {
