@@ -14,10 +14,9 @@
  * limitations under the License.
  *@
 
-@import controllers.routes._
+@import controllers.declaration.routes._
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
-@import play.api.mvc.Call
 @import config.FrontendAppConfig
 
 @this(
@@ -26,13 +25,13 @@
         formHelper: FormWithCSRF
 )
 
-@(form: Form[_], onSubmit: Call)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: WhatNextMode)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)} ${messages("declaration.title")}"
 ) {
 
-    @formHelper(action = onSubmit, 'autoComplete -> "off") {
+    @formHelper(action = AgentDeclarationController.onSubmit(mode), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -93,7 +92,15 @@
             )
         }
 
-        @components.warning("declaration.variation.agent")
+        @{
+            components.warning(
+                if(mode == CloseMode) {
+                    "declaration.closing.agent"
+                } else {
+                    "declaration.variation.agent"
+                }
+            )
+        }
 
         @components.submit_button(Some("site.confirm-send"))
     }

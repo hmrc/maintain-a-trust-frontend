@@ -23,6 +23,7 @@ import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
 import models.WhatNextMode
 import models.http.TVNResponse
+import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.IndividualDeclarationPage
 import pages.{SubmissionDatePage, TVNPage, UTRPage}
 import play.api.data.Form
@@ -56,7 +57,7 @@ class IndividualDeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, controllers.declaration.routes.IndividualDeclarationController.onSubmit(mode)))
+      Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
@@ -64,14 +65,14 @@ class IndividualDeclarationController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.IndividualDeclarationController.onSubmit(mode)))),
+          Future.successful(BadRequest(view(formWithErrors, mode))),
 
         declaration => {
           request.userAnswers.get(UTRPage) match {
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
-              service.individualDeclareNoChange(utr, declaration) flatMap {
+              service.individualDeclaration(utr, declaration, request.userAnswers.get(DateLastAssetSharedOutPage)) flatMap {
                 case TVNResponse(tvn) =>
                   for {
                     updatedAnswers <- Future.fromTry(

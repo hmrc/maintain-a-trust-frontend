@@ -17,12 +17,11 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.{UserAnswers, WhatNextMode}
 import models.requests.DataRequest
+import models.{UserAnswers, WhatNextMode}
 import navigation.DeclareNoChange
 import pages.UTRPage
 import pages.makechanges._
@@ -42,7 +41,6 @@ class AddOtherIndividualsYesNoController @Inject()(
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: AddOtherIndividualsYesNoView,
-                                        config: FrontendAppConfig,
                                         trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport {
 

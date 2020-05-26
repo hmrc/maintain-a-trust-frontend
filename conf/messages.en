@@ -108,6 +108,9 @@ declaration.individual.warning = I confirm that I have taken all reasonable step
 declaration.variation.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
 declaration.variation.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief. I will ensure it is regularly kept up to date as required including changes of address. If I discover that I have made an error or something has changed, I will update this register.
 
+declaration.closing.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief before closing this trust. I understand that if I knowingly provide false information and cannot demonstrate that I have taken all reasonable steps, I could be subject to penalties.
+declaration.closing.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration before closing this trust. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
+
 deedOfVariation.replaceAbsoluteInterestOverWill = to replace an absolute interest over a will
 deedOfVariation.replaceWillTrust = to replace a will trust
 

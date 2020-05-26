@@ -16,7 +16,7 @@
 
 package controllers.declaration
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
@@ -25,6 +25,7 @@ import models.http.TVNResponse
 import models.requests.{AgentUser, DataRequest}
 import models.{Address, AgentDeclaration, UserAnswers, WhatNextMode}
 import pages._
+import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.{AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
 import play.api.Logger
 import play.api.data.Form
@@ -58,7 +59,7 @@ class AgentDeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, controllers.declaration.routes.AgentDeclarationController.onSubmit(mode)))
+      Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
@@ -66,7 +67,7 @@ class AgentDeclarationController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.AgentDeclarationController.onSubmit(mode)))),
+          Future.successful(BadRequest(view(formWithErrors, mode))),
 
         declaration => {
           request.user match {
@@ -75,7 +76,14 @@ class AgentDeclarationController @Inject()(
                 utr <- request.userAnswers.get(UTRPage)
                 agencyAddress <- getAgencyRegisteredAddress(request.userAnswers)
               } yield {
-                submitDeclaration(declaration, agentUser, utr, agencyAddress, mode)
+                submitDeclaration(
+                  declaration,
+                  agentUser,
+                  utr,
+                  agencyAddress,
+                  request.userAnswers.get(DateLastAssetSharedOutPage),
+                  mode
+                )
               }).getOrElse(handleError("Failed to get UTR or agency address"))
 
             case _ =>
@@ -89,14 +97,16 @@ class AgentDeclarationController @Inject()(
                                 agentUser: AgentUser,
                                 utr: String,
                                 agencyAddress: Address,
+                                endDate: Option[LocalDate],
                                 mode: WhatNextMode
                                )(implicit request: DataRequest[AnyContent]) = {
 
-    service.agentDeclareNoChange(utr,
+    service.agentDeclaration(utr,
       declaration,
       agentUser.agentReferenceNumber,
       agencyAddress,
-      declaration.agencyName
+      declaration.agencyName,
+      endDate
     ) flatMap {
       case TVNResponse(tvn) =>
         for {
