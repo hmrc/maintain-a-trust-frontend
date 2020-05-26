@@ -19,6 +19,7 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
+import models.WhatNextMode
 import pages.makechanges.UpdateBeneficiariesYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -41,7 +42,7 @@ class UpdateBeneficiariesYesNoController @Inject()(
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateBeneficiaries")
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(UpdateBeneficiariesYesNoPage) match {
@@ -49,15 +50,15 @@ class UpdateBeneficiariesYesNoController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, mode))),
 
         value => {
           for {
@@ -67,7 +68,7 @@ class UpdateBeneficiariesYesNoController @Inject()(
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
-            Redirect(controllers.makechanges.routes.UpdateSettlorsYesNoController.onPageLoad())
+            Redirect(controllers.makechanges.routes.UpdateSettlorsYesNoController.onPageLoad(mode))
           }
         }
       )

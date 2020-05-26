@@ -19,6 +19,7 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.{MakeChangesMode, WhatNextMode}
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -29,7 +30,9 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
   val formProvider = new YesNoFormProvider()
   val form = formProvider.withPrefix("addProtector")
 
-  lazy val addProtectorYesNoRoute = routes.AddProtectorYesNoController.onPageLoad().url
+  val mode: WhatNextMode = MakeChangesMode
+
+  lazy val addProtectorYesNoRoute = routes.AddProtectorYesNoController.onPageLoad(mode).url
 
   "AddProtectorYesNo Controller" must {
 
@@ -46,7 +49,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, mode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -66,7 +69,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), mode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -84,7 +87,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AddOtherIndividualsYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.AddOtherIndividualsYesNoController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -106,7 +109,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, mode)(fakeRequest, messages).toString
 
       application.stop()
     }

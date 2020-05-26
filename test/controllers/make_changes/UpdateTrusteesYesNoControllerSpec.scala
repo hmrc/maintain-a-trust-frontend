@@ -19,6 +19,7 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.{MakeChangesMode, WhatNextMode}
 import pages.makechanges.UpdateTrusteesYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -28,8 +29,8 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
   val form = formProvider.withPrefix("updateTrustees")
-
-  lazy val updateTrusteesYesNoRoute = routes.UpdateTrusteesYesNoController.onPageLoad().url
+  val mode: WhatNextMode = MakeChangesMode
+  lazy val updateTrusteesYesNoRoute = routes.UpdateTrusteesYesNoController.onPageLoad(mode).url
 
   "UpdateTrusteesYesNo Controller" must {
 
@@ -46,7 +47,7 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, mode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -66,7 +67,7 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), mode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -84,7 +85,7 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.UpdateBeneficiariesYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.UpdateBeneficiariesYesNoController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -106,7 +107,7 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, mode)(fakeRequest, messages).toString
 
       application.stop()
     }

@@ -19,6 +19,7 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
+import models.WhatNextMode
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -41,7 +42,7 @@ class UpdateProtectorYesNoController @Inject()(
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateProtector")
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AddOrUpdateProtectorYesNoPage) match {
@@ -49,15 +50,15 @@ class UpdateProtectorYesNoController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, mode))),
 
         value => {
           for {
@@ -67,7 +68,7 @@ class UpdateProtectorYesNoController @Inject()(
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
-            Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
+            Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad(mode))
           }
         }
       )

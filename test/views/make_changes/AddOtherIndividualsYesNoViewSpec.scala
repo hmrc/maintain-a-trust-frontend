@@ -18,6 +18,7 @@ package views.make_changes
 
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.{MakeChangesMode, WhatNextMode}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
@@ -28,14 +29,15 @@ class AddOtherIndividualsYesNoViewSpec extends YesNoViewBehaviours {
 
   val messageKeyPrefix = "addOtherIndividuals"
   val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-  lazy val onSubmit: Call = routes.AddOtherIndividualsYesNoController.onSubmit()
+  val mode: WhatNextMode = MakeChangesMode
+  lazy val onSubmit: Call = routes.AddOtherIndividualsYesNoController.onSubmit(mode)
 
   "AddOtherIndividualsYesNo view" must {
 
     val view = viewFor[AddOtherIndividualsYesNoView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form)(fakeRequest, messages)
+      view.apply(form, mode)(fakeRequest, messages)
 
     behave like normalPage(applyView(form), messageKeyPrefix)
 

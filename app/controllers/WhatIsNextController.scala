@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
 import forms.WhatIsNextFormProvider
-import models.Enumerable
+import models.{Enumerable, MakeChangesMode}
 import models.pages.WhatIsNext
 import navigation.DeclareNoChange
 import pages.WhatIsNextPage
@@ -39,8 +39,7 @@ class WhatIsNextController @Inject()(
                                       actions: AuthenticateForPlayback,
                                       formProvider: WhatIsNextFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
-                                      view: WhatIsNextView,
-                                      config: FrontendAppConfig
+                                      view: WhatIsNextView
                                     )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
 
   val form = formProvider()
@@ -72,7 +71,7 @@ class WhatIsNextController @Inject()(
               redirectToDeclaration()
 
             case WhatIsNext.MakeChanges =>
-              Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
+              Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(MakeChangesMode))
 
             case _ =>
               Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())

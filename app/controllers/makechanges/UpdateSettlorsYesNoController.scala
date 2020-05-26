@@ -20,6 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
+import models.WhatNextMode
 import pages.UTRPage
 import pages.makechanges.UpdateSettlorsYesNoPage
 import play.api.data.Form
@@ -44,7 +45,7 @@ class UpdateSettlorsYesNoController @Inject()(
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateSettlors")
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(UpdateSettlorsYesNoPage) match {
@@ -52,15 +53,15 @@ class UpdateSettlorsYesNoController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, mode))),
 
         value => {
           for {
@@ -72,9 +73,9 @@ class UpdateSettlorsYesNoController @Inject()(
             protectorsExist <- trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.get(UTRPage).get)
           } yield {
               if(protectorsExist.value) {
-                Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
+                Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad(mode))
               } else {
-                Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
+                Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad(mode))
               }
           }
         }

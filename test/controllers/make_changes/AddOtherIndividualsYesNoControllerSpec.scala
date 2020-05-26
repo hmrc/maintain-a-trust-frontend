@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.TrustsStoreConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.CompletedMaintenanceTasks
+import models.{CompletedMaintenanceTasks, MakeChangesMode, WhatNextMode}
 import pages.UTRPage
 import pages.makechanges._
 import play.api.test.FakeRequest
@@ -39,7 +39,9 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   val mockConnector = mock[TrustsStoreConnector]
 
-  lazy val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad().url
+  val mode: WhatNextMode = MakeChangesMode
+
+  lazy val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad(mode).url
 
   "AddOtherIndividualsYesNo Controller" must {
 
@@ -56,7 +58,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, mode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -76,7 +78,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), mode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -191,7 +193,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, mode)(fakeRequest, messages).toString
 
       application.stop()
     }

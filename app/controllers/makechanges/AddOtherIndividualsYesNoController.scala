@@ -21,7 +21,7 @@ import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.UserAnswers
+import models.{UserAnswers, WhatNextMode}
 import models.requests.DataRequest
 import navigation.DeclareNoChange
 import pages.UTRPage
@@ -48,7 +48,7 @@ class AddOtherIndividualsYesNoController @Inject()(
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("addOtherIndividuals")
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage) match {
@@ -56,20 +56,20 @@ class AddOtherIndividualsYesNoController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, mode))),
         value => {
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            route <- determineRoute(updatedAnswers)
+            route <- determineRoute(updatedAnswers, mode)
           } yield {
             route
           }
@@ -77,7 +77,8 @@ class AddOtherIndividualsYesNoController @Inject()(
     )
   }
 
-  private def determineRoute(updatedAnswers: UserAnswers)(implicit request: DataRequest[AnyContent]) : Future[Result] = {
+  private def determineRoute(updatedAnswers: UserAnswers, mode: WhatNextMode)
+                            (implicit request: DataRequest[AnyContent]) : Future[Result] = {
     MakeChangesRouter.decide(updatedAnswers) match {
       case MakeChangesRouter.Declaration =>
         Future.successful(redirectToDeclaration())
@@ -93,7 +94,7 @@ class AddOtherIndividualsYesNoController @Inject()(
           Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
         }
       case MakeChangesRouter.UnableToDecide =>
-        Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
+        Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(mode)))
       case MakeChangesRouter.UnavailableSections =>
         Future.successful(Redirect(controllers.makechanges.routes.UnavailableSectionsController.onPageLoad()))
     }

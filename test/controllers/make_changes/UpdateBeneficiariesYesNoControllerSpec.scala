@@ -19,6 +19,7 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.{MakeChangesMode, WhatNextMode}
 import pages.makechanges.UpdateBeneficiariesYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -28,8 +29,8 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
   val form = formProvider.withPrefix("updateBeneficiaries")
-
-  lazy val updateBeneficiariesYesNoRoute = routes.UpdateBeneficiariesYesNoController.onPageLoad().url
+  val mode: WhatNextMode = MakeChangesMode
+  lazy val updateBeneficiariesYesNoRoute = routes.UpdateBeneficiariesYesNoController.onPageLoad(mode).url
 
   "UpdateBeneficiariesYesNo Controller" must {
 
@@ -46,7 +47,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, mode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -66,7 +67,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), mode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -84,7 +85,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.UpdateSettlorsYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.UpdateSettlorsYesNoController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -106,7 +107,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, mode)(fakeRequest, messages).toString
 
       application.stop()
     }

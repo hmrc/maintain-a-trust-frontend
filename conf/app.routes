@@ -66,23 +66,35 @@ GET        /declared-updates                            controllers.declaration.
 GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=true)
 GET        /continue-maintaining-this-trust             controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=false)
 
-GET        /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad()
-POST       /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onSubmit()
+GET        /make-changes/update-trustees                controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad(mode: WhatNextMode = MakeChangesMode)
+POST       /make-changes/update-trustees                controllers.makechanges.UpdateTrusteesYesNoController.onSubmit(mode: WhatNextMode = MakeChangesMode)
+GET        /close/update-trustees                       controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad(mode: WhatNextMode = CloseMode)
+POST       /close/update-trustees                       controllers.makechanges.UpdateTrusteesYesNoController.onSubmit(mode: WhatNextMode = CloseMode)
 
-GET        /update-beneficiaries                        controllers.makechanges.UpdateBeneficiariesYesNoController.onPageLoad()
-POST       /update-beneficiaries                        controllers.makechanges.UpdateBeneficiariesYesNoController.onSubmit()
+GET        /make-changes/update-beneficiaries           controllers.makechanges.UpdateBeneficiariesYesNoController.onPageLoad(mode: WhatNextMode = MakeChangesMode)
+POST       /make-changes/update-beneficiaries           controllers.makechanges.UpdateBeneficiariesYesNoController.onSubmit(mode: WhatNextMode = MakeChangesMode)
+GET        /close/update-beneficiaries                  controllers.makechanges.UpdateBeneficiariesYesNoController.onPageLoad(mode: WhatNextMode = CloseMode)
+POST       /close/update-beneficiaries                  controllers.makechanges.UpdateBeneficiariesYesNoController.onSubmit(mode: WhatNextMode = CloseMode)
 
-GET        /update-settlors                             controllers.makechanges.UpdateSettlorsYesNoController.onPageLoad()
-POST       /update-settlors                             controllers.makechanges.UpdateSettlorsYesNoController.onSubmit()
+GET        /make-changes/update-settlors                controllers.makechanges.UpdateSettlorsYesNoController.onPageLoad(mode: WhatNextMode = MakeChangesMode)
+POST       /make-changes/update-settlors                controllers.makechanges.UpdateSettlorsYesNoController.onSubmit(mode: WhatNextMode = MakeChangesMode)
+GET        /close/update-settlors                       controllers.makechanges.UpdateSettlorsYesNoController.onPageLoad(mode: WhatNextMode = CloseMode)
+POST       /close/update-settlors                       controllers.makechanges.UpdateSettlorsYesNoController.onSubmit(mode: WhatNextMode = CloseMode)
 
-GET        /add-protector                               controllers.makechanges.AddProtectorYesNoController.onPageLoad()
-POST       /add-protector                               controllers.makechanges.AddProtectorYesNoController.onSubmit()
+GET        /make-changes/add-protector                  controllers.makechanges.AddProtectorYesNoController.onPageLoad(mode: WhatNextMode = MakeChangesMode)
+POST       /make-changes/add-protector                  controllers.makechanges.AddProtectorYesNoController.onSubmit(mode: WhatNextMode = MakeChangesMode)
+GET        /close/add-protector                         controllers.makechanges.AddProtectorYesNoController.onPageLoad(mode: WhatNextMode = CloseMode)
+POST       /close/add-protector                         controllers.makechanges.AddProtectorYesNoController.onSubmit(mode: WhatNextMode = CloseMode)
 
-GET        /update-protector                            controllers.makechanges.UpdateProtectorYesNoController.onPageLoad()
-POST       /update-protector                            controllers.makechanges.UpdateProtectorYesNoController.onSubmit()
+GET        /make-changes/update-protector               controllers.makechanges.UpdateProtectorYesNoController.onPageLoad(mode: WhatNextMode = MakeChangesMode)
+POST       /make-changes/update-protector               controllers.makechanges.UpdateProtectorYesNoController.onSubmit(mode: WhatNextMode = MakeChangesMode)
+GET        /close/update-protector                      controllers.makechanges.UpdateProtectorYesNoController.onPageLoad(mode: WhatNextMode = CloseMode)
+POST       /close/update-protector                      controllers.makechanges.UpdateProtectorYesNoController.onSubmit(mode: WhatNextMode = CloseMode)
 
-GET        /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad()
-POST       /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit()
+GET        /make-changes/add-other-individuals          controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad(mode: WhatNextMode = MakeChangesMode)
+POST       /make-changes/add-other-individuals          controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit(mode: WhatNextMode = MakeChangesMode)
+GET        /close/add-other-individuals                 controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad(mode: WhatNextMode = CloseMode)
+POST       /close/add-other-individuals                 controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit(mode: WhatNextMode = CloseMode)
 
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
