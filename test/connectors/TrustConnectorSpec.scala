@@ -21,6 +21,7 @@ import java.time.LocalDate
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.Generators
+import models.TrustDetails
 import models.http.DeclarationResponse.InternalServerError
 import models.http._
 import org.scalatest.concurrent.ScalaFutures
@@ -42,6 +43,52 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
   private def declareUrl(utr: String) : String = s"/trusts/declare/$utr"
 
   "TrustConnector" - {
+
+    "get trusts details" in {
+
+      val utr = "1000000008"
+
+      val json = Json.parse(
+        """
+          |{
+          | "startDate": "1920-03-28",
+          | "lawCountry": "AD",
+          | "administrationCountry": "GB",
+          | "residentialStatus": {
+          |   "uk": {
+          |     "scottishLaw": false,
+          |     "preOffShore": "AD"
+          |   }
+          | },
+          | "typeOfTrust": "Will Trust or Intestacy Trust",
+          | "deedOfVariation": "Previously there was only an absolute interest under the will",
+          | "interVivos": false
+          |}
+          |""".stripMargin)
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustConnector]
+
+      server.stubFor(
+        get(urlEqualTo(s"/trusts/$utr/trust-details"))
+          .willReturn(okJson(json.toString))
+      )
+
+      val processed = connector.getTrustDetails(utr)
+
+      whenReady(processed) {
+        r =>
+          r mustBe TrustDetails(startDate = "1920-03-28")
+      }
+
+    }
 
     "playback data must" - {
 
