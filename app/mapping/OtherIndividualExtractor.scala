@@ -46,7 +46,7 @@ class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[D
                 _.set(
                   OtherIndividualMetaData(index),
                   MetaData(
-                    lineNo = individual.lineNo,
+                    lineNo = individual.lineNo.getOrElse(""),
                     bpMatchStatus = individual.bpMatchStatus,
                     entityStart = individual.entityStart
                   )

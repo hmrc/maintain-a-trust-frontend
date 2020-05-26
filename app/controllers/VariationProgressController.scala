@@ -70,6 +70,14 @@ class VariationProgressController @Inject()(
     }
   }
 
+  def otherIndividualsRouteEnabled(utr: String): String = {
+    if (config.maintainOtherIndividualsEnabled) {
+      config.maintainOtherIndividualsUrl(utr)
+    } else {
+      notYetAvailable
+    }
+  }
+
   case class TaskList(mandatory: List[Task], other: List[Task]) {
     val isAbleToDeclare : Boolean = !(mandatory ::: other).exists(_.tag.contains(InProgress))
   }
@@ -96,7 +104,7 @@ class VariationProgressController @Inject()(
         Some(Tag.tagFor(tasks.protectors, config.maintainProtectorsEnabled))
       ),
       Task(
-        Link(NaturalPeople, notYetAvailable),
+        Link(NaturalPeople, otherIndividualsRouteEnabled(utr)),
         Some(Tag.tagFor(tasks.other, config.maintainOtherIndividualsEnabled))
       )
     )

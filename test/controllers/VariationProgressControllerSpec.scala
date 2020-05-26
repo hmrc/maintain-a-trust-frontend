@@ -53,7 +53,7 @@ class VariationProgressControllerSpec extends SpecBase {
   )
   val optionalSections = List(
     Task(Link(Protectors, "http://localhost:9796/maintain-a-trust/protectors/1234567890"), Some(InProgress)),
-    Task(Link(NaturalPeople, controllers.routes.FeatureNotAvailableController.onPageLoad().url), Some(UpToDate))
+    Task(Link(NaturalPeople, "http://localhost:9799/maintain-a-trust/other-individuals/1234567890"), Some(InProgress))
   )
 
   "VariationProgress Controller" must {

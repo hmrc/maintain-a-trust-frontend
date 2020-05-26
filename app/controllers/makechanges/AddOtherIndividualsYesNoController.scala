@@ -95,8 +95,6 @@ class AddOtherIndividualsYesNoController @Inject()(
         }
       case MakeChangesRouter.UnableToDecide =>
         Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(mode)))
-      case MakeChangesRouter.UnavailableSections =>
-        Future.successful(Redirect(controllers.makechanges.routes.UnavailableSectionsController.onPageLoad()))
     }
   }
 }

@@ -143,39 +143,6 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to overview when valid data is submitted, yes has been selected for an unavailable section" in {
-
-      val utr = "0987654321"
-
-      val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
-        .set(UpdateTrusteesYesNoPage, true).success.value
-        .set(UpdateBeneficiariesYesNoPage, false).success.value
-        .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddOrUpdateProtectorYesNoPage, false).success.value
-
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
-          .build()
-
-      val request =
-        FakeRequest(POST, addOtherIndividualsYesNoRoute)
-          .withFormUrlEncodedBody(("value", "true"))
-
-      when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value must include(
-        s"/maintain-a-trust/unavailable-sections"
-      )
-
-      application.stop()
-    }
-
     "return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
