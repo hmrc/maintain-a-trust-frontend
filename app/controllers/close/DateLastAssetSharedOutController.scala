@@ -16,12 +16,11 @@
 
 package controllers.close
 
-import java.time.LocalDate
-
 import controllers.actions.AuthenticateForPlayback
 import forms.DateFormProvider
 import javax.inject.Inject
 import models.CloseMode
+import pages.StartDatePage
 import pages.close.DateLastAssetSharedOutPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -40,35 +39,37 @@ class DateLastAssetSharedOutController @Inject()(
                                        view: DateLastAssetSharedOutView
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  // TODO: update userAnswers model to retrieve trust start date and pass date into form
-
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
-      val form = formProvider.withPrefix("dateLastAssetSharedOut", LocalDate.of(1500,1,1))
+      request.userAnswers.get(StartDatePage).map { startDate =>
+        val form = formProvider.withPrefix("dateLastAssetSharedOut", startDate)
 
-      val preparedForm = request.userAnswers.get(DateLastAssetSharedOutPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+        val preparedForm = request.userAnswers.get(DateLastAssetSharedOutPage) match {
+          case None => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm))
+        Ok(view(preparedForm))
+      }.getOrElse(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
-      val form = formProvider.withPrefix("dateLastAssetSharedOut", LocalDate.of(1500,1,1))
+      request.userAnswers.get(StartDatePage).map { startDate =>
+        val form = formProvider.withPrefix("dateLastAssetSharedOut", startDate)
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors))),
+        form.bindFromRequest().fold(
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors))),
 
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(DateLastAssetSharedOutPage, value))
-            _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(CloseMode))
-      )
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(DateLastAssetSharedOutPage, value))
+              _ <- playbackRepository.set(updatedAnswers)
+            } yield Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(CloseMode))
+        )
+      }.getOrElse(Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad())))
   }
 }

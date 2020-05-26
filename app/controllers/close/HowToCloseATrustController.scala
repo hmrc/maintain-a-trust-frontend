@@ -19,6 +19,7 @@ package controllers.close
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
+import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
@@ -37,7 +38,8 @@ class HowToCloseATrustController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
-      // TODO: put utr in UserAnswers model. Use this in DateLastAssetSharedOutYesNoController and InformationMaintainingThisTrustController
-      Ok(view("1234567890"))
+      request.userAnswers.get(UTRPage).map { utr =>
+        Ok(view(utr))
+      }.getOrElse(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
   }
 }

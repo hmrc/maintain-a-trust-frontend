@@ -18,6 +18,7 @@ package pages.close
 
 import models.UserAnswers
 import pages.QuestionPage
+import pages.makechanges._
 import play.api.libs.json.JsPath
 
 import scala.util.Try
@@ -30,9 +31,15 @@ case object DateLastAssetSharedOutYesNoPage extends QuestionPage[Boolean] {
 
   override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
     value match {
-      case Some(false) => userAnswers.remove(DateLastAssetSharedOutPage)
-        //TODO : clean up rest of journey
-      case _ => super.cleanup(value, userAnswers)
+      case Some(false) =>
+        userAnswers.remove(DateLastAssetSharedOutPage)
+          .flatMap(_.remove(UpdateTrusteesYesNoPage))
+          .flatMap(_.remove(UpdateBeneficiariesYesNoPage))
+          .flatMap(_.remove(UpdateSettlorsYesNoPage))
+          .flatMap(_.remove(AddOrUpdateProtectorYesNoPage))
+          .flatMap(_.remove(AddOrUpdateOtherIndividualsYesNoPage))
+      case _ =>
+        super.cleanup(value, userAnswers)
     }
   }
 }

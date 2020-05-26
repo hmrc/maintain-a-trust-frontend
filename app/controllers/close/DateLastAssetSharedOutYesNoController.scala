@@ -19,7 +19,7 @@ package controllers.close
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.WhatNextMode
+import pages.UTRPage
 import pages.close.DateLastAssetSharedOutYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -45,40 +45,41 @@ class DateLastAssetSharedOutYesNoController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(DateLastAssetSharedOutYesNoPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+      request.userAnswers.get(UTRPage).map { utr =>
+        val preparedForm = request.userAnswers.get(DateLastAssetSharedOutYesNoPage) match {
+          case None => form
+          case Some(value) => form.fill(value)
+        }
 
-      // TODO: don't hard-code utr
-      Ok(view(preparedForm, "1234567890"))
+        Ok(view(preparedForm, utr))
+      }.getOrElse(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
-      // TODO: don't hard-code utr
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, "1234567890"))),
+      request.userAnswers.get(UTRPage).map { utr =>
+        form.bindFromRequest().fold(
+          (formWithErrors: Form[_]) =>
+            Future.successful(BadRequest(view(formWithErrors, utr))),
 
-        value => {
-          for {
-            updatedAnswers <- Future.fromTry(
-              request.userAnswers
-                .set(DateLastAssetSharedOutYesNoPage, value)
-            )
-            _ <- playbackRepository.set(updatedAnswers)
-          } yield {
-            if (value) {
-              Redirect(controllers.close.routes.DateLastAssetSharedOutController.onPageLoad())
-            } else {
-              Redirect(controllers.close.routes.HowToCloseATrustController.onPageLoad())
+          value => {
+            for {
+              updatedAnswers <- Future.fromTry(
+                request.userAnswers
+                  .set(DateLastAssetSharedOutYesNoPage, value)
+              )
+              _ <- playbackRepository.set(updatedAnswers)
+            } yield {
+              if (value) {
+                Redirect(controllers.close.routes.DateLastAssetSharedOutController.onPageLoad())
+              } else {
+                Redirect(controllers.close.routes.HowToCloseATrustController.onPageLoad())
+              }
             }
           }
-        }
-      )
-
+        )
+      }.getOrElse(Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad())))
   }
 
 }
