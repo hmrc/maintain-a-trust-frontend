@@ -56,11 +56,13 @@
     }
 
     @{
-        if(mode == CloseMode) {
-            components.warning("variationProgress.closing")
-        } else {
-            components.warning("variationProgress")
-        }
+        components.warning(
+            if(mode == CloseMode) {
+                "variationProgress.closing"
+            } else {
+                "variationProgress"
+            }
+        )
     }
 
     @components.task_list("mandatory", mandatory, messages("variationProgress.subHeading.2"))

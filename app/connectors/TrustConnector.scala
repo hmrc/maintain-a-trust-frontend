@@ -30,7 +30,7 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
   private def getTrustDetailsUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/trust-details"
 
-  def getTrustDetails(utr: String)(implicit hc: HeaderCarrier, ex: ExecutionContext):  Future[TrustDetails] = {
+  def getTrustDetails(utr: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
     http.GET[TrustDetails](getTrustDetailsUrl(utr))
   }
 
