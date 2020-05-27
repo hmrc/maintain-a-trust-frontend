@@ -112,7 +112,7 @@ class WhatIsNextControllerSpec extends SpecBase {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustBe
-        controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+        controllers.declaration.routes.IndividualDeclarationController.onPageLoad(NormalMode).url
 
       application.stop()
     }
@@ -133,7 +133,7 @@ class WhatIsNextControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
+      redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(NormalMode).url
 
       application.stop()
     }
