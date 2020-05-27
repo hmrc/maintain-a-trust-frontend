@@ -19,7 +19,7 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.WhatNextMode
+import models.Mode
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -42,7 +42,7 @@ class AgencyRegisteredAddressUkYesNoController @Inject()(
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("agencyRegisteredAddressUkYesNo")
 
-  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgencyRegisteredAddressUkYesNoPage) match {
@@ -53,7 +53,7 @@ class AgencyRegisteredAddressUkYesNoController @Inject()(
       Ok(view(preparedForm, controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onSubmit(mode)))
   }
 
-  def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(

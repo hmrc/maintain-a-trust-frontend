@@ -22,7 +22,7 @@ import connectors.TrustsStoreConnector
 import controllers.actions.AuthenticateForPlayback
 import models.pages.{Tag, WhatIsNext}
 import models.pages.Tag.InProgress
-import models.{CloseMode, CompletedMaintenanceTasks, Enumerable, UpdateMode, WhatNextMode}
+import models.{CloseMode, CompletedMaintenanceTasks, Enumerable, NormalMode, Mode}
 import navigation.DeclareNoChange
 import pages.{UTRPage, WhatIsNextPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -148,10 +148,10 @@ class VariationProgressController @Inject()(
       }
   }
 
-  private def mode(whatNext: WhatIsNext): WhatNextMode = {
+  private def mode(whatNext: WhatIsNext): Mode = {
     whatNext match {
       case WhatIsNext.CloseTrust => CloseMode
-      case _ => UpdateMode
+      case _ => NormalMode
     }
   }
 }

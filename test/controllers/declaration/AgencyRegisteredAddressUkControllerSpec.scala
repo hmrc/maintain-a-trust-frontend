@@ -18,7 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.UKAddressFormProvider
-import models.{UKAddress, UpdateMode, WhatNextMode}
+import models.{UKAddress, NormalMode, Mode}
 import pages.AgencyRegisteredAddressUkPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -28,7 +28,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
   val formProvider = new UKAddressFormProvider()
   val form = formProvider()
-  val mode: WhatNextMode = UpdateMode
+  val mode: Mode = NormalMode
   lazy val agencyRegisteredAddressUkRoute = routes.AgencyRegisteredAddressUkController.onPageLoad(mode).url
 
   "AgencyRegisteredAddressUk Controller" must {

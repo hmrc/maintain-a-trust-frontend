@@ -18,7 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.YesNoFormProvider
-import models.{UpdateMode, WhatNextMode}
+import models.{NormalMode, Mode}
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -29,7 +29,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
   val form = formProvider.withPrefix("agencyRegisteredAddressUkYesNo")
-  val mode: WhatNextMode = UpdateMode
+  val mode: Mode = NormalMode
   lazy val agencyRegisteredAddressUkYesNoRoute = routes.AgencyRegisteredAddressUkYesNoController.onPageLoad(mode).url
   lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit(mode)
 

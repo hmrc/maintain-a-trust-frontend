@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 
 import controllers.actions.AuthenticateForPlayback
 import javax.inject.Inject
-import models.{CloseMode, UpdateMode, WhatNextMode}
+import models.{CloseMode, NormalMode, Mode}
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
 import play.api.i18n.{I18nSupport, MessagesApi}

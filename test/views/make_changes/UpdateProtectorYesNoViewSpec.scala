@@ -18,7 +18,7 @@ package views.make_changes
 
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.{UpdateMode, WhatNextMode}
+import models.{NormalMode, Mode}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
@@ -29,7 +29,7 @@ class UpdateProtectorYesNoViewSpec extends YesNoViewBehaviours {
 
   val messageKeyPrefix = "updateProtector"
   val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-  val mode: WhatNextMode = UpdateMode
+  val mode: Mode = NormalMode
   lazy val onSubmit: Call = routes.UpdateProtectorYesNoController.onSubmit(mode)
 
   "UpdateProtectorYesNo view" must {

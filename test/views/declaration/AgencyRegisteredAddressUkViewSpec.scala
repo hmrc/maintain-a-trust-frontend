@@ -17,7 +17,7 @@
 package views.declaration
 
 import forms.UKAddressFormProvider
-import models.UpdateMode
+import models.NormalMode
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.UkAddressViewBehaviours
@@ -34,7 +34,7 @@ class AgencyRegisteredAddressUkViewSpec extends UkAddressViewBehaviours {
     val view = viewFor[AgencyRegisteredAddressUkView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, UpdateMode)(fakeRequest, messages)
+      view.apply(form, NormalMode)(fakeRequest, messages)
 
     behave like normalPage(applyView(form), messageKeyPrefix)
 

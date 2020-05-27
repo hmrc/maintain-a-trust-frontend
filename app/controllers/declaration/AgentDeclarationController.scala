@@ -23,7 +23,7 @@ import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
 import models.http.TVNResponse
 import models.requests.{AgentUser, DataRequest}
-import models.{Address, AgentDeclaration, UserAnswers, WhatNextMode}
+import models.{Address, AgentDeclaration, UserAnswers, Mode}
 import pages._
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.{AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
@@ -51,7 +51,7 @@ class AgentDeclarationController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgentDeclarationPage) match {
@@ -62,7 +62,7 @@ class AgentDeclarationController @Inject()(
       Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(
@@ -98,7 +98,7 @@ class AgentDeclarationController @Inject()(
                                 utr: String,
                                 agencyAddress: Address,
                                 endDate: Option[LocalDate],
-                                mode: WhatNextMode
+                                mode: Mode
                                )(implicit request: DataRequest[AnyContent]) = {
 
     service.agentDeclaration(utr,

@@ -20,7 +20,7 @@ import java.time.{LocalDate, LocalDateTime}
 
 import base.SpecBase
 import models.http.NameType
-import models.{AgentDeclaration, CloseMode, UKAddress, UpdateMode, UserAnswers}
+import models.{AgentDeclaration, CloseMode, UKAddress, NormalMode, UserAnswers}
 import pages.beneficiaries.charity._
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
@@ -64,7 +64,7 @@ class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(playbackAnswers), AffinityGroup.Agent).build()
 
-      val request = FakeRequest(GET, routes.PlaybackDeclaredAnswersController.onPageLoad(UpdateMode).url)
+      val request = FakeRequest(GET, routes.PlaybackDeclaredAnswersController.onPageLoad(NormalMode).url)
 
       val result = route(application, request).value
 

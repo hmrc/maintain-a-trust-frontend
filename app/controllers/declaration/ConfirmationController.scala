@@ -19,7 +19,7 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
-import models.{CloseMode, UpdateMode, WhatNextMode}
+import models.{CloseMode, Mode}
 import pages.TVNPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -41,7 +41,7 @@ class ConfirmationController @Inject()(
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
-  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.refreshedData {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.refreshedData {
     implicit request =>
 
       val isAgent = request.user.affinityGroup == Agent
@@ -53,11 +53,10 @@ class ConfirmationController @Inject()(
         tvn =>
           Ok(
             mode match {
-              case UpdateMode =>
-                confirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
               case CloseMode =>
                 closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
-
+              case _ =>
+                confirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
             }
           )
       }

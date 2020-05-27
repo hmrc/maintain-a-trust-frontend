@@ -18,7 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.InternationalAddressFormProvider
-import models.{InternationalAddress, UpdateMode, WhatNextMode}
+import models.{InternationalAddress, NormalMode, Mode}
 import pages.AgencyRegisteredAddressInternationalPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -29,7 +29,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
   val formProvider = new InternationalAddressFormProvider()
   val form = formProvider()
-  val mode: WhatNextMode = UpdateMode
+  val mode: Mode = NormalMode
   lazy val agencyRegisteredAddressInternationalRoute = routes.AgencyRegisteredAddressInternationalController.onPageLoad(mode).url
 
   "AgencyRegisteredAddressInternational Controller" must {

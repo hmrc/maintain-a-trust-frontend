@@ -18,7 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.declaration.IndividualDeclarationFormProvider
-import models.{IndividualDeclaration, UKAddress, UpdateMode, WhatNextMode}
+import models.{IndividualDeclaration, UKAddress, NormalMode, Mode}
 import pages.UTRPage
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
@@ -37,7 +37,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
   val formProvider = new IndividualDeclarationFormProvider()
   val form: Form[IndividualDeclaration] = formProvider()
   val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
-  val mode: WhatNextMode = UpdateMode
+  val mode: Mode = NormalMode
   lazy val onSubmit: Call = routes.IndividualDeclarationController.onSubmit(mode)
 
   "Individual Declaration Controller" must {

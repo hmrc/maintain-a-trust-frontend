@@ -24,7 +24,7 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_], mode: WhatNextMode, prefix: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, prefix: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)} ${messages(s"$prefix.title")}"

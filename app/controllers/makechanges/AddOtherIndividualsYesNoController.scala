@@ -21,7 +21,7 @@ import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import models.requests.DataRequest
-import models.{CloseMode, UpdateMode, UserAnswers, WhatNextMode}
+import models.{CloseMode, Mode, UserAnswers}
 import navigation.DeclareNoChange
 import pages.UTRPage
 import pages.makechanges._
@@ -44,7 +44,7 @@ class AddOtherIndividualsYesNoController @Inject()(
                                         trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport {
 
-  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
@@ -57,7 +57,7 @@ class AddOtherIndividualsYesNoController @Inject()(
       Ok(view(preparedForm, mode, prefix(mode)))
   }
 
-  def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
@@ -77,7 +77,7 @@ class AddOtherIndividualsYesNoController @Inject()(
     )
   }
 
-  private def determineRoute(updatedAnswers: UserAnswers, mode: WhatNextMode)
+  private def determineRoute(updatedAnswers: UserAnswers, mode: Mode)
                             (implicit request: DataRequest[AnyContent]) : Future[Result] = {
 
     MakeChangesRouter.decide(updatedAnswers) match {
@@ -99,10 +99,10 @@ class AddOtherIndividualsYesNoController @Inject()(
     }
   }
 
-  private def prefix(mode: WhatNextMode): String = {
+  private def prefix(mode: Mode): String = {
     mode match {
-      case UpdateMode => "addOtherIndividuals"
       case CloseMode => "addOtherIndividualsClosing"
+      case _ => "addOtherIndividuals"
     }
   }
 }

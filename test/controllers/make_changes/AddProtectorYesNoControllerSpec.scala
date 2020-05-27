@@ -19,7 +19,7 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.{UpdateMode, WhatNextMode}
+import models.{NormalMode, Mode}
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -31,7 +31,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
   val prefix: String = "addProtector"
   val form = formProvider.withPrefix(prefix)
 
-  val mode: WhatNextMode = UpdateMode
+  val mode: Mode = NormalMode
 
   lazy val addProtectorYesNoRoute = routes.AddProtectorYesNoController.onPageLoad(mode).url
 

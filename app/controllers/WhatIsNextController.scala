@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions.AuthenticateForPlayback
 import forms.WhatIsNextFormProvider
 import models.pages.WhatIsNext
-import models.{Enumerable, UpdateMode}
+import models.{Enumerable, NormalMode}
 import navigation.DeclareNoChange
 import pages.WhatIsNextPage
 import play.api.data.Form
@@ -67,10 +67,10 @@ class WhatIsNextController @Inject()(
             _ <- playbackRepository.set(updatedAnswers)
           } yield value match {
             case WhatIsNext.DeclareTheTrustIsUpToDate =>
-              redirectToDeclaration(UpdateMode)
+              redirectToDeclaration(NormalMode)
 
             case WhatIsNext.MakeChanges =>
-              Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(UpdateMode))
+              Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(NormalMode))
 
             case _ =>
               Redirect(controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad())

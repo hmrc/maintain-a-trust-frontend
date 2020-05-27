@@ -18,7 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.declaration.AgentDeclarationFormProvider
-import models.{AgentDeclaration, UKAddress, UpdateMode, WhatNextMode}
+import models.{AgentDeclaration, UKAddress, NormalMode, Mode}
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import pages.{AgencyRegisteredAddressUkPage, UTRPage}
 import play.api.data.Form
@@ -36,7 +36,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
   val formProvider = new AgentDeclarationFormProvider()
   val form: Form[AgentDeclaration] = formProvider()
   val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
-  val mode: WhatNextMode = UpdateMode
+  val mode: Mode = NormalMode
   lazy val onSubmit: Call = routes.AgentDeclarationController.onSubmit(mode)
 
   "Agent Declaration Controller" must {

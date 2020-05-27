@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.TrustsStoreConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.{CloseMode, CompletedMaintenanceTasks, UpdateMode, WhatNextMode}
+import models.{CloseMode, CompletedMaintenanceTasks, NormalMode, Mode}
 import pages.UTRPage
 import pages.makechanges._
 import play.api.test.FakeRequest
@@ -40,7 +40,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   val mockConnector = mock[TrustsStoreConnector]
 
-  val mode: WhatNextMode = UpdateMode
+  val mode: Mode = NormalMode
 
   lazy val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad(mode).url
 

@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@import models.WhatNextMode
-@import models.WhatNextMode._
+@import models.Mode
+@import models.Mode._
 @import controllers.declaration.routes._
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.auth.core.AffinityGroup
@@ -33,7 +33,7 @@
     affinityGroup : AffinityGroup,
     nextUrl : String,
     isAbleToDeclare: Boolean,
-    mode: WhatNextMode)(implicit request: Request[_], messages: Messages)
+    mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("variationProgress.title")

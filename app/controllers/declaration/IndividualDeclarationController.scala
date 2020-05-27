@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
-import models.WhatNextMode
+import models.Mode
 import models.http.TVNResponse
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.IndividualDeclarationPage
@@ -49,7 +49,7 @@ class IndividualDeclarationController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(IndividualDeclarationPage) match {
@@ -60,7 +60,7 @@ class IndividualDeclarationController @Inject()(
       Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(

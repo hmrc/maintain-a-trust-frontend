@@ -19,7 +19,7 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.{CloseMode, UpdateMode, WhatNextMode}
+import models.{CloseMode, Mode}
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -40,7 +40,7 @@ class UpdateProtectorYesNoController @Inject()(
                                         view: UpdateProtectorYesNoView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
@@ -53,7 +53,7 @@ class UpdateProtectorYesNoController @Inject()(
       Ok(view(preparedForm, mode, prefix(mode)))
   }
 
-  def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
@@ -74,13 +74,12 @@ class UpdateProtectorYesNoController @Inject()(
           }
         }
       )
-
   }
 
-  private def prefix(mode: WhatNextMode): String = {
+  private def prefix(mode: Mode): String = {
     mode match {
-      case UpdateMode => "updateProtector"
       case CloseMode => "updateProtectorClosing"
+      case _ => "updateProtector"
     }
   }
 
