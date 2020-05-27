@@ -17,6 +17,7 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
+import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions._
 import forms.YesNoFormProvider
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
@@ -36,8 +37,12 @@ class AddProtectorYesNoController @Inject()(
                                         actions: AuthenticateForPlayback,
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: AddProtectorYesNoView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                        view: AddProtectorYesNoView,
+                                        trustConnector: TrustConnector,
+                                        trustStoreConnector: TrustsStoreConnector
+                                     )(implicit ec: ExecutionContext)
+
+  extends MakeChangesQuestionController(trustConnector, trustStoreConnector) with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("addProtector")
 
@@ -66,8 +71,9 @@ class AddProtectorYesNoController @Inject()(
                 .set(AddOrUpdateProtectorYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
+            nextRoute <- addOrUpdateOtherIndividuals()
           } yield {
-            Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
+            nextRoute
           }
         }
       )

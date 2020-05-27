@@ -106,7 +106,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to the update protectors page when valid data is submitted and no protectors exist" in {
+    "redirect to the update individuals page when valid data is submitted and individuals exist" in {
 
       val utr = "1000000008"
 
