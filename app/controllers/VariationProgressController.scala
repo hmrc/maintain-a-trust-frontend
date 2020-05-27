@@ -23,12 +23,12 @@ import controllers.actions.AuthenticateForPlayback
 import models.pages.Tag
 import models.pages.Tag.InProgress
 import models.{CompletedMaintenanceTasks, Enumerable}
-import navigation.DeclareNoChange
 import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import sections.Protectors
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
+import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
@@ -42,7 +42,7 @@ class VariationProgressController @Inject()(
                                       val controllerComponents: MessagesControllerComponents,
                                       config: FrontendAppConfig,
                                       storeConnector: TrustsStoreConnector
-                                    )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
+                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
 
   lazy val notYetAvailable : String = controllers.routes.FeatureNotAvailableController.onPageLoad().url
 

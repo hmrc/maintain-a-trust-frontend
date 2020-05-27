@@ -17,34 +17,32 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import navigation.MakeChangesQuestionController
-import pages.makechanges._
+import pages.makechanges.AddOrUpdateOtherIndividualsYesNoPage
 import play.api.data.Form
-import play.api.i18n.MessagesApi
-import play.api.mvc._
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import views.html.makechanges.AddOtherIndividualsYesNoView
+import views.html.makechanges.UpdateOtherIndividualsYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddOtherIndividualsYesNoController @Inject()(
+class UpdateOtherIndividualsYesNoController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         playbackRepository: PlaybackRepository,
                                         actions: AuthenticateForPlayback,
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: AddOtherIndividualsYesNoView,
-                                        config: FrontendAppConfig,
+                                        view: UpdateOtherIndividualsYesNoView,
                                         trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext)
-  extends MakeChangesQuestionController(trustStoreConnector){
+  extends MakeChangesQuestionController(trustStoreConnector) with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("addOtherIndividuals")
+  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateOtherIndividuals")
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
@@ -65,11 +63,15 @@ class AddOtherIndividualsYesNoController @Inject()(
           Future.successful(BadRequest(view(formWithErrors))),
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
+            updatedAnswers <- Future.fromTry(
+              request.userAnswers
+                .set(AddOrUpdateOtherIndividualsYesNoPage, value)
+            )
             _ <- playbackRepository.set(updatedAnswers)
-            route <- decideNexRouteFromAnswers(updatedAnswers)
-          } yield route
+            nextRoute <- decideNexRouteFromAnswers(updatedAnswers)
+          } yield nextRoute
         }
-    )
+      )
   }
+
 }
