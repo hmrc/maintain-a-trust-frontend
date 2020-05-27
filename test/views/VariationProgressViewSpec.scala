@@ -16,7 +16,7 @@
 
 package views
 
-import models.NormalMode
+import models.pages.WhatIsNext.MakeChanges
 import pages.UTRPage
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.tasks._
@@ -26,7 +26,7 @@ import views.html.VariationProgressView
 
 class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressViewBehaviours {
 
-  val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad(NormalMode).url
+  val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
   "VariationProgress view" must {
 
@@ -47,7 +47,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
     val view = viewFor[VariationProgressView](Some(userAnswers))
 
-    val applyView = view.apply(utr, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = false, NormalMode)(fakeRequest, messages)
+    val applyView = view.apply(utr, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = false, MakeChanges)(fakeRequest, messages)
 
     "Have a dynamic utr in the subheading" in {
       val doc = asDocument(applyView)

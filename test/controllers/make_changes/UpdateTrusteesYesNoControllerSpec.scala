@@ -19,8 +19,8 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.UserAnswers
 import models.pages.WhatIsNext
-import models.{Mode, NormalMode, UserAnswers}
 import pages.WhatIsNextPage
 import pages.makechanges.UpdateTrusteesYesNoPage
 import play.api.test.FakeRequest
@@ -32,7 +32,6 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
   val formProvider = new YesNoFormProvider()
   val prefix: String = "updateTrustees"
   val form = formProvider.withPrefix(prefix)
-  val mode: Mode = NormalMode
   lazy val updateTrusteesYesNoRoute = routes.UpdateTrusteesYesNoController.onPageLoad().url
 
   val baseAnswers: UserAnswers = emptyUserAnswers
@@ -90,7 +89,7 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.UpdateBeneficiariesYesNoController.onPageLoad(mode).url
+      redirectLocation(result).value mustEqual routes.UpdateBeneficiariesYesNoController.onPageLoad().url
 
       application.stop()
     }

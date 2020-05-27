@@ -19,7 +19,9 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.{NormalMode, Mode}
+import models.UserAnswers
+import models.pages.WhatIsNext.MakeChanges
+import pages.WhatIsNextPage
 import pages.makechanges.UpdateBeneficiariesYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -30,14 +32,16 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
   val formProvider = new YesNoFormProvider()
   val prefix: String = "updateBeneficiaries"
   val form = formProvider.withPrefix(prefix)
-  val mode: Mode = NormalMode
-  lazy val updateBeneficiariesYesNoRoute = routes.UpdateBeneficiariesYesNoController.onPageLoad(mode).url
+  lazy val updateBeneficiariesYesNoRoute = routes.UpdateBeneficiariesYesNoController.onPageLoad().url
+
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, MakeChanges).success.value
 
   "UpdateBeneficiariesYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, updateBeneficiariesYesNoRoute)
 
@@ -48,14 +52,14 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, mode, prefix)(fakeRequest, messages).toString
+        view(form, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(UpdateBeneficiariesYesNoPage, true).success.value
+      val userAnswers = baseAnswers.set(UpdateBeneficiariesYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -68,7 +72,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), mode, prefix)(fakeRequest, messages).toString
+        view(form.fill(true), prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -76,7 +80,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
     "redirect to the next page when valid data is submitted" in {
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, updateBeneficiariesYesNoRoute)
@@ -86,14 +90,29 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.UpdateSettlorsYesNoController.onPageLoad(mode).url
+      redirectLocation(result).value mustEqual routes.UpdateSettlorsYesNoController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to Session Expired if required answer does not exist" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      val request = FakeRequest(GET, updateBeneficiariesYesNoRoute)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.routes.SessionExpiredController.onPageLoad().url
 
       application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, updateBeneficiariesYesNoRoute)
@@ -108,7 +127,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, mode, prefix)(fakeRequest, messages).toString
+        view(boundForm, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

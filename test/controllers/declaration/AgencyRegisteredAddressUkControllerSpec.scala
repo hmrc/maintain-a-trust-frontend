@@ -18,7 +18,9 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.UKAddressFormProvider
-import models.{Mode, NormalMode, UKAddress}
+import models.pages.WhatIsNext.MakeChanges
+import models.{UKAddress, UserAnswers}
+import pages.WhatIsNextPage
 import pages.declaration.AgencyRegisteredAddressUkPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -28,14 +30,16 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
   val formProvider = new UKAddressFormProvider()
   val form = formProvider()
-  val mode: Mode = NormalMode
-  lazy val agencyRegisteredAddressUkRoute = routes.AgencyRegisteredAddressUkController.onPageLoad(mode).url
+  lazy val agencyRegisteredAddressUkRoute = routes.AgencyRegisteredAddressUkController.onPageLoad().url
+
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, MakeChanges).success.value
 
   "AgencyRegisteredAddressUk Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, agencyRegisteredAddressUkRoute)
 
@@ -46,14 +50,14 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, mode)(request, messages).toString
+        view(form)(request, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = baseAnswers
         .set(AgencyRegisteredAddressUkPage, UKAddress("line 1", "line 2", Some("line 3"), Some("line 4"),"line 5")).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -67,7 +71,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(UKAddress("line 1","line 2", Some("line 3"), Some("line 4"),"line 5")), mode)(fakeRequest, messages).toString
+        view(form.fill(UKAddress("line 1","line 2", Some("line 3"), Some("line 4"),"line 5")))(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -75,7 +79,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
     "redirect to the next page when valid data is submitted" in {
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressUkRoute)
@@ -85,14 +89,29 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AgentDeclarationController.onPageLoad(mode).url
+      redirectLocation(result).value mustEqual routes.AgentDeclarationController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to Session Expired if required answer does not exist" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      val request = FakeRequest(GET, agencyRegisteredAddressUkRoute)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.routes.SessionExpiredController.onPageLoad().url
 
       application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressUkRoute)
@@ -107,7 +126,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, mode)(fakeRequest, messages).toString
+        view(boundForm)(fakeRequest, messages).toString
 
       application.stop()
     }

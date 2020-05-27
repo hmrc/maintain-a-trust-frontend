@@ -20,11 +20,12 @@ import java.time.{LocalDate, LocalDateTime}
 
 import base.SpecBase
 import models.http.NameType
+import models.pages.WhatIsNext.CloseTrust
 import models.{AgentDeclaration, UKAddress, UserAnswers}
 import pages.beneficiaries.charity._
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
-import pages.{SubmissionDatePage, TVNPage}
+import pages.{SubmissionDatePage, TVNPage, WhatIsNextPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
@@ -43,6 +44,7 @@ class PlaybackDraftAnswersControllerSpec extends SpecBase {
     "return OK and the correct view for a GET" in {
 
       val playbackAnswers = UserAnswers("internalId")
+        .set(WhatIsNextPage, CloseTrust).success.value
         .set(TVNPage, fakeTvn).success.value
         .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
         .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value

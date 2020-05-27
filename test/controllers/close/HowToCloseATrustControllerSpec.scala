@@ -17,20 +17,12 @@
 package controllers.close
 
 import base.SpecBase
-import forms.YesNoFormProvider
 import models.UserAnswers
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.UTRPage
-import pages.close.DateLastAssetSharedOutYesNoPage
-import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.PlaybackRepository
-import views.html.close.{DateLastAssetSharedOutYesNoView, HowToCloseATrustView}
-
-import scala.concurrent.Future
+import views.html.close.HowToCloseATrustView
 
 class HowToCloseATrustControllerSpec extends SpecBase with MockitoSugar {
 

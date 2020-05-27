@@ -17,8 +17,9 @@
 package controllers.declaration
 
 import base.SpecBase
-import models.{NormalMode, UserAnswers}
-import pages.TVNPage
+import models.UserAnswers
+import models.pages.WhatIsNext.MakeChanges
+import pages.{TVNPage, WhatIsNextPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.declaration.ConfirmationView
@@ -32,11 +33,12 @@ class ConfirmationControllerSpec extends SpecBase {
       val fakeTvn = "XCTVN0000004912"
 
       val playbackAnswers = UserAnswers("internalId")
+        .set(WhatIsNextPage, MakeChanges).success.value
         .set(TVNPage, fakeTvn).success.value
 
       val application = applicationBuilder(userAnswers = Some(playbackAnswers)).build()
 
-      val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad(NormalMode).url)
+      val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
 
       val result = route(application, request).value
 

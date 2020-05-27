@@ -18,7 +18,9 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.YesNoFormProvider
-import models.{NormalMode, Mode}
+import models.UserAnswers
+import models.pages.WhatIsNext.MakeChanges
+import pages.WhatIsNextPage
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -29,15 +31,17 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
   val form = formProvider.withPrefix("agencyRegisteredAddressUkYesNo")
-  val mode: Mode = NormalMode
-  lazy val agencyRegisteredAddressUkYesNoRoute = routes.AgencyRegisteredAddressUkYesNoController.onPageLoad(mode).url
-  lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit(mode)
+  lazy val agencyRegisteredAddressUkYesNoRoute = routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+  lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit()
+
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, MakeChanges).success.value
 
   "AgencyRegisteredAddressUkYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, agencyRegisteredAddressUkYesNoRoute)
 
@@ -55,7 +59,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(AgencyRegisteredAddressUkYesNoPage, true).success.value
+      val userAnswers = baseAnswers.set(AgencyRegisteredAddressUkYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -75,8 +79,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
     "redirect to the next page when Yes is submitted" in {
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressUkYesNoRoute)
@@ -86,15 +89,14 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AgencyRegisteredAddressUkController.onPageLoad(mode).url
+      redirectLocation(result).value mustEqual routes.AgencyRegisteredAddressUkController.onPageLoad().url
 
       application.stop()
     }
 
     "redirect to the next page when No is submitted" in {
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressUkYesNoRoute)
@@ -104,14 +106,29 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AgencyRegisteredAddressInternationalController.onPageLoad(mode).url
+      redirectLocation(result).value mustEqual routes.AgencyRegisteredAddressInternationalController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to Session Expired if required answer does not exist" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      val request = FakeRequest(GET, agencyRegisteredAddressUkYesNoRoute)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.routes.SessionExpiredController.onPageLoad().url
 
       application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressUkYesNoRoute)

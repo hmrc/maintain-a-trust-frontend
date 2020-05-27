@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import forms.DateFormProvider
-import models.{CloseMode, UserAnswers}
+import models.UserAnswers
 import org.scalatestplus.mockito.MockitoSugar
 import pages.StartDatePage
 import pages.close.DateLastAssetSharedOutPage

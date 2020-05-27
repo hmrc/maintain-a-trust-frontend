@@ -16,14 +16,14 @@
 
 package views.declaration
 
+import config.FrontendAppConfig
 import forms.declaration.AgentDeclarationFormProvider
-import models.{AgentDeclaration, NormalMode}
+import models.AgentDeclaration
+import models.pages.WhatIsNext.MakeChanges
 import play.api.data.Form
-import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import views.behaviours.QuestionViewBehaviours
 import views.html.declaration.AgentDeclarationView
-import config.FrontendAppConfig
 
 class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] {
 
@@ -38,7 +38,7 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
     val view = viewFor[AgentDeclarationView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, NormalMode)(fakeRequest, messages)
+      view.apply(form, MakeChanges)(fakeRequest, messages)
 
     if(appConfig.declarationEmailEnabled) {
       behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1", "paragraph2")
