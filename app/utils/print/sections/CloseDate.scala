@@ -14,10 +14,25 @@
  * limitations under the License.
  */
 
-package pages
+package utils.print.sections
 
-import play.api.libs.json.JsPath
+import models.UserAnswers
+import pages.close.DateLastAssetSharedOutPage
+import play.api.i18n.Messages
+import utils.print.sections.AnswerRowConverter._
+import viewmodels.AnswerSection
 
-package object close {
-  val basePath: JsPath = JsPath \ 'close
+object CloseDate {
+
+  def apply(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection = {
+
+    AnswerSection(
+      headingKey = None,
+      Seq(
+        dateQuestion(DateLastAssetSharedOutPage, userAnswers, "dateLastAssetSharedOut")
+      ).flatten,
+      sectionKey = Some(messages("answerPage.section.closeDate.heading"))
+    )
+  }
+
 }

@@ -23,7 +23,7 @@ import models.{CloseMode, UpdateMode, WhatNextMode}
 import pages.TVNPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.declaration.{CloseTrustConfirmationView, ConfirmationView}
@@ -41,7 +41,7 @@ class ConfirmationController @Inject()(
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
-  def onPageLoad(mode: WhatNextMode) = actions.refreshedData {
+  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.refreshedData {
     implicit request =>
 
       val isAgent = request.user.affinityGroup == Agent
@@ -51,14 +51,15 @@ class ConfirmationController @Inject()(
         Redirect(controllers.routes.TrustStatusController.sorryThereHasBeenAProblem())
       }{
         tvn =>
-          mode match {
-            case UpdateMode =>
-              Ok(confirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl))
-            case CloseMode =>
-              Ok(closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl))
+          Ok(
+            mode match {
+              case UpdateMode =>
+                confirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
+              case CloseMode =>
+                closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
 
-          }
-
+            }
+          )
       }
   }
 }

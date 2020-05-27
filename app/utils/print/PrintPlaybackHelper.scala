@@ -20,10 +20,13 @@ import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
 import utils.countryoptions.CountryOptions
-import utils.print.sections.TrustDetails
+import utils.print.sections.{CloseDate, TrustDetails}
 import viewmodels.AnswerSection
 
 class PrintPlaybackHelper @Inject()(countryOptions: CountryOptions){
+
+  def closeDate(userAnswers: UserAnswers)(implicit messages: Messages) : AnswerSection =
+    CloseDate(userAnswers)
 
   def entities(userAnswers: UserAnswers)(implicit messages: Messages) : Seq[AnswerSection] = {
 

@@ -43,11 +43,11 @@ closeTrustConfirmation.printsave.link = Print or save a declared copy of the tru
 closeTrustConfirmation.subheading = What happens next
 closeTrustConfirmation.paragraph1 = Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.
 closeTrustConfirmation.paragraph2 = Your request to close this trust will be processed and access to its online register will now be removed.
-closeTrustConformation.paragraph3.beforeLink = If this has been done in error, please
-closeTrustConformation.paragraph3.link = contact HMRC
-closeTrustConformation.paragraph3.afterLink = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
-closeTrustConformation.agent.you.can = You can
-closeTrustConformation.agent.link = return to register and maintain a trust for a client.
+closeTrustConfirmation.paragraph3.beforeLink = If this has been done in error, please
+closeTrustConfirmation.paragraph3.link = contact HMRC
+closeTrustConfirmation.paragraph3.afterLink = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
+closeTrustConfirmation.agent.you.can = You can
+closeTrustConfirmation.agent.link = return to register and maintain a trust for a client.
 
 confirmationPage.title = Declaration received
 confirmationPage.heading = Declaration received
@@ -177,6 +177,13 @@ playbackDeclarationAnswers.p1 = Declaration reference number is: {0}
 playbackDeclarationAnswers.p2 = Client reference number: {0}
 playbackDeclarationAnswers.p3 = The trust’s declaration was sent on {0}
 playbackDeclarationAnswers.warning = You only need to declare the trust is up to date every year if there is a tax liability.
+
+playbackFinalDeclarationAnswers.title = Final declared copy of updates to this trust
+playbackFinalDeclarationAnswers.heading = Final declared copy of updates to this trust
+playbackFinalDeclarationAnswers.p1 = Declaration reference number is: {0}
+playbackFinalDeclarationAnswers.p2 = Client reference number: {0}
+playbackFinalDeclarationAnswers.p3 = The trust’s final declaration was sent on {0}
+playbackFinalDeclarationAnswers.selfAssessmentOnline = If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts.
 
 playbackProblemContactHMRC.title = Sorry, there is a problem accessing your trust’s registration
 playbackProblemContactHMRC.heading = Sorry, there is a problem accessing your trust’s registration
@@ -405,6 +412,7 @@ dateLastAssetSharedOutYesNo.error.required = Select yes if you know the date the
 
 dateLastAssetSharedOut.title = When did the last asset in the trust get shared out?
 dateLastAssetSharedOut.heading = When did the last asset in the trust get shared out?
+dateLastAssetSharedOut.checkYourAnswersLabel = When did the last asset in the trust get shared out?
 dateLastAssetSharedOut.hint = For example, 31 3 1980
 dateLastAssetSharedOut.error.required.all = Enter the date the last asset was distributed
 dateLastAssetSharedOut.error.required.two = The date the last asset was distributed must include a {0} and a {1}
@@ -428,6 +436,9 @@ section.trustees = trustees
 section.beneficiaries = beneficiaries
 section.protectors = protectors
 section.natural = other individuals
+
+## Close date
+answerPage.section.closeDate.heading = Close date
 
 ## Settlors
 answerPage.section.settlors.heading = Settlors

@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import models.CloseMode
 @import controllers.declaration.routes._
 @import utils.AccessibilityHelper._
 
@@ -38,7 +39,7 @@
         </h1>
     </div>
 
-<p class="panel-indent">@components.link(PlaybackDeclaredAnswersController.onPageLoad().url, "print-and-save","closeTrustConfirmation.printsave.link", openInNewWindow = true)</p>
+    <p class="panel-indent">@components.link(PlaybackDeclaredAnswersController.onPageLoad(CloseMode).url, "print-and-save","closeTrustConfirmation.printsave.link", openInNewWindow = true)</p>
 
     <h2>@messages("closeTrustConfirmation.subheading")</h2>
 
@@ -46,11 +47,7 @@
 
     <p>@messages("closeTrustConfirmation.paragraph2")</p>
 
-    <p>@messages("closeTrustConfirmation.paragraph3") </p>
-
-    <p>
-        @messages("closeTrustConfirmation.paragraph3.beforeLink") <a id="help-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("closeTrustConfirmation.paragraph3.link")</a>@messages("closeTrustConfirmation.paragraph3.afterLink")
-    </p>
+    <p>@messages("closeTrustConfirmation.paragraph3.beforeLink") <a id="help-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("closeTrustConfirmation.paragraph3.link")</a>@messages("closeTrustConfirmation.paragraph3.afterLink")</p>
 
     @if(isAgent: Boolean) {
         @messages("closeTrustConfirmation.agent.you.can") @components.link(agentOverviewUrl, "agent-overview", "closeTrustConfirmation.agent.link", false)

@@ -20,15 +20,16 @@ import java.time.LocalDateTime
 
 import controllers.actions.AuthenticateForPlayback
 import javax.inject.Inject
+import models.{CloseMode, UpdateMode, WhatNextMode}
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.DateFormatter
 import utils.print.PrintPlaybackHelper
-import views.html.declaration.PlaybackDeclaredAnswersView
+import views.html.declaration.{PlaybackDeclaredAnswersView, PlaybackFinalDeclaredAnswersView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,12 +37,13 @@ class PlaybackDeclaredAnswersController @Inject()(
                                                    override val messagesApi: MessagesApi,
                                                    actions: AuthenticateForPlayback,
                                                    val controllerComponents: MessagesControllerComponents,
-                                                   view: PlaybackDeclaredAnswersView,
+                                                   declaredAnswersView: PlaybackDeclaredAnswersView,
+                                                   finalDeclaredAnswersView: PlaybackFinalDeclaredAnswersView,
                                                    printPlaybackAnswersHelper: PrintPlaybackHelper,
                                                    dateFormatter: DateFormatter
-                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad() = actions.verifiedForUtr.async {
+  def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       val entities = printPlaybackAnswersHelper.entities(request.userAnswers)
@@ -58,7 +60,15 @@ class PlaybackDeclaredAnswersController @Inject()(
 
       val isAgent = request.user.affinityGroup == Agent
 
-      Future.successful(Ok(view(entities, trustDetails, tvn, crn, declarationSent, isAgent)))
+      Future.successful(Ok(
+        mode match {
+          case UpdateMode =>
+            declaredAnswersView(entities, trustDetails, tvn, crn, declarationSent, isAgent)
+          case CloseMode =>
+            val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)
+            finalDeclaredAnswersView(closeDate, entities, trustDetails, tvn, crn, declarationSent, isAgent)
+        }
+      ))
   }
 
 }
