@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package navigation
+package controllers.makechanges
 
 import connectors.TrustsStoreConnector
-import controllers.makechanges.MakeChangesRouter
 import models.UserAnswers
 import models.requests.DataRequest
 import pages.UTRPage

@@ -20,10 +20,10 @@ import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions.AuthenticateForPlayback
+import controllers.makechanges.MakeChangesQuestionController
 import forms.WhatIsNextFormProvider
 import models.Enumerable
 import models.pages.WhatIsNext
-import navigation.MakeChangesQuestionController
 import pages.WhatIsNextPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi

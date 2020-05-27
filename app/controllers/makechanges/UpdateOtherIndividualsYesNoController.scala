@@ -20,7 +20,6 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import navigation.MakeChangesQuestionController
 import pages.makechanges.AddOrUpdateOtherIndividualsYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}

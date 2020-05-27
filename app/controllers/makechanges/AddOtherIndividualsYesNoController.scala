@@ -21,7 +21,6 @@ import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import navigation.MakeChangesQuestionController
 import pages.makechanges._
 import play.api.data.Form
 import play.api.i18n.MessagesApi
