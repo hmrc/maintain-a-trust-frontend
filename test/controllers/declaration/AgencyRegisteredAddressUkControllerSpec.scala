@@ -18,8 +18,8 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.UKAddressFormProvider
-import models.{UKAddress, NormalMode, Mode}
-import pages.AgencyRegisteredAddressUkPage
+import models.{Mode, NormalMode, UKAddress}
+import pages.declaration.AgencyRegisteredAddressUkPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.declaration.AgencyRegisteredAddressUkView

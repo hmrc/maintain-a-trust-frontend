@@ -22,4 +22,5 @@ import play.api.mvc.WrappedRequest
 
 case class WhatNextRequest[T](request: DataRequest[T], whatIsNext: WhatIsNext) extends WrappedRequest[T](request){
   val userAnswers:UserAnswers = request.userAnswers
+  val user: User = request.user
 }

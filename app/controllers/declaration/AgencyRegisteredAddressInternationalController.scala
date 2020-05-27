@@ -19,8 +19,8 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.InternationalAddressFormProvider
-import models.Mode
-import pages.AgencyRegisteredAddressInternationalPage
+import models.InternationalAddress
+import pages.declaration.AgencyRegisteredAddressInternationalPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -39,12 +39,13 @@ class AgencyRegisteredAddressInternationalController @Inject()(
                                                                 formProvider: InternationalAddressFormProvider,
                                                                 countryOptions: CountryOptionsNonUK,
                                                                 val controllerComponents: MessagesControllerComponents,
-                                                                view: AgencyRegisteredAddressInternationalView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                                view: AgencyRegisteredAddressInternationalView,
+                                                                answerRequiredAction: WhatNextRequiredAction
+                                                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[InternationalAddress] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgencyRegisteredAddressInternationalPage) match {
@@ -52,15 +53,15 @@ class AgencyRegisteredAddressInternationalController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode, countryOptions.options))
+      Ok(view(preparedForm, countryOptions.options))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, mode, countryOptions.options))),
+          Future.successful(BadRequest(view(formWithErrors, countryOptions.options))),
 
         value => {
           for {
@@ -69,7 +70,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
                 .set(AgencyRegisteredAddressInternationalPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.declaration.routes.AgentDeclarationController.onPageLoad(mode))
+          } yield Redirect(controllers.declaration.routes.AgentDeclarationController.onPageLoad())
         }
       )
 

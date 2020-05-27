@@ -100,7 +100,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(CloseMode).url
+      redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
 
       application.stop()
     }

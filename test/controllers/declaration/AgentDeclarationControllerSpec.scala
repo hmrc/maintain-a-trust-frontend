@@ -18,9 +18,9 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.declaration.AgentDeclarationFormProvider
-import models.{AgentDeclaration, UKAddress, NormalMode, Mode}
-import pages.declaration.AgencyRegisteredAddressUkYesNoPage
-import pages.{AgencyRegisteredAddressUkPage, UTRPage}
+import models.{AgentDeclaration, Mode, NormalMode, UKAddress}
+import pages.declaration.{AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage}
+import pages.UTRPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}

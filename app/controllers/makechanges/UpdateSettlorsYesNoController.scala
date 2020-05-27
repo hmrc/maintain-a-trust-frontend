@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.{CloseMode, Mode}
+import models.pages.WhatIsNext
 import pages.UTRPage
 import pages.makechanges.UpdateSettlorsYesNoPage
 import play.api.data.Form
@@ -34,36 +34,37 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UpdateSettlorsYesNoController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        playbackRepository: PlaybackRepository,
-                                        trustConnector: TrustConnector,
-                                        actions: AuthenticateForPlayback,
-                                        yesNoFormProvider: YesNoFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateSettlorsYesNoView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                               override val messagesApi: MessagesApi,
+                                               playbackRepository: PlaybackRepository,
+                                               trustConnector: TrustConnector,
+                                               actions: AuthenticateForPlayback,
+                                               yesNoFormProvider: YesNoFormProvider,
+                                               val controllerComponents: MessagesControllerComponents,
+                                               view: UpdateSettlorsYesNoView,
+                                               answerRequiredAction: WhatNextRequiredAction
+                                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
 
       val preparedForm = request.userAnswers.get(UpdateSettlorsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode, prefix(mode)))
+      Ok(view(preparedForm, prefix(request.whatIsNext)))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, mode, prefix(mode)))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.whatIsNext)))),
 
         value => {
           for {
@@ -75,18 +76,18 @@ class UpdateSettlorsYesNoController @Inject()(
             protectorsExist <- trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.get(UTRPage).get)
           } yield {
               if(protectorsExist.value) {
-                Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad(mode))
+                Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
               } else {
-                Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad(mode))
+                Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
               }
           }
         }
       )
   }
 
-  private def prefix(mode: Mode): String = {
-    mode match {
-      case CloseMode => "updateSettlorsClosing"
+  private def prefix(whatIsNext: WhatIsNext): String = {
+    whatIsNext match {
+      case WhatIsNext.CloseTrust => "updateSettlorsClosing"
       case _ => "updateSettlors"
     }
   }

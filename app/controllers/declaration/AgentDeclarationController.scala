@@ -23,10 +23,10 @@ import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
 import models.http.TVNResponse
 import models.requests.{AgentUser, DataRequest}
-import models.{Address, AgentDeclaration, UserAnswers, Mode}
+import models.{Address, AgentDeclaration, UserAnswers}
 import pages._
 import pages.close.DateLastAssetSharedOutPage
-import pages.declaration.{AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
+import pages.declaration.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
 import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -46,12 +46,13 @@ class AgentDeclarationController @Inject()(
                                             formProvider: AgentDeclarationFormProvider,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: AgentDeclarationView,
-                                            service: DeclarationService
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                            service: DeclarationService,
+                                            answerRequiredAction: WhatNextRequiredAction
+                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[AgentDeclaration] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgentDeclarationPage) match {
@@ -59,15 +60,15 @@ class AgentDeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, request.whatIsNext))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future.successful(BadRequest(view(formWithErrors, request.whatIsNext))),
 
         declaration => {
           request.user match {
@@ -81,9 +82,8 @@ class AgentDeclarationController @Inject()(
                   agentUser,
                   utr,
                   agencyAddress,
-                  request.userAnswers.get(DateLastAssetSharedOutPage),
-                  mode
-                )
+                  request.userAnswers.get(DateLastAssetSharedOutPage)
+                )(request.request)
               }).getOrElse(handleError("Failed to get UTR or agency address"))
 
             case _ =>
@@ -97,8 +97,7 @@ class AgentDeclarationController @Inject()(
                                 agentUser: AgentUser,
                                 utr: String,
                                 agencyAddress: Address,
-                                endDate: Option[LocalDate],
-                                mode: Mode
+                                endDate: Option[LocalDate]
                                )(implicit request: DataRequest[AnyContent]) = {
 
     service.agentDeclaration(utr,
@@ -117,7 +116,7 @@ class AgentDeclarationController @Inject()(
               .flatMap(_.set(TVNPage, tvn))
           )
           _ <- playbackRepository.set(updatedAnswers)
-        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad(mode))
+        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
       case _ =>
         handleError("Failed to declare")
     }

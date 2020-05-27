@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import models.pages.WhatIsNext
+@import models.pages.WhatIsNext._
 @import controllers.declaration.routes._
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
@@ -25,13 +27,13 @@
         formHelper: FormWithCSRF
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], whatIsNext: WhatIsNext)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)} ${messages("declaration.title")}"
 ) {
 
-    @formHelper(action = AgentDeclarationController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = AgentDeclarationController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -94,7 +96,7 @@
 
         @{
             components.warning(
-                if(mode == CloseMode) {
+                if(whatIsNext == CloseTrust) {
                     "declaration.closing.agent"
                 } else {
                     "declaration.variation.agent"

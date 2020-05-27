@@ -19,12 +19,12 @@ package controllers
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
-import controllers.actions.AuthenticateForPlayback
-import models.pages.{Tag, WhatIsNext}
+import controllers.actions.{AuthenticateForPlayback, WhatNextRequiredAction}
+import models.pages.Tag
 import models.pages.Tag.InProgress
-import models.{CloseMode, CompletedMaintenanceTasks, Enumerable, NormalMode, Mode}
+import models.{CompletedMaintenanceTasks, Enumerable}
 import navigation.DeclareNoChange
-import pages.{UTRPage, WhatIsNextPage}
+import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import sections.Protectors
@@ -36,13 +36,14 @@ import views.html.VariationProgressView
 import scala.concurrent.{ExecutionContext, Future}
 
 class VariationProgressController @Inject()(
-                                      override val messagesApi: MessagesApi,
-                                      actions: AuthenticateForPlayback,
-                                      view: VariationProgressView,
-                                      val controllerComponents: MessagesControllerComponents,
-                                      config: FrontendAppConfig,
-                                      storeConnector: TrustsStoreConnector
-                                    )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
+                                             override val messagesApi: MessagesApi,
+                                             actions: AuthenticateForPlayback,
+                                             view: VariationProgressView,
+                                             val controllerComponents: MessagesControllerComponents,
+                                             config: FrontendAppConfig,
+                                             storeConnector: TrustsStoreConnector,
+                                             answerRequiredAction: WhatNextRequiredAction
+                                           )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
 
   lazy val notYetAvailable : String = controllers.routes.FeatureNotAvailableController.onPageLoad().url
 
@@ -112,7 +113,7 @@ class VariationProgressController @Inject()(
     TaskList(mandatorySections, optionalSections)
   }
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
     implicit request =>
 
       request.userAnswers.get(UTRPage) match {
@@ -123,35 +124,23 @@ class VariationProgressController @Inject()(
 
               val sections = taskList(tasks, utr)
 
-              request.userAnswers.get(WhatIsNextPage) match {
-                case Some(whatNext) =>
-                  val next = if (request.user.affinityGroup == Agent) {
-                    controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad(mode(whatNext)).url
-                  } else {
-                    controllers.declaration.routes.IndividualDeclarationController.onPageLoad(mode(whatNext)).url
-                  }
-
-                  Ok(view(utr,
-                    sections.mandatory,
-                    sections.other,
-                    request.user.affinityGroup,
-                    next,
-                    isAbleToDeclare = sections.isAbleToDeclare,
-                    mode(whatNext)
-                  ))
-                case _ =>
-                  Redirect(routes.WhatIsNextController.onPageLoad())
+              val next = if (request.user.affinityGroup == Agent) {
+                controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+              } else {
+                controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
               }
+
+              Ok(view(utr,
+                sections.mandatory,
+                sections.other,
+                request.user.affinityGroup,
+                next,
+                isAbleToDeclare = sections.isAbleToDeclare,
+                request.whatIsNext
+              ))
           }
         case _ =>
           Future.successful(Redirect(routes.UTRController.onPageLoad()))
       }
-  }
-
-  private def mode(whatNext: WhatIsNext): Mode = {
-    whatNext match {
-      case WhatIsNext.CloseTrust => CloseMode
-      case _ => NormalMode
-    }
   }
 }

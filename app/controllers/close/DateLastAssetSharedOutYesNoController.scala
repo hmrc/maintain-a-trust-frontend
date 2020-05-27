@@ -32,13 +32,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DateLastAssetSharedOutYesNoController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        playbackRepository: PlaybackRepository,
-                                        actions: AuthenticateForPlayback,
-                                        yesNoFormProvider: YesNoFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: DateLastAssetSharedOutYesNoView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                       override val messagesApi: MessagesApi,
+                                                       playbackRepository: PlaybackRepository,
+                                                       actions: AuthenticateForPlayback,
+                                                       yesNoFormProvider: YesNoFormProvider,
+                                                       val controllerComponents: MessagesControllerComponents,
+                                                       view: DateLastAssetSharedOutYesNoView
+                                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("dateLastAssetSharedOutYesNo")
 

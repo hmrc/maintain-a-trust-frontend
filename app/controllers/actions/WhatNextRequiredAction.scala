@@ -16,29 +16,22 @@
 
 package controllers.actions
 
-import javax.inject.Inject
-import models.pages.WhatIsNext
+import com.google.inject.Inject
 import models.requests.{DataRequest, WhatNextRequest}
 import pages.WhatIsNextPage
-import play.api.i18n.MessagesApi
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{ActionRefiner, Call, Result}
-import queries.Gettable
+import play.api.mvc.{ActionRefiner, Result}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class RequiredAnswer(answer: Gettable[WhatIsNext],
-                          redirect: Call = controllers.routes.SessionExpiredController.onPageLoad())
-
-class WhatNextRequiredAction @Inject()(required: RequiredAnswer)
-                                      (val executionContext: ExecutionContext, val messagesApi: MessagesApi)
+class WhatNextRequiredAction @Inject()(implicit val executionContext: ExecutionContext)
   extends ActionRefiner[DataRequest, WhatNextRequest] {
 
   override protected def refine[A](request: DataRequest[A]): Future[Either[Result, WhatNextRequest[A]]] = {
 
     request.userAnswers.get(WhatIsNextPage) match {
       case None =>
-        Future.successful(Left(Redirect(required.redirect)))
+        Future.successful(Left(Redirect(controllers.routes.SessionExpiredController.onPageLoad())))
       case Some(value) =>
         Future.successful(Right(WhatNextRequest(request, value)))
     }

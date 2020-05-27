@@ -20,8 +20,10 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.requests.DataRequest
-import models.{CloseMode, Mode, UserAnswers}
+import models.UserAnswers
+import models.pages.WhatIsNext
+import models.pages.WhatIsNext.CloseTrust
+import models.requests.WhatNextRequest
 import navigation.DeclareNoChange
 import pages.UTRPage
 import pages.makechanges._
@@ -35,41 +37,42 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AddOtherIndividualsYesNoController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        playbackRepository: PlaybackRepository,
-                                        actions: AuthenticateForPlayback,
-                                        yesNoFormProvider: YesNoFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: AddOtherIndividualsYesNoView,
-                                        trustStoreConnector: TrustsStoreConnector
-                                     )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport {
+                                                    override val messagesApi: MessagesApi,
+                                                    playbackRepository: PlaybackRepository,
+                                                    actions: AuthenticateForPlayback,
+                                                    yesNoFormProvider: YesNoFormProvider,
+                                                    val controllerComponents: MessagesControllerComponents,
+                                                    view: AddOtherIndividualsYesNoView,
+                                                    trustStoreConnector: TrustsStoreConnector,
+                                                    answerRequiredAction: WhatNextRequiredAction
+                                                  )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
 
       val preparedForm = request.userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode, prefix(mode)))
+      Ok(view(preparedForm, prefix(request.whatIsNext)))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, mode, prefix(mode)))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.whatIsNext)))),
         value => {
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            route <- determineRoute(updatedAnswers, mode)
+            route <- determineRoute(updatedAnswers, request.whatIsNext)
           } yield {
             route
           }
@@ -77,12 +80,12 @@ class AddOtherIndividualsYesNoController @Inject()(
     )
   }
 
-  private def determineRoute(updatedAnswers: UserAnswers, mode: Mode)
-                            (implicit request: DataRequest[AnyContent]) : Future[Result] = {
+  private def determineRoute(updatedAnswers: UserAnswers, whatIsNext: WhatIsNext)
+                            (implicit request: WhatNextRequest[AnyContent]) : Future[Result] = {
 
     MakeChangesRouter.decide(updatedAnswers) match {
-      case MakeChangesRouter.Declaration if mode != CloseMode =>
-        Future.successful(redirectToDeclaration(mode))
+      case MakeChangesRouter.Declaration if whatIsNext != CloseTrust =>
+        Future.successful(redirectToDeclaration()(request.request))
       case MakeChangesRouter.TaskList | MakeChangesRouter.Declaration =>
         request.userAnswers.get(UTRPage).map {
           utr =>
@@ -95,13 +98,13 @@ class AddOtherIndividualsYesNoController @Inject()(
           Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
         }
       case MakeChangesRouter.UnableToDecide =>
-        Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(mode)))
+        Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
     }
   }
 
-  private def prefix(mode: Mode): String = {
-    mode match {
-      case CloseMode => "addOtherIndividualsClosing"
+  private def prefix(whatIsNext: WhatIsNext): String = {
+    whatIsNext match {
+      case WhatIsNext.CloseTrust => "addOtherIndividualsClosing"
       case _ => "addOtherIndividuals"
     }
   }

@@ -19,7 +19,9 @@ package pages
 import models.UserAnswers
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
-import pages.declaration.{AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage, IndividualDeclarationPage}
+import pages.close.{DateLastAssetSharedOutPage, DateLastAssetSharedOutYesNoPage}
+import pages.declaration.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage, IndividualDeclarationPage}
+import pages.makechanges.{AddOrUpdateOtherIndividualsYesNoPage, AddOrUpdateProtectorYesNoPage, UpdateBeneficiariesYesNoPage, UpdateSettlorsYesNoPage, UpdateTrusteesYesNoPage}
 import play.api.libs.json.JsPath
 
 import scala.util.Try
@@ -32,20 +34,31 @@ case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
 
   override def cleanup(value: Option[WhatIsNext], userAnswers: UserAnswers): Try[UserAnswers] = {
     value match {
-      case Some(MakeChanges) =>
-        removeDeclareNoChangeData(userAnswers)
-      case Some(CloseTrust) =>
-        removeDeclareNoChangeData(userAnswers)
       case _ =>
-        super.cleanup(value, userAnswers)
+        removeDeclareData(userAnswers)
+        .flatMap(answers => removeMakeChangesData(answers))
+        .flatMap(answers => removeCloseTrustData(answers))
     }
   }
 
-  private def removeDeclareNoChangeData(userAnswers: UserAnswers): Try[UserAnswers] = {
+  private def removeDeclareData(userAnswers: UserAnswers): Try[UserAnswers] = {
     userAnswers.remove(AgencyRegisteredAddressUkYesNoPage)
       .flatMap(_.remove(AgencyRegisteredAddressUkPage))
       .flatMap(_.remove(AgencyRegisteredAddressInternationalPage))
       .flatMap(_.remove(AgentDeclarationPage))
       .flatMap(_.remove(IndividualDeclarationPage))
+  }
+
+  private def removeMakeChangesData(userAnswers: UserAnswers): Try[UserAnswers] = {
+    userAnswers.remove(UpdateTrusteesYesNoPage)
+      .flatMap(_.remove(UpdateBeneficiariesYesNoPage))
+      .flatMap(_.remove(UpdateSettlorsYesNoPage))
+      .flatMap(_.remove(AddOrUpdateProtectorYesNoPage))
+      .flatMap(_.remove(AddOrUpdateOtherIndividualsYesNoPage))
+  }
+
+  private def removeCloseTrustData(userAnswers: UserAnswers): Try[UserAnswers] = {
+    userAnswers.remove(DateLastAssetSharedOutYesNoPage)
+      .flatMap(_.remove(DateLastAssetSharedOutPage))
   }
 }

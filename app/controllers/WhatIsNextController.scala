@@ -67,10 +67,10 @@ class WhatIsNextController @Inject()(
             _ <- playbackRepository.set(updatedAnswers)
           } yield value match {
             case WhatIsNext.DeclareTheTrustIsUpToDate =>
-              redirectToDeclaration(NormalMode)
+              redirectToDeclaration()
 
             case WhatIsNext.MakeChanges =>
-              Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(NormalMode))
+              Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
 
             case _ =>
               Redirect(controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad())

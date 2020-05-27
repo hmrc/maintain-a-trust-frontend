@@ -18,8 +18,8 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.InternationalAddressFormProvider
-import models.{InternationalAddress, NormalMode, Mode}
-import pages.AgencyRegisteredAddressInternationalPage
+import models.{InternationalAddress, Mode, NormalMode}
+import pages.declaration.AgencyRegisteredAddressInternationalPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.countryoptions.CountryOptionsNonUK

@@ -29,15 +29,14 @@ class UpdateTrusteesYesNoViewSpec extends YesNoViewBehaviours {
 
   val messageKeyPrefix = "updateTrustees"
   val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-  val mode: Mode = NormalMode
-  lazy val onSubmit: Call = routes.UpdateTrusteesYesNoController.onSubmit(mode)
+  lazy val onSubmit: Call = routes.UpdateTrusteesYesNoController.onSubmit()
 
   "UpdateTrusteesYesNo view" must {
 
     val view = viewFor[UpdateTrusteesYesNoView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, mode, messageKeyPrefix)(fakeRequest, messages)
+      view.apply(form, messageKeyPrefix)(fakeRequest, messages)
 
     behave like normalPage(applyView(form), messageKeyPrefix)
 

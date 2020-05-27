@@ -17,7 +17,7 @@
 package pages.declaration
 
 import models.UserAnswers
-import pages.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, QuestionPage}
+import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 import scala.util.Try

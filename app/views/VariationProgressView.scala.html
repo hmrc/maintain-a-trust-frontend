@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@import models.Mode
-@import models.Mode._
+@import models.pages.WhatIsNext
+@import models.pages.WhatIsNext._
 @import controllers.declaration.routes._
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.auth.core.AffinityGroup
@@ -33,7 +33,7 @@
     affinityGroup : AffinityGroup,
     nextUrl : String,
     isAbleToDeclare: Boolean,
-    mode: Mode)(implicit request: Request[_], messages: Messages)
+    whatIsNext: WhatIsNext)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("variationProgress.title")
@@ -57,7 +57,7 @@
 
     @{
         components.warning(
-            if(mode == CloseMode) {
+            if(whatIsNext == CloseTrust) {
                 "variationProgress.closing"
             } else {
                 "variationProgress"
@@ -69,7 +69,7 @@
 
     @components.task_list("additional", optional, messages("variationProgress.subHeading.3"))
 
-    @if(mode == CloseMode) {
+    @if(whatIsNext == CloseTrust) {
         <p>@messages("variationProgress.p3")</p>
         <h2 id="task-list--heading--summary" class="app-task-list__section">@messages("variationProgress.subHeading.4")</h2>
         <p>
