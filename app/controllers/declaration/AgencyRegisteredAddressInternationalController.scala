@@ -39,13 +39,12 @@ class AgencyRegisteredAddressInternationalController @Inject()(
                                                                 formProvider: InternationalAddressFormProvider,
                                                                 countryOptions: CountryOptionsNonUK,
                                                                 val controllerComponents: MessagesControllerComponents,
-                                                                view: AgencyRegisteredAddressInternationalView,
-                                                                answerRequiredAction: WhatNextRequiredAction
+                                                                view: AgencyRegisteredAddressInternationalView
                                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form: Form[InternationalAddress] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
+  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgencyRegisteredAddressInternationalPage) match {
@@ -56,7 +55,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
       Ok(view(preparedForm, countryOptions.options))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
+  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(

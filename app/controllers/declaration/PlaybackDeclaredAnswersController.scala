@@ -40,11 +40,10 @@ class PlaybackDeclaredAnswersController @Inject()(
                                                    declaredAnswersView: PlaybackDeclaredAnswersView,
                                                    finalDeclaredAnswersView: PlaybackFinalDeclaredAnswersView,
                                                    printPlaybackAnswersHelper: PrintPlaybackHelper,
-                                                   dateFormatter: DateFormatter,
-                                                   answerRequiredAction: WhatNextRequiredAction
+                                                   dateFormatter: DateFormatter
                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
+  def onPageLoad(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
       val entities = printPlaybackAnswersHelper.entities(request.userAnswers)

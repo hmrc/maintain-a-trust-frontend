@@ -17,7 +17,7 @@
 package controllers.actions
 
 import com.google.inject.Inject
-import models.requests.{DataRequest, OptionalDataRequest}
+import models.requests.{DataRequest, OptionalDataRequest, WhatNextRequest}
 import play.api.mvc.{ActionBuilder, AnyContent}
 
 class AuthenticateForPlayback @Inject()(
@@ -25,7 +25,8 @@ class AuthenticateForPlayback @Inject()(
                                          getData: DataRetrievalAction,
                                          requireData: DataRequiredAction,
                                          playbackIdentifier: PlaybackIdentifierAction,
-                                         refreshedDataRetrieval: RefreshedDataRetrievalAction
+                                         refreshedDataRetrieval: RefreshedDataRetrievalAction,
+                                         requireWhatNextAnswer: WhatNextRequiredAction
                                        ) {
 
   def authWithSession: ActionBuilder[OptionalDataRequest, AnyContent] =
@@ -39,4 +40,7 @@ class AuthenticateForPlayback @Inject()(
 
   def refreshedData: ActionBuilder[DataRequest, AnyContent] =
     verifiedForUtr andThen refreshedDataRetrieval
+
+  def requireAnswer: ActionBuilder[WhatNextRequest, AnyContent] =
+    verifiedForUtr andThen requireWhatNextAnswer
 }

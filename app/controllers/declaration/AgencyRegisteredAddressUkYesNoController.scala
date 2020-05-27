@@ -36,13 +36,12 @@ class AgencyRegisteredAddressUkYesNoController @Inject()(
                                                           actions: AuthenticateForPlayback,
                                                           yesNoFormProvider: YesNoFormProvider,
                                                           val controllerComponents: MessagesControllerComponents,
-                                                          view: AgencyRegisteredAddressUkYesNoView,
-                                                          answerRequiredAction: WhatNextRequiredAction
+                                                          view: AgencyRegisteredAddressUkYesNoView
                                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("agencyRegisteredAddressUkYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
+  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgencyRegisteredAddressUkYesNoPage) match {
@@ -53,7 +52,7 @@ class AgencyRegisteredAddressUkYesNoController @Inject()(
       Ok(view(preparedForm, controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onSubmit()))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
+  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(

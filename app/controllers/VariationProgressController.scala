@@ -41,8 +41,7 @@ class VariationProgressController @Inject()(
                                              view: VariationProgressView,
                                              val controllerComponents: MessagesControllerComponents,
                                              config: FrontendAppConfig,
-                                             storeConnector: TrustsStoreConnector,
-                                             answerRequiredAction: WhatNextRequiredAction
+                                             storeConnector: TrustsStoreConnector
                                            )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
 
   lazy val notYetAvailable : String = controllers.routes.FeatureNotAvailableController.onPageLoad().url
@@ -113,7 +112,7 @@ class VariationProgressController @Inject()(
     TaskList(mandatorySections, optionalSections)
   }
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
+  def onPageLoad(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
       request.userAnswers.get(UTRPage) match {

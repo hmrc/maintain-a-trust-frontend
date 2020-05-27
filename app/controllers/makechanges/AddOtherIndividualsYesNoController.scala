@@ -43,11 +43,10 @@ class AddOtherIndividualsYesNoController @Inject()(
                                                     yesNoFormProvider: YesNoFormProvider,
                                                     val controllerComponents: MessagesControllerComponents,
                                                     view: AddOtherIndividualsYesNoView,
-                                                    trustStoreConnector: TrustsStoreConnector,
-                                                    answerRequiredAction: WhatNextRequiredAction
+                                                    trustStoreConnector: TrustsStoreConnector
                                                   )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
+  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
@@ -60,7 +59,7 @@ class AddOtherIndividualsYesNoController @Inject()(
       Ok(view(preparedForm, prefix(request.whatIsNext)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
+  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
@@ -104,7 +103,7 @@ class AddOtherIndividualsYesNoController @Inject()(
 
   private def prefix(whatIsNext: WhatIsNext): String = {
     whatIsNext match {
-      case WhatIsNext.CloseTrust => "addOtherIndividualsClosing"
+      case CloseTrust => "addOtherIndividualsClosing"
       case _ => "addOtherIndividuals"
     }
   }

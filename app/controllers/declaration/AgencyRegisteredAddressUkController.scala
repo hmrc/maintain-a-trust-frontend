@@ -37,13 +37,12 @@ class AgencyRegisteredAddressUkController @Inject()(
                                                      actions: AuthenticateForPlayback,
                                                      formProvider: UKAddressFormProvider,
                                                      val controllerComponents: MessagesControllerComponents,
-                                                     view: AgencyRegisteredAddressUkView,
-                                                     answerRequiredAction: WhatNextRequiredAction
+                                                     view: AgencyRegisteredAddressUkView
                                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form: Form[UKAddress] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
+  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgencyRegisteredAddressUkPage) match {
@@ -54,7 +53,7 @@ class AgencyRegisteredAddressUkController @Inject()(
       Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
+  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(

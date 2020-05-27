@@ -20,6 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
 import models.pages.WhatIsNext
+import models.pages.WhatIsNext.CloseTrust
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -37,11 +38,10 @@ class UpdateProtectorYesNoController @Inject()(
                                                 actions: AuthenticateForPlayback,
                                                 yesNoFormProvider: YesNoFormProvider,
                                                 val controllerComponents: MessagesControllerComponents,
-                                                view: UpdateProtectorYesNoView,
-                                                answerRequiredAction: WhatNextRequiredAction
+                                                view: UpdateProtectorYesNoView
                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
+  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
@@ -54,7 +54,7 @@ class UpdateProtectorYesNoController @Inject()(
       Ok(view(preparedForm, prefix(request.whatIsNext)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
+  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
@@ -79,7 +79,7 @@ class UpdateProtectorYesNoController @Inject()(
 
   private def prefix(whatIsNext: WhatIsNext): String = {
     whatIsNext match {
-      case WhatIsNext.CloseTrust => "updateProtectorClosing"
+      case CloseTrust => "updateProtectorClosing"
       case _ => "updateProtector"
     }
   }

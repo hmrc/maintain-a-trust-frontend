@@ -31,11 +31,10 @@ class PlaybackDraftAnswersController @Inject()(
                                                 actions: AuthenticateForPlayback,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: PlaybackDraftAnswersView,
-                                                printPlaybackAnswersHelper: PrintPlaybackHelper,
-                                                answerRequiredAction: WhatNextRequiredAction
+                                                printPlaybackAnswersHelper: PrintPlaybackHelper
                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
+  def onPageLoad(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
       val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)

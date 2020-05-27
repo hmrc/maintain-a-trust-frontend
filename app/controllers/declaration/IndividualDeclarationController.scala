@@ -44,13 +44,12 @@ class IndividualDeclarationController @Inject()(
                                                  formProvider: IndividualDeclarationFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: IndividualDeclarationView,
-                                                 service: DeclarationService,
-                                                 answerRequiredAction: WhatNextRequiredAction
+                                                 service: DeclarationService
                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form: Form[IndividualDeclaration] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
+  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(IndividualDeclarationPage) match {
@@ -61,7 +60,7 @@ class IndividualDeclarationController @Inject()(
       Ok(view(preparedForm, request.whatIsNext))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
+  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(

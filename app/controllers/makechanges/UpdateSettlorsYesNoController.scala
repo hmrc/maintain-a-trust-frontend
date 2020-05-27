@@ -21,6 +21,7 @@ import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import models.pages.WhatIsNext
+import models.pages.WhatIsNext.CloseTrust
 import pages.UTRPage
 import pages.makechanges.UpdateSettlorsYesNoPage
 import play.api.data.Form
@@ -40,11 +41,10 @@ class UpdateSettlorsYesNoController @Inject()(
                                                actions: AuthenticateForPlayback,
                                                yesNoFormProvider: YesNoFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
-                                               view: UpdateSettlorsYesNoView,
-                                               answerRequiredAction: WhatNextRequiredAction
+                                               view: UpdateSettlorsYesNoView
                                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
+  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
@@ -57,7 +57,7 @@ class UpdateSettlorsYesNoController @Inject()(
       Ok(view(preparedForm, prefix(request.whatIsNext)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction).async {
+  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
@@ -87,7 +87,7 @@ class UpdateSettlorsYesNoController @Inject()(
 
   private def prefix(whatIsNext: WhatIsNext): String = {
     whatIsNext match {
-      case WhatIsNext.CloseTrust => "updateSettlorsClosing"
+      case CloseTrust => "updateSettlorsClosing"
       case _ => "updateSettlors"
     }
   }
