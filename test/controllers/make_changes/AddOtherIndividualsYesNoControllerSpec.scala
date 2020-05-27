@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.TrustsStoreConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.{CompletedMaintenanceTasks, UpdateMode, WhatNextMode}
+import models.{CloseMode, CompletedMaintenanceTasks, UpdateMode, WhatNextMode}
 import pages.UTRPage
 import pages.makechanges._
 import play.api.test.FakeRequest
@@ -118,6 +118,41 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       val userAnswers = emptyUserAnswers
         .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, true).success.value
+        .set(UpdateBeneficiariesYesNoPage, false).success.value
+        .set(UpdateSettlorsYesNoPage, false).success.value
+        .set(AddOrUpdateProtectorYesNoPage, false).success.value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
+          .build()
+
+      val request =
+        FakeRequest(POST, addOtherIndividualsYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
+
+      when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value must include(
+        s"/maintain-a-trust/overview"
+      )
+
+      application.stop()
+    }
+
+    "redirect to overview when valid data is submitted, no has been selected for all questions and the user is closing the trust" in {
+
+      val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad(CloseMode).url
+
+      val utr = "0987654321"
+
+      val userAnswers = emptyUserAnswers
+        .set(UTRPage, utr).success.value
+        .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
         .set(AddOrUpdateProtectorYesNoPage, false).success.value

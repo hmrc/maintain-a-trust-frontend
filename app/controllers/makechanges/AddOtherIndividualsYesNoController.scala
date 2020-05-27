@@ -79,7 +79,7 @@ class AddOtherIndividualsYesNoController @Inject()(
 
   private def determineRoute(updatedAnswers: UserAnswers, mode: WhatNextMode)
                             (implicit request: DataRequest[AnyContent]) : Future[Result] = {
-    
+
     MakeChangesRouter.decide(updatedAnswers) match {
       case MakeChangesRouter.Declaration if mode != CloseMode =>
         Future.successful(redirectToDeclaration(mode))

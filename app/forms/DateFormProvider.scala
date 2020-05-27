@@ -24,7 +24,7 @@ import play.api.data.Form
 
 class DateFormProvider @Inject() extends Mappings {
 
-  def withPrefix(prefix: String, trustStartDate: LocalDate): Form[LocalDate] =
+  def withPrefixAndTrustStartDate(prefix: String, trustStartDate: LocalDate): Form[LocalDate] =
     Form(
       "value" -> localDate(
         invalidKey     = s"$prefix.error.invalid",

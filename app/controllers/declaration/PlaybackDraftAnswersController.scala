@@ -38,8 +38,7 @@ class PlaybackDraftAnswersController @Inject()(
                                                 actions: AuthenticateForPlayback,
                                                 val controllerComponents: MessagesControllerComponents,
                                                 view: PlaybackDraftAnswersView,
-                                                printPlaybackAnswersHelper: PrintPlaybackHelper,
-                                                dateFormatter: DateFormatter
+                                                printPlaybackAnswersHelper: PrintPlaybackHelper
                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {

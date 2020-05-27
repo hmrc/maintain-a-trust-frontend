@@ -16,19 +16,20 @@
 
 package controllers.declaration
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
 
 import base.SpecBase
 import models.http.NameType
-import models.{AgentDeclaration, UKAddress, UpdateMode, UserAnswers}
+import models.{AgentDeclaration, CloseMode, UKAddress, UpdateMode, UserAnswers}
 import pages.beneficiaries.charity._
+import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
 import utils.print.PrintPlaybackHelper
-import views.html.declaration.PlaybackDeclaredAnswersView
+import views.html.declaration.{PlaybackDeclaredAnswersView, PlaybackFinalDeclaredAnswersView}
 
 class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
@@ -39,27 +40,27 @@ class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
   "PlaybackDeclaredAnswersController Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    val playbackAnswers = UserAnswers("internalId")
+      .set(TVNPage, fakeTvn).success.value
+      .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
+      .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value
 
-      val playbackAnswers = UserAnswers("internalId")
-        .set(TVNPage, fakeTvn).success.value
-        .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
-        .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value
+      .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value
+      .set(CharityBeneficiaryDiscretionYesNoPage(0), true).success.value
+      .set(CharityBeneficiaryShareOfIncomePage(0), "10").success.value
+      .set(CharityBeneficiaryAddressYesNoPage(0), true).success.value
+      .set(CharityBeneficiaryAddressUKYesNoPage(0), true).success.value
+      .set(CharityBeneficiaryAddressPage(0), UKAddress("line1", "line2", None, None, "NE11NE")).success.value
 
-        .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value
-        .set(CharityBeneficiaryDiscretionYesNoPage(0), true).success.value
-        .set(CharityBeneficiaryShareOfIncomePage(0), "10").success.value
-        .set(CharityBeneficiaryAddressYesNoPage(0), true).success.value
-        .set(CharityBeneficiaryAddressUKYesNoPage(0), true).success.value
-        .set(CharityBeneficiaryAddressPage(0), UKAddress("line1", "line2", None, None, "NE11NE")).success.value
+      .set(CharityBeneficiaryNamePage(1), "Charity Beneficiary 2").success.value
+      .set(CharityBeneficiaryDiscretionYesNoPage(1), false).success.value
+      .set(CharityBeneficiaryAddressYesNoPage(1), false).success.value
 
-        .set(CharityBeneficiaryNamePage(1), "Charity Beneficiary 2").success.value
-        .set(CharityBeneficiaryDiscretionYesNoPage(1), false).success.value
-        .set(CharityBeneficiaryAddressYesNoPage(1), false).success.value
+    val entities = injector.instanceOf[PrintPlaybackHelper].entities(playbackAnswers)
 
-      val entities = injector.instanceOf[PrintPlaybackHelper].entities(playbackAnswers)
+    val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(playbackAnswers)
 
-      val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(playbackAnswers)
+    "return OK and the correct view for a GET when making changes" in {
 
       val application = applicationBuilder(userAnswers = Some(playbackAnswers), AffinityGroup.Agent).build()
 
@@ -73,6 +74,36 @@ class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
       contentAsString(result) mustEqual
         view(
+          entities,
+          trustDetails,
+          fakeTvn,
+          fakeCrn,
+          "27 January 2020",
+          isAgent = true
+        )(fakeRequest, messages).toString
+
+      application.stop()
+    }
+
+    "return OK and the correct view for a GET when closing" in {
+
+      val answers = playbackAnswers.set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
+
+      val closeDate = injector.instanceOf[PrintPlaybackHelper].closeDate(answers)
+
+      val application = applicationBuilder(userAnswers = Some(answers), AffinityGroup.Agent).build()
+
+      val request = FakeRequest(GET, routes.PlaybackDeclaredAnswersController.onPageLoad(CloseMode).url)
+
+      val result = route(application, request).value
+
+      val view = application.injector.instanceOf[PlaybackFinalDeclaredAnswersView]
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(
+          closeDate,
           entities,
           trustDetails,
           fakeTvn,

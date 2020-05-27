@@ -39,11 +39,13 @@ class DateLastAssetSharedOutController @Inject()(
                                        view: DateLastAssetSharedOutView
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
+  val prefix: String = "dateLastAssetSharedOut"
+
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       request.userAnswers.get(StartDatePage).map { startDate =>
-        val form = formProvider.withPrefix("dateLastAssetSharedOut", startDate)
+        val form = formProvider.withPrefixAndTrustStartDate(prefix, startDate)
 
         val preparedForm = request.userAnswers.get(DateLastAssetSharedOutPage) match {
           case None => form
@@ -58,7 +60,7 @@ class DateLastAssetSharedOutController @Inject()(
     implicit request =>
 
       request.userAnswers.get(StartDatePage).map { startDate =>
-        val form = formProvider.withPrefix("dateLastAssetSharedOut", startDate)
+        val form = formProvider.withPrefixAndTrustStartDate(prefix, startDate)
 
         form.bindFromRequest().fold(
           formWithErrors =>
