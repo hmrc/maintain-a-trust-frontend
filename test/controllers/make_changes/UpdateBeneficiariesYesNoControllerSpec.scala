@@ -19,6 +19,7 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.{NormalMode, Mode}
 import pages.makechanges.UpdateBeneficiariesYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -27,9 +28,10 @@ import views.html.makechanges.UpdateBeneficiariesYesNoView
 class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("updateBeneficiaries")
-
-  lazy val updateBeneficiariesYesNoRoute = routes.UpdateBeneficiariesYesNoController.onPageLoad().url
+  val prefix: String = "updateBeneficiaries"
+  val form = formProvider.withPrefix(prefix)
+  val mode: Mode = NormalMode
+  lazy val updateBeneficiariesYesNoRoute = routes.UpdateBeneficiariesYesNoController.onPageLoad(mode).url
 
   "UpdateBeneficiariesYesNo Controller" must {
 
@@ -46,7 +48,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -66,7 +68,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -84,7 +86,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.UpdateSettlorsYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.UpdateSettlorsYesNoController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -106,7 +108,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

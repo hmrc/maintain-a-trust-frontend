@@ -21,7 +21,9 @@ import java.time.LocalDateTime
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
+import models.Mode
 import models.http.TVNResponse
+import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.IndividualDeclarationPage
 import pages.{SubmissionDatePage, TVNPage, UTRPage}
 import play.api.data.Form
@@ -47,7 +49,7 @@ class IndividualDeclarationController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(IndividualDeclarationPage) match {
@@ -55,22 +57,22 @@ class IndividualDeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, controllers.declaration.routes.IndividualDeclarationController.onSubmit()))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.IndividualDeclarationController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors, mode))),
 
         declaration => {
           request.userAnswers.get(UTRPage) match {
             case None =>
               Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
             case Some(utr) =>
-              service.individualDeclareNoChange(utr, declaration) flatMap {
+              service.individualDeclaration(utr, declaration, request.userAnswers.get(DateLastAssetSharedOutPage)) flatMap {
                 case TVNResponse(tvn) =>
                   for {
                     updatedAnswers <- Future.fromTry(
@@ -80,7 +82,7 @@ class IndividualDeclarationController @Inject()(
                         .flatMap(_.set(TVNPage, tvn))
                     )
                     _ <- playbackRepository.set(updatedAnswers)
-                  } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+                  } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad(mode))
                 case _ =>
                   Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
               }

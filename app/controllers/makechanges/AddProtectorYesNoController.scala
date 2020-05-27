@@ -19,6 +19,7 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
+import models.{CloseMode, Mode}
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -39,25 +40,27 @@ class AddProtectorYesNoController @Inject()(
                                         view: AddProtectorYesNoView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("addProtector")
-
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
 
       val preparedForm = request.userAnswers.get(AddOrUpdateProtectorYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, mode, prefix(mode)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, mode, prefix(mode)))),
 
         value => {
           for {
@@ -67,11 +70,17 @@ class AddProtectorYesNoController @Inject()(
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
-            Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
+            Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad(mode))
           }
         }
       )
+  }
 
+  private def prefix(mode: Mode): String = {
+    mode match {
+      case CloseMode => "addProtectorClosing"
+      case _ => "addProtector"
+    }
   }
 
 }

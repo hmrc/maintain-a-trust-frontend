@@ -39,6 +39,11 @@ p.font-xsmall {
   display: block;
 }
 
+.bullet-list {
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
 @media (min-width: 40.0625em) {
   .govuk-list > li {
     margin-bottom: 15px;

@@ -18,6 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.YesNoFormProvider
+import models.{NormalMode, Mode}
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -28,9 +29,9 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
   val form = formProvider.withPrefix("agencyRegisteredAddressUkYesNo")
-
-  lazy val agencyRegisteredAddressUkYesNoRoute = routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
-  lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit()
+  val mode: Mode = NormalMode
+  lazy val agencyRegisteredAddressUkYesNoRoute = routes.AgencyRegisteredAddressUkYesNoController.onPageLoad(mode).url
+  lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit(mode)
 
   "AgencyRegisteredAddressUkYesNo Controller" must {
 
@@ -85,7 +86,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AgencyRegisteredAddressUkController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.AgencyRegisteredAddressUkController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -103,7 +104,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AgencyRegisteredAddressInternationalController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.AgencyRegisteredAddressInternationalController.onPageLoad(mode).url
 
       application.stop()
     }

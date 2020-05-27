@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.TrustsStoreConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.CompletedMaintenanceTasks
+import models.{CloseMode, CompletedMaintenanceTasks, NormalMode, Mode}
 import pages.UTRPage
 import pages.makechanges._
 import play.api.test.FakeRequest
@@ -35,11 +35,14 @@ import scala.concurrent.Future
 class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("addOtherIndividuals")
+  val prefix: String = "addOtherIndividuals"
+  val form = formProvider.withPrefix(prefix)
 
   val mockConnector = mock[TrustsStoreConnector]
 
-  lazy val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad().url
+  val mode: Mode = NormalMode
+
+  lazy val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad(mode).url
 
   "AddOtherIndividualsYesNo Controller" must {
 
@@ -56,7 +59,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -76,7 +79,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -103,7 +106,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.declaration.routes.IndividualDeclarationController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -115,6 +118,41 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       val userAnswers = emptyUserAnswers
         .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, true).success.value
+        .set(UpdateBeneficiariesYesNoPage, false).success.value
+        .set(UpdateSettlorsYesNoPage, false).success.value
+        .set(AddOrUpdateProtectorYesNoPage, false).success.value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
+          .build()
+
+      val request =
+        FakeRequest(POST, addOtherIndividualsYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
+
+      when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value must include(
+        s"/maintain-a-trust/overview"
+      )
+
+      application.stop()
+    }
+
+    "redirect to overview when valid data is submitted, no has been selected for all questions and the user is closing the trust" in {
+
+      val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad(CloseMode).url
+
+      val utr = "0987654321"
+
+      val userAnswers = emptyUserAnswers
+        .set(UTRPage, utr).success.value
+        .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
         .set(AddOrUpdateProtectorYesNoPage, false).success.value
@@ -158,7 +196,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

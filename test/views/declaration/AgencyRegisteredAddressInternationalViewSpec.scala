@@ -17,6 +17,7 @@
 package views.declaration
 
 import forms.InternationalAddressFormProvider
+import models.NormalMode
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.InternationalAddressViewBehaviours
@@ -33,7 +34,7 @@ class AgencyRegisteredAddressInternationalViewSpec extends InternationalAddressV
     val view = viewFor[AgencyRegisteredAddressInternationalView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, Seq())(fakeRequest, messages)
+      view.apply(form, NormalMode, Seq())(fakeRequest, messages)
 
     behave like normalPage(applyView(form), messageKeyPrefix)
 

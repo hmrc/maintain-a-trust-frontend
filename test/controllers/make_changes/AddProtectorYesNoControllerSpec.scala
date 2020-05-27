@@ -19,6 +19,7 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.{NormalMode, Mode}
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -27,9 +28,12 @@ import views.html.makechanges.AddProtectorYesNoView
 class AddProtectorYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("addProtector")
+  val prefix: String = "addProtector"
+  val form = formProvider.withPrefix(prefix)
 
-  lazy val addProtectorYesNoRoute = routes.AddProtectorYesNoController.onPageLoad().url
+  val mode: Mode = NormalMode
+
+  lazy val addProtectorYesNoRoute = routes.AddProtectorYesNoController.onPageLoad(mode).url
 
   "AddProtectorYesNo Controller" must {
 
@@ -46,7 +50,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -66,7 +70,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -84,7 +88,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AddOtherIndividualsYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.AddOtherIndividualsYesNoController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -106,7 +110,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

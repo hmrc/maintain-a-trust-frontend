@@ -24,13 +24,13 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, prefix: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("updateProtector.title")}"
+    title = s"${errorPrefix(form)} ${messages(s"$prefix.title")}"
 ) {
 
-    @formHelper(action = UpdateProtectorYesNoController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = UpdateProtectorYesNoController.onSubmit(mode), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -38,7 +38,7 @@
 
         @components.input_yes_no(
             field = form("value"),
-            label = messages("updateProtector.heading"),
+            label = messages(s"$prefix.heading"),
             legendClass = Some("heading-large"),
             legendAsHeading = true
         )

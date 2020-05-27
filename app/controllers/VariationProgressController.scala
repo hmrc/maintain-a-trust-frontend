@@ -20,11 +20,11 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions.AuthenticateForPlayback
-import models.pages.Tag
+import models.pages.{Tag, WhatIsNext}
 import models.pages.Tag.InProgress
-import models.{CompletedMaintenanceTasks, Enumerable}
+import models.{CloseMode, CompletedMaintenanceTasks, Enumerable, NormalMode, Mode}
 import navigation.DeclareNoChange
-import pages.UTRPage
+import pages.{UTRPage, WhatIsNextPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import sections.Protectors
@@ -123,23 +123,35 @@ class VariationProgressController @Inject()(
 
               val sections = taskList(tasks, utr)
 
-              val next = if (request.user.affinityGroup == Agent) {
-                controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
-              } else {
-                controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+              request.userAnswers.get(WhatIsNextPage) match {
+                case Some(whatNext) =>
+                  val next = if (request.user.affinityGroup == Agent) {
+                    controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad(mode(whatNext)).url
+                  } else {
+                    controllers.declaration.routes.IndividualDeclarationController.onPageLoad(mode(whatNext)).url
+                  }
+
+                  Ok(view(utr,
+                    sections.mandatory,
+                    sections.other,
+                    request.user.affinityGroup,
+                    next,
+                    isAbleToDeclare = sections.isAbleToDeclare,
+                    mode(whatNext)
+                  ))
+                case _ =>
+                  Redirect(routes.WhatIsNextController.onPageLoad())
               }
-
-              Ok(view(utr,
-                sections.mandatory,
-                sections.other,
-                request.user.affinityGroup,
-                next,
-                isAbleToDeclare = sections.isAbleToDeclare
-              ))
-
           }
         case _ =>
           Future.successful(Redirect(routes.UTRController.onPageLoad()))
       }
+  }
+
+  private def mode(whatNext: WhatIsNext): Mode = {
+    whatNext match {
+      case WhatIsNext.CloseTrust => CloseMode
+      case _ => NormalMode
+    }
   }
 }

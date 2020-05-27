@@ -18,7 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.declaration.AgentDeclarationFormProvider
-import models.{AgentDeclaration, UKAddress}
+import models.{AgentDeclaration, UKAddress, NormalMode, Mode}
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import pages.{AgencyRegisteredAddressUkPage, UTRPage}
 import play.api.data.Form
@@ -36,8 +36,8 @@ class AgentDeclarationControllerSpec extends SpecBase {
   val formProvider = new AgentDeclarationFormProvider()
   val form: Form[AgentDeclaration] = formProvider()
   val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
-
-  lazy val onSubmit: Call = routes.AgentDeclarationController.onSubmit()
+  val mode: Mode = NormalMode
+  lazy val onSubmit: Call = routes.AgentDeclarationController.onSubmit(mode)
 
   "Agent Declaration Controller" must {
 
@@ -45,7 +45,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val request = FakeRequest(GET, routes.AgentDeclarationController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.AgentDeclarationController.onPageLoad(mode).url)
 
       val result = route(application, request).value
 
@@ -54,7 +54,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, onSubmit)(fakeRequest, messages).toString
+        view(form, mode)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -87,7 +87,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe controllers.declaration.routes.ConfirmationController.onPageLoad().url
+      redirectLocation(result).value mustBe controllers.declaration.routes.ConfirmationController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -97,7 +97,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       val request =
-        FakeRequest(POST, routes.AgentDeclarationController.onPageLoad().url)
+        FakeRequest(POST, routes.AgentDeclarationController.onPageLoad(mode).url)
           .withFormUrlEncodedBody(("firstName", ""), ("lastName", ""), ("agencyName", ""), ("telephoneNumber", ""), ("crn", ""))
 
       val boundForm = form.bind(Map("firstName" -> "", "lastName" -> "", "agencyName" -> "", "telephoneNumber" -> "", "crn" -> ""))
@@ -109,7 +109,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, onSubmit)(fakeRequest, messages).toString
+        view(boundForm, mode)(fakeRequest, messages).toString
 
       application.stop()
     }

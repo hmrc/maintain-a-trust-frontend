@@ -20,24 +20,26 @@ import base.SpecBase
 import connectors.TrustConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.{NormalMode, Mode}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import pages.UTRPage
 import pages.makechanges.UpdateSettlorsYesNoPage
 import play.api.inject.bind
 import play.api.libs.json.JsBoolean
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.makechanges.UpdateSettlorsYesNoView
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import pages.UTRPage
 
 import scala.concurrent.Future
 
 class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("updateSettlors")
-
-  lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad().url
+  val prefix: String = "updateSettlors"
+  val form = formProvider.withPrefix(prefix)
+  val mode: Mode = NormalMode
+  lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad(mode).url
 
   "UpdateSettlorsYesNo Controller" must {
 
@@ -54,7 +56,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -74,7 +76,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -101,7 +103,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AddProtectorYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.AddProtectorYesNoController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -128,7 +130,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.UpdateProtectorYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.UpdateProtectorYesNoController.onPageLoad(mode).url
 
       application.stop()
     }
@@ -150,7 +152,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

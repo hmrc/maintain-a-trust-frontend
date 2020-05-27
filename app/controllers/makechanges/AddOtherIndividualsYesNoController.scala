@@ -17,12 +17,11 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.UserAnswers
 import models.requests.DataRequest
+import models.{CloseMode, Mode, UserAnswers}
 import navigation.DeclareNoChange
 import pages.UTRPage
 import pages.makechanges._
@@ -42,34 +41,35 @@ class AddOtherIndividualsYesNoController @Inject()(
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: AddOtherIndividualsYesNoView,
-                                        config: FrontendAppConfig,
                                         trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("addOtherIndividuals")
-
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
 
       val preparedForm = request.userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, mode, prefix(mode)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, mode, prefix(mode)))),
         value => {
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            route <- determineRoute(updatedAnswers)
+            route <- determineRoute(updatedAnswers, mode)
           } yield {
             route
           }
@@ -77,11 +77,13 @@ class AddOtherIndividualsYesNoController @Inject()(
     )
   }
 
-  private def determineRoute(updatedAnswers: UserAnswers)(implicit request: DataRequest[AnyContent]) : Future[Result] = {
+  private def determineRoute(updatedAnswers: UserAnswers, mode: Mode)
+                            (implicit request: DataRequest[AnyContent]) : Future[Result] = {
+
     MakeChangesRouter.decide(updatedAnswers) match {
-      case MakeChangesRouter.Declaration =>
-        Future.successful(redirectToDeclaration())
-      case MakeChangesRouter.TaskList =>
+      case MakeChangesRouter.Declaration if mode != CloseMode =>
+        Future.successful(redirectToDeclaration(mode))
+      case MakeChangesRouter.TaskList | MakeChangesRouter.Declaration =>
         request.userAnswers.get(UTRPage).map {
           utr =>
             for {
@@ -93,7 +95,14 @@ class AddOtherIndividualsYesNoController @Inject()(
           Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
         }
       case MakeChangesRouter.UnableToDecide =>
-        Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
+        Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(mode)))
+    }
+  }
+
+  private def prefix(mode: Mode): String = {
+    mode match {
+      case CloseMode => "addOtherIndividualsClosing"
+      case _ => "addOtherIndividuals"
     }
   }
 }

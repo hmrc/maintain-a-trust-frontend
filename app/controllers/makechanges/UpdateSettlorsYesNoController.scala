@@ -20,6 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
+import models.{CloseMode, Mode}
 import pages.UTRPage
 import pages.makechanges.UpdateSettlorsYesNoPage
 import play.api.data.Form
@@ -42,25 +43,27 @@ class UpdateSettlorsYesNoController @Inject()(
                                         view: UpdateSettlorsYesNoView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateSettlors")
-
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
 
       val preparedForm = request.userAnswers.get(UpdateSettlorsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, mode, prefix(mode)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, mode, prefix(mode)))),
 
         value => {
           for {
@@ -72,14 +75,20 @@ class UpdateSettlorsYesNoController @Inject()(
             protectorsExist <- trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.get(UTRPage).get)
           } yield {
               if(protectorsExist.value) {
-                Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
+                Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad(mode))
               } else {
-                Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
+                Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad(mode))
               }
           }
         }
       )
+  }
 
+  private def prefix(mode: Mode): String = {
+    mode match {
+      case CloseMode => "updateSettlorsClosing"
+      case _ => "updateSettlors"
+    }
   }
 
 }

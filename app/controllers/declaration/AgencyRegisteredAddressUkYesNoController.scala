@@ -19,6 +19,7 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
+import models.Mode
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -41,7 +42,7 @@ class AgencyRegisteredAddressUkYesNoController @Inject()(
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("agencyRegisteredAddressUkYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgencyRegisteredAddressUkYesNoPage) match {
@@ -49,15 +50,15 @@ class AgencyRegisteredAddressUkYesNoController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onSubmit()))
+      Ok(view(preparedForm, controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onSubmit(mode)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onSubmit(mode)))),
 
         value => {
           for {
@@ -68,9 +69,9 @@ class AgencyRegisteredAddressUkYesNoController @Inject()(
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
             if (value) {
-              Redirect(controllers.declaration.routes.AgencyRegisteredAddressUkController.onPageLoad())
+              Redirect(controllers.declaration.routes.AgencyRegisteredAddressUkController.onPageLoad(mode))
             } else {
-              Redirect(controllers.declaration.routes.AgencyRegisteredAddressInternationalController.onPageLoad())
+              Redirect(controllers.declaration.routes.AgencyRegisteredAddressInternationalController.onPageLoad(mode))
             }
           }
         }

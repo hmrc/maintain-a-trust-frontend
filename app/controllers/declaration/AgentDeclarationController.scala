@@ -16,15 +16,16 @@
 
 package controllers.declaration
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
 import models.http.TVNResponse
 import models.requests.{AgentUser, DataRequest}
-import models.{Address, AgentDeclaration, UserAnswers}
+import models.{Address, AgentDeclaration, UserAnswers, Mode}
 import pages._
+import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.{AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
 import play.api.Logger
 import play.api.data.Form
@@ -50,7 +51,7 @@ class AgentDeclarationController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgentDeclarationPage) match {
@@ -58,15 +59,15 @@ class AgentDeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, controllers.declaration.routes.AgentDeclarationController.onSubmit()))
+      Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.AgentDeclarationController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors, mode))),
 
         declaration => {
           request.user match {
@@ -75,7 +76,14 @@ class AgentDeclarationController @Inject()(
                 utr <- request.userAnswers.get(UTRPage)
                 agencyAddress <- getAgencyRegisteredAddress(request.userAnswers)
               } yield {
-                submitDeclaration(declaration, agentUser, utr, agencyAddress)
+                submitDeclaration(
+                  declaration,
+                  agentUser,
+                  utr,
+                  agencyAddress,
+                  request.userAnswers.get(DateLastAssetSharedOutPage),
+                  mode
+                )
               }).getOrElse(handleError("Failed to get UTR or agency address"))
 
             case _ =>
@@ -88,14 +96,17 @@ class AgentDeclarationController @Inject()(
   private def submitDeclaration(declaration: AgentDeclaration,
                                 agentUser: AgentUser,
                                 utr: String,
-                                agencyAddress: Address)
-                               (implicit request: DataRequest[AnyContent]) = {
+                                agencyAddress: Address,
+                                endDate: Option[LocalDate],
+                                mode: Mode
+                               )(implicit request: DataRequest[AnyContent]) = {
 
-    service.agentDeclareNoChange(utr,
+    service.agentDeclaration(utr,
       declaration,
       agentUser.agentReferenceNumber,
       agencyAddress,
-      declaration.agencyName
+      declaration.agencyName,
+      endDate
     ) flatMap {
       case TVNResponse(tvn) =>
         for {
@@ -106,7 +117,7 @@ class AgentDeclarationController @Inject()(
               .flatMap(_.set(TVNPage, tvn))
           )
           _ <- playbackRepository.set(updatedAnswers)
-        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad(mode))
       case _ =>
         handleError("Failed to declare")
     }

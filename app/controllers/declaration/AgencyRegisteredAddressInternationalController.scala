@@ -19,6 +19,7 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.InternationalAddressFormProvider
+import models.Mode
 import pages.AgencyRegisteredAddressInternationalPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -43,7 +44,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgencyRegisteredAddressInternationalPage) match {
@@ -51,15 +52,15 @@ class AgencyRegisteredAddressInternationalController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, countryOptions.options))
+      Ok(view(preparedForm, mode, countryOptions.options))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, countryOptions.options))),
+          Future.successful(BadRequest(view(formWithErrors, mode, countryOptions.options))),
 
         value => {
           for {
@@ -68,7 +69,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
                 .set(AgencyRegisteredAddressInternationalPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.declaration.routes.AgentDeclarationController.onPageLoad())
+          } yield Redirect(controllers.declaration.routes.AgentDeclarationController.onPageLoad(mode))
         }
       )
 

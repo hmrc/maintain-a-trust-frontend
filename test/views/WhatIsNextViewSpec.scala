@@ -16,7 +16,6 @@
 
 package views
 
-import controllers.routes
 import forms.WhatIsNextFormProvider
 import models.pages.WhatIsNext
 import play.api.data.Form
