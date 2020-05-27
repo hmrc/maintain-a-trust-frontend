@@ -85,7 +85,7 @@ class VariationProgressControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false)(fakeRequest, messages).toString
+        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, UpdateMode)(fakeRequest, messages).toString
 
       application.stop()
     }

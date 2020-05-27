@@ -72,6 +72,8 @@ GET        /feature-not-available                       controllers.FeatureNotAv
 
 GET        /last-declaration                            controllers.PlaybackAnswersController.onPageLoad()
 
+GET        /draft-declaration                           controllers.declaration.PlaybackDraftAnswersController.onPageLoad()
+
 GET        /make-changes/declared-updates               controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad(mode: WhatNextMode = UpdateMode)
 GET        /close/declared-updates                      controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad(mode: WhatNextMode = CloseMode)
 

@@ -136,7 +136,8 @@ class VariationProgressController @Inject()(
                     sections.other,
                     request.user.affinityGroup,
                     next,
-                    isAbleToDeclare = sections.isAbleToDeclare
+                    isAbleToDeclare = sections.isAbleToDeclare,
+                    mode(whatNext)
                   ))
                 case _ =>
                   Redirect(routes.WhatIsNextController.onPageLoad())

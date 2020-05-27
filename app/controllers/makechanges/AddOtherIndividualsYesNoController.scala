@@ -21,7 +21,7 @@ import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import models.requests.DataRequest
-import models.{UserAnswers, WhatNextMode}
+import models.{CloseMode, UpdateMode, UserAnswers, WhatNextMode}
 import navigation.DeclareNoChange
 import pages.UTRPage
 import pages.makechanges._
@@ -44,25 +44,27 @@ class AddOtherIndividualsYesNoController @Inject()(
                                         trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("addOtherIndividuals")
-
   def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
 
       val preparedForm = request.userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode, prefix(mode)))
   }
 
   def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
+
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future.successful(BadRequest(view(formWithErrors, mode, prefix(mode)))),
         value => {
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
@@ -77,10 +79,11 @@ class AddOtherIndividualsYesNoController @Inject()(
 
   private def determineRoute(updatedAnswers: UserAnswers, mode: WhatNextMode)
                             (implicit request: DataRequest[AnyContent]) : Future[Result] = {
+    
     MakeChangesRouter.decide(updatedAnswers) match {
-      case MakeChangesRouter.Declaration =>
+      case MakeChangesRouter.Declaration if mode != CloseMode =>
         Future.successful(redirectToDeclaration(mode))
-      case MakeChangesRouter.TaskList =>
+      case MakeChangesRouter.TaskList | MakeChangesRouter.Declaration =>
         request.userAnswers.get(UTRPage).map {
           utr =>
             for {
@@ -93,6 +96,13 @@ class AddOtherIndividualsYesNoController @Inject()(
         }
       case MakeChangesRouter.UnableToDecide =>
         Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(mode)))
+    }
+  }
+
+  private def prefix(mode: WhatNextMode): String = {
+    mode match {
+      case UpdateMode => "addOtherIndividuals"
+      case CloseMode => "addOtherIndividualsClosing"
     }
   }
 }

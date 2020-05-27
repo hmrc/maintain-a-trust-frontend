@@ -28,7 +28,8 @@ import views.html.makechanges.UpdateTrusteesYesNoView
 class UpdateTrusteesYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("updateTrustees")
+  val prefix: String = "updateTrustees"
+  val form = formProvider.withPrefix(prefix)
   val mode: WhatNextMode = UpdateMode
   lazy val updateTrusteesYesNoRoute = routes.UpdateTrusteesYesNoController.onPageLoad(mode).url
 
@@ -47,7 +48,7 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, mode)(fakeRequest, messages).toString
+        view(form, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -67,7 +68,7 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), mode)(fakeRequest, messages).toString
+        view(form.fill(true), mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -107,7 +108,7 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, mode)(fakeRequest, messages).toString
+        view(boundForm, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

@@ -35,7 +35,8 @@ import scala.concurrent.Future
 class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("addOtherIndividuals")
+  val prefix: String = "addOtherIndividuals"
+  val form = formProvider.withPrefix(prefix)
 
   val mockConnector = mock[TrustsStoreConnector]
 
@@ -58,7 +59,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, mode)(fakeRequest, messages).toString
+        view(form, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -78,7 +79,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), mode)(fakeRequest, messages).toString
+        view(form.fill(true), mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -160,7 +161,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, mode)(fakeRequest, messages).toString
+        view(boundForm, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

@@ -19,7 +19,7 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.WhatNextMode
+import models.{CloseMode, UpdateMode, WhatNextMode}
 import pages.makechanges.UpdateTrusteesYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -40,25 +40,27 @@ class UpdateTrusteesYesNoController @Inject()(
                                         view: UpdateTrusteesYesNoView
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateTrustees")
-
   def onPageLoad(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
 
       val preparedForm = request.userAnswers.get(UpdateTrusteesYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode, prefix(mode)))
   }
 
   def onSubmit(mode: WhatNextMode): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
+
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future.successful(BadRequest(view(formWithErrors, mode, prefix(mode)))),
 
         value => {
           for {
@@ -73,6 +75,13 @@ class UpdateTrusteesYesNoController @Inject()(
         }
       )
 
+  }
+
+  private def prefix(mode: WhatNextMode): String = {
+    mode match {
+      case UpdateMode => "updateTrustees"
+      case CloseMode => "updateTrusteesClosing"
+    }
   }
 
 }

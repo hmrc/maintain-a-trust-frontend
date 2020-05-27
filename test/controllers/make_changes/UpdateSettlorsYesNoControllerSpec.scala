@@ -36,7 +36,8 @@ import scala.concurrent.Future
 class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("updateSettlors")
+  val prefix: String = "updateSettlors"
+  val form = formProvider.withPrefix(prefix)
   val mode: WhatNextMode = UpdateMode
   lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad(mode).url
 
@@ -55,7 +56,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, mode)(fakeRequest, messages).toString
+        view(form, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -75,7 +76,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), mode)(fakeRequest, messages).toString
+        view(form.fill(true), mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -151,7 +152,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, mode)(fakeRequest, messages).toString
+        view(boundForm, mode, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

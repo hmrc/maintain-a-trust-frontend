@@ -24,10 +24,10 @@
         formHelper: FormWithCSRF
 )
 
-@(form: Form[_], mode: WhatNextMode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: WhatNextMode, prefix: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("updateTrustees.title")}"
+    title = s"${errorPrefix(form)} ${messages(s"$prefix.title")}"
 ) {
 
     @formHelper(action = UpdateTrusteesYesNoController.onSubmit(mode), 'autoComplete -> "off") {
@@ -38,7 +38,7 @@
 
         @components.input_yes_no(
             field = form("value"),
-            label = messages("updateTrustees.heading"),
+            label = messages(s"$prefix.heading"),
             legendClass = Some("heading-large"),
             legendAsHeading = true
         )

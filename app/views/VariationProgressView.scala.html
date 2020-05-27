@@ -14,7 +14,8 @@
  * limitations under the License.
  *@
 
-@import models.Mode
+@import models.WhatNextMode
+@import models.WhatNextMode._
 @import controllers.declaration.routes._
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.auth.core.AffinityGroup
@@ -31,7 +32,8 @@
     optional: List[Task],
     affinityGroup : AffinityGroup,
     nextUrl : String,
-    isAbleToDeclare: Boolean)(implicit request: Request[_], messages: Messages)
+    isAbleToDeclare: Boolean,
+    mode: WhatNextMode)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("variationProgress.title")
@@ -53,11 +55,25 @@
         </p>
     }
 
-    @components.warning("variationProgress")
+    @{
+        if(mode == CloseMode) {
+            components.warning("variationProgress.closing")
+        } else {
+            components.warning("variationProgress")
+        }
+    }
 
     @components.task_list("mandatory", mandatory, messages("variationProgress.subHeading.2"))
 
     @components.task_list("additional", optional, messages("variationProgress.subHeading.3"))
+
+    @if(mode == CloseMode) {
+        <p>@messages("variationProgress.p3")</p>
+        <h2 id="task-list--heading--summary" class="app-task-list__section">@messages("variationProgress.subHeading.4")</h2>
+        <p>
+            @components.link(PlaybackDraftAnswersController.onPageLoad().url, "print-and-save", "variationProgress.printsave.link", openInNewWindow = true)
+        </p>
+    }
 
     @if(isAbleToDeclare) {
         @components.button_link(messages("taskList.summary.continue"), nextUrl)
