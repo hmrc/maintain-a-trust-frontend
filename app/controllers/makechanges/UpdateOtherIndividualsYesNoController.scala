@@ -17,7 +17,7 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
-import connectors.TrustsStoreConnector
+import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions._
 import forms.YesNoFormProvider
 import pages.makechanges.AddOrUpdateOtherIndividualsYesNoPage
@@ -37,9 +37,10 @@ class UpdateOtherIndividualsYesNoController @Inject()(
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: UpdateOtherIndividualsYesNoView,
+                                        trustConnector: TrustConnector,
                                         trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext)
-  extends MakeChangesQuestionController(trustStoreConnector) with I18nSupport {
+  extends MakeChangesQuestionController(trustConnector, trustStoreConnector) with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateOtherIndividuals")
 

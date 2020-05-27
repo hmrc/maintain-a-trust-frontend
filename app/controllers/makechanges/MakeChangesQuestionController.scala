@@ -16,7 +16,7 @@
 
 package controllers.makechanges
 
-import connectors.TrustsStoreConnector
+import connectors.{TrustConnector, TrustsStoreConnector}
 import models.UserAnswers
 import models.requests.DataRequest
 import pages.UTRPage
@@ -28,18 +28,18 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
 
-abstract class MakeChangesQuestionController(trustStoreConnector: TrustsStoreConnector)
+abstract class MakeChangesQuestionController(trustConnector: TrustConnector,
+                                             trustStoreConnector: TrustsStoreConnector)
                                             (implicit ec : ExecutionContext)
   extends FrontendBaseController with I18nSupport {
 
   private def redirectAndResetTaskList(updatedAnswers: UserAnswers)
-                                      (implicit request: DataRequest[AnyContent], hc: HeaderCarrier) = request.userAnswers.get(UTRPage).map {
-      utr =>
-        for {
-          _ <- trustStoreConnector.set(utr, updatedAnswers)
-        } yield {
-          Redirect(controllers.routes.VariationProgressController.onPageLoad())
-        }
+                                      (implicit request: DataRequest[AnyContent], hc: HeaderCarrier) = request.userAnswers.get(UTRPage).map { utr =>
+      for {
+        _ <- trustStoreConnector.set(utr, updatedAnswers)
+      } yield {
+        Redirect(controllers.routes.VariationProgressController.onPageLoad())
+      }
     }.getOrElse {
       Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
     }
@@ -50,6 +50,36 @@ abstract class MakeChangesQuestionController(trustStoreConnector: TrustsStoreCon
         Redirect(controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad())
       case _ =>
         Redirect(controllers.declaration.routes.IndividualDeclarationController.onPageLoad())
+    }
+  }
+
+  protected def addOrUpdateProtectors()(implicit request: DataRequest[AnyContent]) = {
+    request.userAnswers.get(UTRPage).map { utr =>
+      for {
+        existsF <- trustConnector.getDoProtectorsAlreadyExist(utr)
+        exist = existsF.value
+      } yield if (exist) {
+        Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
+      } else {
+        Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
+      }
+    }.getOrElse {
+      Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
+    }
+  }
+
+  protected def addOrUpdateOtherIndividuals()(implicit request: DataRequest[AnyContent]) = {
+    request.userAnswers.get(UTRPage).map { utr =>
+      for {
+        existsF <- trustConnector.getDoOtherIndividualsAlreadyExist(utr)
+        exist = existsF.value
+      } yield if (exist) {
+        Redirect(controllers.makechanges.routes.UpdateOtherIndividualsYesNoController.onPageLoad())
+      } else {
+        Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
+      }
+    }.getOrElse {
+      Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
     }
   }
 

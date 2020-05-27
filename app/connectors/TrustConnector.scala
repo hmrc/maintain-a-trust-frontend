@@ -28,7 +28,16 @@ import scala.concurrent.{ExecutionContext, Future}
 class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
   def playbackUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/transformed"
+
   def playbackFromEtmpUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/refresh"
+
+  private def getDoProtectorsAlreadyExistUrl(utr: String) =
+    s"${config.trustsUrl}/trusts/$utr/transformed/protectors-already-exist"
+
+  private def getDoOtherIndividualsAlreadyExistUrl(utr: String) =
+    s"${config.trustsUrl}/trusts/$utr/transformed/other-individuals-already-exist"
+
+  def declareUrl(utr: String) = s"${config.trustsUrl}/trusts/declare/$utr"
 
   def playback(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[TrustsResponse] = {
     http.GET[TrustsResponse](playbackUrl(utr))(TrustsStatusReads.httpReads, hc, ec)
@@ -38,13 +47,13 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
     http.GET[TrustsResponse](playbackFromEtmpUrl(utr))(TrustsStatusReads.httpReads, hc, ec)
   }
 
-  private def getDoProtectorsAlreadyExistUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/transformed/protectors-already-exist"
-
   def getDoProtectorsAlreadyExist(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[JsBoolean] = {
     http.GET[JsBoolean](getDoProtectorsAlreadyExistUrl(utr))
   }
 
-  def declareUrl(utr: String) = s"${config.trustsUrl}/trusts/declare/$utr"
+  def getDoOtherIndividualsAlreadyExist(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[JsBoolean] = {
+    http.GET[JsBoolean](getDoOtherIndividualsAlreadyExistUrl(utr))
+  }
 
   def declare(utr: String, payload: JsValue)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
     http.POST[JsValue, DeclarationResponse](declareUrl(utr), payload)(implicitly[Writes[JsValue]], DeclarationResponse.httpReads, hc, ec)

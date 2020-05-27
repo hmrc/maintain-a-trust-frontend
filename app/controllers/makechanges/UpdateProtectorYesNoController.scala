@@ -17,14 +17,14 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
+import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions._
 import forms.YesNoFormProvider
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.makechanges.UpdateProtectorYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,8 +36,12 @@ class UpdateProtectorYesNoController @Inject()(
                                         actions: AuthenticateForPlayback,
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateProtectorYesNoView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                        view: UpdateProtectorYesNoView,
+                                        trustConnector: TrustConnector,
+                                        trustStoreConnector: TrustsStoreConnector
+                                     )(implicit ec: ExecutionContext)
+
+  extends MakeChangesQuestionController(trustConnector, trustStoreConnector) {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateProtector")
 
@@ -66,8 +70,9 @@ class UpdateProtectorYesNoController @Inject()(
                 .set(AddOrUpdateProtectorYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
+            nextRoute <- addOrUpdateOtherIndividuals()
           } yield {
-            Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
+            nextRoute
           }
         }
       )
