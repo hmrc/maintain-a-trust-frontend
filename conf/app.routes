@@ -86,13 +86,13 @@ POST       /update-protector                            controllers.makechanges.
 GET        /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad()
 POST       /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit()
 
-GET        /close/know-date-last-asset-shared-out       controllers.close.DateLastAssetSharedOutYesNoController.onPageLoad()
-POST       /close/know-date-last-asset-shared-out       controllers.close.DateLastAssetSharedOutYesNoController.onSubmit()
+GET        /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onPageLoad()
+POST       /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onSubmit()
 
-GET        /close/date-last-asset-shared-out            controllers.close.DateLastAssetSharedOutController.onPageLoad()
-POST       /close/date-last-asset-shared-out            controllers.close.DateLastAssetSharedOutController.onSubmit()
+GET        /date-last-asset-shared-out                  controllers.close.DateLastAssetSharedOutController.onPageLoad()
+POST       /date-last-asset-shared-out                  controllers.close.DateLastAssetSharedOutController.onSubmit()
 
-GET        /close/how-to-close-trust                    controllers.close.HowToCloseATrustController.onPageLoad()
+GET        /how-to-close-trust                          controllers.close.HowToCloseATrustController.onPageLoad()
 
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
