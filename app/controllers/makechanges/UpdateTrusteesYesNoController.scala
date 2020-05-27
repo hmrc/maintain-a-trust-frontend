@@ -37,10 +37,11 @@ class UpdateTrusteesYesNoController @Inject()(
                                         actions: AuthenticateForPlayback,
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateTrusteesYesNoView
+                                        view: UpdateTrusteesYesNoView,
+                                        answerRequiredAction: WhatNextRequiredAction
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.andThen(answerRequiredAction) {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))

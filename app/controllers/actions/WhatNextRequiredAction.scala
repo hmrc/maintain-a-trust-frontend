@@ -18,7 +18,7 @@ package controllers.actions
 
 import javax.inject.Inject
 import models.pages.WhatIsNext
-import models.requests.WhatNextRequest
+import models.requests.{DataRequest, WhatNextRequest}
 import pages.WhatIsNextPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.Results.Redirect
@@ -32,15 +32,15 @@ case class RequiredAnswer(answer: Gettable[WhatIsNext],
 
 class WhatNextRequiredAction @Inject()(required: RequiredAnswer)
                                       (val executionContext: ExecutionContext, val messagesApi: MessagesApi)
-  extends ActionRefiner[WhatNextRequest, WhatNextRequest] {
+  extends ActionRefiner[DataRequest, WhatNextRequest] {
 
-  override protected def refine[A](request: WhatNextRequest[A]): Future[Either[Result, WhatNextRequest[A]]] = {
+  override protected def refine[A](request: DataRequest[A]): Future[Either[Result, WhatNextRequest[A]]] = {
 
     request.userAnswers.get(WhatIsNextPage) match {
       case None =>
         Future.successful(Left(Redirect(required.redirect)))
-      case Some(_) =>
-        Future.successful(Right(request))
+      case Some(value) =>
+        Future.successful(Right(WhatNextRequest(request, value)))
     }
   }
 }
