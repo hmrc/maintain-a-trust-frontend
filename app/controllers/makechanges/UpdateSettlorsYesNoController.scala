@@ -41,7 +41,7 @@ class UpdateSettlorsYesNoController @Inject()(
                                         trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext)
 
-  extends MakeChangesQuestionController(trustConnector, trustStoreConnector) {
+  extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateSettlors")
 
@@ -70,7 +70,7 @@ class UpdateSettlorsYesNoController @Inject()(
                 .set(UpdateSettlorsYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- addOrUpdateProtectors()
+            nextRoute <- routeToAddOrUpdateProtectors()
           } yield nextRoute
         }
       )

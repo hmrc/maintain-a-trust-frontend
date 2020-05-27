@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.AuthenticateForPlayback
-import controllers.makechanges.MakeChangesQuestionController
+import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.WhatIsNextFormProvider
 import models.Enumerable
 import models.pages.WhatIsNext
@@ -45,7 +45,7 @@ class WhatIsNextController @Inject()(
                                       trustConnector: TrustConnector,
                                       trustsStoreConnector: TrustsStoreConnector
                                     )(implicit ec: ExecutionContext)
-  extends MakeChangesQuestionController(trustConnector, trustsStoreConnector) with Enumerable.Implicits {
+  extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) with Enumerable.Implicits {
 
   val form = formProvider()
 

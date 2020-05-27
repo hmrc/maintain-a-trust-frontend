@@ -42,7 +42,7 @@ class AddOtherIndividualsYesNoController @Inject()(
                                         trustConnector: TrustConnector,
                                         trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext)
-  extends MakeChangesQuestionController(trustConnector, trustStoreConnector){
+  extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector){
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("addOtherIndividuals")
 
@@ -67,7 +67,7 @@ class AddOtherIndividualsYesNoController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            route <- decideNexRouteFromAnswers(updatedAnswers)
+            route <- routeToDeclareOrTaskList(updatedAnswers)
           } yield route
         }
     )

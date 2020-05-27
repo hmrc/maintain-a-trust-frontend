@@ -28,9 +28,9 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
 
-abstract class MakeChangesQuestionController(trustConnector: TrustConnector,
-                                             trustStoreConnector: TrustsStoreConnector)
-                                            (implicit ec : ExecutionContext)
+abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnector,
+                                                   trustStoreConnector: TrustsStoreConnector)
+                                                  (implicit ec : ExecutionContext)
   extends FrontendBaseController with I18nSupport {
 
   private def redirectAndResetTaskList(updatedAnswers: UserAnswers)
@@ -53,7 +53,7 @@ abstract class MakeChangesQuestionController(trustConnector: TrustConnector,
     }
   }
 
-  protected def addOrUpdateProtectors()(implicit request: DataRequest[AnyContent]) = {
+  protected def routeToAddOrUpdateProtectors()(implicit request: DataRequest[AnyContent]) = {
     request.userAnswers.get(UTRPage).map { utr =>
       for {
         existsF <- trustConnector.getDoProtectorsAlreadyExist(utr)
@@ -68,7 +68,7 @@ abstract class MakeChangesQuestionController(trustConnector: TrustConnector,
     }
   }
 
-  protected def addOrUpdateOtherIndividuals()(implicit request: DataRequest[AnyContent]) = {
+  protected def routeToAddOrUpdateOtherIndividuals()(implicit request: DataRequest[AnyContent]) = {
     request.userAnswers.get(UTRPage).map { utr =>
       for {
         existsF <- trustConnector.getDoOtherIndividualsAlreadyExist(utr)
@@ -83,7 +83,7 @@ abstract class MakeChangesQuestionController(trustConnector: TrustConnector,
     }
   }
 
-  protected def decideNexRouteFromAnswers(updatedAnswers: UserAnswers)(implicit request: DataRequest[AnyContent]) : Future[Result] = {
+  protected def routeToDeclareOrTaskList(updatedAnswers: UserAnswers)(implicit request: DataRequest[AnyContent]) : Future[Result] = {
     MakeChangesRouter.decide(updatedAnswers) match {
       case MakeChangesRouter.Declaration =>
         Future.successful(redirectToDeclaration())

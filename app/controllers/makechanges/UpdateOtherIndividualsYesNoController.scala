@@ -40,7 +40,7 @@ class UpdateOtherIndividualsYesNoController @Inject()(
                                         trustConnector: TrustConnector,
                                         trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext)
-  extends MakeChangesQuestionController(trustConnector, trustStoreConnector) with I18nSupport {
+  extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateOtherIndividuals")
 
@@ -68,7 +68,7 @@ class UpdateOtherIndividualsYesNoController @Inject()(
                 .set(AddOrUpdateOtherIndividualsYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- decideNexRouteFromAnswers(updatedAnswers)
+            nextRoute <- routeToDeclareOrTaskList(updatedAnswers)
           } yield nextRoute
         }
       )

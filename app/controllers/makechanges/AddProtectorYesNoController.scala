@@ -42,7 +42,7 @@ class AddProtectorYesNoController @Inject()(
                                         trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext)
 
-  extends MakeChangesQuestionController(trustConnector, trustStoreConnector) with I18nSupport {
+  extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("addProtector")
 
@@ -71,7 +71,7 @@ class AddProtectorYesNoController @Inject()(
                 .set(AddOrUpdateProtectorYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- addOrUpdateOtherIndividuals()
+            nextRoute <- routeToAddOrUpdateOtherIndividuals()
           } yield {
             nextRoute
           }
