@@ -81,13 +81,9 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
           .willReturn(okJson(json.toString))
       )
 
-      val processed = connector.getTrustDetails(utr)
 
-      whenReady(processed) {
-        r =>
-          r mustBe TrustDetails(startDate = "1920-03-28")
-      }
-
+      val result  = Await.result(connector.getTrustDetails(utr), Duration.Inf)
+      result mustBe TrustDetails(startDate = "1920-03-28")
     }
 
     "playback data must" - {
@@ -369,6 +365,39 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         )
 
         val processed = connector.getDoProtectorsAlreadyExist(utr)
+
+        whenReady(processed) {
+          result =>
+            result.value mustBe true
+        }
+
+        application.stop()
+      }
+    }
+
+    "get whether other individuals already exist must" - {
+
+      "return true or false when the request is successful" in {
+
+        val utr = "1000000008"
+        val json = JsBoolean(true)
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(s"/trusts/$utr/transformed/other-individuals-already-exist"))
+            .willReturn(okJson(json.toString))
+        )
+
+        val processed = connector.getDoOtherIndividualsAlreadyExist(utr)
 
         whenReady(processed) {
           result =>

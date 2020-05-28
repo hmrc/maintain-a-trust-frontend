@@ -86,6 +86,10 @@ POST       /update-protector                            controllers.makechanges.
 GET        /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad()
 POST       /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit()
 
+
+GET        /update-other-individuals                       controllers.makechanges.UpdateOtherIndividualsYesNoController.onPageLoad()
+POST       /update-other-individuals                       controllers.makechanges.UpdateOtherIndividualsYesNoController.onSubmit()
+
 GET        /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onPageLoad()
 POST       /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onSubmit()
 

@@ -39,10 +39,14 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
   val formProvider = new YesNoFormProvider()
   val prefix: String = "updateSettlors"
   val form = formProvider.withPrefix(prefix)
+
   lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad().url
+
+  val utr = "1000000008"
 
   val baseAnswers: UserAnswers = emptyUserAnswers
     .set(WhatIsNextPage, MakeChanges).success.value
+    .set(UTRPage, utr).success.value
 
   "UpdateSettlorsYesNo Controller" must {
 
@@ -86,14 +90,15 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
     "redirect to the add a protector page when valid data is submitted and no protectors exist" in {
 
-      val utr = "1000000008"
+
 
       val  mockTrustConnector = mock[TrustConnector]
 
       val application =
-        applicationBuilder(userAnswers = Some(baseAnswers.set(UTRPage, utr).get)).overrides(
-          bind[TrustConnector].toInstance(mockTrustConnector)
-        ).build()
+        applicationBuilder(userAnswers = Some(baseAnswers))
+          .overrides(
+            bind[TrustConnector].toInstance(mockTrustConnector)
+          ).build()
 
       val request =
         FakeRequest(POST, updateSettlorsYesNoRoute)
@@ -113,12 +118,10 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
     "redirect to the update protectors page when valid data is submitted and no protectors exist" in {
 
-      val utr = "1000000008"
-
       val  mockTrustConnector = mock[TrustConnector]
 
       val application =
-        applicationBuilder(userAnswers = Some(baseAnswers.set(UTRPage, utr).get)).overrides(
+        applicationBuilder(userAnswers = Some(baseAnswers)).overrides(
           bind[TrustConnector].toInstance(mockTrustConnector)
         ).build()
 

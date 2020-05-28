@@ -20,31 +20,30 @@ import com.google.inject.{Inject, Singleton}
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions._
 import forms.YesNoFormProvider
-import pages.makechanges.UpdateSettlorsYesNoPage
+import pages.makechanges.AddOrUpdateOtherIndividualsYesNoPage
 import play.api.data.Form
-import play.api.i18n.MessagesApi
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import views.html.makechanges.UpdateSettlorsYesNoView
+import views.html.makechanges.UpdateOtherIndividualsYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UpdateSettlorsYesNoController @Inject()(
+class UpdateOtherIndividualsYesNoController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         playbackRepository: PlaybackRepository,
-                                        trustConnector: TrustConnector,
                                         actions: AuthenticateForPlayback,
                                         yesNoFormProvider: YesNoFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateSettlorsYesNoView,
+                                        view: UpdateOtherIndividualsYesNoView,
+                                        trustConnector: TrustConnector,
                                         trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext)
-
-  extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) {
+  extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with I18nSupport {
 
   private def prefix(closingTrust: Boolean): String = {
-    if (closingTrust) "updateSettlorsClosing" else "updateSettlors"
+    if (closingTrust) "updateOtherIndividualsClosing" else "updateOtherIndividuals"
   }
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
@@ -52,7 +51,7 @@ class UpdateSettlorsYesNoController @Inject()(
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
-      val preparedForm = request.userAnswers.get(UpdateSettlorsYesNoPage) match {
+      val preparedForm = request.userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -68,15 +67,14 @@ class UpdateSettlorsYesNoController @Inject()(
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
-
         value => {
           for {
             updatedAnswers <- Future.fromTry(
               request.userAnswers
-                .set(UpdateSettlorsYesNoPage, value)
+                .set(AddOrUpdateOtherIndividualsYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- routeToAddOrUpdateProtectors()(request.request)
+            nextRoute <- routeToDeclareOrTaskList(updatedAnswers, request.closingTrust)(request.request)
           } yield nextRoute
         }
       )

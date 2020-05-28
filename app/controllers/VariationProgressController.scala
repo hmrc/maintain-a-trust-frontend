@@ -19,16 +19,16 @@ package controllers
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
-import controllers.actions.{AuthenticateForPlayback, RequireClosingTrustAnswerAction}
+import controllers.actions.AuthenticateForPlayback
 import models.pages.Tag
 import models.pages.Tag.InProgress
 import models.{CompletedMaintenanceTasks, Enumerable}
-import navigation.DeclareNoChange
 import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import sections.Protectors
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
+import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
@@ -36,13 +36,14 @@ import views.html.VariationProgressView
 import scala.concurrent.{ExecutionContext, Future}
 
 class VariationProgressController @Inject()(
-                                             override val messagesApi: MessagesApi,
-                                             actions: AuthenticateForPlayback,
-                                             view: VariationProgressView,
-                                             val controllerComponents: MessagesControllerComponents,
-                                             config: FrontendAppConfig,
-                                             storeConnector: TrustsStoreConnector
-                                           )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
+                                      override val messagesApi: MessagesApi,
+                                      actions: AuthenticateForPlayback,
+                                      view: VariationProgressView,
+                                      val controllerComponents: MessagesControllerComponents,
+                                      config: FrontendAppConfig,
+                                      storeConnector: TrustsStoreConnector
+                                    )(implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
 
   lazy val notYetAvailable : String = controllers.routes.FeatureNotAvailableController.onPageLoad().url
 

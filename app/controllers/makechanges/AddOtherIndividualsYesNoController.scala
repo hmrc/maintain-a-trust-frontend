@@ -17,16 +17,13 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
-import connectors.TrustsStoreConnector
+import config.FrontendAppConfig
+import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.UserAnswers
-import models.requests.ClosingTrustRequest
-import navigation.DeclareNoChange
-import pages.UTRPage
 import pages.makechanges._
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc._
 import repositories.PlaybackRepository
 import views.html.makechanges.AddOtherIndividualsYesNoView
@@ -35,14 +32,21 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AddOtherIndividualsYesNoController @Inject()(
-                                                    override val messagesApi: MessagesApi,
-                                                    playbackRepository: PlaybackRepository,
-                                                    actions: AuthenticateForPlayback,
-                                                    yesNoFormProvider: YesNoFormProvider,
-                                                    val controllerComponents: MessagesControllerComponents,
-                                                    view: AddOtherIndividualsYesNoView,
-                                                    trustStoreConnector: TrustsStoreConnector
-                                                  )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport {
+                                        override val messagesApi: MessagesApi,
+                                        playbackRepository: PlaybackRepository,
+                                        actions: AuthenticateForPlayback,
+                                        yesNoFormProvider: YesNoFormProvider,
+                                        val controllerComponents: MessagesControllerComponents,
+                                        view: AddOtherIndividualsYesNoView,
+                                        config: FrontendAppConfig,
+                                        trustConnector: TrustConnector,
+                                        trustStoreConnector: TrustsStoreConnector
+                                     )(implicit ec: ExecutionContext)
+  extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector){
+
+  private def prefix(closingTrust: Boolean): String = {
+    if (closingTrust) "addOtherIndividualsClosing" else "addOtherIndividuals"
+  }
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
@@ -69,37 +73,11 @@ class AddOtherIndividualsYesNoController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            route <- determineRoute(updatedAnswers, request.closingTrust)
-          } yield {
-            route
-          }
+            route <- routeToDeclareOrTaskList(updatedAnswers, request.closingTrust)(request.request)
+          } yield route
         }
     )
   }
 
-  private def determineRoute(updatedAnswers: UserAnswers, closingTrust: Boolean)
-                            (implicit request: ClosingTrustRequest[AnyContent]) : Future[Result] = {
 
-    MakeChangesRouter.decide(updatedAnswers) match {
-      case MakeChangesRouter.Declaration if !closingTrust =>
-        Future.successful(redirectToDeclaration()(request.request))
-      case MakeChangesRouter.TaskList | MakeChangesRouter.Declaration =>
-        request.userAnswers.get(UTRPage).map {
-          utr =>
-            for {
-              _ <- trustStoreConnector.set(utr, updatedAnswers)
-            } yield {
-              Redirect(controllers.routes.VariationProgressController.onPageLoad())
-            }
-        }.getOrElse {
-          Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
-        }
-      case MakeChangesRouter.UnableToDecide =>
-        Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
-    }
-  }
-
-  private def prefix(closingTrust: Boolean): String = {
-    if (closingTrust) "addOtherIndividualsClosing" else "addOtherIndividuals"
-  }
 }

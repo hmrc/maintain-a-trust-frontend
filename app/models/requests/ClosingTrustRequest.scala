@@ -20,7 +20,9 @@ import models.UserAnswers
 import models.pages.WhatIsNext
 import play.api.mvc.WrappedRequest
 
-case class ClosingTrustRequest[T](request: DataRequest[T], closingTrust: Boolean) extends WrappedRequest[T](request){
+case class ClosingTrustRequest[T](request: DataRequest[T], closingTrust: Boolean)
+  extends WrappedRequest[T](request){
+
   val userAnswers:UserAnswers = request.userAnswers
   val user: User = request.user
 }
