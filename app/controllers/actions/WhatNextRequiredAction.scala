@@ -17,6 +17,7 @@
 package controllers.actions
 
 import com.google.inject.Inject
+import models.pages.WhatIsNext.CloseTrust
 import models.requests.{DataRequest, WhatNextRequest}
 import pages.WhatIsNextPage
 import play.api.mvc.Results.Redirect
@@ -29,11 +30,20 @@ class WhatNextRequiredAction @Inject()(implicit val executionContext: ExecutionC
 
   override protected def refine[A](request: DataRequest[A]): Future[Either[Result, WhatNextRequest[A]]] = {
 
-    request.userAnswers.get(WhatIsNextPage) match {
-      case None =>
-        Future.successful(Left(Redirect(controllers.routes.SessionExpiredController.onPageLoad())))
-      case Some(value) =>
-        Future.successful(Right(WhatNextRequest(request, value)))
-    }
+    Future.successful(
+      request.userAnswers.get(WhatIsNextPage) match {
+        case None =>
+          Left(
+            Redirect(controllers.routes.SessionExpiredController.onPageLoad())
+          )
+        case Some(value) =>
+          Right(
+            WhatNextRequest(
+              request,
+              value == CloseTrust
+            )
+          )
+      }
+    )
   }
 }

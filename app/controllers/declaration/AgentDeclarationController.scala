@@ -59,7 +59,7 @@ class AgentDeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, request.whatIsNext))
+      Ok(view(preparedForm, request.closingTrust))
   }
 
   def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
@@ -67,7 +67,7 @@ class AgentDeclarationController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.whatIsNext))),
+          Future.successful(BadRequest(view(formWithErrors, request.closingTrust))),
 
         declaration => {
           request.user match {

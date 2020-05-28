@@ -18,9 +18,8 @@ package controllers.declaration
 
 import java.time.LocalDateTime
 
-import controllers.actions.{AuthenticateForPlayback, WhatNextRequiredAction}
+import controllers.actions.AuthenticateForPlayback
 import javax.inject.Inject
-import models.pages.WhatIsNext.CloseTrust
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -61,12 +60,11 @@ class PlaybackDeclaredAnswersController @Inject()(
       val isAgent = request.user.affinityGroup == Agent
 
       Future.successful(Ok(
-        request.whatIsNext match {
-          case CloseTrust =>
-            val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)
-            finalDeclaredAnswersView(closeDate, entities, trustDetails, tvn, crn, declarationSent, isAgent)
-          case _ =>
-            declaredAnswersView(entities, trustDetails, tvn, crn, declarationSent, isAgent)
+        if (request.closingTrust) {
+          val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)
+          finalDeclaredAnswersView(closeDate, entities, trustDetails, tvn, crn, declarationSent, isAgent)
+        } else {
+          declaredAnswersView(entities, trustDetails, tvn, crn, declarationSent, isAgent)
         }
       ))
   }

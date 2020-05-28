@@ -18,22 +18,21 @@ package controllers
 
 import base.SpecBase
 import connectors.TrustsStoreConnector
-import models.{CompletedMaintenanceTasks, NormalMode}
-import models.pages.Tag.{InProgress, UpToDate}
+import models.CompletedMaintenanceTasks
+import models.pages.Tag.InProgress
 import models.pages.WhatIsNext
-import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
+import org.mockito.Matchers.any
+import org.mockito.Mockito._
 import pages.{UTRPage, WhatIsNextPage}
+import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import sections.Protectors
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
-import play.api.inject.bind
-import org.mockito.Matchers.any
-import org.mockito.Mockito._
-import sections.Protectors
 
 import scala.concurrent.Future
 
@@ -86,7 +85,7 @@ class VariationProgressControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, MakeChanges)(fakeRequest, messages).toString
+        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -118,7 +117,7 @@ class VariationProgressControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, CloseTrust)(fakeRequest, messages).toString
+        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(fakeRequest, messages).toString
 
       application.stop()
     }

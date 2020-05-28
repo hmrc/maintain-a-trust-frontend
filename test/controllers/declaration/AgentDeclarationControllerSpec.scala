@@ -59,7 +59,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, whatIsNext)(fakeRequest, messages).toString
+        view(form, closingTrust = false)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -114,7 +114,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, whatIsNext)(fakeRequest, messages).toString
+        view(boundForm, closingTrust = false)(fakeRequest, messages).toString
 
       application.stop()
     }

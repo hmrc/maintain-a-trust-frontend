@@ -19,7 +19,6 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.{AuthenticateForPlayback, WhatNextRequiredAction}
-import models.pages.WhatIsNext.CloseTrust
 import pages.TVNPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -53,11 +52,10 @@ class ConfirmationController @Inject()(
       }{
         tvn =>
           Ok(
-            request.whatIsNext match {
-              case CloseTrust =>
-                closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
-              case _ =>
-                confirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
+            if (request.closingTrust) {
+              closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
+            } else {
+              confirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
             }
           )
       }

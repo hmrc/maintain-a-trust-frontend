@@ -19,7 +19,6 @@ package views.declaration
 import config.FrontendAppConfig
 import forms.declaration.AgentDeclarationFormProvider
 import models.AgentDeclaration
-import models.pages.WhatIsNext.MakeChanges
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.QuestionViewBehaviours
@@ -38,7 +37,7 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
     val view = viewFor[AgentDeclarationView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, MakeChanges)(fakeRequest, messages)
+      view.apply(form, closingTrust = false)(fakeRequest, messages)
 
     if(appConfig.declarationEmailEnabled) {
       behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1", "paragraph2")

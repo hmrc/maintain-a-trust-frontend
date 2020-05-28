@@ -17,7 +17,7 @@
 package controllers.actions
 
 import base.SpecBase
-import models.pages.WhatIsNext.MakeChanges
+import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
 import models.requests.{DataRequest, OrganisationUser, User, WhatNextRequest}
 import org.scalatest.concurrent.ScalaFutures
 import pages.WhatIsNextPage
@@ -59,7 +59,29 @@ class WhatNextRequiredActionSpec extends SpecBase with ScalaFutures {
       }
     }
 
-    "there is an answer" must {
+    "closing the trust" must {
+
+      "add the answer to the request" in {
+
+        val action = new Harness()
+
+        val userAnswers = emptyUserAnswers.set(WhatIsNextPage, CloseTrust).success.value
+
+        val futureResult = action.callRefine(
+          DataRequest(
+            fakeRequest,
+            userAnswers,
+            user
+          )
+        )
+
+        whenReady(futureResult) { result =>
+          result.right.get.closingTrust must be(true)
+        }
+      }
+    }
+
+    "not closing the trust" must {
 
       "add the answer to the request" in {
 
@@ -76,7 +98,7 @@ class WhatNextRequiredActionSpec extends SpecBase with ScalaFutures {
         )
 
         whenReady(futureResult) { result =>
-          result.right.get.whatIsNext mustEqual MakeChanges
+          result.right.get.closingTrust must be(false)
         }
       }
     }

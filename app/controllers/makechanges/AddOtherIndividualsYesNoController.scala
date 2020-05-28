@@ -21,8 +21,6 @@ import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import models.UserAnswers
-import models.pages.WhatIsNext
-import models.pages.WhatIsNext.CloseTrust
 import models.requests.WhatNextRequest
 import navigation.DeclareNoChange
 import pages.UTRPage
@@ -49,29 +47,29 @@ class AddOtherIndividualsYesNoController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       val preparedForm = request.userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, prefix(request.whatIsNext)))
+      Ok(view(preparedForm, prefix(request.closingTrust)))
   }
 
   def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, prefix(request.whatIsNext)))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
         value => {
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            route <- determineRoute(updatedAnswers, request.whatIsNext)
+            route <- determineRoute(updatedAnswers, request.closingTrust)
           } yield {
             route
           }
@@ -79,11 +77,11 @@ class AddOtherIndividualsYesNoController @Inject()(
     )
   }
 
-  private def determineRoute(updatedAnswers: UserAnswers, whatIsNext: WhatIsNext)
+  private def determineRoute(updatedAnswers: UserAnswers, closingTrust: Boolean)
                             (implicit request: WhatNextRequest[AnyContent]) : Future[Result] = {
 
     MakeChangesRouter.decide(updatedAnswers) match {
-      case MakeChangesRouter.Declaration if whatIsNext != CloseTrust =>
+      case MakeChangesRouter.Declaration if !closingTrust =>
         Future.successful(redirectToDeclaration()(request.request))
       case MakeChangesRouter.TaskList | MakeChangesRouter.Declaration =>
         request.userAnswers.get(UTRPage).map {
@@ -101,10 +99,7 @@ class AddOtherIndividualsYesNoController @Inject()(
     }
   }
 
-  private def prefix(whatIsNext: WhatIsNext): String = {
-    whatIsNext match {
-      case CloseTrust => "addOtherIndividualsClosing"
-      case _ => "addOtherIndividuals"
-    }
+  private def prefix(closingTrust: Boolean): String = {
+    if (closingTrust) "addOtherIndividualsClosing" else "addOtherIndividuals"
   }
 }

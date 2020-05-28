@@ -20,8 +20,6 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.pages.WhatIsNext
-import models.pages.WhatIsNext.CloseTrust
 import pages.UTRPage
 import pages.makechanges.UpdateSettlorsYesNoPage
 import play.api.data.Form
@@ -47,24 +45,24 @@ class UpdateSettlorsYesNoController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       val preparedForm = request.userAnswers.get(UpdateSettlorsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, prefix(request.whatIsNext)))
+      Ok(view(preparedForm, prefix(request.closingTrust)))
   }
 
   def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, prefix(request.whatIsNext)))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
 
         value => {
           for {
@@ -85,11 +83,8 @@ class UpdateSettlorsYesNoController @Inject()(
       )
   }
 
-  private def prefix(whatIsNext: WhatIsNext): String = {
-    whatIsNext match {
-      case CloseTrust => "updateSettlorsClosing"
-      case _ => "updateSettlors"
-    }
+  private def prefix(closingTrust: Boolean): String = {
+    if (closingTrust) "updateSettlorsClosing" else "updateSettlors"
   }
 
 }

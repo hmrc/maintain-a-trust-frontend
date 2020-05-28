@@ -135,7 +135,7 @@ class VariationProgressController @Inject()(
                 request.user.affinityGroup,
                 next,
                 isAbleToDeclare = sections.isAbleToDeclare,
-                request.whatIsNext
+                request.closingTrust
               ))
           }
         case _ =>

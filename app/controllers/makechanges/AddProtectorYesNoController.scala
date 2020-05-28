@@ -19,8 +19,6 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.pages.WhatIsNext
-import models.pages.WhatIsNext.CloseTrust
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,24 +42,24 @@ class AddProtectorYesNoController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       val preparedForm = request.userAnswers.get(AddOrUpdateProtectorYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, prefix(request.whatIsNext)))
+      Ok(view(preparedForm, prefix(request.closingTrust)))
   }
 
   def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.whatIsNext))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, prefix(request.whatIsNext)))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
 
         value => {
           for {
@@ -77,11 +75,8 @@ class AddProtectorYesNoController @Inject()(
       )
   }
 
-  private def prefix(whatIsNext: WhatIsNext): String = {
-    whatIsNext match {
-      case CloseTrust => "addProtectorClosing"
-      case _ => "addProtector"
-    }
+  private def prefix(closingTrust: Boolean): String = {
+    if (closingTrust) "addProtectorClosing" else "addProtector"
   }
 
 }

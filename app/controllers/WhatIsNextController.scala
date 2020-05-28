@@ -19,8 +19,8 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.AuthenticateForPlayback
 import forms.WhatIsNextFormProvider
+import models.Enumerable
 import models.pages.WhatIsNext
-import models.{Enumerable, NormalMode}
 import navigation.DeclareNoChange
 import pages.WhatIsNextPage
 import play.api.data.Form
