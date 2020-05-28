@@ -17,17 +17,20 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
 import forms.WhatIsNextFormProvider
-import models.NormalMode
 import models.pages.WhatIsNext
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import pages.{UTRPage, WhatIsNextPage}
 import play.api.data.Form
+import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.WhatIsNextView
 
-class WhatIsNextControllerSpec extends SpecBase {
+class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new WhatIsNextFormProvider()
   val form: Form[WhatIsNext] = formProvider()
@@ -35,6 +38,8 @@ class WhatIsNextControllerSpec extends SpecBase {
   lazy val onPageLoad: String = routes.WhatIsNextController.onPageLoad().url
 
   lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
+
+  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   "WhatIsNext Controller" must {
 
@@ -138,14 +143,18 @@ class WhatIsNextControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to Do you know the date the last asset in the trust was shared out when user selects 'Close'" in {
+    "redirect to Do you know the date the last asset in the trust was shared out when user selects 'Close' and feature toggle set to true" in {
+
+      when(mockAppConfig.closeATrustEnabled) thenReturn true
 
       val utr = "0987654321"
 
       val userAnswers = emptyUserAnswers
         .set(UTRPage, utr).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
+        .build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
         .withFormUrlEncodedBody(("value", "close-trust"))
@@ -155,6 +164,31 @@ class WhatIsNextControllerSpec extends SpecBase {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustBe controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to Feature unavailable when user selects 'Close' and feature toggle set to false" in {
+
+      when(mockAppConfig.closeATrustEnabled) thenReturn false
+
+      val utr = "0987654321"
+
+      val userAnswers = emptyUserAnswers
+        .set(UTRPage, utr).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
+        .build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+        .withFormUrlEncodedBody(("value", "close-trust"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
 
       application.stop()
     }
