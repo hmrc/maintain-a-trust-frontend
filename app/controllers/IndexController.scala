@@ -22,11 +22,13 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions.AuthenticateForPlayback
 import models.UserAnswers
+import models.requests.{OptionalDataRequest, User}
 import pages.{StartDatePage, UTRPage}
 import play.api.Logger
 import play.api.i18n.I18nSupport
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,6 +39,38 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
                                 playbackRepository: PlaybackRepository,
                                 connector: TrustConnector
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+
+  private def flushAndCreateUserAnswers(utr: String,
+                                        internalId: String)
+                                       (implicit hc: HeaderCarrier): Future[UserAnswers] = {
+
+    def newUserAnswers(startDate: LocalDate) = UserAnswers(internalId)
+      .set(UTRPage, utr)
+      .flatMap(_.set(StartDatePage, startDate))
+
+    for {
+      details <- connector.getTrustDetails(utr)
+      startDate = LocalDate.parse(details.startDate)
+      userAnswers <- Future.fromTry(newUserAnswers(startDate))
+      _ <- playbackRepository.resetCache(internalId)
+      _ <- playbackRepository.set(userAnswers)
+    } yield {
+      userAnswers
+    }
+  }
+
+  def saveStartDate() = actions.authWithData.async {
+    implicit request =>
+      request.userAnswers.get(UTRPage) match {
+        case Some(utr) =>
+          flushAndCreateUserAnswers(utr, request.user.internalId) map {
+            _ =>
+              Redirect(controllers.routes.TrustStatusController.status())
+          }
+        case None =>
+          Future.successful(Redirect(routes.SessionExpiredController.onPageLoad()))
+      }
+  }
 
   def onPageLoad() = actions.authWithSession.async {
     implicit request =>
@@ -52,12 +86,7 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
           utr =>
 
             for {
-              details <- connector.getTrustDetails(utr)
-              userAnswers <- Future.fromTry(UserAnswers(request.user.internalId)
-                .set(UTRPage, utr)
-                .flatMap(_.set(StartDatePage, LocalDate.parse(details.startDate))))
-              _ <- playbackRepository.resetCache(request.user.internalId)
-              _ <- playbackRepository.set(userAnswers)
+              _ <- flushAndCreateUserAnswers(utr, request.user.internalId)
             } yield {
               Logger.info(s"[IndexController] $utr user is enrolled, storing UTR and StartDate in user answers, checking status of trust")
               Redirect(controllers.routes.TrustStatusController.status())
