@@ -21,7 +21,6 @@ import connectors.TrustConnector
 import models.TrustDetails
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
-import org.scalatest.concurrent.ScalaFutures
 import pages.UTRPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -30,7 +29,7 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, EnrolmentIdentifier, Enr
 
 import scala.concurrent.Future
 
-class IndexControllerSpec extends SpecBase with ScalaFutures {
+class IndexControllerSpec extends SpecBase {
 
   lazy val onPageLoad: String = routes.IndexController.onPageLoad().url
 
