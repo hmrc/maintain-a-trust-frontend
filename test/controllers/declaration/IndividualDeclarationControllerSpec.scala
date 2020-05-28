@@ -131,21 +131,6 @@ class IndividualDeclarationControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to Session Expired if required answer does not exist" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      val request = FakeRequest(GET, routes.IndividualDeclarationController.onPageLoad().url)
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustBe controllers.routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
-    }
-
     "return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
