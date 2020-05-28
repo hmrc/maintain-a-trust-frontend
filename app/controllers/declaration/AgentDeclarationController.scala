@@ -51,7 +51,7 @@ class AgentDeclarationController @Inject()(
 
   val form: Form[AgentDeclaration] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgentDeclarationPage) match {
@@ -62,7 +62,7 @@ class AgentDeclarationController @Inject()(
       Ok(view(preparedForm, request.closingTrust))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(

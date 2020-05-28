@@ -18,17 +18,17 @@ package controllers.actions
 
 import com.google.inject.Inject
 import models.pages.WhatIsNext.CloseTrust
-import models.requests.{DataRequest, WhatNextRequest}
+import models.requests.{DataRequest, ClosingTrustRequest}
 import pages.WhatIsNextPage
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class WhatNextRequiredAction @Inject()(implicit val executionContext: ExecutionContext)
-  extends ActionRefiner[DataRequest, WhatNextRequest] {
+class RequireClosingTrustAnswerAction @Inject()(implicit val executionContext: ExecutionContext)
+  extends ActionRefiner[DataRequest, ClosingTrustRequest] {
 
-  override protected def refine[A](request: DataRequest[A]): Future[Either[Result, WhatNextRequest[A]]] = {
+  override protected def refine[A](request: DataRequest[A]): Future[Either[Result, ClosingTrustRequest[A]]] = {
 
     Future.successful(
       request.userAnswers.get(WhatIsNextPage) match {
@@ -38,7 +38,7 @@ class WhatNextRequiredAction @Inject()(implicit val executionContext: ExecutionC
           )
         case Some(value) =>
           Right(
-            WhatNextRequest(
+            ClosingTrustRequest(
               request,
               value == CloseTrust
             )

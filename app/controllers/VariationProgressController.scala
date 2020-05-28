@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
-import controllers.actions.{AuthenticateForPlayback, WhatNextRequiredAction}
+import controllers.actions.{AuthenticateForPlayback, RequireClosingTrustAnswerAction}
 import models.pages.Tag
 import models.pages.Tag.InProgress
 import models.{CompletedMaintenanceTasks, Enumerable}
@@ -112,7 +112,7 @@ class VariationProgressController @Inject()(
     TaskList(mandatorySections, optionalSections)
   }
 
-  def onPageLoad(): Action[AnyContent] = actions.requireAnswer.async {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       request.userAnswers.get(UTRPage) match {

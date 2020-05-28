@@ -21,7 +21,7 @@ import connectors.TrustsStoreConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import models.UserAnswers
-import models.requests.WhatNextRequest
+import models.requests.ClosingTrustRequest
 import navigation.DeclareNoChange
 import pages.UTRPage
 import pages.makechanges._
@@ -44,7 +44,7 @@ class AddOtherIndividualsYesNoController @Inject()(
                                                     trustStoreConnector: TrustsStoreConnector
                                                   )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
@@ -57,7 +57,7 @@ class AddOtherIndividualsYesNoController @Inject()(
       Ok(view(preparedForm, prefix(request.closingTrust)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
@@ -78,7 +78,7 @@ class AddOtherIndividualsYesNoController @Inject()(
   }
 
   private def determineRoute(updatedAnswers: UserAnswers, closingTrust: Boolean)
-                            (implicit request: WhatNextRequest[AnyContent]) : Future[Result] = {
+                            (implicit request: ClosingTrustRequest[AnyContent]) : Future[Result] = {
 
     MakeChangesRouter.decide(updatedAnswers) match {
       case MakeChangesRouter.Declaration if !closingTrust =>

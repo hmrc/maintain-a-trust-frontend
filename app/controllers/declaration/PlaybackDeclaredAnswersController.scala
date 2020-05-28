@@ -42,7 +42,7 @@ class PlaybackDeclaredAnswersController @Inject()(
                                                    dateFormatter: DateFormatter
                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.requireAnswer.async {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       val entities = printPlaybackAnswersHelper.entities(request.userAnswers)

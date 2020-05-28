@@ -18,7 +18,7 @@ package controllers.actions
 
 import base.SpecBase
 import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
-import models.requests.{DataRequest, OrganisationUser, User, WhatNextRequest}
+import models.requests.{DataRequest, OrganisationUser, User, ClosingTrustRequest}
 import org.scalatest.concurrent.ScalaFutures
 import pages.WhatIsNextPage
 import play.api.mvc.Result
@@ -27,10 +27,10 @@ import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
-class WhatNextRequiredActionSpec extends SpecBase with ScalaFutures {
+class RequireClosingTrustAnswerActionSpec extends SpecBase with ScalaFutures {
 
-  class Harness() extends WhatNextRequiredAction {
-    def callRefine[A](request: DataRequest[A]): Future[Either[Result, WhatNextRequest[A]]] = refine(request)
+  class Harness() extends RequireClosingTrustAnswerAction {
+    def callRefine[A](request: DataRequest[A]): Future[Either[Result, ClosingTrustRequest[A]]] = refine(request)
   }
 
   private val user: User = OrganisationUser("id", Enrolments(Set()))

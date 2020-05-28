@@ -49,7 +49,7 @@ class IndividualDeclarationController @Inject()(
 
   val form: Form[IndividualDeclaration] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(IndividualDeclarationPage) match {
@@ -60,7 +60,7 @@ class IndividualDeclarationController @Inject()(
       Ok(view(preparedForm, request.closingTrust))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(

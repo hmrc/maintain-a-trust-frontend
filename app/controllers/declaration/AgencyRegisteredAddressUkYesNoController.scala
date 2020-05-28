@@ -41,7 +41,7 @@ class AgencyRegisteredAddressUkYesNoController @Inject()(
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("agencyRegisteredAddressUkYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgencyRegisteredAddressUkYesNoPage) match {
@@ -52,7 +52,7 @@ class AgencyRegisteredAddressUkYesNoController @Inject()(
       Ok(view(preparedForm, controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onSubmit()))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(

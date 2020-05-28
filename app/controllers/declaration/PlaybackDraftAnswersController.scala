@@ -16,7 +16,7 @@
 
 package controllers.declaration
 
-import controllers.actions.{AuthenticateForPlayback, WhatNextRequiredAction}
+import controllers.actions.{AuthenticateForPlayback, RequireClosingTrustAnswerAction}
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -34,7 +34,7 @@ class PlaybackDraftAnswersController @Inject()(
                                                 printPlaybackAnswersHelper: PrintPlaybackHelper
                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.requireAnswer.async {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)

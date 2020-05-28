@@ -44,7 +44,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
 
   val form: Form[InternationalAddress] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.requireAnswer {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgencyRegisteredAddressInternationalPage) match {
@@ -55,7 +55,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
       Ok(view(preparedForm, countryOptions.options))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.requireAnswer.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(

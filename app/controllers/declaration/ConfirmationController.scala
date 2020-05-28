@@ -18,7 +18,7 @@ package controllers.declaration
 
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
-import controllers.actions.{AuthenticateForPlayback, WhatNextRequiredAction}
+import controllers.actions.{AuthenticateForPlayback, RequireClosingTrustAnswerAction}
 import pages.TVNPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -37,7 +37,7 @@ class ConfirmationController @Inject()(
                                         confirmationView: ConfirmationView,
                                         closeTrustConfirmationView: CloseTrustConfirmationView,
                                         config: FrontendAppConfig,
-                                        answerRequiredAction: WhatNextRequiredAction
+                                        answerRequiredAction: RequireClosingTrustAnswerAction
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
