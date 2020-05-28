@@ -19,8 +19,8 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.AuthenticateForPlayback
 import forms.WhatIsNextFormProvider
+import models.Enumerable
 import models.pages.WhatIsNext
-import models.{Enumerable, NormalMode}
 import navigation.DeclareNoChange
 import pages.WhatIsNextPage
 import play.api.data.Form
@@ -41,7 +41,7 @@ class WhatIsNextController @Inject()(
                                       view: WhatIsNextView
                                     )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
 
-  val form = formProvider()
+  val form: Form[WhatIsNext] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
@@ -67,10 +67,10 @@ class WhatIsNextController @Inject()(
             _ <- playbackRepository.set(updatedAnswers)
           } yield value match {
             case WhatIsNext.DeclareTheTrustIsUpToDate =>
-              redirectToDeclaration(NormalMode)
+              redirectToDeclaration()
 
             case WhatIsNext.MakeChanges =>
-              Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(NormalMode))
+              Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
 
             case _ =>
               Redirect(controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad())

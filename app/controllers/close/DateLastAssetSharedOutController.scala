@@ -19,7 +19,6 @@ package controllers.close
 import controllers.actions.AuthenticateForPlayback
 import forms.DateFormProvider
 import javax.inject.Inject
-import models.CloseMode
 import pages.StartDatePage
 import pages.close.DateLastAssetSharedOutPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -70,7 +69,7 @@ class DateLastAssetSharedOutController @Inject()(
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(DateLastAssetSharedOutPage, value))
               _ <- playbackRepository.set(updatedAnswers)
-            } yield Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(CloseMode))
+            } yield Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
         )
       }.getOrElse(Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad())))
   }

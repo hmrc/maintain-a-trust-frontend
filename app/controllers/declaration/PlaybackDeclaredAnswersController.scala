@@ -20,7 +20,6 @@ import java.time.LocalDateTime
 
 import controllers.actions.AuthenticateForPlayback
 import javax.inject.Inject
-import models.{CloseMode, Mode}
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -43,7 +42,7 @@ class PlaybackDeclaredAnswersController @Inject()(
                                                    dateFormatter: DateFormatter
                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       val entities = printPlaybackAnswersHelper.entities(request.userAnswers)
@@ -61,12 +60,11 @@ class PlaybackDeclaredAnswersController @Inject()(
       val isAgent = request.user.affinityGroup == Agent
 
       Future.successful(Ok(
-        mode match {
-          case CloseMode =>
-            val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)
-            finalDeclaredAnswersView(closeDate, entities, trustDetails, tvn, crn, declarationSent, isAgent)
-          case _ =>
-            declaredAnswersView(entities, trustDetails, tvn, crn, declarationSent, isAgent)
+        if (request.closingTrust) {
+          val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)
+          finalDeclaredAnswersView(closeDate, entities, trustDetails, tvn, crn, declarationSent, isAgent)
+        } else {
+          declaredAnswersView(entities, trustDetails, tvn, crn, declarationSent, isAgent)
         }
       ))
   }

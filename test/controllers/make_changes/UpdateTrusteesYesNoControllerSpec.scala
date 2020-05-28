@@ -19,7 +19,9 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.{NormalMode, Mode}
+import models.UserAnswers
+import models.pages.WhatIsNext
+import pages.WhatIsNextPage
 import pages.makechanges.UpdateTrusteesYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -30,14 +32,16 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
   val formProvider = new YesNoFormProvider()
   val prefix: String = "updateTrustees"
   val form = formProvider.withPrefix(prefix)
-  val mode: Mode = NormalMode
-  lazy val updateTrusteesYesNoRoute = routes.UpdateTrusteesYesNoController.onPageLoad(mode).url
+  lazy val updateTrusteesYesNoRoute = routes.UpdateTrusteesYesNoController.onPageLoad().url
+
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
   "UpdateTrusteesYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, updateTrusteesYesNoRoute)
 
@@ -48,14 +52,14 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, mode, prefix)(fakeRequest, messages).toString
+        view(form, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(UpdateTrusteesYesNoPage, true).success.value
+      val userAnswers = baseAnswers.set(UpdateTrusteesYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -68,15 +72,14 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), mode, prefix)(fakeRequest, messages).toString
+        view(form.fill(true), prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, updateTrusteesYesNoRoute)
@@ -86,14 +89,14 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.UpdateBeneficiariesYesNoController.onPageLoad(mode).url
+      redirectLocation(result).value mustEqual routes.UpdateBeneficiariesYesNoController.onPageLoad().url
 
       application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, updateTrusteesYesNoRoute)
@@ -108,7 +111,7 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, mode, prefix)(fakeRequest, messages).toString
+        view(boundForm, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

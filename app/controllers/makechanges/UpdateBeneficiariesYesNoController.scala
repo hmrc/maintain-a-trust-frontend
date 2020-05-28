@@ -19,7 +19,6 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.{CloseMode, Mode}
 import pages.makechanges.UpdateBeneficiariesYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -32,35 +31,35 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UpdateBeneficiariesYesNoController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        playbackRepository: PlaybackRepository,
-                                        actions: AuthenticateForPlayback,
-                                        yesNoFormProvider: YesNoFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateBeneficiariesYesNoView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                    override val messagesApi: MessagesApi,
+                                                    playbackRepository: PlaybackRepository,
+                                                    actions: AuthenticateForPlayback,
+                                                    yesNoFormProvider: YesNoFormProvider,
+                                                    val controllerComponents: MessagesControllerComponents,
+                                                    view: UpdateBeneficiariesYesNoView
+                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       val preparedForm = request.userAnswers.get(UpdateBeneficiariesYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode, prefix(mode)))
+      Ok(view(preparedForm, prefix(request.closingTrust)))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, mode, prefix(mode)))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
 
         value => {
           for {
@@ -70,17 +69,14 @@ class UpdateBeneficiariesYesNoController @Inject()(
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
-            Redirect(controllers.makechanges.routes.UpdateSettlorsYesNoController.onPageLoad(mode))
+            Redirect(controllers.makechanges.routes.UpdateSettlorsYesNoController.onPageLoad())
           }
         }
       )
   }
 
-  private def prefix(mode: Mode): String = {
-    mode match {
-      case CloseMode => "updateBeneficiariesClosing"
-      case _ => "updateBeneficiaries"
-    }
+  private def prefix(closingTrust: Boolean): String = {
+    if (closingTrust) "updateBeneficiariesClosing" else "updateBeneficiaries"
   }
 
 }

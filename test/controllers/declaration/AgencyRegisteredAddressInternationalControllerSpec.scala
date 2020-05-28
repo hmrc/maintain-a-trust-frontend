@@ -18,8 +18,10 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.InternationalAddressFormProvider
-import models.{InternationalAddress, NormalMode, Mode}
-import pages.AgencyRegisteredAddressInternationalPage
+import models.pages.WhatIsNext.MakeChanges
+import models.{InternationalAddress, UserAnswers}
+import pages.WhatIsNextPage
+import pages.declaration.AgencyRegisteredAddressInternationalPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.countryoptions.CountryOptionsNonUK
@@ -29,14 +31,16 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
   val formProvider = new InternationalAddressFormProvider()
   val form = formProvider()
-  val mode: Mode = NormalMode
-  lazy val agencyRegisteredAddressInternationalRoute = routes.AgencyRegisteredAddressInternationalController.onPageLoad(mode).url
+  lazy val agencyRegisteredAddressInternationalRoute = routes.AgencyRegisteredAddressInternationalController.onPageLoad().url
+
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, MakeChanges).success.value
 
   "AgencyRegisteredAddressInternational Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, agencyRegisteredAddressInternationalRoute)
 
@@ -48,14 +52,14 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, mode, countryOptions)(request, messages).toString
+        view(form, countryOptions)(request, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = baseAnswers
         .set(AgencyRegisteredAddressInternationalPage, InternationalAddress("line 1", "line 2", Some("line 3"), "country")).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -70,7 +74,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(InternationalAddress("line 1","line 2", Some("line 3"), "country")), mode, countryOptions)(fakeRequest, messages).toString
+        view(form.fill(InternationalAddress("line 1","line 2", Some("line 3"), "country")), countryOptions)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -78,7 +82,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
     "redirect to the next page when valid data is submitted" in {
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressInternationalRoute)
@@ -88,14 +92,14 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AgentDeclarationController.onPageLoad(mode).url
+      redirectLocation(result).value mustEqual routes.AgentDeclarationController.onPageLoad().url
 
       application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressInternationalRoute)
@@ -111,7 +115,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, mode, countryOptions)(fakeRequest, messages).toString
+        view(boundForm, countryOptions)(fakeRequest, messages).toString
 
       application.stop()
     }

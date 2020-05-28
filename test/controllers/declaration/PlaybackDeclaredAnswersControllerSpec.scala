@@ -20,11 +20,13 @@ import java.time.{LocalDate, LocalDateTime}
 
 import base.SpecBase
 import models.http.NameType
-import models.{AgentDeclaration, CloseMode, UKAddress, NormalMode, UserAnswers}
+import models.pages.WhatIsNext
+import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
+import models.{AgentDeclaration, UKAddress, UserAnswers}
 import pages.beneficiaries.charity._
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
-import pages.{SubmissionDatePage, TVNPage}
+import pages.{SubmissionDatePage, TVNPage, WhatIsNextPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
@@ -40,7 +42,8 @@ class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
   "PlaybackDeclaredAnswersController Controller" must {
 
-    val playbackAnswers = UserAnswers("internalId")
+    def playbackAnswers(whatIsNext: WhatIsNext) = UserAnswers("internalId")
+      .set(WhatIsNextPage, whatIsNext).success.value
       .set(TVNPage, fakeTvn).success.value
       .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
       .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value
@@ -56,15 +59,17 @@ class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
       .set(CharityBeneficiaryDiscretionYesNoPage(1), false).success.value
       .set(CharityBeneficiaryAddressYesNoPage(1), false).success.value
 
-    val entities = injector.instanceOf[PrintPlaybackHelper].entities(playbackAnswers)
-
-    val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(playbackAnswers)
-
     "return OK and the correct view for a GET when making changes" in {
 
-      val application = applicationBuilder(userAnswers = Some(playbackAnswers), AffinityGroup.Agent).build()
+      val answers = playbackAnswers(MakeChanges)
 
-      val request = FakeRequest(GET, routes.PlaybackDeclaredAnswersController.onPageLoad(NormalMode).url)
+      val entities = injector.instanceOf[PrintPlaybackHelper].entities(answers)
+
+      val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(answers)
+
+      val application = applicationBuilder(userAnswers = Some(answers), AffinityGroup.Agent).build()
+
+      val request = FakeRequest(GET, routes.PlaybackDeclaredAnswersController.onPageLoad().url)
 
       val result = route(application, request).value
 
@@ -87,13 +92,18 @@ class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET when closing" in {
 
-      val answers = playbackAnswers.set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
+      val answers = playbackAnswers(CloseTrust)
+        .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
+
+      val entities = injector.instanceOf[PrintPlaybackHelper].entities(answers)
+
+      val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(answers)
 
       val closeDate = injector.instanceOf[PrintPlaybackHelper].closeDate(answers)
 
       val application = applicationBuilder(userAnswers = Some(answers), AffinityGroup.Agent).build()
 
-      val request = FakeRequest(GET, routes.PlaybackDeclaredAnswersController.onPageLoad(CloseMode).url)
+      val request = FakeRequest(GET, routes.PlaybackDeclaredAnswersController.onPageLoad().url)
 
       val result = route(application, request).value
 

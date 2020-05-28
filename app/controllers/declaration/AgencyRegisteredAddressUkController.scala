@@ -19,8 +19,8 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.UKAddressFormProvider
-import models.Mode
-import pages.AgencyRegisteredAddressUkPage
+import models.UKAddress
+import pages.declaration.AgencyRegisteredAddressUkPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -38,11 +38,11 @@ class AgencyRegisteredAddressUkController @Inject()(
                                                      formProvider: UKAddressFormProvider,
                                                      val controllerComponents: MessagesControllerComponents,
                                                      view: AgencyRegisteredAddressUkView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                   )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[UKAddress] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgencyRegisteredAddressUkPage) match {
@@ -50,15 +50,15 @@ class AgencyRegisteredAddressUkController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(preparedForm))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future.successful(BadRequest(view(formWithErrors))),
 
         value => {
           for {
@@ -67,7 +67,7 @@ class AgencyRegisteredAddressUkController @Inject()(
                 .set(AgencyRegisteredAddressUkPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.declaration.routes.AgentDeclarationController.onPageLoad(mode))
+          } yield Redirect(controllers.declaration.routes.AgentDeclarationController.onPageLoad())
         }
       )
 

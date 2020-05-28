@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
-import models.Mode
+import models.IndividualDeclaration
 import models.http.TVNResponse
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.IndividualDeclarationPage
@@ -47,9 +47,9 @@ class IndividualDeclarationController @Inject()(
                                                  service: DeclarationService
                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[IndividualDeclaration] = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(IndividualDeclarationPage) match {
@@ -57,15 +57,15 @@ class IndividualDeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, request.closingTrust))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future.successful(BadRequest(view(formWithErrors, request.closingTrust))),
 
         declaration => {
           request.userAnswers.get(UTRPage) match {
@@ -82,7 +82,7 @@ class IndividualDeclarationController @Inject()(
                         .flatMap(_.set(TVNPage, tvn))
                     )
                     _ <- playbackRepository.set(updatedAnswers)
-                  } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad(mode))
+                  } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
                 case _ =>
                   Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
               }

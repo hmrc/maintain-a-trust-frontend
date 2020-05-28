@@ -20,36 +20,25 @@ POST       /unique-taxpayer-reference                   controllers.UTRControlle
 
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
 
-GET        /make-changes/agent-declaration              controllers.declaration.AgentDeclarationController.onPageLoad(mode: Mode = NormalMode)
-POST       /make-changes/agent-declaration              controllers.declaration.AgentDeclarationController.onSubmit(mode: Mode = NormalMode)
-GET        /close/agent-declaration                     controllers.declaration.AgentDeclarationController.onPageLoad(mode: Mode = CloseMode)
-POST       /close/agent-declaration                     controllers.declaration.AgentDeclarationController.onSubmit(mode: Mode = CloseMode)
+GET        /agent-declaration                           controllers.declaration.AgentDeclarationController.onPageLoad()
+POST       /agent-declaration                           controllers.declaration.AgentDeclarationController.onSubmit()
 
-GET        /make-changes/individual-declaration         controllers.declaration.IndividualDeclarationController.onPageLoad(mode: Mode = NormalMode)
-POST       /make-changes/individual-declaration         controllers.declaration.IndividualDeclarationController.onSubmit(mode: Mode = NormalMode)
-GET        /close/individual-declaration                controllers.declaration.IndividualDeclarationController.onPageLoad(mode: Mode = CloseMode)
-POST       /close/individual-declaration                controllers.declaration.IndividualDeclarationController.onSubmit(mode: Mode = CloseMode)
+GET        /individual-declaration                      controllers.declaration.IndividualDeclarationController.onPageLoad()
+POST       /individual-declaration                      controllers.declaration.IndividualDeclarationController.onSubmit()
 
-GET        /make-changes/confirmation                   controllers.declaration.ConfirmationController.onPageLoad(mode: Mode = NormalMode)
-GET        /close/confirmation                          controllers.declaration.ConfirmationController.onPageLoad(mode: Mode = CloseMode)
+GET        /confirmation                                controllers.declaration.ConfirmationController.onPageLoad()
 
 GET        /declare-what-changed                        controllers.WhatIsNextController.onPageLoad()
 POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()
 
-GET        /make-changes/is-agency-address-in-uk        controllers.declaration.AgencyRegisteredAddressUkYesNoController.onPageLoad(mode: Mode = NormalMode)
-POST       /make-changes/is-agency-address-in-uk        controllers.declaration.AgencyRegisteredAddressUkYesNoController.onSubmit(mode: Mode = NormalMode)
-GET        /close/is-agency-address-in-uk               controllers.declaration.AgencyRegisteredAddressUkYesNoController.onPageLoad(mode: Mode = CloseMode)
-POST       /close/is-agency-address-in-uk               controllers.declaration.AgencyRegisteredAddressUkYesNoController.onSubmit(mode: Mode = CloseMode)
+GET        /is-agency-address-in-uk                     controllers.declaration.AgencyRegisteredAddressUkYesNoController.onPageLoad()
+POST       /is-agency-address-in-uk                     controllers.declaration.AgencyRegisteredAddressUkYesNoController.onSubmit()
 
-GET        /make-changes/agency/address/uk              controllers.declaration.AgencyRegisteredAddressUkController.onPageLoad(mode: Mode = NormalMode)
-POST       /make-changes/agency/address/uk              controllers.declaration.AgencyRegisteredAddressUkController.onSubmit(mode: Mode = NormalMode)
-GET        /close/agency/address/uk                     controllers.declaration.AgencyRegisteredAddressUkController.onPageLoad(mode: Mode = CloseMode)
-POST       /close/agency/address/uk                     controllers.declaration.AgencyRegisteredAddressUkController.onSubmit(mode: Mode = CloseMode)
+GET        /agency/address/uk                           controllers.declaration.AgencyRegisteredAddressUkController.onPageLoad()
+POST       /agency/address/uk                           controllers.declaration.AgencyRegisteredAddressUkController.onSubmit()
 
-GET        /make-changes/agency/address/international   controllers.declaration.AgencyRegisteredAddressInternationalController.onPageLoad(mode: Mode = NormalMode)
-POST       /make-changes/agency/address/international   controllers.declaration.AgencyRegisteredAddressInternationalController.onSubmit(mode: Mode = NormalMode)
-GET        /close/agency/address/international          controllers.declaration.AgencyRegisteredAddressInternationalController.onPageLoad(mode: Mode = CloseMode)
-POST       /close/agency/address/international          controllers.declaration.AgencyRegisteredAddressInternationalController.onSubmit(mode: Mode = CloseMode)
+GET        /agency/address/international                controllers.declaration.AgencyRegisteredAddressInternationalController.onPageLoad()
+POST       /agency/address/international                controllers.declaration.AgencyRegisteredAddressInternationalController.onSubmit()
 
 GET        /create-agent-services-account               controllers.CreateAgentServicesAccountController.onPageLoad()
 
@@ -74,49 +63,36 @@ GET        /last-declaration                            controllers.PlaybackAnsw
 
 GET        /draft-declaration                           controllers.declaration.PlaybackDraftAnswersController.onPageLoad()
 
-GET        /make-changes/declared-updates               controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad(mode: Mode = NormalMode)
-GET        /close/declared-updates                      controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad(mode: Mode = CloseMode)
+GET        /declared-updates                            controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad()
 
 GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=true)
 GET        /continue-maintaining-this-trust             controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=false)
 
-GET        /make-changes/update-trustees                controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad(mode: Mode = NormalMode)
-POST       /make-changes/update-trustees                controllers.makechanges.UpdateTrusteesYesNoController.onSubmit(mode: Mode = NormalMode)
-GET        /close/update-trustees                       controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad(mode: Mode = CloseMode)
-POST       /close/update-trustees                       controllers.makechanges.UpdateTrusteesYesNoController.onSubmit(mode: Mode = CloseMode)
+GET        /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad()
+POST       /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onSubmit()
 
-GET        /make-changes/update-beneficiaries           controllers.makechanges.UpdateBeneficiariesYesNoController.onPageLoad(mode: Mode = NormalMode)
-POST       /make-changes/update-beneficiaries           controllers.makechanges.UpdateBeneficiariesYesNoController.onSubmit(mode: Mode = NormalMode)
-GET        /close/update-beneficiaries                  controllers.makechanges.UpdateBeneficiariesYesNoController.onPageLoad(mode: Mode = CloseMode)
-POST       /close/update-beneficiaries                  controllers.makechanges.UpdateBeneficiariesYesNoController.onSubmit(mode: Mode = CloseMode)
+GET        /update-beneficiaries                        controllers.makechanges.UpdateBeneficiariesYesNoController.onPageLoad()
+POST       /update-beneficiaries                        controllers.makechanges.UpdateBeneficiariesYesNoController.onSubmit()
 
-GET        /make-changes/update-settlors                controllers.makechanges.UpdateSettlorsYesNoController.onPageLoad(mode: Mode = NormalMode)
-POST       /make-changes/update-settlors                controllers.makechanges.UpdateSettlorsYesNoController.onSubmit(mode: Mode = NormalMode)
-GET        /close/update-settlors                       controllers.makechanges.UpdateSettlorsYesNoController.onPageLoad(mode: Mode = CloseMode)
-POST       /close/update-settlors                       controllers.makechanges.UpdateSettlorsYesNoController.onSubmit(mode: Mode = CloseMode)
+GET        /update-settlors                             controllers.makechanges.UpdateSettlorsYesNoController.onPageLoad()
+POST       /update-settlors                             controllers.makechanges.UpdateSettlorsYesNoController.onSubmit()
 
-GET        /make-changes/add-protector                  controllers.makechanges.AddProtectorYesNoController.onPageLoad(mode: Mode = NormalMode)
-POST       /make-changes/add-protector                  controllers.makechanges.AddProtectorYesNoController.onSubmit(mode: Mode = NormalMode)
-GET        /close/add-protector                         controllers.makechanges.AddProtectorYesNoController.onPageLoad(mode: Mode = CloseMode)
-POST       /close/add-protector                         controllers.makechanges.AddProtectorYesNoController.onSubmit(mode: Mode = CloseMode)
+GET        /add-protector                               controllers.makechanges.AddProtectorYesNoController.onPageLoad()
+POST       /add-protector                               controllers.makechanges.AddProtectorYesNoController.onSubmit()
 
-GET        /make-changes/update-protector               controllers.makechanges.UpdateProtectorYesNoController.onPageLoad(mode: Mode = NormalMode)
-POST       /make-changes/update-protector               controllers.makechanges.UpdateProtectorYesNoController.onSubmit(mode: Mode = NormalMode)
-GET        /close/update-protector                      controllers.makechanges.UpdateProtectorYesNoController.onPageLoad(mode: Mode = CloseMode)
-POST       /close/update-protector                      controllers.makechanges.UpdateProtectorYesNoController.onSubmit(mode: Mode = CloseMode)
+GET        /update-protector                            controllers.makechanges.UpdateProtectorYesNoController.onPageLoad()
+POST       /update-protector                            controllers.makechanges.UpdateProtectorYesNoController.onSubmit()
 
-GET        /make-changes/add-other-individuals          controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad(mode: Mode = NormalMode)
-POST       /make-changes/add-other-individuals          controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit(mode: Mode = NormalMode)
-GET        /close/add-other-individuals                 controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad(mode: Mode = CloseMode)
-POST       /close/add-other-individuals                 controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit(mode: Mode = CloseMode)
+GET        /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad()
+POST       /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit()
 
-GET        /close/know-date-last-asset-shared-out       controllers.close.DateLastAssetSharedOutYesNoController.onPageLoad()
-POST       /close/know-date-last-asset-shared-out       controllers.close.DateLastAssetSharedOutYesNoController.onSubmit()
+GET        /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onPageLoad()
+POST       /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onSubmit()
 
-GET        /close/date-last-asset-shared-out            controllers.close.DateLastAssetSharedOutController.onPageLoad()
-POST       /close/date-last-asset-shared-out            controllers.close.DateLastAssetSharedOutController.onSubmit()
+GET        /date-last-asset-shared-out                  controllers.close.DateLastAssetSharedOutController.onPageLoad()
+POST       /date-last-asset-shared-out                  controllers.close.DateLastAssetSharedOutController.onSubmit()
 
-GET        /close/how-to-close-trust                    controllers.close.HowToCloseATrustController.onPageLoad()
+GET        /how-to-close-trust                          controllers.close.HowToCloseATrustController.onPageLoad()
 
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 

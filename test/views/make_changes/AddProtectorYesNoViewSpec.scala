@@ -18,7 +18,6 @@ package views.make_changes
 
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.{NormalMode, Mode}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
@@ -29,15 +28,14 @@ class AddProtectorYesNoViewSpec extends YesNoViewBehaviours {
 
   val messageKeyPrefix = "addProtector"
   val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-  val mode: Mode = NormalMode
-  lazy val onSubmit: Call = routes.AddProtectorYesNoController.onSubmit(mode)
+  lazy val onSubmit: Call = routes.AddProtectorYesNoController.onSubmit()
 
   "AddProtectorYesNo view" must {
 
     val view = viewFor[AddProtectorYesNoView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, mode, messageKeyPrefix)(fakeRequest, messages)
+      view.apply(form, messageKeyPrefix)(fakeRequest, messages)
 
     behave like normalPage(applyView(form), messageKeyPrefix)
 

@@ -18,9 +18,8 @@ package views.declaration
 
 import config.FrontendAppConfig
 import forms.declaration.IndividualDeclarationFormProvider
-import models.{IndividualDeclaration, NormalMode}
+import models.IndividualDeclaration
 import play.api.data.Form
-import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import views.behaviours.QuestionViewBehaviours
 import views.html.declaration.IndividualDeclarationView
@@ -38,7 +37,7 @@ class IndividualDeclarationViewSpec extends QuestionViewBehaviours[IndividualDec
     val view = viewFor[IndividualDeclarationView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, NormalMode)(fakeRequest, messages)
+      view.apply(form, closingTrust = false)(fakeRequest, messages)
 
     if(appConfig.declarationEmailEnabled) {
       behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1", "paragraph2")

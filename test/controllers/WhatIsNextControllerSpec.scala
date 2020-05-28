@@ -25,7 +25,7 @@ import play.api.data.Form
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.{UTRView, WhatIsNextView}
+import views.html.WhatIsNextView
 
 class WhatIsNextControllerSpec extends SpecBase {
 
@@ -112,7 +112,7 @@ class WhatIsNextControllerSpec extends SpecBase {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustBe
-        controllers.declaration.routes.IndividualDeclarationController.onPageLoad(NormalMode).url
+        controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
       application.stop()
     }
@@ -133,7 +133,7 @@ class WhatIsNextControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(NormalMode).url
+      redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
 
       application.stop()
     }

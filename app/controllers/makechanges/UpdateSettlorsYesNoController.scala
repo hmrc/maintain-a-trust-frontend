@@ -20,7 +20,6 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.{CloseMode, Mode}
 import pages.UTRPage
 import pages.makechanges.UpdateSettlorsYesNoPage
 import play.api.data.Form
@@ -34,36 +33,36 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UpdateSettlorsYesNoController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        playbackRepository: PlaybackRepository,
-                                        trustConnector: TrustConnector,
-                                        actions: AuthenticateForPlayback,
-                                        yesNoFormProvider: YesNoFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateSettlorsYesNoView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                               override val messagesApi: MessagesApi,
+                                               playbackRepository: PlaybackRepository,
+                                               trustConnector: TrustConnector,
+                                               actions: AuthenticateForPlayback,
+                                               yesNoFormProvider: YesNoFormProvider,
+                                               val controllerComponents: MessagesControllerComponents,
+                                               view: UpdateSettlorsYesNoView
+                                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       val preparedForm = request.userAnswers.get(UpdateSettlorsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode, prefix(mode)))
+      Ok(view(preparedForm, prefix(request.closingTrust)))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(mode))
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, mode, prefix(mode)))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
 
         value => {
           for {
@@ -75,20 +74,17 @@ class UpdateSettlorsYesNoController @Inject()(
             protectorsExist <- trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.get(UTRPage).get)
           } yield {
               if(protectorsExist.value) {
-                Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad(mode))
+                Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
               } else {
-                Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad(mode))
+                Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
               }
           }
         }
       )
   }
 
-  private def prefix(mode: Mode): String = {
-    mode match {
-      case CloseMode => "updateSettlorsClosing"
-      case _ => "updateSettlors"
-    }
+  private def prefix(closingTrust: Boolean): String = {
+    if (closingTrust) "updateSettlorsClosing" else "updateSettlors"
   }
 
 }

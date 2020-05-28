@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package pages
+package pages.declaration
 
 import models.InternationalAddress
+import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object AgencyRegisteredAddressInternationalPage extends QuestionPage[InternationalAddress] {

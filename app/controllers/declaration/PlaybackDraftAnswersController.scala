@@ -16,20 +16,13 @@
 
 package controllers.declaration
 
-import java.time.LocalDateTime
-
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.{AuthenticateForPlayback, RequireClosingTrustAnswerAction}
 import javax.inject.Inject
-import models.{CloseMode, NormalMode, Mode}
-import pages.declaration.AgentDeclarationPage
-import pages.{SubmissionDatePage, TVNPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import utils.DateFormatter
 import utils.print.PrintPlaybackHelper
-import views.html.declaration.{PlaybackDeclaredAnswersView, PlaybackDraftAnswersView, PlaybackFinalDeclaredAnswersView}
+import views.html.declaration.PlaybackDraftAnswersView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,7 +34,7 @@ class PlaybackDraftAnswersController @Inject()(
                                                 printPlaybackAnswersHelper: PrintPlaybackHelper
                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)

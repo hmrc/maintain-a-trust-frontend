@@ -25,13 +25,13 @@
         formHelper: FormWithCSRF
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)} ${messages("declaration.title")}"
 ) {
 
-    @formHelper(action = AgentDeclarationController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = AgentDeclarationController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -94,7 +94,7 @@
 
         @{
             components.warning(
-                if(mode == CloseMode) {
+                if(closingTrust) {
                     "declaration.closing.agent"
                 } else {
                     "declaration.variation.agent"

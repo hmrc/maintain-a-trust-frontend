@@ -18,21 +18,21 @@ package controllers
 
 import base.SpecBase
 import connectors.TrustsStoreConnector
-import models.{CompletedMaintenanceTasks, NormalMode}
-import models.pages.Tag.{InProgress, UpToDate}
+import models.CompletedMaintenanceTasks
+import models.pages.Tag.InProgress
 import models.pages.WhatIsNext
+import org.mockito.Matchers.any
+import org.mockito.Mockito._
 import pages.{UTRPage, WhatIsNextPage}
+import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import sections.Protectors
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
-import play.api.inject.bind
-import org.mockito.Matchers.any
-import org.mockito.Mockito._
-import sections.Protectors
 
 import scala.concurrent.Future
 
@@ -44,7 +44,7 @@ class VariationProgressControllerSpec extends SpecBase {
 
   val fakeUTR = "1234567890"
 
-  val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad(NormalMode).url
+  val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
   val mandatorySections = List(
     Task(Link(Settlors, "http://localhost:9795/maintain-a-trust/settlors/1234567890"), Some(InProgress)),
@@ -58,7 +58,7 @@ class VariationProgressControllerSpec extends SpecBase {
 
   "VariationProgress Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "return OK and the correct view for a GET when making changes" in {
 
       val mockConnector = mock[TrustsStoreConnector]
 
@@ -85,14 +85,49 @@ class VariationProgressControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, NormalMode)(fakeRequest, messages).toString
+        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(fakeRequest, messages).toString
+
+      application.stop()
+    }
+
+    "return OK and the correct view for a GET when closing the trust" in {
+
+      val mockConnector = mock[TrustsStoreConnector]
+
+      val answers = emptyUserAnswers
+        .set(UTRPage, fakeUTR).success.value
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
+
+      val application = applicationBuilder(userAnswers = Some(answers))
+        .overrides(
+          Seq(
+            bind(classOf[TrustsStoreConnector]).toInstance(mockConnector)
+          )
+        )
+        .build()
+
+      when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+      val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
+
+      val result = route(application, request).value
+
+      val view = application.injector.instanceOf[VariationProgressView]
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(fakeRequest, messages).toString
 
       application.stop()
     }
 
     "redirect to UTR page when no utr is found" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val answers = emptyUserAnswers
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
 
         val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
 
@@ -103,6 +138,24 @@ class VariationProgressControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual routes.UTRController.onPageLoad().url
 
         application.stop()
+    }
+
+    "redirect to session expired page when no value found for What do you want to do next" in {
+
+      val answers = emptyUserAnswers
+        .set(UTRPage, fakeUTR).success.value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
+
+      application.stop()
     }
 
 

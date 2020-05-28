@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBase
 import forms.DateFormProvider
-import models.{CloseMode, UserAnswers}
+import models.UserAnswers
 import org.scalatestplus.mockito.MockitoSugar
 import pages.StartDatePage
 import pages.close.DateLastAssetSharedOutPage
@@ -100,7 +100,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad(CloseMode).url
+      redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
 
       application.stop()
     }
@@ -123,18 +123,6 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
       contentAsString(result) mustEqual
         view(boundForm)(fakeRequest, messages).toString
-
-      application.stop()
-    }
-
-    "redirect to Session Expired for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      val result = route(application, getRequest()).value
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad().url
 
       application.stop()
     }

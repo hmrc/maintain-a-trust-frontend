@@ -18,8 +18,7 @@ package controllers.declaration
 
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
-import controllers.actions.AuthenticateForPlayback
-import models.{CloseMode, Mode}
+import controllers.actions.{AuthenticateForPlayback, RequireClosingTrustAnswerAction}
 import pages.TVNPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -37,11 +36,12 @@ class ConfirmationController @Inject()(
                                         val controllerComponents: MessagesControllerComponents,
                                         confirmationView: ConfirmationView,
                                         closeTrustConfirmationView: CloseTrustConfirmationView,
-                                        config: FrontendAppConfig
+                                        config: FrontendAppConfig,
+                                        answerRequiredAction: RequireClosingTrustAnswerAction
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = actions.refreshedData {
+  def onPageLoad(): Action[AnyContent] = actions.refreshedData.andThen(answerRequiredAction) {
     implicit request =>
 
       val isAgent = request.user.affinityGroup == Agent
@@ -52,11 +52,10 @@ class ConfirmationController @Inject()(
       }{
         tvn =>
           Ok(
-            mode match {
-              case CloseMode =>
-                closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
-              case _ =>
-                confirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
+            if (request.closingTrust) {
+              closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
+            } else {
+              confirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
             }
           )
       }

@@ -20,11 +20,12 @@ import base.SpecBase
 import connectors.TrustConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.{NormalMode, Mode}
+import models.UserAnswers
+import models.pages.WhatIsNext.MakeChanges
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
-import pages.UTRPage
 import pages.makechanges.UpdateSettlorsYesNoPage
+import pages.{UTRPage, WhatIsNextPage}
 import play.api.inject.bind
 import play.api.libs.json.JsBoolean
 import play.api.test.FakeRequest
@@ -38,14 +39,16 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
   val formProvider = new YesNoFormProvider()
   val prefix: String = "updateSettlors"
   val form = formProvider.withPrefix(prefix)
-  val mode: Mode = NormalMode
-  lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad(mode).url
+  lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad().url
+
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, MakeChanges).success.value
 
   "UpdateSettlorsYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, updateSettlorsYesNoRoute)
 
@@ -56,14 +59,14 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, mode, prefix)(fakeRequest, messages).toString
+        view(form, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(UpdateSettlorsYesNoPage, true).success.value
+      val userAnswers = baseAnswers.set(UpdateSettlorsYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -76,7 +79,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), mode, prefix)(fakeRequest, messages).toString
+        view(form.fill(true), prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -88,7 +91,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       val  mockTrustConnector = mock[TrustConnector]
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).get)).overrides(
+        applicationBuilder(userAnswers = Some(baseAnswers.set(UTRPage, utr).get)).overrides(
           bind[TrustConnector].toInstance(mockTrustConnector)
         ).build()
 
@@ -103,7 +106,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AddProtectorYesNoController.onPageLoad(mode).url
+      redirectLocation(result).value mustEqual routes.AddProtectorYesNoController.onPageLoad().url
 
       application.stop()
     }
@@ -115,7 +118,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       val  mockTrustConnector = mock[TrustConnector]
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).get)).overrides(
+        applicationBuilder(userAnswers = Some(baseAnswers.set(UTRPage, utr).get)).overrides(
           bind[TrustConnector].toInstance(mockTrustConnector)
         ).build()
 
@@ -130,14 +133,14 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.UpdateProtectorYesNoController.onPageLoad(mode).url
+      redirectLocation(result).value mustEqual routes.UpdateProtectorYesNoController.onPageLoad().url
 
       application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, updateSettlorsYesNoRoute)
@@ -152,7 +155,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, mode, prefix)(fakeRequest, messages).toString
+        view(boundForm, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

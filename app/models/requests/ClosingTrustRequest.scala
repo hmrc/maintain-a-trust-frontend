@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-package models
+package models.requests
 
-import play.api.mvc.JavascriptLiteral
+import models.UserAnswers
+import models.pages.WhatIsNext
+import play.api.mvc.WrappedRequest
 
-sealed trait Mode
-
-case object CheckMode extends Mode
-
-case object NormalMode extends Mode
-
-object Mode {
-
-  implicit val jsLiteral: JavascriptLiteral[Mode] = new JavascriptLiteral[Mode] {
-    override def to(value: Mode): String = value match {
-      case NormalMode => "NormalMode"
-      case CheckMode => "CheckMode"
-    }
-  }
+case class ClosingTrustRequest[T](request: DataRequest[T], closingTrust: Boolean) extends WrappedRequest[T](request){
+  val userAnswers:UserAnswers = request.userAnswers
+  val user: User = request.user
 }
