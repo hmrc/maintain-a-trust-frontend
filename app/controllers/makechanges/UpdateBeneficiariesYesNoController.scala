@@ -31,33 +31,35 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UpdateBeneficiariesYesNoController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        playbackRepository: PlaybackRepository,
-                                        actions: AuthenticateForPlayback,
-                                        yesNoFormProvider: YesNoFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateBeneficiariesYesNoView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                    override val messagesApi: MessagesApi,
+                                                    playbackRepository: PlaybackRepository,
+                                                    actions: AuthenticateForPlayback,
+                                                    yesNoFormProvider: YesNoFormProvider,
+                                                    val controllerComponents: MessagesControllerComponents,
+                                                    view: UpdateBeneficiariesYesNoView
+                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateBeneficiaries")
-
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       val preparedForm = request.userAnswers.get(UpdateBeneficiariesYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, prefix(request.closingTrust)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
 
         value => {
           for {
@@ -71,7 +73,10 @@ class UpdateBeneficiariesYesNoController @Inject()(
           }
         }
       )
+  }
 
+  private def prefix(closingTrust: Boolean): String = {
+    if (closingTrust) "updateBeneficiariesClosing" else "updateBeneficiaries"
   }
 
 }

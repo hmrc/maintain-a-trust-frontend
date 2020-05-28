@@ -35,7 +35,8 @@ import scala.concurrent.Future
 class UpdateProtectorsYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("updateProtector")
+  val prefix = "updateProtector"
+  val form = formProvider.withPrefix(prefix)
 
   lazy val updateProtectorYesNoRoute = routes.UpdateProtectorYesNoController.onPageLoad().url
 
@@ -54,7 +55,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -74,7 +75,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -150,7 +151,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

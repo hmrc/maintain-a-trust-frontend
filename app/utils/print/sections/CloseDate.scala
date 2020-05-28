@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
-package pages
+package utils.print.sections
 
-import models.InternationalAddress
-import play.api.libs.json.JsPath
+import models.UserAnswers
+import pages.close.DateLastAssetSharedOutPage
+import play.api.i18n.Messages
+import utils.print.sections.AnswerRowConverter._
+import viewmodels.AnswerSection
 
-case object AgencyRegisteredAddressInternationalPage extends QuestionPage[InternationalAddress] {
+object CloseDate {
 
-  override def path: JsPath = JsPath \ toString
+  def apply(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection = {
 
-  override def toString: String = "agencyRegisteredAddress"
+    AnswerSection(
+      headingKey = None,
+      Seq(
+        dateQuestion(DateLastAssetSharedOutPage, userAnswers, "dateLastAssetSharedOut")
+      ).flatten,
+      sectionKey = Some(messages("answerPage.section.closeDate.heading"))
+    )
+  }
+
 }

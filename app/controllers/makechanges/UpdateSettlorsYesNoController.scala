@@ -43,25 +43,31 @@ class UpdateSettlorsYesNoController @Inject()(
 
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateSettlors")
+  private def prefix(closingTrust: Boolean): String = {
+    if (closingTrust) "updateSettlorsClosing" else "updateSettlors"
+  }
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       val preparedForm = request.userAnswers.get(UpdateSettlorsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, prefix(request.closingTrust)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
 
         value => {
           for {
@@ -70,11 +76,10 @@ class UpdateSettlorsYesNoController @Inject()(
                 .set(UpdateSettlorsYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- routeToAddOrUpdateProtectors()
+            nextRoute <- routeToAddOrUpdateProtectors()(request.request)
           } yield nextRoute
         }
       )
-
   }
 
 }

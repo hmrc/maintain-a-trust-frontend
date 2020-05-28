@@ -16,10 +16,13 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import com.google.inject.{Inject, Singleton}
+import connectors.TrustConnector
 import controllers.actions.AuthenticateForPlayback
 import models.UserAnswers
-import pages.UTRPage
+import pages.{StartDatePage, UTRPage}
 import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.MessagesControllerComponents
@@ -31,7 +34,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class IndexController @Inject()(val controllerComponents: MessagesControllerComponents,
                                 actions: AuthenticateForPlayback,
-                                playbackRepository: PlaybackRepository
+                                playbackRepository: PlaybackRepository,
+                                connector: TrustConnector
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad() = actions.authWithSession.async {
@@ -47,15 +51,15 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
         } {
           utr =>
 
-            val userAnswers = UserAnswers(request.user.internalId)
-              .set(UTRPage, utr)
-
             for {
+              details <- connector.getTrustDetails(utr)
+              userAnswers <- Future.fromTry(UserAnswers(request.user.internalId)
+                .set(UTRPage, utr)
+                .flatMap(_.set(StartDatePage, LocalDate.parse(details.startDate))))
               _ <- playbackRepository.resetCache(request.user.internalId)
-              updatedAnswers <- Future.fromTry(userAnswers)
-              _ <- playbackRepository.set(updatedAnswers)
+              _ <- playbackRepository.set(userAnswers)
             } yield {
-              Logger.info(s"[IndexController] $utr user is enrolled, storing UTR in user answers, checking status of trust")
+              Logger.info(s"[IndexController] $utr user is enrolled, storing UTR and StartDate in user answers, checking status of trust")
               Redirect(controllers.routes.TrustStatusController.status())
             }
         }

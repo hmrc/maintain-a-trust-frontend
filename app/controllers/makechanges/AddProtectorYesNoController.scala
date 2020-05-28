@@ -25,7 +25,6 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.makechanges.AddProtectorYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,25 +43,31 @@ class AddProtectorYesNoController @Inject()(
 
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with I18nSupport {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("addProtector")
+  private def prefix(closingTrust: Boolean): String = {
+    if (closingTrust) "addProtectorClosing" else "addProtector"
+  }
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       val preparedForm = request.userAnswers.get(AddOrUpdateProtectorYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, prefix(request.closingTrust)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
 
         value => {
           for {
@@ -71,13 +76,12 @@ class AddProtectorYesNoController @Inject()(
                 .set(AddOrUpdateProtectorYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- routeToAddOrUpdateOtherIndividuals()
+            nextRoute <- routeToAddOrUpdateOtherIndividuals()(request.request)
           } yield {
             nextRoute
           }
         }
       )
-
   }
 
 }

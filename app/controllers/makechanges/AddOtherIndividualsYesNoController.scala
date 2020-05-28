@@ -44,32 +44,40 @@ class AddOtherIndividualsYesNoController @Inject()(
                                      )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector){
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("addOtherIndividuals")
+  private def prefix(closingTrust: Boolean): String = {
+    if (closingTrust) "addOtherIndividualsClosing" else "addOtherIndividuals"
+  }
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       val preparedForm = request.userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, prefix(request.closingTrust)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
         value => {
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            route <- routeToDeclareOrTaskList(updatedAnswers)
+            route <- routeToDeclareOrTaskList(updatedAnswers, request.closingTrust)(request.request)
           } yield route
         }
     )
   }
+
+
 }

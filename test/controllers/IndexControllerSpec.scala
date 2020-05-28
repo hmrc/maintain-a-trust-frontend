@@ -17,19 +17,31 @@
 package controllers
 
 import base.SpecBase
+import connectors.TrustConnector
+import models.TrustDetails
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, route, status, _}
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, EnrolmentIdentifier, Enrolments}
+
+import scala.concurrent.Future
 
 class IndexControllerSpec extends SpecBase {
 
   lazy val onPageLoad: String = routes.IndexController.onPageLoad().url
 
+  private val mockTrustConnector = mock[TrustConnector]
+
+  when(mockTrustConnector.getTrustDetails(any())(any(), any()))
+    .thenReturn(Future.successful(TrustDetails(startDate = "2019-06-01")))
+
   "Index Controller" must {
 
     "redirect to UTR controller when user is not enrolled" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(bind[TrustConnector].toInstance(mockTrustConnector)).build()
 
       val request = FakeRequest(GET, onPageLoad)
 
@@ -54,7 +66,7 @@ class IndexControllerSpec extends SpecBase {
             state = "Activated"
           )
         ))
-      ).build()
+      ).overrides(bind[TrustConnector].toInstance(mockTrustConnector)).build()
 
       val request = FakeRequest(GET, onPageLoad)
 

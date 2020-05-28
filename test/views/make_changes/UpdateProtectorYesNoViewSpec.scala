@@ -35,7 +35,7 @@ class UpdateProtectorYesNoViewSpec extends YesNoViewBehaviours {
     val view = viewFor[UpdateProtectorYesNoView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form)(fakeRequest, messages)
+      view.apply(form, messageKeyPrefix)(fakeRequest, messages)
 
     behave like normalPage(applyView(form), messageKeyPrefix)
 

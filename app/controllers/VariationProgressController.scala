@@ -42,7 +42,8 @@ class VariationProgressController @Inject()(
                                       val controllerComponents: MessagesControllerComponents,
                                       config: FrontendAppConfig,
                                       storeConnector: TrustsStoreConnector
-                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
+                                    )(implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
 
   lazy val notYetAvailable : String = controllers.routes.FeatureNotAvailableController.onPageLoad().url
 
@@ -112,7 +113,7 @@ class VariationProgressController @Inject()(
     TaskList(mandatorySections, optionalSections)
   }
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       request.userAnswers.get(UTRPage) match {
@@ -134,9 +135,9 @@ class VariationProgressController @Inject()(
                 sections.other,
                 request.user.affinityGroup,
                 next,
-                isAbleToDeclare = sections.isAbleToDeclare
+                isAbleToDeclare = sections.isAbleToDeclare,
+                request.closingTrust
               ))
-
           }
         case _ =>
           Future.successful(Redirect(routes.UTRController.onPageLoad()))

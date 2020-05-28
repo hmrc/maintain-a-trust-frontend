@@ -45,9 +45,10 @@ class WhatIsNextController @Inject()(
                                       trustConnector: TrustConnector,
                                       trustsStoreConnector: TrustsStoreConnector
                                     )(implicit ec: ExecutionContext)
+
   extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) with Enumerable.Implicits {
 
-  val form = formProvider()
+  val form: Form[WhatIsNext] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
@@ -78,8 +79,8 @@ class WhatIsNextController @Inject()(
             case WhatIsNext.MakeChanges =>
               Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
 
-            case _ =>
-              Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+            case WhatIsNext.CloseTrust =>
+              Redirect(controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad())
           }
         }
       )

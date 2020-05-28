@@ -14,20 +14,17 @@
  * limitations under the License.
  *@
 
-@import play.api.mvc.Call
-@import config.FrontendAppConfig
 @import controllers.makechanges.routes._
 
 @this(
-        appConfig: FrontendAppConfig,
         main_template: MainTemplate,
         formHelper: FormWithCSRF
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], prefix: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("updateBeneficiaries.title")}"
+    title = s"${errorPrefix(form)} ${messages(s"$prefix.title")}"
 ) {
 
     @formHelper(action = UpdateBeneficiariesYesNoController.onSubmit(), 'autoComplete -> "off") {
@@ -38,7 +35,7 @@
 
         @components.input_yes_no(
             field = form("value"),
-            label = messages("updateBeneficiaries.heading"),
+            label = messages(s"$prefix.heading"),
             legendClass = Some("heading-large"),
             legendAsHeading = true
         )

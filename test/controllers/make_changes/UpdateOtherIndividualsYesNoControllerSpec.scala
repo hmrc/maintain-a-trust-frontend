@@ -21,9 +21,10 @@ import connectors.TrustsStoreConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
 import models.CompletedMaintenanceTasks
+import models.pages.WhatIsNext
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
-import pages.UTRPage
+import pages.{UTRPage, WhatIsNextPage}
 import pages.makechanges._
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -35,7 +36,10 @@ import scala.concurrent.Future
 class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("updateOtherIndividuals")
+
+  val prefix = "updateOtherIndividuals"
+
+  val form = formProvider.withPrefix(prefix)
 
   val mockConnector = mock[TrustsStoreConnector]
 
@@ -45,7 +49,10 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val userAnswers = emptyUserAnswers
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request = FakeRequest(GET, updateOtherIndividualsYesNoRoute)
 
@@ -56,7 +63,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -65,6 +72,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       val userAnswers = emptyUserAnswers
         .set(AddOrUpdateOtherIndividualsYesNoPage, true).success.value
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -77,7 +85,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -87,6 +95,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
       val utr = "0987654321"
 
       val userAnswers = emptyUserAnswers
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
         .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
@@ -114,6 +123,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
       val utr = "0987654321"
 
       val userAnswers = emptyUserAnswers
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
         .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
@@ -144,7 +154,10 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val userAnswers = emptyUserAnswers
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request =
         FakeRequest(POST, updateOtherIndividualsYesNoRoute)
@@ -159,7 +172,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

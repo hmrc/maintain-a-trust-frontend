@@ -18,6 +18,9 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.YesNoFormProvider
+import models.UserAnswers
+import models.pages.WhatIsNext.MakeChanges
+import pages.WhatIsNextPage
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -28,15 +31,17 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
   val form = formProvider.withPrefix("agencyRegisteredAddressUkYesNo")
-
   lazy val agencyRegisteredAddressUkYesNoRoute = routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
   lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit()
+
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, MakeChanges).success.value
 
   "AgencyRegisteredAddressUkYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, agencyRegisteredAddressUkYesNoRoute)
 
@@ -54,7 +59,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(AgencyRegisteredAddressUkYesNoPage, true).success.value
+      val userAnswers = baseAnswers.set(AgencyRegisteredAddressUkYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,8 +79,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
     "redirect to the next page when Yes is submitted" in {
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressUkYesNoRoute)
@@ -92,8 +96,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
     "redirect to the next page when No is submitted" in {
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressUkYesNoRoute)
@@ -110,7 +113,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressUkYesNoRoute)

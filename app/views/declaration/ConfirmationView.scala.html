@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import models.NormalMode
 @import controllers.declaration.routes._
 @import utils.AccessibilityHelper._
 
@@ -52,6 +53,5 @@
 
     @if(isAgent: Boolean) {
         @messages("confirmationPage.agent.you.can") @components.link(agentOverviewUrl, "agent-overview", "confirmationPage.agent.link", false)
-
     }
 }

@@ -18,8 +18,10 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.UKAddressFormProvider
-import models.UKAddress
-import pages.AgencyRegisteredAddressUkPage
+import models.pages.WhatIsNext.MakeChanges
+import models.{UKAddress, UserAnswers}
+import pages.WhatIsNextPage
+import pages.declaration.AgencyRegisteredAddressUkPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.declaration.AgencyRegisteredAddressUkView
@@ -28,14 +30,16 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
   val formProvider = new UKAddressFormProvider()
   val form = formProvider()
-
   lazy val agencyRegisteredAddressUkRoute = routes.AgencyRegisteredAddressUkController.onPageLoad().url
+
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, MakeChanges).success.value
 
   "AgencyRegisteredAddressUk Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, agencyRegisteredAddressUkRoute)
 
@@ -53,7 +57,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = baseAnswers
         .set(AgencyRegisteredAddressUkPage, UKAddress("line 1", "line 2", Some("line 3"), Some("line 4"),"line 5")).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -75,7 +79,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
     "redirect to the next page when valid data is submitted" in {
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressUkRoute)
@@ -92,7 +96,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, agencyRegisteredAddressUkRoute)

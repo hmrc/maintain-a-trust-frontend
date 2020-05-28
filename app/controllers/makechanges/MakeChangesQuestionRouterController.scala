@@ -18,7 +18,7 @@ package controllers.makechanges
 
 import connectors.{TrustConnector, TrustsStoreConnector}
 import models.UserAnswers
-import models.requests.DataRequest
+import models.requests.{ClosingTrustRequest, DataRequest}
 import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -83,10 +83,14 @@ abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnecto
     }
   }
 
-  protected def routeToDeclareOrTaskList(updatedAnswers: UserAnswers)(implicit request: DataRequest[AnyContent]) : Future[Result] = {
+  protected def routeToDeclareOrTaskList(updatedAnswers: UserAnswers, isClosingTrust: Boolean)
+                                        (implicit request: DataRequest[AnyContent]) : Future[Result] = {
+
     MakeChangesRouter.decide(updatedAnswers) match {
-      case MakeChangesRouter.Declaration =>
+      case MakeChangesRouter.Declaration if !isClosingTrust =>
         Future.successful(redirectToDeclaration())
+      case MakeChangesRouter.Declaration if isClosingTrust =>
+        redirectAndResetTaskList(updatedAnswers)
       case MakeChangesRouter.TaskList =>
         redirectAndResetTaskList(updatedAnswers)
       case MakeChangesRouter.UnableToDecide =>

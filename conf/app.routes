@@ -61,6 +61,8 @@ GET        /feature-not-available                       controllers.FeatureNotAv
 
 GET        /last-declaration                            controllers.PlaybackAnswersController.onPageLoad()
 
+GET        /draft-declaration                           controllers.declaration.PlaybackDraftAnswersController.onPageLoad()
+
 GET        /declared-updates                            controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad()
 
 GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=true)
@@ -84,8 +86,17 @@ POST       /update-protector                            controllers.makechanges.
 GET        /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad()
 POST       /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit()
 
+
 GET        /update-other-individuals                       controllers.makechanges.UpdateOtherIndividualsYesNoController.onPageLoad()
 POST       /update-other-individuals                       controllers.makechanges.UpdateOtherIndividualsYesNoController.onSubmit()
+
+GET        /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onPageLoad()
+POST       /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onSubmit()
+
+GET        /date-last-asset-shared-out                  controllers.close.DateLastAssetSharedOutController.onPageLoad()
+POST       /date-last-asset-shared-out                  controllers.close.DateLastAssetSharedOutController.onSubmit()
+
+GET        /how-to-close-trust                          controllers.close.HowToCloseATrustController.onPageLoad()
 
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 

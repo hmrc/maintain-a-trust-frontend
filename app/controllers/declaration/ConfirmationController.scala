@@ -18,14 +18,14 @@ package controllers.declaration
 
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.{AuthenticateForPlayback, RequireClosingTrustAnswerAction}
 import pages.TVNPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.declaration.ConfirmationView
+import views.html.declaration.{CloseTrustConfirmationView, ConfirmationView}
 
 import scala.concurrent.ExecutionContext
 
@@ -34,12 +34,14 @@ class ConfirmationController @Inject()(
                                         override val messagesApi: MessagesApi,
                                         actions: AuthenticateForPlayback,
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: ConfirmationView,
-                                        config: FrontendAppConfig
+                                        confirmationView: ConfirmationView,
+                                        closeTrustConfirmationView: CloseTrustConfirmationView,
+                                        config: FrontendAppConfig,
+                                        answerRequiredAction: RequireClosingTrustAnswerAction
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
 
-  def onPageLoad() = actions.refreshedData {
+  def onPageLoad(): Action[AnyContent] = actions.refreshedData.andThen(answerRequiredAction) {
     implicit request =>
 
       val isAgent = request.user.affinityGroup == Agent
@@ -49,7 +51,13 @@ class ConfirmationController @Inject()(
         Redirect(controllers.routes.TrustStatusController.sorryThereHasBeenAProblem())
       }{
         tvn =>
-          Ok(view(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl))
+          Ok(
+            if (request.closingTrust) {
+              closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
+            } else {
+              confirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
+            }
+          )
       }
   }
 }

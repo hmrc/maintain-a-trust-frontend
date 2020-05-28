@@ -18,9 +18,11 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.declaration.AgentDeclarationFormProvider
-import models.{AgentDeclaration, UKAddress}
-import pages.declaration.AgencyRegisteredAddressUkYesNoPage
-import pages.{AgencyRegisteredAddressUkPage, UTRPage}
+import models.pages.WhatIsNext
+import models.pages.WhatIsNext.MakeChanges
+import models.{AgentDeclaration, UKAddress, UserAnswers}
+import pages.declaration.{AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage}
+import pages.{UTRPage, WhatIsNextPage}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
@@ -36,14 +38,17 @@ class AgentDeclarationControllerSpec extends SpecBase {
   val formProvider = new AgentDeclarationFormProvider()
   val form: Form[AgentDeclaration] = formProvider()
   val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
-
   lazy val onSubmit: Call = routes.AgentDeclarationController.onSubmit()
+
+  val whatIsNext: WhatIsNext = MakeChanges
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, whatIsNext).success.value
 
   "Agent Declaration Controller" must {
 
     "return OK and the correct view for a onPageLoad" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, routes.AgentDeclarationController.onPageLoad().url)
 
@@ -54,7 +59,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, onSubmit)(fakeRequest, messages).toString
+        view(form, closingTrust = false)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -67,7 +72,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
         "HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")), "Activated"
       )))
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = baseAnswers
         .set(UTRPage, utr).success.value
         .set(AgencyRegisteredAddressUkYesNoPage, true).success.value
         .set(AgencyRegisteredAddressUkPage, address).success.value
@@ -94,7 +99,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, routes.AgentDeclarationController.onPageLoad().url)
@@ -109,7 +114,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, onSubmit)(fakeRequest, messages).toString
+        view(boundForm, closingTrust = false)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -122,7 +127,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
         "HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")), "Activated"
       )))
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = baseAnswers
         .set(UTRPage, utr).success.value
         .set(AgencyRegisteredAddressUkYesNoPage, true).success.value
         .set(AgencyRegisteredAddressUkPage, address).success.value

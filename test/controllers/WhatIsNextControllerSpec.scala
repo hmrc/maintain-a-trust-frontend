@@ -18,13 +18,14 @@ package controllers
 
 import base.SpecBase
 import forms.WhatIsNextFormProvider
+import models.NormalMode
 import models.pages.WhatIsNext
 import pages.{UTRPage, WhatIsNextPage}
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.{UTRView, WhatIsNextView}
+import views.html.WhatIsNextView
 
 class WhatIsNextControllerSpec extends SpecBase {
 
@@ -137,7 +138,7 @@ class WhatIsNextControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to FeatureNotAvailable when user selects 'Close'" in {
+    "redirect to Do you know the date the last asset in the trust was shared out when user selects 'Close'" in {
 
       val utr = "0987654321"
 
@@ -153,7 +154,7 @@ class WhatIsNextControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
+      redirectLocation(result).value mustBe controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
 
       application.stop()
     }

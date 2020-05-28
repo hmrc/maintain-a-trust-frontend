@@ -16,7 +16,7 @@
 
 package controllers.declaration
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
@@ -25,7 +25,8 @@ import models.http.TVNResponse
 import models.requests.{AgentUser, DataRequest}
 import models.{Address, AgentDeclaration, UserAnswers}
 import pages._
-import pages.declaration.{AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
+import pages.close.DateLastAssetSharedOutPage
+import pages.declaration.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
 import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -46,11 +47,11 @@ class AgentDeclarationController @Inject()(
                                             val controllerComponents: MessagesControllerComponents,
                                             view: AgentDeclarationView,
                                             service: DeclarationService
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[AgentDeclaration] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgentDeclarationPage) match {
@@ -58,15 +59,15 @@ class AgentDeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, controllers.declaration.routes.AgentDeclarationController.onSubmit()))
+      Ok(view(preparedForm, request.closingTrust))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.AgentDeclarationController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors, request.closingTrust))),
 
         declaration => {
           request.user match {
@@ -75,7 +76,13 @@ class AgentDeclarationController @Inject()(
                 utr <- request.userAnswers.get(UTRPage)
                 agencyAddress <- getAgencyRegisteredAddress(request.userAnswers)
               } yield {
-                submitDeclaration(declaration, agentUser, utr, agencyAddress)
+                submitDeclaration(
+                  declaration,
+                  agentUser,
+                  utr,
+                  agencyAddress,
+                  request.userAnswers.get(DateLastAssetSharedOutPage)
+                )(request.request)
               }).getOrElse(handleError("Failed to get UTR or agency address"))
 
             case _ =>
@@ -88,14 +95,16 @@ class AgentDeclarationController @Inject()(
   private def submitDeclaration(declaration: AgentDeclaration,
                                 agentUser: AgentUser,
                                 utr: String,
-                                agencyAddress: Address)
-                               (implicit request: DataRequest[AnyContent]) = {
+                                agencyAddress: Address,
+                                endDate: Option[LocalDate]
+                               )(implicit request: DataRequest[AnyContent]) = {
 
-    service.agentDeclareNoChange(utr,
+    service.agentDeclaration(utr,
       declaration,
       agentUser.agentReferenceNumber,
       agencyAddress,
-      declaration.agencyName
+      declaration.agencyName,
+      endDate
     ) flatMap {
       case TVNResponse(tvn) =>
         for {
