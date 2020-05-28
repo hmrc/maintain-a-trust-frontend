@@ -95,6 +95,8 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
   lazy val maintainProtectorsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-protectors.enabled")
   lazy val maintainOtherIndividualsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-other-individuals.enabled")
 
+  lazy val closeATrustEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.close-a-trust.enabled")
+
   lazy val maintainATrusteeFrontendUrl : String =
     configuration.get[String]("urls.maintainATrustee")
 

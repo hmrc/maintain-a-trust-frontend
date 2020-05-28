@@ -79,8 +79,11 @@ class WhatIsNextController @Inject()(
             case WhatIsNext.MakeChanges =>
               Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
 
-            case WhatIsNext.CloseTrust =>
+            case WhatIsNext.CloseTrust if config.closeATrustEnabled =>
               Redirect(controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad())
+
+            case _ =>
+              Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
           }
         }
       )
