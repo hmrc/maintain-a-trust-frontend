@@ -21,6 +21,8 @@ import connectors.TrustConnector
 import models.TrustDetails
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
+import org.scalatest.concurrent.ScalaFutures
+import pages.UTRPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, route, status, _}
@@ -28,7 +30,7 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, EnrolmentIdentifier, Enr
 
 import scala.concurrent.Future
 
-class IndexControllerSpec extends SpecBase {
+class IndexControllerSpec extends SpecBase with ScalaFutures {
 
   lazy val onPageLoad: String = routes.IndexController.onPageLoad().url
 
@@ -36,6 +38,8 @@ class IndexControllerSpec extends SpecBase {
 
   when(mockTrustConnector.getTrustDetails(any())(any(), any()))
     .thenReturn(Future.successful(TrustDetails(startDate = "2019-06-01")))
+
+  val utr: String = "1234567892"
 
   "Index Controller" must {
 
@@ -62,13 +66,30 @@ class IndexControllerSpec extends SpecBase {
         enrolments = Enrolments(Set(
           Enrolment(
             key = "HMRC-TERS-ORG",
-            identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = "1234567892")),
+            identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = utr)),
             state = "Activated"
           )
         ))
       ).overrides(bind[TrustConnector].toInstance(mockTrustConnector)).build()
 
       val request = FakeRequest(GET, onPageLoad)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+      application.stop()
+    }
+
+    "redirect to status controller when user has been redirected from UTR controller" in {
+
+      val userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[TrustConnector].toInstance(mockTrustConnector)).build()
+
+      val request = FakeRequest(GET, routes.IndexController.saveStartDate().url)
 
       val result = route(application, request).value
 
