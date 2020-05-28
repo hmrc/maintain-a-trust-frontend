@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
 import forms.WhatIsNextFormProvider
 import models.Enumerable
@@ -38,7 +39,8 @@ class WhatIsNextController @Inject()(
                                       actions: AuthenticateForPlayback,
                                       formProvider: WhatIsNextFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
-                                      view: WhatIsNextView
+                                      view: WhatIsNextView,
+                                      config: FrontendAppConfig
                                     )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
 
   val form: Form[WhatIsNext] = formProvider()
@@ -72,8 +74,11 @@ class WhatIsNextController @Inject()(
             case WhatIsNext.MakeChanges =>
               Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
 
-            case _ =>
+            case WhatIsNext.CloseTrust if config.closeATrustEnabled =>
               Redirect(controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad())
+
+            case _ =>
+              Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
           }
         }
       )
