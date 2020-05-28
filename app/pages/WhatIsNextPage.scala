@@ -18,10 +18,9 @@ package pages
 
 import models.UserAnswers
 import models.pages.WhatIsNext
-import models.pages.WhatIsNext._
 import pages.close.{DateLastAssetSharedOutPage, DateLastAssetSharedOutYesNoPage}
-import pages.declaration.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage, IndividualDeclarationPage}
-import pages.makechanges.{AddOrUpdateOtherIndividualsYesNoPage, AddOrUpdateProtectorYesNoPage, UpdateBeneficiariesYesNoPage, UpdateSettlorsYesNoPage, UpdateTrusteesYesNoPage}
+import pages.declaration._
+import pages.makechanges._
 import play.api.libs.json.JsPath
 
 import scala.util.Try
@@ -35,13 +34,13 @@ case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
   override def cleanup(value: Option[WhatIsNext], userAnswers: UserAnswers): Try[UserAnswers] = {
     value match {
       case _ =>
-        removeDeclareData(userAnswers)
+        removeDeclarationData(userAnswers)
         .flatMap(answers => removeMakeChangesData(answers))
         .flatMap(answers => removeCloseTrustData(answers))
     }
   }
 
-  private def removeDeclareData(userAnswers: UserAnswers): Try[UserAnswers] = {
+  private def removeDeclarationData(userAnswers: UserAnswers): Try[UserAnswers] = {
     userAnswers.remove(AgencyRegisteredAddressUkYesNoPage)
       .flatMap(_.remove(AgencyRegisteredAddressUkPage))
       .flatMap(_.remove(AgencyRegisteredAddressInternationalPage))
