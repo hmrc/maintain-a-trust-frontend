@@ -20,9 +20,10 @@ import base.SpecBase
 import connectors.TrustConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.pages.WhatIsNext
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
-import pages.UTRPage
+import pages.{UTRPage, WhatIsNextPage}
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.inject.bind
 import play.api.libs.json.JsBoolean
@@ -40,11 +41,14 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
 
   lazy val updateProtectorYesNoRoute = routes.UpdateProtectorYesNoController.onPageLoad().url
 
+  val baseAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
   "UpdateProtectorYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, updateProtectorYesNoRoute)
 
@@ -62,7 +66,8 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(AddOrUpdateProtectorYesNoPage, true).success.value
+      val userAnswers = baseAnswers
+        .set(AddOrUpdateProtectorYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -87,7 +92,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       val  mockTrustConnector = mock[TrustConnector]
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).get)).overrides(
+        applicationBuilder(userAnswers = Some(baseAnswers.set(UTRPage, utr).get)).overrides(
           bind[TrustConnector].toInstance(mockTrustConnector)
         ).build()
 
@@ -114,7 +119,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       val  mockTrustConnector = mock[TrustConnector]
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).get)).overrides(
+        applicationBuilder(userAnswers = Some(baseAnswers.set(UTRPage, utr).get)).overrides(
           bind[TrustConnector].toInstance(mockTrustConnector)
         ).build()
 
@@ -136,7 +141,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, updateProtectorYesNoRoute)

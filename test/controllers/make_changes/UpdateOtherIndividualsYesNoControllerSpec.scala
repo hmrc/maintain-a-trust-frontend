@@ -45,14 +45,14 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   lazy val updateOtherIndividualsYesNoRoute = routes.UpdateOtherIndividualsYesNoController.onPageLoad().url
 
+  val baseAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
   "UpdateOtherIndividualsYesNoController" must {
 
     "return OK and the correct view for a GET" in {
 
-      val userAnswers = emptyUserAnswers
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, updateOtherIndividualsYesNoRoute)
 
@@ -70,9 +70,8 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = baseAnswers
         .set(AddOrUpdateOtherIndividualsYesNoPage, true).success.value
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -94,8 +93,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       val utr = "0987654321"
 
-      val userAnswers = emptyUserAnswers
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+      val userAnswers = baseAnswers
         .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
@@ -122,8 +120,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       val utr = "0987654321"
 
-      val userAnswers = emptyUserAnswers
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+      val userAnswers = baseAnswers
         .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
@@ -154,10 +151,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val userAnswers = emptyUserAnswers
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, updateOtherIndividualsYesNoRoute)
