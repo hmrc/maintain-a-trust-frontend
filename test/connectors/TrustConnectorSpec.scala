@@ -81,13 +81,9 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
           .willReturn(okJson(json.toString))
       )
 
-      val processed = connector.getTrustDetails(utr)
 
-      whenReady(processed) {
-        r =>
-          r mustBe TrustDetails(startDate = "1920-03-28")
-      }
-
+      val result  = Await.result(connector.getTrustDetails(utr), Duration.Inf)
+      result mustBe TrustDetails(startDate = "1920-03-28")
     }
 
     "playback data must" - {
