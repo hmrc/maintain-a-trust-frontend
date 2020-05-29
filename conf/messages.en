@@ -434,7 +434,7 @@ taskList.settlors.label = Settlors
 taskList.protectors.label = Protectors
 taskList.trustees.label = Trustees
 taskList.beneficiaries.label = Beneficiaries
-taskList.natural.label = Other representatives
+taskList.natural.label = Other individuals
 taskList.summary.continue = Continue to declaration
 
 featureNotAvailable.title = This part of the online service is not available yet
