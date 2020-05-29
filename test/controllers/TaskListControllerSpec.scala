@@ -36,7 +36,7 @@ import views.html.VariationProgressView
 
 import scala.concurrent.Future
 
-class VariationProgressControllerSpec extends SpecBase {
+class TaskListControllerSpec extends SpecBase {
 
   lazy val onPageLoad: String = routes.WhatIsNextController.onPageLoad().url
 
@@ -76,7 +76,7 @@ class VariationProgressControllerSpec extends SpecBase {
 
       when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
-      val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
+      val request = FakeRequest(GET, controllers.task_list.routes.TaskListController.onPageLoad().url)
 
       val result = route(application, request).value
 
@@ -108,7 +108,7 @@ class VariationProgressControllerSpec extends SpecBase {
 
       when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
-      val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
+      val request = FakeRequest(GET, controllers.task_list.routes.TaskListController.onPageLoad().url)
 
       val result = route(application, request).value
 
@@ -129,7 +129,7 @@ class VariationProgressControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-        val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
+        val request = FakeRequest(GET, controllers.task_list.routes.TaskListController.onPageLoad().url)
 
         val result = route(application, request).value
 
@@ -147,7 +147,7 @@ class VariationProgressControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      val request = FakeRequest(GET, routes.VariationProgressController.onPageLoad().url)
+      val request = FakeRequest(GET, controllers.task_list.routes.TaskListController.onPageLoad().url)
 
       val result = route(application, request).value
 

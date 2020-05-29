@@ -18,7 +18,7 @@ package controllers.makechanges
 
 import connectors.{TrustConnector, TrustsStoreConnector}
 import models.UserAnswers
-import models.requests.{ClosingTrustRequest, DataRequest}
+import models.requests.DataRequest
 import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -38,7 +38,7 @@ abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnecto
       for {
         _ <- trustStoreConnector.set(utr, updatedAnswers)
       } yield {
-        Redirect(controllers.routes.VariationProgressController.onPageLoad())
+        Redirect(controllers.task_list.routes.TaskListController.onPageLoad())
       }
     }.getOrElse {
       Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
