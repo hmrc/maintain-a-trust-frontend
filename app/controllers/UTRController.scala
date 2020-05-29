@@ -17,10 +17,8 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
 import forms.UTRFormProvider
-import handlers.ErrorHandler
 import models.UserAnswers
 import pages.UTRPage
 import play.api.data.Form
@@ -73,7 +71,7 @@ class UTRController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(newUpdatedAnswerSession)
             _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.routes.TrustStatusController.status())
+          } yield Redirect(controllers.routes.IndexController.saveStartDate())
         }
       )
   }

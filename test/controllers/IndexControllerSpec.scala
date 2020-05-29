@@ -16,12 +16,17 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import base.SpecBase
 import connectors.TrustConnector
-import models.TrustDetails
+import models.{TrustDetails, UserAnswers}
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{reset, verify, when}
+import pages.{StartDatePage, UTRPage}
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, route, status, _}
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, EnrolmentIdentifier, Enrolments}
@@ -34,8 +39,12 @@ class IndexControllerSpec extends SpecBase {
 
   private val mockTrustConnector = mock[TrustConnector]
 
+  private val date: String = "2019-06-01"
+
   when(mockTrustConnector.getTrustDetails(any())(any(), any()))
-    .thenReturn(Future.successful(TrustDetails(startDate = "2019-06-01")))
+    .thenReturn(Future.successful(TrustDetails(startDate = date)))
+
+  val utr: String = "1234567892"
 
   "Index Controller" must {
 
@@ -62,7 +71,7 @@ class IndexControllerSpec extends SpecBase {
         enrolments = Enrolments(Set(
           Enrolment(
             key = "HMRC-TERS-ORG",
-            identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = "1234567892")),
+            identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = utr)),
             state = "Activated"
           )
         ))
@@ -75,6 +84,35 @@ class IndexControllerSpec extends SpecBase {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+      application.stop()
+    }
+
+    "save trust start date and redirect to status controller when user has been redirected from UTR controller" in {
+
+      reset(playbackRepository)
+
+      val userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+        .build()
+
+      when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+      when(playbackRepository.resetCache(any())).thenReturn(Future.successful(Some(Json.obj())))
+
+      val request = FakeRequest(GET, routes.IndexController.saveStartDate().url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+      verify(playbackRepository).set(uaCaptor.capture)
+      uaCaptor.getValue.get(StartDatePage).get mustEqual LocalDate.parse(date)
+      uaCaptor.getValue.get(UTRPage).get mustEqual utr
 
       application.stop()
     }

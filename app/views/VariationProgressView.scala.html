@@ -67,13 +67,14 @@
 
     @components.task_list("additional", optional, messages("variationProgress.subHeading.3"))
 
-    @if(closingTrust) {
+    <!-- TODO: Reintroduce this content when the playback print has been reworked to retrieve the information from the backend rather than user answers -->
+    <!--@if(closingTrust) {
         <p>@messages("variationProgress.p3")</p>
         <h2 id="task-list--heading--summary" class="app-task-list__section">@messages("variationProgress.subHeading.4")</h2>
         <p>
             @components.link(PlaybackDraftAnswersController.onPageLoad().url, "print-and-save", "variationProgress.printsave.link", openInNewWindow = true)
         </p>
-    }
+    }-->
 
     @if(isAbleToDeclare) {
         @components.button_link(messages("taskList.summary.continue"), nextUrl)

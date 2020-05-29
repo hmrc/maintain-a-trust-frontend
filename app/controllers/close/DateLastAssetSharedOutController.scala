@@ -21,6 +21,7 @@ import forms.DateFormProvider
 import javax.inject.Inject
 import pages.StartDatePage
 import pages.close.DateLastAssetSharedOutPage
+import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
@@ -52,7 +53,10 @@ class DateLastAssetSharedOutController @Inject()(
         }
 
         Ok(view(preparedForm))
-      }.getOrElse(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
+      }.getOrElse {
+        Logger.warn(s"[DateLastAssetSharedOutController] unable to get start date from user answers")
+        Redirect(controllers.routes.SessionExpiredController.onPageLoad())
+      }
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
