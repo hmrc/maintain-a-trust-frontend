@@ -34,7 +34,7 @@ class CountryOptionsSpec extends SpecBase with MockitoSugar {
         .build()
 
         val countryOption: CountryOptions = application.injector.instanceOf[CountryOptions]
-        countryOption.options mustEqual Seq(InputOption("GB", "United Kingdom"), InputOption("SP", "Spain"))
+        countryOption.options mustEqual Seq(InputOption("SP", "Spain"), InputOption("GB", "United Kingdom"))
 
       application.stop()
     }
