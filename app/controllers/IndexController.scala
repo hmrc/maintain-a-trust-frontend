@@ -16,28 +16,22 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import com.google.inject.{Inject, Singleton}
-import connectors.TrustConnector
 import controllers.actions.AuthenticateForPlayback
 import models.UserAnswers
-import pages.{StartDatePage, UTRPage}
+import pages.UTRPage
 import play.api.Logger
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 @Singleton
 class IndexController @Inject()(val controllerComponents: MessagesControllerComponents,
                                 actions: AuthenticateForPlayback,
-                                playbackRepository: PlaybackRepository,
-                                connector: TrustConnector
+                                playbackRepository: PlaybackRepository
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.authWithSession.async {
@@ -52,38 +46,18 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
           Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
         } {
           utr =>
-            resetAnswersAndRedirect(utr, request.user.internalId)
+
+            val userAnswers = UserAnswers(request.user.internalId)
+              .set(UTRPage, utr)
+
+            for {
+              _ <- playbackRepository.resetCache(request.user.internalId)
+              updatedAnswers <- Future.fromTry(userAnswers)
+              _ <- playbackRepository.set(updatedAnswers)
+            } yield {
+              Logger.info(s"[IndexController] $utr user is enrolled, storing UTR in user answers, checking status of trust")
+              Redirect(controllers.routes.TrustStatusController.status())
+            }
         }
-  }
-
-  def saveStartDate(): Action[AnyContent] = actions.authWithData.async {
-    implicit request =>
-
-      request.userAnswers.get(UTRPage) match {
-        case Some(utr) =>
-          resetAnswersAndRedirect(utr, request.user.internalId)
-        case None =>
-          Future.successful(Redirect(routes.SessionExpiredController.onPageLoad()))
-      }
-  }
-
-  private def resetAnswersAndRedirect(utr: String,
-                                      internalId: String
-                                     )(implicit hc: HeaderCarrier): Future[Result] = {
-
-    def newUserAnswers(startDate: LocalDate): Try[UserAnswers] = UserAnswers(internalId)
-      .set(UTRPage, utr)
-      .flatMap(_.set(StartDatePage, startDate))
-
-    for {
-      _ <- playbackRepository.resetCache(internalId)
-      details <- connector.getTrustDetails(utr)
-      startDate = LocalDate.parse(details.startDate)
-      userAnswers <- Future.fromTry(newUserAnswers(startDate))
-      _ <- playbackRepository.set(userAnswers)
-    } yield {
-      Logger.info(s"[IndexController] $utr user is enrolled, storing UTR and StartDate in user answers, checking status of trust")
-      Redirect(controllers.routes.TrustStatusController.status())
-    }
   }
 }

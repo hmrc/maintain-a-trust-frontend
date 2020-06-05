@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package pages
+package implicits
 
-import java.time.LocalDate
+import scala.concurrent.Future
 
-import play.api.libs.json.JsPath
+object OptionImplicits {
 
-case object StartDatePage extends QuestionPage[LocalDate] {
+  implicit class OptionIsFuture[A](val option: Option[A]) extends AnyVal {
+    def future = option.map(Future.successful).getOrElse(Future.failed(new RuntimeException("required option was not defined")))
+  }
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "startDate"
 }

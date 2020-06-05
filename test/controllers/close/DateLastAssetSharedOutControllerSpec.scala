@@ -19,29 +19,39 @@ package controllers.close
 import java.time.LocalDate
 
 import base.SpecBase
+import connectors.TrustConnector
 import forms.DateFormProvider
 import models.UserAnswers
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.StartDatePage
+import pages.UTRPage
 import pages.close.DateLastAssetSharedOutPage
 import play.api.data.Form
+import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.close.DateLastAssetSharedOutView
 
+import scala.concurrent.Future
+
 class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new DateFormProvider()
+
   val trustStartDate: LocalDate = LocalDate.parse("2019-02-03")
+
   private def form: Form[LocalDate] = formProvider.withPrefixAndTrustStartDate("dateLastAssetSharedOut", trustStartDate)
+
+  val fakeConnector : TrustConnector = mock[TrustConnector]
 
   val validAnswer: LocalDate = LocalDate.parse("2019-02-04")
 
   lazy val dateLastAssetSharedOutRoute: String = routes.DateLastAssetSharedOutController.onPageLoad().url
 
   override val emptyUserAnswers = UserAnswers("id")
-    .set(StartDatePage, trustStartDate).success.value
+    .set(UTRPage, "ur").success.value
 
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, dateLastAssetSharedOutRoute)
@@ -58,7 +68,13 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[TrustConnector].toInstance(fakeConnector)
+        )
+        .build()
 
       val result = route(application, getRequest()).value
 
@@ -74,10 +90,15 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
+      when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+
       val userAnswers = emptyUserAnswers
         .set(DateLastAssetSharedOutPage, validAnswer).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[TrustConnector].toInstance(fakeConnector)
+        ).build()
 
       val view = application.injector.instanceOf[DateLastAssetSharedOutView]
 
@@ -93,8 +114,13 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when valid data is submitted" in {
 
+      when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[TrustConnector].toInstance(fakeConnector)
+          ).build()
 
       val result = route(application, postRequest()).value
 
@@ -107,7 +133,12 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[TrustConnector].toInstance(fakeConnector)
+        ).build()
 
       val request =
         FakeRequest(POST, dateLastAssetSharedOutRoute)

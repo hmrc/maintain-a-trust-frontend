@@ -16,12 +16,14 @@
 
 package controllers.close
 
+import java.time.LocalDate
+
+import connectors.TrustConnector
 import controllers.actions.AuthenticateForPlayback
 import forms.DateFormProvider
 import javax.inject.Inject
-import pages.StartDatePage
+import pages.UTRPage
 import pages.close.DateLastAssetSharedOutPage
-import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
@@ -30,21 +32,29 @@ import views.html.close.DateLastAssetSharedOutView
 
 import scala.concurrent.{ExecutionContext, Future}
 
+
+
 class DateLastAssetSharedOutController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        playbackRepository: PlaybackRepository,
                                        actions: AuthenticateForPlayback,
                                        formProvider: DateFormProvider,
                                        val controllerComponents: MessagesControllerComponents,
-                                       view: DateLastAssetSharedOutView
+                                       view: DateLastAssetSharedOutView,
+                                       trustConnector : TrustConnector
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+
+  import implicits.OptionImplicits._
 
   val prefix: String = "dateLastAssetSharedOut"
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
-      request.userAnswers.get(StartDatePage).map { startDate =>
+      for {
+        utr <- request.userAnswers.get(UTRPage).future
+        startDate <- trustConnector.getStartDate(utr)
+      } yield {
         val form = formProvider.withPrefixAndTrustStartDate(prefix, startDate)
 
         val preparedForm = request.userAnswers.get(DateLastAssetSharedOutPage) match {
@@ -53,16 +63,13 @@ class DateLastAssetSharedOutController @Inject()(
         }
 
         Ok(view(preparedForm))
-      }.getOrElse {
-        Logger.warn(s"[DateLastAssetSharedOutController] unable to get start date from user answers")
-        Redirect(controllers.routes.SessionExpiredController.onPageLoad())
       }
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
-      request.userAnswers.get(StartDatePage).map { startDate =>
+      def render(startDate: LocalDate) = {
         val form = formProvider.withPrefixAndTrustStartDate(prefix, startDate)
 
         form.bindFromRequest().fold(
@@ -75,6 +82,12 @@ class DateLastAssetSharedOutController @Inject()(
               _ <- playbackRepository.set(updatedAnswers)
             } yield Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
         )
-      }.getOrElse(Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad())))
+      }
+
+      for {
+        utr <- request.userAnswers.get(UTRPage).future
+        startDate <- trustConnector.getStartDate(utr)
+        result <- render(startDate)
+      } yield result
   }
 }

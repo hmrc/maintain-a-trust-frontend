@@ -44,17 +44,17 @@ class UTRController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = actions.authWithSession.async {
     implicit request =>
-      playbackRepository.resetCache(request.user.internalId).map { _ =>
 
-        val preparedForm = request.userAnswers
-          .getOrElse(UserAnswers(request.user.internalId))
-          .get(UTRPage) match {
-            case None => form
-            case Some(value) => form.fill(value)
-          }
+      val utr = request.userAnswers
+        .getOrElse(UserAnswers(request.user.internalId))
+        .get(UTRPage)
 
-        Ok(view(preparedForm, routes.UTRController.onSubmit()))
-      }
+      val preparedForm = utr match {
+          case None => form
+          case Some(value) => form.fill(value)
+        }
+
+      Future.successful(Ok(view(preparedForm, routes.UTRController.onSubmit())))
   }
 
   def onSubmit(): Action[AnyContent] = actions.authWithSession.async {
@@ -64,14 +64,15 @@ class UTRController @Inject()(
           Future.successful(BadRequest(view(formWithErrors, routes.UTRController.onSubmit()))),
         utr => {
 
-          val newUpdatedAnswerSession = request.userAnswers
+          val userAnswers = request.userAnswers
             .getOrElse(UserAnswers(request.user.internalId))
             .set(UTRPage, utr)
 
           for {
-            updatedAnswers <- Future.fromTry(newUpdatedAnswerSession)
+            _ <- playbackRepository.resetCache(request.user.internalId)
+            updatedAnswers <- Future.fromTry(userAnswers)
             _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.routes.IndexController.saveStartDate())
+          } yield Redirect(controllers.routes.TrustStatusController.status())
         }
       )
   }
