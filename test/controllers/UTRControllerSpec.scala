@@ -74,7 +74,7 @@ class UTRControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to Save Start Date for a POST if no existing data is found (creating a new session)" in {
+    "redirect to trust status for a POST if no existing data is found (creating a new session)" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
@@ -88,7 +88,7 @@ class UTRControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.routes.IndexController.saveStartDate().url
+      redirectLocation(result).value mustEqual controllers.routes.TrustStatusController.status().url
 
       application.stop()
     }
@@ -113,7 +113,7 @@ class UTRControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to Save Start Date on a POST" in {
+    "redirect to trust status on a POST" in {
 
       val utr = "0987654321"
 
@@ -133,7 +133,7 @@ class UTRControllerSpec extends SpecBase {
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe controllers.routes.IndexController.saveStartDate().url
+      redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
 
       application.stop()
     }

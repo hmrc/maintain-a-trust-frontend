@@ -16,6 +16,8 @@
 
 package connectors
 
+import java.time.LocalDate
+
 import config.FrontendAppConfig
 import javax.inject.Inject
 import models.TrustDetails
@@ -32,6 +34,13 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
   def getTrustDetails(utr: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
     http.GET[TrustDetails](getTrustDetailsUrl(utr))
+  }
+
+  def getStartDate(utr: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[LocalDate] = {
+    for {
+      details <- getTrustDetails(utr)
+      date = LocalDate.parse(details.startDate)
+    } yield date
   }
 
   def playbackUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/transformed"
