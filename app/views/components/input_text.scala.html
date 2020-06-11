@@ -23,16 +23,8 @@
         readerHint: Option[String] = None,
         labelClass: Option[String] = None,
         symbol: Option[String] = None,
-        optionalHtmlContent: Option[Html] = None,
-        ariaRequired: Boolean = false
+        optionalHtmlContent: Option[Html] = None
 )(implicit messages: Messages)
-
-@required = @{
-    ariaRequired match {
-        case true => {"aria-required=true"}
-        case false => {"aria-required=false"}
-    }
-}
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
     @if(labelAsHeading){<h1 class="label-as-heading">}
@@ -56,7 +48,6 @@
         id="@{field.id}"
         name="@{field.name}"
         value="@{field.value}"
-        @required
         @if(hint.nonEmpty) {
             aria-describedby="@{field.id}_hint"
         }
