@@ -232,6 +232,7 @@ site.warning = Warning
 site.or = or
 site.and = and
 site.startMaintaining = Start maintaining this trust
+site.error = Error:
 
 site.address.uk.title = What is the address?
 site.address.uk.heading = What is {0}’s address?
