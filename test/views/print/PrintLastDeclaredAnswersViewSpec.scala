@@ -33,15 +33,18 @@ class PrintLastDeclaredAnswersViewSpec extends ViewBehaviours {
       val doc = asDocument(applyView)
 
       assertContainsText(doc,
+        "Last declared copy of the trust’s registration"
+      )
+
+      assertContainsText(doc,
         "You only need to declare the trust is up to date every year if there is a tax liability"
       )
 
       assertContainsText(doc,
-        "The following sections indicate what was entered when the trust was first registered." +
-        " No further updates to trust details, assets and years of tax liability are required through this service."
+        "No further updates to trust details, assets and years of tax liability are required through this service."
       )
       assertContainsText(doc,
-        "If you need to update these sections, use Self Assessment for trusts."
+        "If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts."
       )
     }
   }
