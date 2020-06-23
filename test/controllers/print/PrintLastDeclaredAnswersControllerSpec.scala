@@ -22,9 +22,9 @@ import pages.beneficiaries.charity._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.print.PrintPlaybackHelper
-import views.html.print.PrintLastDeclaredView
+import views.html.print.PrintLastDeclaredAnswersView
 
-class PrintLastDeclaredControllerSpec extends SpecBase {
+class PrintLastDeclaredAnswersControllerSpec extends SpecBase {
 
   val index = 0
 
@@ -49,11 +49,11 @@ class PrintLastDeclaredControllerSpec extends SpecBase {
 
       val application = applicationBuilder(Some(playbackAnswers)).build()
 
-      val request = FakeRequest(GET, controllers.print.routes.PrintLastDeclaredController.onPageLoad().url)
+      val request = FakeRequest(GET, controllers.print.routes.PrintLastDeclaredAnswersController.onPageLoad().url)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[PrintLastDeclaredView]
+      val view = application.injector.instanceOf[PrintLastDeclaredAnswersView]
 
       status(result) mustEqual OK
 

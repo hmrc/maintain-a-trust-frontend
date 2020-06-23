@@ -16,22 +16,21 @@
 
 package views.print
 
+import viewmodels.AnswerSection
 import views.behaviours.ViewBehaviours
-import views.html.print.PlaybackDeclaredAnswersView
+import views.html.print.PrintMaintainFinalDeclaredAnswersView
 
-class PlaybackDeclaredAnswersViewSpec extends ViewBehaviours {
+class PrintMaintainFinalDeclaredAnswersViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "playbackDeclarationAnswers"
-
-  "PlaybackDeclaredAnswers view" must {
+  "PrintMaintainFinalDeclaredAnswersView view" must {
 
     val application = applicationBuilder().build()
 
-    val view = application.injector.instanceOf[PlaybackDeclaredAnswersView]
+    val view = application.injector.instanceOf[PrintMaintainFinalDeclaredAnswersView]
 
-    val applyView = view.apply(Nil, Nil, "tvn", "crn", "27 January 2020", isAgent = true)(fakeRequest, messages)
+    val applyView = view.apply(AnswerSection(), Nil, Nil, "tvn", "crn", "27 January 2020", isAgent = true)(fakeRequest, messages)
 
-    behave like normalPage(applyView, "playbackDeclarationAnswers")
+    behave like normalPage(applyView, "playbackFinalDeclarationAnswers")
   }
 
 }

@@ -59,7 +59,7 @@ GET        /problem-declaring                           controllers.declaration.
 
 GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
 
-GET        /last-declaration                            controllers.print.PrintLastDeclaredController.onPageLoad()
+GET        /last-declaration                            controllers.print.PrintLastDeclaredAnswersController.onPageLoad()
 
 GET        /draft-declaration                           controllers.print.PrintMaintainDraftAnswersController.onPageLoad()
 

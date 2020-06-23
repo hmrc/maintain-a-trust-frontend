@@ -17,13 +17,13 @@
 package views.print
 
 import views.behaviours.ViewBehaviours
-import views.html.print.PrintLastDeclaredView
+import views.html.print.PrintLastDeclaredAnswersView
 
-class PrintLastDeclaredViewSpec extends ViewBehaviours {
+class PrintLastDeclaredAnswersViewSpec extends ViewBehaviours {
 
-  "PrintLastDeclaredView view" must {
+  "PrintLastDeclaredAnswersView view" must {
 
-    val view = viewFor[PrintLastDeclaredView](Some(emptyUserAnswers))
+    val view = viewFor[PrintLastDeclaredAnswersView](Some(emptyUserAnswers))
 
     val applyView = view.apply(Nil, Nil)(fakeRequest, messages)
 

@@ -28,7 +28,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.DateFormatter
 import utils.print.PrintPlaybackHelper
-import views.html.print.{PlaybackDeclaredAnswersView, PlaybackFinalDeclaredAnswersView}
+import views.html.print.{PrintMaintainDeclaredAnswersView, PrintMaintainFinalDeclaredAnswersView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,8 +36,8 @@ class PrintMaintainDeclaredAnswersController @Inject()(
                                                    override val messagesApi: MessagesApi,
                                                    actions: AuthenticateForPlayback,
                                                    val controllerComponents: MessagesControllerComponents,
-                                                   declaredAnswersView: PlaybackDeclaredAnswersView,
-                                                   finalDeclaredAnswersView: PlaybackFinalDeclaredAnswersView,
+                                                   declaredAnswersView: PrintMaintainDeclaredAnswersView,
+                                                   finalDeclaredAnswersView: PrintMaintainFinalDeclaredAnswersView,
                                                    printPlaybackAnswersHelper: PrintPlaybackHelper,
                                                    dateFormatter: DateFormatter
                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {

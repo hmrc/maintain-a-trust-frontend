@@ -31,7 +31,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
 import utils.print.PrintPlaybackHelper
-import views.html.print.{PlaybackDeclaredAnswersView, PlaybackFinalDeclaredAnswersView}
+import views.html.print.{PrintMaintainDeclaredAnswersView, PrintMaintainFinalDeclaredAnswersView}
 
 class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
@@ -73,7 +73,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[PlaybackDeclaredAnswersView]
+      val view = application.injector.instanceOf[PrintMaintainDeclaredAnswersView]
 
       status(result) mustEqual OK
 
@@ -107,7 +107,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[PlaybackFinalDeclaredAnswersView]
+      val view = application.injector.instanceOf[PrintMaintainFinalDeclaredAnswersView]
 
       status(result) mustEqual OK
 
