@@ -46,14 +46,12 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
           Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
         } {
           utr =>
-
-            val userAnswers = UserAnswers(request.user.internalId)
-              .set(UTRPage, utr)
-
             for {
               _ <- playbackRepository.resetCache(request.user.internalId)
-              updatedAnswers <- Future.fromTry(userAnswers)
-              _ <- playbackRepository.set(updatedAnswers)
+              newSessionWithUtr <- Future.fromTry {
+                UserAnswers.startNewSession(request.user.internalId).set(UTRPage, utr)
+              }
+              _ <- playbackRepository.set(newSessionWithUtr)
             } yield {
               Logger.info(s"[IndexController] $utr user is enrolled, storing UTR in user answers, checking status of trust")
               Redirect(controllers.routes.TrustStatusController.status())

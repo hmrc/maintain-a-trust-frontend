@@ -55,10 +55,10 @@ class UTRController @Inject()(
         utr => {
           for {
             _ <- playbackRepository.resetCache(request.user.internalId)
-            newSessionWithAnswers <- Future.fromTry {
+            newSessionWithUtr <- Future.fromTry {
               UserAnswers.startNewSession(request.user.internalId).set(UTRPage, utr)
             }
-            _ <- playbackRepository.set(newSessionWithAnswers)
+            _ <- playbackRepository.set(newSessionWithUtr)
           } yield Redirect(controllers.routes.TrustStatusController.status())
         }
       )
