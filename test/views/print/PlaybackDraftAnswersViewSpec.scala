@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package views.declaration
+package views.print
 
 import viewmodels.AnswerSection
 import views.behaviours.ViewBehaviours
-import views.html.declaration.PlaybackDraftAnswersView
+import views.html.print.PlaybackDraftAnswersView
 
 class PlaybackDraftAnswersViewSpec extends ViewBehaviours {
 

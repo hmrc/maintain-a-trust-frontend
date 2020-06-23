@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package views.declaration
+package views.print
 
+import viewmodels.AnswerSection
 import views.behaviours.ViewBehaviours
-import views.html.declaration.PlaybackDeclaredAnswersView
+import views.html.print.PlaybackFinalDeclaredAnswersView
 
-class PlaybackDeclaredAnswersViewSpec extends ViewBehaviours {
+class PlaybackFinalDeclaredAnswersViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "playbackDeclarationAnswers"
-
-  "PlaybackDeclaredAnswers view" must {
+  "PlaybackFinalDeclaredAnswers view" must {
 
     val application = applicationBuilder().build()
 
-    val view = application.injector.instanceOf[PlaybackDeclaredAnswersView]
+    val view = application.injector.instanceOf[PlaybackFinalDeclaredAnswersView]
 
-    val applyView = view.apply(Nil, Nil, "tvn", "crn", "27 January 2020", isAgent = true)(fakeRequest, messages)
+    val applyView = view.apply(AnswerSection(), Nil, Nil, "tvn", "crn", "27 January 2020", isAgent = true)(fakeRequest, messages)
 
-    behave like normalPage(applyView, "playbackDeclarationAnswers")
+    behave like normalPage(applyView, "playbackFinalDeclarationAnswers")
   }
 
 }

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package views
+package views.print
 
 import views.behaviours.ViewBehaviours
-import views.html.PlaybackAnswersView
+import views.html.print.PlaybackAnswersView
 
 class PlaybackAnswersViewSpec extends ViewBehaviours {
 

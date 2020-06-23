@@ -31,7 +31,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
 import utils.print.PrintPlaybackHelper
-import views.html.declaration.{PlaybackDeclaredAnswersView, PlaybackFinalDeclaredAnswersView}
+import views.html.print.{PlaybackDeclaredAnswersView, PlaybackFinalDeclaredAnswersView}
 
 class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 

@@ -22,7 +22,7 @@ import pages.beneficiaries.charity._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.print.PrintPlaybackHelper
-import views.html.PlaybackAnswersView
+import views.html.print.PlaybackAnswersView
 
 class PrintLastDeclaredControllerSpec extends SpecBase {
 

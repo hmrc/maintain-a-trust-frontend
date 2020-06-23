@@ -30,7 +30,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
 import utils.print.PrintPlaybackHelper
-import views.html.declaration.PlaybackDraftAnswersView
+import views.html.print.PlaybackDraftAnswersView
 
 class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
 
