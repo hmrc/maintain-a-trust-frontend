@@ -14,34 +14,36 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.print
 
 import controllers.actions.AuthenticateForPlayback
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.print.PrintPlaybackHelper
-import views.html.PlaybackAnswersView
+import views.html.declaration.PlaybackDraftAnswersView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PlaybackAnswersController @Inject()(
-                                              override val messagesApi: MessagesApi,
-                                              actions: AuthenticateForPlayback,
-                                              val controllerComponents: MessagesControllerComponents,
-                                              view: PlaybackAnswersView,
-                                              printPlaybackAnswersHelper: PrintPlaybackHelper
-                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class PrintMaintainDraftAnswersController @Inject()(
+                                                override val messagesApi: MessagesApi,
+                                                actions: AuthenticateForPlayback,
+                                                val controllerComponents: MessagesControllerComponents,
+                                                view: PlaybackDraftAnswersView,
+                                                printPlaybackAnswersHelper: PrintPlaybackHelper
+                                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad() = actions.verifiedForUtr.async {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
+
+      val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)
 
       val entities = printPlaybackAnswersHelper.people(request.userAnswers)
 
       val trustDetails = printPlaybackAnswersHelper.trustDetails(request.userAnswers)
 
-      Future.successful(Ok(view(entities, trustDetails)))
+      Future.successful(Ok(view(closeDate, entities, trustDetails)))
   }
 
 }

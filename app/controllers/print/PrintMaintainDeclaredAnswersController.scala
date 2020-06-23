@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.declaration
+package controllers.print
 
 import java.time.LocalDateTime
 
@@ -32,7 +32,7 @@ import views.html.declaration.{PlaybackDeclaredAnswersView, PlaybackFinalDeclare
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PlaybackDeclaredAnswersController @Inject()(
+class PrintMaintainDeclaredAnswersController @Inject()(
                                                    override val messagesApi: MessagesApi,
                                                    actions: AuthenticateForPlayback,
                                                    val controllerComponents: MessagesControllerComponents,

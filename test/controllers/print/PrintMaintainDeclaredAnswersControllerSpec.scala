@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.declaration
+package controllers.print
 
 import java.time.{LocalDate, LocalDateTime}
 
@@ -33,7 +33,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import utils.print.PrintPlaybackHelper
 import views.html.declaration.{PlaybackDeclaredAnswersView, PlaybackFinalDeclaredAnswersView}
 
-class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
+class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
   val fakeTvn = "XC TRN 000 000 4912"
   val fakeAgencyName = "Agency Name"
@@ -69,7 +69,7 @@ class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(answers), AffinityGroup.Agent).build()
 
-      val request = FakeRequest(GET, routes.PlaybackDeclaredAnswersController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.PrintMaintainDeclaredAnswersController.onPageLoad().url)
 
       val result = route(application, request).value
 
@@ -103,7 +103,7 @@ class PlaybackDeclaredAnswersControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(answers), AffinityGroup.Agent).build()
 
-      val request = FakeRequest(GET, routes.PlaybackDeclaredAnswersController.onPageLoad().url)
+      val request = FakeRequest(GET, routes.PrintMaintainDeclaredAnswersController.onPageLoad().url)
 
       val result = route(application, request).value
 

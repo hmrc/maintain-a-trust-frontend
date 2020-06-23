@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.print
 
 import base.SpecBase
 import models.{UKAddress, UserAnswers}
@@ -24,11 +24,11 @@ import play.api.test.Helpers._
 import utils.print.PrintPlaybackHelper
 import views.html.PlaybackAnswersView
 
-class PlaybackAnswersControllerSpec extends SpecBase {
+class PrintLastDeclaredControllerSpec extends SpecBase {
 
   val index = 0
 
-  "PlaybackAnswersController" must {
+  "PrintLastDeclaredController" must {
 
     "return OK and the correct view for a GET" in {
 
@@ -49,7 +49,7 @@ class PlaybackAnswersControllerSpec extends SpecBase {
 
       val application = applicationBuilder(Some(playbackAnswers)).build()
 
-      val request = FakeRequest(GET, controllers.routes.PlaybackAnswersController.onPageLoad().url)
+      val request = FakeRequest(GET, controllers.print.routes.PrintLastDeclaredController.onPageLoad().url)
 
       val result = route(application, request).value
 

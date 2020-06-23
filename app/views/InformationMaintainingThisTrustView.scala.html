@@ -42,7 +42,7 @@
    <p>@messages("informationMaintainingThisTrust.paragraph1")</p>
 
     <ul>
-        <li class="panel-indent">@components.link(controllers.routes.PlaybackAnswersController.onPageLoad().url, "print-and-save","informationMaintainingThisTrust.printsave.link", openInNewWindow = true).</li>
+        <li class="panel-indent">@components.link(controllers.print.routes.PrintLastDeclaredController.onPageLoad().url, "print-and-save","informationMaintainingThisTrust.printsave.link", openInNewWindow = true).</li>
     </ul>
 
     <h2>@messages("informationMaintainingThisTrust.updateDetails")</h2>
