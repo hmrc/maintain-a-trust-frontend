@@ -22,7 +22,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.print.PrintPlaybackHelper
-import views.html.print.PlaybackAnswersView
+import views.html.print.PrintLastDeclaredView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +30,7 @@ class PrintLastDeclaredController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               actions: AuthenticateForPlayback,
                                               val controllerComponents: MessagesControllerComponents,
-                                              view: PlaybackAnswersView,
+                                              view: PrintLastDeclaredView,
                                               printPlaybackAnswersHelper: PrintPlaybackHelper
                                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 

@@ -22,7 +22,7 @@ import pages.beneficiaries.charity._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.print.PrintPlaybackHelper
-import views.html.print.PlaybackAnswersView
+import views.html.print.PrintLastDeclaredView
 
 class PrintLastDeclaredControllerSpec extends SpecBase {
 
@@ -53,7 +53,7 @@ class PrintLastDeclaredControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[PlaybackAnswersView]
+      val view = application.injector.instanceOf[PrintLastDeclaredView]
 
       status(result) mustEqual OK
 
