@@ -93,26 +93,6 @@ class UTRControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswers.set(UTRPage, "0987654321").success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val request = FakeRequest(GET, trustUTRRoute)
-
-      val view = application.injector.instanceOf[UTRView]
-
-      val result = route(application, request).value
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(form.fill("0987654321"), onSubmit)(fakeRequest, messages).toString
-
-      application.stop()
-    }
-
     "redirect to trust status on a POST" in {
 
       val utr = "0987654321"
