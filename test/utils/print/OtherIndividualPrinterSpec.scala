@@ -25,9 +25,9 @@ import play.twirl.api.Html
 import utils.countryoptions.CountryOptions
 import viewmodels.{AnswerRow, AnswerSection}
 
-class OtherIndividualPrintPlaybackHelperSpec extends SpecBase {
+class OtherIndividualPrinterSpec extends SpecBase {
 
-  "Playback print helper" must {
+  ".print" must {
 
     "generate other individuals sections given individuals" in {
 

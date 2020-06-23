@@ -39,7 +39,6 @@ class PlaybackAnswersControllerSpec extends SpecBase {
         .set(CharityBeneficiaryAddressYesNoPage(0), true).success.value
         .set(CharityBeneficiaryAddressUKYesNoPage(0), true).success.value
         .set(CharityBeneficiaryAddressPage(0), UKAddress("line1", "line2", None, None, "NE11NE")).success.value
-
         .set(CharityBeneficiaryNamePage(1), "Charity Beneficiary 2").success.value
         .set(CharityBeneficiaryDiscretionYesNoPage(1), false).success.value
         .set(CharityBeneficiaryAddressYesNoPage(1), false).success.value

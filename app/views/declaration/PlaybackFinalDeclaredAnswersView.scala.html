@@ -59,6 +59,15 @@
 
     @components.summary_answer_section(closeDateSection)
 
+    @for(section <- trustDetails){
+        @{
+            section match {
+                case a: AnswerSection => components.summary_answer_section(a)
+                case r: RepeaterAnswerSection => components.repeater_answer_section(r)
+            }
+        }
+    }
+
     @for(section <- entities){
         @{
             section match {
@@ -71,13 +80,6 @@
     <p>@messages("playbackAnswers.informationFirstRegistered")</p>
     <p>@messages("playbackFinalDeclarationAnswers.selfAssessmentOnline")</p>
 
-    @for(section <- trustDetails){
-        @{
-            section match {
-                case a: AnswerSection => components.summary_answer_section(a)
-                case r: RepeaterAnswerSection => components.repeater_answer_section(r)
-            }
-        }
-    }
+
 
 }

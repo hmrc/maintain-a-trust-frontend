@@ -165,42 +165,6 @@ kindOfTrust.Employees = A trust for the employees of a company
 kindOfTrust.Building = A trust for a building or building with tenants
 kindOfTrust.Repair = A trust for the repair of historic buildings
 
-playbackAnswers.title = Last declared copy of the trust’s registration
-playbackAnswers.heading = Last declared copy of the trust’s registration
-playbackAnswers.declareAnnually.warning = You only need to declare the trust is up to date every year if there is a tax liability.
-playbackAnswers.informationFirstRegistered = The following sections indicate what was entered when the trust was first registered. No further updates to trust details, assets and years of tax liability are required through this service.
-playbackAnswers.selfAssessmentOnline = If you need to update these sections, use Self Assessment for trusts.
-
-playbackDeclarationAnswers.title = Declared copy of updates to the trust
-playbackDeclarationAnswers.heading = Declared copy of updates to the trust
-playbackDeclarationAnswers.p1 = Declaration reference number is: {0}
-playbackDeclarationAnswers.p2 = Client reference number: {0}
-playbackDeclarationAnswers.p3 = The trust’s declaration was sent on {0}
-playbackDeclarationAnswers.warning = You only need to declare the trust is up to date every year if there is a tax liability.
-
-playbackDraftAnswers.title = Draft copy of the trust's declaration
-playbackDraftAnswers.heading = Draft copy of the trust's declaration
-playbackDraftAnswers.p1 = This is a draft copy confirming that the trust is up to date.
-playbackDraftAnswers.p2 = If you have made any changes they must reflect what's in the trust deed. You will need to re-enter and declare for them to be updated on this service.
-playbackDraftAnswers.p3 = Any details shown for assets and years of tax liability indicate what was entered at registration. No further updates to these details are required through this service.
-playbackDraftAnswers.p4 = This is not a declaration.
-playbackDraftAnswers.selfAssessmentOnline = If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts.
-
-playbackFinalDeclarationAnswers.title = Final declared copy of updates to this trust
-playbackFinalDeclarationAnswers.heading = Final declared copy of updates to this trust
-playbackFinalDeclarationAnswers.p1 = Declaration reference number is: {0}
-playbackFinalDeclarationAnswers.p2 = Client reference number: {0}
-playbackFinalDeclarationAnswers.p3 = The trust’s final declaration was sent on {0}
-playbackFinalDeclarationAnswers.selfAssessmentOnline = If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts.
-
-playbackProblemContactHMRC.title = Sorry, there is a problem accessing your trust’s registration
-playbackProblemContactHMRC.heading = Sorry, there is a problem accessing your trust’s registration
-playbackProblemContactHMRC.subheading = This trust’s UTR: {0}
-playbackProblemContactHMRC.p1.beforeLink = You need to
-playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
-playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
-playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment ready when you contact HMRC.
-
 maintainThisTrust.title = Maintain this trust
 maintainThisTrust.heading = Maintain this trust
 maintainThisTrust.subheading = This trust’s UTR: {0}
@@ -706,3 +670,43 @@ trustUniqueTaxReference.checkYourAnswersLabel = What is the trust’s Unique Tax
 # Task List
 taskList.up-to-date = Up to date
 taskList.in-progress = In progress
+
+# Playback prints
+
+playbackAnswers.title = Last declared copy of the trust’s registration
+playbackAnswers.heading = Last declared copy of the trust’s registration
+playbackAnswers.declareAnnually.warning = You only need to declare the trust is up to date every year if there is a tax liability.
+playbackAnswers.informationFirstRegistered = The following sections indicate what was entered when the trust was first registered. No further updates to trust details, assets and years of tax liability are required through this service.
+playbackAnswers.selfAssessmentOnline = If you need to update these sections, use Self Assessment for trusts.
+
+playbackDeclarationAnswers.title = Declared copy of updates to the trust
+playbackDeclarationAnswers.heading = Declared copy of updates to the trust
+playbackDeclarationAnswers.p1 = Declaration reference number is: {0}
+playbackDeclarationAnswers.p2 = Client reference number: {0}
+playbackDeclarationAnswers.p3 = The trust’s declaration was sent on {0}
+playbackDeclarationAnswers.warning = You only need to declare the trust is up to date every year if there is a tax liability.
+
+playbackDraftAnswers.title = Draft copy of the trust's declaration
+playbackDraftAnswers.heading = Draft copy of the trust's declaration
+playbackDraftAnswers.p1 = This is a draft copy confirming that the trust is up to date.
+playbackDraftAnswers.p2 = If you have made any changes they must reflect what's in the trust deed. You will need to re-enter and declare for them to be updated on this service.
+playbackDraftAnswers.p3 = Any details shown for assets and years of tax liability indicate what was entered at registration. No further updates to these details are required through this service.
+playbackDraftAnswers.p4 = This is not a declaration.
+playbackDraftAnswers.selfAssessmentOnline = If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts.
+
+playbackFinalDeclarationAnswers.title = Final declared copy of updates to this trust
+playbackFinalDeclarationAnswers.heading = Final declared copy of updates to this trust
+playbackFinalDeclarationAnswers.p1 = Declaration reference number is: {0}
+playbackFinalDeclarationAnswers.p2 = Client reference number: {0}
+playbackFinalDeclarationAnswers.p3 = The trust’s final declaration was sent on {0}
+playbackFinalDeclarationAnswers.selfAssessmentOnline = If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts.
+
+# Technical difficulties playing back trust
+
+playbackProblemContactHMRC.title = Sorry, there is a problem accessing your trust’s registration
+playbackProblemContactHMRC.heading = Sorry, there is a problem accessing your trust’s registration
+playbackProblemContactHMRC.subheading = This trust’s UTR: {0}
+playbackProblemContactHMRC.p1.beforeLink = You need to
+playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
+playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
+playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment ready when you contact HMRC.

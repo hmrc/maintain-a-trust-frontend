@@ -24,9 +24,9 @@ import pages.trustdetails._
 import play.twirl.api.Html
 import viewmodels.{AnswerRow, AnswerSection}
 
-class TrustDetailsPrintPlaybackHelperSpec extends SpecBase {
+class TrustDetailsPrinterSpec extends SpecBase {
 
-  ".trustDetails" must {
+  ".print" must {
 
     "generate an answer section with trust name, created date and utr" in {
       val helper = injector.instanceOf[PrintPlaybackHelper]

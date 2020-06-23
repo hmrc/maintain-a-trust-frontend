@@ -24,7 +24,7 @@ import pages.settlors.living_settlor.SettlorIndividualOrBusinessPage
 import pages.trustees._
 import play.api.i18n.Messages
 import utils.countryoptions.CountryOptions
-import utils.print.sections.OtherIndividual
+import utils.print.sections.OtherIndividualPrinter
 import utils.print.sections.beneficiaries._
 import utils.print.sections.protectors.{BusinessProtector, IndividualProtector}
 import utils.print.sections.settlors._
@@ -246,8 +246,10 @@ class PlaybackAnswersHelper(countryOptions: CountryOptions, userAnswers: UserAns
     size match {
       case 0 => Nil
       case _ =>
-        Seq(AnswerSection(sectionKey = Some(messages("answerPage.section.otherIndividuals.heading")))) ++
-          (for (index <- 0 to size) yield OtherIndividual(index, userAnswers, countryOptions)).flatten
+        val heading = Seq(AnswerSection(sectionKey = Some(messages("answerPage.section.otherIndividuals.heading"))))
+        val individuals = (for (index <- 0 to size) yield OtherIndividualPrinter.print(index, userAnswers, countryOptions)).flatten
+
+        heading ++ individuals
     }
   }
 
