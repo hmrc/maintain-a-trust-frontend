@@ -45,7 +45,7 @@ class PlaybackDeclaredAnswersController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
-      val entities = printPlaybackAnswersHelper.entities(request.userAnswers)
+      val entities = printPlaybackAnswersHelper.people(request.userAnswers)
 
       val trustDetails = printPlaybackAnswersHelper.trustDetails(request.userAnswers)
 

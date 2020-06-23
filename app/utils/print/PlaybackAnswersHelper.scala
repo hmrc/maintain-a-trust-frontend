@@ -24,7 +24,7 @@ import pages.settlors.living_settlor.SettlorIndividualOrBusinessPage
 import pages.trustees._
 import play.api.i18n.Messages
 import utils.countryoptions.CountryOptions
-import utils.print.sections.{OtherIndividual, TrustType}
+import utils.print.sections.OtherIndividual
 import utils.print.sections.beneficiaries._
 import utils.print.sections.protectors.{BusinessProtector, IndividualProtector}
 import utils.print.sections.settlors._
@@ -248,19 +248,6 @@ class PlaybackAnswersHelper(countryOptions: CountryOptions, userAnswers: UserAns
       case _ =>
         Seq(AnswerSection(sectionKey = Some(messages("answerPage.section.otherIndividuals.heading")))) ++
           (for (index <- 0 to size) yield OtherIndividual(index, userAnswers, countryOptions)).flatten
-    }
-  }
-
-  def trustType : Seq[AnswerSection] = {
-    TrustType(userAnswers).rows match {
-      case Nil => Nil
-      case trustType =>
-        Seq(
-          AnswerSection(
-            rows = trustType,
-            sectionKey = Some(messages("answerPage.section.trustType.heading"))
-          )
-        )
     }
   }
 

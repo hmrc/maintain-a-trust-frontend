@@ -31,7 +31,6 @@ import pages.settlors.living_settlor.trust_type._
 class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-
   val trustTypeExtractor : PlaybackExtractor[Option[DisplayTrust]] =
     injector.instanceOf[TrustTypeExtractor]
 

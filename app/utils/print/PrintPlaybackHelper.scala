@@ -20,7 +20,7 @@ import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
 import utils.countryoptions.CountryOptions
-import utils.print.sections.{CloseDate, TrustDetails}
+import utils.print.sections.{CloseDate, TrustDetailsPrinter}
 import viewmodels.AnswerSection
 
 class PrintPlaybackHelper @Inject()(countryOptions: CountryOptions){
@@ -28,7 +28,7 @@ class PrintPlaybackHelper @Inject()(countryOptions: CountryOptions){
   def closeDate(userAnswers: UserAnswers)(implicit messages: Messages) : AnswerSection =
     CloseDate(userAnswers)
 
-  def entities(userAnswers: UserAnswers)(implicit messages: Messages) : Seq[AnswerSection] = {
+  def people(userAnswers: UserAnswers)(implicit messages: Messages) : Seq[AnswerSection] = {
 
     val playbackAnswersHelper: PlaybackAnswersHelper = new PlaybackAnswersHelper(countryOptions, userAnswers)
 
@@ -43,14 +43,7 @@ class PrintPlaybackHelper @Inject()(countryOptions: CountryOptions){
   }
 
   def trustDetails(userAnswers: UserAnswers)(implicit messages: Messages) : Seq[AnswerSection] = {
-
-    val playbackAnswersHelper: PlaybackAnswersHelper = new PlaybackAnswersHelper(countryOptions, userAnswers)
-
-    List(
-      TrustDetails(userAnswers, countryOptions),
-      playbackAnswersHelper.trustType
-    ).flatten
-
+    TrustDetailsPrinter.print(userAnswers, countryOptions)
   }
 
 }

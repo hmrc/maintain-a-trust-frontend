@@ -44,7 +44,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.entities(answers)
+      val result = helper.people(answers)
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -80,7 +80,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- TrusteePassportIDCardYesNoPage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.entities(answers)
+      val result = helper.people(answers)
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -117,7 +117,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.entities(answers)
+      val result = helper.people(answers)
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -150,7 +150,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.entities(answers)
+      val result = helper.people(answers)
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -184,7 +184,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.entities(answers)
+      val result = helper.people(answers)
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -223,7 +223,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(2) is false
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.entities(answers)
+      val result = helper.people(answers)
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
