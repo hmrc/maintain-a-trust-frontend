@@ -14,9 +14,8 @@
  * limitations under the License.
  *@
 
-@(
-messageKey: String = "",
-href: String
-)(implicit messages: Messages)
+@()(implicit messages: Messages)
 
-<a id="button" href="@href" role="button" class="button print-hidden">@messages(messageKey)</a>
+<button id="print" class="button--secondary print-hidden" onClick="window.print()">
+    @messages("site.print-or-save")
+</button>

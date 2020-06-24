@@ -29,6 +29,8 @@ import pages.beneficiaries.large._
 import pages.beneficiaries.other._
 import pages.beneficiaries.trust._
 import play.twirl.api.Html
+import utils.countryoptions.CountryOptions
+import utils.print.sections.beneficiaries.AllBeneficiariesPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
 class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
@@ -39,8 +41,6 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
 
       val charityBen1Name = "Red Cross Ltd."
       val charityBen2Name = "Bernardos"
-
-      val helper = injector.instanceOf[PrintPlaybackHelper]
 
       val answers = emptyUserAnswers
         .set(CharityBeneficiaryNamePage(0), charityBen1Name).success.value
@@ -63,7 +63,9 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(CharityBeneficiaryAddressYesNoPage(1), false).success.value
         .set(CharityBeneficiaryUtrPage(1), "1234567890").success.value
 
-      val result = helper.entities(answers)
+      val helper = new AllBeneficiariesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allBeneficiaries
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
@@ -94,8 +96,6 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
     }
 
     "generate individual beneficiaries sections" in {
-
-      val helper = injector.instanceOf[PrintPlaybackHelper]
 
       val answers = emptyUserAnswers
         .set(IndividualBeneficiaryRoleInCompanyPage(0), RoleInCompany.Director).success.value
@@ -128,7 +128,9 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(IndividualBeneficiaryPassportIDCardPage(2), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
         .set(IndividualBeneficiaryVulnerableYesNoPage(2), false).success.value
 
-      val result = helper.entities(answers)
+      val helper = new AllBeneficiariesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allBeneficiaries
 
       val name1 = "Michael Finnegan"
       val name2 = "Joe Bloggs"
@@ -190,8 +192,6 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
       val companyBen1Name = "Amazon"
       val companyBen2Name = "Apple"
 
-      val helper = injector.instanceOf[PrintPlaybackHelper]
-
       val answers = emptyUserAnswers
         .set(CompanyBeneficiaryNamePage(0), companyBen1Name).success.value
         .set(CompanyBeneficiaryDiscretionYesNoPage(0), false).success.value
@@ -213,7 +213,9 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(CompanyBeneficiaryAddressYesNoPage(1), false).success.value
         .set(CompanyBeneficiaryUtrPage(1), "1234567890").success.value
 
-      val result = helper.entities(answers)
+      val helper = new AllBeneficiariesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allBeneficiaries
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
@@ -248,8 +250,6 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
       val trustBen1Name = "Trust of Adam"
       val trustBen2Name = "Grandchildren of Adam"
 
-      val helper = injector.instanceOf[PrintPlaybackHelper]
-
       val answers = emptyUserAnswers
         .set(TrustBeneficiaryNamePage(0), trustBen1Name).success.value
         .set(TrustBeneficiaryDiscretionYesNoPage(0), false).success.value
@@ -271,7 +271,9 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(TrustBeneficiaryAddressYesNoPage(1), false).success.value
         .set(TrustBeneficiaryUtrPage(1), "1234567890").success.value
 
-      val result = helper.entities(answers)
+      val helper = new AllBeneficiariesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allBeneficiaries
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
@@ -306,8 +308,6 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
       val largeBen1Name = "Amazon"
       val largeBen2Name = "Apple"
 
-      val helper = injector.instanceOf[PrintPlaybackHelper]
-
       val answers = emptyUserAnswers
         .set(LargeBeneficiaryNamePage(0), largeBen1Name).success.value
         .set(LargeBeneficiaryDiscretionYesNoPage(0), false).success.value
@@ -333,7 +333,9 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(LargeBeneficiaryDescriptionPage(1), Description("Description", None, None, None, None)).success.value
         .set(LargeBeneficiaryNumberOfBeneficiariesPage(1), "1").success.value
 
-      val result = helper.entities(answers)
+      val helper = new AllBeneficiariesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allBeneficiaries
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
@@ -369,8 +371,6 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
       val otherBen1Name = "Dog"
       val otherBen2Name = "Cat"
 
-      val helper = injector.instanceOf[PrintPlaybackHelper]
-
       val answers = emptyUserAnswers
         .set(OtherBeneficiaryDescriptionPage(0), otherBen1Name).success.value
         .set(OtherBeneficiaryDiscretionYesNoPage(0), false).success.value
@@ -391,7 +391,9 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(OtherBeneficiaryDiscretionYesNoPage(1), true).success.value
         .set(OtherBeneficiaryAddressYesNoPage(1), false).success.value
 
-      val result = helper.entities(answers)
+      val helper = new AllBeneficiariesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allBeneficiaries
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
@@ -425,8 +427,6 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
       val classBenDescription1 = "Grandchildren"
       val classBenDescription2 = "Spouses"
 
-      val helper = injector.instanceOf[PrintPlaybackHelper]
-
       val answers = emptyUserAnswers
         .set(ClassOfBeneficiaryDescriptionPage(0), classBenDescription1).success.value
         .set(ClassOfBeneficiaryDiscretionYesNoPage(0), false).success.value
@@ -435,7 +435,9 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(ClassOfBeneficiaryDescriptionPage(1), classBenDescription2).success.value
         .set(ClassOfBeneficiaryDiscretionYesNoPage(1), true).success.value
 
-      val result = helper.entities(answers)
+      val helper = new AllBeneficiariesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allBeneficiaries
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),

@@ -59,11 +59,11 @@ GET        /problem-declaring                           controllers.declaration.
 
 GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
 
-GET        /last-declaration                            controllers.PlaybackAnswersController.onPageLoad()
+GET        /last-declaration                            controllers.print.PrintLastDeclaredAnswersController.onPageLoad()
 
-GET        /draft-declaration                           controllers.declaration.PlaybackDraftAnswersController.onPageLoad()
+GET        /draft-declaration                           controllers.print.PrintMaintainDraftAnswersController.onPageLoad()
 
-GET        /declared-updates                            controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad()
+GET        /declared-updates                            controllers.print.PrintMaintainDeclaredAnswersController.onPageLoad()
 
 GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=true)
 GET        /continue-maintaining-this-trust             controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=false)

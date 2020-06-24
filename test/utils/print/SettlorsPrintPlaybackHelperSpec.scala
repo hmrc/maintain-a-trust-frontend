@@ -27,6 +27,9 @@ import pages.settlors.living_settlor._
 import play.api.libs.json.Writes
 import play.twirl.api.Html
 import queries.Settable
+import utils.countryoptions.CountryOptions
+import utils.print.sections.beneficiaries.AllBeneficiariesPrinter
+import utils.print.sections.settlors.AllSettlorsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
 class SettlorsPrintPlaybackHelperSpec extends SpecBase {
@@ -37,8 +40,6 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
 
       val name = "Adam Smith"
 
-      val helper = injector.instanceOf[PrintPlaybackHelper]
-
       val answers = emptyUserAnswers
         .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
         .set(SettlorDateOfDeathYesNoPage, true).success.value
@@ -48,7 +49,9 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         .set(SettlorNationalInsuranceYesNoPage, true).success.value
         .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
 
-      val result = helper.entities(answers)
+      val helper = new AllSettlorsPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allSettlors
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.deceasedSettlor.heading")),
@@ -73,8 +76,6 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
 
       val name = "Adam Smith"
 
-      val helper = injector.instanceOf[PrintPlaybackHelper]
-
       val answers = emptyUserAnswers
         .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
         .set(SettlorDateOfDeathYesNoPage, false).success.value
@@ -93,7 +94,9 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
           PassportOrIdCardDetails("DE", "123456789", LocalDate.of(2021,10,10))
         ).success.value
 
-      val result = helper.entities(answers)
+      val helper = new AllSettlorsPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allSettlors
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.deceasedSettlor.heading")),
@@ -144,16 +147,15 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         uaSet(SettlorCompanyTypePage(index), Trading) andThen
         uaSet(SettlorCompanyTimePage(index), false)
 
-      val helper = injector.instanceOf[PrintPlaybackHelper]
-
-      val result = helper.entities((
+      val helper = new AllSettlorsPrinter((
         businessSettlorWithUTR(0) andThen
-        businessSettlorWithUKAddress(1) andThen
-        businessSettlorWithNonUKAddress(2) andThen
-        businessSettlorWithNoIdentification(3) andThen
-        businessSettlorInEmployeeRelatedTrust(4)
-        ).apply(emptyUserAnswers))
+          businessSettlorWithUKAddress(1) andThen
+          businessSettlorWithNonUKAddress(2) andThen
+          businessSettlorWithNoIdentification(3) andThen
+          businessSettlorInEmployeeRelatedTrust(4)
+        ).apply(emptyUserAnswers), injector.instanceOf[CountryOptions])
 
+      val result = helper.allSettlors
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.settlors.heading")),
@@ -227,16 +229,15 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         uaSet(SettlorIndividualNINOYesNoPage(index), false) andThen
         uaSet(SettlorAddressYesNoPage(index), false)
 
-      val helper = injector.instanceOf[PrintPlaybackHelper]
-
-      val result = helper.entities((
+      val helper = new AllSettlorsPrinter((
         individualSettlorWithNino(0) andThen
           individualSettlorWithUKAddressAndNoPassportOrIdCard(1) andThen
           individualSettlorWithInternationalAddressAndIdCard(2) andThen
           individualSettlorWithNoId(3)
-        ).apply(emptyUserAnswers))
+        ).apply(emptyUserAnswers), injector.instanceOf[CountryOptions])
 
-
+      val result = helper.allSettlors
+      
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.settlors.heading")),
         AnswerSection(Some("Settlor 1"),Seq(
