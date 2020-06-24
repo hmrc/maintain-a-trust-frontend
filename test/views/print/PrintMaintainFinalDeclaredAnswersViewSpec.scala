@@ -32,6 +32,8 @@ class PrintMaintainFinalDeclaredAnswersViewSpec extends ViewBehaviours {
 
     behave like normalPage(applyView, "playbackFinalDeclarationAnswers")
 
+    behave like pageWithPrintButton(applyView)
+
     "render correct content" in {
       val doc = asDocument(applyView)
 

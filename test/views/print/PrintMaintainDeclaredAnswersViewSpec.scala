@@ -33,6 +33,8 @@ class PrintMaintainDeclaredAnswersViewSpec extends ViewBehaviours {
 
     behave like normalPage(applyView, "playbackDeclarationAnswers")
 
+    behave like pageWithPrintButton(applyView)
+
     "render correct content" in {
       val doc = asDocument(applyView)
 
