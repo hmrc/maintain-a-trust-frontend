@@ -72,12 +72,12 @@
         <p>@messages("variationProgress.p3")</p>
         <h2 id="task-list--heading--summary" class="app-task-list__section">@messages("variationProgress.subHeading.4")</h2>
         <p>
-            @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "variationProgress.printsave.link", openInNewWindow = true)
+            @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "variationProgress.printsave.link", openInNewWindow = false)
         </p>
     }-->
 
     @if(isAbleToDeclare) {
-        @components.button_link(messages("taskList.summary.continue"), nextUrl)
+        <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
     }
 }
 

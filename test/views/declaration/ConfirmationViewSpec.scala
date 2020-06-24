@@ -35,7 +35,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
       assertContainsText(doc, s"Declaration received")
       assertContainsText(doc, s"Your reference is:")
       assertContainsText(doc, s"$fakeTvn")
-      assertContainsText(doc, "Print or save a copy of your answers (opens in a new window or tab)")
+      assertContainsText(doc, "Print or save a copy of your answers")
 
       assertContainsText(doc, "What happens next")
 

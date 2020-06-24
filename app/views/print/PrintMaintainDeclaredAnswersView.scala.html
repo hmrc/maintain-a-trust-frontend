@@ -55,7 +55,9 @@
 
     @components.warning("playbackAnswers.declareAnnually")
 
-    @components.button_print()
+    <div class="section">
+        @components.button_print()
+    </div>
 
     @for(section <- trustDetails){
         @{

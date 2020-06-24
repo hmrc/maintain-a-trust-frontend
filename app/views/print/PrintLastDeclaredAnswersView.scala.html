@@ -33,9 +33,11 @@
 
     @components.warning("playbackAnswers.declareAnnually")
 
-    @components.button_link("site.button.continue.maintaining", controllers.routes.WhatIsNextController.onPageLoad().url)
+    <div class="section">
+        <p>@components.button_link("site.button.continue.maintaining", controllers.routes.WhatIsNextController.onPageLoad().url)</p>
 
-    @components.button_print()
+        @components.button_print()
+    </div>
 
     @for(section <- trustDetails){
         @{
