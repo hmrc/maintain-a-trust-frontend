@@ -23,9 +23,9 @@ import utils.countryoptions.CountryOptions
 import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
 
-object BusinessProtector {
+object BusinessProtectorPrinter {
 
-  def apply(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] =
+  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] =
     userAnswers.get(BusinessProtectorNamePage(index)).map { protectorName =>
       Seq(
         AnswerSection(

@@ -31,13 +31,8 @@
     isAgent: Boolean
 )(implicit request: Request[_], messages: Messages)
 
-@printScript = {
-    <script type="text/javascript" src='@routes.Assets.versioned("javascripts/print.js")'></script>
-}
-
 @main_template(
-    title = messages("playbackDeclarationAnswers.title"),
-    scriptElem = Some(printScript)
+    title = messages("playbackDeclarationAnswers.title")
     ) {
 
     @components.heading("playbackDeclarationAnswers.heading", headingSize = "heading-xlarge")

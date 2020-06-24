@@ -29,9 +29,9 @@ import utils.countryoptions.CountryOptions
 import viewmodels.{AnswerRow, AnswerSection}
 import utils.print.sections.AnswerRowConverter._
 
-object IndividualBeneficiary {
+object IndividualBeneficiaryPrinter {
 
-  def apply(index: Int,
+  def print(index: Int,
             userAnswers: UserAnswers,
             countryOptions: CountryOptions)
            (implicit messages: Messages): Seq[AnswerSection] = {

@@ -26,9 +26,9 @@ import utils.countryoptions.CountryOptions
 import viewmodels.{AnswerRow, AnswerSection}
 import utils.print.sections.AnswerRowConverter._
 
-object LargeBeneficiary {
+object LargeBeneficiaryPrinter {
 
-  def apply(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)
+  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)
            (implicit messages: Messages): Seq[AnswerSection] =
 
     userAnswers.get(LargeBeneficiaryNamePage(index)).map { name =>

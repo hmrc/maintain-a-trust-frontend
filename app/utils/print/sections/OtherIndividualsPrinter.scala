@@ -17,27 +17,25 @@
 package utils.print.sections
 
 import models.UserAnswers
-import pages.UTRPage
-import pages.trustdetails._
 import play.api.i18n.Messages
 import utils.countryoptions.CountryOptions
-import utils.print.sections.AnswerRowConverter._
 import viewmodels.AnswerSection
 
-object TrustDetailsPrinter {
+class OtherIndividualsPrinter(userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages) {
 
-  def print(userAnswers: UserAnswers,
-            countryOptions: CountryOptions)
-           (implicit messages: Messages): Seq[AnswerSection] = Seq(
-      AnswerSection(
-        headingKey = None,
-        Seq(
-          stringQuestion(TrustNamePage, userAnswers, "trustName"),
-          dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
-          utrQuestion(UTRPage, userAnswers, "trustUniqueTaxReference")
-        ).flatten,
-        sectionKey = Some(messages("answerPage.section.trustsDetails.heading"))
-      )
-    )
+  def allOtherIndividuals : Seq[AnswerSection] = {
+    val size = userAnswers
+      .get(_root_.sections.natural.Individual)
+      .map(_.value.size)
+      .getOrElse(0)
 
+    size match {
+      case 0 => Nil
+      case _ =>
+        val heading = Seq(AnswerSection(sectionKey = Some(messages("answerPage.section.otherIndividuals.heading"))))
+        val individuals = (for (index <- 0 to size) yield OtherIndividualPrinter.print(index, userAnswers, countryOptions)).flatten
+
+        heading ++ individuals
+    }
+  }
 }

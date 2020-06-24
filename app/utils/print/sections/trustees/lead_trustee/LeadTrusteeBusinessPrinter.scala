@@ -19,31 +19,27 @@ package utils.print.sections.trustees.lead_trustee
 import models.UserAnswers
 import pages.trustees._
 import play.api.i18n.Messages
-import utils.CheckAnswersFormatters
 import utils.countryoptions.CountryOptions
 import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
 
-object LeadTrusteeIndividual extends LeadTrustee {
+object LeadTrusteeBusinessPrinter extends LeadTrustee {
 
-  def apply(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)
+           (implicit messages: Messages): Option[Seq[AnswerSection]] = {
 
-    userAnswers.get(TrusteeNamePage(index)).map(CheckAnswersFormatters.fullName).flatMap { name =>
+    userAnswers.get(TrusteeOrgNamePage(index)).flatMap { name =>
       Some(
         Seq(
           AnswerSection(
             headingKey = Some(messages("answerPage.section.leadTrustee.subheading")),
             Seq(
-              fullNameQuestion(TrusteeNamePage(index), userAnswers, "leadTrusteeName"),
-              dateQuestion(TrusteeDateOfBirthPage(index), userAnswers, "trusteeDateOfBirth", name),
-              yesNoQuestion(TrusteeAUKCitizenPage(index), userAnswers, "trusteeAUKCitizen", name),
-              ninoQuestion(TrusteeNinoPage(index), userAnswers, "trusteeNino", name),
-              yesNoQuestion(TrusteePassportIDCardYesNoPage(index), userAnswers, "trusteePassportOrIdCardYesNo", name),
-              passportOrIdCardQuestion(TrusteePassportIDCardPage(index), userAnswers, "trusteePassportOrIdCard", name, countryOptions)
+              yesNoQuestion(TrusteeUtrYesNoPage(index), userAnswers, "leadTrusteeUtrYesNo", name),
+              stringQuestion(TrusteeOrgNamePage(index), userAnswers, "trusteeBusinessName"),
+              stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name)
             ).flatten ++
             addressAnswers(index, userAnswers, countryOptions, name).flatten ++
-            Seq(
-              yesNoQuestion(TrusteeEmailYesNoPage(index), userAnswers, "trusteeEmailAddressYesNo", name),
+            Seq(yesNoQuestion(TrusteeEmailYesNoPage(index), userAnswers, "trusteeEmailAddressYesNo", name),
               stringQuestion(TrusteeEmailPage(index), userAnswers, "trusteeEmailAddress", name),
               stringQuestion(TrusteeTelephoneNumberPage(index), userAnswers, "trusteeTelephoneNumber", name)
             ).flatten,

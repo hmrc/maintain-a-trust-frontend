@@ -21,8 +21,8 @@ import pages.individual._
 import play.api.i18n.Messages
 import utils.CheckAnswersFormatters
 import utils.countryoptions.CountryOptions
-import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
+import viewmodels.AnswerSection
 
 object OtherIndividualPrinter {
 
@@ -30,27 +30,29 @@ object OtherIndividualPrinter {
             userAnswers: UserAnswers,
             countryOptions: CountryOptions)
            (implicit messages: Messages): Seq[AnswerSection] = {
-
-    userAnswers.get(OtherIndividualNamePage(index)).map(CheckAnswersFormatters.fullName).map { name =>
-      Seq(
-        AnswerSection(
-          headingKey = Some(messages("answerPage.section.otherIndividual.subheading", index + 1)),
-          Seq(
-            fullNameQuestion(OtherIndividualNamePage(index), userAnswers, "otherIndividualName"),
-            yesNoQuestion(OtherIndividualDateOfBirthYesNoPage(index), userAnswers, "otherIndividualDateOfBirthYesNo", name),
-            dateQuestion(OtherIndividualDateOfBirthPage(index), userAnswers, "otherIndividualDateOfBirth", name),
-            yesNoQuestion(OtherIndividualNationalInsuranceYesNoPage(index), userAnswers, "otherIndividualNINOYesNo", name),
-            ninoQuestion(OtherIndividualNationalInsuranceNumberPage(index), userAnswers, "otherIndividualNINO", name),
-            yesNoQuestion(OtherIndividualAddressYesNoPage(index), userAnswers, "otherIndividualAddressYesNo", name),
-            yesNoQuestion(OtherIndividualAddressUKYesNoPage(index), userAnswers, "otherIndividualAddressUKYesNo", name),
-            addressQuestion(OtherIndividualAddressPage(index), userAnswers, "otherIndividualAddress", name, countryOptions),
-            yesNoQuestion(OtherIndividualPassportIDCardYesNoPage(index), userAnswers, "otherIndividualPassportIDCardYesNo", name),
-            passportOrIdCardQuestion(OtherIndividualPassportIDCardPage(index), userAnswers, "otherIndividualPassportIDCard", name, countryOptions)
-          ).flatten,
-          sectionKey = None
+    userAnswers
+      .get(OtherIndividualNamePage(index))
+      .map(CheckAnswersFormatters.fullName)
+      .map { name =>
+        Seq(
+          AnswerSection(
+            headingKey = Some(messages("answerPage.section.otherIndividual.subheading", index + 1)),
+            Seq(
+              fullNameQuestion(OtherIndividualNamePage(index), userAnswers, "otherIndividualName"),
+              yesNoQuestion(OtherIndividualDateOfBirthYesNoPage(index), userAnswers, "otherIndividualDateOfBirthYesNo", name),
+              dateQuestion(OtherIndividualDateOfBirthPage(index), userAnswers, "otherIndividualDateOfBirth", name),
+              yesNoQuestion(OtherIndividualNationalInsuranceYesNoPage(index), userAnswers, "otherIndividualNINOYesNo", name),
+              ninoQuestion(OtherIndividualNationalInsuranceNumberPage(index), userAnswers, "otherIndividualNINO", name),
+              yesNoQuestion(OtherIndividualAddressYesNoPage(index), userAnswers, "otherIndividualAddressYesNo", name),
+              yesNoQuestion(OtherIndividualAddressUKYesNoPage(index), userAnswers, "otherIndividualAddressUKYesNo", name),
+              addressQuestion(OtherIndividualAddressPage(index), userAnswers, "otherIndividualAddress", name, countryOptions),
+              yesNoQuestion(OtherIndividualPassportIDCardYesNoPage(index), userAnswers, "otherIndividualPassportIDCardYesNo", name),
+              passportOrIdCardQuestion(OtherIndividualPassportIDCardPage(index), userAnswers, "otherIndividualPassportIDCard", name, countryOptions)
+            ).flatten,
+            sectionKey = None
+          )
         )
-      )
-    }.getOrElse(Nil)
+      }.getOrElse(Nil)
   }
 
 }

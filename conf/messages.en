@@ -691,8 +691,8 @@ playbackDeclarationAnswers.p3 = The trust’s declaration was sent on {0}
 
 # Draft answers after updating and maintaining the trust
 
-playbackDraftAnswers.title = Draft copy of the trust's declaration
-playbackDraftAnswers.heading = Draft copy of the trust's declaration
+playbackDraftAnswers.title = Draft copy of the trust’s declaration
+playbackDraftAnswers.heading = Draft copy of the trust’s declaration
 playbackDraftAnswers.p1 = This is a draft copy confirming that the trust is up to date.
 playbackDraftAnswers.p2 = If you have made any changes they must reflect what’s in the trust deed. You will need to re-enter and declare for them to be updated on this service.
 playbackDraftAnswers.p4 = This is not a declaration.

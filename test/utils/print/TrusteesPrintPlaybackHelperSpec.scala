@@ -23,12 +23,13 @@ import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddres
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees._
 import play.twirl.api.Html
+import utils.countryoptions.CountryOptions
+import utils.print.sections.trustees.AllTrusteesPrinter
 
 class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatchers with UserAnswersWriting {
 
   "when the lead trustee is an UK individual" must {
     "generate lead trustee section" in {
-      val helper = injector.instanceOf[PrintPlaybackHelper]
 
       val (answers, _) = (for {
         _ <- individualUKTrustee(0)
@@ -44,7 +45,9 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.people(answers)
+      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allTrustees
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -63,7 +66,6 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
 
   "when the lead trustee is a non-UK individual" must {
     "generate a lead trustee section" in {
-      val helper = injector.instanceOf[PrintPlaybackHelper]
 
       val (answers, _) = (for {
         _ <- individualUKTrustee(0)
@@ -80,7 +82,9 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- TrusteePassportIDCardYesNoPage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.people(answers)
+      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allTrustees
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -100,7 +104,6 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
 
   "when the lead trustee is an UK individual with nino and no address" must {
     "generate lead trustee section with correspondence address" in {
-      val helper = injector.instanceOf[PrintPlaybackHelper]
 
       val (answers, _) = (for {
         _ <- individualUKTrustee(0)
@@ -117,7 +120,9 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.people(answers)
+      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allTrustees
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -135,7 +140,6 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
 
   "when the lead trustee is a company" must {
     "generate a lead trustee section" in {
-      val helper = injector.instanceOf[PrintPlaybackHelper]
 
       val (answers, _) = (for {
         _ <- ukCompanyTrustee(0)
@@ -150,7 +154,9 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.people(answers)
+      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allTrustees
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -167,7 +173,6 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
 
   "when the lead trustee is a company with utr and no address" must {
     "generate a lead trustee section with correspondence address" in {
-      val helper = injector.instanceOf[PrintPlaybackHelper]
 
       val (answers, _) = (for {
         _ <- ukCompanyTrustee(0)
@@ -184,7 +189,9 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.people(answers)
+      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allTrustees
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -201,7 +208,6 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
 
   "when the lead trustee is a company and other trustees" must {
     "generate a trustee section for each trustee" in {
-      val helper = injector.instanceOf[PrintPlaybackHelper]
 
       val (answers, _) = (for {
         _ <- ukCompanyTrustee(0)
@@ -223,7 +229,9 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(2) is false
       } yield Unit).run(emptyUserAnswers).value
 
-      val result = helper.people(answers)
+      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allTrustees
 
       result must containHeadingSection(messages("answerPage.section.trustees.heading"))
       result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),

@@ -24,9 +24,9 @@ import utils.CheckAnswersFormatters
 import utils.countryoptions.CountryOptions
 import viewmodels.AnswerSection
 
-object DeceasedSettlor {
+object DeceasedSettlorPrinter {
 
-  def apply(userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] = {
+  def print(userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] = {
     userAnswers.get(SettlorNamePage).map(CheckAnswersFormatters.fullName).map { name =>
       Seq(
         AnswerSection(

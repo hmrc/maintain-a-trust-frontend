@@ -24,9 +24,9 @@ import utils.countryoptions.CountryOptions
 import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
 
-object IndividualProtector {
+object IndividualProtectorPrinter {
 
-  def apply(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] =
+  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] =
     userAnswers.get(IndividualProtectorNamePage(index)).map(CheckAnswersFormatters.fullName).map { protectorName =>
       Seq(AnswerSection(
         headingKey = Some(messages("answerPage.section.protector.subheading", index + 1)),

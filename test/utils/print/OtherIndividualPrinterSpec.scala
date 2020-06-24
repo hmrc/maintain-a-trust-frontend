@@ -23,6 +23,7 @@ import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddres
 import pages.individual._
 import play.twirl.api.Html
 import utils.countryoptions.CountryOptions
+import utils.print.sections.OtherIndividualsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
 class OtherIndividualPrinterSpec extends SpecBase {
@@ -58,9 +59,9 @@ class OtherIndividualPrinterSpec extends SpecBase {
         .set(OtherIndividualPassportIDCardYesNoPage(3), true).success.value
         .set(OtherIndividualPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))).success.value
 
-      val helper = new PlaybackAnswersHelper(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
+      val helper = new OtherIndividualsPrinter(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
 
-      val result = helper.otherIndividual
+      val result = helper.allOtherIndividuals
 
       val name1 = "Joe Bloggs"
       val name2 = "John Doe"

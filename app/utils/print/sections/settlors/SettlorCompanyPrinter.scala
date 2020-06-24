@@ -26,9 +26,9 @@ import utils.countryoptions.CountryOptions
 import viewmodels.{AnswerRow, AnswerSection}
 import utils.print.sections.AnswerRowConverter._
 
-object SettlorCompany {
+object SettlorCompanyPrinter {
 
-  def apply(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
 
     userAnswers.get(SettlorBusinessNamePage(index)).flatMap { name =>
       Some(Seq(

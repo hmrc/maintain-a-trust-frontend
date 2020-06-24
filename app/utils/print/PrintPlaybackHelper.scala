@@ -20,30 +20,27 @@ import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
 import utils.countryoptions.CountryOptions
-import utils.print.sections.{CloseDate, TrustDetailsPrinter}
+import utils.print.sections.beneficiaries.AllBeneficiariesPrinter
+import utils.print.sections.protectors.AllProtectorsPrinter
+import utils.print.sections.settlors.AllSettlorsPrinter
+import utils.print.sections.trustees.AllTrusteesPrinter
+import utils.print.sections.{CloseDatePrinter, OtherIndividualsPrinter, TrustDetailsPrinter}
 import viewmodels.AnswerSection
 
 class PrintPlaybackHelper @Inject()(countryOptions: CountryOptions){
 
   def closeDate(userAnswers: UserAnswers)(implicit messages: Messages) : AnswerSection =
-    CloseDate(userAnswers)
+    CloseDatePrinter.print(userAnswers)
 
-  def people(userAnswers: UserAnswers)(implicit messages: Messages) : Seq[AnswerSection] = {
-
-    val playbackAnswersHelper: PlaybackAnswersHelper = new PlaybackAnswersHelper(countryOptions, userAnswers)
-
-    List(
-      playbackAnswersHelper.settlors,
-      playbackAnswersHelper.allTrustees,
-      playbackAnswersHelper.beneficiaries,
-      playbackAnswersHelper.protectors,
-      playbackAnswersHelper.otherIndividual
+  def people(userAnswers: UserAnswers)(implicit messages: Messages) : Seq[AnswerSection] = List(
+      new AllSettlorsPrinter(userAnswers, countryOptions).allSettlors,
+      new AllTrusteesPrinter(userAnswers, countryOptions).allTrustees,
+      new AllBeneficiariesPrinter(userAnswers, countryOptions).allBeneficiaries,
+      new AllProtectorsPrinter(userAnswers, countryOptions).allProtectors,
+      new OtherIndividualsPrinter(userAnswers, countryOptions).allOtherIndividuals
     ).flatten
 
-  }
-
-  def trustDetails(userAnswers: UserAnswers)(implicit messages: Messages) : Seq[AnswerSection] = {
+  def trustDetails(userAnswers: UserAnswers)(implicit messages: Messages) : Seq[AnswerSection] =
     TrustDetailsPrinter.print(userAnswers, countryOptions)
-  }
 
 }

@@ -36,7 +36,7 @@ class PrintMaintainDraftAnswersViewSpec extends ViewBehaviours {
       val doc = asDocument(applyView)
 
       assertContainsText(doc,
-        "Draft copy of the trust's declaration"
+        "Draft copy of the trust’s declaration"
       )
 
       assertContainsText(doc,

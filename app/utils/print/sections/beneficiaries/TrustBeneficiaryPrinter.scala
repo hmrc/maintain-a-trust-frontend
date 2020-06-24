@@ -23,9 +23,9 @@ import utils.countryoptions.CountryOptions
 import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
 
-object TrustBeneficiary {
+object TrustBeneficiaryPrinter {
 
-  def apply(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)
+  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)
            (implicit messages: Messages): Seq[AnswerSection] = {
 
     userAnswers.get(TrustBeneficiaryNamePage(index)).map { name =>

@@ -24,9 +24,9 @@ import utils.countryoptions.CountryOptions
 import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
 
-object SettlorIndividual {
+object SettlorIndividualPrinter {
 
-  def apply(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
     userAnswers.get(SettlorIndividualNamePage(index)).map(CheckAnswersFormatters.fullName).flatMap { name =>
       Some(
         Seq(

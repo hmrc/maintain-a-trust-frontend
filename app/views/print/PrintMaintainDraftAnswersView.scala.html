@@ -28,13 +28,8 @@
     trustDetails: Seq[Section]
 )(implicit request: Request[_], messages: Messages)
 
-@printScript = {
-    <script type="text/javascript" src='@routes.Assets.versioned("javascripts/print.js")'></script>
-}
-
 @main_template(
-    title = messages("playbackDraftAnswers.title"),
-    scriptElem = Some(printScript)
+    title = messages("playbackDraftAnswers.title")
     ) {
 
     @components.heading("playbackDraftAnswers.heading", headingSize = "heading-xlarge")

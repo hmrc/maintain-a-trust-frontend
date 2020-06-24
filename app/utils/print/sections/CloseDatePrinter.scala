@@ -22,17 +22,14 @@ import play.api.i18n.Messages
 import utils.print.sections.AnswerRowConverter._
 import viewmodels.AnswerSection
 
-object CloseDate {
+object CloseDatePrinter {
 
-  def apply(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection = {
-
-    AnswerSection(
+  def print(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection = AnswerSection(
       headingKey = None,
       Seq(
         dateQuestion(DateLastAssetSharedOutPage, userAnswers, "dateLastAssetSharedOut")
       ).flatten,
       sectionKey = Some(messages("answerPage.section.closeDate.heading"))
     )
-  }
 
 }
