@@ -179,7 +179,7 @@ details summary:focus,
 
 // #00823b to #00703c
 button,
-.button,
+.button
 button:visited,
 .button:visited,
 button.disabled:hover,
@@ -198,6 +198,9 @@ button[disabled]:hover,
 .toggle__button--active:focus,
 .button[disabled="disabled"] {
   background-color: $green;
+}
+.button:hover {
+    background-color: $govuk-button-hover;
 }
 button:active,
 .button:active,
