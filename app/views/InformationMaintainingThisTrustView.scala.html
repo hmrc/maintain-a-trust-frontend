@@ -33,9 +33,9 @@
    <span class="govuk-caption-xl">@messages("informationMaintainingThisTrust.subHeading", utr)</span>
    @components.heading("informationMaintainingThisTrust.heading", headingSize = "heading-xlarge govuk-fieldset__heading")
 
-   <h2></h2>
-
-   @components.warning("informationMaintainingThisTrust")
+    <div class="info-maintaining-warning-margin-top">
+       @components.warning("informationMaintainingThisTrust")
+    </div>
 
    <h2>@messages("informationMaintainingThisTrust.viewLastDeclaration")</h2>
 

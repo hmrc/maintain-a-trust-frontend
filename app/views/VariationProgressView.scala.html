@@ -77,7 +77,9 @@
     }-->
 
     @if(isAbleToDeclare) {
-        <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
+        <div class="section">
+            <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
+        </div>
     }
 }
 
