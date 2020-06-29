@@ -17,13 +17,13 @@
 @import viewmodels.RadioOption
 
 @(
-        field: Field,
-        legend: String,
-        legendClass: Option[String] = None,
-        hint: Option[String] = None,
-        trackGa: Boolean = false,
-        headingIsLegend: Boolean = false,
-        inputs: Seq[(RadioOption, String)]
+    field: Field,
+    legend: String,
+    legendClass: Option[String] = None,
+    hint: Option[String] = None,
+    trackGa: Boolean = false,
+    headingIsLegend: Boolean = false,
+    inputs: Seq[(RadioOption, String)]
 )(implicit messages: Messages)
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
@@ -48,13 +48,13 @@
         }
         @for(input <- inputs) {
             <div class="multiple-choice">
-                <input id="@{input._1.id}" type="radio" name="@{field.id}" value="@{input._1.value}" @if(field.value == Some(input._1.value)){checked="checked"} @if(trackGa){data-journey-click="maintain-a-trust-frontend:click:@{input._1.id}"} />
+                <input id="@{input._1.id}" type="radio" name="@{field.id}" value="@{input._1.value}" aria-describedby="@{input._1.id}.hint" @if(field.value == Some(input._1.value)){checked="checked"} @if(trackGa){data-journey-click="maintain-a-trust-frontend:click:@{input._1.id}"} />
 
                 <label class="radios-label block-label selection-button-radio bold" for="@{input._1.id}">
                     @messages(input._1.messageKey)
                 </label>
-                <span id="@{input._1.id}.hint" class="radios-hint form-hint form-field" aria-label="@messages(input._2)">
-                        @messages(input._2)
+                <span id="@{input._1.id}.hint" class="radios-hint form-hint form-field">
+                    @messages(input._2)
                 </span>
             </div>
         }
