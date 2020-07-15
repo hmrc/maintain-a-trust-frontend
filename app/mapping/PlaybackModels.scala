@@ -367,7 +367,7 @@ object NonUKType {
 case class PropertyLandType(buildingLandName: Option[String],
                             address: Option[AddressType],
                             valueFull: Long,
-                            valuePrevious: Long) extends Asset
+                            valuePrevious: Option[Long]) extends Asset
 
 object PropertyLandType {
   implicit val propertyLandTypeFormat: Format[PropertyLandType] = Json.format[PropertyLandType]
