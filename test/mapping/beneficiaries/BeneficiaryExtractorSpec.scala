@@ -45,7 +45,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val beneficiary = DisplayTrustBeneficiaryType(None, None, None, None, None, None, None)
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = beneficiaryExtractor.extract(ua, beneficiary)
 
@@ -180,7 +180,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           )
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = beneficiaryExtractor.extract(ua, beneficiary)
 

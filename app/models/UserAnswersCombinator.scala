@@ -25,13 +25,12 @@ object UserAnswersCombinator {
   implicit val userAnswersSemigroup : Semigroup[UserAnswers] = new Semigroup[UserAnswers] {
 
     override def combine(x: UserAnswers, y: UserAnswers): UserAnswers = {
-
         UserAnswers(
           data = x.data.deepMerge(y.data),
           internalAuthId = x.internalAuthId,
+          utr = x.utr,
           updatedAt = LocalDateTime.now
         )
-
     }
   }
 

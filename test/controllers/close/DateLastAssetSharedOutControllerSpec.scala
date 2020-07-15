@@ -32,6 +32,7 @@ import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.TestUserAnswers
 import views.html.close.DateLastAssetSharedOutView
 
 import scala.concurrent.Future
@@ -50,7 +51,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val dateLastAssetSharedOutRoute: String = routes.DateLastAssetSharedOutController.onPageLoad().url
 
-  override val emptyUserAnswers = UserAnswers("id")
+  override val emptyUserAnswers = TestUserAnswers.emptyUserAnswers
     .set(UTRPage, "ur").success.value
 
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =

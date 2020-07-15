@@ -22,6 +22,7 @@ import models.pages.WhatIsNext.MakeChanges
 import pages.{TVNPage, WhatIsNextPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.TestUserAnswers
 import views.html.declaration.ConfirmationView
 
 class ConfirmationControllerSpec extends SpecBase {
@@ -32,7 +33,7 @@ class ConfirmationControllerSpec extends SpecBase {
 
       val fakeTvn = "XCTVN0000004912"
 
-      val playbackAnswers = UserAnswers("internalId")
+      val playbackAnswers = TestUserAnswers.emptyUserAnswers
         .set(WhatIsNextPage, MakeChanges).success.value
         .set(TVNPage, fakeTvn).success.value
 

@@ -77,7 +77,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val largeBeneficiaries = None
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiaries)
 
@@ -114,7 +114,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           )
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = largeBeneficiaryExtractor.extract(ua, Some(largeBeneficiary))
 
@@ -134,7 +134,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
       "with full data must return user answers updated" in {
         val largeBeneficiaries = (for(index <- 0 to 2) yield generateLargeBeneficiary(index)).toList
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = largeBeneficiaryExtractor.extract(ua, Some(largeBeneficiaries))
 

@@ -20,12 +20,12 @@ import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
 import mapping.PlaybackExtractor
-import models.{FullName, MetaData, UserAnswers}
 import models.http._
 import models.pages.KindOfBusiness.Trading
 import models.pages.{IndividualOrBusiness, KindOfBusiness}
+import models.{FullName, MetaData, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
-import pages.settlors.deceased_settlor.{SettlorDateOfBirthPage, SettlorDateOfBirthYesNoPage, SettlorDateOfDeathPage, SettlorDateOfDeathYesNoPage, SettlorInternationalAddressPage, SettlorLastKnownAddressYesNoPage, SettlorNamePage, SettlorNationalInsuranceNumberPage, SettlorNationalInsuranceYesNoPage, SettlorPassportIDCardPage, SettlorUKAddressPage}
+import pages.settlors.deceased_settlor._
 import pages.settlors.living_settlor._
 
 
@@ -46,7 +46,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
           None, DisplayTrustLeadTrusteeType(None, None),
           None, None, None)
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = settlorExtractor.extract(ua, entities)
 
@@ -125,7 +125,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
           ))
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = settlorExtractor.extract(ua, entities)
 

@@ -17,7 +17,7 @@
 package controllers.actions
 
 import com.google.inject.Inject
-import models.requests.{DataRequest, OptionalDataRequest, ClosingTrustRequest}
+import models.requests.{ClosingTrustRequest, DataRequest, IdentifierRequest, OptionalDataRequest}
 import play.api.mvc.{ActionBuilder, AnyContent}
 
 class AuthenticateForPlayback @Inject()(
@@ -29,8 +29,10 @@ class AuthenticateForPlayback @Inject()(
                                          requireClosingTrustAnswer: RequireClosingTrustAnswerAction
                                        ) {
 
+  def auth : ActionBuilder[IdentifierRequest, AnyContent] = identify
+
   def authWithSession: ActionBuilder[OptionalDataRequest, AnyContent] =
-    identify andThen getData
+    auth andThen getData
 
   def authWithData: ActionBuilder[DataRequest, AnyContent] =
     authWithSession andThen requireData

@@ -56,7 +56,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val classesOfBeneficiaries = None
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = classOfBeneficiaryExtractor.extract(ua, classesOfBeneficiaries)
 
@@ -78,7 +78,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         ))
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = classOfBeneficiaryExtractor.extract(ua, Some(classOfBeneficiary))
 
@@ -91,7 +91,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
       "with full data must return user answers updated" in {
         val charities = (for(index <- 0 to 2) yield generateClassOfBeneficiary(index)).toList
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = classOfBeneficiaryExtractor.extract(ua, Some(charities))
 

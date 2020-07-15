@@ -43,10 +43,10 @@ class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[Displa
               .flatMap(answers => extractDateOfDeath(deceasedSettlor, answers))
               .flatMap(answers => extractDateOfBirth(deceasedSettlor, answers))
               .flatMap(answers => extractIdentification(deceasedSettlor.identification, answers))
-              .flatMap(_.set(SettlorSafeIdPage, deceasedSettlor.identification.flatMap(_.safeId)))
+              .flatMap(_.set(DeceasdSettlorSafeIdPage, deceasedSettlor.identification.flatMap(_.safeId)))
               .flatMap {
                 _.set(
-                  SettlorMetaData,
+                  DeceasedSettlorMetaData,
                   MetaData(
                     lineNo = deceasedSettlor.lineNo,
                     bpMatchStatus = deceasedSettlor.bpMatchStatus,

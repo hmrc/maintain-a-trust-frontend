@@ -21,7 +21,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.DeceasedSettlor
 
-case object SettlorMetaData extends QuestionPage[MetaData] {
+case object DeceasedSettlorMetaData extends QuestionPage[MetaData] {
 
   override def path: JsPath = DeceasedSettlor.path \ toString
 

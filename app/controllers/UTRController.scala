@@ -42,12 +42,12 @@ class UTRController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithSession.async {
+  def onPageLoad(): Action[AnyContent] = actions.auth.async {
     implicit request =>
       Future.successful(Ok(view(form, routes.UTRController.onSubmit())))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.authWithSession.async {
+  def onSubmit(): Action[AnyContent] = actions.auth.async {
     implicit request =>
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
@@ -56,7 +56,7 @@ class UTRController @Inject()(
           for {
             _ <- playbackRepository.resetCache(request.user.internalId)
             newSessionWithUtr <- Future.fromTry {
-              UserAnswers.startNewSession(request.user.internalId).set(UTRPage, utr)
+              UserAnswers.startNewSession(request.user.internalId, utr).set(UTRPage, utr)
             }
             _ <- playbackRepository.set(newSessionWithUtr)
           } yield Redirect(controllers.routes.TrustStatusController.status())

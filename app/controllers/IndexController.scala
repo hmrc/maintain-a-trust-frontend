@@ -34,7 +34,7 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
                                 playbackRepository: PlaybackRepository
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithSession.async {
+  def onPageLoad(): Action[AnyContent] = actions.auth.async {
     implicit request =>
 
       request.user.enrolments.enrolments
@@ -49,7 +49,7 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
             for {
               _ <- playbackRepository.resetCache(request.user.internalId)
               newSessionWithUtr <- Future.fromTry {
-                UserAnswers.startNewSession(request.user.internalId).set(UTRPage, utr)
+                UserAnswers.startNewSession(request.user.internalId, utr).set(UTRPage, utr)
               }
               _ <- playbackRepository.set(newSessionWithUtr)
             } yield {

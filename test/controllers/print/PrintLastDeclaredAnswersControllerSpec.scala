@@ -21,6 +21,7 @@ import models.{UKAddress, UserAnswers}
 import pages.beneficiaries.charity._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.TestUserAnswers
 import utils.print.PrintPlaybackHelper
 import views.html.print.PrintLastDeclaredAnswersView
 
@@ -32,7 +33,7 @@ class PrintLastDeclaredAnswersControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val playbackAnswers = UserAnswers("internalId")
+      val playbackAnswers = TestUserAnswers.emptyUserAnswers
         .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value
         .set(CharityBeneficiaryDiscretionYesNoPage(0), true).success.value
         .set(CharityBeneficiaryShareOfIncomePage(0), "10").success.value
