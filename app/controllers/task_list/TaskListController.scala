@@ -19,7 +19,7 @@ package controllers.task_list
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.Actions
 import models.Enumerable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -30,12 +30,12 @@ import views.html.VariationProgressView
 import scala.concurrent.ExecutionContext
 
 class TaskListController @Inject()(
-                                      override val messagesApi: MessagesApi,
-                                      actions: AuthenticateForPlayback,
-                                      view: VariationProgressView,
-                                      val controllerComponents: MessagesControllerComponents,
-                                      val config: FrontendAppConfig,
-                                      storeConnector: TrustsStoreConnector
+                                    override val messagesApi: MessagesApi,
+                                    actions: Actions,
+                                    view: VariationProgressView,
+                                    val controllerComponents: MessagesControllerComponents,
+                                    val config: FrontendAppConfig,
+                                    storeConnector: TrustsStoreConnector
                                     )(implicit ec: ExecutionContext) extends FrontendBaseController
   with I18nSupport with Enumerable.Implicits with TaskListSections {
 

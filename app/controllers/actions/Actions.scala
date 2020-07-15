@@ -20,22 +20,22 @@ import com.google.inject.Inject
 import models.requests.{ClosingTrustRequest, DataRequest, IdentifierRequest, OptionalDataRequest}
 import play.api.mvc.{ActionBuilder, AnyContent}
 
-class AuthenticateForPlayback @Inject()(
-                                         identify: IdentifierAction,
-                                         getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
-                                         playbackIdentifier: PlaybackIdentifierAction,
-                                         refreshedDataRetrieval: RefreshedDataRetrievalAction,
-                                         requireClosingTrustAnswer: RequireClosingTrustAnswerAction
-                                       ) {
+class Actions @Inject()(
+                         identify: IdentifierAction,
+                         getData: DataRetrievalAction,
+                         requireData: DataRequiredAction,
+                         playbackIdentifier: PlaybackIdentifierAction,
+                         refreshedDataRetrieval: RefreshedDataRetrievalAction,
+                         requireClosingTrustAnswer: RequireClosingTrustAnswerAction
+                       ) {
 
   def auth : ActionBuilder[IdentifierRequest, AnyContent] = identify
 
-  def authWithSession: ActionBuilder[OptionalDataRequest, AnyContent] =
+  def authWithOptionalData: ActionBuilder[OptionalDataRequest, AnyContent] =
     auth andThen getData
 
   def authWithData: ActionBuilder[DataRequest, AnyContent] =
-    authWithSession andThen requireData
+    authWithOptionalData andThen requireData
 
   def verifiedForUtr: ActionBuilder[DataRequest, AnyContent] =
     authWithData andThen playbackIdentifier

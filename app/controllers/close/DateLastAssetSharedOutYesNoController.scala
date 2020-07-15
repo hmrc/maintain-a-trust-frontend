@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DateLastAssetSharedOutYesNoController @Inject()(
                                                        override val messagesApi: MessagesApi,
                                                        playbackRepository: PlaybackRepository,
-                                                       actions: AuthenticateForPlayback,
+                                                       actions: Actions,
                                                        yesNoFormProvider: YesNoFormProvider,
                                                        val controllerComponents: MessagesControllerComponents,
                                                        view: DateLastAssetSharedOutYesNoView

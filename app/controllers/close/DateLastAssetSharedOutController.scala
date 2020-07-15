@@ -19,7 +19,7 @@ package controllers.close
 import java.time.LocalDate
 
 import connectors.TrustConnector
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.Actions
 import forms.DateFormProvider
 import javax.inject.Inject
 import pages.close.DateLastAssetSharedOutPage
@@ -34,13 +34,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 
 class DateLastAssetSharedOutController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       playbackRepository: PlaybackRepository,
-                                       actions: AuthenticateForPlayback,
-                                       formProvider: DateFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: DateLastAssetSharedOutView,
-                                       trustConnector : TrustConnector
+                                                  override val messagesApi: MessagesApi,
+                                                  playbackRepository: PlaybackRepository,
+                                                  actions: Actions,
+                                                  formProvider: DateFormProvider,
+                                                  val controllerComponents: MessagesControllerComponents,
+                                                  view: DateLastAssetSharedOutView,
+                                                  trustConnector : TrustConnector
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val prefix: String = "dateLastAssetSharedOut"

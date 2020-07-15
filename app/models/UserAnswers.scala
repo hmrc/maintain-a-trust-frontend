@@ -25,7 +25,7 @@ import queries.{Gettable, Settable}
 import scala.util.{Failure, Success, Try}
 
 final case class UserAnswers(
-                              internalAuthId: String,
+                              internalId: String,
                               utr: String,
                               data: JsObject = Json.obj(),
                               updatedAt: LocalDateTime = LocalDateTime.now
@@ -37,7 +37,6 @@ final case class UserAnswers(
       case JsError(errors) => None
     }
   }
-
 
   def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A]): Try[UserAnswers] = {
     value match {
@@ -87,7 +86,7 @@ final case class UserAnswers(
 object UserAnswers {
 
   def startNewSession(internalId: String, utr: String) : UserAnswers =
-    UserAnswers(internalAuthId = internalId, utr = utr)
+    UserAnswers(internalId = internalId, utr = utr)
 
   implicit lazy val reads: Reads[UserAnswers] = {
 

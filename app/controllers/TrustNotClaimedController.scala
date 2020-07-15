@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.Actions
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
@@ -28,7 +28,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class TrustNotClaimedController @Inject()(
                                            override val messagesApi: MessagesApi,
-                                           actions: AuthenticateForPlayback,
+                                           actions: Actions,
                                            val controllerComponents: MessagesControllerComponents,
                                            view: TrustNotClaimedView
                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {

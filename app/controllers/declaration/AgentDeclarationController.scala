@@ -42,7 +42,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AgentDeclarationController @Inject()(
                                             override val messagesApi: MessagesApi,
                                             playbackRepository: PlaybackRepository,
-                                            actions: AuthenticateForPlayback,
+                                            actions: Actions,
                                             formProvider: AgentDeclarationFormProvider,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: AgentDeclarationView,

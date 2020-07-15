@@ -31,14 +31,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UpdateOtherIndividualsYesNoController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        playbackRepository: PlaybackRepository,
-                                        actions: AuthenticateForPlayback,
-                                        yesNoFormProvider: YesNoFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateOtherIndividualsYesNoView,
-                                        trustConnector: TrustConnector,
-                                        trustStoreConnector: TrustsStoreConnector
+                                                       override val messagesApi: MessagesApi,
+                                                       playbackRepository: PlaybackRepository,
+                                                       actions: Actions,
+                                                       yesNoFormProvider: YesNoFormProvider,
+                                                       val controllerComponents: MessagesControllerComponents,
+                                                       view: UpdateOtherIndividualsYesNoView,
+                                                       trustConnector: TrustConnector,
+                                                       trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with I18nSupport {
 

@@ -18,7 +18,7 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.{TrustConnector, TrustsStoreConnector}
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.Actions
 import handlers.ErrorHandler
 import javax.inject.Inject
 import mapping.UserAnswersExtractor
@@ -38,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class TrustStatusController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        playbackRepository: PlaybackRepository,
-                                       actions: AuthenticateForPlayback,
+                                       actions: Actions,
                                        closedView: TrustClosedView,
                                        stillProcessingView: TrustStillProcessingView,
                                        utrDoesNotMatchView: TrustUtrDoesNotMatchView,

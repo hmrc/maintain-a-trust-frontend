@@ -18,7 +18,7 @@ package controllers.declaration
 
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
-import controllers.actions.{AuthenticateForPlayback, RequireClosingTrustAnswerAction}
+import controllers.actions.{Actions, RequireClosingTrustAnswerAction}
 import pages.TVNPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -32,7 +32,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ConfirmationController @Inject()(
                                         override val messagesApi: MessagesApi,
-                                        actions: AuthenticateForPlayback,
+                                        actions: Actions,
                                         val controllerComponents: MessagesControllerComponents,
                                         confirmationView: ConfirmationView,
                                         closeTrustConfirmationView: CloseTrustConfirmationView,

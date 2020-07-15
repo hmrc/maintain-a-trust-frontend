@@ -17,12 +17,12 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import controllers.actions.AuthenticateForPlayback
-import models.UserAnswers
+import controllers.actions.Actions
+import models.{UserAnswers, UtrSession}
 import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.PlaybackRepository
+import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,8 +30,9 @@ import scala.util.Try
 
 @Singleton
 class IndexController @Inject()(val controllerComponents: MessagesControllerComponents,
-                                actions: AuthenticateForPlayback,
-                                playbackRepository: PlaybackRepository
+                                actions: Actions,
+                                playbackRepository: PlaybackRepository,
+                                sessionRepository: ActiveSessionRepository
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.auth.async {
@@ -46,12 +47,14 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
           Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
         } {
           utr =>
+
+            val activeSession = UtrSession(request.user.internalId, utr)
+            val newEmptyAnswers = UserAnswers.startNewSession(request.user.internalId, utr)
+
             for {
-              _ <- playbackRepository.resetCache(request.user.internalId)
-              newSessionWithUtr <- Future.fromTry {
-                Try(UserAnswers.startNewSession(request.user.internalId, utr))
-              }
-              _ <- playbackRepository.set(newSessionWithUtr)
+              _ <- playbackRepository.resetCache(utr, request.user.internalId)
+              _ <- playbackRepository.set(newEmptyAnswers)
+              _ <- sessionRepository.set(activeSession)
             } yield {
               Logger.info(s"[IndexController] $utr user is enrolled, storing UTR in user answers, checking status of trust")
               Redirect(controllers.routes.TrustStatusController.status())

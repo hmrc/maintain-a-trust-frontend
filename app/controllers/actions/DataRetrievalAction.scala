@@ -21,11 +21,11 @@ import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.Logger
 import play.api.mvc.ActionTransformer
-import repositories.PlaybackRepository
+import repositories.{ActiveSessionRepository, PlaybackRepository}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DataRetrievalActionImpl @Inject()(
+class DataRetrievalActionImpl @Inject()(activeSessionRepository: ActiveSessionRepository,
                                          val playbackRepository: PlaybackRepository
                                        )(implicit val executionContext: ExecutionContext) extends DataRetrievalAction {
 
@@ -39,14 +39,20 @@ class DataRetrievalActionImpl @Inject()(
       )
     }
 
-    playbackRepository.get(request.user.internalId) map {
+    activeSessionRepository.get(request.user.internalId) flatMap {
+      case Some(session) =>
+        playbackRepository.get(request.user.internalId, session.utr) map {
+          case None =>
+            Logger.debug(s"[DataRetrievalAction] no user answers returned for internal id")
+            createdOptionalDataRequest(request, None)
+          case Some(userAnswers) =>
+            Logger.debug(s"[DataRetrievalAction] user answers returned for internal id")
+            createdOptionalDataRequest(request, Some(userAnswers))
+        }
       case None =>
-        Logger.debug(s"[DataRetrievalAction] no user answers returned for internal id")
-        createdOptionalDataRequest(request, None)
-      case Some(userAnswers) =>
-        Logger.debug(s"[DataRetrievalAction] user answers returned for internal id")
-        createdOptionalDataRequest(request, Some(userAnswers))
+        Future.successful(createdOptionalDataRequest(request, None))
     }
+
   }
 }
 

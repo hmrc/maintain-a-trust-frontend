@@ -16,7 +16,7 @@
 
 package controllers.print
 
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.Actions
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -27,11 +27,11 @@ import views.html.print.PrintMaintainDraftAnswersView
 import scala.concurrent.{ExecutionContext, Future}
 
 class PrintMaintainDraftAnswersController @Inject()(
-                                                override val messagesApi: MessagesApi,
-                                                actions: AuthenticateForPlayback,
-                                                val controllerComponents: MessagesControllerComponents,
-                                                view: PrintMaintainDraftAnswersView,
-                                                printPlaybackAnswersHelper: PrintPlaybackHelper
+                                                     override val messagesApi: MessagesApi,
+                                                     actions: Actions,
+                                                     val controllerComponents: MessagesControllerComponents,
+                                                     view: PrintMaintainDraftAnswersView,
+                                                     printPlaybackAnswersHelper: PrintPlaybackHelper
                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {

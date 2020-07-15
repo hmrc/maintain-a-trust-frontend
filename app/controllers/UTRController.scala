@@ -17,13 +17,13 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.Actions
 import forms.UTRFormProvider
-import models.UserAnswers
+import models.{UserAnswers, UtrSession}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.PlaybackRepository
+import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.UTRView
 
@@ -33,8 +33,9 @@ import scala.util.Try
 @Singleton
 class UTRController @Inject()(
                                override val messagesApi: MessagesApi,
-                               actions: AuthenticateForPlayback,
+                               actions: Actions,
                                playbackRepository: PlaybackRepository,
+                               sessionRepository: ActiveSessionRepository,
                                formProvider: UTRFormProvider,
                                val controllerComponents: MessagesControllerComponents,
                                view: UTRView
@@ -53,12 +54,14 @@ class UTRController @Inject()(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, routes.UTRController.onSubmit()))),
         utr => {
+
+          val activeSession = UtrSession(request.user.internalId, utr)
+          val newEmptyAnswers = UserAnswers.startNewSession(request.user.internalId, utr)
+
           for {
-            _ <- playbackRepository.resetCache(request.user.internalId)
-            newSessionWithUtr <- Future.fromTry {
-              Try(UserAnswers.startNewSession(request.user.internalId, utr))
-            }
-            _ <- playbackRepository.set(newSessionWithUtr)
+            _ <- playbackRepository.resetCache(utr, request.user.internalId)
+            _ <- playbackRepository.set(newEmptyAnswers)
+            _ <- sessionRepository.set(activeSession)
           } yield Redirect(controllers.routes.TrustStatusController.status())
         }
       )

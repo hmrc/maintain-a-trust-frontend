@@ -30,5 +30,5 @@ trait Mocked extends MockitoSugar {
 
   when(playbackRepository.set(any())).thenReturn(Future.successful(true))
 
-  when(playbackRepository.resetCache(any())).thenReturn(Future.successful(Some(Json.obj())))
+  when(playbackRepository.resetCache(any(), any())).thenReturn(Future.successful(Some(Json.obj())))
 }

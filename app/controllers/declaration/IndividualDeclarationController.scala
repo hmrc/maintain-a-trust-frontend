@@ -40,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class IndividualDeclarationController @Inject()(
                                                  override val messagesApi: MessagesApi,
                                                  playbackRepository: PlaybackRepository,
-                                                 actions: AuthenticateForPlayback,
+                                                 actions: Actions,
                                                  formProvider: IndividualDeclarationFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: IndividualDeclarationView,

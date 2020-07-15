@@ -18,7 +18,7 @@ package controllers.print
 
 import java.time.LocalDateTime
 
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.Actions
 import javax.inject.Inject
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
@@ -33,13 +33,13 @@ import views.html.print.{PrintMaintainDeclaredAnswersView, PrintMaintainFinalDec
 import scala.concurrent.{ExecutionContext, Future}
 
 class PrintMaintainDeclaredAnswersController @Inject()(
-                                                   override val messagesApi: MessagesApi,
-                                                   actions: AuthenticateForPlayback,
-                                                   val controllerComponents: MessagesControllerComponents,
-                                                   declaredAnswersView: PrintMaintainDeclaredAnswersView,
-                                                   finalDeclaredAnswersView: PrintMaintainFinalDeclaredAnswersView,
-                                                   printPlaybackAnswersHelper: PrintPlaybackHelper,
-                                                   dateFormatter: DateFormatter
+                                                        override val messagesApi: MessagesApi,
+                                                        actions: Actions,
+                                                        val controllerComponents: MessagesControllerComponents,
+                                                        declaredAnswersView: PrintMaintainDeclaredAnswersView,
+                                                        finalDeclaredAnswersView: PrintMaintainFinalDeclaredAnswersView,
+                                                        printPlaybackAnswersHelper: PrintPlaybackHelper,
+                                                        dateFormatter: DateFormatter
                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {

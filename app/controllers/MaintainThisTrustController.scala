@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.Actions
 import models.requests.DataRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{AnyContent, MessagesControllerComponents}
@@ -30,7 +30,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class MaintainThisTrustController @Inject()(
                                              override val messagesApi: MessagesApi,
-                                             actions: AuthenticateForPlayback,
+                                             actions: Actions,
                                              val controllerComponents: MessagesControllerComponents,
                                              config: FrontendAppConfig,
                                              view: MaintainThisTrustView
