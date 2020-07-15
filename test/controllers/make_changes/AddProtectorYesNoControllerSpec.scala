@@ -20,11 +20,10 @@ import base.SpecBase
 import connectors.TrustConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import pages.UTRPage
 import models.UserAnswers
 import models.pages.WhatIsNext.MakeChanges
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import pages.WhatIsNextPage
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.inject.bind
@@ -43,11 +42,10 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
 
   lazy val addProtectorYesNoRoute = routes.AddProtectorYesNoController.onPageLoad().url
 
-  val utr = "1000000008"
+  val utr = "utr"
 
   val baseAnswers: UserAnswers = emptyUserAnswers
     .set(WhatIsNextPage, MakeChanges).success.value
-    .set(UTRPage, utr).success.value
 
   "AddProtectorYesNo Controller" must {
 

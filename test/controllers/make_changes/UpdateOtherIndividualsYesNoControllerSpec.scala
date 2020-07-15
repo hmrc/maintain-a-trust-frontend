@@ -24,7 +24,7 @@ import models.CompletedMaintenanceTasks
 import models.pages.WhatIsNext
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
-import pages.{UTRPage, WhatIsNextPage}
+import pages.WhatIsNextPage
 import pages.makechanges._
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -91,10 +91,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "redirect to individual declaration when valid data is submitted and no has been selected for all the questions" in {
 
-      val utr = "0987654321"
-
       val userAnswers = baseAnswers
-        .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
@@ -117,11 +114,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
     }
 
     "redirect to overview when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
-
-      val utr = "0987654321"
-
       val userAnswers = baseAnswers
-        .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value

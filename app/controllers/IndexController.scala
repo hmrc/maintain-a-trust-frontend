@@ -19,7 +19,6 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.AuthenticateForPlayback
 import models.UserAnswers
-import pages.UTRPage
 import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -27,6 +26,7 @@ import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 @Singleton
 class IndexController @Inject()(val controllerComponents: MessagesControllerComponents,
@@ -49,7 +49,7 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
             for {
               _ <- playbackRepository.resetCache(request.user.internalId)
               newSessionWithUtr <- Future.fromTry {
-                UserAnswers.startNewSession(request.user.internalId, utr).set(UTRPage, utr)
+                Try(UserAnswers.startNewSession(request.user.internalId, utr))
               }
               _ <- playbackRepository.set(newSessionWithUtr)
             } yield {

@@ -17,7 +17,6 @@
 package controllers.declaration
 
 import base.SpecBase
-import models.UserAnswers
 import models.pages.WhatIsNext.MakeChanges
 import pages.{TVNPage, WhatIsNextPage}
 import play.api.test.FakeRequest

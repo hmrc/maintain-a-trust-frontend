@@ -19,7 +19,6 @@ package utils.print
 import java.time.LocalDate
 
 import base.SpecBase
-import pages.UTRPage
 import pages.trustdetails._
 import play.twirl.api.Html
 import viewmodels.{AnswerRow, AnswerSection}
@@ -34,7 +33,6 @@ class TrustDetailsPrinterSpec extends SpecBase {
       val answers = emptyUserAnswers
         .set(TrustNamePage, "Trust Ltd.").success.value
         .set(WhenTrustSetupPage, LocalDate.of(2019,6,1)).success.value
-        .set(UTRPage, "1234567890").success.value
 
       val actualSection = helper.trustDetails(answers)
 
@@ -44,7 +42,7 @@ class TrustDetailsPrinterSpec extends SpecBase {
           rows = Seq(
             AnswerRow("What is the trust’s name?", Html("Trust Ltd."), None),
             AnswerRow("When was the trust created?", Html("1 June 2019"), None),
-            AnswerRow("What is the trust’s Unique Taxpayer Reference (UTR)?", Html("1234567890"), None)
+            AnswerRow("What is the trust’s Unique Taxpayer Reference (UTR)?", Html("utr"), None)
           ),
           sectionKey = Some("Trust details")
         )

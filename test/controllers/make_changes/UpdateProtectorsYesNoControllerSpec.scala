@@ -23,7 +23,7 @@ import forms.YesNoFormProvider
 import models.pages.WhatIsNext
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
-import pages.{UTRPage, WhatIsNextPage}
+import pages.WhatIsNextPage
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.inject.bind
 import play.api.libs.json.JsBoolean
@@ -86,13 +86,10 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
     }
 
     "redirect to the add an other individuals page when valid data is submitted and no individuals exist" in {
-
-      val utr = "1000000008"
-
       val  mockTrustConnector = mock[TrustConnector]
 
       val application =
-        applicationBuilder(userAnswers = Some(baseAnswers.set(UTRPage, utr).get)).overrides(
+        applicationBuilder(userAnswers = Some(baseAnswers)).overrides(
           bind[TrustConnector].toInstance(mockTrustConnector)
         ).build()
 
@@ -113,13 +110,10 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
     }
 
     "redirect to the update individuals page when valid data is submitted and individuals exist" in {
-
-      val utr = "1000000008"
-
       val  mockTrustConnector = mock[TrustConnector]
 
       val application =
-        applicationBuilder(userAnswers = Some(baseAnswers.set(UTRPage, utr).get)).overrides(
+        applicationBuilder(userAnswers = Some(baseAnswers)).overrides(
           bind[TrustConnector].toInstance(mockTrustConnector)
         ).build()
 

@@ -21,7 +21,7 @@ import java.time.{LocalDate, LocalDateTime}
 import base.SpecBase
 import models.http.NameType
 import models.pages.WhatIsNext.CloseTrust
-import models.{AgentDeclaration, UKAddress, UserAnswers}
+import models.{AgentDeclaration, UKAddress}
 import pages.beneficiaries.charity._
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage

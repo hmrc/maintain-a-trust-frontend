@@ -16,9 +16,8 @@
 
 package controllers
 
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import com.google.inject.{Inject, Singleton}
-import pages.UTRPage
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
@@ -35,8 +34,6 @@ class AgentNotAuthorisedController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      request.userAnswers.get(UTRPage) map { utr =>
-        Ok(view(utr))
-      } getOrElse Redirect(controllers.routes.SessionExpiredController.onPageLoad())
+      Ok(view(request.userAnswers.utr))
   }
 }

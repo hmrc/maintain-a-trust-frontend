@@ -21,11 +21,9 @@ import java.time.LocalDate
 import base.SpecBase
 import connectors.TrustConnector
 import forms.DateFormProvider
-import models.UserAnswers
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.UTRPage
 import pages.close.DateLastAssetSharedOutPage
 import play.api.data.Form
 import play.api.inject.bind
@@ -52,7 +50,6 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
   lazy val dateLastAssetSharedOutRoute: String = routes.DateLastAssetSharedOutController.onPageLoad().url
 
   override val emptyUserAnswers = TestUserAnswers.emptyUserAnswers
-    .set(UTRPage, "ur").success.value
 
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, dateLastAssetSharedOutRoute)

@@ -18,12 +18,12 @@ package controllers.actions
 
 import base.SpecBase
 import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
-import models.requests.{DataRequest, OrganisationUser, User, ClosingTrustRequest}
+import models.requests.{ClosingTrustRequest, DataRequest, OrganisationUser, User}
 import org.scalatest.concurrent.ScalaFutures
 import pages.WhatIsNextPage
 import play.api.mvc.Result
-import uk.gov.hmrc.auth.core.Enrolments
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.Enrolments
 
 import scala.concurrent.Future
 

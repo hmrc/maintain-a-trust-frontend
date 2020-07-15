@@ -22,7 +22,7 @@ import forms.WhatIsNextFormProvider
 import models.pages.WhatIsNext
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{UTRPage, WhatIsNextPage}
+import pages.WhatIsNextPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
@@ -45,7 +45,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
     "return OK and the correct view for a GET" in {
 
-      val userAnswers = emptyUserAnswers.set(UTRPage, "1234567892").success.value
+      val userAnswers = emptyUserAnswers
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -66,7 +66,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, "0987654321").success.value
         .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -101,11 +100,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "redirect to declaration when user selects 'Declare no changes'" in {
-
-      val utr = "0987654321"
-
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -124,10 +119,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to do you need to update details for the trustees when user selects 'Make changes'" in {
 
-      val utr = "0987654321"
-
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -147,10 +139,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
       when(mockAppConfig.closeATrustEnabled) thenReturn true
 
-      val utr = "0987654321"
-
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
@@ -172,10 +161,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
       when(mockAppConfig.closeATrustEnabled) thenReturn false
 
-      val utr = "0987654321"
-
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
@@ -195,7 +181,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val userAnswers = emptyUserAnswers.set(UTRPage, "1234567892").success.value
+      val userAnswers = emptyUserAnswers
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -216,7 +202,5 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
       application.stop()
     }
-
-
   }
 }

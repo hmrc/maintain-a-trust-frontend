@@ -22,7 +22,6 @@ import connectors.TrustConnector
 import controllers.actions.AuthenticateForPlayback
 import forms.DateFormProvider
 import javax.inject.Inject
-import pages.UTRPage
 import pages.close.DateLastAssetSharedOutPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -44,16 +43,13 @@ class DateLastAssetSharedOutController @Inject()(
                                        trustConnector : TrustConnector
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  import implicits.OptionImplicits._
-
   val prefix: String = "dateLastAssetSharedOut"
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       for {
-        utr <- request.userAnswers.get(UTRPage).future
-        startDate <- trustConnector.getStartDate(utr)
+        startDate <- trustConnector.getStartDate(request.userAnswers.utr)
       } yield {
         val form = formProvider.withPrefixAndTrustStartDate(prefix, startDate)
 
@@ -85,8 +81,7 @@ class DateLastAssetSharedOutController @Inject()(
       }
 
       for {
-        utr <- request.userAnswers.get(UTRPage).future
-        startDate <- trustConnector.getStartDate(utr)
+        startDate <- trustConnector.getStartDate(request.userAnswers.utr)
         result <- render(startDate)
       } yield result
   }

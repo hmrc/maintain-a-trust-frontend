@@ -22,7 +22,7 @@ import base.SpecBase
 import models.http.NameType
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
-import models.{AgentDeclaration, UKAddress, UserAnswers}
+import models.{AgentDeclaration, UKAddress}
 import pages.beneficiaries.charity._
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage

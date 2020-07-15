@@ -18,9 +18,6 @@ package controllers.actions
 
 import com.google.inject.{ImplementedBy, Inject}
 import models.requests.DataRequest
-import pages.UTRPage
-import play.api.Logger
-import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
 import services.AuthenticationService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -36,13 +33,7 @@ class PlaybackIdentifierActionImpl @Inject()(val parser: BodyParsers.Default,
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    request.userAnswers.get(UTRPage) map { utr =>
-      playbackAuthenticationService.authenticateForUtr(utr)(request, hc)
-    } getOrElse {
-      Logger.info(s"[PlaybackIdentifierAction] cannot authenticate user due to no utr in action")
-      Future.successful(Left(Redirect(controllers.routes.IndexController.onPageLoad())))
-    }
-
+    playbackAuthenticationService.authenticateForUtr(request.userAnswers.utr)(request, hc)
   }
 
 }

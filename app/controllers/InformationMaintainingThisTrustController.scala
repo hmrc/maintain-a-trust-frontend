@@ -16,10 +16,9 @@
 
 package controllers
 
+import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.AuthenticateForPlayback
-import com.google.inject.{Inject, Singleton}
-import pages.UTRPage
 import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -41,18 +40,13 @@ class InformationMaintainingThisTrustController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
-      request.userAnswers.get(UTRPage) match {
-        case Some(utr) =>
+      val utr = request.userAnswers.utr
 
-          Logger.info(s"[InformationMaintainingThisTrustController] showing information about this trust $utr")
+      Logger.info(s"[InformationMaintainingThisTrustController] showing information about this trust $utr")
 
-          request.user.affinityGroup match {
-            case Agent if !config.playbackEnabled => Ok(agentCannotAccessTrustYetView(utr))
-            case _ => Ok(maintainingTrustView(utr))
-          }
-        case None =>
-          Logger.info(s"[InformationMaintainingThisTrustController] no utr in user answers, going to ask for it")
-          Redirect(routes.UTRController.onPageLoad())
+      request.user.affinityGroup match {
+        case Agent if !config.playbackEnabled => Ok(agentCannotAccessTrustYetView(utr))
+        case _ => Ok(maintainingTrustView(utr))
       }
   }
 }

@@ -24,8 +24,8 @@ import models.UserAnswers
 import models.pages.WhatIsNext.MakeChanges
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
+import pages.WhatIsNextPage
 import pages.makechanges.UpdateSettlorsYesNoPage
-import pages.{UTRPage, WhatIsNextPage}
 import play.api.inject.bind
 import play.api.libs.json.JsBoolean
 import play.api.test.FakeRequest
@@ -42,11 +42,8 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
   lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad().url
 
-  val utr = "1000000008"
-
   val baseAnswers: UserAnswers = emptyUserAnswers
     .set(WhatIsNextPage, MakeChanges).success.value
-    .set(UTRPage, utr).success.value
 
   "UpdateSettlorsYesNo Controller" must {
 

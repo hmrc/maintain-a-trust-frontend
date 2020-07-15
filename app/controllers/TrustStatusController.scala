@@ -24,10 +24,8 @@ import javax.inject.Inject
 import mapping.UserAnswersExtractor
 import models.http._
 import models.requests.DataRequest
-import pages.UTRPage
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
 import services.AuthenticationService
@@ -59,65 +57,47 @@ class TrustStatusController @Inject()(
 
   def closed(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      enforceUtr() { utr =>
-        Future.successful(Ok(closedView(request.user.affinityGroup, utr)))
-      }
+      Future.successful(Ok(closedView(request.user.affinityGroup, request.userAnswers.utr)))
   }
 
   def processing(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      enforceUtr() { utr =>
-        Future.successful(Ok(stillProcessingView(request.user.affinityGroup, utr)))
-      }
+      Future.successful(Ok(stillProcessingView(request.user.affinityGroup, request.userAnswers.utr)))
   }
 
   def sorryThereHasBeenAProblem(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      enforceUtr() { utr =>
-        Future.successful(Ok(playbackProblemContactHMRCView(utr)))
-      }
+      Future.successful(Ok(playbackProblemContactHMRCView(request.userAnswers.utr)))
   }
 
   def notFound(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      enforceUtr() { _ =>
-        Future.successful(Ok(utrDoesNotMatchView(request.user.affinityGroup)))
-      }
+      Future.successful(Ok(utrDoesNotMatchView(request.user.affinityGroup)))
   }
 
   def locked(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      enforceUtr() { utr =>
-        Future.successful(Ok(lockedView(utr)))
-      }
+      Future.successful(Ok(lockedView(request.userAnswers.utr)))
   }
 
   def down(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      enforceUtr() { _ =>
-        Future.successful(ServiceUnavailable(ivDownView(request.user.affinityGroup)))
-      }
+      Future.successful(ServiceUnavailable(ivDownView(request.user.affinityGroup)))
   }
 
   def alreadyClaimed(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      enforceUtr() { utr =>
-        Future.successful(Ok(alreadyClaimedView(utr)))
-      }
+      Future.successful(Ok(alreadyClaimedView(request.userAnswers.utr)))
   }
 
   def status(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      enforceUtr() { utr =>
-        checkIfLocked(utr, fromVerify = false )
-      }
+      checkIfLocked(request.userAnswers.utr, fromVerify = false )
   }
 
   def statusAfterVerify(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-    enforceUtr() { utr =>
-        checkIfLocked(utr, fromVerify = true)
-      }
+      checkIfLocked(request.userAnswers.utr, fromVerify = true)
   }
 
   private def checkIfLocked(utr: String, fromVerify: Boolean)(implicit request: DataRequest[AnyContent]): Future[Result] = {
@@ -186,17 +166,6 @@ class TrustStatusController @Inject()(
       case Left(reason) =>
         Logger.warn(s"[TrustStatusController] $utr unable to extract user answers due to $reason")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-    }
-  }
-
-  private def enforceUtr()(block: String => Future[Result])(implicit request: DataRequest[AnyContent]): Future[Result] = {
-    request.userAnswers.get(UTRPage) match {
-      case None =>
-        Logger.info(s"[TrustStatusController] no UTR is user answers, redirecting to ask for it")
-        Future.successful(Redirect(routes.UTRController.onPageLoad()))
-      case Some(utr) =>
-        Logger.info(s"[TrustStatusController] checking status of trust for $utr")
-        block(utr)
     }
   }
 

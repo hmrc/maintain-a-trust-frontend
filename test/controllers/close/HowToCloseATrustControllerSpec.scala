@@ -19,18 +19,16 @@ package controllers.close
 import base.SpecBase
 import models.UserAnswers
 import org.scalatestplus.mockito.MockitoSugar
-import pages.UTRPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.close.HowToCloseATrustView
 
 class HowToCloseATrustControllerSpec extends SpecBase with MockitoSugar {
 
-  val utr: String = "1234567890"
+  val utr: String = "utr"
   lazy val howToCloseATrustRoute: String = routes.HowToCloseATrustController.onPageLoad().url
 
   override val emptyUserAnswers: UserAnswers = super.emptyUserAnswers
-    .set(UTRPage, utr).success.value
 
   "HowToCloseATrust Controller" must {
 

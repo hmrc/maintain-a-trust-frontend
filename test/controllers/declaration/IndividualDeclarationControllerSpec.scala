@@ -21,9 +21,9 @@ import forms.declaration.IndividualDeclarationFormProvider
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext.MakeChanges
 import models.{IndividualDeclaration, UKAddress, UserAnswers}
+import pages.WhatIsNextPage
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
-import pages.{UTRPage, WhatIsNextPage}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
@@ -74,7 +74,6 @@ class IndividualDeclarationControllerSpec extends SpecBase {
       )))
 
       val userAnswers = baseAnswers
-        .set(UTRPage, utr).success.value
         .set(IsThisLeadTrusteePage(0), true).success.value
         .set(TrusteeAddressPage(0), address).success.value
 
@@ -107,7 +106,6 @@ class IndividualDeclarationControllerSpec extends SpecBase {
       )))
 
       val userAnswers = baseAnswers
-        .set(UTRPage, utr).success.value
         .set(IsThisLeadTrusteePage(0), true).success.value
         .set(CorrespondenceAddressPage, address).success.value
 
@@ -162,7 +160,6 @@ class IndividualDeclarationControllerSpec extends SpecBase {
       )))
 
       val userAnswers = baseAnswers
-        .set(UTRPage, utr).success.value
         .set(IsThisLeadTrusteePage(0), true).success.value
         .set(TrusteeAddressPage(0), address).success.value
 

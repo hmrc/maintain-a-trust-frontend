@@ -18,7 +18,6 @@ package controllers
 
 import base.SpecBase
 import forms.UTRFormProvider
-import pages.UTRPage
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
