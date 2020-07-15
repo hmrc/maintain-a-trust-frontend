@@ -252,6 +252,60 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
         application.stop()
       }
+
+      "must playback data for a trust with property or land, no previous value" in {
+        val utr = "1000000007"
+        val payload = Source.fromFile(getClass.getResource("/display-trust-property-or-land-no-previous.json").getPath).mkString
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(playbackUrl(utr)))
+            .willReturn(okJson(payload))
+        )
+
+        val processed = Await.result(connector.playback(utr), Duration.Inf)
+
+        inside(processed) {
+          case Processed(data, bundleNumber) =>
+
+            bundleNumber mustBe "000012345678"
+
+            data.matchData.utr mustBe "1000000007"
+
+            data.correspondence.name mustBe "Trust of Brian Cloud"
+
+            data.declaration.name mustBe NameType("Agent", None, "Agency")
+
+            data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe NameType("Lead", None, "Trustee")
+
+            data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
+
+            data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe Some("1")
+            data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
+            data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
+
+            data.trust.entities.settlors.value.settlorCompany.value.head.name mustBe "Settlor Org 01"
+
+            data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe Some("1")
+            data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
+            data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
+
+            data.trust.assets.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+            data.trust.assets.propertyOrLand.head.valueFull mustBe 999999999999L
+            data.trust.assets.propertyOrLand.head.valuePrevious mustBe None
+        }
+
+        application.stop()
+      }
     }
 
     "declare no change must" - {
