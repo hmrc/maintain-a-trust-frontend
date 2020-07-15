@@ -37,20 +37,34 @@ object TrustsStatusReads {
 
   implicit object TrustStatusReads extends Reads[TrustStatus] {
     override def reads(json:JsValue): JsResult[TrustStatus] = json("responseHeader")("status") match {
-      case JsString("In Processing") => JsSuccess(Processing)
-      case JsString("Closed") => JsSuccess(Closed)
-      case JsString("Pending Closure") => JsSuccess(Closed)
+      case JsString("In Processing") =>
+        JsSuccess(Processing)
+      case JsString("Closed") =>
+        JsSuccess(Closed)
+      case JsString("Pending Closure") =>
+        JsSuccess(Closed)
       case JsString("Processed") =>
-         json("getTrust").validate[GetTrust] match {
-          case JsSuccess(trust, _) =>
-            val formBundle = json("responseHeader")("formBundleNo").as[String]
-            JsSuccess(Processed(trust, formBundle))
-          case JsError(errors) => JsError(s"Can not parse as GetTrust due to $errors")
-        }
-      case JsString("Parked") => JsSuccess(SorryThereHasBeenAProblem)
-      case JsString("Obsoleted") => JsSuccess(SorryThereHasBeenAProblem)
-      case JsString("Suspended") => JsSuccess(SorryThereHasBeenAProblem)
-      case _ => JsError("Unexpected Status")
+         validatedProcessedStatus(json)
+      case JsString("Parked") =>
+        JsSuccess(SorryThereHasBeenAProblem)
+      case JsString("Obsoleted") =>
+        JsSuccess(SorryThereHasBeenAProblem)
+      case JsString("Suspended") =>
+        JsSuccess(SorryThereHasBeenAProblem)
+      case _ =>
+        Logger.warn(s"[TrustStatusReads] unexpected status for trust")
+        JsError("Unexpected Status")
+    }
+  }
+
+  private def validatedProcessedStatus(json: JsValue) : JsResult[Processed] = {
+    json("getTrust").validate[GetTrust] match {
+      case JsSuccess(trust, _) =>
+        val formBundle = json("responseHeader")("formBundleNo").as[String]
+        JsSuccess(Processed(trust, formBundle))
+      case JsError(errors) =>
+        Logger.error(s"[TrustStatusReads] Unable to parse processed response due to $errors")
+        JsError(s"Can not parse as GetTrust due to $errors")
     }
   }
 
