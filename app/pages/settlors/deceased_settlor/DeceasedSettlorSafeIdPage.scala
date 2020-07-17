@@ -20,7 +20,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.DeceasedSettlor
 
-case object DeceasdSettlorSafeIdPage extends QuestionPage[String] {
+case object DeceasedSettlorSafeIdPage extends QuestionPage[String] {
 
   override def path: JsPath = DeceasedSettlor.path \ toString
 
