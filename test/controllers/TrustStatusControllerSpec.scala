@@ -23,7 +23,6 @@ import models.http._
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
-import pages.UTRPage
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -45,9 +44,9 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     val builder: GuiceApplicationBuilder
 
-    def utr = "1234567890"
+    def utr = "utr"
 
-    def userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
+    def userAnswers = emptyUserAnswers
 
     val fakeTrustConnector: TrustConnector = mock[TrustConnector]
     val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
@@ -183,7 +182,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
+          .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
         when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(Closed))
 
@@ -199,7 +198,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
+          .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
         when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(Processing))
 
@@ -215,7 +214,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
+          .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
         when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(UtrNotFound))
 
@@ -231,7 +230,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = true, managedByAgent = false))))
+          .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = true, managedByAgent = false))))
 
         status(result) mustEqual SEE_OTHER
 
@@ -245,7 +244,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
+          .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
         when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(TrustServiceUnavailable))
 
@@ -274,7 +273,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val getTrust = json.as[GetTrustDesResponse].getTrust.value
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-                .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
+                .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
               when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -300,7 +299,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val getTrust = json.as[GetTrustDesResponse].getTrust.value
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-                .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
+                .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
               when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -324,7 +323,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val fakeTrustConnector: TrustConnector = mock[TrustConnector]
               val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
 
-              val userAnswers = emptyUserAnswers.set(UTRPage, "1234567890").success.value
+              val userAnswers = emptyUserAnswers
 
               def application: Application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(
                 bind[TrustConnector].to(fakeTrustConnector),
@@ -341,7 +340,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val getTrust = json.as[GetTrustDesResponse].getTrust.value
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-                .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
+                .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
               when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -367,9 +366,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
             lazy val request = FakeRequest(GET, routes.TrustStatusController.status().url)
 
-            def utr = "1234567890"
-
-            def userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
+            def userAnswers = emptyUserAnswers
 
             val fakeTrustConnector: TrustConnector = mock[TrustConnector]
             val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
@@ -390,7 +387,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
             def result: Future[Result] = route(application, request).value
 
             when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-              .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
+              .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
             when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any()))
               .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -425,7 +422,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val getTrust = json.as[GetTrustDesResponse].getTrust.value
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-                .thenReturn(Future.successful(Some(TrustClaim("1234567890", trustLocked = false, managedByAgent = false))))
+                .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
               when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))

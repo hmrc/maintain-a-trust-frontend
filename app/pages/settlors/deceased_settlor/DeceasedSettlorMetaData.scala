@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package pages
+package pages.settlors.deceased_settlor
 
+import models.MetaData
+import pages.QuestionPage
 import play.api.libs.json.JsPath
+import sections.settlors.DeceasedSettlor
 
-case object UTRPage extends QuestionPage[String] {
+case object DeceasedSettlorMetaData extends QuestionPage[MetaData] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = DeceasedSettlor.path \ toString
 
-  override def toString: String = "utr"
+  override def toString: String = "metaData"
+
 }

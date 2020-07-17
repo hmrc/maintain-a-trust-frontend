@@ -21,7 +21,7 @@ import java.time.{LocalDate, LocalDateTime}
 import base.SpecBase
 import models.http.NameType
 import models.pages.WhatIsNext.CloseTrust
-import models.{AgentDeclaration, UKAddress, UserAnswers}
+import models.{AgentDeclaration, UKAddress}
 import pages.beneficiaries.charity._
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
@@ -29,6 +29,7 @@ import pages.{SubmissionDatePage, TVNPage, WhatIsNextPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
+import utils.TestUserAnswers
 import utils.print.PrintPlaybackHelper
 import views.html.print.PrintMaintainDraftAnswersView
 
@@ -43,7 +44,7 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val playbackAnswers = UserAnswers("internalId")
+      val playbackAnswers = TestUserAnswers.emptyUserAnswers
         .set(WhatIsNextPage, CloseTrust).success.value
         .set(TVNPage, fakeTvn).success.value
         .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value

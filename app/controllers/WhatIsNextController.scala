@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import connectors.{TrustConnector, TrustsStoreConnector}
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.Actions
 import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.WhatIsNextFormProvider
 import models.Enumerable
@@ -37,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class WhatIsNextController @Inject()(
                                       override val messagesApi: MessagesApi,
                                       playbackRepository: PlaybackRepository,
-                                      actions: AuthenticateForPlayback,
+                                      actions: Actions,
                                       formProvider: WhatIsNextFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: WhatIsNextView,

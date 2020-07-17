@@ -22,7 +22,6 @@ import models.UserAnswers
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.UTRPage
 import pages.close.DateLastAssetSharedOutYesNoPage
 import play.api.data.Form
 import play.api.test.FakeRequest
@@ -36,11 +35,10 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
 
   val formProvider = new YesNoFormProvider()
   val form: Form[Boolean] = formProvider.withPrefix("dateLastAssetSharedOutYesNo")
-  val utr: String = "1234567890"
+  val utr: String = "utr"
   lazy val dateLastAssetSharedOutYesNoRoute: String = routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
 
   override val emptyUserAnswers: UserAnswers = super.emptyUserAnswers
-    .set(UTRPage, utr).success.value
 
   "DateLastAssetSharedOutYesNo Controller" must {
 

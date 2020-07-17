@@ -30,7 +30,7 @@ import utils.TestUserAnswers
 trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked with BeforeAndAfter with FakeTrustsApp {
   this: TestSuite =>
 
-  def emptyUserAnswers = models.UserAnswers(TestUserAnswers.userInternalId)
+  def emptyUserAnswers = TestUserAnswers.emptyUserAnswers
 
   val bodyParsers = injector.instanceOf[BodyParsers.Default]
 

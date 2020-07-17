@@ -24,8 +24,8 @@ import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
 import models.{CompletedMaintenanceTasks, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
+import pages.WhatIsNextPage
 import pages.makechanges._
-import pages.{UTRPage, WhatIsNextPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -88,10 +88,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "redirect to individual declaration when valid data is submitted and no has been selected for all the questions" in {
 
-      val utr = "0987654321"
-
       val userAnswers = baseAnswers
-        .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
@@ -115,10 +112,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "redirect to overview when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
 
-      val utr = "0987654321"
-
       val userAnswers = baseAnswers
-        .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
@@ -150,11 +144,8 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad().url
 
-      val utr = "0987654321"
-
       val userAnswers = emptyUserAnswers
         .set(WhatIsNextPage, CloseTrust).success.value
-        .set(UTRPage, utr).success.value
         .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value

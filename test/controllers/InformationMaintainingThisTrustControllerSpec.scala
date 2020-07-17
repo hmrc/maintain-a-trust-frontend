@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBase
-import pages.UTRPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.InformationMaintainingThisTrustView
@@ -26,11 +25,9 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
 
   "InformationMaintainingThisTrustPage Controller" must {
 
-    val utr = "1234545678"
-
     "return OK and the correct view for a GET" in {
 
-      val userAnswers = emptyUserAnswers.set(UTRPage, utr).success.value
+      val userAnswers = emptyUserAnswers
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -43,22 +40,7 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr)(fakeRequest, messages).toString
-
-      application.stop()
-    }
-
-    "redirect to UTR page when UTR page is not answered" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation (result).value mustEqual routes.UTRController.onPageLoad().url
+        view("utr")(fakeRequest, messages).toString
 
       application.stop()
     }

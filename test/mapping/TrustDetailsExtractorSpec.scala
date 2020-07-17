@@ -50,7 +50,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           efrbsStartDate = Some(LocalDate.of(2018, 4, 20))
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = trusteeDetailsExtractor.extract(ua, trust)
 
@@ -77,7 +77,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           efrbsStartDate = Some(LocalDate.of(2018, 4, 20))
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = trusteeDetailsExtractor.extract(ua, trust)
 

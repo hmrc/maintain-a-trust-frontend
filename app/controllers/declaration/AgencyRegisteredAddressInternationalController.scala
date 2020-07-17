@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AgencyRegisteredAddressInternationalController @Inject()(
                                                                 override val messagesApi: MessagesApi,
                                                                 playbackRepository: PlaybackRepository,
-                                                                actions: AuthenticateForPlayback,
+                                                                actions: Actions,
                                                                 formProvider: InternationalAddressFormProvider,
                                                                 countryOptions: CountryOptionsNonUK,
                                                                 val controllerComponents: MessagesControllerComponents,

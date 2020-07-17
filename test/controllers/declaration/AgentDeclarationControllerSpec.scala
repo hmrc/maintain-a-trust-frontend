@@ -21,8 +21,8 @@ import forms.declaration.AgentDeclarationFormProvider
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext.MakeChanges
 import models.{AgentDeclaration, UKAddress, UserAnswers}
+import pages.WhatIsNextPage
 import pages.declaration.{AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage}
-import pages.{UTRPage, WhatIsNextPage}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
@@ -66,14 +66,11 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
     "redirect to confirmation for a POST" in {
 
-      val utr = "0987654321"
-
       val enrolments = Enrolments(Set(Enrolment(
         "HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")), "Activated"
       )))
 
       val userAnswers = baseAnswers
-        .set(UTRPage, utr).success.value
         .set(AgencyRegisteredAddressUkYesNoPage, true).success.value
         .set(AgencyRegisteredAddressUkPage, address).success.value
 
@@ -121,14 +118,11 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
     "render problem declaring when error retrieving TVN" in {
 
-      val utr = "0987654321"
-
       val enrolments = Enrolments(Set(Enrolment(
         "HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")), "Activated"
       )))
 
       val userAnswers = baseAnswers
-        .set(UTRPage, utr).success.value
         .set(AgencyRegisteredAddressUkYesNoPage, true).success.value
         .set(AgencyRegisteredAddressUkPage, address).success.value
 

@@ -16,15 +16,13 @@
 
 package pages.settlors.deceased_settlor
 
-import models.MetaData
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.DeceasedSettlor
 
-case object SettlorMetaData extends QuestionPage[MetaData] {
+case object DeceasedSettlorSafeIdPage extends QuestionPage[String] {
 
   override def path: JsPath = DeceasedSettlor.path \ toString
 
-  override def toString: String = "metaData"
-
+  override def toString: String = "safeId"
 }

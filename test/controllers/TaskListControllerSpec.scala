@@ -23,7 +23,7 @@ import models.pages.Tag.InProgress
 import models.pages.WhatIsNext
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
-import pages.{UTRPage, WhatIsNextPage}
+import pages.WhatIsNextPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -42,28 +42,27 @@ class TaskListControllerSpec extends SpecBase {
 
   lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
 
-  val fakeUTR = "1234567890"
+  val fakeUTR = "utr"
 
   val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
   val mandatorySections = List(
-    Task(Link(Settlors, "http://localhost:9795/maintain-a-trust/settlors/1234567890"), Some(InProgress)),
-    Task(Link(Trustees, "http://localhost:9792/maintain-a-trust/trustees/1234567890"), Some(InProgress)),
-    Task(Link(Beneficiaries, "http://localhost:9793/maintain-a-trust/beneficiaries/1234567890"), Some(InProgress))
+    Task(Link(Settlors, "http://localhost:9795/maintain-a-trust/settlors/utr"), Some(InProgress)),
+    Task(Link(Trustees, "http://localhost:9792/maintain-a-trust/trustees/utr"), Some(InProgress)),
+    Task(Link(Beneficiaries, "http://localhost:9793/maintain-a-trust/beneficiaries/utr"), Some(InProgress))
   )
   val optionalSections = List(
-    Task(Link(Protectors, "http://localhost:9796/maintain-a-trust/protectors/1234567890"), Some(InProgress)),
-    Task(Link(NaturalPeople, "http://localhost:9799/maintain-a-trust/other-individuals/1234567890"), Some(InProgress))
+    Task(Link(Protectors, "http://localhost:9796/maintain-a-trust/protectors/utr"), Some(InProgress)),
+    Task(Link(NaturalPeople, "http://localhost:9799/maintain-a-trust/other-individuals/utr"), Some(InProgress))
   )
 
-  "VariationProgress Controller" must {
+  "TaskListController Controller" must {
 
     "return OK and the correct view for a GET when making changes" in {
 
       val mockConnector = mock[TrustsStoreConnector]
 
       val answers = emptyUserAnswers
-        .set(UTRPage, fakeUTR).success.value
         .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
       val application = applicationBuilder(userAnswers = Some(answers))
@@ -95,7 +94,6 @@ class TaskListControllerSpec extends SpecBase {
       val mockConnector = mock[TrustsStoreConnector]
 
       val answers = emptyUserAnswers
-        .set(UTRPage, fakeUTR).success.value
         .set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
 
       val application = applicationBuilder(userAnswers = Some(answers))
@@ -122,28 +120,9 @@ class TaskListControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to UTR page when no utr is found" in {
-
-      val answers = emptyUserAnswers
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
-
-      val application = applicationBuilder(userAnswers = Some(answers)).build()
-
-        val request = FakeRequest(GET, controllers.task_list.routes.TaskListController.onPageLoad().url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value mustEqual routes.UTRController.onPageLoad().url
-
-        application.stop()
-    }
-
     "redirect to session expired page when no value found for What do you want to do next" in {
 
       val answers = emptyUserAnswers
-        .set(UTRPage, fakeUTR).success.value
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 

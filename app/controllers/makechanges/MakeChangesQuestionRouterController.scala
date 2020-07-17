@@ -19,7 +19,6 @@ package controllers.makechanges
 import connectors.{TrustConnector, TrustsStoreConnector}
 import models.UserAnswers
 import models.requests.DataRequest
-import pages.UTRPage
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -34,15 +33,12 @@ abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnecto
   extends FrontendBaseController with I18nSupport {
 
   private def redirectAndResetTaskList(updatedAnswers: UserAnswers)
-                                      (implicit request: DataRequest[AnyContent], hc: HeaderCarrier) = request.userAnswers.get(UTRPage).map { utr =>
+                                      (implicit request: DataRequest[AnyContent], hc: HeaderCarrier) =
       for {
-        _ <- trustStoreConnector.set(utr, updatedAnswers)
+        _ <- trustStoreConnector.set(request.userAnswers.utr, updatedAnswers)
       } yield {
         Redirect(controllers.task_list.routes.TaskListController.onPageLoad())
       }
-    }.getOrElse {
-      Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
-    }
 
   protected def redirectToDeclaration()(implicit request: DataRequest[AnyContent]): Result = {
     request.user.affinityGroup match {
@@ -54,33 +50,25 @@ abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnecto
   }
 
   protected def routeToAddOrUpdateProtectors()(implicit request: DataRequest[AnyContent]) = {
-    request.userAnswers.get(UTRPage).map { utr =>
       for {
-        existsF <- trustConnector.getDoProtectorsAlreadyExist(utr)
+        existsF <- trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.utr)
         exist = existsF.value
       } yield if (exist) {
         Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
       } else {
         Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
       }
-    }.getOrElse {
-      Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
-    }
   }
 
   protected def routeToAddOrUpdateOtherIndividuals()(implicit request: DataRequest[AnyContent]) = {
-    request.userAnswers.get(UTRPage).map { utr =>
       for {
-        existsF <- trustConnector.getDoOtherIndividualsAlreadyExist(utr)
+        existsF <- trustConnector.getDoOtherIndividualsAlreadyExist(request.userAnswers.utr)
         exist = existsF.value
       } yield if (exist) {
         Redirect(controllers.makechanges.routes.UpdateOtherIndividualsYesNoController.onPageLoad())
       } else {
         Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
       }
-    }.getOrElse {
-      Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
-    }
   }
 
   protected def routeToDeclareOrTaskList(updatedAnswers: UserAnswers, isClosingTrust: Boolean)

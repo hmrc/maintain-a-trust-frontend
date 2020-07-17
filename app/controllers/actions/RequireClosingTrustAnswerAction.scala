@@ -18,7 +18,7 @@ package controllers.actions
 
 import com.google.inject.Inject
 import models.pages.WhatIsNext.CloseTrust
-import models.requests.{DataRequest, ClosingTrustRequest}
+import models.requests.{ClosingTrustRequest, DataRequest}
 import pages.WhatIsNextPage
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}

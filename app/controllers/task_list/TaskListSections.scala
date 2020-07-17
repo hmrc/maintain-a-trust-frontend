@@ -21,8 +21,8 @@ import models.CompletedMaintenanceTasks
 import models.pages.Tag
 import models.pages.Tag.InProgress
 import sections.Protectors
-import viewmodels.{Link, Task}
 import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
+import viewmodels.{Link, Task}
 
 trait TaskListSections {
 

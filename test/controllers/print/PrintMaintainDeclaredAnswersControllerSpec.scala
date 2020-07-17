@@ -22,7 +22,7 @@ import base.SpecBase
 import models.http.NameType
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
-import models.{AgentDeclaration, UKAddress, UserAnswers}
+import models.{AgentDeclaration, UKAddress}
 import pages.beneficiaries.charity._
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
@@ -42,7 +42,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
   "PlaybackDeclaredAnswersController Controller" must {
 
-    def playbackAnswers(whatIsNext: WhatIsNext) = UserAnswers("internalId")
+    def playbackAnswers(whatIsNext: WhatIsNext) = emptyUserAnswers
       .set(WhatIsNextPage, whatIsNext).success.value
       .set(TVNPage, fakeTvn).success.value
       .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value

@@ -43,6 +43,16 @@ object AnswerRowConverter {
     }
   }
 
+  def utr(userAnswers: UserAnswers, labelKey: String,
+                  messageArg: String = "", changeRoute: Option[Call] = None)
+                 (implicit messages:Messages): Option[AnswerRow] = {
+    Some(AnswerRow(
+      messages(s"$labelKey.checkYourAnswersLabel", messageArg),
+      CheckAnswersFormatters.utr(userAnswers.utr),
+      None
+    ))
+  }
+
   def utrQuestion(query: Gettable[String], userAnswers: UserAnswers, labelKey: String,
                    messageArg: String = "", changeRoute: Option[Call] = None)
                   (implicit messages:Messages): Option[AnswerRow] = {

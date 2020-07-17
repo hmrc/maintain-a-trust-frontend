@@ -28,7 +28,7 @@ import models.requests.DataRequest
 import models.{AgentDeclaration, UserAnswers}
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
-import pages.{SubmissionDatePage, TVNPage, UTRPage, WhatIsNextPage}
+import pages.{SubmissionDatePage, TVNPage, WhatIsNextPage}
 import play.api.Logger
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
@@ -51,7 +51,6 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     (for {
-      utr <- request.userAnswers.get(UTRPage)
       whatIsNext <- request.userAnswers.get(WhatIsNextPage)
       tvn <- request.userAnswers.get(TVNPage)
       submissionDate <- request.userAnswers.get(SubmissionDatePage)
@@ -59,10 +58,12 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
       optionalEndDate = request.userAnswers.get(DateLastAssetSharedOutPage)
     } yield {
 
+      val utr = request.userAnswers.utr
+
       val submissionData = SubmissionData(utr, whatIsNext, tvn, submissionDate, optionalAgentInformation, optionalEndDate)
 
       trustConnector.playback(utr).flatMap {
-        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, playback)(request)
+        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, utr, playback)(request)
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
@@ -71,15 +72,17 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
     }
   }
 
-  private def extractAndRefreshUserAnswers[A](data: SubmissionData, playback: GetTrust)
+  private def extractAndRefreshUserAnswers[A](data: SubmissionData, utr: String, playback: GetTrust)
                         (implicit request: DataRequest[A]) : Future[Either[Result, DataRequest[A]]] = {
 
-    playbackExtractor.extract(UserAnswers(request.user.internalId), playback) match {
+    val newSession = UserAnswers.startNewSession(request.user.internalId, utr)
+
+    playbackExtractor.extract(newSession, playback) match {
       case Right(answers) =>
         for {
           updatedAnswers <- Future.fromTry {
-            answers.set(UTRPage, data.utr)
-              .flatMap(_.set(WhatIsNextPage, data.whatIsNext))
+            answers
+              .set(WhatIsNextPage, data.whatIsNext)
               .flatMap(_.set(TVNPage, data.tvn))
               .flatMap(_.set(SubmissionDatePage, data.date))
               .flatMap(_.set(AgentDeclarationPage, data.agent))

@@ -17,7 +17,6 @@
 package utils.print.sections
 
 import models.UserAnswers
-import pages.UTRPage
 import pages.trustdetails._
 import play.api.i18n.Messages
 import utils.countryoptions.CountryOptions
@@ -34,7 +33,7 @@ object TrustDetailsPrinter {
         Seq(
           stringQuestion(TrustNamePage, userAnswers, "trustName"),
           dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
-          utrQuestion(UTRPage, userAnswers, "trustUniqueTaxReference")
+          utr(userAnswers, "trustUniqueTaxReference")
         ).flatten,
         sectionKey = Some(messages("answerPage.section.trustsDetails.heading"))
       )

@@ -43,7 +43,7 @@ class CorrespondenceExtractorSpec extends FreeSpec with MustMatchers with Either
         phoneNumber = "1225645"
       )
 
-      val ua = UserAnswers("fakeId")
+      val ua = UserAnswers("fakeId", "utr")
 
       val extraction = correspondenceExtractor.extract(ua, correspondence)
 

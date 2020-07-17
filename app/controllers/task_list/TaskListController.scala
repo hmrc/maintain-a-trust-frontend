@@ -19,55 +19,50 @@ package controllers.task_list
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
-import controllers.actions.AuthenticateForPlayback
+import controllers.actions.Actions
 import models.Enumerable
-import pages.UTRPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.VariationProgressView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class TaskListController @Inject()(
-                                      override val messagesApi: MessagesApi,
-                                      actions: AuthenticateForPlayback,
-                                      view: VariationProgressView,
-                                      val controllerComponents: MessagesControllerComponents,
-                                      val config: FrontendAppConfig,
-                                      storeConnector: TrustsStoreConnector
+                                    override val messagesApi: MessagesApi,
+                                    actions: Actions,
+                                    view: VariationProgressView,
+                                    val controllerComponents: MessagesControllerComponents,
+                                    val config: FrontendAppConfig,
+                                    storeConnector: TrustsStoreConnector
                                     )(implicit ec: ExecutionContext) extends FrontendBaseController
   with I18nSupport with Enumerable.Implicits with TaskListSections {
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
-      request.userAnswers.get(UTRPage) match {
-        case Some(utr) =>
+      val utr = request.userAnswers.utr
 
-          storeConnector.getStatusOfTasks(utr) map {
-            tasks =>
+      storeConnector.getStatusOfTasks(utr) map {
+        tasks =>
 
-              val sections = generateTaskList(tasks, utr)
+          val sections = generateTaskList(tasks, utr)
 
-              val next = if (request.user.affinityGroup == Agent) {
-                controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
-              } else {
-                controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
-              }
-
-              Ok(view(utr,
-                sections.mandatory,
-                sections.other,
-                request.user.affinityGroup,
-                next,
-                isAbleToDeclare = sections.isAbleToDeclare,
-                request.closingTrust
-              ))
+          val next = if (request.user.affinityGroup == Agent) {
+            controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+          } else {
+            controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
           }
-        case _ =>
-          Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
+
+          Ok(view(utr,
+            sections.mandatory,
+            sections.other,
+            request.user.affinityGroup,
+            next,
+            isAbleToDeclare = sections.isAbleToDeclare,
+            request.closingTrust
+          ))
       }
   }
 }

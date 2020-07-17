@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AgencyRegisteredAddressUkController @Inject()(
                                                      override val messagesApi: MessagesApi,
                                                      playbackRepository: PlaybackRepository,
-                                                     actions: AuthenticateForPlayback,
+                                                     actions: Actions,
                                                      formProvider: UKAddressFormProvider,
                                                      val controllerComponents: MessagesControllerComponents,
                                                      view: AgencyRegisteredAddressUkView

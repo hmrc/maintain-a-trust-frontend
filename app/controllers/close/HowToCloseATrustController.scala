@@ -18,8 +18,7 @@ package controllers.close
 
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
-import controllers.actions.AuthenticateForPlayback
-import pages.UTRPage
+import controllers.actions.Actions
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
@@ -29,7 +28,7 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class HowToCloseATrustController @Inject()(
-                                            actions: AuthenticateForPlayback,
+                                            actions: Actions,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: HowToCloseATrustView
                                            )(implicit ec: ExecutionContext, config: FrontendAppConfig)
@@ -38,8 +37,6 @@ class HowToCloseATrustController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
-      request.userAnswers.get(UTRPage).map { utr =>
-        Ok(view(utr))
-      }.getOrElse(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
+      Ok(view(request.userAnswers.utr))
   }
 }

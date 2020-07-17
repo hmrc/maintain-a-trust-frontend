@@ -18,22 +18,19 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
-import controllers.actions.AuthenticateForPlayback
-import models.UserAnswers
-import models.requests.{DataRequest, OptionalDataRequest}
-import pages.UTRPage
+import controllers.actions.Actions
+import models.requests.DataRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.PlaybackRepository
+import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.MaintainThisTrustView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class MaintainThisTrustController @Inject()(
                                              override val messagesApi: MessagesApi,
-                                             actions: AuthenticateForPlayback,
+                                             actions: Actions,
                                              val controllerComponents: MessagesControllerComponents,
                                              config: FrontendAppConfig,
                                              view: MaintainThisTrustView
@@ -42,42 +39,41 @@ class MaintainThisTrustController @Inject()(
   def onPageLoad(needsIv: Boolean) = actions.authWithData {
     implicit request =>
 
-      request.userAnswers.get(UTRPage).map { utr =>
+      val utr = request.userAnswers.utr
 
-        @scala.annotation.tailrec
-        def commaSeparate(connective: String, list: List[String], acc: String = "")
-                         (implicit request: DataRequest[AnyContent]): String = {
-          list.size match {
-            case 0 => acc
-            case 1 if !acc.isEmpty => commaSeparate(connective, list.tail, acc + " " + connective + " " + list.head)
-            case 1 | 2 => commaSeparate(connective, list.tail, acc + list.head)
-            case _ => commaSeparate(connective, list.tail, acc + list.head + ", ")
-          }
+      @scala.annotation.tailrec
+      def commaSeparate(connective: String, list: List[String], acc: String = "")
+                       (implicit request: DataRequest[AnyContent]): String = {
+        list.size match {
+          case 0 => acc
+          case 1 if !acc.isEmpty => commaSeparate(connective, list.tail, acc + " " + connective + " " + list.head)
+          case 1 | 2 => commaSeparate(connective, list.tail, acc + list.head)
+          case _ => commaSeparate(connective, list.tail, acc + list.head + ", ")
         }
+      }
 
-        val sections: List[(Boolean, String)] = List(
-          (config.maintainSettlorsEnabled, request.messages(messagesApi)("section.settlors")),
-          (config.maintainTrusteesEnabled, request.messages(messagesApi)("section.trustees")),
-          (config.maintainBeneficiariesEnabled, request.messages(messagesApi)("section.beneficiaries")),
-          (config.maintainProtectorsEnabled, request.messages(messagesApi)("section.protectors")),
-          (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.natural"))
-        )
+      val sections: List[(Boolean, String)] = List(
+        (config.maintainSettlorsEnabled, request.messages(messagesApi)("section.settlors")),
+        (config.maintainTrusteesEnabled, request.messages(messagesApi)("section.trustees")),
+        (config.maintainBeneficiariesEnabled, request.messages(messagesApi)("section.beneficiaries")),
+        (config.maintainProtectorsEnabled, request.messages(messagesApi)("section.protectors")),
+        (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.natural"))
+      )
 
-        val availableSections = commaSeparate(
-          request.messages(messagesApi)("site.and"),
-          sections.collect {
-            case (true, x) => x
-          }
-        )
-
-        val continueUrl: String = if (needsIv) {
-          config.verifyIdentityForATrustUrl(utr)
-        } else {
-          routes.InformationMaintainingThisTrustController.onPageLoad().url
+      val availableSections = commaSeparate(
+        request.messages(messagesApi)("site.and"),
+        sections.collect {
+          case (true, x) => x
         }
+      )
 
-        Ok(view(utr, availableSections, continueUrl))
-      } getOrElse Redirect(routes.SessionExpiredController.onPageLoad())
+      val continueUrl: String = if (needsIv) {
+        config.verifyIdentityForATrustUrl(utr)
+      } else {
+        routes.InformationMaintainingThisTrustController.onPageLoad().url
+      }
+
+      Ok(view(utr, availableSections, continueUrl))
 
   }
 
