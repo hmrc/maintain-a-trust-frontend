@@ -23,7 +23,8 @@
         readerHint: Option[String] = None,
         labelClass: Option[String] = None,
         symbol: Option[String] = None,
-        optionalHtmlContent: Option[Html] = None
+        optionalHtmlContent: Option[Html] = None,
+        autoComplete: Option[String] = None
 )(implicit messages: Messages)
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
@@ -50,6 +51,9 @@
         id="@{field.id}"
         name="@{field.name}"
         value="@{field.value}"
+        @if(autoComplete.nonEmpty){
+            autocomplete="@{autoComplete.get}"
+        }
         @if(hint.nonEmpty) {
             aria-describedby="@{field.id}_hint"
         }
