@@ -45,7 +45,8 @@
 
             @components.input_text(
                 field = form("firstName"),
-                label = messages("declaration.firstName")
+                label = messages("declaration.firstName"),
+                autoComplete = Some("given-name")
             )
 
             @components.input_text(
@@ -55,7 +56,8 @@
 
             @components.input_text(
                 field = form("lastName"),
-                label = messages("declaration.lastName")
+                label = messages("declaration.lastName"),
+                autoComplete = Some("family-name")
             )
 
         </fieldset>
