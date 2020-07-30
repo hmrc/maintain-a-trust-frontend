@@ -1,0 +1,163 @@
+  {
+  "getTrust": {
+    "matchData": {
+      "utr": "1000000007"
+    },
+    "correspondence": {
+      "abroadIndicator": false,
+      "name": "Trust of Brian Cloud",
+      "address": {
+        "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+        "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+        "line3": "1234567890 QwErTyUiOp ,.(/)&'- name",
+        "line4": "1234567890 QwErTyUiOp ,.(/)&'- name",
+        "postCode": "NE98 1YX",
+        "country": "GB"
+      },
+      "phoneNumber": "+123456789012345678"
+    },
+    "declaration": {
+      "name": {
+        "firstName": "Agent",
+        "lastName": "Agency"
+      },
+      "address": {
+        "line1": "DECLARED WITH NINO",
+        "line2": "DECLARED WITH NINO",
+        "postCode": "XX1 1XX",
+        "country": "GB"
+      }
+    },
+    "trust": {
+      "details": {
+        "startDate": "2016-04-06",
+        "administrationCountry": "GB",
+        "residentialStatus": {
+          "uk": {
+            "scottishLaw": false
+          }
+        },
+        "typeOfTrust": "Heritage Maintenance Fund"
+      },
+      "entities": {
+        "beneficiary": {
+          "charity": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "01",
+              "organisationName": "1234567890&`'^ -QWERTYqwertyzxcvbnmasdfghjklpoiuypoiuytr",
+              "address": {
+                "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                "line3": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                "country": "DE"
+              },
+              "beneficiaryDiscretion": false,
+              "beneficiaryShareOfIncome": "100",
+              "entityStart": "2019-02-28"
+            }
+          ],
+          "other": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "01",
+              "description": "1234567890&`'^ -QWERTYqwertyzxcvbnmasdfghjklpoiuypoiuytr",
+              "address": {
+                "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                "line3": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                "country": "DE"
+              },
+              "beneficiaryDiscretion": false,
+              "beneficiaryShareOfIncome": "100",
+              "entityStart": "2019-02-28"
+            }
+          ]
+        },
+        "leadTrustee": {
+          "leadTrusteeInd": {
+            "lineNo": "1",
+            "bpMatchStatus": "01",
+            "name": {
+              "firstName": "Lead",
+              "lastName": "Trustee"
+            },
+            "dateOfBirth": "2015-03-20",
+            "phoneNumber": "+123456789012345678",
+            "identification": {
+              "nino": "SJ123456B"
+            },
+            "entityStart": "2019-02-28"
+          }
+        },
+        "trustees": [
+          {
+            "trusteeInd": {
+              "lineNo": "1",
+              "bpMatchStatus": "01",
+              "name": {
+                "firstName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                "lastName": "1234567890 QwErTyUiOp ,.(/)&'- name"
+              },
+              "dateOfBirth": "1983-09-24",
+              "identification": {
+                "nino": "JS123456A"
+              },
+              "entityStart": "2019-02-28"
+            }
+          }
+        ],
+        "protectors": {
+          "protectorCompany": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "01",
+              "name": "Protector Org 01",
+              "identification": {
+                "address": {
+                  "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line3": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "country": "DE"
+                }
+              },
+              "entityStart": "2019-03-05"
+            }
+          ]
+        },
+        "settlors": {
+          "settlorCompany": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "01",
+              "name": "Settlor Org 01",
+              "identification": {
+                "address": {
+                  "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line3": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line4": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "postCode": "Z99 2YY",
+                  "country": "GB"
+                }
+              },
+              "entityStart": "2019-02-28"
+            }
+          ]
+        }
+      },
+      "assets": {
+        "propertyOrLand": [
+          {
+            "buildingLandName": "Land of Brian Cloud",
+            "valueFull": 999999999999
+          }
+        ]
+      }
+    }
+  },
+  "responseHeader": {
+    "status": "Processed",
+    "formBundleNo": "000012345678"
+  }
+}

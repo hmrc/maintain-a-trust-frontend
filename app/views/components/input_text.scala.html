@@ -24,15 +24,8 @@
         labelClass: Option[String] = None,
         symbol: Option[String] = None,
         optionalHtmlContent: Option[Html] = None,
-        ariaRequired: Boolean = false
+        autoComplete: Option[String] = None
 )(implicit messages: Messages)
-
-@required = @{
-    ariaRequired match {
-        case true => {"aria-required=true"}
-        case false => {"aria-required=false"}
-    }
-}
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
     @if(labelAsHeading){<h1 class="label-as-heading">}
@@ -47,16 +40,20 @@
         </div>
     }
     @field.errors.map { error =>
-    <span class="error-message" id="error-message-@{field.id}-input">@messages(error.message, error.args: _*)</span>
+    <span class="error-message" id="error-message-@{field.id}-input">
+        <span class="visually-hidden">@messages("site.error") </span>@messages(error.message, error.args: _*)
+    </span>
     }
     <div class="form-control-wrapper" @if(symbol.isDefined){data-type="@{symbol}"}>
         <input
-        class="form-control @inputClass"
+        class="form-control @inputClass @if(field.hasErrors){form-control-error}"
         type="text"
         id="@{field.id}"
         name="@{field.name}"
         value="@{field.value}"
-        @required
+        @if(autoComplete.nonEmpty){
+            autocomplete="@{autoComplete.get}"
+        }
         @if(hint.nonEmpty | field.hasErrors) {
             aria-describedby="@{if(hint.nonEmpty){s"${field.id}_hint"}} @{if(field.hasErrors){s"error-message-${field.id}-input"}}"
         }

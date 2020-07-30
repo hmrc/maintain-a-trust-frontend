@@ -17,47 +17,58 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
+import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions._
 import forms.YesNoFormProvider
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.makechanges.UpdateProtectorYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UpdateProtectorYesNoController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        playbackRepository: PlaybackRepository,
-                                        actions: AuthenticateForPlayback,
-                                        yesNoFormProvider: YesNoFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: UpdateProtectorYesNoView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                override val messagesApi: MessagesApi,
+                                                playbackRepository: PlaybackRepository,
+                                                actions: Actions,
+                                                yesNoFormProvider: YesNoFormProvider,
+                                                val controllerComponents: MessagesControllerComponents,
+                                                view: UpdateProtectorYesNoView,
+                                                trustConnector: TrustConnector,
+                                                trustStoreConnector: TrustsStoreConnector
+                                     )(implicit ec: ExecutionContext)
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("updateProtector")
+  extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  private def prefix(closingTrust: Boolean): String = {
+    if (closingTrust) "updateProtectorClosing" else "updateProtector"
+  }
+
+
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       val preparedForm = request.userAnswers.get(AddOrUpdateProtectorYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, prefix(request.closingTrust)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
+
+      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
 
         value => {
           for {
@@ -66,12 +77,11 @@ class UpdateProtectorYesNoController @Inject()(
                 .set(AddOrUpdateProtectorYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
+            nextRoute <- routeToAddOrUpdateOtherIndividuals()(request.request)
           } yield {
-            Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
+            nextRoute
           }
         }
       )
-
   }
-
 }

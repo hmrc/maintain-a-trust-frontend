@@ -18,8 +18,10 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.declaration.IndividualDeclarationFormProvider
-import models.{IndividualDeclaration, UKAddress}
-import pages.UTRPage
+import models.pages.WhatIsNext
+import models.pages.WhatIsNext.MakeChanges
+import models.{IndividualDeclaration, UKAddress, UserAnswers}
+import pages.WhatIsNextPage
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
 import play.api.data.Form
@@ -37,14 +39,17 @@ class IndividualDeclarationControllerSpec extends SpecBase {
   val formProvider = new IndividualDeclarationFormProvider()
   val form: Form[IndividualDeclaration] = formProvider()
   val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
-
   lazy val onSubmit: Call = routes.IndividualDeclarationController.onSubmit()
+
+  val whatIsNext: WhatIsNext = MakeChanges
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, whatIsNext).success.value
 
   "Individual Declaration Controller" must {
 
     "return OK and the correct view for a onPageLoad" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, routes.IndividualDeclarationController.onPageLoad().url)
 
@@ -55,7 +60,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, onSubmit)(fakeRequest, messages).toString
+        view(form, closingTrust = false)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -68,8 +73,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
         "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
       )))
 
-      val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
+      val userAnswers = baseAnswers
         .set(IsThisLeadTrusteePage(0), true).success.value
         .set(TrusteeAddressPage(0), address).success.value
 
@@ -101,8 +105,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
         "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
       )))
 
-      val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
+      val userAnswers = baseAnswers
         .set(IsThisLeadTrusteePage(0), true).success.value
         .set(CorrespondenceAddressPage, address).success.value
 
@@ -128,7 +131,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, routes.IndividualDeclarationController.onPageLoad().url)
@@ -143,7 +146,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, onSubmit)(fakeRequest, messages).toString
+        view(boundForm, closingTrust = false)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -156,8 +159,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
         "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
       )))
 
-      val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
+      val userAnswers = baseAnswers
         .set(IsThisLeadTrusteePage(0), true).success.value
         .set(TrusteeAddressPage(0), address).success.value
 

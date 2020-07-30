@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import models.Mode
 @import controllers.declaration.routes._
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.auth.core.AffinityGroup
@@ -31,7 +30,8 @@
     optional: List[Task],
     affinityGroup : AffinityGroup,
     nextUrl : String,
-    isAbleToDeclare: Boolean)(implicit request: Request[_], messages: Messages)
+    isAbleToDeclare: Boolean,
+    closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("variationProgress.title")
@@ -53,14 +53,33 @@
         </p>
     }
 
-    @components.warning("variationProgress")
+    @{
+        components.warning(
+            if(closingTrust) {
+                "variationProgress.closing"
+            } else {
+                "variationProgress"
+            }
+        )
+    }
 
     @components.task_list("mandatory", mandatory, messages("variationProgress.subHeading.2"))
 
     @components.task_list("additional", optional, messages("variationProgress.subHeading.3"))
 
+    <!-- TODO: Reintroduce this content when the playback print has been reworked to retrieve the information from the backend rather than user answers -->
+    <!--@if(closingTrust) {
+        <p>@messages("variationProgress.p3")</p>
+        <h2 id="task-list--heading--summary" class="app-task-list__section">@messages("variationProgress.subHeading.4")</h2>
+        <p>
+            @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "variationProgress.printsave.link", openInNewWindow = false)
+        </p>
+    }-->
+
     @if(isAbleToDeclare) {
-        @components.button_link(messages("taskList.summary.continue"), nextUrl)
+        <div class="section">
+            <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
+        </div>
     }
 }
 

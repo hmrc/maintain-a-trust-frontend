@@ -16,10 +16,13 @@
 
 package connectors
 
+import java.time.LocalDate
+
 import config.FrontendAppConfig
 import javax.inject.Inject
+import models.TrustDetails
 import models.http.{DeclarationResponse, TrustsResponse, TrustsStatusReads}
-import play.api.libs.json.{JsBoolean, JsValue, Json, Writes}
+import play.api.libs.json.{JsBoolean, JsValue, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
@@ -27,8 +30,30 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
+  private def getTrustDetailsUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/trust-details"
+
+  def getTrustDetails(utr: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
+    http.GET[TrustDetails](getTrustDetailsUrl(utr))
+  }
+
+  def getStartDate(utr: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[LocalDate] = {
+    for {
+      details <- getTrustDetails(utr)
+      date = LocalDate.parse(details.startDate)
+    } yield date
+  }
+
   def playbackUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/transformed"
+
   def playbackFromEtmpUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/refresh"
+
+  private def getDoProtectorsAlreadyExistUrl(utr: String) =
+    s"${config.trustsUrl}/trusts/$utr/transformed/protectors-already-exist"
+
+  private def getDoOtherIndividualsAlreadyExistUrl(utr: String) =
+    s"${config.trustsUrl}/trusts/$utr/transformed/other-individuals-already-exist"
+
+  def declareUrl(utr: String) = s"${config.trustsUrl}/trusts/declare/$utr"
 
   def playback(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[TrustsResponse] = {
     http.GET[TrustsResponse](playbackUrl(utr))(TrustsStatusReads.httpReads, hc, ec)
@@ -38,13 +63,13 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
     http.GET[TrustsResponse](playbackFromEtmpUrl(utr))(TrustsStatusReads.httpReads, hc, ec)
   }
 
-  private def getDoProtectorsAlreadyExistUrl(utr: String) = s"${config.trustsUrl}/trusts/$utr/transformed/protectors-already-exist"
-
   def getDoProtectorsAlreadyExist(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[JsBoolean] = {
     http.GET[JsBoolean](getDoProtectorsAlreadyExistUrl(utr))
   }
 
-  def declareUrl(utr: String) = s"${config.trustsUrl}/trusts/declare/$utr"
+  def getDoOtherIndividualsAlreadyExist(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[JsBoolean] = {
+    http.GET[JsBoolean](getDoOtherIndividualsAlreadyExistUrl(utr))
+  }
 
   def declare(utr: String, payload: JsValue)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
     http.POST[JsValue, DeclarationResponse](declareUrl(utr), payload)(implicitly[Writes[JsValue]], DeclarationResponse.httpReads, hc, ec)

@@ -29,11 +29,11 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class UnavailableSectionsController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        actions: AuthenticateForPlayback,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: UnavailableSectionsView,
-                                        config: FrontendAppConfig
+                                               override val messagesApi: MessagesApi,
+                                               actions: Actions,
+                                               val controllerComponents: MessagesControllerComponents,
+                                               view: UnavailableSectionsView,
+                                               config: FrontendAppConfig
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {

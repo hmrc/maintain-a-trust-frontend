@@ -25,9 +25,11 @@ class IndexControllerSpec extends SpecBase {
 
   lazy val onPageLoad: String = routes.IndexController.onPageLoad().url
 
+  val utr: String = "1234567892"
+
   "Index Controller" must {
 
-    "redirect to UTR controller when user is not enrolled" in {
+    "redirect to UTR controller when user is not enrolled (agent)" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
@@ -50,7 +52,7 @@ class IndexControllerSpec extends SpecBase {
         enrolments = Enrolments(Set(
           Enrolment(
             key = "HMRC-TERS-ORG",
-            identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = "1234567892")),
+            identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = utr)),
             state = "Activated"
           )
         ))

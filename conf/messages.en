@@ -36,10 +36,23 @@ checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
 checkYourAnswers.guidance = Guidance for check your answers
 
+closeTrustConfirmation.title = Declaration received
+closeTrustConfirmation.heading = Declaration received
+closeTrustConfirmation.heading2 = Your reference is:
+closeTrustConfirmation.printsave.link = Print or save a declared copy of the trust’s registration
+closeTrustConfirmation.subheading = What happens next
+closeTrustConfirmation.paragraph1 = Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.
+closeTrustConfirmation.paragraph2 = Your request to close this trust will be processed and access to its online register will now be removed.
+closeTrustConfirmation.paragraph3.beforeLink = If this has been done in error, please
+closeTrustConfirmation.paragraph3.link = contact HMRC
+closeTrustConfirmation.paragraph3.afterLink = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
+closeTrustConfirmation.agent.you.can = You can
+closeTrustConfirmation.agent.link = return to register and maintain a trust for a client.
+
 confirmationPage.title = Declaration received
 confirmationPage.heading = Declaration received
 confirmationPage.heading2 = Your reference is:
-confirmationPage.printsave.link = Print or save a copy of your answers (opens in a new window or tab)
+confirmationPage.printsave.link = Print or save a copy of your answers
 confirmationPage.subheading1 = What happens next
 confirmationPage.paragraph1 = Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.
 confirmationPage.paragraph2 = If any of the settlor, trustee or beneficiary details change (before you make your next declaration) you will need to update them using the online service.
@@ -56,6 +69,10 @@ createAgentServicesAccount.link = Check the guidance
 createAgentServicesAccount.paragraph2 = to find out what you will need to create an agent services account.
 createAgentServicesAccount.paragraph3 = Once you have created your agent services account, you can carry on with your trust registration.
 createAgentServicesAccount.cta = Create an agent services account
+
+date.day = Day
+date.month = Month
+date.year = Year
 
 declaration.title = Declaration
 declaration.heading = Declaration
@@ -91,6 +108,9 @@ declaration.individual.warning = I confirm that I have taken all reasonable step
 declaration.variation.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
 declaration.variation.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief. I will ensure it is regularly kept up to date as required including changes of address. If I discover that I have made an error or something has changed, I will update this register.
 
+declaration.closing.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief before closing this trust. I understand that if I knowingly provide false information and cannot demonstrate that I have taken all reasonable steps, I could be subject to penalties.
+declaration.closing.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration before closing this trust. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
+
 deedOfVariation.replaceAbsoluteInterestOverWill = to replace an absolute interest over a will
 deedOfVariation.replaceWillTrust = to replace a will trust
 
@@ -106,8 +126,7 @@ informationMaintainingThisTrust.heading = Information about maintaining this tru
 informationMaintainingThisTrust.subHeading = This trust’s UTR: {0}
 informationMaintainingThisTrust.warning = Some questions may have changed since the trust was registered. You have a legal responsibility to make sure the details held on the register are accurate. You only need to declare the trust is up to date if there is a tax liability.
 informationMaintainingThisTrust.viewLastDeclaration = View the last declaration
-informationMaintainingThisTrust.paragraph1 = You can view the trust’s last declaration before you continue.
-informationMaintainingThisTrust.printsave.link = You can view the trust’s last declaration before you continue (opens in a new window or tab)
+informationMaintainingThisTrust.printsave.link = You can view the trust’s last declaration before you continue
 informationMaintainingThisTrust.updateDetails = Update trust details and make declaration
 informationMaintainingThisTrust.paragraph2 = You can make changes to the trust, confirm it is up to date or close the trust, and then make a declaration.
 informationMaintainingThisTrust.paragraph3 = Any changes you make will not be saved until you make a declaration. You will not be able to save and continue later. You can print a copy of your draft answers as well as a copy of the declaration.
@@ -145,27 +164,6 @@ kindOfTrust.Employees = A trust for the employees of a company
 kindOfTrust.Building = A trust for a building or building with tenants
 kindOfTrust.Repair = A trust for the repair of historic buildings
 
-playbackAnswers.title = Last declared copy of the trust’s registration
-playbackAnswers.heading = Last declared copy of the trust’s registration
-playbackAnswers.declareAnnually.warning = You only need to declare the trust is up to date every year if there is a tax liability.
-playbackAnswers.informationFirstRegistered = The following sections indicate what was entered when the trust was first registered. No further updates to trust details, assets and years of tax liability are required through this service.
-playbackAnswers.selfAssessmentOnline = If you need to update these sections, use Self Assessment for trusts.
-
-playbackDeclarationAnswers.title = Declared copy of updates to the trust
-playbackDeclarationAnswers.heading = Declared copy of updates to the trust
-playbackDeclarationAnswers.p1 = Declaration reference number is: {0}
-playbackDeclarationAnswers.p2 = Client reference number: {0}
-playbackDeclarationAnswers.p3 = The trust’s declaration was sent on {0}
-playbackDeclarationAnswers.warning = You only need to declare the trust is up to date every year if there is a tax liability.
-
-playbackProblemContactHMRC.title = Sorry, there is a problem accessing your trust’s registration
-playbackProblemContactHMRC.heading = Sorry, there is a problem accessing your trust’s registration
-playbackProblemContactHMRC.subheading = This trust’s UTR: {0}
-playbackProblemContactHMRC.p1.beforeLink = You need to
-playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
-playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
-playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment ready when you contact HMRC.
-
 maintainThisTrust.title = Maintain this trust
 maintainThisTrust.heading = Maintain this trust
 maintainThisTrust.subheading = This trust’s UTR: {0}
@@ -197,6 +195,9 @@ site.warning = Warning
 site.or = or
 site.and = and
 site.startMaintaining = Start maintaining this trust
+site.error = Error:
+site.print-or-save = Print or save this page
+site.button.continue.maintaining = Continue maintaining this trust
 
 site.address.uk.title = What is the address?
 site.address.uk.heading = What is {0}’s address?
@@ -303,28 +304,54 @@ timeout.keep-alive-button=Continue application
 updateTrustees.title = Do you need to update details for the trustees?
 updateTrustees.heading = Do you need to update details for the trustees?
 updateTrustees.error.required = Select yes if you need to update details for the trustees
+updateTrusteesClosing.title = Do you need to update details for the trustees before closing the trust?
+updateTrusteesClosing.heading = Do you need to update details for the trustees before closing the trust?
+updateTrusteesClosing.error.required = Select yes if you need to update details for the trustees before closing the trust
 
 updateBeneficiaries.title = Do you need to update details for the beneficiaries?
 updateBeneficiaries.heading = Do you need to update details for the beneficiaries?
 updateBeneficiaries.error.required = Select yes if you need to update details for the beneficiaries
+updateBeneficiariesClosing.title = Do you need to update details for the beneficiaries before closing the trust?
+updateBeneficiariesClosing.heading = Do you need to update details for the beneficiaries before closing the trust?
+updateBeneficiariesClosing.error.required = Select yes if you need to update details for the beneficiaries before closing the trust
 
 updateSettlors.title = Do you need to update details for the settlors?
 updateSettlors.heading = Do you need to update details for the settlors?
 updateSettlors.error.required = Select yes if you need to update details for the settlors
+updateSettlorsClosing.title = Do you need to update details for the settlors before closing the trust?
+updateSettlorsClosing.heading = Do you need to update details for the settlors before closing the trust?
+updateSettlorsClosing.error.required = Select yes if you need to update details for the settlors before closing the trust
 
 addProtector.title = Do you need to add a protector?
 addProtector.heading = Do you need to add a protector?
 addProtector.hint = A protector is an individual or business named in the trust who can influence the way the trustees manage the trust.
 addProtector.error.required = Select yes if you need to add a protector
+addProtectorClosing.title = Do you need to add a protector before closing the trust?
+addProtectorClosing.heading = Do you need to add a protector before closing the trust?
+addProtectorClosing.error.required = Select yes if you need to add a protector before closing the trust
 
 updateProtector.title = Do you need to update details for the protectors?
 updateProtector.heading = Do you need to update details for the protectors?
 updateProtector.error.required = Select yes if you need to update details for the protectors
+updateProtectorClosing.title = Do you need to update details for the protectors before closing the trust?
+updateProtectorClosing.heading = Do you need to update details for the protectors before closing the trust?
+updateProtectorClosing.error.required = Select yes if you need to update details for the protectors before closing the trust
 
 addOtherIndividuals.title = Do you need to add any other individuals associated with the trust?
 addOtherIndividuals.heading = Do you need to add any other individuals associated with the trust?
 addOtherIndividuals.hint = They might not be named in the trust deed. For example, friends, family members or third parties.
 addOtherIndividuals.error.required = Select yes if you need to add any other individuals associated with the trust
+addOtherIndividualsClosing.title = Do you need to add any other individuals associated with the trust before closing the trust?
+addOtherIndividualsClosing.heading = Do you need to add any other individuals associated with the trust before closing the trust?
+addOtherIndividualsClosing.error.required = Select yes if you need to add any other individuals associated with the trust before closing the trust
+
+updateOtherIndividuals.title = Do you need to update details for the other individuals?
+updateOtherIndividuals.heading = Do you need to update details for the other individuals?
+updateOtherIndividuals.error.required = Select yes if you need to update details for the other individuals
+
+updateOtherIndividualsClosing.title = Do you need to update details for the other individuals before closing the trust?
+updateOtherIndividualsClosing.heading = Do you need to update details for the other individuals before closing the trust?
+updateOtherIndividualsClosing.error.required = Select yes if you need to update details for the other individuals before closing the trust
 
 unavailableSections.title = You can only update {0} online at the moment
 unavailableSections.heading = You can only update {0} online at the moment
@@ -349,7 +376,7 @@ declarationWhatNext.heading = What do you want to do next?
 declarationWhatNext.declare = Declare the trust is up to date
 declarationWhatNext.declare.hint = Confirm the current information held by HMRC is up to date and declare as part of the trust’s self assessment.
 declarationWhatNext.make-changes = Make changes to the trust and declare
-declarationWhatNext.make-changes.hint = Add, remove and/or update any details for trustees.
+declarationWhatNext.make-changes.hint = Add, remove and/or update details for trustees, settlors, beneficiaries and protectors.
 declarationWhatNext.close-trust = Close the trust
 declarationWhatNext.close-trust.hint = Tell HMRC the end date for the trust and apply any changes before a final declaration.
 declarationWhatNext.error.required = Select what you want to do next
@@ -364,11 +391,16 @@ variationProgress.warning = You need to declare the trust details are up to date
 variationProgress.subHeading.2 = Sections to be completed
 variationProgress.subHeading.3 = Additional sections to be completed
 
+variationProgress.closing.warning = You need to declare the trust details are up to date before closing. Some questions may have changed since the trust was registered.
+variationProgress.p3 = You can save or print a draft copy of your saved answers once all sections are up to date, as well as a declared copy after you have made a declaration.
+variationProgress.subHeading.4 = Summary
+variationProgress.printsave.link = Print or save a copy of your answers
+
 taskList.settlors.label = Settlors
 taskList.protectors.label = Protectors
 taskList.trustees.label = Trustees
 taskList.beneficiaries.label = Beneficiaries
-taskList.natural.label = Other representatives
+taskList.natural.label = Other individuals
 taskList.summary.continue = Continue to declaration
 
 featureNotAvailable.title = This part of the online service is not available yet
@@ -377,6 +409,31 @@ featureNotAvailable.p1 = If you need to make any changes to the trust you can
 featureNotAvailable.link = contact the trusts helpline (opens in a new window or tab)
 featureNotAvailable.p2 = You will be able to update these details online in the future.
 
+dateLastAssetSharedOutYesNo.title = Do you know the date the last asset in the trust was shared out?
+dateLastAssetSharedOutYesNo.heading = Do you know the date the last asset in the trust was shared out?
+dateLastAssetSharedOutYesNo.subHeading = This trust’s UTR: {0}
+dateLastAssetSharedOutYesNo.hint = It is also called the trust closed date or date of termination. This will be the date given on the final Trust and Estate (SA900) tax return or Self Assessment Online for trusts.
+dateLastAssetSharedOutYesNo.error.required = Select yes if you know the date the last asset in the trust was shared out
+
+dateLastAssetSharedOut.title = When did the last asset in the trust get shared out?
+dateLastAssetSharedOut.heading = When did the last asset in the trust get shared out?
+dateLastAssetSharedOut.checkYourAnswersLabel = When did the last asset in the trust get shared out?
+dateLastAssetSharedOut.hint = For example, 31 3 1980
+dateLastAssetSharedOut.error.required.all = Enter the date the last asset was distributed
+dateLastAssetSharedOut.error.required.two = The date the last asset was distributed must include a {0} and a {1}
+dateLastAssetSharedOut.error.required = The date the last asset was distributed must include a {0}
+dateLastAssetSharedOut.error.invalid = Enter a real date
+dateLastAssetSharedOut.error.future = The date the last asset was distributed must be today or in the past
+dateLastAssetSharedOut.error.past = The date the last asset was distributed cannot be before the start date of the trust
+
+howToCloseATrust.title = How to close a trust with HMRC
+howToCloseATrust.heading = How to close a trust with HMRC
+howToCloseATrust.subHeading = This trust’s UTR: {0}
+howToCloseATrust.p1 = To close a trust register with HMRC, you need to tell us:
+howToCloseATrust.bullet1 = the date the last asset was shared out to the beneficiaries
+howToCloseATrust.bullet2 = a final tax return, using Trust and Estate (SA900) tax return or Self Assessment Online for trusts
+howToCloseATrust.p2 = Please review any documentation regarding the trust.
+
 # SECTIONS
 
 section.settlors = settlors
@@ -384,6 +441,9 @@ section.trustees = trustees
 section.beneficiaries = beneficiaries
 section.protectors = protectors
 section.natural = other individuals
+
+## Close date
+answerPage.section.closeDate.heading = Close date
 
 ## Settlors
 answerPage.section.settlors.heading = Settlors
@@ -416,12 +476,10 @@ answerPage.section.otherIndividual.subheading = Other individual {0}
 ## Trust details
 answerPage.section.trustsDetails.heading = Trust details
 
-## Trust type
-answerPage.section.trustType.heading = Trust type
-
 # CHECK YOUR ANSWERS LABELS
 
 ## Beneficiaries
+
 ### Charity
 charityBeneficiaryName.checkYourAnswersLabel = What is the name of the charity?
 charityBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
@@ -430,10 +488,12 @@ charityBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s addre
 charityBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 charityBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
 charityBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+
 ### Class of beneficiary
 classBeneficiaryDescription.checkYourAnswersLabel = What is the description for the class of beneficiaries?
 classBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
 classBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+
 ### Company
 companyBeneficiaryName.checkYourAnswersLabel = What is the name of the company?
 companyBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
@@ -442,6 +502,7 @@ companyBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s addre
 companyBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 companyBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
 companyBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+
 ### Individual
 individualBeneficiaryName.checkYourAnswersLabel = What is the name of the individual?
 
@@ -463,6 +524,7 @@ individualBeneficiaryAddressUK.checkYourAnswersLabel = What is {0}’s address?
 individualBeneficiaryPassportIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
 individualBeneficiaryPassportIDCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
 individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel = Has a vulnerable person election form (VPE1) been submitted to HMRC for {0}?
+
 ### Large
 largeBeneficiaryName.checkYourAnswersLabel = What is the business’s name?
 largeBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
@@ -473,6 +535,7 @@ largeBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
 largeBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
 largeBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
 largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel = How many people are in this employment related beneficiary?
+
 ### Other
 otherBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
 otherBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
@@ -480,6 +543,7 @@ otherBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the tru
 otherBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 otherBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 otherBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+
 ### Trust
 trustBeneficiaryName.checkYourAnswersLabel = What is the name of the trust?
 trustBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
@@ -503,6 +567,7 @@ otherIndividualPassportIDCard.checkYourAnswersLabel = What are {0}’s passport 
 
 # Protectors
 protectorIndividualOrBusiness.checkYourAnswersLabel = Is the protector an individual or a business?
+
 ## Individual
 individualProtectorName.checkYourAnswersLabel = What is the protector's name?
 individualProtectorDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
@@ -514,6 +579,7 @@ individualProtectorAddressUkYesNo.checkYourAnswersLabel = Does {0} live in the U
 individualProtectorAddress.checkYourAnswersLabel = What is {0}’s address?
 individualProtectorPassportIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
 individualProtectorPassportIDCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+
 ## Company
 companyProtectorName.checkYourAnswersLabel = What is the business’s name?
 companyProtectorUtrYesNo.checkYourAnswersLabel = Do you know {0}’s Unique Taxpayer Reference (UTR) number?
@@ -523,6 +589,7 @@ companyProtectorAddressUkYesNo.checkYourAnswersLabel = Is {0}’s address in the
 companyProtectorAddress.checkYourAnswersLabel = What is {0}’s address?
 
 # Settlors
+
 ## Deceased
 settlorName.checkYourAnswersLabel = What is the settlor’s name?
 settlorDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
@@ -537,8 +604,10 @@ settlorLastKnownAddressYesNo.checkYourAnswersLabel = Do you know {0}’s last kn
 settlorLastKnownAddressUKYesNo.checkYourAnswersLabel = Was {0}’s last known address in the UK?
 settlorUKAddress.checkYourAnswersLabel = What is {0}’s last known address?
 settlorInternationalAddress.checkYourAnswersLabel = What is {0}’s last known address?
+
 ## Living
 settlorIndividualOrBusiness.checkYourAnswersLabel = Is the settlor an individual or a business?
+
 ### Business
 settlorBusinessName.checkYourAnswersLabel = What is the business’s name?
 settlorBusinessUtrYesNo.checkYourAnswersLabel = Do you know {0}’s Unique Taxpayer Reference (UTR) number?
@@ -549,6 +618,7 @@ settlorBusinessAddressUK.checkYourAnswersLabel = What is {0}’s address?
 settlorBusinessAddressInternational.checkYourAnswersLabel = What is {0}’s address?
 settlorBusinessType.checkYourAnswersLabel = What kind of business is {0}?
 settlorBusinessTime.checkYourAnswersLabel = At the date of each contribution to the trust, had the business been in existence for at least 2 years?
+
 ### Individual
 settlorIndividualName.checkYourAnswersLabel = What is the settlor’s name?
 settlorIndividualDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
@@ -566,10 +636,12 @@ settlorIndividualIDCard.checkYourAnswersLabel = What are {0}’s ID card details
 
 # Trustees
 isThisLeadTrustee.checkYourAnswersLabel = Is this the lead trustee?
+
 ## Lead
 leadTrusteeIndividualOrBusiness.checkYourAnswersLabel = Is the lead trustee an individual or a business?
 leadTrusteeUtrYesNo.checkYourAnswersLabel = Is this trustee a UK registered company?
 leadTrusteeName.checkYourAnswersLabel = What is the lead trustee’s name?
+
 ## Trustee
 trusteeIndividualOrBusiness.checkYourAnswersLabel = Is the trustee an individual or a business?
 trusteeBusinessName.checkYourAnswersLabel = What is the business’s name?
@@ -594,28 +666,52 @@ trusteeTelephoneNumber.checkYourAnswersLabel = What is {0}’s telephone number?
 # Trust details
 trustName.checkYourAnswersLabel = What is the trust’s name?
 whenTrustSetup.checkYourAnswersLabel = When was the trust created?
-governedInsideTheUK.checkYourAnswersLabel = Is the trust governed by UK law?
-countryGoverningTrust.checkYourAnswersLabel = What country governs the trust?
-administrationInsideUK.checkYourAnswersLabel = Is the trust’s general administration done in the UK?
-countryAdministeringTrust.checkYourAnswersLabel = In what country is the trust administered?
-trustResidentInUK.checkYourAnswersLabel = Is the trust resident in the UK?
-registeringTrustFor5A.checkYourAnswersLabel = Are you registering the trust because the settlor benefits from the trust’s assets?
-inheritanceTaxAct.checkYourAnswersLabel = Are you registering the trust for Inheritance Tax reasons?
-agentOtherThanBarrister.checkYourAnswersLabel = Has an agent who is not a barrister created this trust?
-establishedUnderScotsLaw.checkYourAnswersLabel = Is the trust established under Scots Law?
-trustResidentOffshore.checkYourAnswersLabel = Has the trust ever been resident offshore?
-trustPreviouslyResident.checkYourAnswersLabel = In what country was the trust previously resident?
-
-# Trust type
-setUpAfterSettlorDied.checkYourAnswersLabel = Was the trust set up after the settlor died?
-kindOfTrust.checkYourAnswersLabel = What kind of trust did the settlor create?
-setupInAdditionToWillTrustYesNo.checkYourAnswersLabel = Was it set up in addition to a will trust?
-howDeedOfVariationCreated.checkYourAnswersLabel = How was the Deed of Variation created?
-holdoverReliefYesNo.checkYourAnswersLabel = Was holdover relief claimed on any assets put into the trust?
-employerFinancedRetirementBenefitsSchemeYesNo.checkYourAnswersLabel = Is this an employer-financed retirement benefits scheme?
-employerFinancedRetirementBenefitsSchemeStartDate.checkYourAnswersLabel = When did the employer-financed retirement benefits scheme start?
-
+trustUniqueTaxReference.checkYourAnswersLabel = What is the trust’s Unique Taxpayer Reference (UTR)?
 
 # Task List
 taskList.up-to-date = Up to date
 taskList.in-progress = In progress
+
+# Playback prints
+
+# Last declared answers
+
+playbackAnswers.title = Last declared copy of the trust’s registration
+playbackAnswers.heading = Last declared copy of the trust’s registration
+playbackAnswers.declareAnnually.warning = You only need to declare the trust is up to date every year if there is a tax liability.
+playbackAnswers.informationFirstRegistered = No further updates to trust details, assets and years of tax liability are required through this service.
+playbackAnswers.selfAssessmentOnline = If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts.
+
+# Declared answers following maintaining the trust
+
+playbackDeclarationAnswers.title = Declared copy of updates to the trust
+playbackDeclarationAnswers.heading = Declared copy of updates to the trust
+playbackDeclarationAnswers.p1 = Declaration reference number is: {0}
+playbackDeclarationAnswers.p2 = Client reference number: {0}
+playbackDeclarationAnswers.p3 = The trust’s declaration was sent on {0}
+
+# Draft answers after updating and maintaining the trust
+
+playbackDraftAnswers.title = Draft copy of the trust’s declaration
+playbackDraftAnswers.heading = Draft copy of the trust’s declaration
+playbackDraftAnswers.p1 = This is a draft copy confirming that the trust is up to date.
+playbackDraftAnswers.p2 = If you have made any changes they must reflect what’s in the trust deed. You will need to re-enter and declare for them to be updated on this service.
+playbackDraftAnswers.p4 = This is not a declaration.
+
+# Final declaration following closing the trust
+
+playbackFinalDeclarationAnswers.title = Final declared copy of updates to this   trust
+playbackFinalDeclarationAnswers.heading = Final declared copy of updates to this trust
+playbackFinalDeclarationAnswers.p1 = Declaration reference number is: {0}
+playbackFinalDeclarationAnswers.p2 = Client reference number: {0}
+playbackFinalDeclarationAnswers.p3 = The trust’s final declaration was sent on {0}
+
+# Technical difficulties playing back trust
+
+playbackProblemContactHMRC.title = Sorry, there is a problem accessing your trust’s registration
+playbackProblemContactHMRC.heading = Sorry, there is a problem accessing your trust’s registration
+playbackProblemContactHMRC.subheading = This trust’s UTR: {0}
+playbackProblemContactHMRC.p1.beforeLink = You need to
+playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
+playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
+playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment ready when you contact HMRC.

@@ -21,6 +21,7 @@ import java.time.LocalDate
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.Generators
+import models.TrustDetails
 import models.http.DeclarationResponse.InternalServerError
 import models.http._
 import org.scalatest.concurrent.ScalaFutures
@@ -42,6 +43,48 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
   private def declareUrl(utr: String) : String = s"/trusts/declare/$utr"
 
   "TrustConnector" - {
+
+    "get trusts details" in {
+
+      val utr = "1000000008"
+
+      val json = Json.parse(
+        """
+          |{
+          | "startDate": "1920-03-28",
+          | "lawCountry": "AD",
+          | "administrationCountry": "GB",
+          | "residentialStatus": {
+          |   "uk": {
+          |     "scottishLaw": false,
+          |     "preOffShore": "AD"
+          |   }
+          | },
+          | "typeOfTrust": "Will Trust or Intestacy Trust",
+          | "deedOfVariation": "Previously there was only an absolute interest under the will",
+          | "interVivos": false
+          |}
+          |""".stripMargin)
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustConnector]
+
+      server.stubFor(
+        get(urlEqualTo(s"/trusts/$utr/trust-details"))
+          .willReturn(okJson(json.toString))
+      )
+
+
+      val result  = Await.result(connector.getTrustDetails(utr), Duration.Inf)
+      result mustBe TrustDetails(startDate = "1920-03-28")
+    }
 
     "playback data must" - {
 
@@ -209,6 +252,60 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
         application.stop()
       }
+
+      "must playback data for a trust with property or land, no previous value" in {
+        val utr = "1000000007"
+        val payload = Source.fromFile(getClass.getResource("/display-trust-property-or-land-no-previous.json").getPath).mkString
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(playbackUrl(utr)))
+            .willReturn(okJson(payload))
+        )
+
+        val processed = Await.result(connector.playback(utr), Duration.Inf)
+
+        inside(processed) {
+          case Processed(data, bundleNumber) =>
+
+            bundleNumber mustBe "000012345678"
+
+            data.matchData.utr mustBe "1000000007"
+
+            data.correspondence.name mustBe "Trust of Brian Cloud"
+
+            data.declaration.name mustBe NameType("Agent", None, "Agency")
+
+            data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe NameType("Lead", None, "Trustee")
+
+            data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
+
+            data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe Some("1")
+            data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
+            data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
+
+            data.trust.entities.settlors.value.settlorCompany.value.head.name mustBe "Settlor Org 01"
+
+            data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe Some("1")
+            data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
+            data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
+
+            data.trust.assets.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+            data.trust.assets.propertyOrLand.head.valueFull mustBe 999999999999L
+            data.trust.assets.propertyOrLand.head.valuePrevious mustBe None
+        }
+
+        application.stop()
+      }
     }
 
     "declare no change must" - {
@@ -322,6 +419,39 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         )
 
         val processed = connector.getDoProtectorsAlreadyExist(utr)
+
+        whenReady(processed) {
+          result =>
+            result.value mustBe true
+        }
+
+        application.stop()
+      }
+    }
+
+    "get whether other individuals already exist must" - {
+
+      "return true or false when the request is successful" in {
+
+        val utr = "1000000008"
+        val json = JsBoolean(true)
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(s"/trusts/$utr/transformed/other-individuals-already-exist"))
+            .willReturn(okJson(json.toString))
+        )
+
+        val processed = connector.getDoOtherIndividualsAlreadyExist(utr)
 
         whenReady(processed) {
           result =>

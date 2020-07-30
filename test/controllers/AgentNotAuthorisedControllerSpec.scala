@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBase
-import pages.UTRPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.AgentNotAuthorisedView
@@ -28,11 +27,7 @@ class AgentNotAuthorisedControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val utr = "0987654321"
-
       val answers = emptyUserAnswers
-        .set(UTRPage, utr)
-        .success.value
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -45,7 +40,7 @@ class AgentNotAuthorisedControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr)(fakeRequest, messages).toString
+        view("utr")(fakeRequest, messages).toString
 
       application.stop()
     }

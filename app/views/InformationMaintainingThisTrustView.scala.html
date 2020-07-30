@@ -33,17 +33,13 @@
    <span class="govuk-caption-xl">@messages("informationMaintainingThisTrust.subHeading", utr)</span>
    @components.heading("informationMaintainingThisTrust.heading", headingSize = "heading-xlarge govuk-fieldset__heading")
 
-   <h2></h2>
-
-   @components.warning("informationMaintainingThisTrust")
+    <div class="info-maintaining-warning-margin-top">
+       @components.warning("informationMaintainingThisTrust")
+    </div>
 
    <h2>@messages("informationMaintainingThisTrust.viewLastDeclaration")</h2>
 
-   <p>@messages("informationMaintainingThisTrust.paragraph1")</p>
-
-    <ul>
-        <li class="panel-indent">@components.link(controllers.routes.PlaybackAnswersController.onPageLoad().url, "print-and-save","informationMaintainingThisTrust.printsave.link", openInNewWindow = true).</li>
-    </ul>
+   <p class="panel-indent">@components.link(controllers.print.routes.PrintLastDeclaredAnswersController.onPageLoad().url, "print-and-save","informationMaintainingThisTrust.printsave.link", openInNewWindow = false).</p>
 
     <h2>@messages("informationMaintainingThisTrust.updateDetails")</h2>
 

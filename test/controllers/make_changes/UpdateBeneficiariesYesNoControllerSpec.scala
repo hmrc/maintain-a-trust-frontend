@@ -19,6 +19,9 @@ package controllers.make_changes
 import base.SpecBase
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.UserAnswers
+import models.pages.WhatIsNext.MakeChanges
+import pages.WhatIsNextPage
 import pages.makechanges.UpdateBeneficiariesYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -27,15 +30,18 @@ import views.html.makechanges.UpdateBeneficiariesYesNoView
 class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("updateBeneficiaries")
-
+  val prefix: String = "updateBeneficiaries"
+  val form = formProvider.withPrefix(prefix)
   lazy val updateBeneficiariesYesNoRoute = routes.UpdateBeneficiariesYesNoController.onPageLoad().url
+
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, MakeChanges).success.value
 
   "UpdateBeneficiariesYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, updateBeneficiariesYesNoRoute)
 
@@ -46,14 +52,14 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(UpdateBeneficiariesYesNoPage, true).success.value
+      val userAnswers = baseAnswers.set(UpdateBeneficiariesYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -66,7 +72,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
@@ -74,7 +80,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
     "redirect to the next page when valid data is submitted" in {
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+        applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, updateBeneficiariesYesNoRoute)
@@ -91,7 +97,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, updateBeneficiariesYesNoRoute)
@@ -106,7 +112,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

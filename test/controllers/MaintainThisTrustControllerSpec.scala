@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBase
-import pages.UTRPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.MaintainThisTrustView
@@ -28,10 +27,8 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET when needs IV" in {
 
-      val utr = "0987654321"
-
       val application = applicationBuilder(
-        userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).success.value)
+        userAnswers = Some(emptyUserAnswers)
       ).build()
 
       val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad(needsIv = true).url)
@@ -43,9 +40,9 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr,
+        view("utr",
           "settlors, trustees, beneficiaries, protectors and other individuals",
-          frontendAppConfig.verifyIdentityForATrustUrl(utr)
+          frontendAppConfig.verifyIdentityForATrustUrl("utr")
         )(fakeRequest, messages).toString
 
       application.stop()
@@ -53,10 +50,8 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET when doesn't need IV" in {
 
-      val utr = "0987654321"
-
       val application = applicationBuilder(
-        userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).success.value)
+        userAnswers = Some(emptyUserAnswers)
       ).build()
 
       val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad(needsIv = false).url)
@@ -68,7 +63,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr,
+        view("utr",
           "settlors, trustees, beneficiaries, protectors and other individuals",
           routes.InformationMaintainingThisTrustController.onPageLoad().url
         )(fakeRequest, messages).toString

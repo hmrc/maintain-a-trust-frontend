@@ -1,0 +1,56 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.declaration.routes._
+@import utils.AccessibilityHelper._
+
+@this(
+    main_template: MainTemplate
+)
+
+@(fakeTvn: String, isAgent: Boolean, agentOverviewUrl: String)(implicit request: Request[_], messages: Messages)
+
+@main_template(
+    title = s"${messages("closeTrustConfirmation.title", formatReferenceNumber(fakeTvn))}"
+    ) {
+
+    <div class="govuk-main-wrapper--l">
+        <h1 class="form-title heading-large heading-confirmation ">
+            @messages("closeTrustConfirmation.heading")
+            <span class="reference-text">@messages("closeTrustConfirmation.heading2")</span>
+            <span id="trusts-registration-number" class="reference-number">
+                <span aria-hidden=true>@fakeTvn</span>
+                <span class="visually-hidden">@formatReferenceNumber(fakeTvn)</span>
+            </span>
+        </h1>
+    </div>
+
+    <div class="section">
+        <p class="panel-indent">@components.link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save","closeTrustConfirmation.printsave.link", openInNewWindow = false)</p>
+    </div>
+
+    <h2>@messages("closeTrustConfirmation.subheading")</h2>
+
+    <p>@messages("closeTrustConfirmation.paragraph1")</p>
+
+    <p>@messages("closeTrustConfirmation.paragraph2")</p>
+
+    <p>@messages("closeTrustConfirmation.paragraph3.beforeLink") <a id="help-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("closeTrustConfirmation.paragraph3.link")</a>@messages("closeTrustConfirmation.paragraph3.afterLink")</p>
+
+    @if(isAgent: Boolean) {
+        @messages("closeTrustConfirmation.agent.you.can") @components.link(agentOverviewUrl, "agent-overview", "closeTrustConfirmation.agent.link", false)
+    }
+}

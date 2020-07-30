@@ -52,6 +52,7 @@ trait AnswerSectionMatchers {
   }
 
   def containHeadingSection(expectedHeadingKey: String) = new ContainsHeadingSection(expectedHeadingKey)
+
   def containSectionWithHeadingAndValues(expectedHeading: String, expectedValues: (String, Html)*) =
     new ContainsSectionWithHeadingAndValues(expectedHeading, expectedValues)
 }

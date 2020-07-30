@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
+@import controllers.declaration.routes._
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
-@import play.api.mvc.Call
 @import config.FrontendAppConfig
 
 @this(
@@ -25,13 +25,13 @@
         formHelper: FormWithCSRF
 )
 
-@(form: Form[_], onSubmit: Call)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)} ${messages("declaration.title")}"
 ) {
 
-    @formHelper(action = onSubmit, 'autoComplete -> "off") {
+    @formHelper(action = IndividualDeclarationController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -46,7 +46,7 @@
             @components.input_text(
                 field = form("firstName"),
                 label = messages("declaration.firstName"),
-                ariaRequired = true
+                autoComplete = Some("given-name")
             )
 
             @components.input_text(
@@ -57,7 +57,7 @@
             @components.input_text(
                 field = form("lastName"),
                 label = messages("declaration.lastName"),
-                ariaRequired = true
+                autoComplete = Some("family-name")
             )
 
         </fieldset>
@@ -72,7 +72,16 @@
             )
         }
 
-        @components.warning("declaration.variation.individual")
+        @{
+            components.warning(
+                if(closingTrust) {
+                    "declaration.closing.individual"
+                } else {
+                    "declaration.variation.individual"
+                }
+            )
+        }
+
 
         @components.submit_button(Some("site.confirm-send"))
     }

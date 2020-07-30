@@ -10,6 +10,10 @@
 @import 'partials/heading';
 @import 'conditionals';
 @import 'colours/palette';
+
+// WCGA 2.1 https://design-system.service.gov.uk/styles/colour/
+@import 'govuk-colours-override';
+
 @import 'partials/_focus';
 @import 'location-autocomplete.min';
 @import 'patterns/add-to-a-list';
@@ -19,6 +23,20 @@
 @import 'partials/_modal';
 @import 'patterns/tag';
 @import 'patterns/check-your-answers';
+
+@media print {
+    .print-hidden {
+        position: absolute;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        height: 1px; width: 1px;
+        margin: -1px; padding: 0; border: 0;
+    }
+}
+
+.info-maintaining-warning-margin-top {
+    margin-top: govuk-spacing(5);
+}
 
 .push-text-top--3 {
   padding-top: govuk-spacing(3);
@@ -45,12 +63,6 @@
   .govuk-warning-text {
     font-size: 19px;
     line-height: 1.31579;
-  }
-}
-
-@media (min-width: 40.0625em) {
-  .govuk-warning-text {
-    margin-bottom: 30px;
   }
 }
 
@@ -156,10 +168,15 @@
 }
 
 #value__listbox, #country__listbox {
-  width: 100%;
-  @include media(tablet) {
-    width: 49.4%;
-  }
+    @media (min-width: 641px) {
+      width: calc(75% - 4px;)
+    }
+}
+
+#country {
+    @media (min-width: 641px) {
+      width:75%;
+    }
 }
 
 .autocomplete__wrapper span {

@@ -19,7 +19,8 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.InternationalAddressFormProvider
-import pages.AgencyRegisteredAddressInternationalPage
+import models.InternationalAddress
+import pages.declaration.AgencyRegisteredAddressInternationalPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -34,16 +35,16 @@ import scala.concurrent.{ExecutionContext, Future}
 class AgencyRegisteredAddressInternationalController @Inject()(
                                                                 override val messagesApi: MessagesApi,
                                                                 playbackRepository: PlaybackRepository,
-                                                                actions: AuthenticateForPlayback,
+                                                                actions: Actions,
                                                                 formProvider: InternationalAddressFormProvider,
                                                                 countryOptions: CountryOptionsNonUK,
                                                                 val controllerComponents: MessagesControllerComponents,
                                                                 view: AgencyRegisteredAddressInternationalView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[InternationalAddress] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(AgencyRegisteredAddressInternationalPage) match {
@@ -54,7 +55,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
       Ok(view(preparedForm, countryOptions.options))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(

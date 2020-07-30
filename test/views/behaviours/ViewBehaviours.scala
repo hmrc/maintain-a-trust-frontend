@@ -130,6 +130,15 @@ trait ViewBehaviours extends ViewSpecBase {
     }
   }
 
+  def pageWithPrintButton(view: HtmlFormat.Appendable) = {
+    "behave like a page with a print button" must {
+      "have a print button" in {
+        val doc = asDocument(view)
+        assertRenderedById(doc, "print")
+      }
+    }
+  }
+
   def pageWithContinueButton(view: HtmlFormat.Appendable, url: String, expectedTextKey: Option[String] = None) = {
 
     "behave like a page with a Continue button" must {

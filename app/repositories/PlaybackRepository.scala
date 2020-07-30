@@ -58,9 +58,9 @@ class PlaybackRepositoryImpl @Inject()(
     options = BSONDocument("expireAfterSeconds" -> cacheTtl)
   )
 
-  private val internalAuthIdIndex = Index(
-    key = Seq("internalId" -> IndexType.Ascending),
-    name = Some("internal-auth-id-index")
+  private val internalIdAndUtrIndex = Index(
+    key = Seq("internalId" -> IndexType.Ascending, "utr" -> IndexType.Ascending),
+    name = Some("internal-id-and-utr-compound-index")
   )
 
   private lazy val ensureIndexes = {
@@ -68,16 +68,17 @@ class PlaybackRepositoryImpl @Inject()(
     for {
       collection              <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
       createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
-      createdIdIndex          <- collection.indexesManager.ensure(internalAuthIdIndex)
+      createdIdIndex          <- collection.indexesManager.ensure(internalIdAndUtrIndex)
     } yield createdLastUpdatedIndex && createdIdIndex
   }
 
-  override def get(internalId: String): Future[Option[UserAnswers]] = {
+  override def get(internalId: String, utr: String): Future[Option[UserAnswers]] = {
 
     logger.debug(s"PlaybackRepository getting user answers for $internalId")
 
     val selector = Json.obj(
-      "internalId" -> internalId
+      "internalId" -> internalId,
+      "utr" -> utr
     )
 
     val modifier = Json.obj(
@@ -86,51 +87,50 @@ class PlaybackRepositoryImpl @Inject()(
       )
     )
 
-    collection.flatMap {
-      _.findAndUpdate(selector, modifier, fetchNewObject = true, upsert = false).map {
-        r =>
-          logger.debug(s"[PlaybackRepository][get] last mongo error ${r.lastError}")
-          r.result[UserAnswers]
-      }
-    }
+    for {
+      col <- collection
+      r <- col.findAndUpdate(selector, modifier, fetchNewObject = true, upsert = false)
+    } yield r.result[UserAnswers]
   }
 
   override def set(userAnswers: UserAnswers): Future[Boolean] = {
 
     val selector = Json.obj(
-      "internalId" -> userAnswers.internalAuthId
+      "internalId" -> userAnswers.internalId,
+      "utr" -> userAnswers.utr
     )
 
     val modifier = Json.obj(
-      "$set" -> (userAnswers copy (updatedAt = LocalDateTime.now))
+      "$set" -> (userAnswers.copy(updatedAt = LocalDateTime.now))
     )
 
-    collection.flatMap {
-      _.update(ordered = false).one(selector, modifier, upsert = true, multi = false).map {
-        result => result.ok
-      }
-    }
+    for {
+      col <- collection
+      r <- col.update(ordered = false).one(selector, modifier, upsert = true, multi = false)
+    } yield r.ok
   }
 
-  override def resetCache(internalId: String): Future[Option[JsObject]] = {
+  override def resetCache(internalId: String, utr: String): Future[Option[JsObject]] = {
 
     logger.debug(s"PlaybackRepository resetting cache for $internalId")
 
     val selector = Json.obj(
-      "internalId" -> internalId
+      "internalId" -> internalId,
+      "utr" -> utr
     )
 
-    collection.flatMap(_.findAndRemove(selector, None, None, WriteConcern.Default, None, None, Seq.empty).map(
-      _.value
-    ))
+    for {
+      col <- collection
+      r <- col.findAndRemove(selector, None, None, WriteConcern.Default, None, None, Seq.empty)
+    } yield r.value
   }
 }
 
 trait PlaybackRepository {
 
-  def get(internalId: String): Future[Option[UserAnswers]]
+  def get(internalId: String, utr: String): Future[Option[UserAnswers]]
 
   def set(userAnswers: UserAnswers): Future[Boolean]
 
-  def resetCache(internalId: String): Future[Option[JsObject]]
+  def resetCache(internalId: String, utr: String): Future[Option[JsObject]]
 }

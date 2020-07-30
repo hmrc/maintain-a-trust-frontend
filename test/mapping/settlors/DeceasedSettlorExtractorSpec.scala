@@ -41,7 +41,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val deceasedSettlor = None
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, deceasedSettlor)
 
@@ -65,7 +65,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -102,7 +102,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -117,7 +117,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
-        extraction.right.value.get(SettlorSafeIdPage).get mustBe "34234234-34234-234234"
+        extraction.right.value.get(DeceasedSettlorSafeIdPage).get mustBe "34234234-34234-234234"
       }
 
       "with name and nino, must return user answers updated" in {
@@ -139,7 +139,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId","utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -175,7 +175,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId","utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -213,7 +213,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId","utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -251,7 +251,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -289,7 +289,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -325,7 +325,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId")
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -342,8 +342,8 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) must be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage).get.country mustBe "DE"
-        extraction.right.value.get(SettlorSafeIdPage).get mustBe "XK0000100152366"
-        extraction.right.value.get(SettlorMetaData).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.right.value.get(DeceasedSettlorSafeIdPage).get mustBe "XK0000100152366"
+        extraction.right.value.get(DeceasedSettlorMetaData).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
       }
 

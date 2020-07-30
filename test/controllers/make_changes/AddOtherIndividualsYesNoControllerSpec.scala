@@ -20,32 +20,37 @@ import base.SpecBase
 import connectors.TrustsStoreConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.CompletedMaintenanceTasks
-import pages.UTRPage
+import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
+import models.{CompletedMaintenanceTasks, UserAnswers}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import pages.WhatIsNextPage
 import pages.makechanges._
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.makechanges.AddOtherIndividualsYesNoView
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import play.api.inject.bind
 
 import scala.concurrent.Future
 
 class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("addOtherIndividuals")
+  val prefix: String = "addOtherIndividuals"
+  val form = formProvider.withPrefix(prefix)
 
   val mockConnector = mock[TrustsStoreConnector]
 
   lazy val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad().url
 
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, MakeChanges).success.value
+
   "AddOtherIndividualsYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, addOtherIndividualsYesNoRoute)
 
@@ -56,14 +61,14 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, true).success.value
+      val userAnswers = baseAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -76,17 +81,14 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
 
     "redirect to individual declaration when valid data is submitted and no has been selected for all the questions" in {
 
-      val utr = "0987654321"
-
-      val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
+      val userAnswers = baseAnswers
         .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
@@ -110,11 +112,41 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "redirect to overview when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
 
-      val utr = "0987654321"
+      val userAnswers = baseAnswers
+        .set(UpdateTrusteesYesNoPage, true).success.value
+        .set(UpdateBeneficiariesYesNoPage, false).success.value
+        .set(UpdateSettlorsYesNoPage, false).success.value
+        .set(AddOrUpdateProtectorYesNoPage, false).success.value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
+          .build()
+
+      val request =
+        FakeRequest(POST, addOtherIndividualsYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
+
+      when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value must include(
+        s"/maintain-a-trust/overview"
+      )
+
+      application.stop()
+    }
+
+    "redirect to overview when valid data is submitted, no has been selected for all questions and the user is closing the trust" in {
+
+      val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad().url
 
       val userAnswers = emptyUserAnswers
-        .set(UTRPage, utr).success.value
-        .set(UpdateTrusteesYesNoPage, true).success.value
+        .set(WhatIsNextPage, CloseTrust).success.value
+        .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
         .set(AddOrUpdateProtectorYesNoPage, false).success.value
@@ -143,7 +175,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, addOtherIndividualsYesNoRoute)
@@ -158,7 +190,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }

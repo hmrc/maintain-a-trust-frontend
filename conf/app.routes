@@ -59,9 +59,11 @@ GET        /problem-declaring                           controllers.declaration.
 
 GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
 
-GET        /last-declaration                            controllers.PlaybackAnswersController.onPageLoad()
+GET        /last-declaration                            controllers.print.PrintLastDeclaredAnswersController.onPageLoad()
 
-GET        /declared-updates                            controllers.declaration.PlaybackDeclaredAnswersController.onPageLoad()
+GET        /draft-declaration                           controllers.print.PrintMaintainDraftAnswersController.onPageLoad()
+
+GET        /declared-updates                            controllers.print.PrintMaintainDeclaredAnswersController.onPageLoad()
 
 GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=true)
 GET        /continue-maintaining-this-trust             controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=false)
@@ -84,6 +86,18 @@ POST       /update-protector                            controllers.makechanges.
 GET        /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad()
 POST       /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit()
 
+
+GET        /update-other-individuals                       controllers.makechanges.UpdateOtherIndividualsYesNoController.onPageLoad()
+POST       /update-other-individuals                       controllers.makechanges.UpdateOtherIndividualsYesNoController.onSubmit()
+
+GET        /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onPageLoad()
+POST       /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onSubmit()
+
+GET        /date-last-asset-shared-out                  controllers.close.DateLastAssetSharedOutController.onPageLoad()
+POST       /date-last-asset-shared-out                  controllers.close.DateLastAssetSharedOutController.onSubmit()
+
+GET        /how-to-close-trust                          controllers.close.HowToCloseATrustController.onPageLoad()
+
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
-GET        /overview                                    controllers.VariationProgressController.onPageLoad()
+GET        /overview                                    controllers.task_list.TaskListController.onPageLoad()

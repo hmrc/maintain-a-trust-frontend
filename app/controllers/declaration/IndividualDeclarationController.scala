@@ -21,9 +21,11 @@ import java.time.LocalDateTime
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
+import models.IndividualDeclaration
 import models.http.TVNResponse
+import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.IndividualDeclarationPage
-import pages.{SubmissionDatePage, TVNPage, UTRPage}
+import pages.{SubmissionDatePage, TVNPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -38,16 +40,16 @@ import scala.concurrent.{ExecutionContext, Future}
 class IndividualDeclarationController @Inject()(
                                                  override val messagesApi: MessagesApi,
                                                  playbackRepository: PlaybackRepository,
-                                                 actions: AuthenticateForPlayback,
+                                                 actions: Actions,
                                                  formProvider: IndividualDeclarationFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: IndividualDeclarationView,
                                                  service: DeclarationService
                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[IndividualDeclaration] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(IndividualDeclarationPage) match {
@@ -55,37 +57,35 @@ class IndividualDeclarationController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, controllers.declaration.routes.IndividualDeclarationController.onSubmit()))
+      Ok(view(preparedForm, request.closingTrust))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, controllers.declaration.routes.IndividualDeclarationController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors, request.closingTrust))),
 
-        declaration => {
-          request.userAnswers.get(UTRPage) match {
-            case None =>
-              Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
-            case Some(utr) =>
-              service.individualDeclareNoChange(utr, declaration) flatMap {
-                case TVNResponse(tvn) =>
-                  for {
-                    updatedAnswers <- Future.fromTry(
-                      request.userAnswers
-                        .set(IndividualDeclarationPage, declaration)
-                        .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                        .flatMap(_.set(TVNPage, tvn))
-                    )
-                    _ <- playbackRepository.set(updatedAnswers)
-                  } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-                case _ =>
-                  Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-              }
+        declaration =>
+          service.individualDeclaration(
+            request.userAnswers.utr,
+            declaration,
+            request.userAnswers.get(DateLastAssetSharedOutPage)
+          ) flatMap {
+            case TVNResponse(tvn) =>
+              for {
+                updatedAnswers <- Future.fromTry(
+                  request.userAnswers
+                    .set(IndividualDeclarationPage, declaration)
+                    .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+                    .flatMap(_.set(TVNPage, tvn))
+                )
+                _ <- playbackRepository.set(updatedAnswers)
+              } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+            case _ =>
+              Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
           }
-        }
       )
   }
 }

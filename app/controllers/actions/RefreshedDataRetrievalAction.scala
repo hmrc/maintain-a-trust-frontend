@@ -16,22 +16,23 @@
 
 package controllers.actions
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
 
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
 import controllers.routes
 import mapping.UserAnswersExtractor
 import models.http.{GetTrust, Processed}
+import models.pages.WhatIsNext
 import models.requests.DataRequest
 import models.{AgentDeclaration, UserAnswers}
+import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
-import pages.{SubmissionDatePage, TVNPage, UTRPage}
+import pages.{SubmissionDatePage, TVNPage, WhatIsNextPage}
 import play.api.Logger
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
 import repositories.PlaybackRepository
-import services.AuthenticationService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
@@ -40,27 +41,29 @@ import scala.concurrent.{ExecutionContext, Future}
 class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default,
                                              playbackRepository: PlaybackRepository,
                                              trustConnector: TrustConnector,
-                                             playbackExtractor: UserAnswersExtractor,
-                                             authenticationService: AuthenticationService
+                                             playbackExtractor: UserAnswersExtractor
                                             )(override implicit val executionContext: ExecutionContext) extends RefreshedDataRetrievalAction {
 
-  case class SubmissionData(utr: String, tvn: String, date: LocalDateTime, agent: Option[AgentDeclaration])
+  case class SubmissionData(utr: String, whatIsNext: WhatIsNext, tvn: String, date: LocalDateTime, agent: Option[AgentDeclaration], endDate: Option[LocalDate])
 
   override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     (for {
-      utr <- request.userAnswers.get(UTRPage)
+      whatIsNext <- request.userAnswers.get(WhatIsNextPage)
       tvn <- request.userAnswers.get(TVNPage)
       submissionDate <- request.userAnswers.get(SubmissionDatePage)
       optionalAgentInformation = request.userAnswers.get(AgentDeclarationPage)
+      optionalEndDate = request.userAnswers.get(DateLastAssetSharedOutPage)
     } yield {
 
-      val submissionData = SubmissionData(utr, tvn, submissionDate, optionalAgentInformation)
+      val utr = request.userAnswers.utr
+
+      val submissionData = SubmissionData(utr, whatIsNext, tvn, submissionDate, optionalAgentInformation, optionalEndDate)
 
       trustConnector.playback(utr).flatMap {
-        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, playback)(request)
+        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, utr, playback)(request)
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
@@ -69,17 +72,21 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
     }
   }
 
-  private def extractAndRefreshUserAnswers[A](data: SubmissionData, playback: GetTrust)
+  private def extractAndRefreshUserAnswers[A](data: SubmissionData, utr: String, playback: GetTrust)
                         (implicit request: DataRequest[A]) : Future[Either[Result, DataRequest[A]]] = {
 
-    playbackExtractor.extract(UserAnswers(request.user.internalId), playback) match {
+    val newSession = UserAnswers.startNewSession(request.user.internalId, utr)
+
+    playbackExtractor.extract(newSession, playback) match {
       case Right(answers) =>
         for {
           updatedAnswers <- Future.fromTry {
-            answers.set(UTRPage, data.utr)
+            answers
+              .set(WhatIsNextPage, data.whatIsNext)
               .flatMap(_.set(TVNPage, data.tvn))
               .flatMap(_.set(SubmissionDatePage, data.date))
               .flatMap(_.set(AgentDeclarationPage, data.agent))
+              .flatMap(_.set(DateLastAssetSharedOutPage, data.endDate))
           }
           _ <- playbackRepository.set(updatedAnswers)
         } yield {

@@ -26,6 +26,7 @@ import pages.protectors.business._
 import pages.protectors.individual._
 import play.twirl.api.Html
 import utils.countryoptions.CountryOptions
+import utils.print.sections.protectors.AllProtectorsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
 class ProtectorPrintPlaybackHelperSpec extends SpecBase {
@@ -63,9 +64,9 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
         .set(IndividualProtectorPassportIDCardYesNoPage(3), true).success.value
         .set(IndividualProtectorPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
 
-      val helper = new PlaybackAnswersHelper(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
+      val helper = new AllProtectorsPrinter(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
 
-      val result = helper.protectors
+      val result = helper.allProtectors
 
       val name1 = "Joe Bloggs"
       val name2 = "John Doe"
@@ -141,9 +142,9 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
         .set(BusinessProtectorUtrYesNoPage(2), false).success.value
         .set(BusinessProtectorAddressYesNoPage(2), false).success.value
 
-      val helper = new PlaybackAnswersHelper(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
+      val helper = new AllProtectorsPrinter(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
 
-      val result = helper.protectors
+      val result = helper.allProtectors
 
       val company1 = "Bernardos"
       val company2 = "Red Cross Ltd."
@@ -200,9 +201,9 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
         .set(BusinessProtectorUtrYesNoPage(1), true).success.value
         .set(BusinessProtectorUtrPage(1), "1234567890").success.value
 
-      val helper = new PlaybackAnswersHelper(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
+      val helper = new AllProtectorsPrinter(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
 
-      val result = helper.protectors
+      val result = helper.allProtectors
 
       val name1 = "Paul Chuckle"
       val company1 = "Bernardos"

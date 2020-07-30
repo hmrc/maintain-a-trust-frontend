@@ -18,6 +18,7 @@ package views.make_changes
 
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.{NormalMode, Mode}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
@@ -35,7 +36,7 @@ class UpdateTrusteesYesNoViewSpec extends YesNoViewBehaviours {
     val view = viewFor[UpdateTrusteesYesNoView](Some(emptyUserAnswers))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form)(fakeRequest, messages)
+      view.apply(form, messageKeyPrefix)(fakeRequest, messages)
 
     behave like normalPage(applyView(form), messageKeyPrefix)
 

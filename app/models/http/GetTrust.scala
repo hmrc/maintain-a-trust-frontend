@@ -16,6 +16,8 @@
 
 package models.http
 
+import java.time.LocalDate
+
 import mapping.{AgentDetails, AssetMonetaryAmount, PassportType, PropertyLandType, TrustDetailsType}
 import models.Constant._
 import models.pages.{KindOfBusiness, RoleInCompany, ShareClass, ShareType}
@@ -57,7 +59,8 @@ object Declaration {
 }
 
 case class DeclarationForApi(declaration: Declaration,
-                             agentDetails: Option[AgentDetails])
+                             agentDetails: Option[AgentDetails],
+                             endDate: Option[LocalDate])
 
 object DeclarationForApi {
   implicit val declarationForApiFormat: Format[DeclarationForApi] = Json.format[DeclarationForApi]

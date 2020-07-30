@@ -18,14 +18,15 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
-import controllers.actions.AuthenticateForPlayback
+import connectors.{TrustConnector, TrustsStoreConnector}
+import controllers.actions.Actions
+import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.WhatIsNextFormProvider
 import models.Enumerable
 import models.pages.WhatIsNext
-import navigation.DeclareNoChange
 import pages.WhatIsNextPage
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import views.html.WhatIsNextView
@@ -36,14 +37,18 @@ import scala.concurrent.{ExecutionContext, Future}
 class WhatIsNextController @Inject()(
                                       override val messagesApi: MessagesApi,
                                       playbackRepository: PlaybackRepository,
-                                      actions: AuthenticateForPlayback,
+                                      actions: Actions,
                                       formProvider: WhatIsNextFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: WhatIsNextView,
-                                      config: FrontendAppConfig
-                                    )(implicit ec: ExecutionContext) extends DeclareNoChange with I18nSupport with Enumerable.Implicits {
+                                      config: FrontendAppConfig,
+                                      trustConnector: TrustConnector,
+                                      trustsStoreConnector: TrustsStoreConnector
+                                    )(implicit ec: ExecutionContext)
 
-  val form = formProvider()
+  extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) with Enumerable.Implicits {
+
+  val form: Form[WhatIsNext] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
@@ -73,6 +78,9 @@ class WhatIsNextController @Inject()(
 
             case WhatIsNext.MakeChanges =>
               Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
+
+            case WhatIsNext.CloseTrust if config.closeATrustEnabled =>
+              Redirect(controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad())
 
             case _ =>
               Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())

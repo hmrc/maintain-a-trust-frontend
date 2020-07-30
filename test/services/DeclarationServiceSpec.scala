@@ -15,6 +15,8 @@
  */
 
 package services
+import java.time.LocalDate
+
 import base.SpecBase
 import connectors.TrustConnector
 import models.http.DeclarationResponse.InternalServerError
@@ -37,6 +39,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
   val utr = "0987654321"
   val address: UKAddress = UKAddress("Line 1", "Line 2", None, None, "NE11NE")
   val mockTrustConnector: TrustConnector = mock[TrustConnector]
+  val date: LocalDate = LocalDate.parse("2019-02-03")
 
   val enrolments: Enrolments = Enrolments(Set(Enrolment(
     "HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")), "Activated"
@@ -82,7 +85,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.agentDeclareNoChange(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName")) {
+        whenReady(service.agentDeclaration(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName", Some(date))) {
           result =>
             result mustBe TVNResponse("123456")
         }
@@ -99,7 +102,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.agentDeclareNoChange(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName")) {
+        whenReady(service.agentDeclaration(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName", Some(date))) {
           result =>
             result mustBe InternalServerError
         }
@@ -120,7 +123,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.individualDeclareNoChange(utr, individualDeclaration)) {
+        whenReady(service.individualDeclaration(utr, individualDeclaration, Some(date))) {
           result =>
             result mustBe TVNResponse("123456")
         }
@@ -137,7 +140,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.individualDeclareNoChange(utr, individualDeclaration)) {
+        whenReady(service.individualDeclaration(utr, individualDeclaration, Some(date))) {
           result =>
             result mustBe InternalServerError
         }

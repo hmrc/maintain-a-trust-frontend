@@ -18,7 +18,6 @@ package controllers
 
 import base.SpecBase
 import forms.UTRFormProvider
-import pages.UTRPage
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
@@ -74,7 +73,7 @@ class UTRControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to Trust Status for a POST if no existing data is found (creating a new session)" in {
+    "redirect to trust status for a POST if no existing data is found (creating a new session)" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
@@ -89,26 +88,6 @@ class UTRControllerSpec extends SpecBase {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual controllers.routes.TrustStatusController.status().url
-
-      application.stop()
-    }
-
-    "populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswers.set(UTRPage, "0987654321").success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val request = FakeRequest(GET, trustUTRRoute)
-
-      val view = application.injector.instanceOf[UTRView]
-
-      val result = route(application, request).value
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(form.fill("0987654321"), onSubmit)(fakeRequest, messages).toString
 
       application.stop()
     }

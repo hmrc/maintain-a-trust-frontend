@@ -20,30 +20,36 @@ import base.SpecBase
 import connectors.TrustConnector
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
+import models.UserAnswers
+import models.pages.WhatIsNext.MakeChanges
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import pages.WhatIsNextPage
 import pages.makechanges.UpdateSettlorsYesNoPage
 import play.api.inject.bind
 import play.api.libs.json.JsBoolean
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.makechanges.UpdateSettlorsYesNoView
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
-import pages.UTRPage
 
 import scala.concurrent.Future
 
 class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("updateSettlors")
+  val prefix: String = "updateSettlors"
+  val form = formProvider.withPrefix(prefix)
 
   lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad().url
+
+  val baseAnswers: UserAnswers = emptyUserAnswers
+    .set(WhatIsNextPage, MakeChanges).success.value
 
   "UpdateSettlorsYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request = FakeRequest(GET, updateSettlorsYesNoRoute)
 
@@ -54,14 +60,14 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(UpdateSettlorsYesNoPage, true).success.value
+      val userAnswers = baseAnswers.set(UpdateSettlorsYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,21 +80,22 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(fakeRequest, messages).toString
+        view(form.fill(true), prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
 
     "redirect to the add a protector page when valid data is submitted and no protectors exist" in {
 
-      val utr = "1000000008"
+
 
       val  mockTrustConnector = mock[TrustConnector]
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).get)).overrides(
-          bind[TrustConnector].toInstance(mockTrustConnector)
-        ).build()
+        applicationBuilder(userAnswers = Some(baseAnswers))
+          .overrides(
+            bind[TrustConnector].toInstance(mockTrustConnector)
+          ).build()
 
       val request =
         FakeRequest(POST, updateSettlorsYesNoRoute)
@@ -108,12 +115,10 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
     "redirect to the update protectors page when valid data is submitted and no protectors exist" in {
 
-      val utr = "1000000008"
-
       val  mockTrustConnector = mock[TrustConnector]
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers.set(UTRPage, utr).get)).overrides(
+        applicationBuilder(userAnswers = Some(baseAnswers)).overrides(
           bind[TrustConnector].toInstance(mockTrustConnector)
         ).build()
 
@@ -135,7 +140,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
         FakeRequest(POST, updateSettlorsYesNoRoute)
@@ -150,7 +155,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm, prefix)(fakeRequest, messages).toString
 
       application.stop()
     }
