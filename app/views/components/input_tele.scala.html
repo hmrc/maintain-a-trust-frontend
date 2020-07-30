@@ -1,4 +1,4 @@
-@*
+    @*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,24 +15,16 @@
  *@
 
 @(
-        field: Field,
-        label: String,
-        labelAsHeading: Boolean = false,
-        inputClass: Option[String] = None,
-        hint: Option[String] = None,
-        readerHint: Option[String] = None,
-        labelClass: Option[String] = None,
-        symbol: Option[String] = None,
-        optionalHtmlContent: Option[Html] = None,
-        ariaRequired: Boolean = false
+    field: Field,
+    label: String,
+    labelAsHeading: Boolean = false,
+    inputClass: Option[String] = None,
+    hint: Option[String] = None,
+    readerHint: Option[String] = None,
+    labelClass: Option[String] = None,
+    optionalHtmlContent: Option[Html] = None,
+    inputMode: String = "numeric"
 )(implicit messages: Messages)
-
-@required = @{
-    ariaRequired match {
-        case true => {"aria-required=true"}
-        case false => {"aria-required=false"}
-    }
-}
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
     @if(labelAsHeading){<h1 class="label-as-heading">}
@@ -47,16 +39,20 @@
         </div>
     }
     @field.errors.map { error =>
-    <span class="error-message" id="error-message-@{field.id}-input">@messages(error.message, error.args: _*)</span>
+    <span class="error-message" id="error-message-@{field.id}-input">
+        <span class="visually-hidden">@messages("site.error")</span> @messages(error.message, error.args: _*)
+    </span>
     }
-    <div class="form-control-wrapper" @if(symbol.isDefined){data-type="@{symbol}"}>
+    <div class="form-control-wrapper">
         <input
-        class="form-control @inputClass"
-        type="text"
+        class="form-control @inputClass @if(field.hasErrors){field-error}"
+        type="tel"
         id="@{field.id}"
         name="@{field.name}"
         value="@{field.value}"
-        @required
+        @if(inputMode.nonEmpty) {
+            inputmode="@inputMode"
+        }
         @if(hint.nonEmpty | field.hasErrors) {
             aria-describedby="@{if(hint.nonEmpty){s"${field.id}_hint"}} @{if(field.hasErrors){s"error-message-${field.id}-input"}}"
         }
