@@ -1,4 +1,4 @@
-@*
+    @*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,16 +15,15 @@
  *@
 
 @(
-        field: Field,
-        label: String,
-        labelAsHeading: Boolean = false,
-        inputClass: Option[String] = None,
-        hint: Option[String] = None,
-        readerHint: Option[String] = None,
-        labelClass: Option[String] = None,
-        symbol: Option[String] = None,
-        optionalHtmlContent: Option[Html] = None,
-        autoComplete: Option[String] = None
+    field: Field,
+    label: String,
+    labelAsHeading: Boolean = false,
+    inputClass: Option[String] = None,
+    hint: Option[String] = None,
+    readerHint: Option[String] = None,
+    labelClass: Option[String] = None,
+    optionalHtmlContent: Option[Html] = None,
+    inputMode: String = "numeric"
 )(implicit messages: Messages)
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
@@ -41,18 +40,18 @@
     }
     @field.errors.map { error =>
     <span class="error-message" id="error-message-@{field.id}-input">
-        <span class="visually-hidden">@messages("site.error") </span>@messages(error.message, error.args: _*)
+        <span class="visually-hidden">@messages("site.error")</span> @messages(error.message, error.args: _*)
     </span>
     }
-    <div class="form-control-wrapper" @if(symbol.isDefined){data-type="@{symbol}"}>
+    <div class="form-control-wrapper">
         <input
-        class="form-control @inputClass @if(field.hasErrors){form-control-error}"
-        type="text"
+        class="form-control @inputClass @if(field.hasErrors){field-error}"
+        type="tel"
         id="@{field.id}"
         name="@{field.name}"
         value="@{field.value}"
-        @if(autoComplete.nonEmpty){
-            autocomplete="@{autoComplete.get}"
+        @if(inputMode.nonEmpty) {
+            inputmode="@inputMode"
         }
         @if(hint.nonEmpty | field.hasErrors) {
             aria-describedby="@{if(hint.nonEmpty){s"${field.id}_hint"}} @{if(field.hasErrors){s"error-message-${field.id}-input"}}"
