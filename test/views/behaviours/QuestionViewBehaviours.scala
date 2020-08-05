@@ -99,7 +99,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
           doc.getElementById(field).attr("aria-describedby") must include(errorSpan.attr("id"))
 
           // error is linked with input
-          errorSpan.siblingElements().get(0).attr("for") mustBe field
+          errorSpan.parent().getElementsByAttributeValue("for", field).get(0).attr("for") mustBe field
         }
       }
     }
