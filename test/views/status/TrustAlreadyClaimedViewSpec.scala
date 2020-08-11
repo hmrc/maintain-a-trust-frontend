@@ -29,11 +29,10 @@ class TrustAlreadyClaimedViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(utr)(fakeRequest, messages)
 
-    behave like normalPage(applyView, "trustAlreadyClaimed","p1", "p2","p2.a")
+    behave like normalPageTitleWithCaption(applyView,
+      "trustAlreadyClaimed",
+      utr,
+      "p1", "p2","p2.a")
 
-    "display the correct subheading" in {
-      val doc = asDocument(applyView)
-      assertContainsText(doc, messages("trustAlreadyClaimed.subheading", utr))
-    }
   }
 }

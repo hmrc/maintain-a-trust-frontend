@@ -30,8 +30,7 @@
 
    @components.back_link()
 
-   <span class="govuk-caption-xl">@messages("informationMaintainingThisTrust.subHeading", utr)</span>
-   @components.heading("informationMaintainingThisTrust.heading", headingSize = "heading-xlarge govuk-fieldset__heading")
+    @components.heading_with_caption(headingKey = "informationMaintainingThisTrust.heading", caption = "informationMaintainingThisTrust.caption", captionParam = utr)
 
     <div class="info-maintaining-warning-margin-top">
        @components.warning("informationMaintainingThisTrust")

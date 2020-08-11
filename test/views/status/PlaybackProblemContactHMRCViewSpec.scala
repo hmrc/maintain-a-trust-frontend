@@ -29,11 +29,10 @@ class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(utr)(fakeRequest, messages)
 
-    behave like normalPage(applyView, "playbackProblemContactHMRC","p1.beforeLink", "p1.link", "p1.afterLink","p2")
+    behave like normalPageTitleWithCaption(applyView,
+      "playbackProblemContactHMRC",
+      utr,
+      "p1.beforeLink", "p1.link", "p1.afterLink","p2")
 
-    "display the correct subheading" in {
-      val doc = asDocument(applyView)
-      assertContainsText(doc, messages("playbackProblemContactHMRC.subheading", utr))
-    }
   }
 }

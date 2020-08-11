@@ -21,13 +21,19 @@ import views.html.TrustNotClaimedView
 
 class TrustNotClaimedViewSpec extends ViewBehaviours {
 
+  val utr = "0987654321"
+
   "TrustNotClaimed view" must {
 
     val view = viewFor[TrustNotClaimedView](Some(emptyUserAnswers))
 
     val applyView = view.apply("0987654321")(fakeRequest, messages)
 
-    behave like normalPage(applyView, "trustNotClaimed")
+    behave like normalPageTitleWithCaption(applyView,
+      "trustNotClaimed",
+      utr,
+    "bullet.1.title", "bullet.1.p1", "bullet.1.p2", "bullet.1.p3", "bullet.1.p4",
+    "bullet.2.title", "bullet.2.p1", "bullet.2.p2", "bullet.2.p3", "bullet.2.p4")
 
     behave like pageWithBackLink(applyView)
   }

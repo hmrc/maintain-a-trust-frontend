@@ -30,8 +30,7 @@ appConfig: FrontendAppConfig
 title = messages("trustStillProcessing.title")
 ) {
 
- <span class="govuk-caption-xl">@messages("trustStillProcessing.subheading", utr)</span>
- @components.heading("trustStillProcessing.heading", headingSize = "heading-large heading-no-top-margin")
+ @components.heading_with_caption(headingKey = "trustStillProcessing.heading", caption = "trustStillProcessing.caption", captionParam = utr)
 
  <p>@messages("trustStillProcessing.p1")</p>
 

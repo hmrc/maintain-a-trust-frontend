@@ -26,8 +26,7 @@
 
     @components.back_link()
 
-    <span class="govuk-caption-xl">@messages("agentCannotAccessTrustYet.subHeading", utr)</span>
-    @components.heading("agentCannotAccessTrustYet.heading", headingSize = "heading-large govuk-fieldset__heading")
+    @components.heading_with_caption(headingKey = "agentCannotAccessTrustYet.heading", caption = "agentCannotAccessTrustYet.caption", captionParam = utr)
 
     <p>@messages("agentCannotAccessTrustYet.p1")</p>
     <p>@messages("agentCannotAccessTrustYet.p2")</p>

@@ -30,9 +30,10 @@ class TrustClosedViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(AffinityGroup.Agent, utr)(fakeRequest, messages)
 
-    behave like normalPage(
+    behave like normalPageTitleWithCaption(
       applyView,
       "trustClosed",
+      utr,
       "p1",
       "p2",
       "contact.link",
@@ -40,11 +41,6 @@ class TrustClosedViewSpec extends ViewBehaviours {
       "p4",
       "return.link"
     )
-
-    "display the correct subheading" in {
-      val doc = asDocument(applyView)
-      assertContainsText(doc, messages("trustClosed.subheading", utr))
-    }
 
   }
 

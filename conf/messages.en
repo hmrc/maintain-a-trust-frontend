@@ -8,7 +8,7 @@ agencyRegisteredAddressInternational.heading = What is your agency’s registere
 
 agentCannotAccessTrustYet.title = You cannot access this trust yet
 agentCannotAccessTrustYet.heading = You cannot access this trust yet
-agentCannotAccessTrustYet.subHeading = This trust’s UTR: {0}
+agentCannotAccessTrustYet.caption = This trust’s UTR: {0}
 agentCannotAccessTrustYet.p1 = You have been authorised by your client and do not need to do anything else at the moment.
 agentCannotAccessTrustYet.p2 = You will be able to access this trust by 2020.
 agentCannotAccessTrustYet.heading.2 = What you need to know about maintaining this trust
@@ -22,7 +22,7 @@ agentCannotAccessTrustYet.p4 = You are not required to update the trust’s deta
 
 agentNotAuthorised.title = Sorry, you cannot access this trust
 agentNotAuthorised.heading = Sorry, you cannot access this trust
-agentNotAuthorised.subheading = This trust’s UTR: {0}
+agentNotAuthorised.caption = This trust’s UTR: {0}
 agentNotAuthorised.p1 = The trustee who claimed the trust needs to give you authorisation.
 agentNotAuthorised.p2 = You can create an authorisation link to send to the trustee through
 agentNotAuthorised.p2.a = Agent Services.
@@ -137,7 +137,7 @@ featureNotAvailable.heading = This feature is currently not available
 
 informationMaintainingThisTrust.title = Information about maintaining this trust
 informationMaintainingThisTrust.heading = Information about maintaining this trust
-informationMaintainingThisTrust.subHeading = This trust’s UTR: {0}
+informationMaintainingThisTrust.caption = This trust’s UTR: {0}
 informationMaintainingThisTrust.warning = Some questions may have changed since the trust was registered. You have a legal responsibility to make sure the details held on the register are accurate. You only need to declare the trust is up to date if there is a tax liability.
 informationMaintainingThisTrust.viewLastDeclaration = View the last declaration
 informationMaintainingThisTrust.printsave.link = You can view the trust’s last declaration before you continue
@@ -180,7 +180,7 @@ kindOfTrust.Repair = A trust for the repair of historic buildings
 
 maintainThisTrust.title = Maintain this trust
 maintainThisTrust.heading = Maintain this trust
-maintainThisTrust.subheading = This trust’s UTR: {0}
+maintainThisTrust.caption = This trust’s UTR: {0}
 maintainThisTrust.p1.a = The trust with the Unique Taxpayer Reference (UTR)
 maintainThisTrust.p1.b = has been linked with this account.
 maintainThisTrust.p2 = You can add, remove and update {0} in this trust. Your changes will not be saved until you have declared.
@@ -231,14 +231,14 @@ site.address.international.country.select = Select a country
 
 trustAlreadyClaimed.title = Sorry, you cannot access this trust
 trustAlreadyClaimed.heading = Sorry, you cannot access this trust
-trustAlreadyClaimed.subheading = This trust’s UTR: {0}
+trustAlreadyClaimed.caption = This trust’s UTR: {0}
 trustAlreadyClaimed.p1 = Another Government Gateway account is linked to it. Please sign in with that account.
 trustAlreadyClaimed.p2 = If you are unable to do so,
 trustAlreadyClaimed.p2.a = contact the trusts helpline (opens in a new window or tab)
 
 trustClosed.title = Sorry, you cannot access this trust
 trustClosed.heading = Sorry, you cannot access this trust
-trustClosed.subheading = This trust’s UTR: {0}
+trustClosed.caption = This trust’s UTR: {0}
 trustClosed.p1 = You cannot make changes to this trust as it has been closed.
 trustClosed.p2 = If this has been done in error or you need help with the service, please
 trustClosed.contact.link = contact the trusts helpline (opens in a new window or tab)
@@ -252,11 +252,11 @@ trustLocked.p1 = You have not passed the security questions asked by HMRC.
 trustLocked.p2 = Try again in 30 minutes.
 trustLocked.p3 = If you need help with the service
 trustLocked.link1 = contact the trusts helpline (opens in a new window or tab)
-trustLocked.subheading = This trust’s UTR: {0}
+trustLocked.caption = This trust’s UTR: {0}
 
 trustNotClaimed.title = Your client must claim the trust and authorise your access
 trustNotClaimed.heading = Your client must claim the trust and authorise your access
-trustNotClaimed.subheading = This trust’s UTR: {0}
+trustNotClaimed.caption = This trust’s UTR: {0}
 trustNotClaimed.p1 = One of the trustees must complete these 2 steps so you can maintain the trust online on their behalf.
 trustNotClaimed.bullet.1.title = Trustee must claim the trust
 trustNotClaimed.bullet.1.p1 = A trustee needs to log onto the Trust Registration Service using their Government Gateway account. The account they use must be an organisation account, not an individual account.
@@ -277,7 +277,7 @@ trustResidentInTheUK.no = Based on your answers, the trust is not resident in th
 
 trustStillProcessing.title = Sorry, you cannot access this trust
 trustStillProcessing.heading = Sorry, you cannot access this trust
-trustStillProcessing.subheading = This trust’s UTR: {0}
+trustStillProcessing.caption = This trust’s UTR: {0}
 trustStillProcessing.p1 = HMRC is still processing changes recently made to this trust.
 trustStillProcessing.p2 = Try again later.
 trustStillProcessing.p3 = If you need help with the service
@@ -397,7 +397,7 @@ declarationWhatNext.error.required = Select what you want to do next
 
 variationProgress.title = Trust overview
 variationProgress.heading = Trust overview
-variationProgress.subHeading.1 = This trust’s UTR: {0}
+variationProgress.caption = This trust’s UTR: {0}
 variationProgress.p1 = You can change information about the trust and make a declaration once you have confirmed each section is up to date.
 variationProgress.p2 = Any changes you make without declaring will not be saved.
 variationsProgress.return.link = Return to register and maintain a trust for a client
@@ -442,7 +442,7 @@ dateLastAssetSharedOut.error.past = The date the last asset was distributed cann
 
 howToCloseATrust.title = How to close a trust with HMRC
 howToCloseATrust.heading = How to close a trust with HMRC
-howToCloseATrust.subHeading = This trust’s UTR: {0}
+howToCloseATrust.caption = This trust’s UTR: {0}
 howToCloseATrust.p1 = To close a trust register with HMRC, you need to tell us:
 howToCloseATrust.bullet1 = the date the last asset was shared out to the beneficiaries
 howToCloseATrust.bullet2 = a final tax return, using Trust and Estate (SA900) tax return or Self Assessment Online for trusts
@@ -724,7 +724,7 @@ playbackFinalDeclarationAnswers.p3 = The trust’s final declaration was sent on
 
 playbackProblemContactHMRC.title = Sorry, there is a problem accessing your trust’s registration
 playbackProblemContactHMRC.heading = Sorry, there is a problem accessing your trust’s registration
-playbackProblemContactHMRC.subheading = This trust’s UTR: {0}
+playbackProblemContactHMRC.caption = This trust’s UTR: {0}
 playbackProblemContactHMRC.p1.beforeLink = You need to
 playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
 playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.

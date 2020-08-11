@@ -29,12 +29,9 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(utr)(fakeRequest, messages)
 
-    "Have a dynamic utr in the subheading" in {
-      val doc = asDocument(applyView)
-      assertContainsText(doc, s"This trust’s UTR: $utr")
-    }
-
-    behave like normalPage(applyView, "informationMaintainingThisTrust",
+    behave like normalPageTitleWithCaption(applyView,
+      "informationMaintainingThisTrust",
+      utr,
       "warning",
       "viewLastDeclaration",
       "printsave.link",

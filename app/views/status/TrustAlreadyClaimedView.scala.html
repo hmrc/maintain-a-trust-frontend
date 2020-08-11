@@ -26,9 +26,7 @@ main_template: MainTemplate
 title = messages("trustAlreadyClaimed.title")
 ) {
 
-  <span class="govuk-caption-xl">@messages("trustAlreadyClaimed.subheading", utr)</span>
-
-  @components.heading("trustAlreadyClaimed.heading")
+  @components.heading_with_caption(headingKey = "trustAlreadyClaimed.heading", caption = "trustAlreadyClaimed.caption", captionParam = utr)
 
   <p>@messages("trustAlreadyClaimed.p1")</p>
 

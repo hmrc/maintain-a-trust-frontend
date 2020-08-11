@@ -39,9 +39,7 @@
 
    @components.back_link()
 
-    <span class="govuk-caption-xl">@messages("variationProgress.subHeading.1", utr)</span>
-
-    @components.heading("variationProgress.heading", headingSize = "heading-large")
+    @components.heading_with_caption(headingKey = "variationProgress.heading", caption = "variationProgress.caption", captionParam = utr)
 
     <p>@messages("variationProgress.p1")</p>
 

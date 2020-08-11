@@ -28,8 +28,7 @@
 
     @components.back_link()
 
-    <span class="govuk-caption-xl">@messages("howToCloseATrust.subHeading", utr)</span>
-    @components.heading("howToCloseATrust.heading", headingSize = "heading-xlarge govuk-fieldset__heading")
+    @components.heading_with_caption(headingKey = "howToCloseATrust.heading", caption = "howToCloseATrust.caption", captionParam = utr)
 
     <h2></h2>
 

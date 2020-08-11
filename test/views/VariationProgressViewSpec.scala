@@ -46,12 +46,10 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
     val applyView = view.apply(utr, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(fakeRequest, messages)
 
-    "Have a dynamic utr in the subheading" in {
-      val doc = asDocument(applyView)
-      assertContainsText(doc, s"This trust’s UTR: $utr")
-    }
-
-    behave like normalPage(applyView, "variationProgress")
+    behave like normalPageTitleWithCaption(applyView,
+      "variationProgress",
+      utr,
+    "p1", "p2")
 
     behave like pageWithBackLink(applyView)
 
