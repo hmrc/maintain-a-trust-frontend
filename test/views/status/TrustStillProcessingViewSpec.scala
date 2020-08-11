@@ -30,20 +30,16 @@ class TrustStillProcessingViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(AffinityGroup.Agent, utr)(fakeRequest, messages)
 
-    behave like normalPage(
+    behave like normalPageTitleWithCaption(
       applyView,
       "trustStillProcessing",
+      utr,
       "p1",
       "p2",
       "p3",
       "contact.link",
       "p4",
       "return.link")
-
-    "display the correct subheading" in {
-      val doc = asDocument(applyView)
-      assertContainsText(doc, messages("trustStillProcessing.subheading", utr))
-    }
 
   }
 

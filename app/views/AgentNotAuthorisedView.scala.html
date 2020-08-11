@@ -30,8 +30,7 @@
 
     @components.back_link()
 
-    <span class="govuk-caption-xl">@messages("agentNotAuthorised.subheading", utr)</span>
-    @components.heading("agentNotAuthorised.heading")
+    @components.heading_with_caption(headingKey = "agentNotAuthorised.heading", caption = "agentNotAuthorised.caption", captionParam = utr)
 
     <p>@messages("agentNotAuthorised.p1")</p>
     <p>@messages("agentNotAuthorised.p2") <a href="@config.agentInvitationsUrl">@messages("agentNotAuthorised.p2.a")</a></p>

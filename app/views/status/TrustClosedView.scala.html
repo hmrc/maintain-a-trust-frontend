@@ -30,8 +30,7 @@
 title = messages("trustClosed.title")
 ) {
 
-  <span class="govuk-caption-xl">@messages("trustClosed.subheading", utr)</span>
-  @components.heading("trustClosed.heading", headingSize = "heading-large heading-no-top-margin")
+  @components.heading_with_caption(headingKey = "trustClosed.heading", caption = "trustClosed.caption", captionParam = utr)
 
   <p>@messages("trustClosed.p1")</p>
 

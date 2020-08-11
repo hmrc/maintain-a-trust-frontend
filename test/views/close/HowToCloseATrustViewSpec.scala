@@ -29,13 +29,9 @@ class HowToCloseATrustViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(utr)(fakeRequest, messages)
 
-    "Have a dynamic utr in the subheading" in {
-      val doc = asDocument(applyView)
-      assertContainsText(doc, s"This trust’s UTR: $utr")
-    }
-
-    behave like normalPage(applyView,
+    behave like normalPageTitleWithCaption(applyView,
       "howToCloseATrust",
+      utr,
       "p1",
       "bullet1",
       "bullet2",

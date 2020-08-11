@@ -26,8 +26,7 @@
 
     @components.back_link()
 
-    <span class="govuk-caption-xl">@messages("maintainThisTrust.subheading", utr)</span>
-    @components.heading("maintainThisTrust.heading")
+    @components.heading_with_caption(headingKey = "maintainThisTrust.heading", caption = "maintainThisTrust.caption", captionParam = utr)
 
     <p>@messages("maintainThisTrust.p1.a") <span class="weight-bold">@utr</span> @messages("maintainThisTrust.p1.b")</p>
 

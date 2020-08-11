@@ -29,8 +29,7 @@
 
     @components.back_link()
 
-    <span class="govuk-caption-xl">@messages("trustNotClaimed.subheading", utr)</span>
-    @components.heading("trustNotClaimed.heading")
+    @components.heading_with_caption(headingKey = "trustNotClaimed.heading", caption = "trustNotClaimed.caption", captionParam = utr)
 
     <p>@messages("trustNotClaimed.p1")</p>
 
