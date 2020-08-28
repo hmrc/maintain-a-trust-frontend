@@ -34,12 +34,10 @@
 
         @components.error_summary(form.errors)
 
-        @components.heading("declarationWhatNext.heading")
-
         @components.input_radio_with_hint(
             field = form("value"),
             legend = messages("declarationWhatNext.heading"),
-            legendClass = Some("visually-hidden"),
+            headingIsLegend = true,
             inputs = WhatIsNext.options
         )
 
