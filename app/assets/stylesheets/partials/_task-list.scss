@@ -1,5 +1,4 @@
 // Task list pattern
-@import '../conditionals';
 
 .app-task-list {
   list-style-type: none;
@@ -53,7 +52,9 @@
 
 .app-task-list__task-name {
   display: block;
-  float: left;
+  @include media(450px) {
+    float: left;
+  }
 }
 
 .app-task-list__task-up-to-date {
