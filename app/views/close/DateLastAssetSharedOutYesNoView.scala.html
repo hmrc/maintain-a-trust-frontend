@@ -24,7 +24,7 @@
 @(form: Form[_], utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("dateLastAssetSharedOutYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("dateLastAssetSharedOutYesNo.title")}"
 ) {
 
     @formHelper(action = DateLastAssetSharedOutYesNoController.onSubmit(), 'autoComplete -> "off") {

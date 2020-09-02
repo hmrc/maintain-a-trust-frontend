@@ -24,7 +24,7 @@
 @(form: Form[_], prefix: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages(s"$prefix.title")}"
+    title = s"${errorPrefix(form)}${messages(s"$prefix.title")}"
 ) {
 
     @formHelper(action = UpdateProtectorYesNoController.onSubmit(), 'autoComplete -> "off") {

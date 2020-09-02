@@ -26,7 +26,7 @@
 @(form: Form[_], onSubmit: Call)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)} ${messages("agencyRegisteredAddressUkYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("agencyRegisteredAddressUkYesNo.title")}"
 ) {
 
     @formHelper(action = onSubmit, 'autoComplete -> "off") {
