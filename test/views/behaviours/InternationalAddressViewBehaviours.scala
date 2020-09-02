@@ -19,6 +19,7 @@ package views.behaviours
 import models.InternationalAddress
 import play.api.data.{Form, FormError}
 import play.twirl.api.HtmlFormat
+import views.ViewUtils
 
 
 trait InternationalAddressViewBehaviours extends ViewBehaviours {
@@ -69,7 +70,7 @@ trait InternationalAddressViewBehaviours extends ViewBehaviours {
           assertEqualsValue(
             doc,
             "title",
-            s"""${messages("error.browser.title.prefix")} ${messages(s"$titlePrefix.title", args: _*)}""")
+            ViewUtils.breadcrumbTitle(s"""${messages("error.browser.title.prefix")} ${messages(s"$titlePrefix.title", args: _*)}"""))
         }
       }
 
