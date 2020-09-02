@@ -21,13 +21,15 @@
 
 <li class="app-task-list__item" id="task-list__item--@{task.link.text}">
 
-    <a class="app-task-list__task-name"
-       id="task-list__task--@{task.link.text}"
-       href="@{task.link.url}"
-       @task.tag.map { t => aria-describedby="task-list__task--@{task.link.text}__tag" }>
+    <span class="app-task-link">
+        <a class="app-task-list__task-name"
+           id="task-list__task--@{task.link.text}"
+           href="@{task.link.url}"
+           @task.tag.map { t => aria-describedby="task-list__task--@{task.link.text}__tag" }>
 
-        @messages(s"taskList.${task.link.text}.label")
-    </a>
+            @messages(s"taskList.${task.link.text}.label")
+        </a>
+    </span>
 
     @task.tag.map { t =>
       <strong class="govuk-tag @{t.toString} app-task-list__task-@{t.toString}"

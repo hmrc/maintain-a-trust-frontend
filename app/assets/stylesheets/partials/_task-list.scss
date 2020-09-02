@@ -51,7 +51,6 @@
 }
 
 .app-task-list__task-name {
-  display: block;
   @include media(450px) {
     float: left;
   }
@@ -77,4 +76,8 @@
     margin-top: 0;
     margin-bottom: 0;
   }
+}
+
+.app-task-link {
+  display: block;
 }
