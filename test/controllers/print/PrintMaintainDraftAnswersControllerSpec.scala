@@ -83,7 +83,7 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
           closeDate,
           entities,
           trustDetails
-        )(fakeRequest, messages).toString
+        )(request, messages).toString
 
       application.stop()
     }

@@ -74,7 +74,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(InternationalAddress("line 1","line 2", Some("line 3"), "country")), countryOptions)(fakeRequest, messages).toString
+        view(form.fill(InternationalAddress("line 1","line 2", Some("line 3"), "country")), countryOptions)(request, messages).toString
 
       application.stop()
     }
@@ -115,7 +115,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, countryOptions)(fakeRequest, messages).toString
+        view(boundForm, countryOptions)(request, messages).toString
 
       application.stop()
     }

@@ -81,7 +81,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form)(getRequest, messages).toString
 
       application.stop()
     }
@@ -151,7 +151,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }

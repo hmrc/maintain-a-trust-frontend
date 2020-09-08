@@ -59,7 +59,7 @@ class PrintLastDeclaredAnswersControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(entities, trustDetails)(fakeRequest, messages).toString
+        view(entities, trustDetails)(request, messages).toString
 
       application.stop()
     }

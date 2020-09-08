@@ -85,7 +85,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
           fakeCrn,
           "27 January 2020",
           isAgent = true
-        )(fakeRequest, messages).toString
+        )(request, messages).toString
 
       application.stop()
     }
@@ -120,7 +120,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
           fakeCrn,
           "27 January 2020",
           isAgent = true
-        )(fakeRequest, messages).toString
+        )(request, messages).toString
 
       application.stop()
     }

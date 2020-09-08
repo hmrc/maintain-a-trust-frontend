@@ -43,7 +43,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
         view("utr",
           "settlors, trustees, beneficiaries, protectors and other individuals",
           frontendAppConfig.verifyIdentityForATrustUrl("utr")
-        )(fakeRequest, messages).toString
+        )(request, messages).toString
 
       application.stop()
     }
@@ -66,7 +66,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
         view("utr",
           "settlors, trustees, beneficiaries, protectors and other individuals",
           routes.InformationMaintainingThisTrustController.onPageLoad().url
-        )(fakeRequest, messages).toString
+        )(request, messages).toString
 
       application.stop()
     }

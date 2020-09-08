@@ -58,7 +58,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(fakeRequest, messages).toString
+        view(form)(request, messages).toString
 
       application.stop()
     }
@@ -79,7 +79,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(WhatIsNext.MakeChanges))(fakeRequest, messages).toString
+        view(form.fill(WhatIsNext.MakeChanges))(request, messages).toString
 
       application.stop()
     }
@@ -198,7 +198,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(fakeRequest, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }

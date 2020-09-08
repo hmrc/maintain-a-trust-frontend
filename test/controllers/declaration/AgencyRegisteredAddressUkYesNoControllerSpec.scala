@@ -52,7 +52,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, onSubmit)(fakeRequest, messages).toString
+        view(form, onSubmit)(request, messages).toString
 
       application.stop()
     }
@@ -72,7 +72,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), onSubmit)(fakeRequest, messages).toString
+        view(form.fill(true), onSubmit)(request, messages).toString
 
       application.stop()
     }
@@ -128,7 +128,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, onSubmit)(fakeRequest, messages).toString
+        view(boundForm, onSubmit)(request, messages).toString
 
       application.stop()
     }
