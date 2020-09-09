@@ -51,7 +51,7 @@ class UnavailableSectionsControllerSpec extends SpecBase {
           "trustees",
           "settlors, beneficiaries, protectors or other individuals",
           "settlors, beneficiaries, protectors and other individuals"
-        )(fakeRequest, messages).toString
+        )(request, messages).toString
 
       application.stop()
     }
@@ -81,7 +81,7 @@ class UnavailableSectionsControllerSpec extends SpecBase {
           "trustees and beneficiaries",
           "settlors, protectors or other individuals",
           "settlors, protectors and other individuals"
-        )(fakeRequest, messages).toString
+        )(request, messages).toString
 
       application.stop()
     }
@@ -111,7 +111,7 @@ class UnavailableSectionsControllerSpec extends SpecBase {
           "settlors, trustees and beneficiaries",
           "protectors or other individuals",
           "protectors and other individuals"
-        )(fakeRequest, messages).toString
+        )(request, messages).toString
 
       application.stop()
     }

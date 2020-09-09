@@ -86,7 +86,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(AffinityGroup.Individual, utr)(fakeRequest, messages).toString
+        view(AffinityGroup.Individual, utr)(request, messages).toString
 
       application.stop()
     }
@@ -100,7 +100,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(AffinityGroup.Individual, utr)(fakeRequest, messages).toString
+        view(AffinityGroup.Individual, utr)(request, messages).toString
 
       application.stop()
     }
@@ -114,7 +114,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(AffinityGroup.Individual)(fakeRequest, messages).toString
+        view(AffinityGroup.Individual)(request, messages).toString
 
       application.stop()
     }
@@ -128,7 +128,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr)(fakeRequest, messages).toString
+        view(utr)(request, messages).toString
 
       application.stop()
     }
@@ -142,7 +142,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr)(fakeRequest, messages).toString
+        view(utr)(request, messages).toString
 
       application.stop()
     }
@@ -156,7 +156,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr)(fakeRequest, messages).toString
+        view(utr)(request, messages).toString
 
       application.stop()
     }
@@ -170,7 +170,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual SERVICE_UNAVAILABLE
 
       contentAsString(result) mustEqual
-        view(AffinityGroup.Individual)(fakeRequest, messages).toString
+        view(AffinityGroup.Individual)(request, messages).toString
 
       application.stop()
     }

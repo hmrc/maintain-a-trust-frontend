@@ -61,7 +61,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, prefix)(fakeRequest, messages).toString
+        view(form, prefix)(request, messages).toString
 
       application.stop()
     }
@@ -81,7 +81,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), prefix)(fakeRequest, messages).toString
+        view(form.fill(true), prefix)(request, messages).toString
 
       application.stop()
     }
@@ -190,7 +190,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, prefix)(fakeRequest, messages).toString
+        view(boundForm, prefix)(request, messages).toString
 
       application.stop()
     }

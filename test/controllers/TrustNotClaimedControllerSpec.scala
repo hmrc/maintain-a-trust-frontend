@@ -39,7 +39,7 @@ class TrustNotClaimedControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view("utr")(fakeRequest, messages).toString
+        view("utr")(request, messages).toString
 
       application.stop()
     }

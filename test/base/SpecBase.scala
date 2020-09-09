@@ -16,6 +16,7 @@
 
 package base
 
+import config.FrontendAppConfig
 import controllers.actions._
 import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec
@@ -37,7 +38,7 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
   protected def applicationBuilder(userAnswers: Option[models.UserAnswers] = None,
                                    affinityGroup: AffinityGroup = AffinityGroup.Organisation,
                                    enrolments: Enrolments = Enrolments(Set.empty[Enrolment])
-                                  ): GuiceApplicationBuilder =
+                                  ): GuiceApplicationBuilder = {
     new GuiceApplicationBuilder()
       .overrides(
         bind[IdentifierAction].toInstance(new FakeIdentifierAction(bodyParsers, affinityGroup, enrolments)),
@@ -47,6 +48,7 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[PlaybackRepository].toInstance(playbackRepository)
       )
+  }
 }
 
 trait SpecBase extends PlaySpec with SpecBaseHelpers

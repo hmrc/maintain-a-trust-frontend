@@ -16,14 +16,16 @@
 
 package config
 
+import java.net.{URI, URLEncoder}
+
 import com.google.inject.{Inject, Singleton}
 import controllers.routes
 import play.api.Configuration
 import play.api.i18n.Lang
-import play.api.mvc.Call
+import play.api.mvc.{Call, Request}
 
 @Singleton
-class FrontendAppConfig @Inject()(configuration: Configuration) {
+class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "trusts"
@@ -112,5 +114,10 @@ class FrontendAppConfig @Inject()(configuration: Configuration) {
   lazy val maintainOtherIndividualsFrontendUrl : String =
     configuration.get[String]("urls.maintainAnOtherIndividual")
 
-  lazy val accessibilityLinkUrl: String = configuration.get[String]("urls.accessibility")
+  private lazy val accessibilityBaseLinkUrl: String = configuration.get[String]("urls.accessibility")
+
+  def accessibilityLinkUrl(implicit request: Request[_]): String = {
+    val userAction = URLEncoder.encode(new URI(request.uri).getPath, "UTF-8")
+    s"$accessibilityBaseLinkUrl?userAction=$userAction"
+  }
 }
