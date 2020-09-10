@@ -33,8 +33,11 @@ legendAsHeading: Boolean = false
 
 <div class="form-group @if(field.hasErrors){form-group-error}">
 
-    <fieldset class="inline" id="@{field.id}">
-
+    <fieldset class="inline" id="@{field.id}"
+        @if(hint.nonEmpty || field.hasErrors) {
+            aria-describedby="@if(hint.nonEmpty){form-hint}@if(hint.nonEmpty && field.hasErrors){ }@if(field.hasErrors){error-message-@{field.id}-input}"
+        }
+    >
         <legend class="form-field" id="@{field.id}-legend">
             @if(legendAsHeading){<h1 id="@{field.id}-id" class="legend-as-heading heading-large">}
             @label
@@ -52,12 +55,6 @@ legendAsHeading: Boolean = false
                     type="radio"
                     name="@{field.id}"
                     value="true"
-                    @if(hint.nonEmpty) {
-                    aria-describedby="form-hint"
-                    }
-                    @if(field.hasErrors) {
-                    aria-labelledby="error-message-@{field.id}-input aria-period @{field.id}-yes-label"
-                    }
                     @if(field.value.contains("true")){checked="checked"}
             />
             <label id="@{field.id}-yes-label" class="block-label selection-button-radio" for="@{field.id}-yes" data-target="@if(yesAssoc.nonEmpty){@yesAssoc}">
@@ -71,12 +68,6 @@ legendAsHeading: Boolean = false
                     type="radio"
                     name="@{field.id}"
                     value="false"
-                    @if(hint.nonEmpty) {
-                    aria-describedby="form-hint"
-                    }
-                    @if(field.hasErrors) {
-                    aria-labelledby="error-message-@{field.id}-input aria-period @{field.id}-no-label"
-                    }
                     @if(field.value.contains("false")){checked="checked"}
             />
             <label id="@{field.id}-no-label" class="block-label selection-button-radio" for="@{field.id}-no" data-target="@if(noAssoc.nonEmpty){@noAssoc}">
