@@ -16,9 +16,12 @@
 
 package forms.behaviours
 
+import forms.Validation
+import forms.mappings.TelephoneNumber
 import play.api.data.{Form, FormError}
+import wolfendale.scalacheck.regexp.RegexpGen
 
-trait StringFieldBehaviours extends FieldBehaviours {
+trait StringFieldBehaviours extends FieldBehaviours with OptionalFieldBehaviours {
 
   def fieldWithMaxLength(form: Form[_],
                          fieldName: String,
@@ -31,6 +34,33 @@ trait StringFieldBehaviours extends FieldBehaviours {
         string =>
           val result = form.bind(Map(fieldName -> string)).apply(fieldName)
           result.errors shouldEqual Seq(lengthError)
+      }
+    }
+  }
+
+  def nonEmptyField(form: Form[_],
+                    fieldName: String,
+                    requiredError: FormError): Unit = {
+
+    "not bind spaces" in {
+
+      val result = form.bind(Map(fieldName -> "    ")).apply(fieldName)
+      result.errors shouldBe Seq(requiredError)
+    }
+  }
+
+  def telephoneNumberField(form: Form[_],
+                           fieldName: String,
+                           invalidError: FormError): Unit = {
+
+    "not bind strings which do not match valid telephone number format" in {
+      val generator = RegexpGen.from(Validation.telephoneRegex)
+      forAll(generator) {
+        string =>
+          whenever(!TelephoneNumber.isValid(string)) {
+            val result = form.bind(Map(fieldName -> string)).apply(fieldName)
+            result.errors shouldEqual Seq(invalidError)
+          }
       }
     }
   }
