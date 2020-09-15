@@ -16,13 +16,12 @@
 
 package forms.declaration
 
-import com.google.inject.Inject
 import forms.Validation
 import models.IndividualDeclaration
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional}
 
-class IndividualDeclarationFormProvider @Inject() extends DeclarationFormProvider {
+class IndividualDeclarationFormProvider extends DeclarationFormProvider {
 
   def apply(): Form[IndividualDeclaration] =
     Form(
@@ -30,8 +29,7 @@ class IndividualDeclarationFormProvider @Inject() extends DeclarationFormProvide
         "" -> fullName,
         "email" -> optional(text().verifying(
           firstError(
-            maxLength(35, s"declaration.error.email.length"),
-            regexp(Validation.emailRegex, s"declaration.error.email.invalid"))
+            regexp(Validation.emailRegex, "declaration.error.email.invalid"))
         ))
       )(IndividualDeclaration.apply)(IndividualDeclaration.unapply)
     )
