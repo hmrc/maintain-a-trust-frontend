@@ -46,7 +46,11 @@ object CheckAnswersFormatters {
     }
   }
 
-  def formatNino(nino: String): String = Nino(nino).formatted
+  def formatNino(nino: String): String = try {
+    Nino(nino).formatted
+  } catch {
+    case _: IllegalArgumentException => nino
+  }
 
   def country(code: String, countryOptions: CountryOptions): String =
     countryOptions.options.find(_.value.equals(code)).map(_.label).getOrElse("")
