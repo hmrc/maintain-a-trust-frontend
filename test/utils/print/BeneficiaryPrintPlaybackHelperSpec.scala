@@ -187,6 +187,98 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
 
     }
 
+    "generate individual beneficiaries sections with bad nino" in {
+
+      val answers = emptyUserAnswers
+        .set(IndividualBeneficiaryRoleInCompanyPage(0), RoleInCompany.Director).success.value
+        .set(IndividualBeneficiaryNamePage(0), FullName("Michael", None, "Finnegan")).success.value
+        .set(IndividualBeneficiaryDateOfBirthYesNoPage(0), true).success.value
+        .set(IndividualBeneficiaryDateOfBirthPage(0), LocalDate.of(1996, 2, 3)).success.value
+        .set(IndividualBeneficiaryIncomeYesNoPage(0), true).success.value
+        .set(IndividualBeneficiaryIncomePage(0), "98").success.value
+        .set(IndividualBeneficiaryNationalInsuranceYesNoPage(0), true).success.value
+        .set(IndividualBeneficiaryNationalInsuranceNumberPage(0), "JB123456").success.value
+        .set(IndividualBeneficiaryVulnerableYesNoPage(0), true).success.value
+
+        .set(IndividualBeneficiaryRoleInCompanyPage(1), RoleInCompany.Employee).success.value
+        .set(IndividualBeneficiaryNamePage(1), FullName("Joe", None, "Bloggs")).success.value
+        .set(IndividualBeneficiaryDateOfBirthYesNoPage(1), false).success.value
+        .set(IndividualBeneficiaryIncomeYesNoPage(1), false).success.value
+        .set(IndividualBeneficiaryNationalInsuranceYesNoPage(1), false).success.value
+        .set(IndividualBeneficiaryAddressYesNoPage(1), false).success.value
+        .set(IndividualBeneficiaryVulnerableYesNoPage(1), true).success.value
+
+        .set(IndividualBeneficiaryRoleInCompanyPage(2), RoleInCompany.NA).success.value
+        .set(IndividualBeneficiaryNamePage(2), FullName("Paul", None, "Chuckle")).success.value
+        .set(IndividualBeneficiaryDateOfBirthYesNoPage(2), false).success.value
+        .set(IndividualBeneficiaryIncomeYesNoPage(2), false).success.value
+        .set(IndividualBeneficiaryNationalInsuranceYesNoPage(2), false).success.value
+        .set(IndividualBeneficiaryAddressYesNoPage(2), true).success.value
+        .set(IndividualBeneficiaryAddressUKYesNoPage(2), true).success.value
+        .set(IndividualBeneficiaryAddressPage(2), UKAddress("line 1", "line 2", None, None, "NE11NE")).success.value
+        .set(IndividualBeneficiaryPassportIDCardYesNoPage(2), true).success.value
+        .set(IndividualBeneficiaryPassportIDCardPage(2), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
+        .set(IndividualBeneficiaryVulnerableYesNoPage(2), false).success.value
+
+      val helper = new AllBeneficiariesPrinter(answers, injector.instanceOf[CountryOptions])
+
+      val result = helper.allBeneficiaries
+
+      val name1 = "Michael Finnegan"
+      val name2 = "Joe Bloggs"
+      val name3 = "Paul Chuckle"
+
+      result mustBe Seq(
+        AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
+        AnswerSection(
+          headingKey = Some("Individual beneficiary 1"),
+          rows = Seq(
+            AnswerRow(label = messages("individualBeneficiaryName.checkYourAnswersLabel"), answer = Html(name1), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryRoleInCompany.checkYourAnswersLabel", name1), answer = Html("Director"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryDateOfBirth.checkYourAnswersLabel", name1), answer = Html("3 February 1996"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryIncomeYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryIncome.checkYourAnswersLabel", name1), answer = Html("98%"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryNationalInsuranceYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryNationalInsuranceNumber.checkYourAnswersLabel", name1), answer = Html("JB123456"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None)
+          ),
+          sectionKey = None
+        ),
+        AnswerSection(
+          headingKey = Some("Individual beneficiary 2"),
+          rows = Seq(
+            AnswerRow(label = messages("individualBeneficiaryName.checkYourAnswersLabel"), answer = Html(name2), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryRoleInCompany.checkYourAnswersLabel", name2), answer = Html("Employee"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel", name2), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryIncomeYesNo.checkYourAnswersLabel", name2), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryNationalInsuranceYesNo.checkYourAnswersLabel", name2), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryAddressYesNo.checkYourAnswersLabel", name2), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel", name2), answer = Html("Yes"), changeUrl = None)
+          ),
+          sectionKey = None
+        ),
+        AnswerSection(
+          headingKey = Some("Individual beneficiary 3"),
+          rows = Seq(
+            AnswerRow(label = messages("individualBeneficiaryName.checkYourAnswersLabel"), answer = Html(name3), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryRoleInCompany.checkYourAnswersLabel", name3), answer = Html("Not a director or employee"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryIncomeYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryNationalInsuranceYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryAddressYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryAddressUKYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryAddressUK.checkYourAnswersLabel", name3), answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryPassportIDCardYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryPassportIDCard.checkYourAnswersLabel", name3), answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None)
+          ),
+          sectionKey = None
+        )
+      )
+
+    }
+
     "generate company beneficiaries sections" in {
 
       val companyBen1Name = "Amazon"
