@@ -17,3 +17,9 @@ POST       /maintain-a-trust/test-only/insert-test-user       controllers.testOn
 
 + nocsrf
 DELETE     /maintain-a-trust/test-only/test-users   controllers.testOnlyDoNotUseInAppConf.EnrolmentStoreStubController.flush
+
++ nocsrf
+PUT       /maintain-a-trust/test-only/set-4mld       controllers.testOnlyDoNotUseInAppConf.TestTrustsStoreController.set4Mld
+
++ nocsrf
+PUT       /maintain-a-trust/test-only/set-5mld       controllers.testOnlyDoNotUseInAppConf.TestTrustsStoreController.set5Mld

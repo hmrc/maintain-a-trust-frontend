@@ -23,11 +23,15 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import models.CompletedMaintenanceTasks
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
-import pages.makechanges.{AddOrUpdateOtherIndividualsYesNoPage, AddOrUpdateProtectorYesNoPage, UpdateBeneficiariesYesNoPage, UpdateSettlorsYesNoPage, UpdateTrusteesYesNoPage}
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.HeaderCarrier
+import pages.makechanges._
 import play.api.http.HeaderNames._
 import play.api.http.MimeTypes._
+import play.api.http.Status
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.HeaderCarrier
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach with ScalaFutures with IntegrationPatience {
 
@@ -151,6 +155,32 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
 
       result.futureValue mustBe
         CompletedMaintenanceTasks(trustees = false, beneficiaries = false, settlors = false, protectors = false, other = false)
+
+      application.stop()
+    }
+
+    "return OK response when setting feature" in {
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts-store.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsStoreConnector]
+
+      server.stubFor(
+        put(urlEqualTo("/trusts-store/features/TestFeature"))
+          .withHeader(CONTENT_TYPE, containing(JSON))
+          .withRequestBody(equalTo("true"))
+          .willReturn(aResponse()
+            .withStatus(Status.OK))
+      )
+
+      val result = Await.result(connector.setFeature("TestFeature", state = true), Duration.Inf)
+
+      result.status mustBe Status.OK
 
       application.stop()
     }

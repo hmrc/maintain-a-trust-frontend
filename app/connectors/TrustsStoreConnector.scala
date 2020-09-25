@@ -19,8 +19,8 @@ package connectors
 import config.FrontendAppConfig
 import javax.inject.Inject
 import models.{CompletedMaintenanceTasks, UserAnswers}
-import play.api.libs.json.{JsValue, Json}
-import uk.gov.hmrc.http.HeaderCarrier
+import play.api.libs.json.{JsBoolean, JsValue, Json}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,6 +30,8 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfi
   private val trustLockedUrl: String = config.trustsStoreUrl + "/claim"
 
   private def maintainTasksUrl(utr: String) = s"${config.trustsStoreUrl}/maintain/tasks/$utr"
+
+  private def featuresUrl(feature: String) = s"${config.trustsStoreUrl}/features/$feature"
 
   def get(utr : String)(implicit hc : HeaderCarrier, ec : ExecutionContext): Future[Option[TrustClaim]] = {
     http.GET[Option[TrustClaim]](trustLockedUrl)(TrustClaim.httpReads(utr), hc, ec)
@@ -50,6 +52,10 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfi
       .recover {
         case _ => CompletedMaintenanceTasks()
       }
+  }
+
+  def setFeature(feature: String, state: Boolean)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
+    http.PUT[JsValue, HttpResponse](featuresUrl(feature), JsBoolean(state))
   }
 
 }
