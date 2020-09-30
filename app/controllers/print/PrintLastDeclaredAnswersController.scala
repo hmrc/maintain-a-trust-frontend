@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.print.PrintPlaybackHelper
 import views.html.print.PrintLastDeclaredAnswersView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class PrintLastDeclaredAnswersController @Inject()(
                                                     override val messagesApi: MessagesApi,
@@ -32,7 +32,7 @@ class PrintLastDeclaredAnswersController @Inject()(
                                                     val controllerComponents: MessagesControllerComponents,
                                                     view: PrintLastDeclaredAnswersView,
                                                     printPlaybackAnswersHelper: PrintPlaybackHelper
-                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                            ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad() = actions.verifiedForUtr.async {
     implicit request =>

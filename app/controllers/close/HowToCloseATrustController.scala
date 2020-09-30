@@ -17,22 +17,18 @@
 package controllers.close
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import controllers.actions.Actions
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.close.HowToCloseATrustView
 
-import scala.concurrent.ExecutionContext
-
 @Singleton
 class HowToCloseATrustController @Inject()(
                                             actions: Actions,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: HowToCloseATrustView
-                                           )(implicit ec: ExecutionContext, config: FrontendAppConfig)
-  extends FrontendBaseController with I18nSupport {
+                                           ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>

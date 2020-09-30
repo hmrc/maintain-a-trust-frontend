@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.print.PrintPlaybackHelper
 import views.html.print.PrintMaintainDraftAnswersView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class PrintMaintainDraftAnswersController @Inject()(
                                                      override val messagesApi: MessagesApi,
@@ -32,7 +32,7 @@ class PrintMaintainDraftAnswersController @Inject()(
                                                      val controllerComponents: MessagesControllerComponents,
                                                      view: PrintMaintainDraftAnswersView,
                                                      printPlaybackAnswersHelper: PrintPlaybackHelper
-                                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                   ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>

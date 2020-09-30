@@ -18,7 +18,6 @@ package pages.makechanges
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.Protectors
 
 object AddOrUpdateProtectorYesNoPage extends QuestionPage[Boolean] {
 

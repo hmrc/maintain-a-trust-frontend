@@ -21,13 +21,12 @@ import models.pages.RoleInCompany
 import models.pages.RoleInCompany.NA
 import pages.beneficiaries.individual._
 import play.api.i18n.Messages
-import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import queries.Gettable
 import utils.CheckAnswersFormatters
 import utils.countryoptions.CountryOptions
-import viewmodels.{AnswerRow, AnswerSection}
 import utils.print.sections.AnswerRowConverter._
+import viewmodels.{AnswerRow, AnswerSection}
 
 object IndividualBeneficiaryPrinter {
 
@@ -65,8 +64,8 @@ object IndividualBeneficiaryPrinter {
   private def roleInCompanyQuestion(query: Gettable[RoleInCompany],
                                     userAnswers: UserAnswers,
                                     labelKey: String,
-                                    messageArg: String = "",
-                                    changeRoute: Option[Call] = None)(implicit messages:Messages) =
+                                    messageArg: String
+                                   )(implicit messages:Messages) =
   {
     userAnswers.get(query) map {x =>
       AnswerRow(

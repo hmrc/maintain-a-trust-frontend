@@ -59,10 +59,11 @@ class TrustDetailsExtractor @Inject() extends PlaybackExtractor[TrustDetailsType
     }
 
   private def extractResidentialType(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] =
-    details.residentialStatus map {
-      case ResidentialStatusType(Some(uk), None) => ukTrust(uk, answers)
-      case ResidentialStatusType(None, Some(nonUK)) => nonUKTrust(nonUK, answers)
-    } getOrElse Success(answers)
+    details.residentialStatus match {
+      case Some(ResidentialStatusType(Some(uk), None)) => ukTrust(uk, answers)
+      case Some(ResidentialStatusType(None, Some(nonUK))) => nonUKTrust(nonUK, answers)
+      case _ => Success(answers)
+    }
 
   private def ukTrust(uk: UkType, answers: UserAnswers): Try[UserAnswers] = {
     val extractOffShore = uk.preOffShore match {

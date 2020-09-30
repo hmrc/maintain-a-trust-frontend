@@ -66,30 +66,31 @@ class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[D
     }
 
   private def extractIdentification(individual: DisplayTrustNaturalPersonType, index: Int, answers: UserAnswers) = {
-    individual.identification map {
+    individual.identification match {
 
-      case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
+      case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
         answers.set(OtherIndividualNationalInsuranceYesNoPage(index), true)
           .flatMap(_.set(OtherIndividualNationalInsuranceNumberPage(index), nino))
 
-      case DisplayTrustIdentificationType(_, None, None, Some(address)) =>
+      case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
         answers.set(OtherIndividualNationalInsuranceYesNoPage(index), false)
           .flatMap(_.set(OtherIndividualPassportIDCardYesNoPage(index), false))
           .flatMap(answers => extractAddress(address.convert, index, answers))
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), Some(address)) =>
+      case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
         answers.set(OtherIndividualNationalInsuranceYesNoPage(index), false)
           .flatMap(answers => extractAddress(address.convert, index, answers))
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), None) =>
+      case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
         Logger.error(s"[OtherIndividualExtractor] only passport identification returned in DisplayTrustOrEstate api")
         case object InvalidExtractorState extends RuntimeException
         Failure(InvalidExtractorState)
 
-    } getOrElse {
-      answers.set(OtherIndividualNationalInsuranceYesNoPage(index), false)
-        .flatMap(_.set(OtherIndividualAddressYesNoPage(index), false))
+      case _ =>
+        answers.set(OtherIndividualNationalInsuranceYesNoPage(index), false)
+          .flatMap(_.set(OtherIndividualAddressYesNoPage(index), false))
+
     }
   }
 

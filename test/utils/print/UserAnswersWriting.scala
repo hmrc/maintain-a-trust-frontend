@@ -26,6 +26,8 @@ import pages.trustees._
 import play.api.libs.json.Writes
 import queries.Settable
 
+import scala.language.implicitConversions
+
 trait UserAnswersWriting extends TryValues with ModelGenerators {
   class SettableWriterOps[T : Writes](s: Settable[T]) {
     def is(value: T): State[UserAnswers, Unit] = writeUA(s, value)

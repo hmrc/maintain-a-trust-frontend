@@ -159,7 +159,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
           .flatMap(answers => extractAddress(address.convert, index, answers))
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), None) =>
+      case DisplayTrustIdentificationType(_, None, Some(_), None) =>
         Logger.error(s"[TrusteesExtractor] only passport identification for lead trustee individual returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
 
@@ -167,7 +167,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
         answers.set(TrusteeAUKCitizenPage(index), true)
           .flatMap(_.set(TrusteeNinoPage(index), nino))
 
-      case DisplayTrustIdentificationType(_, None, None, Some(address)) =>
+      case DisplayTrustIdentificationType(_, None, None, Some(_)) =>
         Logger.error(s"[TrusteesExtractor] only address identification for lead trustee individual returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
 
@@ -232,19 +232,20 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
   }
 
   private def extractCompanyIdentification(company: DisplayTrustTrusteeOrgType, index: Int, answers: UserAnswers) = {
-    company.identification map {
+    company.identification match {
 
-      case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
+      case Some(DisplayTrustIdentificationOrgType(_, Some(utr), None)) =>
         answers.set(TrusteeUtrYesNoPage(index), true)
           .flatMap(_.set(TrusteeUtrPage(index), utr))
 
-      case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
+      case Some(DisplayTrustIdentificationOrgType(_, None, Some(address))) =>
         answers.set(TrusteeUtrYesNoPage(index), false)
           .flatMap(answers => extractAddress(address.convert, index, answers))
 
-    } getOrElse {
-      answers.set(TrusteeUtrYesNoPage(index), false)
-        .flatMap(_.set(TrusteeAddressYesNoPage(index), false))
+      case _ =>
+        answers.set(TrusteeUtrYesNoPage(index), false)
+          .flatMap(_.set(TrusteeAddressYesNoPage(index), false))
+
     }
   }
 
@@ -279,11 +280,11 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
 
   private def extractEmail(email: Option[String], index: Int, answers: UserAnswers) = {
     email match {
-      case Some(x) => {
+      case Some(x) =>
         answers.set(TrusteeEmailYesNoPage(index), true)
           .flatMap(_.set(TrusteeEmailPage(index), x))
-      }
-      case _ =>  answers.set(TrusteeEmailYesNoPage(index), false)
+      case _ =>
+        answers.set(TrusteeEmailYesNoPage(index), false)
     }
   }
 

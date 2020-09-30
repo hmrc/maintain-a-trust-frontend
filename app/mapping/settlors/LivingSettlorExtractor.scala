@@ -100,47 +100,49 @@ class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[Liv
   }
 
   private def extractIndividualIdentification(individual: DisplayTrustSettlor, index: Int, answers: UserAnswers) = {
-    individual.identification map {
+    individual.identification match {
 
-      case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
+      case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
         answers.set(SettlorIndividualNINOYesNoPage(index), true)
           .flatMap(_.set(SettlorIndividualNINOPage(index), nino))
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), None) =>
+      case Some(DisplayTrustIdentificationType(_, None, Some(passport), None)) =>
         Logger.error(s"[LivingSettlorExtractor] only passport identification returned in DisplayTrustOrEstate api")
         case object InvalidExtractorState extends RuntimeException
         Failure(InvalidExtractorState)
 
-      case DisplayTrustIdentificationType(_, None, None, Some(address)) =>
+      case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
         answers.set(SettlorIndividualNINOYesNoPage(index), false)
           .flatMap(_.set(SettlorIndividualPassportIDCardYesNoPage(index), false))
           .flatMap(answers => extractAddress(address.convert, index, answers))
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), Some(address)) =>
+      case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
         answers.set(SettlorIndividualNINOYesNoPage(index), false)
           .flatMap(answers => extractAddress(address.convert, index, answers))
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
-    } getOrElse {
-      answers.set(SettlorIndividualNINOYesNoPage(index), false)
-        .flatMap(_.set(SettlorAddressYesNoPage(index), false))
+      case _ =>
+        answers.set(SettlorIndividualNINOYesNoPage(index), false)
+          .flatMap(_.set(SettlorAddressYesNoPage(index), false))
+
     }
   }
 
   private def extractCompanyIdentification(company: DisplayTrustSettlorCompany, index: Int, answers: UserAnswers) = {
-    company.identification map {
+    company.identification match {
 
-      case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
+      case Some(DisplayTrustIdentificationOrgType(_, Some(utr), None)) =>
         answers.set(SettlorUtrYesNoPage(index), true)
           .flatMap(_.set(SettlorUtrPage(index), utr))
 
-      case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
+      case Some(DisplayTrustIdentificationOrgType(_, None, Some(address))) =>
         answers.set(SettlorUtrYesNoPage(index), false)
           .flatMap(answers => extractAddress(address.convert, index, answers))
 
-    } getOrElse {
-      answers.set(SettlorUtrYesNoPage(index), false)
-        .flatMap(_.set(SettlorAddressYesNoPage(index), false))
+      case _ =>
+        answers.set(SettlorUtrYesNoPage(index), false)
+          .flatMap(_.set(SettlorAddressYesNoPage(index), false))
+
     }
   }
 

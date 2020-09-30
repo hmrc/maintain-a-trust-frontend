@@ -17,7 +17,6 @@
 package models.requests
 
 import models.UserAnswers
-import models.pages.WhatIsNext
 import play.api.mvc.WrappedRequest
 
 case class ClosingTrustRequest[T](request: DataRequest[T], closingTrust: Boolean)

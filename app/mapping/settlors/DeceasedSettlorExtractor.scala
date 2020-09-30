@@ -89,28 +89,24 @@ class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[Displa
   }
 
   private def extractIdentification(identification : Option[DisplayTrustIdentificationType], answers: UserAnswers) = {
-    identification map {
-      case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
+    identification match {
+      case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
         extractNino(nino, answers)
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), Some(address)) =>
+      case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
         extractPassportIdCard(passport.convert, answers)
           .flatMap(updated => extractAddress(address.convert, updated))
 
-      case DisplayTrustIdentificationType(_, None, None, Some(address)) =>
+      case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
         extractAddress(address.convert, answers)
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), None) =>
+      case Some(DisplayTrustIdentificationType(_, None, Some(passport), None)) =>
         extractPassportIdCard(passport.convert, answers)
 
       case _ =>
-        // just a safeId returned
         answers.set(SettlorNationalInsuranceYesNoPage, false)
           .flatMap(_.set(SettlorLastKnownAddressYesNoPage, false))
 
-    } getOrElse {
-      answers.set(SettlorNationalInsuranceYesNoPage, false)
-        .flatMap(_.set(SettlorLastKnownAddressYesNoPage, false))
     }
   }
 

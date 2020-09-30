@@ -16,7 +16,6 @@
 
 package base
 
-import config.FrontendAppConfig
 import controllers.actions._
 import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec

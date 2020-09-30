@@ -19,6 +19,8 @@ package models
 import models.http.NameType
 import play.api.libs.json.{Json, OFormat, Reads, Writes}
 
+import scala.language.implicitConversions
+
 final case class AgentDeclaration(name: NameType,
                                   agencyName: String,
                                   telephoneNumber: String,

@@ -17,7 +17,7 @@
 package sections.beneficiaries
 
 import pages.QuestionPage
-import play.api.libs.json.{JsArray, JsObject, JsPath}
+import play.api.libs.json.{JsArray, JsPath}
 
 case object CharityBeneficiaries extends QuestionPage[JsArray]{
 
