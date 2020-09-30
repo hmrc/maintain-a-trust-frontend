@@ -19,12 +19,11 @@ package utils.print.sections.beneficiaries
 import models.{Description, UserAnswers}
 import pages.beneficiaries.large._
 import play.api.i18n.Messages
-import play.api.mvc.Call
 import play.twirl.api.{Html, HtmlFormat}
 import queries.Gettable
 import utils.countryoptions.CountryOptions
-import viewmodels.{AnswerRow, AnswerSection}
 import utils.print.sections.AnswerRowConverter._
+import viewmodels.{AnswerRow, AnswerSection}
 
 object LargeBeneficiaryPrinter {
 
@@ -46,9 +45,11 @@ object LargeBeneficiaryPrinter {
       ))
     }.getOrElse(Nil)
 
-  private def descriptionQuestion(query: Gettable[Description], userAnswers: UserAnswers, labelKey: String,
-                                  messageArg: String = "", changeRoute: Option[Call] = None)
-                                 (implicit messages:Messages) = {
+  private def descriptionQuestion(query: Gettable[Description],
+                                  userAnswers: UserAnswers,
+                                  labelKey: String,
+                                  messageArg: String
+                                 )(implicit messages:Messages) = {
     userAnswers.get(query) map {x =>
       AnswerRow(
         messages(s"$labelKey.checkYourAnswersLabel", messageArg),

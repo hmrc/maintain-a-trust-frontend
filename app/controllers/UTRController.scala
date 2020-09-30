@@ -28,7 +28,6 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.UTRView
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 @Singleton
 class UTRController @Inject()(

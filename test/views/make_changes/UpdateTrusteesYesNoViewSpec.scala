@@ -18,7 +18,6 @@ package views.make_changes
 
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.{NormalMode, Mode}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.twirl.api.HtmlFormat

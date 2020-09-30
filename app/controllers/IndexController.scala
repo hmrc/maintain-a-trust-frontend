@@ -26,7 +26,6 @@ import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
 
 @Singleton
 class IndexController @Inject()(val controllerComponents: MessagesControllerComponents,

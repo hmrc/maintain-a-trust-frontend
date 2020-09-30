@@ -27,8 +27,6 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.declaration.{CloseTrustConfirmationView, ConfirmationView}
 
-import scala.concurrent.ExecutionContext
-
 @Singleton
 class ConfirmationController @Inject()(
                                         override val messagesApi: MessagesApi,
@@ -38,7 +36,7 @@ class ConfirmationController @Inject()(
                                         closeTrustConfirmationView: CloseTrustConfirmationView,
                                         config: FrontendAppConfig,
                                         answerRequiredAction: RequireClosingTrustAnswerAction
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                      ) extends FrontendBaseController with I18nSupport {
 
 
   def onPageLoad(): Action[AnyContent] = actions.refreshedData.andThen(answerRequiredAction) {

@@ -18,11 +18,7 @@ package models
 
 import java.time.LocalDateTime
 
-import play.api.Logger
 import play.api.libs.json._
-import queries.{Gettable, Settable}
-
-import scala.util.{Failure, Success, Try}
 
 final case class UtrSession(internalId: String,
                             utr: String,

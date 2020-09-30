@@ -30,7 +30,7 @@ import utils.DateFormatter
 import utils.print.PrintPlaybackHelper
 import views.html.print.{PrintMaintainDeclaredAnswersView, PrintMaintainFinalDeclaredAnswersView}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class PrintMaintainDeclaredAnswersController @Inject()(
                                                         override val messagesApi: MessagesApi,
@@ -40,7 +40,7 @@ class PrintMaintainDeclaredAnswersController @Inject()(
                                                         finalDeclaredAnswersView: PrintMaintainFinalDeclaredAnswersView,
                                                         printPlaybackAnswersHelper: PrintPlaybackHelper,
                                                         dateFormatter: DateFormatter
-                                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                 ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>

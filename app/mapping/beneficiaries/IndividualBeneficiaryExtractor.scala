@@ -69,30 +69,31 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
     }
 
   private def extractIdentification(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers) = {
-    individualBeneficiary.identification map {
+    individualBeneficiary.identification match {
 
-      case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
+      case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
         answers.set(IndividualBeneficiaryNationalInsuranceYesNoPage(index), true)
           .flatMap(_.set(IndividualBeneficiaryNationalInsuranceNumberPage(index), nino))
 
-      case DisplayTrustIdentificationType(_, None, None, Some(address)) =>
+      case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
         answers.set(IndividualBeneficiaryNationalInsuranceYesNoPage(index), false)
           .flatMap(_.set(IndividualBeneficiaryPassportIDCardYesNoPage(index), false))
           .flatMap(answers => extractAddress(address.convert, index, answers))
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), Some(address)) =>
+      case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
         answers.set(IndividualBeneficiaryNationalInsuranceYesNoPage(index), false)
           .flatMap(answers => extractAddress(address.convert, index, answers))
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), None) =>
+      case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
         Logger.error(s"[IndividualBeneficiaryExtractor] only passport identification returned in DisplayTrustOrEstate api")
         case object InvalidExtractorState extends RuntimeException
         Failure(InvalidExtractorState)
 
-    } getOrElse {
-      answers.set(IndividualBeneficiaryNationalInsuranceYesNoPage(index), false)
-        .flatMap(_.set(IndividualBeneficiaryAddressYesNoPage(index), false))
+      case _ =>
+        answers.set(IndividualBeneficiaryNationalInsuranceYesNoPage(index), false)
+          .flatMap(_.set(IndividualBeneficiaryAddressYesNoPage(index), false))
+
     }
   }
 

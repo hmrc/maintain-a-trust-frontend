@@ -34,7 +34,7 @@ object CheckAnswersFormatters {
 
   val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
-  def utr(answer: String)(implicit messages: Messages): Html = {
+  def utr(answer: String): Html = {
     HtmlFormat.escape(answer)
   }
 

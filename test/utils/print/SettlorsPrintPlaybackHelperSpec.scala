@@ -28,7 +28,6 @@ import play.api.libs.json.Writes
 import play.twirl.api.Html
 import queries.Settable
 import utils.countryoptions.CountryOptions
-import utils.print.sections.beneficiaries.AllBeneficiariesPrinter
 import utils.print.sections.settlors.AllSettlorsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 

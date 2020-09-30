@@ -26,15 +26,13 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import views.html.{AgentCannotAccessTrustYetView, InformationMaintainingThisTrustView}
 
-import scala.concurrent.ExecutionContext
-
 @Singleton
 class InformationMaintainingThisTrustController @Inject()(
                                                            actions: Actions,
                                                            val controllerComponents: MessagesControllerComponents,
                                                            maintainingTrustView: InformationMaintainingThisTrustView,
                                                            agentCannotAccessTrustYetView: AgentCannotAccessTrustYetView
-                                                         )(implicit ec: ExecutionContext, config: FrontendAppConfig)
+                                                         )(implicit config: FrontendAppConfig)
   extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {

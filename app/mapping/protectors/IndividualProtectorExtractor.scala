@@ -62,29 +62,30 @@ class IndividualProtectorExtractor {
   }
 
   private def extractIdentification(individualProtector: DisplayTrustProtector, index: Int, answers: UserAnswers) = {
-    individualProtector.identification map {
+    individualProtector.identification match {
 
-      case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
+      case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
         answers.set(IndividualProtectorNINOYesNoPage(index), true)
           .flatMap(_.set(IndividualProtectorNINOPage(index), nino))
 
-      case DisplayTrustIdentificationType(_, None, None, Some(address)) =>
+      case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
         answers.set(IndividualProtectorNINOYesNoPage(index), false)
           .flatMap(_.set(IndividualProtectorPassportIDCardYesNoPage(index), false))
           .flatMap(answers => extractAddress(address.convert, index, answers))
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), Some(address)) =>
+      case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
         answers.set(IndividualProtectorNINOYesNoPage(index), false)
           .flatMap(answers => extractAddress(address.convert, index, answers))
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
-      case DisplayTrustIdentificationType(_, None, Some(passport), None) =>
+      case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
         Logger.error(s"[IndividualProtectorExtractor] only passport identification returned in DisplayTrustIdentificationType")
         Failure(InvalidExtractorState)
 
-    } getOrElse {
-      answers.set(IndividualProtectorNINOYesNoPage(index), false)
-        .flatMap(_.set(IndividualProtectorAddressYesNoPage(index), false))
+      case _ =>
+        answers.set(IndividualProtectorNINOYesNoPage(index), false)
+          .flatMap(_.set(IndividualProtectorAddressYesNoPage(index), false))
+
     }
   }
 

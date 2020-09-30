@@ -19,7 +19,7 @@ package views.declaration
 import play.twirl.api.HtmlFormat
 import utils.AccessibilityHelper._
 import views.behaviours.ViewBehaviours
-import views.html.declaration.{CloseTrustConfirmationView, ConfirmationView}
+import views.html.declaration.CloseTrustConfirmationView
 
 class CloseTrustConfirmationViewSpec extends ViewBehaviours {
 

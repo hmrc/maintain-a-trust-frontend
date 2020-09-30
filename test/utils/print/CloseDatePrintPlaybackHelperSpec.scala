@@ -20,7 +20,6 @@ import java.time.LocalDate
 
 import base.SpecBase
 import pages.close.DateLastAssetSharedOutPage
-import pages.settlors.SetUpAfterSettlorDiedYesNoPage
 import play.twirl.api.Html
 import viewmodels.{AnswerRow, AnswerSection}
 
