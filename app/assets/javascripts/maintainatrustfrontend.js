@@ -91,14 +91,6 @@ $(document).ready(function () {
     $('body').on('mouseup', ".autocomplete__option > strong", function(e){
         e.preventDefault(); $(this).parent().trigger('click');
     })
-    // NB: This code introduces an accessibilty bug and clears the select when using the keyboard to submit
-    // temporary fix for the autocomplete holding onto the last matching country when a user then enters an invalid or blank country
-    // $('input[role="combobox"]').on('keydown', function(e){
-    //     if (e.which != 13 && e.which != 9) {
-    //          var sel = document.querySelector('.autocomplete-wrapper select');
-    //          sel.value = "";
-    //     }
-    // })
 
     //======================================================
     // Move immediate focus to any error summary
