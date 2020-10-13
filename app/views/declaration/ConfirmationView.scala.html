@@ -29,14 +29,11 @@
     ) {
 
     <div class="govuk-main-wrapper--l">
-        <h1 class="form-title heading-large heading-confirmation ">
-            @messages("confirmationPage.heading")
+        <div class="heading-confirmation heading-large">
+        <h1 class="form-title heading-large">@messages("confirmationPage.heading")</h1>
             <span class="reference-text">@messages("confirmationPage.heading2")</span>
-            <span id="trusts-registration-number" class="reference-number">
-                <span aria-hidden=true>@fakeTvn</span>
-                <span class="visually-hidden">@formatReferenceNumber(fakeTvn)</span>
-            </span>
-        </h1>
+            <span id="trusts-registration-number" class="reference-number"></span>
+        </div>
     </div>
 
     <p class="panel-indent">@components.link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save","confirmationPage.printsave.link", openInNewWindow = false)</p>
