@@ -47,51 +47,6 @@ $(document).ready(function () {
         }
     });
 
-    // =========================
-    // GOV.UK country lookup
-    // https://alphagov.github.io/accessible-autocomplete/#progressive-enhancement
-    // =========================
-    // auto complete country lookup, progressive enhancement
-    // using version 2.0.2
-    // need to invoke new enhanceSelectElement()
-    // =====
-
-    if(document.querySelectorAll('select[data-non-uk-countries]').length > 0) {
-       accessibleAutocomplete.enhanceSelectElement({
-            selectElement: document.querySelector("select[data-non-uk-countries]"),
-            minLength:2,
-            defaultValue: ''
-        });
-    }
-
-     if(document.querySelectorAll('select[data-all-countries]').length > 0) {
-           accessibleAutocomplete.enhanceSelectElement({
-                selectElement: document.querySelector("select[data-all-countries]"),
-                minLength:2,
-                defaultValue: ''
-            });
-        }
-
-    // Assign aria-labbledby to the dynamically created country input
-    if ($(".autocomplete-wrapper .error-message").length) $(".autocomplete__wrapper #value").attr('aria-labelledby', 'error-message-input');
-
-    // Override autocomplete styles to apply correct error component design pattern
-    if ($(".autocomplete-wrapper .error-message").length) $(".autocomplete__wrapper input").addClass('form-control-error');
-    $('.autocomplete__wrapper input').focus(function(e){
-        if ($(".autocomplete-wrapper .error-message").length) $(".autocomplete__wrapper input").css({"border" : "4px solid #0b0c0c", "-webkit-box-shadow" : "none", "box-shadow" : "none"});
-    })
-    $('.autocomplete__wrapper input').focusout(function(e){
-        if ($(".autocomplete-wrapper .error-message").length) $(".autocomplete__wrapper input").css("border", "4px solid #d4351c");
-    })
-
-    //======================================================
-    // countries autocomplete
-    //======================================================
-    // temporary fix for IE not registering clicks on the text of the results list for the country autocomplete
-    $('body').on('mouseup', ".autocomplete__option > strong", function(e){
-        e.preventDefault(); $(this).parent().trigger('click');
-    })
-
     //======================================================
     // Move immediate focus to any error summary
     //======================================================
