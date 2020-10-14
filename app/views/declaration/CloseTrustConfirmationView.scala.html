@@ -27,14 +27,11 @@
     ) {
 
     <div class="govuk-main-wrapper--l">
-        <h1 class="form-title heading-large heading-confirmation ">
-            @messages("closeTrustConfirmation.heading")
+        <div class="heading-confirmation heading-large">
+            <h1 class="form-title heading-large">@messages("closeTrustConfirmation.heading")</h1>
             <span class="reference-text">@messages("closeTrustConfirmation.heading2")</span>
-            <span id="trusts-registration-number" class="reference-number">
-                <span aria-hidden=true>@fakeTvn</span>
-                <span class="visually-hidden">@fakeTvn</span>
-            </span>
-        </h1>
+            <span id="trusts-registration-number" class="reference-number">@fakeTvn</span>
+        </div>
     </div>
 
     <div class="section">

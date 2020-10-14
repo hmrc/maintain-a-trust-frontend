@@ -39,14 +39,12 @@
     @components.heading("playbackDeclarationAnswers.heading", headingSize = "heading-xlarge")
 
     <p class="declarationReferenceNumber">
-        <span aria-hidden=true>@messages("playbackDeclarationAnswers.p1", tvn)</span>
-        <span class="visually-hidden">@messages("playbackDeclarationAnswers.p1", tvn)</span>
+        <span>@messages("playbackDeclarationAnswers.p1", tvn)</span>
     </p>
 
     @if(isAgent: Boolean) {
         <p class="agentClientRef">
-            <span aria-hidden=true>@messages("playbackDeclarationAnswers.p2", crn)</span>
-            <span class="visually-hidden">@messages("playbackDeclarationAnswers.p2", crn)</span>
+            <span>@messages("playbackDeclarationAnswers.p2", crn)</span>
         </p>
     }
 
