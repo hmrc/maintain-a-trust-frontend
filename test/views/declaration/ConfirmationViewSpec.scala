@@ -17,7 +17,6 @@
 package views.declaration
 
 import play.twirl.api.HtmlFormat
-import utils.AccessibilityHelper._
 import views.behaviours.ViewBehaviours
 import views.html.declaration.ConfirmationView
 
@@ -25,7 +24,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
 
   val messageKeyPrefix = "confirmationPage"
   val fakeTvn = "XC TVN 000 000 4912"
-  val accessibleRefNumber = formatReferenceNumber(fakeTvn)
+  val accessibleRefNumber = fakeTvn
 
   private def confirmationPage(view: HtmlFormat.Appendable) : Unit = {
 

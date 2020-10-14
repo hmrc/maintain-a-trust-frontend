@@ -15,7 +15,6 @@
  *@
 
 @import viewmodels.{AnswerSection, RepeaterAnswerSection, Section}
-@import utils.AccessibilityHelper._
 
 @this(
     main_template: MainTemplate,
@@ -42,7 +41,7 @@
 
     <p class="declarationReferenceNumber">
         <span aria-hidden=true>@messages("playbackFinalDeclarationAnswers.p1", tvn)</span>
-        <span class="visually-hidden">@messages("playbackDeclarationAnswers.p1", formatReferenceNumber(tvn))</span>
+        <span class="visually-hidden">@messages("playbackDeclarationAnswers.p1", tvn)</span>
     </p>
 
     @if(isAgent: Boolean) {
