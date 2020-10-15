@@ -61,5 +61,22 @@ class IndividualDeclarationViewSpec extends QuestionViewBehaviours[IndividualDec
       )
     }
 
+    "display warning text" when {
+
+      def applyView(form: Form[_], closingTrust: Boolean): HtmlFormat.Appendable =
+        view.apply(form, closingTrust)(fakeRequest, messages)
+
+      "closing trust" in {
+        val doc = asDocument(applyView(form, closingTrust = true))
+        assertContainsMessages(doc, "declaration.closing.individual.warning")
+      }
+
+      "maintaining trust" in {
+        val doc = asDocument(applyView(form, closingTrust = false))
+        assertContainsMessages(doc, "declaration.variation.individual.warning")
+      }
+
+    }
+
   }
 }

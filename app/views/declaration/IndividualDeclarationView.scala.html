@@ -72,10 +72,9 @@
             )
         }
 
-        @if(closingTrust) {
-            <p class="panel-indent">@messages("declaration.closing.individual")</p>
-        } else {
-            <p class="panel-indent">@messages("declaration.variation.individual")</p>
+        @{
+            val key: String = if (closingTrust) "closing" else "variation"
+            <p class="panel-indent">@{messages(s"declaration.$key.individual.warning")}</p>
         }
 
         @components.submit_button(Some("site.confirm-send"))
