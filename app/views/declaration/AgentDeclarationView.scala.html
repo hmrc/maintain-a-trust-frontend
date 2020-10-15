@@ -92,7 +92,7 @@
 
         @{
             val key: String = if (closingTrust) "closing" else "variation"
-            <p class="panel-indent">@{messages(s"declaration.$key.agent.warning")}</p>
+            <p class="panel-indent">{messages(s"declaration.$key.agent.warning")}</p>
         }
 
         @components.submit_button(Some("site.confirm-send"))
