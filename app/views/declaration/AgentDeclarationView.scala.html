@@ -90,14 +90,10 @@
             )
         }
 
-        @{
-            components.warning(
-                if(closingTrust) {
-                    "declaration.closing.agent"
-                } else {
-                    "declaration.variation.agent"
-                }
-            )
+        @if(closingTrust) {
+            <p class="panel-indent">@messages("declaration.closing.agent")</p>
+        } else {
+            <p class="panel-indent">@messages("declaration.variation.agent")</p>
         }
 
         @components.submit_button(Some("site.confirm-send"))

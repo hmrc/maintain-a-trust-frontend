@@ -72,16 +72,11 @@
             )
         }
 
-        @{
-            components.warning(
-                if(closingTrust) {
-                    "declaration.closing.individual"
-                } else {
-                    "declaration.variation.individual"
-                }
-            )
+        @if(closingTrust) {
+            <p class="panel-indent">@messages("declaration.closing.individual")</p>
+        } else {
+            <p class="panel-indent">@messages("declaration.variation.individual")</p>
         }
-
 
         @components.submit_button(Some("site.confirm-send"))
     }
