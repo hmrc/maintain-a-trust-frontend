@@ -73,15 +73,9 @@
         }
 
         @{
-            components.warning(
-                if(closingTrust) {
-                    "declaration.closing.individual"
-                } else {
-                    "declaration.variation.individual"
-                }
-            )
+            val key: String = if (closingTrust) "closing" else "variation"
+            <p class="panel-indent">{messages(s"declaration.$key.individual.warning")}</p>
         }
-
 
         @components.submit_button(Some("site.confirm-send"))
     }
