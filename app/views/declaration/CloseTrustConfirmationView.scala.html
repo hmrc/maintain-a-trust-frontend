@@ -15,7 +15,6 @@
  *@
 
 @import controllers.declaration.routes._
-@import utils.AccessibilityHelper._
 
 @this(
     main_template: MainTemplate
@@ -24,18 +23,15 @@
 @(fakeTvn: String, isAgent: Boolean, agentOverviewUrl: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${messages("closeTrustConfirmation.title", formatReferenceNumber(fakeTvn))}"
+    title = s"${messages("closeTrustConfirmation.title", fakeTvn)}"
     ) {
 
     <div class="govuk-main-wrapper--l">
-        <h1 class="form-title heading-large heading-confirmation ">
-            @messages("closeTrustConfirmation.heading")
+        <div class="heading-confirmation heading-large">
+            <h1 class="form-title heading-large">@messages("closeTrustConfirmation.heading")</h1>
             <span class="reference-text">@messages("closeTrustConfirmation.heading2")</span>
-            <span id="trusts-registration-number" class="reference-number">
-                <span aria-hidden=true>@fakeTvn</span>
-                <span class="visually-hidden">@formatReferenceNumber(fakeTvn)</span>
-            </span>
-        </h1>
+            <span id="trusts-registration-number" class="reference-number">@fakeTvn</span>
+        </div>
     </div>
 
     <div class="section">

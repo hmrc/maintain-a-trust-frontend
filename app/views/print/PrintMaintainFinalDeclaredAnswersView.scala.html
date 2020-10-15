@@ -15,7 +15,6 @@
  *@
 
 @import viewmodels.{AnswerSection, RepeaterAnswerSection, Section}
-@import utils.AccessibilityHelper._
 
 @this(
     main_template: MainTemplate,
@@ -41,14 +40,12 @@
     @components.heading("playbackFinalDeclarationAnswers.heading", headingSize = "heading-xlarge")
 
     <p class="declarationReferenceNumber">
-        <span aria-hidden=true>@messages("playbackFinalDeclarationAnswers.p1", tvn)</span>
-        <span class="visually-hidden">@messages("playbackDeclarationAnswers.p1", formatReferenceNumber(tvn))</span>
+        <span>@messages("playbackFinalDeclarationAnswers.p1", tvn)</span>
     </p>
 
     @if(isAgent: Boolean) {
         <p class="agentClientRef">
-            <span aria-hidden=true>@messages("playbackFinalDeclarationAnswers.p2", crn)</span>
-            <span class="visually-hidden">@messages("playbackFinalDeclarationAnswers.p2", crn)</span>
+            <span>@messages("playbackFinalDeclarationAnswers.p2", crn)</span>
         </p>
     }
 
