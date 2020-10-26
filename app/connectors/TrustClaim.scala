@@ -48,11 +48,11 @@ object TrustClaim {
                   }
                   validClaim
                 } else {
-                  logger.info(s"[UTR: $utr] There was a problem in the data from trusts-store so unable to determine fi there is a claim")
+                  logger.info(s"[UTR: $utr] There was a problem in the data from trusts-store so unable to determine if there is a claim")
                   None
                 }
               case None =>
-                logger.info(s"[UTR: $utr] there was a problem in the data from trusts-store so unable to determine fi there is a claim")
+                logger.info(s"[UTR: $utr] there was a problem in the data from trusts-store so unable to determine if there is a claim")
                 None
             }
           case NOT_FOUND =>
