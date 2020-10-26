@@ -120,7 +120,7 @@ class TaskListControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to session expired page when no value found for What do you want to do next" in {
+    "redirect to Technical difficulties page when no value found for What do you want to do next" in {
 
       val answers = emptyUserAnswers
 
@@ -130,9 +130,7 @@ class TaskListControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
+      status(result) mustEqual INTERNAL_SERVER_ERROR
 
       application.stop()
     }

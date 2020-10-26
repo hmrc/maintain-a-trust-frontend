@@ -18,6 +18,7 @@ package services
 
 import com.google.inject.Inject
 import connectors.TrustAuthConnector
+import handlers.ErrorHandler
 import models.requests.DataRequest
 import models.{TrustAuthAgentAllowed, TrustAuthAllowed, TrustAuthDenied}
 import play.api.Logger
@@ -29,12 +30,13 @@ import utils.Session
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AuthenticationServiceImpl @Inject()(trustAuthConnector: TrustAuthConnector) extends AuthenticationService {
+class AuthenticationServiceImpl @Inject()(errorHandler: ErrorHandler,
+                                         trustAuthConnector: TrustAuthConnector) extends AuthenticationService {
 
   private val logger: Logger = Logger(getClass)
 
-  override def authenticateAgent()
-                                (implicit hc: HeaderCarrier): Future[Either[Result, String]] =
+  override def authenticateAgent[A]()
+                                (implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]] =
   {
     trustAuthConnector.agentIsAuthorised().flatMap {
       case TrustAuthAgentAllowed(arn) =>
@@ -43,7 +45,7 @@ class AuthenticationServiceImpl @Inject()(trustAuthConnector: TrustAuthConnector
         Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
         logger.warn(s"[Session ID: ${Session.id(hc)}] Unable to authenticate agent with trusts-auth")
-        Future.successful(Left(InternalServerError))
+        Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
     }
   }
 
@@ -57,8 +59,8 @@ class AuthenticationServiceImpl @Inject()(trustAuthConnector: TrustAuthConnector
       case TrustAuthDenied(redirectUrl) =>
         Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
-        logger.warn(s"[Session ID: ${Session.id(hc)}][UTR: $utr] Unable to authenticate for utr with trusts-auth")
-        Future.successful(Left(InternalServerError))
+        logger.warn(s"[Session ID: ${Session.id(hc)}][UTR: $utr] Unable to authenticate organisation with trusts-auth")
+        Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
     }
   }
 
@@ -66,8 +68,8 @@ class AuthenticationServiceImpl @Inject()(trustAuthConnector: TrustAuthConnector
 
 trait AuthenticationService {
 
-  def authenticateAgent()
-                       (implicit hc: HeaderCarrier): Future[Either[Result, String]]
+  def authenticateAgent[A]()
+                       (implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]]
 
   def authenticateForUtr[A](utr: String)
                            (implicit request: DataRequest[A],

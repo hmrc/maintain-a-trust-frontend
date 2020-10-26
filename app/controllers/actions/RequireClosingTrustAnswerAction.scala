@@ -17,24 +17,34 @@
 package controllers.actions
 
 import com.google.inject.Inject
+import handlers.ErrorHandler
 import models.pages.WhatIsNext.CloseTrust
 import models.requests.{ClosingTrustRequest, DataRequest}
 import pages.WhatIsNextPage
-import play.api.mvc.Results.Redirect
-import play.api.mvc.{ActionRefiner, Result}
+import play.api.Logger
+import play.api.mvc.{ActionRefiner, Result, Results}
+import uk.gov.hmrc.play.HeaderCarrierConverter
+import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RequireClosingTrustAnswerAction @Inject()(implicit val executionContext: ExecutionContext)
+class RequireClosingTrustAnswerAction @Inject()(errorHandler: ErrorHandler)
+                                               (implicit val executionContext: ExecutionContext)
   extends ActionRefiner[DataRequest, ClosingTrustRequest] {
 
+  private val logger = Logger(getClass)
+
   override protected def refine[A](request: DataRequest[A]): Future[Either[Result, ClosingTrustRequest[A]]] = {
+
+    val hc = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
 
     Future.successful(
       request.userAnswers.get(WhatIsNextPage) match {
         case None =>
+          logger.error(s"[Session ID: ${Session.id(hc)}][UTR: ${request.userAnswers.utr}] " +
+            s"no answer for 'What next' found in user answers, cannot determine if user is closing the trust, cannot continue with journey")
           Left(
-            Redirect(controllers.routes.SessionExpiredController.onPageLoad())
+            Results.InternalServerError(errorHandler.internalServerErrorTemplate(request.request))
           )
         case Some(value) =>
           Right(

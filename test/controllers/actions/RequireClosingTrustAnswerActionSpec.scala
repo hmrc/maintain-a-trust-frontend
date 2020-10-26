@@ -17,6 +17,7 @@
 package controllers.actions
 
 import base.SpecBase
+import handlers.ErrorHandler
 import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
 import models.requests.{ClosingTrustRequest, DataRequest, OrganisationUser, User}
 import org.scalatest.concurrent.ScalaFutures
@@ -29,7 +30,9 @@ import scala.concurrent.Future
 
 class RequireClosingTrustAnswerActionSpec extends SpecBase with ScalaFutures {
 
-  class Harness() extends RequireClosingTrustAnswerAction {
+  private val handler = injector.instanceOf[ErrorHandler]
+
+  class Harness() extends RequireClosingTrustAnswerAction(handler) {
     def callRefine[A](request: DataRequest[A]): Future[Either[Result, ClosingTrustRequest[A]]] = refine(request)
   }
 
@@ -53,8 +56,7 @@ class RequireClosingTrustAnswerActionSpec extends SpecBase with ScalaFutures {
 
         whenReady(futureResult) { r =>
           val result = Future.successful(r.left.get)
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad().url
+          status(result) mustEqual INTERNAL_SERVER_ERROR
         }
       }
     }
