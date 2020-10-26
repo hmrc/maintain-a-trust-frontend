@@ -20,9 +20,8 @@ import java.time.LocalDateTime
 
 import javax.inject.{Inject, Singleton}
 import models.{MongoDateTimeFormats, UserAnswers}
-import org.slf4j.LoggerFactory
-import play.api.Configuration
 import play.api.libs.json._
+import play.api.{Configuration, Logger}
 import reactivemongo.api.WriteConcern
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.BSONDocument
@@ -37,7 +36,7 @@ class PlaybackRepositoryImpl @Inject()(
                                         config: Configuration
                                       )(implicit ec: ExecutionContext) extends PlaybackRepository {
 
-  private val logger = LoggerFactory.getLogger("application." + this.getClass.getCanonicalName)
+  private val logger: Logger = Logger(getClass)
 
   private val collectionName: String = "user-answers"
 

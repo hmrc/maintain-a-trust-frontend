@@ -40,6 +40,8 @@ class UserAnswersExtractorImpl @Inject()(beneficiary: BeneficiaryExtractor,
                                          trustDetailsExtractor: TrustDetailsExtractor
                                         ) extends UserAnswersExtractor {
 
+  private val logger: Logger = Logger(getClass)
+
   override def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionError, UserAnswers] = {
 
     def answersCombined = for {
@@ -57,10 +59,10 @@ class UserAnswersExtractorImpl @Inject()(beneficiary: BeneficiaryExtractor,
 
     answersCombined match {
       case Left(error) =>
-        Logger.error(s"[PlaybackToUserAnswers] failed to unpack data to user answers, failed for $error")
+        logger.error(s"[UTR: ${answers.utr}] failed to unpack data to user answers, failed for $error")
         Left(error)
       case Right(None) =>
-        Logger.error(s"[PlaybackToUserAnswers] failed to combine user answers")
+        logger.error(s"[UTR: ${answers.utr}] failed to combine user answers")
         Left(FailedToCombineAnswers)
       case Right(Some(ua)) =>
         Right(ua)

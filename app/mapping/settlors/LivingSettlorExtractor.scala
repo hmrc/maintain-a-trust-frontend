@@ -32,6 +32,8 @@ import scala.util.{Failure, Success, Try}
 
 class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[LivingSettlor]]] {
 
+  private val logger: Logger = Logger(getClass)
+
   override def extract(answers: UserAnswers, data: Option[List[LivingSettlor]]): Either[PlaybackExtractionError, UserAnswers] =
     {
       data match {
@@ -52,7 +54,7 @@ class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[Liv
             case Success(a) =>
               Right(a)
             case Failure(exception) =>
-              Logger.warn(s"[SettlorCompanyExtractor] failed to extract data due to ${exception.getMessage}")
+              logger.warn(s"[SettlorCompanyExtractor] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustSettlors.toString))
           }
       }
@@ -107,7 +109,7 @@ class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[Liv
           .flatMap(_.set(SettlorIndividualNINOPage(index), nino))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(passport), None)) =>
-        Logger.error(s"[LivingSettlorExtractor] only passport identification returned in DisplayTrustOrEstate api")
+        logger.error(s"[UTR: ${answers.utr}] only passport identification returned in DisplayTrustOrEstate api")
         case object InvalidExtractorState extends RuntimeException
         Failure(InvalidExtractorState)
 

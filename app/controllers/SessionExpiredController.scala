@@ -21,6 +21,7 @@ import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import utils.Session
 import views.html.SessionExpiredView
 
 @Singleton
@@ -29,8 +30,10 @@ class SessionExpiredController @Inject()(
                                           view: SessionExpiredView
                                         ) extends FrontendBaseController with I18nSupport {
 
+  private val logger: Logger = Logger(getClass)
+
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Logger.info(s"[SessionExpiredController] session has expired due to inactivity, sent here from ${request.headers.get(REFERER).getOrElse("no referer heading")}")
+    logger.info(s"[Session ID: ${Session.id(hc)}] session has expired due to inactivity, sent here from ${request.headers.get(REFERER).getOrElse("no referer heading")}")
     Ok(view())
   }
 }

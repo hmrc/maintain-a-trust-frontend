@@ -24,6 +24,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import utils.Session
 import views.html.{AgentCannotAccessTrustYetView, InformationMaintainingThisTrustView}
 
 @Singleton
@@ -35,12 +36,14 @@ class InformationMaintainingThisTrustController @Inject()(
                                                          )(implicit config: FrontendAppConfig)
   extends FrontendBaseController with I18nSupport {
 
+  private val logger: Logger = Logger(getClass)
+
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>
 
       val utr = request.userAnswers.utr
 
-      Logger.info(s"[InformationMaintainingThisTrustController] showing information about this trust $utr")
+      logger.info(s"[Session ID: ${Session.id(hc)}] showing information about this trust $utr")
 
       request.user.affinityGroup match {
         case Agent if !config.playbackEnabled => Ok(agentCannotAccessTrustYetView(utr))

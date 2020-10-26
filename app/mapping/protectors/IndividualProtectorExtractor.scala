@@ -30,6 +30,8 @@ import models.pages.IndividualOrBusiness
 
 class IndividualProtectorExtractor {
 
+  private val logger: Logger = Logger(getClass)
+
   def extract(answers: Try[UserAnswers], index: Int, individualProtector : DisplayTrustProtector): Try[UserAnswers] =
     {
       answers
@@ -79,7 +81,7 @@ class IndividualProtectorExtractor {
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
-        Logger.error(s"[IndividualProtectorExtractor] only passport identification returned in DisplayTrustIdentificationType")
+        logger.error(s"[UTR: ${answers.utr}] only passport identification returned in DisplayTrustIdentificationType")
         Failure(InvalidExtractorState)
 
       case _ =>

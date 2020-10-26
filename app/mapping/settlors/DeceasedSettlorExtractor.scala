@@ -29,6 +29,8 @@ import mapping.PlaybackImplicits._
 
 class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[DisplayTrustWillType]] {
 
+  private val logger: Logger = Logger(getClass)
+
   override def extract(answers: UserAnswers, data: Option[DisplayTrustWillType]): Either[PlaybackExtractionError, UserAnswers] =
     {
       data match {
@@ -60,7 +62,7 @@ class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[Displa
             case Success(a) =>
               Right(a)
             case Failure(exception) =>
-              Logger.warn(s"[DeceasedSettlorExtractor] failed to extract data due to ${exception.getMessage}")
+              logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustWillType.toString))
           }
       }

@@ -28,6 +28,8 @@ import mapping.PlaybackImplicits._
 
 class OtherBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustOtherType]]] {
 
+  private val logger: Logger = Logger(getClass)
+
   override def extract(answers: UserAnswers, data: Option[List[DisplayTrustOtherType]]): Either[PlaybackExtractionError, UserAnswers] =
     {
       data match {
@@ -57,7 +59,7 @@ class OtherBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
             case Success(a) =>
               Right(a)
             case Failure(exception) =>
-              Logger.warn(s"[OtherBeneficiaryExtractor] failed to extract data due to ${exception.getMessage}")
+              logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustOtherType.toString))
           }
       }

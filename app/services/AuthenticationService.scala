@@ -24,11 +24,14 @@ import play.api.Logger
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.Session
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AuthenticationServiceImpl @Inject()(trustAuthConnector: TrustAuthConnector) extends AuthenticationService {
+
+  private val logger: Logger = Logger(getClass)
 
   override def authenticateAgent()
                                 (implicit hc: HeaderCarrier): Future[Either[Result, String]] =
@@ -39,7 +42,7 @@ class AuthenticationServiceImpl @Inject()(trustAuthConnector: TrustAuthConnector
       case TrustAuthDenied(redirectUrl) =>
         Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
-        Logger.warn(s"Unable to authenticate agent with trusts-auth")
+        logger.warn(s"[Session ID: ${Session.id(hc)}] Unable to authenticate agent with trusts-auth")
         Future.successful(Left(InternalServerError))
     }
   }
@@ -54,7 +57,7 @@ class AuthenticationServiceImpl @Inject()(trustAuthConnector: TrustAuthConnector
       case TrustAuthDenied(redirectUrl) =>
         Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
-        Logger.warn(s"Unable to authenticate for utr with trusts-auth")
+        logger.warn(s"[Session ID: ${Session.id(hc)}][UTR: $utr] Unable to authenticate for utr with trusts-auth")
         Future.successful(Left(InternalServerError))
     }
   }

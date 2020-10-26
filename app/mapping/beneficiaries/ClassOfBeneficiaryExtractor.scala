@@ -28,6 +28,8 @@ import scala.util.{Failure, Success, Try}
 
 class ClassOfBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustUnidentifiedType]]] {
 
+  private val logger: Logger = Logger(getClass)
+
   override def extract(answers: UserAnswers, data: Option[List[DisplayTrustUnidentifiedType]]): Either[PlaybackExtractionError, UserAnswers] =
     {
       data match {
@@ -56,7 +58,7 @@ class ClassOfBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
             case Success(a) =>
               Right(a)
             case Failure(exception) =>
-              Logger.warn(s"[ClassOfBeneficiaryExtractor] failed to extract data due to ${exception.getMessage}")
+              logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustUnidentifiedType.toString))
           }
       }

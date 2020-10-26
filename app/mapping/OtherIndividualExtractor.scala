@@ -27,6 +27,8 @@ import scala.util.{Failure, Success, Try}
 
 class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustNaturalPersonType]]] {
 
+  private val logger: Logger = Logger(getClass)
+
   import PlaybackImplicits._
 
   override def extract(answers: UserAnswers, data: Option[List[DisplayTrustNaturalPersonType]]): Either[PlaybackExtractionError, UserAnswers] =
@@ -59,7 +61,7 @@ class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[D
             case Success(a) =>
               Right(a)
             case Failure(exception) =>
-              Logger.warn(s"[OtherIndividualExtractor] failed to extract data due to ${exception.getMessage}")
+              logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustNaturalPersonType.toString))
           }
       }
@@ -83,7 +85,7 @@ class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[D
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
-        Logger.error(s"[OtherIndividualExtractor] only passport identification returned in DisplayTrustOrEstate api")
+        logger.error(s"[UTR: ${answers.utr}] only passport identification returned in DisplayTrustOrEstate api")
         case object InvalidExtractorState extends RuntimeException
         Failure(InvalidExtractorState)
 

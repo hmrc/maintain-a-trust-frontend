@@ -27,6 +27,8 @@ import scala.util.{Failure, Success}
 
 class CorrespondenceExtractor @Inject() extends PlaybackExtractor[models.http.Correspondence] {
 
+  private val logger: Logger = Logger(getClass)
+
   import PlaybackImplicits._
 
   override def extract(answers: UserAnswers, data: Correspondence): Either[PlaybackExtractionError, UserAnswers] =
@@ -42,7 +44,7 @@ class CorrespondenceExtractor @Inject() extends PlaybackExtractor[models.http.Co
       case Success(a) =>
         Right(a)
       case Failure(exception) =>
-        Logger.warn(s"[CorrespondenceExtractor] failed to extract data due to ${exception.getMessage}")
+        logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
         Left(FailedToExtractData(Correspondence.toString))
     }
   }

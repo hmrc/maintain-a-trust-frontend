@@ -29,6 +29,8 @@ import scala.util.{Failure, Success, Try}
 
 class TrustTypeExtractor extends PlaybackExtractor[Option[DisplayTrust]] {
 
+  private val logger: Logger = Logger(getClass)
+
   override def extract(answers: UserAnswers, data: Option[DisplayTrust]): Either[PlaybackExtractionError, UserAnswers] =
   {
     data match {
@@ -45,7 +47,7 @@ class TrustTypeExtractor extends PlaybackExtractor[Option[DisplayTrust]] {
           case Success(a) =>
             Right(a)
           case Failure(exception) =>
-            Logger.warn(s"[TrustTypeExtractor] failed to extract data due to ${exception.getMessage}")
+            logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
             Left(FailedToExtractData(DisplayTrustWillType.toString))
         }
     }

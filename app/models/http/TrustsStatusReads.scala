@@ -35,6 +35,8 @@ case object ServerError extends TrustsResponse
 
 object TrustsStatusReads {
 
+  private val logger: Logger = Logger(getClass)
+
   implicit object TrustStatusReads extends Reads[TrustStatus] {
     override def reads(json:JsValue): JsResult[TrustStatus] = json("responseHeader")("status") match {
       case JsString("In Processing") =>
@@ -52,7 +54,7 @@ object TrustsStatusReads {
       case JsString("Suspended") =>
         JsSuccess(SorryThereHasBeenAProblem)
       case _ =>
-        Logger.warn(s"[TrustStatusReads] unexpected status for trust")
+        logger.warn(s"[TrustStatusReads] unexpected status for trust")
         JsError("Unexpected Status")
     }
   }
@@ -63,7 +65,7 @@ object TrustsStatusReads {
         val formBundle = json("responseHeader")("formBundleNo").as[String]
         JsSuccess(Processed(trust, formBundle))
       case JsError(errors) =>
-        Logger.error(s"[TrustStatusReads] Unable to parse processed response due to $errors")
+        logger.error(s"[TrustStatusReads] Unable to parse processed response due to $errors")
         JsError(s"Can not parse as GetTrust due to $errors")
     }
   }
@@ -71,7 +73,7 @@ object TrustsStatusReads {
   implicit lazy val httpReads: HttpReads[TrustsResponse] =
     new HttpReads[TrustsResponse] {
       override def read(method: String, url: String, response: HttpResponse): TrustsResponse = {
-        Logger.info(s"[TrustStatus] response status received from trusts status api: ${response.status}")
+        logger.info(s"[TrustStatus] response status received from trusts status api: ${response.status}")
 
         response.status match {
           case OK =>

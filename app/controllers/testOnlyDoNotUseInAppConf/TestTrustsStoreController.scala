@@ -21,21 +21,24 @@ import javax.inject.Inject
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.BackendBaseController
+import utils.Session
 
 import scala.concurrent.ExecutionContext
 
 class TestTrustsStoreController @Inject()(connector: TrustsStoreConnector,
                                           val controllerComponents: ControllerComponents
                                          )(implicit ec: ExecutionContext) extends BackendBaseController {
+  private val logger: Logger = Logger(getClass)
+
   def set4Mld: Action[AnyContent] = Action.async {
     implicit request =>
-      Logger.info(s"[TestTrustsStoreController] set 4MLD mode")
+      logger.info(s"[Session ID: ${Session.id(hc)}] set 4MLD mode")
       connector.setFeature("5mld", state = false).map(_ => Ok)
   }
 
   def set5Mld: Action[AnyContent] = Action.async {
     implicit request =>
-      Logger.info(s"[TestTrustsStoreController] set 5MLD mode")
+      logger.info(s"[Session ID: ${Session.id(hc)}] set 5MLD mode")
       connector.setFeature("5mld", state = true).map(_ => Ok)
   }
 }

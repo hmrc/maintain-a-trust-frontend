@@ -25,6 +25,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import utils.Session
 import views.html.declaration.{CloseTrustConfirmationView, ConfirmationView}
 
 @Singleton
@@ -38,6 +39,7 @@ class ConfirmationController @Inject()(
                                         answerRequiredAction: RequireClosingTrustAnswerAction
                                       ) extends FrontendBaseController with I18nSupport {
 
+  private val logger: Logger = Logger(getClass)
 
   def onPageLoad(): Action[AnyContent] = actions.refreshedData.andThen(answerRequiredAction) {
     implicit request =>
@@ -45,7 +47,7 @@ class ConfirmationController @Inject()(
       val isAgent = request.user.affinityGroup == Agent
 
       request.userAnswers.get(TVNPage).fold {
-        Logger.error(s"[ConfirmationController] no TVN in user answers, cannot render confirmation")
+        logger.error(s"[Session ID: ${Session.id(hc)}][UTR: ${request.userAnswers.utr}] no TVN in user answers, cannot render confirmation")
         Redirect(controllers.routes.TrustStatusController.sorryThereHasBeenAProblem())
       }{
         tvn =>

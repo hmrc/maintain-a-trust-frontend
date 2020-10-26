@@ -29,6 +29,8 @@ import scala.util.{Failure, Success, Try}
 
 class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustCompanyType]]] {
 
+  private val logger: Logger = Logger(getClass)
+
   override def extract(answers: UserAnswers, data: Option[List[DisplayTrustCompanyType]]): Either[PlaybackExtractionError, UserAnswers] =
     {
       data match {
@@ -59,7 +61,7 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
             case Success(a) =>
               Right(a)
             case Failure(exception) =>
-              Logger.warn(s"[CompanyBeneficiaryExtractor] failed to extract data due to ${exception.getMessage}")
+              logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustCompanyType.toString))
           }
       }
@@ -75,7 +77,7 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
         extractAddress(address.convert, index, answers)
 
       case _ =>
-        Logger.error(s"[CompanyBeneficiaryExtractor] only both utr and address parsed")
+        logger.error(s"[UTR: ${answers.utr}] only both utr and address parsed")
         Failure(InvalidExtractorState)
 
     } getOrElse {
