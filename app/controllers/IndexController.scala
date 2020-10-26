@@ -24,6 +24,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,6 +35,8 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
                                 sessionRepository: ActiveSessionRepository
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
+  private val logger: Logger = Logger(getClass)
+
   def onPageLoad(): Action[AnyContent] = actions.auth.async {
     implicit request =>
 
@@ -42,7 +45,8 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
         .flatMap(_.identifiers.find(_.key equals "SAUTR"))
         .map(_.value)
         .fold {
-          Logger.info(s"[IndexController] user is not enrolled, starting maintain journey, redirect to ask for UTR")
+          logger.info(s"[Session ID: ${Session.id(hc)}]" +
+            s" user is not enrolled, starting maintain journey, redirect to ask for UTR")
           Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
         } {
           utr =>
@@ -55,7 +59,8 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
               _ <- playbackRepository.set(newEmptyAnswers)
               _ <- sessionRepository.set(activeSession)
             } yield {
-              Logger.info(s"[IndexController] $utr user is enrolled, storing UTR in user answers, checking status of trust")
+              logger.info(s"[Session ID: ${Session.id(hc)}]" +
+                s" $utr user is enrolled, storing UTR in user answers, checking status of trust")
               Redirect(controllers.routes.TrustStatusController.status())
             }
         }

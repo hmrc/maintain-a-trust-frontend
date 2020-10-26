@@ -26,12 +26,14 @@ case class TrustClaim(utr:String, managedByAgent: Boolean, trustLocked:Boolean)
 
 object TrustClaim {
 
+  private val logger: Logger = Logger(getClass)
+
   implicit val formats : OFormat[TrustClaim] = Json.format[TrustClaim]
 
   implicit def httpReads(utr : String): HttpReads[Option[TrustClaim]] =
     new HttpReads[Option[TrustClaim]] {
       override def read(method: String, url: String, response: HttpResponse): Option[TrustClaim] = {
-        Logger.info(s"[TrustClaim] response status received from trusts store api: ${response.status}")
+        logger.info(s"[UTR: $utr] response status received from trusts store api: ${response.status}")
 
         response.status match {
           case OK =>

@@ -29,6 +29,8 @@ import scala.util.{Failure, Success, Try}
 class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProtectorExtractor,
                                    businessProtectorExtractor: BusinessProtectorExtractor) extends PlaybackExtractor[Option[DisplayTrustProtectorsType]] {
 
+  private val logger: Logger = Logger(getClass)
+
   override def extract(answers: UserAnswers, data: Option[DisplayTrustProtectorsType]): Either[PlaybackExtractionError, UserAnswers] = {
 
     data match {
@@ -69,7 +71,7 @@ class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProte
       case Success(a) =>
         Right(a)
       case Failure(_) =>
-        Logger.warn(s"[ProtectorExtractor] failed to extract data")
+        logger.warn(s"[UTR: ${answers.utr}] failed to extract data")
         Left(FailedToExtractData(DisplayTrustProtectorsType.toString))
     }
   }

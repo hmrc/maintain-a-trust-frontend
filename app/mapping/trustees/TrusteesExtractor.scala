@@ -31,6 +31,8 @@ import scala.util.{Failure, Success, Try}
 
 class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees]]] {
 
+  private val logger: Logger = Logger(getClass)
+
   import PlaybackImplicits._
 
   override def extract(answers: UserAnswers, data: Option[List[Trustees]]): Either[PlaybackExtractionError, UserAnswers] =
@@ -53,7 +55,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
             case Success(a) =>
               Right(a)
             case Failure(exception) =>
-              Logger.warn(s"[TrusteesExtractor] failed to extract data due to ${exception.getMessage}")
+              logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustTrusteeType.toString))
           }
       }
@@ -160,7 +162,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
           .flatMap(answers => extractAddress(address.convert, index, answers))
 
       case DisplayTrustIdentificationType(_, None, Some(_), None) =>
-        Logger.error(s"[TrusteesExtractor] only passport identification for lead trustee individual returned in DisplayTrustOrEstate api")
+        logger.error(s"[UTR: ${answers.utr}] only passport identification for lead trustee individual returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
 
       case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
@@ -168,11 +170,11 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
           .flatMap(_.set(TrusteeNinoPage(index), nino))
 
       case DisplayTrustIdentificationType(_, None, None, Some(_)) =>
-        Logger.error(s"[TrusteesExtractor] only address identification for lead trustee individual returned in DisplayTrustOrEstate api")
+        logger.error(s"[UTR: ${answers.utr}] only address identification for lead trustee individual returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
 
       case DisplayTrustIdentificationType(_, _, _, _) =>
-        Logger.error(s"[TrusteesExtractor] no identification for lead trustee individual returned in DisplayTrustOrEstate api")
+        logger.error(s"[UTR: ${answers.utr}] no identification for lead trustee individual returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
     }
   }
@@ -186,7 +188,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
           .flatMap(_.set(TrusteeNinoPage(index), nino))
 
       case DisplayTrustIdentificationType(_, None, Some(_), None) =>
-        Logger.error(s"[TrusteesExtractor] only passport identification returned for trustee individual in DisplayTrustOrEstate api")
+        logger.error(s"[UTR: ${answers.utr}] only passport identification returned for trustee individual in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
 
       case DisplayTrustIdentificationType(_, None, None, Some(address)) =>
@@ -226,7 +228,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
           .flatMap(_.set(TrusteeUtrPage(index), utr))
 
       case DisplayTrustIdentificationOrgType(_, _, _) =>
-        Logger.error(s"[TrusteesExtractor] no identification for lead trustee company returned in DisplayTrustOrEstate api")
+        logger.error(s"[UTR: ${answers.utr}] no identification for lead trustee company returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
     }
   }

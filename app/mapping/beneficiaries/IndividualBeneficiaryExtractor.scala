@@ -29,6 +29,8 @@ import mapping.PlaybackImplicits._
 
 class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustIndividualDetailsType]]] {
 
+  private val logger: Logger = Logger(getClass)
+
   override def extract(answers: UserAnswers, data: Option[List[DisplayTrustIndividualDetailsType]]): Either[PlaybackExtractionError, UserAnswers] =
     {
       data match {
@@ -62,7 +64,7 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
             case Success(a) =>
               Right(a)
             case Failure(exception) =>
-              Logger.warn(s"[IndividualBeneficiaryExtractor] failed to extract data due to ${exception.getMessage}")
+              logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustIndividualDetailsType.toString))
           }
       }
@@ -86,7 +88,7 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
-        Logger.error(s"[IndividualBeneficiaryExtractor] only passport identification returned in DisplayTrustOrEstate api")
+        logger.error(s"[UTR: ${answers.utr}] only passport identification returned in DisplayTrustOrEstate api")
         case object InvalidExtractorState extends RuntimeException
         Failure(InvalidExtractorState)
 

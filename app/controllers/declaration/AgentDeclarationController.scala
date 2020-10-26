@@ -34,6 +34,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.DeclarationService
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import utils.Session
 import views.html.declaration.AgentDeclarationView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -48,6 +49,8 @@ class AgentDeclarationController @Inject()(
                                             view: AgentDeclarationView,
                                             service: DeclarationService
                                           )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+
+  private val logger: Logger = Logger(getClass)
 
   val form: Form[AgentDeclaration] = formProvider()
 
@@ -82,7 +85,7 @@ class AgentDeclarationController @Inject()(
                   agencyAddress,
                   request.userAnswers.get(DateLastAssetSharedOutPage)
                 )(request.request)
-              }).getOrElse(handleError("Failed to get agency address"))
+              }).getOrElse(handleError(s"[Session ID: ${Session.id(hc)}] Failed to get agency address"))
 
             case _ =>
               handleError("User was not an agent")
@@ -116,12 +119,12 @@ class AgentDeclarationController @Inject()(
           _ <- playbackRepository.set(updatedAnswers)
         } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
       case _ =>
-        handleError("Failed to declare")
+        handleError(s"[Session ID: ${Session.id(hc)}][UTR: ${utr}] Failed to declare")
     }
   }
 
   private def handleError(message: String) = {
-    Logger.error(message)
+    logger.error(message)
     Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
   }
 

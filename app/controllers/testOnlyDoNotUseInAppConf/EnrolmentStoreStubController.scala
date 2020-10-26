@@ -24,6 +24,7 @@ import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.controller.BackendBaseController
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -58,15 +59,17 @@ class EnrolmentStoreStubController @Inject()(
                                               val controllerComponents: ControllerComponents
                                             )(implicit ec: ExecutionContext) extends BackendBaseController {
 
+  private val logger: Logger = Logger(getClass)
+
   def insertTestUserIntoEnrolmentStore = Action.async(parse.json) {
     implicit request =>
-      Logger.info(s"[EnrolmentStoreStubController] inserting test user: ${request.body}")
+      logger.info(s"[Session ID: ${Session.id(hc)}] inserting test user: ${request.body}")
       connector.insert(request.body).map(_ => Ok)
   }
 
   def flush = Action.async {
     implicit request =>
-    Logger.info(s"[EnrolmentStoreStubController] flushing test users from enrolment-store")
+    logger.info(s"[Session ID: ${Session.id(hc)}] flushing test users from enrolment-store")
     connector.delete().map(_ => Ok)
   }
 

@@ -27,6 +27,8 @@ import scala.util.{Failure, Success, Try}
 
 class TrustDetailsExtractor @Inject() extends PlaybackExtractor[TrustDetailsType] {
 
+  private val logger: Logger = Logger(getClass)
+
   override def extract(answers: UserAnswers, data: TrustDetailsType): Either[PlaybackExtractionError, UserAnswers] =
     {
       val updated = answers
@@ -39,7 +41,7 @@ class TrustDetailsExtractor @Inject() extends PlaybackExtractor[TrustDetailsType
         case Success(a) =>
           Right(a)
         case Failure(exception) =>
-          Logger.warn(s"[TrustDetailsExtractor] failed to extract data due to ${exception.getMessage}")
+          logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
           Left(FailedToExtractData(TrustDetailsType.toString))
       }
     }

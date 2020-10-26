@@ -22,6 +22,8 @@ import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.Logger
 import play.api.mvc.ActionTransformer
 import repositories.{ActiveSessionRepository, PlaybackRepository}
+import uk.gov.hmrc.play.HeaderCarrierConverter
+import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,7 +31,11 @@ class DataRetrievalActionImpl @Inject()(activeSessionRepository: ActiveSessionRe
                                          val playbackRepository: PlaybackRepository
                                        )(implicit val executionContext: ExecutionContext) extends DataRetrievalAction {
 
+  private val logger: Logger = Logger(getClass)
+
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
+
+    val hc = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
 
     def createdOptionalDataRequest(request: IdentifierRequest[A], userAnswers: Option[UserAnswers]) = {
       OptionalDataRequest(
@@ -43,10 +49,10 @@ class DataRetrievalActionImpl @Inject()(activeSessionRepository: ActiveSessionRe
       case Some(session) =>
         playbackRepository.get(request.user.internalId, session.utr) map {
           case None =>
-            Logger.debug(s"[DataRetrievalAction] no user answers returned for internal id")
+            logger.debug(s"[Session ID: ${Session.id(hc)}] no user answers returned for internal id")
             createdOptionalDataRequest(request, None)
           case Some(userAnswers) =>
-            Logger.debug(s"[DataRetrievalAction] user answers returned for internal id")
+            logger.debug(s"[Session ID: ${Session.id(hc)}] user answers returned for internal id")
             createdOptionalDataRequest(request, Some(userAnswers))
         }
       case None =>

@@ -25,6 +25,8 @@ sealed trait EnrolmentStoreResponse
 
 object EnrolmentStoreResponse {
 
+  private val logger: Logger = Logger(getClass)
+
   implicit val format: Format[EnrolmentStore] = Json.format[EnrolmentStore]
 
   case class EnrolmentStore(principalUserIds: Seq[String], delegatedUserIds: Seq[String]) extends EnrolmentStoreResponse
@@ -44,20 +46,20 @@ object EnrolmentStoreResponse {
   implicit lazy val httpReads: HttpReads[EnrolmentStoreResponse] =
     new HttpReads[EnrolmentStoreResponse] {
       override def read(method: String, url: String, response: HttpResponse): EnrolmentStoreResponse = {
-        Logger.debug(s"[EnrolmentStoreResponse] response status received from ES0 api: ${response.status}")
+        logger.debug(s"Response status received from ES0 api: ${response.status}")
 
         response.status match {
           case OK =>
             response.json.as[EnrolmentStore] match {
               case EnrolmentStore(Seq(), _) =>
-                Logger.info(s"[EnrolmentStoreResponse] UTR has not been claimed")
+                logger.info(s"UTR has not been claimed")
                 NotClaimed
               case _ =>
-                Logger.info(s"[EnrolmentStoreResponse] UTR has already been claimed")
+                logger.info(s"UTR has already been claimed")
                 AlreadyClaimed
             }
           case NO_CONTENT =>
-            Logger.info(s"[EnrolmentStoreResponse] UTR is not claimed or delegated")
+            logger.info(s"UTR is not claimed or delegated")
             NotClaimed
           case SERVICE_UNAVAILABLE =>
             ServiceUnavailable
@@ -66,7 +68,7 @@ object EnrolmentStoreResponse {
           case BAD_REQUEST =>
             BadRequest
           case _ =>
-            Logger.info(s"[EnrolmentStoreResponse] unexpected response from EnrolmentStore")
+            logger.info(s"Unexpected response from EnrolmentStore")
             ServerError
         }
       }

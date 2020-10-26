@@ -31,6 +31,8 @@ final case class UserAnswers(
                               updatedAt: LocalDateTime = LocalDateTime.now
                             ) {
 
+  private val logger: Logger = Logger(getClass)
+
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     Reads.at(page.path).reads(data) match {
       case JsSuccess(value, _) => Some(value)
@@ -55,7 +57,7 @@ final case class UserAnswers(
         Success(jsValue)
       case JsError(errors) =>
         val errorPaths = errors.collectFirst { case (path, e) => s"$path $e" }
-        Logger.warn(s"[UserAnswers] unable to set path ${page.path} due to errors $errorPaths")
+        logger.warn(s"Unable to set path ${page.path} due to errors $errorPaths")
         Failure(JsResultException(errors))
     }
 
