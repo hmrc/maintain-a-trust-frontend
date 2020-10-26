@@ -37,7 +37,7 @@ class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionC
 
     request.userAnswers match {
       case None =>
-        logger.debug(s"[Session ID: ${Session.id(hc)}] no user answers in request")
+        logger.debug(s"[Session ID: ${Session.id(hc)}] no user answers for session, cannot continue with session")
         Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad())))
       case Some(data) =>
         logger.debug(s"[Session ID: ${Session.id(hc)}][UTR: ${data.utr}] user answers in request, continuing with request")
