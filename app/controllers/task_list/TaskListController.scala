@@ -39,7 +39,7 @@ class TaskListController @Inject()(
                                     )(implicit ec: ExecutionContext) extends FrontendBaseController
   with I18nSupport with Enumerable.Implicits with TaskListSections {
 
-  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
+  def onPageLoad(): Action[AnyContent] = actions.refreshAndRequireIsClosingAnswer.async {
     implicit request =>
 
       val utr = request.userAnswers.utr

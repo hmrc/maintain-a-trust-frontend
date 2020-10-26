@@ -16,13 +16,18 @@
 
 package controllers
 
+import java.time.LocalDate
+
 import base.SpecBase
 import connectors.TrustsStoreConnector
-import models.CompletedMaintenanceTasks
+import models.http.NameType
+import models.{AgentDeclaration, CompletedMaintenanceTasks}
 import models.pages.Tag.InProgress
 import models.pages.WhatIsNext
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
+import pages.close.DateLastAssetSharedOutPage
+import pages.declaration.AgentDeclarationPage
 import pages.WhatIsNextPage
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -43,6 +48,10 @@ class TaskListControllerSpec extends SpecBase {
   lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
 
   val fakeUTR = "utr"
+  val fakeTvn = "XCTVN0000004912"
+  val fakeAgencyName = "Agency Name"
+  val fakeTelephoneNumber = "01234567890"
+  val fakeCrn = "123456"
 
   val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
@@ -64,6 +73,8 @@ class TaskListControllerSpec extends SpecBase {
 
       val answers = emptyUserAnswers
         .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+        .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
+        .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
 
       val application = applicationBuilder(userAnswers = Some(answers))
         .overrides(
