@@ -66,10 +66,8 @@ class AuthenticatedIdentifierAction @Inject()(
 
     trustsAuthFunctions.authorised().retrieve(retrievals) {
       case Some(internalId) ~ Some(Agent) ~ enrolments =>
-        logger.info(s"[Session ID: ${Session.id(hc)}] successfully identified as an Agent")
         authoriseAgent(internalId, enrolments, block)(request, hc)
       case Some(internalId) ~ Some(Organisation) ~ enrolments =>
-        logger.info(s"[Session ID: ${Session.id(hc)}] successfully identified as Organisation")
         block(IdentifierRequest(request, OrganisationUser(internalId, enrolments)))
       case Some(_) ~ _ ~ _ =>
         logger.info(s"[Session ID: ${Session.id(hc)}] Unauthorised due to affinityGroup being Individual")

@@ -17,9 +17,10 @@
 package connectors
 
 import play.api.Logger
-import play.api.http.Status.OK
+import play.api.http.Status.{OK, NOT_FOUND}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import play.api.libs.json.{Json, OFormat}
+
 import scala.language.implicitConversions
 
 case class TrustClaim(utr:String, managedByAgent: Boolean, trustLocked:Boolean)
@@ -40,13 +41,25 @@ object TrustClaim {
             response.json.asOpt[TrustClaim] match {
               case validClaim @ Some(c) =>
                 if (c.utr.toLowerCase.trim == utr.toLowerCase.trim) {
+                  if (c.trustLocked) {
+                    logger.info(s"[UTR: $utr] User has been locked out of Trust IV for 30 minutes")
+                  } else {
+                    logger.info(s"[UTR: $utr] User has not been locked out of Trust IV")
+                  }
                   validClaim
                 } else {
+                  logger.info(s"[UTR: $utr] There was a problem in the data from trusts-store so unable to determine fi there is a claim")
                   None
                 }
-              case None => None
+              case None =>
+                logger.info(s"[UTR: $utr] there was a problem in the data from trusts-store so unable to determine fi there is a claim")
+                None
             }
+          case NOT_FOUND =>
+            logger.info(s"[UTR: $utr] User has not been locked out of Trust IV for 30 minutes, continuing into claiming/verifying the trust")
+            None
           case _ =>
+            logger.info(s"[UTR: $utr] User is unable to continue TRUST IV due to the following response - ${response.body}")
             None
         }
       }
