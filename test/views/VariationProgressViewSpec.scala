@@ -16,6 +16,8 @@
 
 package views
 
+import models.pages.Tag.{InProgress, UpToDate}
+import sections.Protectors
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.tasks._
 import viewmodels.{Link, Task}
@@ -59,4 +61,40 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
     behave like taskList(applyView, optionalSections)
 
   }
+
+  "render summary" when {
+
+    "all sections are completed" in {
+
+        val utr = "utr"
+
+        val mandatorySections = List(
+          Task(Link(Settlors, "http://localhost:9795/maintain-a-trust/settlors/utr"), Some(UpToDate)),
+          Task(Link(Trustees, "http://localhost:9792/maintain-a-trust/trustees/utr"), Some(UpToDate)),
+          Task(Link(Beneficiaries, "http://localhost:9793/maintain-a-trust/beneficiaries/utr"), Some(UpToDate))
+        )
+        val optionalSections = List(
+          Task(Link(Protectors, "http://localhost:9796/maintain-a-trust/protectors/utr"), Some(UpToDate)),
+          Task(Link(NaturalPeople, "http://localhost:9799/maintain-a-trust/other-individuals/utr"), Some(UpToDate))
+        )
+
+        val group = Organisation
+
+        val userAnswers = emptyUserAnswers
+
+        val view = viewFor[VariationProgressView](Some(userAnswers))
+
+        val applyView = view.apply(utr, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = true, closingTrust = false)(fakeRequest, messages)
+
+        val doc = asDocument(applyView)
+
+        assertRenderedById(doc, "summary-heading")
+        assertRenderedById(doc, "summary-paragraph")
+        assertRenderedById(doc, "summary-heading-2")
+        assertRenderedById(doc, "summary-paragraph-2")
+        assertRenderedById(doc, "print-and-save")
+
+      }
+    }
+
 }

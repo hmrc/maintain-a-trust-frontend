@@ -47,7 +47,9 @@
         @components.button_print()
     </div>
 
-    @components.summary_answer_section(closeDateSection)
+    @if(closeDateSection.rows) {
+        @components.summary_answer_section(closeDateSection)
+    }
 
     @for(section <- trustDetails){
         @{

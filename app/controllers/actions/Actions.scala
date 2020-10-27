@@ -26,6 +26,7 @@ class Actions @Inject()(
                          requireData: DataRequiredAction,
                          playbackIdentifier: PlaybackIdentifierAction,
                          refreshedDataRetrieval: RefreshedDataRetrievalAction,
+                         refreshedDraftDataRetrieval: RefreshedDataPreSubmitRetrievalAction,
                          requireClosingTrustAnswer: RequireClosingTrustAnswerAction
                        ) {
 
@@ -45,4 +46,8 @@ class Actions @Inject()(
 
   def requireIsClosingAnswer: ActionBuilder[ClosingTrustRequest, AnyContent] =
     verifiedForUtr andThen requireClosingTrustAnswer
+
+  def refreshAndRequireIsClosingAnswer: ActionBuilder[ClosingTrustRequest, AnyContent] =
+    verifiedForUtr andThen refreshedDraftDataRetrieval andThen requireClosingTrustAnswer
+
 }
