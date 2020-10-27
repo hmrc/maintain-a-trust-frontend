@@ -48,10 +48,6 @@ class TaskListControllerSpec extends SpecBase {
   lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
 
   val fakeUTR = "utr"
-  val fakeTvn = "XCTVN0000004912"
-  val fakeAgencyName = "Agency Name"
-  val fakeTelephoneNumber = "01234567890"
-  val fakeCrn = "123456"
 
   val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
@@ -73,8 +69,6 @@ class TaskListControllerSpec extends SpecBase {
 
       val answers = emptyUserAnswers
         .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
-        .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
-        .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
 
       val application = applicationBuilder(userAnswers = Some(answers))
         .overrides(
