@@ -26,7 +26,7 @@ class Actions @Inject()(
                          requireData: DataRequiredAction,
                          playbackIdentifier: PlaybackIdentifierAction,
                          refreshedDataRetrieval: RefreshedDataRetrievalAction,
-                         refreshedDraftDataRetrieval: RefreshedDraftDataRetrievalAction,
+                         refreshedDraftDataRetrieval: RefreshedDataPreSubmitRetrievalAction,
                          requireClosingTrustAnswer: RequireClosingTrustAnswerAction
                        ) {
 

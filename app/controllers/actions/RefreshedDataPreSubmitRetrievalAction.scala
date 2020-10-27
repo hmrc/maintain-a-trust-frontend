@@ -38,11 +38,11 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RefreshedDraftDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default,
-                                             playbackRepository: PlaybackRepository,
-                                             trustConnector: TrustConnector,
-                                             playbackExtractor: UserAnswersExtractor
-                                            )(override implicit val executionContext: ExecutionContext) extends RefreshedDraftDataRetrievalAction {
+class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(val parser: BodyParsers.Default,
+                                                                   playbackRepository: PlaybackRepository,
+                                                                   trustConnector: TrustConnector,
+                                                                   playbackExtractor: UserAnswersExtractor
+                                            )(override implicit val executionContext: ExecutionContext) extends RefreshedDataPreSubmitRetrievalAction {
 
   case class SubmissionData(utr: String, whatIsNext: WhatIsNext, agent: Option[AgentDeclaration], endDate: Option[LocalDate])
 
@@ -97,8 +97,8 @@ class RefreshedDraftDataRetrievalActionImpl @Inject()(val parser: BodyParsers.De
 
 }
 
-@ImplementedBy(classOf[RefreshedDraftDataRetrievalActionImpl])
-trait RefreshedDraftDataRetrievalAction extends ActionRefiner[DataRequest, DataRequest] {
+@ImplementedBy(classOf[RefreshedDataPreSubmitRetrievalActionImpl])
+trait RefreshedDataPreSubmitRetrievalAction extends ActionRefiner[DataRequest, DataRequest] {
 
   def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]]
 

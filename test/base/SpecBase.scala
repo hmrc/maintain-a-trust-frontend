@@ -44,7 +44,7 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
         bind[PlaybackIdentifierAction].toInstance(new FakePlaybackIdentifierAction()),
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[RefreshedDataRetrievalAction].toInstance(new FakeRefreshedDataRetrievalAction),
-        bind[RefreshedDraftDataRetrievalAction].toInstance(new FakeRefreshedDraftDataRetrievalAction),
+        bind[RefreshedDataPreSubmitRetrievalAction].toInstance(new FakeRefreshedDataPreSubmitRetrievalAction),
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[PlaybackRepository].toInstance(playbackRepository)
       )
