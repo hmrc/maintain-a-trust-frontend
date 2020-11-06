@@ -20,8 +20,8 @@ import java.time.LocalDate
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.{PassportType, PlaybackExtractor}
-import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType}
+import mapping.PlaybackExtractor
+import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, PassportType}
 import models.pages.RoleInCompany
 import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.joda.time.DateTime

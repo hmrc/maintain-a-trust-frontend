@@ -20,9 +20,9 @@ import java.time.LocalDate
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.{PlaybackExtractor, TrustDetailsType}
+import mapping.PlaybackExtractor
 import models.UserAnswers
-import models.http.{DisplayTrust, DisplayTrustAssets, DisplayTrustBeneficiaryType, DisplayTrustEntitiesType, DisplayTrustLeadTrusteeType}
+import models.http.{DisplayTrust, DisplayTrustAssets, DisplayTrustBeneficiaryType, DisplayTrustEntitiesType, DisplayTrustLeadTrusteeType, TrustDetailsType}
 import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors._

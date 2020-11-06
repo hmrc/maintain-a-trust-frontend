@@ -20,9 +20,8 @@ import java.time.LocalDate
 
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
-import mapping.AgentDetails
 import mapping.PlaybackImplicits._
-import models.http.DeclarationResponse
+import models.http.{AgentDetails, DeclarationResponse}
 import models.{Address, AgentDeclaration, FullName, IndividualDeclaration}
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier

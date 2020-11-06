@@ -20,8 +20,8 @@ import java.time.LocalDate
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.{PassportType, PlaybackExtractor}
-import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustWillType}
+import mapping.PlaybackExtractor
+import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustWillType, PassportType}
 import models.{FullName, MetaData, UserAnswers}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}

@@ -21,8 +21,8 @@ import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
-import mapping.{PassportType, PlaybackExtractor}
-import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustLeadTrusteeIndType, Trustees}
+import mapping.PlaybackExtractor
+import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, MetaData, UserAnswers}
 import org.joda.time.DateTime

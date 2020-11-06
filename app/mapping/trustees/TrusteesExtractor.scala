@@ -18,7 +18,7 @@ package mapping.trustees
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorState, PlaybackExtractionError}
-import mapping.{PassportType, PlaybackExtractor, PlaybackImplicits}
+import mapping.{PlaybackExtractor, PlaybackImplicits}
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate

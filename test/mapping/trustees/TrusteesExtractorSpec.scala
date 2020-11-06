@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.{PassportType, PlaybackExtractor}
+import mapping.PlaybackExtractor
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}

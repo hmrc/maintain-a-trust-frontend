@@ -18,20 +18,20 @@ package mapping
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import models.http.{DisplayTrustIdentificationType, DisplayTrustNaturalPersonType}
+import models.http.{DisplayTrustIdentificationType, NaturalPersonType, PassportType}
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.individual._
 import play.api.Logger
 
 import scala.util.{Failure, Success, Try}
 
-class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustNaturalPersonType]]] {
+class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[NaturalPersonType]]] {
 
   private val logger: Logger = Logger(getClass)
 
   import PlaybackImplicits._
 
-  override def extract(answers: UserAnswers, data: Option[List[DisplayTrustNaturalPersonType]]): Either[PlaybackExtractionError, UserAnswers] =
+  override def extract(answers: UserAnswers, data: Option[List[NaturalPersonType]]): Either[PlaybackExtractionError, UserAnswers] =
     {
       data match {
         case None => Right(answers)
@@ -62,12 +62,12 @@ class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[D
               Right(a)
             case Failure(exception) =>
               logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(DisplayTrustNaturalPersonType.toString))
+              Left(FailedToExtractData(NaturalPersonType.toString))
           }
       }
     }
 
-  private def extractIdentification(individual: DisplayTrustNaturalPersonType, index: Int, answers: UserAnswers) = {
+  private def extractIdentification(individual: NaturalPersonType, index: Int, answers: UserAnswers) = {
     individual.identification match {
 
       case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
@@ -96,7 +96,7 @@ class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[D
     }
   }
 
-  private def extractDateOfBirth(individual: DisplayTrustNaturalPersonType, index: Int, answers: UserAnswers) = {
+  private def extractDateOfBirth(individual: NaturalPersonType, index: Int, answers: UserAnswers) = {
     individual.dateOfBirth match {
       case Some(dob) =>
         answers.set(OtherIndividualDateOfBirthYesNoPage(index), true)

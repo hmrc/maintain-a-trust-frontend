@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.{PassportType, PlaybackExtractor}
+import mapping.PlaybackExtractor
 import models.http._
 import models.pages.KindOfBusiness._
 import models.pages.{IndividualOrBusiness, KindOfBusiness}
@@ -191,8 +191,6 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
         }
 
       }
-
-
     }
 
     "Settlor Individuals" - {

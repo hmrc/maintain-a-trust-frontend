@@ -18,9 +18,9 @@ package mapping.beneficiaries
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
+import mapping.PlaybackExtractor
 import mapping.PlaybackImplicits._
-import mapping.{PassportType, PlaybackExtractor}
-import models.http.{DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType}
+import models.http.{DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, PassportType}
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.beneficiaries.individual._
 import play.api.Logger

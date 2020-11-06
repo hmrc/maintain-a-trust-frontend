@@ -19,7 +19,7 @@ package mapping
 import java.time.LocalDate
 
 import models._
-import models.http.AddressType
+import models.http.{AddressType, PassportType}
 import org.joda.time.DateTime
 
 object PlaybackImplicits {

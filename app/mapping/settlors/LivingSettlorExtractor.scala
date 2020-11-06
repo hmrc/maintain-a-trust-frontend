@@ -18,8 +18,8 @@ package mapping.settlors
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
+import mapping.PlaybackExtractor
 import mapping.PlaybackImplicits._
-import mapping.{PassportType, PlaybackExtractor}
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
