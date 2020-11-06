@@ -22,9 +22,9 @@ import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
 import mapping.{PassportType, PlaybackExtractor}
-import models.{FullName, MetaData, UserAnswers}
-import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustLeadTrusteeIndType, NameType, Trustees}
+import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustLeadTrusteeIndType, Trustees}
 import models.pages.IndividualOrBusiness
+import models.{FullName, MetaData, UserAnswers}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
@@ -58,7 +58,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
         val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = DateTime.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),
@@ -96,7 +96,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
         val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = DateTime.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),
@@ -134,7 +134,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
         val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = DateTime.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),
@@ -173,7 +173,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
         val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = DateTime.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),

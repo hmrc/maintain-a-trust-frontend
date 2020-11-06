@@ -16,7 +16,7 @@
 
 package views
 
-import models.pages.Tag.{InProgress, UpToDate}
+import models.pages.Tag.UpToDate
 import sections.Protectors
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.tasks._

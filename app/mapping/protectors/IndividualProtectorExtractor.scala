@@ -36,7 +36,7 @@ class IndividualProtectorExtractor {
     {
       answers
         .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
-        .flatMap(_.set(IndividualProtectorNamePage(index), individualProtector.name.convert))
+        .flatMap(_.set(IndividualProtectorNamePage(index), individualProtector.name))
         .flatMap(answers => extractDateOfBirth(individualProtector, index, answers))
         .flatMap(answers => extractIdentification(individualProtector, index, answers))
         .flatMap(_.set(IndividualProtectorSafeIdPage(index), individualProtector.identification.flatMap(_.safeId)))

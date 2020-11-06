@@ -20,8 +20,8 @@ import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
 import mapping.PlaybackExtractor
-import models.{Description, FullName, MetaData, UKAddress, UserAnswers}
 import models.http._
+import models.{Description, FullName, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.charity._
 import pages.beneficiaries.classOfBeneficiary._
@@ -62,7 +62,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           individualDetails = Some(List(DisplayTrustIndividualDetailsType(
             lineNo = Some("1"),
             bpMatchStatus = Some("01"),
-            name = NameType("First Name", None, "Last Name"),
+            name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             vulnerableBeneficiary = false,
             beneficiaryType = None,

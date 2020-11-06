@@ -41,7 +41,7 @@ class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[D
             case (answers, (individual, index)) =>
 
             answers
-              .flatMap(_.set(OtherIndividualNamePage(index), individual.name.convert))
+              .flatMap(_.set(OtherIndividualNamePage(index), individual.name))
               .flatMap(answers => extractDateOfBirth(individual, index, answers))
               .flatMap(answers => extractIdentification(individual, index, answers))
               .flatMap {

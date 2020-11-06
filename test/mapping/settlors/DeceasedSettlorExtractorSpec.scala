@@ -21,8 +21,8 @@ import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.{PassportType, PlaybackExtractor}
+import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustWillType}
 import models.{FullName, MetaData, UserAnswers}
-import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustWillType, NameType}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.deceased_settlor._
@@ -58,7 +58,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         val deceasedSettlor = DisplayTrustWillType(
           lineNo = "1",
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
           dateOfDeath = None,
           identification = None,
@@ -88,7 +88,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         val deceasedSettlor = DisplayTrustWillType(
           lineNo = "1",
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
           dateOfDeath = Some(DateTime.parse("2019-02-01")),
           identification = Some(
@@ -125,7 +125,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         val deceasedSettlor = DisplayTrustWillType(
           lineNo = "1",
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
           dateOfDeath = None,
           identification = Some(
@@ -161,7 +161,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         val deceasedSettlor = DisplayTrustWillType(
           lineNo = "1",
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
           dateOfDeath = None,
           identification = Some(
@@ -199,7 +199,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         val deceasedSettlor = DisplayTrustWillType(
           lineNo = "1",
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
           dateOfDeath = None,
           identification = Some(
@@ -237,7 +237,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         val deceasedSettlor = DisplayTrustWillType(
           lineNo = "1",
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
           dateOfDeath = None,
           identification = Some(
@@ -275,7 +275,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         val deceasedSettlor = DisplayTrustWillType(
           lineNo = "1",
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = Some(DateTime.parse("1970-10-15")),
           dateOfDeath = Some(DateTime.parse("2019-02-01")),
           identification = Some(
@@ -311,7 +311,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         val deceasedSettlor = DisplayTrustWillType(
           lineNo = "1",
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
           dateOfDeath = None,
           identification = Some(

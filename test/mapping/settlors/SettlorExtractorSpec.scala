@@ -73,7 +73,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
           deceased = Some(DisplayTrustWillType(
             lineNo = "1",
             bpMatchStatus = Some("01"),
-            name = NameType("First Name", None, "Last Name"),
+            name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
             identification = None,
@@ -86,7 +86,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
             settlor = Some(List(DisplayTrustSettlor(
               lineNo = Some(s"1"),
               bpMatchStatus = Some("01"),
-              name = NameType("individual", Some("living"), "settlor"),
+              name = FullName("individual", Some("living"), "settlor"),
               dateOfBirth = None,
               identification = None,
               entityStart = "2019-11-26"

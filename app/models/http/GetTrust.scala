@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import mapping.{AgentDetails, AssetMonetaryAmount, PassportType, PropertyLandType, TrustDetailsType}
 import models.Constant._
+import models.FullName
 import models.pages.{KindOfBusiness, RoleInCompany, ShareClass, ShareType}
 import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
@@ -52,7 +53,7 @@ object Correspondence {
 
 }
 
-case class Declaration(name: NameType)
+case class Declaration(name: FullName)
 
 object Declaration {
   implicit val declarationFormat: Format[Declaration] = Json.format[Declaration]
@@ -75,14 +76,6 @@ case class AddressType(line1: String,
 
 object AddressType {
   implicit val addressTypeFormat: Format[AddressType] = Json.format[AddressType]
-}
-
-case class NameType(firstName: String,
-                    middleName: Option[String],
-                    lastName: String)
-
-object NameType {
-  implicit val nameTypeFormat: Format[NameType] = Json.format[NameType]
 }
 
 case class GetTrustDesResponse(getTrust: Option[GetTrust],
@@ -129,7 +122,7 @@ object DisplayTrustEntitiesType {
 
 case class DisplayTrustNaturalPersonType(lineNo: Option[String],
                                          bpMatchStatus: Option[String],
-                                         name: NameType,
+                                         name: FullName,
                                          dateOfBirth: Option[DateTime],
                                          identification: Option[DisplayTrustIdentificationType],
                                          entityStart: String)
@@ -142,7 +135,7 @@ object DisplayTrustNaturalPersonType {
 case class DisplayTrustLeadTrusteeIndType(
                                            lineNo: Option[String],
                                            bpMatchStatus: Option[String],
-                                           name: NameType,
+                                           name: FullName,
                                            dateOfBirth: DateTime,
                                            phoneNumber: String,
                                            email: Option[String] = None,
@@ -200,7 +193,7 @@ object DisplayTrustBeneficiaryType {
 
 case class DisplayTrustIndividualDetailsType(lineNo: Option[String],
                                              bpMatchStatus: Option[String],
-                                             name: NameType,
+                                             name: FullName,
                                              dateOfBirth: Option[DateTime],
                                              vulnerableBeneficiary: Boolean,
                                              beneficiaryType: Option[RoleInCompany],
@@ -227,7 +220,7 @@ object DisplayTrustCompanyType {
 
 case class DisplayTrustWillType(lineNo: String,
                                 bpMatchStatus: Option[String],
-                                name: NameType,
+                                name: FullName,
                                 dateOfBirth: Option[DateTime],
                                 dateOfDeath: Option[DateTime],
                                 identification: Option[DisplayTrustIdentificationType],
@@ -328,7 +321,7 @@ object DisplayTrustTrusteeOrgType {
 
 case class DisplayTrustTrusteeIndividualType(lineNo: Option[String],
                                              bpMatchStatus: Option[String],
-                                             name: NameType,
+                                             name: FullName,
                                              dateOfBirth: Option[DateTime],
                                              phoneNumber: Option[String],
                                              identification: Option[DisplayTrustIdentificationType],
@@ -359,7 +352,7 @@ object DisplayTrustProtectorsType {
 
 case class DisplayTrustProtector(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
-                                 name: NameType,
+                                 name: FullName,
                                  dateOfBirth: Option[DateTime],
                                  identification: Option[DisplayTrustIdentificationType],
                                  entityStart: String) extends Protector
@@ -391,7 +384,7 @@ object DisplayTrustSettlors {
 
 case class DisplayTrustSettlor(lineNo: Option[String],
                                bpMatchStatus: Option[String],
-                               name: NameType,
+                               name: FullName,
                                dateOfBirth: Option[DateTime],
                                identification: Option[DisplayTrustIdentificationType],
                                entityStart: String) extends LivingSettlor

@@ -21,10 +21,10 @@ import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.{PassportType, PlaybackExtractor}
-import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http._
 import models.pages.KindOfBusiness._
 import models.pages.{IndividualOrBusiness, KindOfBusiness}
+import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.living_settlor._
@@ -66,7 +66,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
   def generateSettlorIndividual(index: Int) = DisplayTrustSettlor(
     lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
-    name = NameType(s"First Name $index", None, s"Last Name $index"),
+    name = FullName(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = Some(DateTime.parse("1970-02-01")),
     identification = Some(
       DisplayTrustIdentificationType(
@@ -219,7 +219,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
           val trust = List(DisplayTrustSettlor(
             lineNo = Some(s"1"),
             bpMatchStatus = Some("01"),
-            name = NameType("First Name", None, "Last Name"),
+            name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             identification = None,
             entityStart = "2019-11-26"

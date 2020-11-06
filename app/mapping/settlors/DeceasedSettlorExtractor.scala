@@ -41,7 +41,7 @@ class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[Displa
             case (answers, deceasedSettlor) =>
 
             answers
-              .flatMap(_.set(SettlorNamePage, deceasedSettlor.name.convert))
+              .flatMap(_.set(SettlorNamePage, deceasedSettlor.name))
               .flatMap(answers => extractDateOfDeath(deceasedSettlor, answers))
               .flatMap(answers => extractDateOfBirth(deceasedSettlor, answers))
               .flatMap(answers => extractIdentification(deceasedSettlor.identification, answers))

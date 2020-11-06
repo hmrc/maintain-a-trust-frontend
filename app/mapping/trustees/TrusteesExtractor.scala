@@ -61,11 +61,11 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
       }
     }
 
-  def extractLeadTrusteeIndividual(answers: Try[UserAnswers], index: Int, leadIndividual : DisplayTrustLeadTrusteeIndType) = {
+  private def extractLeadTrusteeIndividual(answers: Try[UserAnswers], index: Int, leadIndividual : DisplayTrustLeadTrusteeIndType): Try[UserAnswers] = {
     answers
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
-      .flatMap(_.set(TrusteeNamePage(index), leadIndividual.name.convert))
+      .flatMap(_.set(TrusteeNamePage(index), leadIndividual.name))
       .flatMap(_.set(TrusteeDateOfBirthPage(index), leadIndividual.dateOfBirth.convert))
       .flatMap(answers => extractLeadIndividualIdentification(leadIndividual, index, answers))
       .flatMap(answers => extractEmail(leadIndividual.email, index, answers))
@@ -83,7 +83,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
       }
   }
 
-  def extractLeadTrusteeCompany(answers: Try[UserAnswers], index: Int, leadCompany : DisplayTrustLeadTrusteeOrgType) = {
+  private def extractLeadTrusteeCompany(answers: Try[UserAnswers], index: Int, leadCompany : DisplayTrustLeadTrusteeOrgType): Try[UserAnswers] = {
     answers
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
@@ -104,11 +104,11 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
       }
   }
 
-  def extractTrusteeIndividual(answers: Try[UserAnswers], index: Int, individual : DisplayTrustTrusteeIndividualType) = {
+  private def extractTrusteeIndividual(answers: Try[UserAnswers], index: Int, individual : DisplayTrustTrusteeIndividualType): Try[UserAnswers] = {
     answers
       .flatMap(_.set(IsThisLeadTrusteePage(index), false))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
-      .flatMap(_.set(TrusteeNamePage(index), individual.name.convert))
+      .flatMap(_.set(TrusteeNamePage(index), individual.name))
       .flatMap(answers => extractDateOfBirth(individual, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), individual.phoneNumber))
       .flatMap(answers => extractIndividualIdentification(individual, index, answers))
@@ -126,7 +126,7 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
       .flatMap(_.set(TrusteeStatus(index), UpToDate))
   }
 
-  def extractTrusteeCompany(answers: Try[UserAnswers], index: Int, company: DisplayTrustTrusteeOrgType) = {
+  private def extractTrusteeCompany(answers: Try[UserAnswers], index: Int, company: DisplayTrustTrusteeOrgType): Try[UserAnswers] = {
     answers
       .flatMap(_.set(IsThisLeadTrusteePage(index), false))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
@@ -178,7 +178,6 @@ class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees
         Failure(InvalidExtractorState)
     }
   }
-
 
   private def extractIndividualIdentification(individual: DisplayTrustTrusteeIndividualType, index: Int, answers: UserAnswers) = {
     individual.identification map {

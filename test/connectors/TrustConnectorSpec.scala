@@ -21,9 +21,9 @@ import java.time.LocalDate
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.Generators
-import models.TrustDetails
 import models.http.DeclarationResponse.InternalServerError
 import models.http._
+import models.{FullName, TrustDetails}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
 import play.api.http.Status
@@ -231,9 +231,9 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
             data.correspondence.name mustBe "Trust of Brian Cloud"
 
-            data.declaration.name mustBe NameType("Agent", None, "Agency")
+            data.declaration.name mustBe FullName("Agent", None, "Agency")
 
-            data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe NameType("Lead", None, "Trustee")
+            data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe FullName("Lead", None, "Trustee")
 
             data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
 
@@ -283,9 +283,9 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
             data.correspondence.name mustBe "Trust of Brian Cloud"
 
-            data.declaration.name mustBe NameType("Agent", None, "Agency")
+            data.declaration.name mustBe FullName("Agent", None, "Agency")
 
-            data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe NameType("Lead", None, "Trustee")
+            data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe FullName("Lead", None, "Trustee")
 
             data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
 

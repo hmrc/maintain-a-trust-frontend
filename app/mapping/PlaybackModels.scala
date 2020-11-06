@@ -18,6 +18,7 @@ package mapping
 
 import java.time.LocalDate
 
+import models.FullName
 import models.http._
 import models.pages.{DeedOfVariation, TypeOfTrust}
 import play.api.libs.json._
@@ -101,7 +102,7 @@ object ProtectorsType {
   implicit val protectorsTypeFormat: Format[ProtectorsType] = Json.format[ProtectorsType]
 }
 
-case class Protector(name: NameType,
+case class Protector(name: FullName,
                      dateOfBirth: Option[LocalDate],
                      identification: Option[IdentificationType])
 
@@ -132,10 +133,10 @@ object TrusteeOrgType {
   implicit val trusteeOrgTypeFormat: Format[TrusteeOrgType] = Json.format[TrusteeOrgType]
 }
 
-case class TrusteeIndividualType(name: NameType,
-                       dateOfBirth: Option[LocalDate],
-                       phoneNumber: Option[String],
-                       identification: Option[IdentificationType])
+case class TrusteeIndividualType(name: FullName,
+                                 dateOfBirth: Option[LocalDate],
+                                 phoneNumber: Option[String],
+                                 identification: Option[IdentificationType])
 
 object TrusteeIndividualType {
 
@@ -149,7 +150,7 @@ object Settlors {
   implicit val settlorsFormat: Format[Settlors] = Json.format[Settlors]
 }
 
-case class Settlor(name: NameType,
+case class Settlor(name: FullName,
                    dateOfBirth: Option[LocalDate],
                    identification: Option[IdentificationType])
 
@@ -169,12 +170,12 @@ object SettlorCompany {
 
 
 case class LeadTrusteeIndType (
-                            name: NameType,
-                            dateOfBirth: LocalDate ,
-                            phoneNumber: String,
-                            email: Option[String] = None,
-                            identification: IdentificationType
-                          )
+                                name: FullName,
+                                dateOfBirth: LocalDate ,
+                                phoneNumber: String,
+                                email: Option[String] = None,
+                                identification: IdentificationType
+                              )
 
 object LeadTrusteeIndType {
 
@@ -216,7 +217,7 @@ object BeneficiaryType {
   implicit val beneficiaryTypeFormat: Format[BeneficiaryType] = Json.format[BeneficiaryType]
 }
 
-case class IndividualDetailsType(name: NameType,
+case class IndividualDetailsType(name: FullName,
                                  dateOfBirth: Option[LocalDate],
                                  vulnerableBeneficiary: Boolean,
                                  beneficiaryType: Option[String],
@@ -309,7 +310,7 @@ object CompanyType {
   implicit val companyTypeFormat: Format[CompanyType] = Json.format[CompanyType]
 }
 
-case class NaturalPersonType(name: NameType,
+case class NaturalPersonType(name: FullName,
                              dateOfBirth: Option[LocalDate],
                              identification: Option[IdentificationType])
 
@@ -423,7 +424,7 @@ object PassportType {
 }
 
 
-case class WillType(name: NameType,
+case class WillType(name: FullName,
                     dateOfBirth: Option[LocalDate],
                     dateOfDeath: Option[LocalDate],
                     identification: Option[Identification])
