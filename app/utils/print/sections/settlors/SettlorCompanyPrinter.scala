@@ -51,11 +51,11 @@ object SettlorCompanyPrinter {
     }
   }
 
-  def kindOfBusinessQuestion(query: Gettable[KindOfBusiness],
-                             userAnswers: UserAnswers,
-                             labelKey: String,
-                             messageArg : String,
-                             messages: Messages): Option[AnswerRow] = {
+  private def kindOfBusinessQuestion(query: Gettable[KindOfBusiness],
+                                     userAnswers: UserAnswers,
+                                     labelKey: String,
+                                     messageArg : String,
+                                     messages: Messages): Option[AnswerRow] = {
     userAnswers.get(query) map { x =>
       AnswerRow(
         messages(s"$labelKey.checkYourAnswersLabel", messageArg),

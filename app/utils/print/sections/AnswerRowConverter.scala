@@ -18,7 +18,6 @@ package utils.print.sections
 
 import java.time.LocalDate
 
-import models.pages.{IndividualOrBusiness, KindOfTrust}
 import models.{Address, FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
@@ -103,24 +102,12 @@ object AnswerRowConverter {
     }
   }
 
-  def monetaryAmountQuestion(query: Gettable[String], userAnswers: UserAnswers, labelKey: String,
-                             messageArg: String = "", changeRoute: Option[Call] = None)
-                            (implicit messages:Messages): Option[AnswerRow] = {
+  def percentageQuestion(query: Gettable[String], userAnswers: UserAnswers, labelKey: String,
+                         messageArg: String = "", changeRoute: Option[Call] = None)
+                        (implicit messages:Messages): Option[AnswerRow] = {
     userAnswers.get(query) map {x =>
       AnswerRow(
         messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        CheckAnswersFormatters.currency(x),
-        None
-      )
-    }
-  }
-
-  def percentageQuestion(query: Gettable[String], userAnswers: UserAnswers, labelKey: String,
-                         messageArg: String = "", changeRoute: Option[Call] = None)
-                        (implicit messages:Messages) = {
-    userAnswers.get(query) map {x =>
-      AnswerRow(
-        messages(s"${labelKey}.checkYourAnswersLabel", messageArg),
         CheckAnswersFormatters.percentage(x),
         None
       )
@@ -157,7 +144,7 @@ object AnswerRowConverter {
     userAnswers.get(query) map {x =>
       AnswerRow(
         messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        HtmlFormat.escape(CheckAnswersFormatters.fullName(x)),
+        HtmlFormat.escape(x.displayFullName),
         None
       )
     }
@@ -182,30 +169,6 @@ object AnswerRowConverter {
       AnswerRow(
         messages(s"$labelKey.checkYourAnswersLabel", messageArg),
         CheckAnswersFormatters.passportOrIDCard(x, countryOptions),
-        None
-      )
-    }
-  }
-
-  def individualOrBusinessQuestion(query: Gettable[IndividualOrBusiness], userAnswers: UserAnswers, labelKey: String,
-                                   messageArg: String = "", changeRoute: Option[Call] = None)
-                              (implicit messages: Messages): Option[AnswerRow] = {
-    userAnswers.get(query) map { x =>
-      AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        HtmlFormat.escape(x.toString.capitalize),
-        None
-      )
-    }
-  }
-
-  def kindOfTrustQuestion(query: Gettable[KindOfTrust], userAnswers: UserAnswers, labelKey: String,
-                          messageArg: String = "", changeRoute: Option[Call] = None)
-                         (implicit messages: Messages): Option[AnswerRow] = {
-    userAnswers.get(query) map { x =>
-      AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        HtmlFormat.escape(CheckAnswersFormatters.kindOfTrust(x, messages)),
         None
       )
     }

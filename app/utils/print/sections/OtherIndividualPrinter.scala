@@ -19,7 +19,6 @@ package utils.print.sections
 import models.UserAnswers
 import pages.individual._
 import play.api.i18n.Messages
-import utils.CheckAnswersFormatters
 import utils.countryoptions.CountryOptions
 import utils.print.sections.AnswerRowConverter._
 import viewmodels.AnswerSection
@@ -32,7 +31,7 @@ object OtherIndividualPrinter {
            (implicit messages: Messages): Seq[AnswerSection] = {
     userAnswers
       .get(OtherIndividualNamePage(index))
-      .map(CheckAnswersFormatters.fullName)
+      .map(_.toString)
       .map { name =>
         Seq(
           AnswerSection(

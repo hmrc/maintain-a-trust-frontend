@@ -22,6 +22,11 @@ case class FullName(firstName: String, middleName: Option[String], lastName: Str
 
   override def toString = s"$firstName $lastName"
 
+  def displayFullName: String = middleName match {
+    case Some(middleName) => s"$firstName $middleName $lastName"
+    case None => this.toString
+  }
+
 }
 
 object FullName {

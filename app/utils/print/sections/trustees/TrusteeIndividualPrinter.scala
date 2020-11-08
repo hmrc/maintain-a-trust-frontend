@@ -19,10 +19,9 @@ package utils.print.sections.trustees
 import models.UserAnswers
 import pages.trustees._
 import play.api.i18n.Messages
-import utils.CheckAnswersFormatters
 import utils.countryoptions.CountryOptions
-import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
+import viewmodels.AnswerSection
 
 object TrusteeIndividualPrinter {
 
@@ -33,7 +32,7 @@ object TrusteeIndividualPrinter {
 
     userAnswers
       .get(TrusteeNamePage(index))
-      .map(CheckAnswersFormatters.fullName)
+      .map(_.toString)
       .flatMap { name =>
         Some(
           Seq(

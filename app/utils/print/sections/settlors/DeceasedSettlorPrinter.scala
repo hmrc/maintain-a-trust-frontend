@@ -19,15 +19,14 @@ package utils.print.sections.settlors
 import models.UserAnswers
 import pages.settlors.deceased_settlor._
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter._
-import utils.CheckAnswersFormatters
 import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter._
 import viewmodels.AnswerSection
 
 object DeceasedSettlorPrinter {
 
   def print(userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] = {
-    userAnswers.get(SettlorNamePage).map(CheckAnswersFormatters.fullName).map { name =>
+    userAnswers.get(SettlorNamePage).map(_.toString).map { name =>
       Seq(
         AnswerSection(
           headingKey = None,
