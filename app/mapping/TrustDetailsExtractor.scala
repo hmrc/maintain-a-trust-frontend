@@ -19,6 +19,7 @@ package mapping
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
+import models.http.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
 import models.pages.NonResidentType
 import pages.trustdetails._
 import play.api.Logger

@@ -19,9 +19,8 @@ package controllers.print
 import java.time.{LocalDate, LocalDateTime}
 
 import base.SpecBase
-import models.http.NameType
 import models.pages.WhatIsNext.CloseTrust
-import models.{AgentDeclaration, UKAddress}
+import models.{AgentDeclaration, FullName, UKAddress}
 import pages.beneficiaries.charity._
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
@@ -47,7 +46,7 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
       val playbackAnswers = TestUserAnswers.emptyUserAnswers
         .set(WhatIsNextPage, CloseTrust).success.value
         .set(TVNPage, fakeTvn).success.value
-        .set(AgentDeclarationPage, AgentDeclaration(NameType("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
+        .set(AgentDeclarationPage, AgentDeclaration(FullName("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
         .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value
         .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
 

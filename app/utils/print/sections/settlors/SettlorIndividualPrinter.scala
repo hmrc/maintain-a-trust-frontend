@@ -19,15 +19,14 @@ package utils.print.sections.settlors
 import models.UserAnswers
 import pages.settlors.living_settlor._
 import play.api.i18n.Messages
-import utils.CheckAnswersFormatters
 import utils.countryoptions.CountryOptions
-import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
+import viewmodels.AnswerSection
 
 object SettlorIndividualPrinter {
 
   def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
-    userAnswers.get(SettlorIndividualNamePage(index)).map(CheckAnswersFormatters.fullName).flatMap { name =>
+    userAnswers.get(SettlorIndividualNamePage(index)).map(_.toString).flatMap { name =>
       Some(
         Seq(
           AnswerSection(

@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package models
+package models.http
 
-import play.api.libs.json._
+import play.api.libs.json.{Format, Json}
 
-case class FullName(firstName: String, middleName: Option[String], lastName: String) {
+case class AgentDetails(arn: String,
+                        agentName: String,
+                        agentAddress: AddressType,
+                        agentTelephoneNumber: String,
+                        clientReference: String)
 
-  override def toString = s"$firstName $lastName"
-
-  def displayFullName: String = middleName match {
-    case Some(middleName) => s"$firstName $middleName $lastName"
-    case None => this.toString
-  }
-
-}
-
-object FullName {
-
-  implicit lazy val formats: OFormat[FullName] = Json.format[FullName]
-
+object AgentDetails {
+  implicit val agentDetailsFormat: Format[AgentDetails] = Json.format[AgentDetails]
 }

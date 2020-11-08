@@ -18,13 +18,7 @@ package utils
 
 import java.time.format.DateTimeFormatter
 
-import models.pages.KindOfTrust
-import models.pages.KindOfTrust._
-import models.{Address, FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress, UserAnswers}
-import pages.beneficiaries.individual.IndividualBeneficiaryNamePage
-import pages.settlors.deceased_settlor.SettlorNamePage
-import pages.settlors.living_settlor.SettlorIndividualNamePage
-import pages.trustees.TrusteeNamePage
+import models.{Address, InternationalAddress, PassportOrIdCardDetails, UKAddress}
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Nino
@@ -32,7 +26,7 @@ import utils.countryoptions.CountryOptions
 
 object CheckAnswersFormatters {
 
-  val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+  val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def utr(answer: String): Html = {
     HtmlFormat.escape(answer)
@@ -59,24 +53,7 @@ object CheckAnswersFormatters {
 
   def percentage(value: String): Html = escape(s"$value%")
 
-  def trusteeName(index: Int, userAnswers: UserAnswers): String =
-    userAnswers.get(TrusteeNamePage(index)).map(_.toString).getOrElse("")
-
-  def answer[T](key: String, answer: T)(implicit messages: Messages): Html =
-    HtmlFormat.escape(messages(s"$key.$answer"))
-
-  def escape(x: String) = HtmlFormat.escape(x)
-
-  def deceasedSettlorName(userAnswers: UserAnswers): String =
-    userAnswers.get(SettlorNamePage).map(_.toString).getOrElse("")
-
-  def indBeneficiaryName(index: Int, userAnswers: UserAnswers): String = {
-    userAnswers.get(IndividualBeneficiaryNamePage(index)).map(_.toString).getOrElse("")
-  }
-
-  def livingSettlorName(index: Int, userAnswers: UserAnswers): String = {
-    userAnswers.get(SettlorIndividualNamePage(index)).map(_.toString).getOrElse("")
-  }
+  private def escape(x: String): Html = HtmlFormat.escape(x)
 
   def ukAddress(address: UKAddress): Html = {
     val lines =
@@ -119,26 +96,6 @@ object CheckAnswersFormatters {
       ).flatten
 
     Html(lines.mkString("<br />"))
-  }
-
-  def fullName(fullname: FullName) = {
-    val middle = fullname.middleName.map(" " + _ + " ").getOrElse(" ")
-    s"${fullname.firstName}${middle}${fullname.lastName}"
-  }
-
-  def kindOfTrust(kindOfTrust: KindOfTrust, messages: Messages) = {
-    kindOfTrust match {
-      case Intervivos =>
-        messages("kindOfTrust.Lifetime")
-      case Deed =>
-        messages("kindOfTrust.Deed")
-      case Employees =>
-        messages("kindOfTrust.Employees")
-      case FlatManagement =>
-        messages("kindOfTrust.Building")
-      case HeritageMaintenanceFund =>
-        messages("kindOfTrust.Repair")
-    }
   }
 
 }

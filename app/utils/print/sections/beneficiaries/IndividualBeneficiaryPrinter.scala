@@ -23,7 +23,6 @@ import pages.beneficiaries.individual._
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import queries.Gettable
-import utils.CheckAnswersFormatters
 import utils.countryoptions.CountryOptions
 import utils.print.sections.AnswerRowConverter._
 import viewmodels.{AnswerRow, AnswerSection}
@@ -35,7 +34,7 @@ object IndividualBeneficiaryPrinter {
             countryOptions: CountryOptions)
            (implicit messages: Messages): Seq[AnswerSection] = {
 
-    userAnswers.get(IndividualBeneficiaryNamePage(index)).map(CheckAnswersFormatters.fullName).map { name =>
+    userAnswers.get(IndividualBeneficiaryNamePage(index)).map(_.toString).map { name =>
       Seq(
         AnswerSection(
           headingKey = Some(messages("answerPage.section.individualBeneficiary.subheading", index + 1)),

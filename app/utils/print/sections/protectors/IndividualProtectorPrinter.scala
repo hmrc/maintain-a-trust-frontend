@@ -19,15 +19,14 @@ package utils.print.sections.protectors
 import models.UserAnswers
 import pages.protectors.individual._
 import play.api.i18n.Messages
-import utils.CheckAnswersFormatters
 import utils.countryoptions.CountryOptions
-import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
+import viewmodels.AnswerSection
 
 object IndividualProtectorPrinter {
 
   def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] =
-    userAnswers.get(IndividualProtectorNamePage(index)).map(CheckAnswersFormatters.fullName).map { protectorName =>
+    userAnswers.get(IndividualProtectorNamePage(index)).map(_.toString).map { protectorName =>
       Seq(AnswerSection(
         headingKey = Some(messages("answerPage.section.protector.subheading", index + 1)),
         Seq(

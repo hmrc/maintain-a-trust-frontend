@@ -20,10 +20,10 @@ import java.time.LocalDate
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.{PassportType, PlaybackExtractor}
-import models.{FullName, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
-import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustIdentificationType, DisplayTrustTrusteeIndividualType, DisplayTrustTrusteeOrgType, NameType, Trustees}
+import mapping.PlaybackExtractor
+import models.http._
 import models.pages.IndividualOrBusiness
+import models.{FullName, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
@@ -65,7 +65,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
   def generateTrusteeIndividual(index: Int) = DisplayTrustTrusteeIndividualType(
     lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
-    name = NameType(s"First Name $index", None, s"Last Name $index"),
+    name = FullName(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = index match {
       case 1 => Some(DateTime.parse("1970-02-01"))
       case _ => None
@@ -222,7 +222,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
           val trust = List(DisplayTrustTrusteeIndividualType(
             lineNo = Some(s"1"),
             bpMatchStatus = Some("01"),
-            name = NameType("First Name", None, "Last Name"),
+            name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             phoneNumber = None,
             identification = None,
@@ -329,7 +329,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
             DisplayTrustTrusteeIndividualType(
               lineNo = Some("01"),
               bpMatchStatus = Some("01"),
-              name = NameType("individual", None, "trustee 1"),
+              name = FullName("individual", None, "trustee 1"),
               dateOfBirth = Some(DateTime.parse("1970-02-01")),
               phoneNumber = Some("01911112222"),
               identification = Some(DisplayTrustIdentificationType(
@@ -354,7 +354,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
             DisplayTrustTrusteeIndividualType(
               lineNo = Some("01"),
               bpMatchStatus = Some("01"),
-              name = NameType("individual", None, "trustee 2"),
+              name = FullName("individual", None, "trustee 2"),
               dateOfBirth = Some(DateTime.parse("1970-02-01")),
               phoneNumber = Some("01911112222"),
               identification = Some(DisplayTrustIdentificationType(

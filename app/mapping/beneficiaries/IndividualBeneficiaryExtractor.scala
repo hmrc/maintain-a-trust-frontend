@@ -18,14 +18,14 @@ package mapping.beneficiaries
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.{PassportType, PlaybackExtractor}
+import mapping.PlaybackExtractor
+import mapping.PlaybackImplicits._
+import models.http.{DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, PassportType}
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
-import models.http.{DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType}
 import pages.beneficiaries.individual._
 import play.api.Logger
 
 import scala.util.{Failure, Success, Try}
-import mapping.PlaybackImplicits._
 
 class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustIndividualDetailsType]]] {
 
@@ -41,7 +41,7 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
             case (answers, (individualBeneficiary, index)) =>
 
             answers
-              .flatMap(_.set(IndividualBeneficiaryNamePage(index), individualBeneficiary.name.convert))
+              .flatMap(_.set(IndividualBeneficiaryNamePage(index), individualBeneficiary.name))
               .flatMap(_.set(IndividualBeneficiaryRoleInCompanyPage(index), individualBeneficiary.beneficiaryType))
               .flatMap(answers => extractDateOfBirth(individualBeneficiary, index, answers))
               .flatMap(answers => extractShareOfIncome(individualBeneficiary, index, answers))

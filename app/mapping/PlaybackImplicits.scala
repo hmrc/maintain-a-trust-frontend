@@ -19,7 +19,7 @@ package mapping
 import java.time.LocalDate
 
 import models._
-import models.http.{AddressType, NameType}
+import models.http.{AddressType, PassportType}
 import org.joda.time.DateTime
 
 object PlaybackImplicits {
@@ -63,10 +63,6 @@ object PlaybackImplicits {
           country = country
         )
     }
-  }
-
-  implicit class FullNameConverter(name: NameType) {
-    def convert : FullName = FullName(name.firstName, name.middleName, name.lastName)
   }
 
   implicit class DateTimeConverter(date : DateTime) {

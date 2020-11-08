@@ -18,8 +18,8 @@ package mapping.settlors
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
+import mapping.PlaybackExtractor
 import mapping.PlaybackImplicits._
-import mapping.{PassportType, PlaybackExtractor}
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
@@ -60,10 +60,10 @@ class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[Liv
       }
     }
 
-  def extractSettlorIndividual(answers: Try[UserAnswers], index: Int, individual : DisplayTrustSettlor) = {
+  private def extractSettlorIndividual(answers: Try[UserAnswers], index: Int, individual : DisplayTrustSettlor): Try[UserAnswers] = {
     answers
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
-      .flatMap(_.set(SettlorIndividualNamePage(index), individual.name.convert))
+      .flatMap(_.set(SettlorIndividualNamePage(index), individual.name))
       .flatMap(answers => extractDateOfBirth(individual, index, answers))
       .flatMap(answers => extractIndividualIdentification(individual, index, answers))
       .flatMap {
@@ -80,7 +80,7 @@ class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[Liv
       .flatMap(_.set(LivingSettlorStatus(index), UpToDate))
   }
 
-  def extractSettlorCompany(answers: Try[UserAnswers], index: Int, company : DisplayTrustSettlorCompany) = {
+  private def extractSettlorCompany(answers: Try[UserAnswers], index: Int, company : DisplayTrustSettlorCompany): Try[UserAnswers] = {
     answers
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(SettlorBusinessNamePage(index), company.name))

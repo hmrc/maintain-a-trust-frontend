@@ -20,10 +20,10 @@ import java.time.LocalDate
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.{PassportType, PlaybackExtractor}
-import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
-import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, NameType}
+import mapping.PlaybackExtractor
+import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, PassportType}
 import models.pages.RoleInCompany
+import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.individual._
@@ -34,7 +34,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   def generateIndividual(index: Int) = DisplayTrustIndividualDetailsType(
     lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
-    name = NameType(s"First Name $index", None, s"Last Name $index"),
+    name = FullName(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = index match {
       case 0 => Some(DateTime.parse("1970-02-01"))
       case _ => None
@@ -101,7 +101,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         val individual = List(DisplayTrustIndividualDetailsType(
           lineNo = Some("1"),
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
           vulnerableBeneficiary = false,
           beneficiaryType = None,

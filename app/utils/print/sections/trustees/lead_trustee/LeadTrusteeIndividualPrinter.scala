@@ -19,17 +19,16 @@ package utils.print.sections.trustees.lead_trustee
 import models.UserAnswers
 import pages.trustees._
 import play.api.i18n.Messages
-import utils.CheckAnswersFormatters
 import utils.countryoptions.CountryOptions
-import viewmodels.AnswerSection
 import utils.print.sections.AnswerRowConverter._
+import viewmodels.AnswerSection
 
 object LeadTrusteeIndividualPrinter extends LeadTrustee {
 
   def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)
            (implicit messages: Messages): Option[Seq[AnswerSection]] = {
 
-    userAnswers.get(TrusteeNamePage(index)).map(CheckAnswersFormatters.fullName).flatMap { name =>
+    userAnswers.get(TrusteeNamePage(index)).map(_.toString).flatMap { name =>
       Some(
         Seq(
           AnswerSection(

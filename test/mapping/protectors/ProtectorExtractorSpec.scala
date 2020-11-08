@@ -21,9 +21,9 @@ import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractor
-import models.{FullName, MetaData, UserAnswers}
 import models.http._
 import models.pages.IndividualOrBusiness
+import models.{FullName, MetaData, UserAnswers}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.protectors._
@@ -69,7 +69,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             DisplayTrustProtector(
               lineNo = Some("1"),
               bpMatchStatus = Some("01"),
-              name = NameType(s"First Name", None, s"Last Name"),
+              name = FullName(s"First Name", None, s"Last Name"),
               dateOfBirth = Some(DateTime.parse("1970-02-01")),
               identification = Some(
                 DisplayTrustIdentificationType(
@@ -84,7 +84,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             DisplayTrustProtector(
               lineNo = Some("2"),
               bpMatchStatus = Some("02"),
-              name = NameType(s"First Name", None, s"Last Name"),
+              name = FullName(s"First Name", None, s"Last Name"),
               dateOfBirth = Some(DateTime.parse("1980-02-01")),
               identification = Some(
                 DisplayTrustIdentificationType(
@@ -205,7 +205,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             DisplayTrustProtector(
               lineNo = Some("1"),
               bpMatchStatus = Some("01"),
-              name = NameType(s"First Name", None, s"Last Name"),
+              name = FullName(s"First Name", None, s"Last Name"),
               dateOfBirth = Some(DateTime.parse("1970-02-01")),
               identification = Some(
                 DisplayTrustIdentificationType(

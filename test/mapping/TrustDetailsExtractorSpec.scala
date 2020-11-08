@@ -21,6 +21,7 @@ import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
 import models.UserAnswers
+import models.http.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
 import models.pages.DeedOfVariation.ReplacedWill
 import models.pages.NonResidentType
 import models.pages.NonResidentType.Domiciled

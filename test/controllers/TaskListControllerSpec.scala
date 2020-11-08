@@ -16,18 +16,13 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import base.SpecBase
 import connectors.TrustsStoreConnector
-import models.http.NameType
-import models.{AgentDeclaration, CompletedMaintenanceTasks}
+import models.CompletedMaintenanceTasks
 import models.pages.Tag.InProgress
 import models.pages.WhatIsNext
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
-import pages.close.DateLastAssetSharedOutPage
-import pages.declaration.AgentDeclarationPage
 import pages.WhatIsNextPage
 import play.api.inject.bind
 import play.api.mvc.Call

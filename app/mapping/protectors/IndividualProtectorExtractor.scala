@@ -16,17 +16,16 @@
 
 package mapping.protectors
 
-import mapping.PassportType
 import mapping.PlaybackExtractionErrors.InvalidExtractorState
+import mapping.PlaybackImplicits._
+import models.http.{DisplayTrustIdentificationType, DisplayTrustProtector, PassportType}
+import models.pages.IndividualOrBusiness
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
-import models.http.{DisplayTrustIdentificationType, DisplayTrustProtector}
 import pages.protectors.ProtectorIndividualOrBusinessPage
 import pages.protectors.individual._
 import play.api.Logger
 
 import scala.util.{Failure, Try}
-import mapping.PlaybackImplicits._
-import models.pages.IndividualOrBusiness
 
 class IndividualProtectorExtractor {
 
@@ -36,7 +35,7 @@ class IndividualProtectorExtractor {
     {
       answers
         .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
-        .flatMap(_.set(IndividualProtectorNamePage(index), individualProtector.name.convert))
+        .flatMap(_.set(IndividualProtectorNamePage(index), individualProtector.name))
         .flatMap(answers => extractDateOfBirth(individualProtector, index, answers))
         .flatMap(answers => extractIdentification(individualProtector, index, answers))
         .flatMap(_.set(IndividualProtectorSafeIdPage(index), individualProtector.identification.flatMap(_.safeId)))

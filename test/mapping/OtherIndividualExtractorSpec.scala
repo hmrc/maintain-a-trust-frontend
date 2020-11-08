@@ -20,8 +20,8 @@ import java.time.LocalDate
 
 import base.SpecBaseHelpers
 import generators.Generators
+import models.http.{AddressType, DisplayTrustIdentificationType, NaturalPersonType, PassportType}
 import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
-import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustNaturalPersonType, NameType}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.individual._
@@ -29,10 +29,10 @@ import pages.individual._
 class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  def generateIndividual(index: Int) = DisplayTrustNaturalPersonType(
+  def generateIndividual(index: Int) = NaturalPersonType(
     lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
-    name = NameType(s"First Name $index", None, s"Last Name $index"),
+    name = FullName(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = index match {
       case 0 => Some(DateTime.parse("1970-02-01"))
       case _ => None
@@ -58,7 +58,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
     entityStart = "2019-11-26"
   )
 
-  val individualExtractor : PlaybackExtractor[Option[List[DisplayTrustNaturalPersonType]]] =
+  val individualExtractor : PlaybackExtractor[Option[List[NaturalPersonType]]] =
     injector.instanceOf[OtherIndividualExtractor]
 
   "Other Individual Extractor" - {
@@ -82,10 +82,10 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
     "when there are individuals" - {
 
       "with minimum data must return user answers updated" in {
-        val individual = List(DisplayTrustNaturalPersonType(
+        val individual = List(NaturalPersonType(
           lineNo = Some("1"),
           bpMatchStatus = Some("01"),
-          name = NameType("First Name", None, "Last Name"),
+          name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
           identification = None,
           entityStart = "2019-11-26"

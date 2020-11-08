@@ -20,8 +20,8 @@ import java.time.LocalDate
 import base.SpecBase
 import connectors.TrustConnector
 import models.http.DeclarationResponse.InternalServerError
-import models.http.{NameType, TVNResponse}
-import models.{AgentDeclaration, IndividualDeclaration, UKAddress}
+import models.http.TVNResponse
+import models.{AgentDeclaration, FullName, IndividualDeclaration, UKAddress}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -48,7 +48,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
   val agentInformation: AgentInformation = AgentInformation(None, None, Some("agentFriendlyName"))
 
   val agentDeclaration: AgentDeclaration = AgentDeclaration(
-    name = NameType(
+    name = FullName(
       "First",
       None,
       "Last"
@@ -60,7 +60,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
   )
 
   val individualDeclaration: IndividualDeclaration = IndividualDeclaration(
-    name = NameType(
+    name = FullName(
       "First",
       None,
       "Last"

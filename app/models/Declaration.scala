@@ -16,12 +16,11 @@
 
 package models
 
-import models.http.NameType
 import play.api.libs.json.{Json, OFormat, Reads, Writes}
 
 import scala.language.implicitConversions
 
-final case class AgentDeclaration(name: NameType,
+final case class AgentDeclaration(name: FullName,
                                   agencyName: String,
                                   telephoneNumber: String,
                                   crn: String,
@@ -32,7 +31,7 @@ object AgentDeclaration {
   implicit lazy val formats: OFormat[AgentDeclaration] = Json.format[AgentDeclaration]
 }
 
-final case class IndividualDeclaration(name: NameType, email: Option[String]) extends Declaration
+final case class IndividualDeclaration(name: FullName, email: Option[String]) extends Declaration
 
 object IndividualDeclaration {
 

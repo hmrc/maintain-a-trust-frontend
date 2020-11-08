@@ -18,13 +18,13 @@ package forms.declaration
 
 import forms.Validation
 import forms.mappings.Mappings
-import models.http.NameType
+import models.FullName
 import play.api.data.Forms.{mapping, optional}
 import play.api.data.Mapping
 
 trait DeclarationFormProvider extends Mappings {
 
-  val fullName: Mapping[NameType] = mapping(
+  val fullName: Mapping[FullName] = mapping(
 
     "firstName" -> text("declaration.error.firstName.required")
       .verifying(
@@ -49,6 +49,6 @@ trait DeclarationFormProvider extends Mappings {
           regexp(Validation.nameRegex, "declaration.error.lastName.invalid")
         )
       )
-  )(NameType.apply)(NameType.unapply)
+  )(FullName.apply)(FullName.unapply)
 
 }

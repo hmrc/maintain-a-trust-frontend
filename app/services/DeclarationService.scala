@@ -20,10 +20,9 @@ import java.time.LocalDate
 
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
-import mapping.AgentDetails
 import mapping.PlaybackImplicits._
-import models.http.{DeclarationResponse, NameType}
-import models.{Address, AgentDeclaration, IndividualDeclaration}
+import models.http.{AgentDetails, DeclarationResponse}
+import models.{Address, AgentDeclaration, FullName, IndividualDeclaration}
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -58,7 +57,7 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
     declare(declaration.name, utr, None, endDate)
   }
 
-  private def declare(name: NameType, utr: String,
+  private def declare(name: FullName, utr: String,
                       agentDetails: Option[AgentDetails],
                       endDate: Option[LocalDate]
                      )(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
@@ -67,7 +66,7 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
     connector.declare(utr, payload)
   }
 
-  private def getPayload(name: NameType,
+  private def getPayload(name: FullName,
                          agentDetails: Option[AgentDetails],
                          endDate: Option[LocalDate]): JsValue = {
     Json.toJson(
