@@ -582,4 +582,3 @@ playbackProblemContactHMRC.p1.beforeLink=Mae angen i chi
 playbackProblemContactHMRC.p1.link=gysylltu â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
 playbackProblemContactHMRC.p1.afterLink=fel y gallwn gadarnhau manylion gyda chi am yr ymddiriedolaeth.
 playbackProblemContactHMRC.p2=Cofiwch gael y dogfennau perthnasol sy’n ymwneud â’r ymddiriedolaeth a’i Hunanasesiad wrth law pan gysylltwch â CThEM.
-
