@@ -126,7 +126,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   def helplineUrl(implicit messages: Messages): String = {
     val path = messages.lang.code match {
-      case WELSH => "urls.welshHelpline"
+      //case WELSH => "urls.welshHelpline" // TODO - Gavin checking with project team if this is correct
       case _ => "urls.trustsHelpline"
     }
 
