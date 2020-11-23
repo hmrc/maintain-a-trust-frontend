@@ -16,15 +16,18 @@
 
 package utils.print.sections.trustees
 
+import javax.inject.Inject
 import models.UserAnswers
 import models.pages.IndividualOrBusiness
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeIndividualOrBusinessPage}
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import utils.print.sections.trustees.lead_trustee.{LeadTrusteeBusinessPrinter, LeadTrusteeIndividualPrinter}
 import viewmodels.AnswerSection
 
-class AllTrusteesPrinter(userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages) {
+class AllTrusteesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
+                                  (userAnswers: UserAnswers)
+                                  (implicit messages: Messages) {
 
   def allTrustees : Seq[AnswerSection] = {
 
@@ -42,13 +45,13 @@ class AllTrusteesPrinter(userAnswers: UserAnswers, countryOptions: CountryOption
       userAnswers.get(TrusteeIndividualOrBusinessPage(index)) flatMap { individualOrBusiness =>
         if (isLeadTrustee) {
           individualOrBusiness match {
-            case IndividualOrBusiness.Individual => LeadTrusteeIndividualPrinter.print(index, userAnswers, countryOptions)
-            case IndividualOrBusiness.Business => LeadTrusteeBusinessPrinter.print(index, userAnswers, countryOptions)
+            case IndividualOrBusiness.Individual => new LeadTrusteeIndividualPrinter(answerRowConverter).print(index, userAnswers)
+            case IndividualOrBusiness.Business => new LeadTrusteeBusinessPrinter(answerRowConverter).print(index, userAnswers)
           }
         } else {
           individualOrBusiness match {
-            case IndividualOrBusiness.Individual => TrusteeIndividualPrinter.print(index, userAnswers, countryOptions)
-            case IndividualOrBusiness.Business => TrusteeOrganisationPrinter.print(index, userAnswers, countryOptions)
+            case IndividualOrBusiness.Individual => new TrusteeIndividualPrinter(answerRowConverter).print(index, userAnswers)
+            case IndividualOrBusiness.Business => new TrusteeOrganisationPrinter(answerRowConverter).print(index, userAnswers)
           }
         }
       }

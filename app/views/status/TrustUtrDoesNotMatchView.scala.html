@@ -36,7 +36,7 @@ title = messages("trustUtrDoesNotMatch.title")
 
  <p>@messages("trustUtrDoesNotMatch.p2")</p>
 
- <p>@messages("trustUtrDoesNotMatch.p3") <a id="help-link" target="_blank" href=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts>@messages("trustUtrDoesNotMatch.contact.link")</a>.</p>
+ <p>@messages("trustUtrDoesNotMatch.p3") <a id="help-link" target="_blank" href="@appConfig.helplineUrl">@messages("trustUtrDoesNotMatch.contact.link")</a>.</p>
 
   @if(affinityGroup == AffinityGroup.Agent) {
    <p>@messages("trustUtrDoesNotMatch.p4") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("trustUtrDoesNotMatch.return.link")</a>.</p>

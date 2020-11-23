@@ -16,28 +16,28 @@
 
 package utils.print.sections.beneficiaries
 
+import javax.inject.Inject
 import models.UserAnswers
 import pages.beneficiaries.other._
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
-import utils.print.sections.AnswerRowConverter._
 
-object OtherBeneficiaryPrinter {
+class OtherBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
+                                       (implicit messages: Messages) {
 
-  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)
-           (implicit messages: Messages): Seq[AnswerSection] = {
+  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] = {
 
     userAnswers.get(OtherBeneficiaryDescriptionPage(index)).map { name =>
       Seq(AnswerSection(
         headingKey = Some(messages("answerPage.section.otherBeneficiary.subheading", index + 1)),
         Seq(
-          stringQuestion(OtherBeneficiaryDescriptionPage(index), userAnswers, "otherBeneficiaryDescription"),
-          yesNoQuestion(OtherBeneficiaryDiscretionYesNoPage(index), userAnswers, "otherBeneficiaryShareOfIncomeYesNo", name),
-          percentageQuestion(OtherBeneficiaryShareOfIncomePage(index), userAnswers, "otherBeneficiaryShareOfIncome", name),
-          yesNoQuestion(OtherBeneficiaryAddressYesNoPage(index), userAnswers, "otherBeneficiaryAddressYesNo", name),
-          yesNoQuestion(OtherBeneficiaryAddressUKYesNoPage(index), userAnswers, "otherBeneficiaryAddressUKYesNo", name),
-          addressQuestion(OtherBeneficiaryAddressPage(index), userAnswers, "otherBeneficiaryAddress", countryOptions = countryOptions, messageArg = name)
+          converter.stringQuestion(OtherBeneficiaryDescriptionPage(index), userAnswers, "otherBeneficiaryDescription"),
+          converter.yesNoQuestion(OtherBeneficiaryDiscretionYesNoPage(index), userAnswers, "otherBeneficiaryShareOfIncomeYesNo", name),
+          converter.percentageQuestion(OtherBeneficiaryShareOfIncomePage(index), userAnswers, "otherBeneficiaryShareOfIncome", name),
+          converter.yesNoQuestion(OtherBeneficiaryAddressYesNoPage(index), userAnswers, "otherBeneficiaryAddressYesNo", name),
+          converter.yesNoQuestion(OtherBeneficiaryAddressUKYesNoPage(index), userAnswers, "otherBeneficiaryAddressUKYesNo", name),
+          converter.addressQuestion(OtherBeneficiaryAddressPage(index), userAnswers, "otherBeneficiaryAddress", name)
         ).flatten,
         sectionKey = None
       ))

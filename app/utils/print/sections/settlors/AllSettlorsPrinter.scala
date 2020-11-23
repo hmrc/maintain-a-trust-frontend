@@ -16,18 +16,21 @@
 
 package utils.print.sections.settlors
 
+import javax.inject.Inject
 import models.UserAnswers
 import models.pages.IndividualOrBusiness
 import pages.settlors.living_settlor.SettlorIndividualOrBusinessPage
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class AllSettlorsPrinter(userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages) {
+class AllSettlorsPrinter @Inject()(answerRowConverter: AnswerRowConverter)
+                                  (userAnswers: UserAnswers)
+                                  (implicit messages: Messages) {
 
   def allSettlors: Seq[AnswerSection] = deceasedSettlors ++ livingSettlors
 
-  private lazy val deceasedSettlors: Seq[AnswerSection] = DeceasedSettlorPrinter.print(userAnswers, countryOptions) match {
+  private lazy val deceasedSettlors: Seq[AnswerSection] = new DeceasedSettlorPrinter(answerRowConverter).print(userAnswers) match {
     case Nil => Nil
     case x => AnswerSection(sectionKey = Some("answerPage.section.deceasedSettlor.heading")) +: x
   }
@@ -45,8 +48,8 @@ class AllSettlorsPrinter(userAnswers: UserAnswers, countryOptions: CountryOption
   private def livingSettlor(index: Int): Seq[AnswerSection] = {
     userAnswers.get(SettlorIndividualOrBusinessPage(index)).flatMap { individualOrBusiness =>
       individualOrBusiness match {
-        case IndividualOrBusiness.Individual => SettlorIndividualPrinter.print(index, userAnswers, countryOptions)
-        case IndividualOrBusiness.Business => SettlorCompanyPrinter.print(index, userAnswers, countryOptions)
+        case IndividualOrBusiness.Individual => new SettlorIndividualPrinter(answerRowConverter).print(index, userAnswers)
+        case IndividualOrBusiness.Business => new SettlorCompanyPrinter(answerRowConverter).print(index, userAnswers)
       }
     }.getOrElse(Nil)
   }

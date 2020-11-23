@@ -16,19 +16,12 @@
 
 package utils
 
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import play.api.i18n.Messages
 
-import com.google.inject.Inject
-import config.FrontendAppConfig
+object DateErrorFormatter {
 
-class DateFormatter @Inject()(config: FrontendAppConfig) {
-
-  private val format = "d MMMM yyyy"
-
-  def formatDate(dateTime: LocalDateTime): String = {
-    val dateFormatter = DateTimeFormatter.ofPattern(format)
-    dateTime.format(dateFormatter)
+  def formatArgs(args: Seq[Any])(implicit messages: Messages): Seq[String] = {
+    args.map(arg => messages(s"date.$arg").toLowerCase)
   }
 
 }

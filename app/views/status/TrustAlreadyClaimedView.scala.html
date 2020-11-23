@@ -14,22 +14,24 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
 @import models.Mode
 
 @this(
-main_template: MainTemplate
+    main_template: MainTemplate,
+    config: FrontendAppConfig
 )
 
 @(utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = messages("trustAlreadyClaimed.title")
+    title = messages("trustAlreadyClaimed.title")
 ) {
 
-  @components.heading_with_caption(headingKey = "trustAlreadyClaimed.heading", caption = "trustAlreadyClaimed.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "trustAlreadyClaimed.heading", caption = "trustAlreadyClaimed.caption", captionParam = utr)
 
-  <p>@messages("trustAlreadyClaimed.p1")</p>
+    <p>@messages("trustAlreadyClaimed.p1")</p>
 
-  <p>@messages("trustAlreadyClaimed.p2") <a id="help-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("trustAlreadyClaimed.p2.a")</a>.</p>
+    <p>@messages("trustAlreadyClaimed.p2") <a id="help-link" href="@config.helplineUrl" target="_blank">@messages("trustAlreadyClaimed.p2.a")</a>.</p>
 
 }

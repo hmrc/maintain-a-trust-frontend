@@ -21,11 +21,14 @@ import java.net.{URI, URLEncoder}
 import com.google.inject.{Inject, Singleton}
 import controllers.routes
 import play.api.Configuration
-import play.api.i18n.Lang
+import play.api.i18n.{Lang, Messages}
 import play.api.mvc.{Call, Request}
 
 @Singleton
 class FrontendAppConfig @Inject()(val configuration: Configuration) {
+
+  private final val ENGLISH = "en"
+  private final val WELSH = "cy"
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "trusts"
@@ -82,8 +85,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
     s"${configuration.get[String]("urls.startVerifyIdentity")}/$utr"
 
   def languageMap: Map[String, Lang] = Map(
-    "english" -> Lang("en"),
-    "cymraeg" -> Lang("cy")
+    "english" -> Lang(ENGLISH),
+    "cymraeg" -> Lang(WELSH)
   )
 
   def routeToSwitchLanguage: String => Call =
@@ -119,5 +122,14 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   def accessibilityLinkUrl(implicit request: Request[_]): String = {
     val userAction = URLEncoder.encode(new URI(request.uri).getPath, "UTF-8")
     s"$accessibilityBaseLinkUrl?userAction=$userAction"
+  }
+
+  def helplineUrl(implicit messages: Messages): String = {
+    val path = messages.lang.code match {
+      //case WELSH => "urls.welshHelpline" // TODO - Gavin checking with project team if this is correct
+      case _ => "urls.trustsHelpline"
+    }
+
+    configuration.get[String](path)
   }
 }

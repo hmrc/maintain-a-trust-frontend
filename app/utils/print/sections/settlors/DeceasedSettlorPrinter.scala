@@ -16,33 +16,34 @@
 
 package utils.print.sections.settlors
 
+import javax.inject.Inject
 import models.UserAnswers
 import pages.settlors.deceased_settlor._
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
-import utils.print.sections.AnswerRowConverter._
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-object DeceasedSettlorPrinter {
+class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter)
+                                      (implicit messages: Messages) {
 
-  def print(userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] = {
+  def print(userAnswers: UserAnswers): Seq[AnswerSection] = {
     userAnswers.get(SettlorNamePage).map(_.toString).map { name =>
       Seq(
         AnswerSection(
           headingKey = None,
           rows = Seq(
-            fullNameQuestion(SettlorNamePage, userAnswers, "settlorName"),
-            yesNoQuestion(SettlorDateOfDeathYesNoPage, userAnswers, "settlorDateOfDeathYesNo", name),
-            dateQuestion(SettlorDateOfDeathPage, userAnswers, "settlorDateOfDeath", name),
-            yesNoQuestion(SettlorDateOfBirthYesNoPage, userAnswers, "settlorDateOfBirthYesNo", name),
-            dateQuestion(SettlorDateOfBirthPage, userAnswers, "settlorDateOfBirth", name),
-            yesNoQuestion(SettlorNationalInsuranceYesNoPage, userAnswers, "settlorNationalInsuranceYesNo", name),
-            ninoQuestion(SettlorNationalInsuranceNumberPage, userAnswers, "settlorNationalInsuranceNumber", name),
-            yesNoQuestion(SettlorLastKnownAddressYesNoPage, userAnswers, "settlorLastKnownAddressYesNo", name),
-            yesNoQuestion(SettlorLastKnownAddressUKYesNoPage, userAnswers, "settlorLastKnownAddressUKYesNo", name),
-            ukAddressQuestion(SettlorUKAddressPage, userAnswers, "settlorUKAddress", name, countryOptions),
-            internationalAddressQuestion(SettlorInternationalAddressPage, userAnswers, "settlorInternationalAddress", name, countryOptions),
-            passportOrIdCardQuestion(SettlorPassportIDCardPage, userAnswers, "settlorPassportOrIdCard", name, countryOptions)
+            converter.fullNameQuestion(SettlorNamePage, userAnswers, "settlorName"),
+            converter.yesNoQuestion(SettlorDateOfDeathYesNoPage, userAnswers, "settlorDateOfDeathYesNo", name),
+            converter.dateQuestion(SettlorDateOfDeathPage, userAnswers, "settlorDateOfDeath", name),
+            converter.yesNoQuestion(SettlorDateOfBirthYesNoPage, userAnswers, "settlorDateOfBirthYesNo", name),
+            converter.dateQuestion(SettlorDateOfBirthPage, userAnswers, "settlorDateOfBirth", name),
+            converter.yesNoQuestion(SettlorNationalInsuranceYesNoPage, userAnswers, "settlorNationalInsuranceYesNo", name),
+            converter.ninoQuestion(SettlorNationalInsuranceNumberPage, userAnswers, "settlorNationalInsuranceNumber", name),
+            converter.yesNoQuestion(SettlorLastKnownAddressYesNoPage, userAnswers, "settlorLastKnownAddressYesNo", name),
+            converter.yesNoQuestion(SettlorLastKnownAddressUKYesNoPage, userAnswers, "settlorLastKnownAddressUKYesNo", name),
+            converter.ukAddressQuestion(SettlorUKAddressPage, userAnswers, "settlorUKAddress", name),
+            converter.internationalAddressQuestion(SettlorInternationalAddressPage, userAnswers, "settlorInternationalAddress", name),
+            converter.passportOrIdCardQuestion(SettlorPassportIDCardPage, userAnswers, "settlorPassportOrIdCard", name)
           ).flatten,
           sectionKey = None
         )

@@ -16,34 +16,35 @@
 
 package utils.print.sections.settlors
 
+import javax.inject.Inject
 import models.UserAnswers
 import models.pages.KindOfBusiness
 import pages.settlors.living_settlor._
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import queries.Gettable
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import viewmodels.{AnswerRow, AnswerSection}
-import utils.print.sections.AnswerRowConverter._
 
-object SettlorCompanyPrinter {
+class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter)
+                                     (implicit messages: Messages) {
 
-  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers): Option[Seq[AnswerSection]] = {
 
     userAnswers.get(SettlorBusinessNamePage(index)).flatMap { name =>
       Some(Seq(
         AnswerSection(
           headingKey = Some(messages("answerPage.section.settlor.subheading", index + 1)),
           Seq(
-            stringQuestion(SettlorBusinessNamePage(index), userAnswers, "settlorBusinessName"),
-            yesNoQuestion(SettlorUtrYesNoPage(index), userAnswers, "settlorBusinessUtrYesNo", name),
-            stringQuestion(SettlorUtrPage(index), userAnswers, "settlorBusinessUtr", name),
-            yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorBusinessAddressYesNo", name),
-            yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorBusinessAddressUKYesNo", name),
-            addressQuestion(SettlorAddressUKPage(index), userAnswers, "settlorBusinessAddressUK", name, countryOptions),
-            addressQuestion(SettlorAddressInternationalPage(index), userAnswers, "settlorBusinessAddressUK", name, countryOptions),
-            kindOfBusinessQuestion(SettlorCompanyTypePage(index), userAnswers, "settlorBusinessType", name, messages),
-            yesNoQuestion(SettlorCompanyTimePage(index), userAnswers, "settlorBusinessTime", name)
+            converter.stringQuestion(SettlorBusinessNamePage(index), userAnswers, "settlorBusinessName"),
+            converter.yesNoQuestion(SettlorUtrYesNoPage(index), userAnswers, "settlorBusinessUtrYesNo", name),
+            converter.stringQuestion(SettlorUtrPage(index), userAnswers, "settlorBusinessUtr", name),
+            converter.yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorBusinessAddressYesNo", name),
+            converter.yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorBusinessAddressUKYesNo", name),
+            converter.addressQuestion(SettlorAddressUKPage(index), userAnswers, "settlorBusinessAddressUK", name),
+            converter.addressQuestion(SettlorAddressInternationalPage(index), userAnswers, "settlorBusinessAddressUK", name),
+            kindOfBusinessQuestion(SettlorCompanyTypePage(index), userAnswers, name, messages),
+            converter.yesNoQuestion(SettlorCompanyTimePage(index), userAnswers, "settlorBusinessTime", name)
           ).flatten,
           sectionKey = None
         )
@@ -53,12 +54,11 @@ object SettlorCompanyPrinter {
 
   private def kindOfBusinessQuestion(query: Gettable[KindOfBusiness],
                                      userAnswers: UserAnswers,
-                                     labelKey: String,
                                      messageArg : String,
                                      messages: Messages): Option[AnswerRow] = {
     userAnswers.get(query) map { x =>
       AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
+        messages("settlorBusinessType.checkYourAnswersLabel", messageArg),
         HtmlFormat.escape(x.toString),
         None
       )

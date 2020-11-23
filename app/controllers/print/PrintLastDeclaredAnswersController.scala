@@ -19,7 +19,7 @@ package controllers.print
 import controllers.actions.Actions
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.print.PrintPlaybackHelper
 import views.html.print.PrintLastDeclaredAnswersView
@@ -32,9 +32,9 @@ class PrintLastDeclaredAnswersController @Inject()(
                                                     val controllerComponents: MessagesControllerComponents,
                                                     view: PrintLastDeclaredAnswersView,
                                                     printPlaybackAnswersHelper: PrintPlaybackHelper
-                                            ) extends FrontendBaseController with I18nSupport {
+                                                  ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad() = actions.verifiedForUtr.async {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
     implicit request =>
 
       val entities = printPlaybackAnswersHelper.people(request.userAnswers)

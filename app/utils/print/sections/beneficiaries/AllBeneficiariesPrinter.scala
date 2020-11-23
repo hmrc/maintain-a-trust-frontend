@@ -16,12 +16,15 @@
 
 package utils.print.sections.beneficiaries
 
+import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class AllBeneficiariesPrinter(userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages) {
+class AllBeneficiariesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
+                                       (userAnswers: UserAnswers)
+                                       (implicit messages: Messages) {
 
   def allBeneficiaries : Seq[AnswerSection] = {
     val beneficiaries = Seq(
@@ -53,7 +56,7 @@ class AllBeneficiariesPrinter(userAnswers: UserAnswers, countryOptions: CountryO
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield ClassOfBeneficiaryPrinter.print(index, userAnswers, countryOptions)).flatten
+        (for (index <- 0 to size) yield new ClassOfBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
     }
   }
 
@@ -66,7 +69,7 @@ class AllBeneficiariesPrinter(userAnswers: UserAnswers, countryOptions: CountryO
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield OtherBeneficiaryPrinter.print(index, userAnswers, countryOptions)).flatten
+        (for (index <- 0 to size) yield new OtherBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
     }
   }
 
@@ -79,7 +82,7 @@ class AllBeneficiariesPrinter(userAnswers: UserAnswers, countryOptions: CountryO
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield TrustBeneficiaryPrinter.print(index, userAnswers, countryOptions)).flatten
+        (for (index <- 0 to size) yield new TrustBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
     }
   }
 
@@ -92,7 +95,7 @@ class AllBeneficiariesPrinter(userAnswers: UserAnswers, countryOptions: CountryO
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield CompanyBeneficiaryPrinter.print(index, userAnswers, countryOptions)).flatten
+        (for (index <- 0 to size) yield new CompanyBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
     }
   }
 
@@ -105,7 +108,7 @@ class AllBeneficiariesPrinter(userAnswers: UserAnswers, countryOptions: CountryO
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield CharityBeneficiaryPrinter.print(index, userAnswers, countryOptions)).flatten
+        (for (index <- 0 to size) yield new CharityBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
     }
   }
 
@@ -118,7 +121,7 @@ class AllBeneficiariesPrinter(userAnswers: UserAnswers, countryOptions: CountryO
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield IndividualBeneficiaryPrinter.print(index, userAnswers, countryOptions)).flatten
+        (for (index <- 0 to size) yield new IndividualBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
     }
   }
 
@@ -128,7 +131,7 @@ class AllBeneficiariesPrinter(userAnswers: UserAnswers, countryOptions: CountryO
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield LargeBeneficiaryPrinter.print(index, userAnswers, countryOptions)).flatten
+        (for (index <- 0 to size) yield new LargeBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
     }
   }
 

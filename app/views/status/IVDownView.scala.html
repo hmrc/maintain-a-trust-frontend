@@ -32,7 +32,7 @@
 
     <p>@messages("ivDown.p1")</p>
 
-    <p>@messages("ivDown.p2") <a id="help-link" target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("ivDown.contact.link")</a> @messages("ivDown.p3")</p>
+    <p>@messages("ivDown.p2") <a id="help-link" target="_blank" href="appConfig.helplineUrl">@messages("ivDown.contact.link")</a> @messages("ivDown.p3")</p>
 
     @if(affinityGroup == AffinityGroup.Agent) {
       <p>@messages("ivDown.p2") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("ivDown.return.link")</a>.</p>

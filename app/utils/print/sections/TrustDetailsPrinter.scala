@@ -16,24 +16,22 @@
 
 package utils.print.sections
 
+import javax.inject.Inject
 import models.UserAnswers
 import pages.trustdetails._
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
-import utils.print.sections.AnswerRowConverter._
 import viewmodels.AnswerSection
 
-object TrustDetailsPrinter {
+class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter)
+                                   (implicit messages: Messages) {
 
-  def print(userAnswers: UserAnswers,
-            countryOptions: CountryOptions)
-           (implicit messages: Messages): Seq[AnswerSection] = Seq(
+  def print(userAnswers: UserAnswers): Seq[AnswerSection] = Seq(
       AnswerSection(
         headingKey = None,
         Seq(
-          stringQuestion(TrustNamePage, userAnswers, "trustName"),
-          dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
-          utr(userAnswers, "trustUniqueTaxReference")
+          converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
+          converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
+          converter.utr(userAnswers, "trustUniqueTaxReference")
         ).flatten,
         sectionKey = Some(messages("answerPage.section.trustsDetails.heading"))
       )

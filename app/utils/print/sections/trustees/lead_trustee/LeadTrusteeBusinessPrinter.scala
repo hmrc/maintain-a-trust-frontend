@@ -16,17 +16,17 @@
 
 package utils.print.sections.trustees.lead_trustee
 
+import javax.inject.Inject
 import models.UserAnswers
 import pages.trustees._
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
-import utils.print.sections.AnswerRowConverter._
 
-object LeadTrusteeBusinessPrinter extends LeadTrustee {
+class LeadTrusteeBusinessPrinter @Inject()(converter: AnswerRowConverter)
+                                          (implicit messages: Messages) extends LeadTrustee(converter) {
 
-  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)
-           (implicit messages: Messages): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers): Option[Seq[AnswerSection]] = {
 
     userAnswers.get(TrusteeOrgNamePage(index)).flatMap { name =>
       Some(
@@ -34,14 +34,15 @@ object LeadTrusteeBusinessPrinter extends LeadTrustee {
           AnswerSection(
             headingKey = Some(messages("answerPage.section.leadTrustee.subheading")),
             Seq(
-              yesNoQuestion(TrusteeUtrYesNoPage(index), userAnswers, "leadTrusteeUtrYesNo", name),
-              stringQuestion(TrusteeOrgNamePage(index), userAnswers, "trusteeBusinessName"),
-              stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name)
+              converter.yesNoQuestion(TrusteeUtrYesNoPage(index), userAnswers, "leadTrusteeUtrYesNo", name),
+              converter.stringQuestion(TrusteeOrgNamePage(index), userAnswers, "trusteeBusinessName"),
+              converter.stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name)
             ).flatten ++
-            addressAnswers(index, userAnswers, countryOptions, name).flatten ++
-            Seq(yesNoQuestion(TrusteeEmailYesNoPage(index), userAnswers, "trusteeEmailAddressYesNo", name),
-              stringQuestion(TrusteeEmailPage(index), userAnswers, "trusteeEmailAddress", name),
-              stringQuestion(TrusteeTelephoneNumberPage(index), userAnswers, "trusteeTelephoneNumber", name)
+            addressAnswers(index, userAnswers, name).flatten ++
+            Seq(
+              converter.yesNoQuestion(TrusteeEmailYesNoPage(index), userAnswers, "trusteeEmailAddressYesNo", name),
+              converter.stringQuestion(TrusteeEmailPage(index), userAnswers, "trusteeEmailAddress", name),
+              converter.stringQuestion(TrusteeTelephoneNumberPage(index), userAnswers, "trusteeTelephoneNumber", name)
             ).flatten,
             sectionKey = Some(messages("answerPage.section.trustees.heading"))
           )

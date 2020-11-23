@@ -16,30 +16,28 @@
 
 package utils.print.sections.trustees.lead_trustee
 
+import javax.inject.Inject
 import models.UserAnswers
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees._
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerRow
-import utils.print.sections.AnswerRowConverter._
 
-trait LeadTrustee {
+class LeadTrustee @Inject()(converter: AnswerRowConverter) {
 
-  def addressAnswers(index: Int,
-                     userAnswers: UserAnswers,
-                     countryOptions: CountryOptions,
-                     name: String)(implicit messages: Messages): Seq[Option[AnswerRow]] = {
+  def addressAnswers(index: Int, userAnswers: UserAnswers, name: String)
+                    (implicit messages: Messages): Seq[Option[AnswerRow]] = {
 
     userAnswers.get(TrusteeAddressPage(index)) match {
       case Some(_) =>
         Seq(
-          yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
-          addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name, countryOptions)
+          converter.yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
+          converter.addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name)
         )
       case _ =>
         Seq(
-          addressQuestion(CorrespondenceAddressPage, userAnswers, "trusteeUkAddress", name, countryOptions)
+          converter.addressQuestion(CorrespondenceAddressPage, userAnswers, "trusteeUkAddress", name)
         )
     }
   }

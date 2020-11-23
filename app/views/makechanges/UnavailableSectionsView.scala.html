@@ -14,8 +14,12 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
+@import controllers.routes._
+
 @this(
-    main_template: MainTemplate
+    main_template: MainTemplate,
+    config: FrontendAppConfig
 )
 
 @(availableSections: String, unavailableSections: String, futureSections: String)(implicit request: Request[_], messages: Messages)
@@ -29,7 +33,7 @@
     @components.heading(messages("unavailableSections.heading", availableSections), headingSize = "heading-large govuk-fieldset__heading")
 
     <p>
-        @messages("unavailableSections.p1", unavailableSections) <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts" target="_blank">@messages("unavailableSections.p1.a")</a>.
+        @messages("unavailableSections.p1", unavailableSections) <a href="@config.helplineUrl" target="_blank">@messages("unavailableSections.p1.a")</a>.
     </p>
 
     <p>
@@ -39,7 +43,7 @@
     @components.button_link(messages("site.sign_out"), controllers.routes.LogoutController.logout().url)
 
     <p>
-        @messages("unavailableSections.p3.start") <a id="information-about-maintaining-link" href=@controllers.routes.InformationMaintainingThisTrustController.onPageLoad().url>@messages("unavailableSections.p3.link")</a> @messages("unavailableSections.p3.end")
+        @messages("unavailableSections.p3.start") <a id="information-about-maintaining-link" href=@InformationMaintainingThisTrustController.onPageLoad().url>@messages("unavailableSections.p3.link")</a> @messages("unavailableSections.p3.end")
     </p>
 
 }
