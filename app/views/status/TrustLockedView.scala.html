@@ -14,8 +14,11 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
+
 @this(
-    main_template: MainTemplate
+    main_template: MainTemplate,
+    config: FrontendAppConfig
 )
 
 @(utr: String)(implicit request: Request[_], messages: Messages)
@@ -27,5 +30,5 @@
     @components.heading_with_caption(headingKey = "trustLocked.heading", caption = "trustLocked.caption", captionParam = utr)
     <p>@messages("trustLocked.p1")</p>
     <p>@messages("trustLocked.p2")</p>
-    <p>@messages("trustLocked.p3") <a target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts">@messages("trustLocked.link1")</a>.</p>
+    <p>@messages("trustLocked.p3") <a target="_blank" href="@config.helplineUrl">@messages("trustLocked.link1")</a>.</p>
 }

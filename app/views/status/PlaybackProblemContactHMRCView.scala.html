@@ -14,31 +14,24 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
 @import models.Mode
 
 @this(
-main_template: MainTemplate
+    main_template: MainTemplate,
+    config: FrontendAppConfig
 )
 
 @(utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = messages("playbackProblemContactHMRC.title")
+    title = messages("playbackProblemContactHMRC.title")
 ) {
 
-@components.heading_with_caption(headingKey = "playbackProblemContactHMRC.heading", caption = "playbackProblemContactHMRC.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "playbackProblemContactHMRC.heading", caption = "playbackProblemContactHMRC.caption", captionParam = utr)
 
-<p>
-    @messages("playbackProblemContactHMRC.p1.beforeLink")
-    <a
-            id="help-link"
-            href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts"
-            target="_blank">
-        @messages("playbackProblemContactHMRC.p1.link")
-    </a>
-    @messages("playbackProblemContactHMRC.p1.afterLink")
-</p>
+    <p>@messages("playbackProblemContactHMRC.p1.beforeLink") <a id="help-link" href="@config.helplineUrl" target="_blank">@messages("playbackProblemContactHMRC.p1.link")</a> @messages("playbackProblemContactHMRC.p1.afterLink")</p>
 
-<p>@messages("playbackProblemContactHMRC.p2")</p>
+    <p>@messages("playbackProblemContactHMRC.p2")</p>
 
 }
