@@ -19,17 +19,19 @@ package utils.print
 import java.time.LocalDate
 
 import base.SpecBase
-import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
 import models.pages.IndividualOrBusiness
+import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
 import pages.protectors._
 import pages.protectors.business._
 import pages.protectors.individual._
 import play.twirl.api.Html
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import utils.print.sections.protectors.AllProtectorsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
 class ProtectorPrintPlaybackHelperSpec extends SpecBase {
+
+  private val answerRowConverter: AnswerRowConverter = injector.instanceOf[AnswerRowConverter]
 
   "Playback print helper" must {
 
@@ -64,7 +66,7 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
         .set(IndividualProtectorPassportIDCardYesNoPage(3), true).success.value
         .set(IndividualProtectorPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
 
-      val helper = new AllProtectorsPrinter(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
+      val helper = new AllProtectorsPrinter(answerRowConverter)(answers)
 
       val result = helper.allProtectors
 
@@ -142,7 +144,7 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
         .set(BusinessProtectorUtrYesNoPage(2), false).success.value
         .set(BusinessProtectorAddressYesNoPage(2), false).success.value
 
-      val helper = new AllProtectorsPrinter(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
+      val helper = new AllProtectorsPrinter(answerRowConverter)(answers)
 
       val result = helper.allProtectors
 
@@ -201,7 +203,7 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
         .set(BusinessProtectorUtrYesNoPage(1), true).success.value
         .set(BusinessProtectorUtrPage(1), "1234567890").success.value
 
-      val helper = new AllProtectorsPrinter(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
+      val helper = new AllProtectorsPrinter(answerRowConverter)(answers)
 
       val result = helper.allProtectors
 

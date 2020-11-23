@@ -23,10 +23,12 @@ import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddres
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees._
 import play.twirl.api.Html
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import utils.print.sections.trustees.AllTrusteesPrinter
 
 class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatchers with UserAnswersWriting {
+
+  private val answerRowConverter: AnswerRowConverter = injector.instanceOf[AnswerRowConverter]
 
   "when the lead trustee is an UK individual" must {
     "generate lead trustee section" in {
@@ -45,7 +47,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+      val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 
       val result = helper.allTrustees
 
@@ -82,7 +84,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- TrusteePassportIDCardYesNoPage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+      val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 
       val result = helper.allTrustees
 
@@ -120,7 +122,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+      val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 
       val result = helper.allTrustees
 
@@ -154,7 +156,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+      val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 
       val result = helper.allTrustees
 
@@ -189,7 +191,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
       } yield Unit).run(emptyUserAnswers).value
 
-      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+      val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 
       val result = helper.allTrustees
 
@@ -229,7 +231,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(2) is false
       } yield Unit).run(emptyUserAnswers).value
 
-      val helper = new AllTrusteesPrinter(answers, injector.instanceOf[CountryOptions])
+      val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 
       val result = helper.allTrustees
 

@@ -16,29 +16,29 @@
 
 package utils.print.sections.beneficiaries
 
+import javax.inject.Inject
 import models.UserAnswers
 import pages.beneficiaries.trust._
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
-import utils.print.sections.AnswerRowConverter._
 
-object TrustBeneficiaryPrinter {
+class TrustBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
+                                       (implicit messages: Messages) {
 
-  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)
-           (implicit messages: Messages): Seq[AnswerSection] = {
+  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] = {
 
     userAnswers.get(TrustBeneficiaryNamePage(index)).map { name =>
       Seq(AnswerSection(
         headingKey = Some(messages("answerPage.section.trustBeneficiary.subheading", index + 1)),
         Seq(
-          stringQuestion(TrustBeneficiaryNamePage(index), userAnswers, "trustBeneficiaryName"),
-          yesNoQuestion(TrustBeneficiaryDiscretionYesNoPage(index), userAnswers, "trustBeneficiaryShareOfIncomeYesNo", name),
-          percentageQuestion(TrustBeneficiaryShareOfIncomePage(index), userAnswers, "trustBeneficiaryShareOfIncome", name),
-          yesNoQuestion(TrustBeneficiaryAddressYesNoPage(index), userAnswers, "trustBeneficiaryAddressYesNo", name),
-          yesNoQuestion(TrustBeneficiaryAddressUKYesNoPage(index), userAnswers, "trustBeneficiaryAddressUKYesNo", name),
-          addressQuestion(TrustBeneficiaryAddressPage(index), userAnswers, "trustBeneficiaryAddress", countryOptions = countryOptions, messageArg = name),
-          utrQuestion(TrustBeneficiaryUtrPage(index), userAnswers, "trustBeneficiaryUtr", name)
+          converter.stringQuestion(TrustBeneficiaryNamePage(index), userAnswers, "trustBeneficiaryName"),
+          converter.yesNoQuestion(TrustBeneficiaryDiscretionYesNoPage(index), userAnswers, "trustBeneficiaryShareOfIncomeYesNo", name),
+          converter.percentageQuestion(TrustBeneficiaryShareOfIncomePage(index), userAnswers, "trustBeneficiaryShareOfIncome", name),
+          converter.yesNoQuestion(TrustBeneficiaryAddressYesNoPage(index), userAnswers, "trustBeneficiaryAddressYesNo", name),
+          converter.yesNoQuestion(TrustBeneficiaryAddressUKYesNoPage(index), userAnswers, "trustBeneficiaryAddressUKYesNo", name),
+          converter.addressQuestion(TrustBeneficiaryAddressPage(index), userAnswers, "trustBeneficiaryAddress", name),
+          converter.utrQuestion(TrustBeneficiaryUtrPage(index), userAnswers, "trustBeneficiaryUtr", name)
         ).flatten,
         sectionKey = None
       ))

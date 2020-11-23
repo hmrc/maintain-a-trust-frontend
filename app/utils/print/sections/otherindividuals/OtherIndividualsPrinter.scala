@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package utils.print.sections
+package utils.print.sections.otherindividuals
 
+import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class OtherIndividualsPrinter(userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages) {
+class OtherIndividualsPrinter @Inject()(answerRowConverter: AnswerRowConverter)
+                                       (userAnswers: UserAnswers)
+                                       (implicit messages: Messages) {
 
   def allOtherIndividuals : Seq[AnswerSection] = {
     val size = userAnswers
@@ -33,7 +36,7 @@ class OtherIndividualsPrinter(userAnswers: UserAnswers, countryOptions: CountryO
       case 0 => Nil
       case _ =>
         val heading = Seq(AnswerSection(sectionKey = Some(messages("answerPage.section.otherIndividuals.heading"))))
-        val individuals = (for (index <- 0 to size) yield OtherIndividualPrinter.print(index, userAnswers, countryOptions)).flatten
+        val individuals = (for (index <- 0 to size) yield new OtherIndividualPrinter(answerRowConverter).print(index, userAnswers)).flatten
 
         heading ++ individuals
     }

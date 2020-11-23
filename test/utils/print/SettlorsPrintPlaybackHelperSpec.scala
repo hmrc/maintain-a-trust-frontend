@@ -27,11 +27,13 @@ import pages.settlors.living_settlor._
 import play.api.libs.json.Writes
 import play.twirl.api.Html
 import queries.Settable
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import utils.print.sections.settlors.AllSettlorsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
 class SettlorsPrintPlaybackHelperSpec extends SpecBase {
+
+  private val answerRowConverter: AnswerRowConverter = injector.instanceOf[AnswerRowConverter]
 
   "Settlors print playback helper" must {
 
@@ -48,7 +50,7 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         .set(SettlorNationalInsuranceYesNoPage, true).success.value
         .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
 
-      val helper = new AllSettlorsPrinter(answers, injector.instanceOf[CountryOptions])
+      val helper = new AllSettlorsPrinter(answerRowConverter)(answers)
 
       val result = helper.allSettlors
 
@@ -93,7 +95,7 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
           PassportOrIdCardDetails("DE", "123456789", LocalDate.of(2021,10,10))
         ).success.value
 
-      val helper = new AllSettlorsPrinter(answers, injector.instanceOf[CountryOptions])
+      val helper = new AllSettlorsPrinter(answerRowConverter)(answers)
 
       val result = helper.allSettlors
 
@@ -146,13 +148,13 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         uaSet(SettlorCompanyTypePage(index), Trading) andThen
         uaSet(SettlorCompanyTimePage(index), false)
 
-      val helper = new AllSettlorsPrinter((
-        businessSettlorWithUTR(0) andThen
-          businessSettlorWithUKAddress(1) andThen
-          businessSettlorWithNonUKAddress(2) andThen
-          businessSettlorWithNoIdentification(3) andThen
-          businessSettlorInEmployeeRelatedTrust(4)
-        ).apply(emptyUserAnswers), injector.instanceOf[CountryOptions])
+      val answers = businessSettlorWithUTR(0) andThen
+        businessSettlorWithUKAddress(1) andThen
+        businessSettlorWithNonUKAddress(2) andThen
+        businessSettlorWithNoIdentification(3) andThen
+        businessSettlorInEmployeeRelatedTrust(4)
+
+      val helper = new AllSettlorsPrinter(answerRowConverter)(answers.apply(emptyUserAnswers))
 
       val result = helper.allSettlors
 
@@ -228,12 +230,12 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         uaSet(SettlorIndividualNINOYesNoPage(index), false) andThen
         uaSet(SettlorAddressYesNoPage(index), false)
 
-      val helper = new AllSettlorsPrinter((
-        individualSettlorWithNino(0) andThen
-          individualSettlorWithUKAddressAndNoPassportOrIdCard(1) andThen
-          individualSettlorWithInternationalAddressAndIdCard(2) andThen
-          individualSettlorWithNoId(3)
-        ).apply(emptyUserAnswers), injector.instanceOf[CountryOptions])
+      val answers = individualSettlorWithNino(0) andThen
+        individualSettlorWithUKAddressAndNoPassportOrIdCard(1) andThen
+        individualSettlorWithInternationalAddressAndIdCard(2) andThen
+        individualSettlorWithNoId(3)
+
+      val helper = new AllSettlorsPrinter(answerRowConverter)(answers.apply(emptyUserAnswers))
 
       val result = helper.allSettlors
       

@@ -16,24 +16,24 @@
 
 package utils.print.sections.beneficiaries
 
+import javax.inject.Inject
 import models.UserAnswers
 import pages.beneficiaries.classOfBeneficiary._
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
-import utils.print.sections.AnswerRowConverter._
 
-object ClassOfBeneficiaryPrinter {
+class ClassOfBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
+                                         (implicit messages: Messages) {
 
-  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)
-           (implicit messages: Messages): Seq[AnswerSection] = {
+  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] = {
 
-    userAnswers.get(ClassOfBeneficiaryDescriptionPage(index)).map { name =>
+    userAnswers.get(ClassOfBeneficiaryDescriptionPage(index)).map { _ =>
       Seq(
         AnswerSection(
           headingKey = Some(messages("answerPage.section.classOfBeneficiary.subheading", index + 1)),
           Seq(
-            stringQuestion(ClassOfBeneficiaryDescriptionPage(index), userAnswers, "classBeneficiaryDescription")
+            converter.stringQuestion(ClassOfBeneficiaryDescriptionPage(index), userAnswers, "classBeneficiaryDescription")
           ).flatten,
           sectionKey = None
         )

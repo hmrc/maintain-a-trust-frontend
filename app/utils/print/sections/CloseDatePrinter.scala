@@ -16,18 +16,19 @@
 
 package utils.print.sections
 
+import javax.inject.Inject
 import models.UserAnswers
 import pages.close.DateLastAssetSharedOutPage
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter._
 import viewmodels.AnswerSection
 
-object CloseDatePrinter {
+class CloseDatePrinter @Inject()(converter: AnswerRowConverter)
+                                (implicit messages: Messages) {
 
-  def print(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection = AnswerSection(
+  def print(userAnswers: UserAnswers): AnswerSection = AnswerSection(
       headingKey = None,
       Seq(
-        dateQuestion(DateLastAssetSharedOutPage, userAnswers, "dateLastAssetSharedOut")
+        converter.dateQuestion(DateLastAssetSharedOutPage, userAnswers, "dateLastAssetSharedOut")
       ).flatten,
       sectionKey = Some(messages("answerPage.section.closeDate.heading"))
     )

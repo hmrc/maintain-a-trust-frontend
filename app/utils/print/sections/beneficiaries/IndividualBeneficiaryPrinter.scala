@@ -16,6 +16,7 @@
 
 package utils.print.sections.beneficiaries
 
+import javax.inject.Inject
 import models.UserAnswers
 import models.pages.RoleInCompany
 import models.pages.RoleInCompany.NA
@@ -23,36 +24,33 @@ import pages.beneficiaries.individual._
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import queries.Gettable
-import utils.countryoptions.CountryOptions
-import utils.print.sections.AnswerRowConverter._
+import utils.print.sections.AnswerRowConverter
 import viewmodels.{AnswerRow, AnswerSection}
 
-object IndividualBeneficiaryPrinter {
+class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
+                                            (implicit messages: Messages) {
 
-  def print(index: Int,
-            userAnswers: UserAnswers,
-            countryOptions: CountryOptions)
-           (implicit messages: Messages): Seq[AnswerSection] = {
+  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] = {
 
     userAnswers.get(IndividualBeneficiaryNamePage(index)).map(_.toString).map { name =>
       Seq(
         AnswerSection(
           headingKey = Some(messages("answerPage.section.individualBeneficiary.subheading", index + 1)),
           Seq(
-            fullNameQuestion(IndividualBeneficiaryNamePage(index), userAnswers, "individualBeneficiaryName"),
-            roleInCompanyQuestion(IndividualBeneficiaryRoleInCompanyPage(index), userAnswers, "individualBeneficiaryRoleInCompany", name),
-            yesNoQuestion(IndividualBeneficiaryDateOfBirthYesNoPage(index), userAnswers, "individualBeneficiaryDateOfBirthYesNo", name),
-            dateQuestion(IndividualBeneficiaryDateOfBirthPage(index), userAnswers, "individualBeneficiaryDateOfBirth", name),
-            yesNoQuestion(IndividualBeneficiaryIncomeYesNoPage(index), userAnswers, "individualBeneficiaryIncomeYesNo", name),
-            percentageQuestion(IndividualBeneficiaryIncomePage(index), userAnswers, "individualBeneficiaryIncome", name ),
-            yesNoQuestion(IndividualBeneficiaryNationalInsuranceYesNoPage(index), userAnswers, "individualBeneficiaryNationalInsuranceYesNo", name),
-            ninoQuestion(IndividualBeneficiaryNationalInsuranceNumberPage(index), userAnswers, "individualBeneficiaryNationalInsuranceNumber", name),
-            yesNoQuestion(IndividualBeneficiaryAddressYesNoPage(index), userAnswers, "individualBeneficiaryAddressYesNo", name),
-            yesNoQuestion(IndividualBeneficiaryAddressUKYesNoPage(index), userAnswers, "individualBeneficiaryAddressUKYesNo", name),
-            addressQuestion(IndividualBeneficiaryAddressPage(index), userAnswers, "individualBeneficiaryAddressUK", name, countryOptions),
-            yesNoQuestion(IndividualBeneficiaryPassportIDCardYesNoPage(index), userAnswers, "individualBeneficiaryPassportIDCardYesNo", name),
-            passportOrIdCardQuestion(IndividualBeneficiaryPassportIDCardPage(index), userAnswers, "individualBeneficiaryPassportIDCard", name, countryOptions),
-            yesNoQuestion(IndividualBeneficiaryVulnerableYesNoPage(index), userAnswers, "individualBeneficiaryVulnerableYesNo", name)
+            converter.fullNameQuestion(IndividualBeneficiaryNamePage(index), userAnswers, "individualBeneficiaryName"),
+            roleInCompanyQuestion(IndividualBeneficiaryRoleInCompanyPage(index), userAnswers, name),
+            converter.yesNoQuestion(IndividualBeneficiaryDateOfBirthYesNoPage(index), userAnswers, "individualBeneficiaryDateOfBirthYesNo", name),
+            converter.dateQuestion(IndividualBeneficiaryDateOfBirthPage(index), userAnswers, "individualBeneficiaryDateOfBirth", name),
+            converter.yesNoQuestion(IndividualBeneficiaryIncomeYesNoPage(index), userAnswers, "individualBeneficiaryIncomeYesNo", name),
+            converter.percentageQuestion(IndividualBeneficiaryIncomePage(index), userAnswers, "individualBeneficiaryIncome", name ),
+            converter.yesNoQuestion(IndividualBeneficiaryNationalInsuranceYesNoPage(index), userAnswers, "individualBeneficiaryNationalInsuranceYesNo", name),
+            converter.ninoQuestion(IndividualBeneficiaryNationalInsuranceNumberPage(index), userAnswers, "individualBeneficiaryNationalInsuranceNumber", name),
+            converter.yesNoQuestion(IndividualBeneficiaryAddressYesNoPage(index), userAnswers, "individualBeneficiaryAddressYesNo", name),
+            converter.yesNoQuestion(IndividualBeneficiaryAddressUKYesNoPage(index), userAnswers, "individualBeneficiaryAddressUKYesNo", name),
+            converter.addressQuestion(IndividualBeneficiaryAddressPage(index), userAnswers, "individualBeneficiaryAddressUK", name),
+            converter.yesNoQuestion(IndividualBeneficiaryPassportIDCardYesNoPage(index), userAnswers, "individualBeneficiaryPassportIDCardYesNo", name),
+            converter.passportOrIdCardQuestion(IndividualBeneficiaryPassportIDCardPage(index), userAnswers, "individualBeneficiaryPassportIDCard", name),
+            converter.yesNoQuestion(IndividualBeneficiaryVulnerableYesNoPage(index), userAnswers, "individualBeneficiaryVulnerableYesNo", name)
           ).flatten,
           sectionKey = None
         )
@@ -62,13 +60,11 @@ object IndividualBeneficiaryPrinter {
 
   private def roleInCompanyQuestion(query: Gettable[RoleInCompany],
                                     userAnswers: UserAnswers,
-                                    labelKey: String,
-                                    messageArg: String
-                                   )(implicit messages:Messages) =
-  {
+                                    messageArg: String): Option[AnswerRow] = {
+
     userAnswers.get(query) map {x =>
       AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
+        messages("individualBeneficiaryRoleInCompany.checkYourAnswersLabel", messageArg),
         x match {
           case NA => HtmlFormat.escape(messages("individualBeneficiary.roleInCompany.checkYourAnswersLabel.na"))
           case _ => HtmlFormat.escape(messages(s"individualBeneficiary.roleInCompany.$x"))
@@ -77,6 +73,4 @@ object IndividualBeneficiaryPrinter {
       )
     }
   }
-
-
 }

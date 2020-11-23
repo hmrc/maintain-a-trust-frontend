@@ -19,28 +19,28 @@ package utils.print
 import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
 import utils.print.sections.beneficiaries.AllBeneficiariesPrinter
+import utils.print.sections.otherindividuals.OtherIndividualsPrinter
 import utils.print.sections.protectors.AllProtectorsPrinter
 import utils.print.sections.settlors.AllSettlorsPrinter
 import utils.print.sections.trustees.AllTrusteesPrinter
-import utils.print.sections.{CloseDatePrinter, OtherIndividualsPrinter, TrustDetailsPrinter}
+import utils.print.sections.{AnswerRowConverter, CloseDatePrinter, TrustDetailsPrinter}
 import viewmodels.AnswerSection
 
-class PrintPlaybackHelper @Inject()(countryOptions: CountryOptions){
+class PrintPlaybackHelper @Inject()(answerRowConverter: AnswerRowConverter) {
 
-  def closeDate(userAnswers: UserAnswers)(implicit messages: Messages) : AnswerSection =
-    CloseDatePrinter.print(userAnswers)
+  def closeDate(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection =
+    new CloseDatePrinter(answerRowConverter).print(userAnswers)
 
-  def people(userAnswers: UserAnswers)(implicit messages: Messages) : Seq[AnswerSection] = List(
-      new AllSettlorsPrinter(userAnswers, countryOptions).allSettlors,
-      new AllTrusteesPrinter(userAnswers, countryOptions).allTrustees,
-      new AllBeneficiariesPrinter(userAnswers, countryOptions).allBeneficiaries,
-      new AllProtectorsPrinter(userAnswers, countryOptions).allProtectors,
-      new OtherIndividualsPrinter(userAnswers, countryOptions).allOtherIndividuals
-    ).flatten
+  def people(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = List(
+    new AllSettlorsPrinter(answerRowConverter)(userAnswers).allSettlors,
+    new AllTrusteesPrinter(answerRowConverter)(userAnswers).allTrustees,
+    new AllBeneficiariesPrinter(answerRowConverter)(userAnswers).allBeneficiaries,
+    new AllProtectorsPrinter(answerRowConverter)(userAnswers).allProtectors,
+    new OtherIndividualsPrinter(answerRowConverter)(userAnswers).allOtherIndividuals
+  ).flatten
 
-  def trustDetails(userAnswers: UserAnswers)(implicit messages: Messages) : Seq[AnswerSection] =
-    TrustDetailsPrinter.print(userAnswers, countryOptions)
+  def trustDetails(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] =
+    new TrustDetailsPrinter(answerRowConverter).print(userAnswers)
 
 }

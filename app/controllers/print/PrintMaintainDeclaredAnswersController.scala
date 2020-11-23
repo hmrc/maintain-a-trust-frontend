@@ -26,7 +26,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import utils.DateFormatter
+import utils.CheckAnswersFormatters
 import utils.print.PrintPlaybackHelper
 import views.html.print.{PrintMaintainDeclaredAnswersView, PrintMaintainFinalDeclaredAnswersView}
 
@@ -39,8 +39,8 @@ class PrintMaintainDeclaredAnswersController @Inject()(
                                                         declaredAnswersView: PrintMaintainDeclaredAnswersView,
                                                         finalDeclaredAnswersView: PrintMaintainFinalDeclaredAnswersView,
                                                         printPlaybackAnswersHelper: PrintPlaybackHelper,
-                                                        dateFormatter: DateFormatter
-                                                 ) extends FrontendBaseController with I18nSupport {
+                                                        formatter: CheckAnswersFormatters
+                                                      ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
@@ -55,7 +55,7 @@ class PrintMaintainDeclaredAnswersController @Inject()(
 
       val trnDateTime = request.userAnswers.get(SubmissionDatePage).getOrElse(LocalDateTime.now)
 
-      val declarationSent : String = dateFormatter.formatDate(trnDateTime)
+      val declarationSent : String = formatter.formatDate(trnDateTime.toLocalDate)
 
       val isAgent = request.user.affinityGroup == Agent
 

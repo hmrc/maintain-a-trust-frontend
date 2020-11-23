@@ -22,11 +22,13 @@ import base.SpecBase
 import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
 import pages.individual._
 import play.twirl.api.Html
-import utils.countryoptions.CountryOptions
-import utils.print.sections.OtherIndividualsPrinter
+import utils.print.sections.AnswerRowConverter
+import utils.print.sections.otherindividuals.OtherIndividualsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
 class OtherIndividualPrinterSpec extends SpecBase {
+
+  private val answerRowConverter: AnswerRowConverter = injector.instanceOf[AnswerRowConverter]
 
   ".print" must {
 
@@ -59,7 +61,7 @@ class OtherIndividualPrinterSpec extends SpecBase {
         .set(OtherIndividualPassportIDCardYesNoPage(3), true).success.value
         .set(OtherIndividualPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))).success.value
 
-      val helper = new OtherIndividualsPrinter(countryOptions = injector.instanceOf[CountryOptions], userAnswers = answers)
+      val helper = new OtherIndividualsPrinter(answerRowConverter)(answers)
 
       val result = helper.allOtherIndividuals
 

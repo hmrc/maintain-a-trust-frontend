@@ -16,43 +16,42 @@
 
 package utils.print.sections.beneficiaries
 
+import javax.inject.Inject
 import models.{Description, UserAnswers}
 import pages.beneficiaries.large._
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
 import queries.Gettable
-import utils.countryoptions.CountryOptions
-import utils.print.sections.AnswerRowConverter._
+import utils.print.sections.AnswerRowConverter
 import viewmodels.{AnswerRow, AnswerSection}
 
-object LargeBeneficiaryPrinter {
+class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
+                                       (implicit messages: Messages) {
 
-  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)
-           (implicit messages: Messages): Seq[AnswerSection] =
+  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] =
 
     userAnswers.get(LargeBeneficiaryNamePage(index)).map { name =>
       Seq(AnswerSection(
         headingKey = Some(messages("answerPage.section.largeBeneficiary.subheading", index + 1)),
         Seq(
-          stringQuestion(LargeBeneficiaryNamePage(index), userAnswers, "largeBeneficiaryName"),
-          yesNoQuestion(LargeBeneficiaryAddressYesNoPage(index), userAnswers, "largeBeneficiaryAddressYesNo", name),
-          yesNoQuestion(LargeBeneficiaryAddressUKYesNoPage(index), userAnswers, "largeBeneficiaryAddressUKYesNo", name),
-          addressQuestion(LargeBeneficiaryAddressPage(index), userAnswers, "largeBeneficiaryAddress", countryOptions = countryOptions, messageArg = name),
-          utrQuestion(LargeBeneficiaryUtrPage(index), userAnswers, "largeBeneficiaryUtr", name),
-          descriptionQuestion(LargeBeneficiaryDescriptionPage(index), userAnswers, "largeBeneficiaryDescription", name),
-          stringQuestion(LargeBeneficiaryNumberOfBeneficiariesPage(index), userAnswers, "largeBeneficiaryNumberOfBeneficiaries")
+          converter.stringQuestion(LargeBeneficiaryNamePage(index), userAnswers, "largeBeneficiaryName"),
+          converter.yesNoQuestion(LargeBeneficiaryAddressYesNoPage(index), userAnswers, "largeBeneficiaryAddressYesNo", name),
+          converter.yesNoQuestion(LargeBeneficiaryAddressUKYesNoPage(index), userAnswers, "largeBeneficiaryAddressUKYesNo", name),
+          converter.addressQuestion(LargeBeneficiaryAddressPage(index), userAnswers, "largeBeneficiaryAddress", name),
+          converter.utrQuestion(LargeBeneficiaryUtrPage(index), userAnswers, "largeBeneficiaryUtr", name),
+          descriptionQuestion(LargeBeneficiaryDescriptionPage(index), userAnswers, name),
+          converter.stringQuestion(LargeBeneficiaryNumberOfBeneficiariesPage(index), userAnswers, "largeBeneficiaryNumberOfBeneficiaries")
         ).flatten
       ))
     }.getOrElse(Nil)
 
   private def descriptionQuestion(query: Gettable[Description],
                                   userAnswers: UserAnswers,
-                                  labelKey: String,
-                                  messageArg: String
-                                 )(implicit messages:Messages) = {
+                                  messageArg: String): Option[AnswerRow] = {
+
     userAnswers.get(query) map {x =>
       AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
+        messages("largeBeneficiaryDescription.checkYourAnswersLabel", messageArg),
         description(x),
         None
       )

@@ -16,31 +16,29 @@
 
 package utils.print.sections.trustees
 
+import javax.inject.Inject
 import models.UserAnswers
 import pages.trustees._
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
-import utils.print.sections.AnswerRowConverter._
 
-object TrusteeOrganisationPrinter {
+class TrusteeOrganisationPrinter @Inject()(converter: AnswerRowConverter)
+                                          (implicit messages: Messages) {
 
-  def print(index: Int,
-            userAnswers: UserAnswers,
-            countryOptions: CountryOptions)
-           (implicit messages: Messages): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers): Option[Seq[AnswerSection]] = {
 
     userAnswers.get(TrusteeOrgNamePage(index)).flatMap { name =>
       Some(Seq(
         AnswerSection(
           headingKey = Some(messages("answerPage.section.trustee.subheading", index + 1)),
           Seq(
-            stringQuestion(TrusteeOrgNamePage(index), userAnswers, "trusteeBusinessName"),
-            yesNoQuestion(TrusteeUtrYesNoPage(index), userAnswers, "trusteeUtrYesNo", name),
-            stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name),
-            yesNoQuestion(TrusteeAddressYesNoPage(index), userAnswers, "trusteeUkAddressYesNo", name),
-            yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
-            addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name, countryOptions)
+            converter.stringQuestion(TrusteeOrgNamePage(index), userAnswers, "trusteeBusinessName"),
+            converter.yesNoQuestion(TrusteeUtrYesNoPage(index), userAnswers, "trusteeUtrYesNo", name),
+            converter.stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name),
+            converter.yesNoQuestion(TrusteeAddressYesNoPage(index), userAnswers, "trusteeUkAddressYesNo", name),
+            converter.yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
+            converter.addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name)
           ).flatten,
           sectionKey = None
         )

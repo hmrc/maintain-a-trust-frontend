@@ -16,30 +16,31 @@
 
 package utils.print.sections.protectors
 
+import javax.inject.Inject
 import models.UserAnswers
 import pages.protectors.individual._
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
-import utils.print.sections.AnswerRowConverter._
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-object IndividualProtectorPrinter {
+class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter)
+                                          (implicit messages: Messages) {
 
-  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] =
+  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] =
     userAnswers.get(IndividualProtectorNamePage(index)).map(_.toString).map { protectorName =>
       Seq(AnswerSection(
         headingKey = Some(messages("answerPage.section.protector.subheading", index + 1)),
         Seq(
-          fullNameQuestion(IndividualProtectorNamePage(index), userAnswers, "individualProtectorName", protectorName),
-          yesNoQuestion(IndividualProtectorDateOfBirthYesNoPage(index), userAnswers, "individualProtectorDateOfBirthYesNo", protectorName),
-          dateQuestion(IndividualProtectorDateOfBirthPage(index),userAnswers, "individualProtectorDateOfBirth", protectorName),
-          yesNoQuestion(IndividualProtectorNINOYesNoPage(index), userAnswers, "individualProtectorNINOYesNo", protectorName),
-          ninoQuestion(IndividualProtectorNINOPage(index), userAnswers, "individualProtectorNINO", protectorName),
-          yesNoQuestion(IndividualProtectorAddressYesNoPage(index), userAnswers, "individualProtectorAddressYesNo", protectorName),
-          yesNoQuestion(IndividualProtectorAddressUKYesNoPage(index), userAnswers, "individualProtectorAddressUkYesNo", protectorName),
-          addressQuestion(IndividualProtectorAddressPage(index), userAnswers, "individualProtectorAddress", protectorName, countryOptions),
-          yesNoQuestion(IndividualProtectorPassportIDCardYesNoPage(index), userAnswers, "individualProtectorPassportIDCardYesNo", protectorName),
-          passportOrIdCardQuestion(IndividualProtectorPassportIDCardPage(index), userAnswers, "individualProtectorPassportIDCard", protectorName, countryOptions)
+          converter.fullNameQuestion(IndividualProtectorNamePage(index), userAnswers, "individualProtectorName", protectorName),
+          converter.yesNoQuestion(IndividualProtectorDateOfBirthYesNoPage(index), userAnswers, "individualProtectorDateOfBirthYesNo", protectorName),
+          converter.dateQuestion(IndividualProtectorDateOfBirthPage(index),userAnswers, "individualProtectorDateOfBirth", protectorName),
+          converter.yesNoQuestion(IndividualProtectorNINOYesNoPage(index), userAnswers, "individualProtectorNINOYesNo", protectorName),
+          converter.ninoQuestion(IndividualProtectorNINOPage(index), userAnswers, "individualProtectorNINO", protectorName),
+          converter.yesNoQuestion(IndividualProtectorAddressYesNoPage(index), userAnswers, "individualProtectorAddressYesNo", protectorName),
+          converter.yesNoQuestion(IndividualProtectorAddressUKYesNoPage(index), userAnswers, "individualProtectorAddressUkYesNo", protectorName),
+          converter.addressQuestion(IndividualProtectorAddressPage(index), userAnswers, "individualProtectorAddress", protectorName),
+          converter.yesNoQuestion(IndividualProtectorPassportIDCardYesNoPage(index), userAnswers, "individualProtectorPassportIDCardYesNo", protectorName),
+          converter.passportOrIdCardQuestion(IndividualProtectorPassportIDCardPage(index), userAnswers, "individualProtectorPassportIDCard", protectorName)
         ).flatten,
         sectionKey = None
       ))

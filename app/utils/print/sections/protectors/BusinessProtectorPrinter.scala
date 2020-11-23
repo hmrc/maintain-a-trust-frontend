@@ -16,27 +16,28 @@
 
 package utils.print.sections.protectors
 
+import javax.inject.Inject
 import models.UserAnswers
 import pages.protectors.business._
 import play.api.i18n.Messages
-import utils.countryoptions.CountryOptions
+import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
-import utils.print.sections.AnswerRowConverter._
 
-object BusinessProtectorPrinter {
+class BusinessProtectorPrinter @Inject()(converter: AnswerRowConverter)
+                                        (implicit messages: Messages) {
 
-  def print(index: Int, userAnswers: UserAnswers, countryOptions: CountryOptions)(implicit messages: Messages): Seq[AnswerSection] =
+  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] =
     userAnswers.get(BusinessProtectorNamePage(index)).map { protectorName =>
       Seq(
         AnswerSection(
           headingKey = Some(messages("answerPage.section.protector.subheading", index + 1)),
           Seq(
-            stringQuestion(BusinessProtectorNamePage(index), userAnswers, "companyProtectorName", protectorName),
-            yesNoQuestion(BusinessProtectorUtrYesNoPage(index), userAnswers, "companyProtectorUtrYesNo", protectorName),
-            stringQuestion(BusinessProtectorUtrPage(index), userAnswers, "companyProtectorUtr", protectorName),
-            yesNoQuestion(BusinessProtectorAddressYesNoPage(index), userAnswers, "companyProtectorAddressYesNo", protectorName),
-            yesNoQuestion(BusinessProtectorAddressUKYesNoPage(index), userAnswers, "companyProtectorAddressUkYesNo", protectorName),
-            addressQuestion(BusinessProtectorAddressPage(index), userAnswers, "companyProtectorAddress", protectorName, countryOptions)
+            converter.stringQuestion(BusinessProtectorNamePage(index), userAnswers, "companyProtectorName", protectorName),
+            converter.yesNoQuestion(BusinessProtectorUtrYesNoPage(index), userAnswers, "companyProtectorUtrYesNo", protectorName),
+            converter.stringQuestion(BusinessProtectorUtrPage(index), userAnswers, "companyProtectorUtr", protectorName),
+            converter.yesNoQuestion(BusinessProtectorAddressYesNoPage(index), userAnswers, "companyProtectorAddressYesNo", protectorName),
+            converter.yesNoQuestion(BusinessProtectorAddressUKYesNoPage(index), userAnswers, "companyProtectorAddressUkYesNo", protectorName),
+            converter.addressQuestion(BusinessProtectorAddressPage(index), userAnswers, "companyProtectorAddress", protectorName)
           ).flatten,
           None
         )
