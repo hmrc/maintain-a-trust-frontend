@@ -68,6 +68,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val trustsStoreUrl: String = configuration.get[Service]("microservice.services.trusts-store").baseUrl + "/trusts-store"
   lazy val trustAuthUrl: String = configuration.get[Service]("microservice.services.trusts-auth").baseUrl
 
+  lazy val trustsObligedEntityOutputUrl: String = configuration.get[Service]("microservice.services.trusts-obliged-entity-output").baseUrl
+
   lazy val agentOverviewUrl: String = configuration.get[String]("urls.agentOverview")
 
   lazy val enrolmentStoreProxyUrl: String = configuration.get[Service]("microservice.services.enrolment-store-proxy").baseUrl
