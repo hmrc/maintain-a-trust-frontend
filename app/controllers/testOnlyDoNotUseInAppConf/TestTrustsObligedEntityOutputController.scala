@@ -21,7 +21,7 @@ import controllers.actions.Actions
 import play.api.Logger
 import play.api.http.HttpEntity
 import play.api.mvc.MessagesControllerComponents
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 
 import javax.inject.Inject
