@@ -16,7 +16,7 @@
 
 package connectors
 
-import play.api.Logger
+import play.api.Logging
 import play.api.http.Status.{OK, NOT_FOUND}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import play.api.libs.json.{Json, OFormat}
@@ -25,9 +25,7 @@ import scala.language.implicitConversions
 
 case class TrustClaim(utr:String, managedByAgent: Boolean, trustLocked:Boolean)
 
-object TrustClaim {
-
-  private val logger: Logger = Logger(getClass)
+object TrustClaim extends Logging {
 
   implicit val formats : OFormat[TrustClaim] = Json.format[TrustClaim]
 

@@ -22,14 +22,12 @@ import mapping.PlaybackExtractor
 import models.{Address, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import models.http.{DisplayTrustIdentificationType, DisplayTrustWillType}
 import pages.settlors.deceased_settlor._
-import play.api.Logger
+import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 import mapping.PlaybackImplicits._
 
-class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[DisplayTrustWillType]] {
-
-  private val logger: Logger = Logger(getClass)
+class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[DisplayTrustWillType]] with Logging {
 
   override def extract(answers: UserAnswers, data: Option[DisplayTrustWillType]): Either[PlaybackExtractionError, UserAnswers] =
     {

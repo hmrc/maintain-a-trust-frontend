@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 import javax.inject.{Inject, Singleton}
 import models.{MongoDateTimeFormats, UserAnswers}
 import play.api.libs.json._
-import play.api.{Configuration, Logger}
+import play.api.{Configuration, Logging}
 import reactivemongo.api.WriteConcern
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.BSONDocument
@@ -34,9 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class PlaybackRepositoryImpl @Inject()(
                                         mongo: MongoDriver,
                                         config: Configuration
-                                      )(implicit ec: ExecutionContext) extends PlaybackRepository {
-
-  private val logger: Logger = Logger(getClass)
+                                      )(implicit ec: ExecutionContext) extends PlaybackRepository with Logging {
 
   private val collectionName: String = "user-answers"
 
@@ -85,7 +83,19 @@ class PlaybackRepositoryImpl @Inject()(
 
     for {
       col <- collection
-      r <- col.findAndUpdate(selector, modifier, fetchNewObject = true, upsert = false)
+      r <- col.findAndUpdate(
+        selector = selector,
+        update = modifier,
+        fetchNewObject = true,
+        upsert = false,
+        sort = None,
+        fields = None,
+        bypassDocumentValidation = false,
+        writeConcern = WriteConcern.Default,
+        maxTime = None,
+        collation = None,
+        arrayFilters = Nil
+      )
     } yield r.result[UserAnswers]
   }
 

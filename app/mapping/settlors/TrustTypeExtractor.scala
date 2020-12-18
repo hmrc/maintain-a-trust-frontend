@@ -23,13 +23,11 @@ import models.http.{DisplayTrust, DisplayTrustWillType}
 import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
 import pages.settlors.SetUpAfterSettlorDiedYesNoPage
 import pages.settlors.living_settlor.trust_type._
-import play.api.Logger
+import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class TrustTypeExtractor extends PlaybackExtractor[Option[DisplayTrust]] {
-
-  private val logger: Logger = Logger(getClass)
+class TrustTypeExtractor extends PlaybackExtractor[Option[DisplayTrust]] with Logging {
 
   override def extract(answers: UserAnswers, data: Option[DisplayTrust]): Either[PlaybackExtractionError, UserAnswers] =
   {

@@ -24,7 +24,7 @@ import javax.inject.Inject
 import mapping.UserAnswersExtractor
 import models.http._
 import models.requests.DataRequest
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
@@ -54,9 +54,7 @@ class TrustStatusController @Inject()(
                                        playbackExtractor: UserAnswersExtractor,
                                        authenticationService: AuthenticationService,
                                        val controllerComponents: MessagesControllerComponents
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
-
-  private val logger: Logger = Logger(getClass)
+                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def closed(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>

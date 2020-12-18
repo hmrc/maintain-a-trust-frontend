@@ -29,7 +29,7 @@ import models.{AgentDeclaration, UserAnswers}
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage, WhatIsNextPage}
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
 import repositories.PlaybackRepository
@@ -43,9 +43,7 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
                                              playbackRepository: PlaybackRepository,
                                              trustConnector: TrustConnector,
                                              playbackExtractor: UserAnswersExtractor
-                                            )(override implicit val executionContext: ExecutionContext) extends RefreshedDataRetrievalAction {
-
-  private val logger: Logger = Logger(getClass)
+                                            )(override implicit val executionContext: ExecutionContext) extends RefreshedDataRetrievalAction with Logging {
 
   case class SubmissionData(utr: String, whatIsNext: WhatIsNext, tvn: String, date: LocalDateTime, agent: Option[AgentDeclaration], endDate: Option[LocalDate])
 

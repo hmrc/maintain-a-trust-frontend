@@ -21,7 +21,7 @@ import handlers.ErrorHandler
 import models.pages.WhatIsNext.CloseTrust
 import models.requests.{ClosingTrustRequest, DataRequest}
 import pages.WhatIsNextPage
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc.{ActionRefiner, Result, Results}
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import utils.Session
@@ -30,9 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RequireClosingTrustAnswerAction @Inject()(errorHandler: ErrorHandler)
                                                (implicit val executionContext: ExecutionContext)
-  extends ActionRefiner[DataRequest, ClosingTrustRequest] {
-
-  private val logger = Logger(getClass)
+  extends ActionRefiner[DataRequest, ClosingTrustRequest] with Logging {
 
   override protected def refine[A](request: DataRequest[A]): Future[Either[Result, ClosingTrustRequest[A]]] = {
 

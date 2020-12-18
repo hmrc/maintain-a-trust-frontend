@@ -22,14 +22,12 @@ import mapping.PlaybackExtractor
 import models.UserAnswers
 import models.http.{DisplayTrustProtector, DisplayTrustProtectorBusiness, DisplayTrustProtectorsType, Protector}
 import pages.protectors._
-import play.api.Logger
+import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
 class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProtectorExtractor,
-                                   businessProtectorExtractor: BusinessProtectorExtractor) extends PlaybackExtractor[Option[DisplayTrustProtectorsType]] {
-
-  private val logger: Logger = Logger(getClass)
+                                   businessProtectorExtractor: BusinessProtectorExtractor) extends PlaybackExtractor[Option[DisplayTrustProtectorsType]] with Logging {
 
   override def extract(answers: UserAnswers, data: Option[DisplayTrustProtectorsType]): Either[PlaybackExtractionError, UserAnswers] = {
 

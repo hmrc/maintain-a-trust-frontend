@@ -16,7 +16,7 @@
 
 package models.http
 
-import play.api.Logger
+import play.api.Logging
 import play.api.http.Status._
 import play.api.libs.json._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
@@ -33,9 +33,7 @@ case object UtrNotFound extends TrustsResponse
 case object TrustServiceUnavailable extends TrustsResponse
 case object ServerError extends TrustsResponse
 
-object TrustsStatusReads {
-
-  private val logger: Logger = Logger(getClass)
+object TrustsStatusReads extends Logging {
 
   implicit object TrustStatusReads extends Reads[TrustStatus] {
     override def reads(json:JsValue): JsResult[TrustStatus] = json("responseHeader")("status") match {

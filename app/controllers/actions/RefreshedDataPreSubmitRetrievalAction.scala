@@ -29,7 +29,7 @@ import models.{AgentDeclaration, UserAnswers}
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
 import pages.WhatIsNextPage
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
 import repositories.PlaybackRepository
@@ -42,7 +42,7 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(val parser: BodyParser
                                                                    playbackRepository: PlaybackRepository,
                                                                    trustConnector: TrustConnector,
                                                                    playbackExtractor: UserAnswersExtractor
-                                            )(override implicit val executionContext: ExecutionContext) extends RefreshedDataPreSubmitRetrievalAction {
+                                            )(override implicit val executionContext: ExecutionContext) extends RefreshedDataPreSubmitRetrievalAction with Logging {
 
   case class SubmissionData(utr: String, whatIsNext: WhatIsNext, agent: Option[AgentDeclaration], endDate: Option[LocalDate])
 
@@ -65,7 +65,7 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(val parser: BodyParser
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
-            Logger.error(s"[RefreshedDraftDataRetrievalAction] unable to get data from user answers")
+            logger.error(s"[RefreshedDraftDataRetrievalAction] unable to get data from user answers")
             Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
   }
@@ -86,11 +86,11 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(val parser: BodyParser
           }
           _ <- playbackRepository.set(updatedAnswers)
         } yield {
-          Logger.debug(s"[RefreshedDraftDataRetrievalAction] Set updated user answers in db")
+          logger.debug(s"[RefreshedDraftDataRetrievalAction] Set updated user answers in db")
           Right(DataRequest(request.request, updatedAnswers, request.user))
         }
       case Left(reason) =>
-        Logger.warn(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to $reason")
+        logger.warn(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to $reason")
         Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
   }
