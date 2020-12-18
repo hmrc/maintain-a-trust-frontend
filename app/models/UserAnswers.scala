@@ -18,7 +18,7 @@ package models
 
 import java.time.LocalDateTime
 
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 
@@ -29,9 +29,7 @@ final case class UserAnswers(
                               utr: String,
                               data: JsObject = Json.obj(),
                               updatedAt: LocalDateTime = LocalDateTime.now
-                            ) {
-
-  private val logger: Logger = Logger(getClass)
+                            ) extends Logging {
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     Reads.at(page.path).reads(data) match {

@@ -24,7 +24,8 @@ import models.TrustDetails
 import models.http.{DeclarationResponse, TrustsResponse, TrustsStatusReads}
 import play.api.libs.json.{JsBoolean, JsValue, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.HttpReads.Implicits.readFromJson
 
 import scala.concurrent.{ExecutionContext, Future}
 

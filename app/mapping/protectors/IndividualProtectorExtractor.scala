@@ -23,13 +23,11 @@ import models.pages.IndividualOrBusiness
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.protectors.ProtectorIndividualOrBusinessPage
 import pages.protectors.individual._
-import play.api.Logger
+import play.api.Logging
 
 import scala.util.{Failure, Try}
 
-class IndividualProtectorExtractor {
-
-  private val logger: Logger = Logger(getClass)
+class IndividualProtectorExtractor extends Logging {
 
   def extract(answers: Try[UserAnswers], index: Int, individualProtector : DisplayTrustProtector): Try[UserAnswers] =
     {

@@ -19,11 +19,11 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.Actions
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 import views.html.{AgentCannotAccessTrustYetView, InformationMaintainingThisTrustView}
 
@@ -34,9 +34,7 @@ class InformationMaintainingThisTrustController @Inject()(
                                                            maintainingTrustView: InformationMaintainingThisTrustView,
                                                            agentCannotAccessTrustYetView: AgentCannotAccessTrustYetView
                                                          )(implicit config: FrontendAppConfig)
-  extends FrontendBaseController with I18nSupport {
-
-  private val logger: Logger = Logger(getClass)
+  extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
     implicit request =>

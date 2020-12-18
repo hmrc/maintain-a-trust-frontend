@@ -22,14 +22,12 @@ import mapping.PlaybackExtractor
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{DisplayTrustCompanyType, DisplayTrustIdentificationOrgType}
 import pages.beneficiaries.company._
-import play.api.Logger
+import play.api.Logging
 import mapping.PlaybackImplicits._
 
 import scala.util.{Failure, Success, Try}
 
-class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustCompanyType]]] {
-
-  private val logger: Logger = Logger(getClass)
+class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustCompanyType]]] with Logging {
 
   override def extract(answers: UserAnswers, data: Option[List[DisplayTrustCompanyType]]): Either[PlaybackExtractionError, UserAnswers] =
     {

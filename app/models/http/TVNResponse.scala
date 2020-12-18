@@ -16,7 +16,7 @@
 
 package models.http
 
-import play.api.Logger
+import play.api.Logging
 import play.api.http.Status._
 import play.api.libs.json._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
@@ -31,9 +31,7 @@ object TVNResponse {
 
 }
 
-object DeclarationResponse {
-
-  private val logger: Logger = Logger(getClass)
+object DeclarationResponse extends Logging {
 
   implicit object RegistrationResponseFormats extends Reads[DeclarationResponse] {
 

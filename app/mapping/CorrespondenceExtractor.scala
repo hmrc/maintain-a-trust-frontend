@@ -22,12 +22,10 @@ import models.{Address, InternationalAddress, UKAddress, UserAnswers}
 import models.http.Correspondence
 import pages.correspondence._
 import pages.trustdetails.TrustNamePage
-import play.api.Logger
+import play.api.Logging
 import scala.util.{Failure, Success}
 
-class CorrespondenceExtractor @Inject() extends PlaybackExtractor[models.http.Correspondence] {
-
-  private val logger: Logger = Logger(getClass)
+class CorrespondenceExtractor @Inject() extends PlaybackExtractor[models.http.Correspondence] with Logging {
 
   import PlaybackImplicits._
 

@@ -22,13 +22,11 @@ import mapping.PlaybackExtractor
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{DisplayTrustCharityType, DisplayTrustIdentificationOrgType}
 import pages.beneficiaries.charity._
-import play.api.Logger
+import play.api.Logging
 import scala.util.{Failure, Success, Try}
 import mapping.PlaybackImplicits._
 
-class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustCharityType]]] {
-
-  private val logger: Logger = Logger(getClass)
+class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustCharityType]]] with Logging {
 
   override def extract(answers: UserAnswers, data: Option[List[DisplayTrustCharityType]]): Either[PlaybackExtractionError, UserAnswers] = {
 

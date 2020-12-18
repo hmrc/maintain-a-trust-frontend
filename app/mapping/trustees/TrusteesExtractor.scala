@@ -25,13 +25,11 @@ import models.pages.Tag.UpToDate
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.entitystatus.TrusteeStatus
 import pages.trustees._
-import play.api.Logger
+import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees]]] {
-
-  private val logger: Logger = Logger(getClass)
+class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees]]] with Logging {
 
   import PlaybackImplicits._
 

@@ -18,12 +18,11 @@ package controllers.testOnlyDoNotUseInAppConf
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json.{JsValue, Writes}
 import play.api.mvc.ControllerComponents
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.controller.BackendBaseController
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
 import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -56,10 +55,8 @@ class TestUserConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
 class EnrolmentStoreStubController @Inject()(
                                               connector: TestUserConnector,
-                                              val controllerComponents: ControllerComponents
-                                            )(implicit ec: ExecutionContext) extends BackendBaseController {
-
-  private val logger: Logger = Logger(getClass)
+                                              override val controllerComponents: ControllerComponents
+                                            )(implicit ec: ExecutionContext) extends BackendBaseController with Logging {
 
   def insertTestUserIntoEnrolmentStore = Action.async(parse.json) {
     implicit request =>

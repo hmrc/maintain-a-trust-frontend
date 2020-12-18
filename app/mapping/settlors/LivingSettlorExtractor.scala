@@ -26,13 +26,11 @@ import models.pages.Tag.UpToDate
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
-import play.api.Logger
+import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[LivingSettlor]]] {
-
-  private val logger: Logger = Logger(getClass)
+class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[LivingSettlor]]] with Logging {
 
   override def extract(answers: UserAnswers, data: Option[List[LivingSettlor]]): Either[PlaybackExtractionError, UserAnswers] =
     {

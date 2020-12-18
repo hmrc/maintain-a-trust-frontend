@@ -18,10 +18,10 @@ package controllers.testOnlyDoNotUseInAppConf
 
 import connectors.TrustsObligedEntityOutputConnector
 import controllers.actions.Actions
-import play.api.Logger
+import play.api.Logging
 import play.api.http.HttpEntity
 import play.api.mvc.MessagesControllerComponents
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 
 import javax.inject.Inject
@@ -30,9 +30,7 @@ import scala.concurrent.ExecutionContext
 class TestTrustsObligedEntityOutputController @Inject()(actions: Actions,
                                                         connector: TrustsObligedEntityOutputConnector,
                                                         val controllerComponents: MessagesControllerComponents
-                                                       )(implicit ec: ExecutionContext) extends FrontendBaseController {
-
-  private val logger: Logger = Logger(getClass)
+                                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
 
   def getPdf(identifier: String) = actions.auth.async {
     implicit request =>

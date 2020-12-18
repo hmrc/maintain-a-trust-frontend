@@ -21,13 +21,11 @@ import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtraction
 import models.http.{DisplayTrustIdentificationType, NaturalPersonType, PassportType}
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.individual._
-import play.api.Logger
+import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[NaturalPersonType]]] {
-
-  private val logger: Logger = Logger(getClass)
+class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[NaturalPersonType]]] with Logging {
 
   import PlaybackImplicits._
 

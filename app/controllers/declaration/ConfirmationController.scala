@@ -20,11 +20,11 @@ import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.{Actions, RequireClosingTrustAnswerAction}
 import pages.TVNPage
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 import views.html.declaration.{CloseTrustConfirmationView, ConfirmationView}
 
@@ -37,9 +37,7 @@ class ConfirmationController @Inject()(
                                         closeTrustConfirmationView: CloseTrustConfirmationView,
                                         config: FrontendAppConfig,
                                         answerRequiredAction: RequireClosingTrustAnswerAction
-                                      ) extends FrontendBaseController with I18nSupport {
-
-  private val logger: Logger = Logger(getClass)
+                                      ) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.refreshedData.andThen(answerRequiredAction) {
     implicit request =>

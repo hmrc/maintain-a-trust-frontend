@@ -22,13 +22,11 @@ import mapping.PlaybackExtractor
 import models.{MetaData, UserAnswers}
 import models.http.DisplayTrustUnidentifiedType
 import pages.beneficiaries.classOfBeneficiary._
-import play.api.Logger
+import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class ClassOfBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustUnidentifiedType]]] {
-
-  private val logger: Logger = Logger(getClass)
+class ClassOfBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustUnidentifiedType]]] with Logging {
 
   override def extract(answers: UserAnswers, data: Option[List[DisplayTrustUnidentifiedType]]): Either[PlaybackExtractionError, UserAnswers] =
     {

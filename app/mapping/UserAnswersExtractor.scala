@@ -24,7 +24,7 @@ import mapping.settlors.{SettlorExtractor, TrustTypeExtractor}
 import mapping.trustees.TrusteeExtractor
 import models.UserAnswers
 import models.http.GetTrust
-import play.api.Logger
+import play.api.Logging
 import models.UserAnswersCombinator._
 
 @ImplementedBy(classOf[UserAnswersExtractorImpl])
@@ -38,9 +38,7 @@ class UserAnswersExtractorImpl @Inject()(beneficiary: BeneficiaryExtractor,
                                          individualExtractor: OtherIndividualExtractor,
                                          correspondenceExtractor: CorrespondenceExtractor,
                                          trustDetailsExtractor: TrustDetailsExtractor
-                                        ) extends UserAnswersExtractor {
-
-  private val logger: Logger = Logger(getClass)
+                                        ) extends UserAnswersExtractor with Logging {
 
   override def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionError, UserAnswers] = {
 

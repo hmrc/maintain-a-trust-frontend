@@ -22,13 +22,11 @@ import models.UserAnswers
 import models.http.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
 import models.pages.NonResidentType
 import pages.trustdetails._
-import play.api.Logger
+import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class TrustDetailsExtractor @Inject() extends PlaybackExtractor[TrustDetailsType] {
-
-  private val logger: Logger = Logger(getClass)
+class TrustDetailsExtractor @Inject() extends PlaybackExtractor[TrustDetailsType] with Logging {
 
   override def extract(answers: UserAnswers, data: TrustDetailsType): Either[PlaybackExtractionError, UserAnswers] =
     {

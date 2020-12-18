@@ -27,13 +27,13 @@ import models.{Address, AgentDeclaration, UserAnswers}
 import pages._
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
-import play.api.Logger
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.DeclarationService
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 import views.html.declaration.AgentDeclarationView
 
@@ -48,9 +48,7 @@ class AgentDeclarationController @Inject()(
                                             val controllerComponents: MessagesControllerComponents,
                                             view: AgentDeclarationView,
                                             service: DeclarationService
-                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
-
-  private val logger: Logger = Logger(getClass)
+                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   val form: Form[AgentDeclaration] = formProvider()
 
