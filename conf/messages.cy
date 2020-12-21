@@ -133,11 +133,13 @@ ivDown.p2=Gallwch
 ivDown.p3=os oes angen i chi siarad â rhywun am gofrestru ymddiriedolaeth a’i chynnal.
 ivDown.contact.link=gysylltu â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
 ivDown.return.link=ddychwelyd i gofrestru ymddiriedolaeth a’i chynnal ar ran cleient
-ivUnavailable.subHeading=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
+
 ivUnavailable.title=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
-ivUnavailable.heading=
+ivUnavailable.heading=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
+ivUnavailable.caption=UTR yr ymddiriedolaeth hon: {0}
 ivUnavailable.p1=
 ivUnavailable.help.link=
+
 problemDeclaring.heading=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
 problemDeclaring.title=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
 problemDeclaring.p1=Rhowch gynnig arall arni yn nes ymlaen.

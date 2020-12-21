@@ -135,10 +135,13 @@ class TrustStatusController @Inject()(
         logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to status")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
       case TrustServiceUnavailable =>
-        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to an error")
+        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to the service being unavailable")
         Future.successful(Redirect(routes.TrustStatusController.unavailable()))
-      case _ =>
-        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to an error")
+      case ClosedRequestResponse =>
+        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to the service closing the request")
+        Future.successful(Redirect(routes.TrustStatusController.unavailable()))
+      case response =>
+        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to an error ${response}")
         Future.successful(Redirect(routes.TrustStatusController.down()))
     }
   }

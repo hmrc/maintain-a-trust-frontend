@@ -270,7 +270,23 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         application.stop()
       }
 
-      "a ServiceUnavailable status is received from the trust connector when we get a ServerError" in new LocalSetup {
+      "a ClosedRequest status is received from the trust connector" in new LocalSetup {
+
+        override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+
+        when(fakeTrustStoreConnector.get(any[String])(any(), any()))
+          .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+
+        when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(ClosedRequestResponse))
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual "/maintain-a-trust/status/unavailable"
+
+        application.stop()
+      }
+
+      "a ServerError status is received from the trust connector" in new LocalSetup {
 
         override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 

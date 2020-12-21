@@ -166,7 +166,7 @@ ivDown.return.link = return to register and maintain a trust for a client
 
 ivUnavailable.title = Sorry, there is a problem with the service
 ivUnavailable.heading = Sorry, there is a problem with the service
-ivUnavailable.caption = This trust’s URN: {0}
+ivUnavailable.caption = This trust’s UTR: {0}
 ivUnavailable.p1 = We need some details from you before we can help you with your trust.
 ivUnavailable.help.link = Get help with the service
 

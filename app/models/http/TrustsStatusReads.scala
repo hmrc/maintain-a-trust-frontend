@@ -31,9 +31,12 @@ case class Processed(playback: GetTrust, formBundleNumber : String) extends Trus
 case object SorryThereHasBeenAProblem extends TrustStatus
 case object UtrNotFound extends TrustsResponse
 case object TrustServiceUnavailable extends TrustsResponse
+case object ClosedRequestResponse extends TrustsResponse
 case object ServerError extends TrustsResponse
 
 object TrustsStatusReads extends Logging {
+
+  val CLOSED_REQUEST = 499
 
   implicit object TrustStatusReads extends Reads[TrustStatus] {
     override def reads(json:JsValue): JsResult[TrustStatus] = json("responseHeader")("status") match {
@@ -82,6 +85,8 @@ object TrustsStatusReads extends Logging {
             UtrNotFound
           case SERVICE_UNAVAILABLE =>
             TrustServiceUnavailable
+          case CLOSED_REQUEST =>
+            ClosedRequestResponse
           case _ =>
             ServerError
         }
