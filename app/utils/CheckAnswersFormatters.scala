@@ -53,7 +53,7 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     case _: IllegalArgumentException => nino
   }
 
-  private def country(code: String): String =
+  private def country(code: String)(implicit messages: Messages): String =
     countryOptions.options.find(_.value.equals(code)).map(_.label).getOrElse("")
 
   def currency(value: String): Html = escape(s"£$value")
@@ -75,7 +75,7 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     Html(lines.mkString("<br />"))
   }
 
-  def internationalAddress(address: InternationalAddress): Html = {
+  def internationalAddress(address: InternationalAddress)(implicit messages: Messages): Html = {
     val lines =
       Seq(
         Some(HtmlFormat.escape(address.line1)),
@@ -87,7 +87,7 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     Html(lines.mkString("<br />"))
   }
 
-  def addressFormatter(address: Address): Html = {
+  def addressFormatter(address: Address)(implicit messages: Messages): Html = {
     address match {
       case a:UKAddress => ukAddress(a)
       case a:InternationalAddress => internationalAddress(a)
