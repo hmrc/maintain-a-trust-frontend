@@ -179,12 +179,13 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.unavailable().url)
 
-      val view: IVDownView = application.injector.instanceOf[IVDownView]
+      val view: IVUnavailableView = application.injector.instanceOf[IVUnavailableView]
 
       status(result) mustEqual SERVICE_UNAVAILABLE
 
       contentAsString(result) mustEqual
-        view(AffinityGroup.Individual)(request, messages).toString
+        view(utr)(request, messages).toString
+
 
       application.stop()
     }

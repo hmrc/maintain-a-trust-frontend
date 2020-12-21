@@ -164,13 +164,11 @@ ivDown.p3 = if you need to speak to someone about registering and maintaining a 
 ivDown.contact.link = contact the trusts helpline (opens in a new window or tab)
 ivDown.return.link = return to register and maintain a trust for a client
 
-ivUnavailable.heading = Sorry, there is a problem with the service
 ivUnavailable.title = Sorry, there is a problem with the service
-ivUnavailable.p1 = Try again later.
-ivUnavailable.p2 = You can
-ivUnavailable.p3 = if you need to speak to someone about registering and maintaining a trust.
-ivUnavailable.contact.link = contact the trusts helpline (opens in a new window or tab)
-ivUnavailable.return.link = return to register and maintain a trust for a client
+ivUnavailable.heading = Sorry, there is a problem with the service
+ivUnavailable.caption = This trust’s URN: {0}
+ivUnavailable.p1 = We need some details from you before we can help you with your trust.
+ivUnavailable.help.link = Get help with the service
 
 problemDeclaring.heading = Sorry, there is a problem with the service
 problemDeclaring.title = Sorry, there is a problem with the service

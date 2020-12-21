@@ -16,28 +16,22 @@
 
 package views.status
 
-import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
 import views.html.status.IVUnavailableView
 
 class IVUnavailableViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
+  val urn = "0987654321"
 
-  "IVDown view" must {
+  "IVUnavailable view" must {
 
     val view = viewFor[IVUnavailableView](Some(emptyUserAnswers))
 
-    val applyView = view.apply(AffinityGroup.Agent)(fakeRequest, messages)
+    val applyView = view.apply(urn)(fakeRequest, messages)
 
-    behave like normalPage(applyView,
-      "ivUnavailable",
-      "p1",
-      "p2",
-      "contact.link",
-      "p3",
-      "p2",
-      "return.link"
-    )
+    behave like normalPageTitleWithCaption(view = applyView,
+      messageKeyPrefix =  "ivUnavailable",
+      captionParam = urn,
+      "p1", "help.link")
   }
 }

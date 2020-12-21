@@ -14,8 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.auth.core.AffinityGroup
-@import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
 
 @this(
@@ -23,20 +21,14 @@
     main_template: MainTemplate
 )
 
-@(affinityGroup: AffinityGroup)(implicit request: Request[_], messages: Messages)
+@(utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("ivUnavailable.title")
     ) {
-    @components.heading("ivUnavailable.heading", headingSize = "heading-large heading-with-top-margin")
+    @components.heading_with_caption(headingKey = "ivUnavailable.heading", caption = "ivUnavailable.caption", captionParam = utr)
 
     <p>@messages("ivUnavailable.p1")</p>
 
-    <p>@messages("ivUnavailable.p2") <a id="help-link" target="_blank" href="appConfig.helplineUrl">@messages("ivUnavailable.contact.link")</a> @messages("ivUnavailable.p3")</p>
-
-    @if(affinityGroup == AffinityGroup.Agent) {
-      <p>@messages("ivUnavailable.p2") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("ivUnavailable.return.link")</a>.</p>
-    } else {
-      @components.button_link(messages("site.try-again"), controllers.routes.UTRController.onPageLoad().url)
-    }
+    <p><a id="help-link" target="_blank" href="appConfig.helplineUrl">@messages("ivUnavailable.help.link")</a></p>
 }
