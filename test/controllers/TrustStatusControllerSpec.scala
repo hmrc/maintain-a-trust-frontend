@@ -175,6 +175,20 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       application.stop()
     }
 
+    "must return SERVICE_UNAVAILABLE and the correct view for GET ../status/unavailable" in new LocalSetup {
+
+      override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.unavailable().url)
+
+      val view: IVDownView = application.injector.instanceOf[IVDownView]
+
+      status(result) mustEqual SERVICE_UNAVAILABLE
+
+      contentAsString(result) mustEqual
+        view(AffinityGroup.Individual)(request, messages).toString
+
+      application.stop()
+    }
+
     "must redirect to the correct route for GET ../status/start" when {
 
       "a Closed status is received from the trust connector" in new LocalSetup {
@@ -247,6 +261,22 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
           .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
         when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(TrustServiceUnavailable))
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual "/maintain-a-trust/status/unavailable"
+
+        application.stop()
+      }
+
+      "a ServiceUnavailable status is received from the trust connector when we get a ServerError" in new LocalSetup {
+
+        override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+
+        when(fakeTrustStoreConnector.get(any[String])(any(), any()))
+          .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+
+        when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(ServerError))
 
         status(result) mustEqual SEE_OTHER
 

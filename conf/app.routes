@@ -49,6 +49,7 @@ GET        /status/closed                               controllers.TrustStatusC
 GET        /status/processing                           controllers.TrustStatusController.processing()
 GET        /status/not-found                            controllers.TrustStatusController.notFound()
 GET        /status/down                                 controllers.TrustStatusController.down()
+GET        /status/unavailable                          controllers.TrustStatusController.unavailable()
 GET        /status/locked                               controllers.TrustStatusController.locked()
 GET        /status/already-claimed                      controllers.TrustStatusController.alreadyClaimed()
 GET        /status/sorry-there-has-been-a-problem       controllers.TrustStatusController.sorryThereHasBeenAProblem()
