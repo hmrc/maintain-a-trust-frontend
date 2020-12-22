@@ -36,7 +36,7 @@ case object ServerError extends TrustsResponse
 
 object TrustsStatusReads extends Logging {
 
-  val CLOSED_REQUEST = 499
+  final val CLOSED_REQUEST = 499
 
   implicit object TrustStatusReads extends Reads[TrustStatus] {
     override def reads(json:JsValue): JsResult[TrustStatus] = json("responseHeader")("status") match {
