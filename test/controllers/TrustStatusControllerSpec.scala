@@ -170,22 +170,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual SERVICE_UNAVAILABLE
 
       contentAsString(result) mustEqual
-        view(AffinityGroup.Individual)(request, messages).toString
-
-      application.stop()
-    }
-
-    "must return SERVICE_UNAVAILABLE and the correct view for GET ../status/unavailable" in new LocalSetup {
-
-      override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.unavailable().url)
-
-      val view: IVUnavailableView = application.injector.instanceOf[IVUnavailableView]
-
-      status(result) mustEqual SERVICE_UNAVAILABLE
-
-      contentAsString(result) mustEqual
         view(utr)(request, messages).toString
-
 
       application.stop()
     }
@@ -265,7 +250,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual "/maintain-a-trust/status/unavailable"
+        redirectLocation(result).value mustEqual "/maintain-a-trust/status/down"
 
         application.stop()
       }
@@ -281,7 +266,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual "/maintain-a-trust/status/unavailable"
+        redirectLocation(result).value mustEqual "/maintain-a-trust/status/down"
 
         application.stop()
       }

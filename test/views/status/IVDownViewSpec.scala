@@ -16,7 +16,6 @@
 
 package views.status
 
-import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
 import views.html.status.IVDownView
 
@@ -28,16 +27,11 @@ class IVDownViewSpec extends ViewBehaviours {
 
     val view = viewFor[IVDownView](Some(emptyUserAnswers))
 
-    val applyView = view.apply(AffinityGroup.Agent)(fakeRequest, messages)
+    val applyView = view.apply(utr)(fakeRequest, messages)
 
-    behave like normalPage(applyView,
-      "ivDown",
-      "p1",
-      "p2",
-      "contact.link",
-      "p3",
-      "p2",
-      "return.link"
-    )
+    behave like normalPageTitleWithCaption(view = applyView,
+      messageKeyPrefix =  "ivDown",
+      captionParam = utr,
+      "p1")
   }
 }
