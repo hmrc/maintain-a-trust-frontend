@@ -159,7 +159,8 @@ internationalAddress.error.line3.invalidCharacters = Address line 3 must only in
 ivDown.heading = Sorry, there is a problem with the service
 ivDown.title = Sorry, there is a problem with the service
 ivDown.caption = This trust’s UTR: {0}
-ivDown.p1 = We need some information from you, so that we can help you with this trust.
+ivDown.p1 = To help you with this trust, we need you to
+ivDown.contact.link = send some information to us
 
 problemDeclaring.heading = Sorry, there is a problem with the service
 problemDeclaring.title = Sorry, there is a problem with the service
