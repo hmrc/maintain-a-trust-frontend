@@ -158,11 +158,9 @@ internationalAddress.error.line3.invalidCharacters = Address line 3 must only in
 
 ivDown.heading = Sorry, there is a problem with the service
 ivDown.title = Sorry, there is a problem with the service
-ivDown.p1 = Try again later.
-ivDown.p2 = You can
-ivDown.p3 = if you need to speak to someone about registering and maintaining a trust.
-ivDown.contact.link = contact the trusts helpline (opens in a new window or tab)
-ivDown.return.link = return to register and maintain a trust for a client
+ivDown.caption = This trust’s UTR: {0}
+ivDown.p1 = To help you with this trust, we need you to
+ivDown.contact.link = send some information to us
 
 problemDeclaring.heading = Sorry, there is a problem with the service
 problemDeclaring.title = Sorry, there is a problem with the service

@@ -72,6 +72,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val trustsObligedEntityOutputUrl: String = configuration.get[Service]("microservice.services.trusts-obliged-entity-output").baseUrl
 
   lazy val agentOverviewUrl: String = configuration.get[String]("urls.agentOverview")
+  lazy val serviceDownContactUrl: String = "/contact/problem_reports_nonjs?service=trusts"
 
   lazy val enrolmentStoreProxyUrl: String = configuration.get[Service]("microservice.services.enrolment-store-proxy").baseUrl
 

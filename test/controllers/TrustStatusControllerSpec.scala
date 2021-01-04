@@ -170,7 +170,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual SERVICE_UNAVAILABLE
 
       contentAsString(result) mustEqual
-        view(AffinityGroup.Individual)(request, messages).toString
+        view(utr)(request, messages).toString
 
       application.stop()
     }
@@ -247,6 +247,38 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
           .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
         when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(TrustServiceUnavailable))
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual "/maintain-a-trust/status/down"
+
+        application.stop()
+      }
+
+      "a ClosedRequest status is received from the trust connector" in new LocalSetup {
+
+        override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+
+        when(fakeTrustStoreConnector.get(any[String])(any(), any()))
+          .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+
+        when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(ClosedRequestResponse))
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual "/maintain-a-trust/status/down"
+
+        application.stop()
+      }
+
+      "a ServerError status is received from the trust connector" in new LocalSetup {
+
+        override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+
+        when(fakeTrustStoreConnector.get(any[String])(any(), any()))
+          .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+
+        when(fakeTrustConnector.playbackfromEtmp(any[String])(any(), any())).thenReturn(Future.successful(ServerError))
 
         status(result) mustEqual SEE_OTHER
 

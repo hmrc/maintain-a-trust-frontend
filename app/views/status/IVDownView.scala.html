@@ -23,20 +23,13 @@
     main_template: MainTemplate
 )
 
-@(affinityGroup: AffinityGroup)(implicit request: Request[_], messages: Messages)
+@(utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("ivDown.title")
     ) {
-    @components.heading("ivDown.heading", headingSize = "heading-large heading-with-top-margin")
 
-    <p>@messages("ivDown.p1")</p>
+    @components.heading_with_caption(headingKey = "ivDown.heading", caption = "ivDown.caption", captionParam = utr)
 
-    <p>@messages("ivDown.p2") <a id="help-link" target="_blank" href="appConfig.helplineUrl">@messages("ivDown.contact.link")</a> @messages("ivDown.p3")</p>
-
-    @if(affinityGroup == AffinityGroup.Agent) {
-      <p>@messages("ivDown.p2") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("ivDown.return.link")</a>.</p>
-    } else {
-      @components.button_link(messages("site.try-again"), controllers.routes.UTRController.onPageLoad().url)
-    }
+    <p>@messages("ivDown.p1") <a id="register-and-maintain-link" href="@{appConfig.serviceDownContactUrl}">@messages("ivDown.contact.link")</a>.</p>
 }

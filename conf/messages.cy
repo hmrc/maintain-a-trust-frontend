@@ -126,13 +126,13 @@ internationalAddress.error.line3.length=Mae’n rhaid i gyfeiriad – llinell 3 
 internationalAddress.error.line1.invalidCharacters=Mae’n rhaid i gyfeiriad – llinell 1 gynnwys y llythrennau a i z, rhifau, ampersandau (&), collnodau, comas, blaenslaesau, atalnodau llawn, cysylltnodau, cromfachau crwn a bylchau yn unig
 internationalAddress.error.line2.invalidCharacters=Mae’n rhaid i gyfeiriad – llinell 2 gynnwys y llythrennau a i z, rhifau, ampersandau (&), collnodau, comas, blaenslaesau, atalnodau llawn, cysylltnodau, cromfachau crwn a bylchau yn unig
 internationalAddress.error.line3.invalidCharacters=Mae’n rhaid i gyfeiriad – llinell 3 gynnwys y llythrennau a i z, rhifau, ampersandau (&), collnodau, comas, blaenslaesau, atalnodau llawn, cysylltnodau, cromfachau crwn a bylchau yn unig
-ivDown.heading=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
+
 ivDown.title=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
-ivDown.p1=Rhowch gynnig arall arni yn nes ymlaen.
-ivDown.p2=Gallwch
-ivDown.p3=os oes angen i chi siarad â rhywun am gofrestru ymddiriedolaeth a’i chynnal.
-ivDown.contact.link=gysylltu â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
-ivDown.return.link=ddychwelyd i gofrestru ymddiriedolaeth a’i chynnal ar ran cleient
+ivDown.heading=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
+ivDown.caption=UTR yr ymddiriedolaeth hon: {0}
+ivDown.p1=Er mwyn eich helpu gyda’r ymddiriedolaeth hon, mae angen i chi
+ivDown.contact.link=anfon rhywfaint o wybodaeth atom
+
 problemDeclaring.heading=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
 problemDeclaring.title=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
 problemDeclaring.p1=Rhowch gynnig arall arni yn nes ymlaen.

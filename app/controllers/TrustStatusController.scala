@@ -83,7 +83,7 @@ class TrustStatusController @Inject()(
 
   def down(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(ServiceUnavailable(ivDownView(request.user.affinityGroup)))
+      Future.successful(ServiceUnavailable(ivDownView(request.userAnswers.utr)))
   }
 
   def alreadyClaimed(): Action[AnyContent] = actions.authWithData.async {
@@ -128,8 +128,14 @@ class TrustStatusController @Inject()(
       case SorryThereHasBeenAProblem =>
         logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to status")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-      case _ =>
-        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to an error")
+      case TrustServiceUnavailable =>
+        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to the service being unavailable")
+        Future.successful(Redirect(routes.TrustStatusController.down()))
+      case ClosedRequestResponse =>
+        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to the service closing the request")
+        Future.successful(Redirect(routes.TrustStatusController.down()))
+      case response =>
+        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to an error ${response}")
         Future.successful(Redirect(routes.TrustStatusController.down()))
     }
   }
