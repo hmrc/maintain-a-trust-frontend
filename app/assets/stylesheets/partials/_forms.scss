@@ -1,4 +1,5 @@
 @import '_forms__mixin';
+@import '../colours/_palette';
 
 /*
 ====================================
@@ -100,11 +101,11 @@ Error styling to bring in line with GDS
 }
 
 .form-field--error .form-control {
-  border: 4px solid #b10e1e;
+  border: 4px solid $red;
 }
 
 .error-summary {
-  border: 4px solid #b10e1e;
+  border: 4px solid $red;
   margin-top: 15px;
   margin-bottom: 15px;
   padding: 15px 10px;
@@ -116,7 +117,7 @@ Error styling to bring in line with GDS
 
 @media (min-width: 641px) {
   .error-summary {
-    border: 5px solid #b10e1e;
+    border: 5px solid $red;
     margin-top: 30px;
     margin-bottom: 30px;
     padding: 20px 15px 15px;
@@ -124,7 +125,7 @@ Error styling to bring in line with GDS
 }
 
 .error-summary .error-summary-list a {
-  color: #b10e1e;
+  color: $red;
   font-weight: bold;
   text-decoration: underline;
 }
