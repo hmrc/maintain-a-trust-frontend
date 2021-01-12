@@ -22,7 +22,6 @@ label: String,
 secondaryLabel: Option[String] = None,
 inputClass: Option[String] = None,
 hint: Option[String] = None,
-readerHint: Option[String] = None,
 yesAssoc: Option[String] = None,
 noAssoc: Option[String] = None,
 legendClass: Option[String] = None,
@@ -43,7 +42,7 @@ legendAsHeading: Boolean = false
             @label
             @if(legendAsHeading){</h1>}
         </legend>
-        @form_hint(hint = hint, readerHint = readerHint, link = link)
+        @form_hint(hint = hint, link = link)
         @field.errors.map { error =>
         <span class="error-message" id="error-message-@{field.id}-input">
             <span class="visually-hidden">@messages("site.error") </span>@messages(error.message, error.args: _*)
