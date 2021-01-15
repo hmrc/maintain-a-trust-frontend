@@ -81,24 +81,20 @@ class PlaybackRepositoryImpl @Inject()(
   final val dropIndex: Unit = {
     for {
       _ <- logIndex
-      collection <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
       _ <- if (dropIndexFeature) {
          for {
+           collection <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
            _ <- collection.indexesManager.drop("internal-auth-id-index")
            _ <- collection.indexesManager.drop("user-answers-last-updated-index")
            _ <- collection.indexesManager.drop("user-answers-updated-at-index")
+           _ <- Future.successful(logger.info(s"[PlaybackRepository] dropped indexes on collection $collectionName"))
            _ <- logIndex
-         } yield {
-           logger.info(s"[PlaybackRepository] dropped indexes on collection $collectionName")
-           ()
-         }
+         } yield ()
       } else {
         logger.info(s"[PlaybackRepository] indexes not modified")
         Future.successful(())
       }
-    } yield {
-      ()
-    }
+    } yield ()
   }
 
   override def get(internalId: String, utr: String): Future[Option[UserAnswers]] = {
