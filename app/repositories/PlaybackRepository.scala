@@ -84,9 +84,7 @@ class PlaybackRepositoryImpl @Inject()(
       _ <- if (dropIndexFeature) {
          for {
            collection <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
-           _ <- collection.indexesManager.drop("internal-auth-id-index")
-           _ <- collection.indexesManager.drop("user-answers-last-updated-index")
-           _ <- collection.indexesManager.drop("user-answers-updated-at-index")
+           _ <- collection.indexesManager.dropAll()
            _ <- Future.successful(logger.info(s"[PlaybackRepository] dropped indexes on collection $collectionName"))
            _ <- logIndex
          } yield ()
