@@ -66,6 +66,16 @@ class PlaybackRepositoryImpl @Inject()(
     } yield createdLastUpdatedIndex && createdIdIndex
   }
 
+  val logIndex: Unit = {
+    for {
+      collection <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
+      indices <- collection.indexesManager.list()
+    } yield {
+      logger.info(s"[PlaybackRepository] indices found on mongo collection $indices")
+      ()
+    }
+  }
+
   override def get(internalId: String, utr: String): Future[Option[UserAnswers]] = {
 
     logger.debug(s"PlaybackRepository getting user answers for $internalId")
