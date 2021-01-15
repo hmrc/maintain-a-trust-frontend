@@ -47,13 +47,14 @@ class DataRetrievalActionImpl @Inject()(activeSessionRepository: ActiveSessionRe
       case Some(session) =>
         playbackRepository.get(request.user.internalId, session.utr) map {
           case None =>
-            logger.debug(s"[Session ID: ${Session.id(hc)}] no user answers returned for internal id")
+            logger.info(s"[Session ID: ${Session.id(hc)}] no user answers in mongo for UTR ${session.utr}")
             createdOptionalDataRequest(request, None)
           case Some(userAnswers) =>
-            logger.debug(s"[Session ID: ${Session.id(hc)}] user answers returned for internal id")
+            logger.info(s"[Session ID: ${Session.id(hc)}] user answers found in mongo for UTR ${session.utr}")
             createdOptionalDataRequest(request, Some(userAnswers))
         }
       case None =>
+        logger.info(s"[Session ID: ${Session.id(hc)}] no active UTR found in mongo for session")
         Future.successful(createdOptionalDataRequest(request, None))
     }
 

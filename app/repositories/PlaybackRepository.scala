@@ -40,6 +40,8 @@ class PlaybackRepositoryImpl @Inject()(
 
   private val cacheTtl = config.get[Int]("mongodb.playback.ttlSeconds")
 
+  private val dropIndexFeature: Boolean = config.get[Boolean]("microservice.services.features.mongo.dropIndexes")
+
   private def collection: Future[JSONCollection] =
     for {
       _ <- ensureIndexes
@@ -64,6 +66,33 @@ class PlaybackRepositoryImpl @Inject()(
       createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
       createdIdIndex          <- collection.indexesManager.ensure(internalIdAndUtrIndex)
     } yield createdLastUpdatedIndex && createdIdIndex
+  }
+
+  private final def logIndex: Future[Unit] = {
+    for {
+      collection <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
+      indices <- collection.indexesManager.list()
+    } yield {
+      logger.info(s"[PlaybackRepository] indices found on mongo collection $indices")
+      ()
+    }
+  }
+
+  final val dropIndex: Unit = {
+    for {
+      _ <- logIndex
+      _ <- if (dropIndexFeature) {
+         for {
+           collection <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
+           _ <- collection.indexesManager.dropAll()
+           _ <- Future.successful(logger.info(s"[PlaybackRepository] dropped indexes on collection $collectionName"))
+           _ <- logIndex
+         } yield ()
+      } else {
+        logger.info(s"[PlaybackRepository] indexes not modified")
+        Future.successful(())
+      }
+    } yield ()
   }
 
   override def get(internalId: String, utr: String): Future[Option[UserAnswers]] = {
