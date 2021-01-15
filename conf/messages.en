@@ -186,9 +186,10 @@ maintainThisTrust.p3 = If you need to register or maintain another trust, you wi
 maintainThisTrust.p4 = If you need help using this service
 maintainThisTrust.p4.a = contact the trust helpline (opens in a new window or tab)
 
-session_expired.title = For your security, this service has been reset
-session_expired.heading = For your security, this service has been reset
-session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
+session_expired.title = For your security, we signed you out
+session_expired.heading = For your security, we signed you out
+session_expired.guidance = This is because you have been inactive on the service for 15 minutes.
+session_expired.guidance.2 = You will need to sign in to continue maintaining the trust.
 
 site.service_name = Register and Maintain a Trust
 site.save.continue = Save and continue
@@ -310,7 +311,7 @@ unauthorised.heading = You can’t access this service with this account
 
 #timeout dialog
 timeout.title=Your application will time out soon
-timeout.message=We will reset your application if you do not respond in
+timeout.message=We will sign you out if you do not respond in
 timeout.keep-alive-button=Continue application
 
 updateTrustees.title = Do you need to update details for the trustees?
