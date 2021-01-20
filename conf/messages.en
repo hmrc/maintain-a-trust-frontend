@@ -554,6 +554,12 @@ largeBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Refe
 largeBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
 largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel = How many people are in this employment related beneficiary?
 
+numberOfBeneficiaries.over1 = 1 to 100
+numberOfBeneficiaries.over101 = 101 to 200
+numberOfBeneficiaries.over201 = 201 to 500
+numberOfBeneficiaries.over501 = 501 to 1,000
+numberOfBeneficiaries.over1001 = Over 1,001
+
 ### Other
 otherBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
 otherBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?

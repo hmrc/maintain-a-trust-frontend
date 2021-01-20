@@ -16,11 +16,12 @@
 
 package pages.beneficiaries.large
 
+import models.HowManyBeneficiaries
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.beneficiaries.{Beneficiaries, LargeBeneficiaries}
 
-case class LargeBeneficiaryNumberOfBeneficiariesPage(index: Int) extends QuestionPage[String] {
+case class LargeBeneficiaryNumberOfBeneficiariesPage(index: Int) extends QuestionPage[HowManyBeneficiaries] {
 
   override def path: JsPath = JsPath \ Beneficiaries \ LargeBeneficiaries \ index \ toString
 

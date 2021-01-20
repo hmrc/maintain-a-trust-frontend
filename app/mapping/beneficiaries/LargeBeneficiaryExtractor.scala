@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorState, PlaybackExtractionError}
 import mapping.PlaybackExtractor
 import mapping.PlaybackImplicits._
+import models.HowManyBeneficiaries.{Over1, Over1001, Over101, Over201, Over501}
 import models.http.{DisplayTrustCompanyType, DisplayTrustIdentificationOrgType, DisplayTrustLargeType}
 import models.{Address, Description, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.beneficiaries.large._
@@ -109,11 +110,11 @@ class LargeBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
 
   private def extractNumberOfBeneficiaries(numberOfBeneficiary: String, index: Int, answers: UserAnswers): Try[UserAnswers] = {
     numberOfBeneficiary.toInt match {
-      case x if 0 to 100 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "1 to 100")
-      case x if 101 to 200 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "101 to 200")
-      case x if 201 to 500 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "201 to 500")
-      case x if 501 to 999 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "501 to 1,000")
-      case _ => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), "Over 1,001")
+      case x if 0 to 100 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over1)
+      case x if 101 to 200 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over101)
+      case x if 201 to 500 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over201)
+      case x if 501 to 999 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over501)
+      case _ => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over1001)
     }
   }
 
