@@ -193,6 +193,21 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     }
   }
 
+  def numberOfBeneficiariesQuestion[T](query: Gettable[T],
+                        userAnswers: UserAnswers,
+                        labelKey: String,
+                        messageArg: String = "")
+                       (implicit messages: Messages, rds: Reads[T]): Option[AnswerRow] = {
+
+    userAnswers.get(query) map {x =>
+      AnswerRow(
+        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
+        HtmlFormat.escape(messages(s"numberOfBeneficiaries.${x.toString}")),
+        None
+      )
+    }
+  }
+
   def passportOrIdCardQuestion(query: Gettable[PassportOrIdCardDetails],
                                userAnswers: UserAnswers,
                                labelKey: String,
