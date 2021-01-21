@@ -19,7 +19,7 @@ package utils.print.sections
 import java.time.LocalDate
 
 import javax.inject.Inject
-import models.{Address, FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress, UserAnswers}
+import models.{Address, FullName, HowManyBeneficiaries, InternationalAddress, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
 import play.twirl.api.HtmlFormat
@@ -193,16 +193,16 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     }
   }
 
-  def numberOfBeneficiariesQuestion[T](query: Gettable[T],
+  def numberOfBeneficiariesQuestion(query: Gettable[HowManyBeneficiaries],
                         userAnswers: UserAnswers,
                         labelKey: String,
                         messageArg: String = "")
-                       (implicit messages: Messages, rds: Reads[T]): Option[AnswerRow] = {
+                       (implicit messages: Messages, rds: Reads[HowManyBeneficiaries]): Option[AnswerRow] = {
 
     userAnswers.get(query) map {x =>
       AnswerRow(
         messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        HtmlFormat.escape(messages(s"numberOfBeneficiaries.${x.toString}")),
+        HtmlFormat.escape(messages(s"numberOfBeneficiaries.$x")),
         None
       )
     }
