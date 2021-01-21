@@ -20,6 +20,7 @@ import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
 import mapping.PlaybackExtractor
+import models.HowManyBeneficiaries.Over1
 import models.http._
 import models.{Description, FullName, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
@@ -254,7 +255,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(LargeBeneficiaryUtrPage(0)) mustNot be(defined)
         extraction.right.value.get(LargeBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
         extraction.right.value.get(LargeBeneficiarySafeIdPage(0)) must be(defined)
-        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe "1 to 100"
+        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe Over1
 
       }
 

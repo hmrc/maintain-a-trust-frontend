@@ -19,6 +19,7 @@ package utils.print
 import java.time.LocalDate
 
 import base.SpecBase
+import models.HowManyBeneficiaries.Over1
 import models.pages.RoleInCompany
 import models.{Description, FullName, PassportOrIdCardDetails, UKAddress}
 import pages.beneficiaries.charity._
@@ -418,14 +419,14 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
           )
         ).success.value
         .set(LargeBeneficiaryDescriptionPage(0), Description("Description", None, None, None, None)).success.value
-        .set(LargeBeneficiaryNumberOfBeneficiariesPage(0), "1").success.value
+        .set(LargeBeneficiaryNumberOfBeneficiariesPage(0), Over1).success.value
 
         .set(LargeBeneficiaryNamePage(1), largeBen2Name).success.value
         .set(LargeBeneficiaryDiscretionYesNoPage(1), true).success.value
         .set(LargeBeneficiaryAddressYesNoPage(1), false).success.value
         .set(LargeBeneficiaryUtrPage(1), "1234567890").success.value
         .set(LargeBeneficiaryDescriptionPage(1), Description("Description", None, None, None, None)).success.value
-        .set(LargeBeneficiaryNumberOfBeneficiariesPage(1), "1").success.value
+        .set(LargeBeneficiaryNumberOfBeneficiariesPage(1), Over1).success.value
 
       val helper = new AllBeneficiariesPrinter(answerRowConverter)(answers)
 
@@ -441,7 +442,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
             AnswerRow(label = messages("largeBeneficiaryAddressUKYesNo.checkYourAnswersLabel", largeBen1Name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("largeBeneficiaryAddress.checkYourAnswersLabel", largeBen1Name), answer = Html("line1<br />line2<br />line3<br />line4<br />NE981ZZ"), changeUrl = None),
             AnswerRow(label = messages("largeBeneficiaryDescription.checkYourAnswersLabel", largeBen1Name), answer = Html("Description"), changeUrl = None),
-            AnswerRow(label = messages("largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel", largeBen1Name), answer = Html("1"), changeUrl = None)
+            AnswerRow(label = messages("largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel", largeBen1Name), answer = Html("1 to 100"), changeUrl = None)
           ),
           sectionKey = None
         ),
@@ -452,7 +453,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
             AnswerRow(label = messages("largeBeneficiaryAddressYesNo.checkYourAnswersLabel", largeBen2Name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("largeBeneficiaryUtr.checkYourAnswersLabel", largeBen2Name), answer = Html("1234567890"), changeUrl = None),
             AnswerRow(label = messages("largeBeneficiaryDescription.checkYourAnswersLabel", largeBen2Name), answer = Html("Description"), changeUrl = None),
-            AnswerRow(label = messages("largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel", largeBen2Name), answer = Html("1"), changeUrl = None)
+            AnswerRow(label = messages("largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel", largeBen2Name), answer = Html("1 to 100"), changeUrl = None)
           ),
           sectionKey = None
         )

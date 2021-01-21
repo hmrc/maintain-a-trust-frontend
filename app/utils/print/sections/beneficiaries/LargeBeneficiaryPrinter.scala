@@ -40,7 +40,7 @@ class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
           converter.addressQuestion(LargeBeneficiaryAddressPage(index), userAnswers, "largeBeneficiaryAddress", name),
           converter.utrQuestion(LargeBeneficiaryUtrPage(index), userAnswers, "largeBeneficiaryUtr", name),
           descriptionQuestion(LargeBeneficiaryDescriptionPage(index), userAnswers, name),
-          converter.stringQuestion(LargeBeneficiaryNumberOfBeneficiariesPage(index), userAnswers, "largeBeneficiaryNumberOfBeneficiaries")
+          converter.numberOfBeneficiariesQuestion(LargeBeneficiaryNumberOfBeneficiariesPage(index), userAnswers, "largeBeneficiaryNumberOfBeneficiaries")
         ).flatten
       ))
     }.getOrElse(Nil)
