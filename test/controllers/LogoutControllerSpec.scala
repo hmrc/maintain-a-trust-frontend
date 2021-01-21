@@ -17,31 +17,35 @@
 package controllers
 
 import base.SpecBase
+import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.Mockito._
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 class LogoutControllerSpec extends SpecBase {
 
-  lazy val onPageLoad: String = routes.LogoutController.logout().url
+  "logout should redirect to feedback and audit" in {
 
-  "Logout Controller" must {
+    val mockAuditConnector = mock[AuditConnector]
 
-    "redirect to Logout URL for a GET" in {
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      .overrides(bind[AuditConnector].toInstance(mockAuditConnector))
+      .build()
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    val request = FakeRequest(GET, routes.LogoutController.logout().url)
 
-      val request = FakeRequest(GET, onPageLoad)
+    val result = route(application, request).value
 
-      val result = route(application, request).value
+    status(result) mustEqual SEE_OTHER
 
-      status(result) mustEqual SEE_OTHER
+    redirectLocation(result).value mustBe frontendAppConfig.logoutUrl
 
-      redirectLocation(result).value must include(
-        "/feedback/trusts"
-      )
+    verify(mockAuditConnector).sendExplicitAudit(eqTo("trusts"), any[Map[String, String]])(any(), any())
 
-      application.stop()
-    }
+    application.stop()
 
   }
+
 }
