@@ -197,7 +197,7 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                         userAnswers: UserAnswers,
                         labelKey: String,
                         messageArg: String = "")
-                       (implicit messages: Messages, rds: Reads[HowManyBeneficiaries]): Option[AnswerRow] = {
+                       (implicit messages: Messages): Option[AnswerRow] = {
 
     userAnswers.get(query) map {x =>
       AnswerRow(
