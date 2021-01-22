@@ -28,7 +28,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
 import play.api.http.Status
 import play.api.libs.json.{JsBoolean, Json}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.WireMockHelper
 
 import scala.concurrent.Await
@@ -418,11 +418,34 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             .willReturn(okJson(json.toString))
         )
 
-        val processed = connector.getDoProtectorsAlreadyExist(utr)
+        val processed = Await.result(connector.getDoProtectorsAlreadyExist(utr), Duration.Inf)
 
-        whenReady(processed) {
-          result =>
-            result.value mustBe true
+        processed.value mustBe true
+
+        application.stop()
+      }
+
+      "throw UpstreamException when returned a 404 NotFound for the cached trust" in {
+
+        val utr = "1000000008"
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(s"/trusts/$utr/transformed/protectors-already-exist"))
+            .willReturn(notFound())
+        )
+
+        a[UpstreamErrorResponse] mustBe thrownBy {
+          Await.result(connector.getDoProtectorsAlreadyExist(utr), Duration.Inf)
         }
 
         application.stop()
@@ -451,11 +474,34 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             .willReturn(okJson(json.toString))
         )
 
-        val processed = connector.getDoOtherIndividualsAlreadyExist(utr)
+        val processed = Await.result(connector.getDoOtherIndividualsAlreadyExist(utr), Duration.Inf)
 
-        whenReady(processed) {
-          result =>
-            result.value mustBe true
+        processed.value mustBe true
+
+        application.stop()
+      }
+
+      "throw UpstreamException when returned a 404 NotFound for the cached trust" in {
+
+        val utr = "1000000008"
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(s"/trusts/$utr/transformed/other-individuals-already-exist"))
+            .willReturn(notFound())
+        )
+
+        a[UpstreamErrorResponse] mustBe thrownBy {
+          Await.result(connector.getDoOtherIndividualsAlreadyExist(utr), Duration.Inf)
         }
 
         application.stop()
