@@ -19,14 +19,15 @@ package controllers.testOnlyDoNotUseInAppConf
 import connectors.TrustsStoreConnector
 import javax.inject.Inject
 import play.api.Logging
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
-import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+
 import scala.concurrent.ExecutionContext
 
 class TestTrustsStoreController @Inject()(connector: TrustsStoreConnector,
-                                          controllerComponents: ControllerComponents
-                                         )(implicit ec: ExecutionContext) extends BackendController(controllerComponents) with Logging {
+                                          val controllerComponents: MessagesControllerComponents
+                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
 
   def set4Mld: Action[AnyContent] = Action.async {
     implicit request =>

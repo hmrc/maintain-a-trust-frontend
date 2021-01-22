@@ -12,7 +12,6 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-ui"                        % "8.21.0-play-27",
     "uk.gov.hmrc"       %% "play-conditional-form-mapping"  % "1.4.0-play-26",
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-27"     % "3.2.0",
-    "uk.gov.hmrc"       %% "bootstrap-backend-play-27"      % "3.2.0",
     "uk.gov.hmrc"       %% "domain"                         % "5.10.0-play-27",
     "com.typesafe.play" %% "play-json-joda"                 % "2.7.4",
     "org.typelevel"     %% "cats-core"                      % "2.0.0",

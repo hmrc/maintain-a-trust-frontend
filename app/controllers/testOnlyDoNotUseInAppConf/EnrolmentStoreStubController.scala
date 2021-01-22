@@ -17,46 +17,17 @@
 package controllers.testOnlyDoNotUseInAppConf
 
 import com.google.inject.Inject
-import config.FrontendAppConfig
 import play.api.Logging
-import play.api.libs.json.{JsValue, Writes}
-import play.api.mvc.ControllerComponents
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
+import play.api.mvc.MessagesControllerComponents
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 
-import scala.concurrent.{ExecutionContext, Future}
-
-class TestUserConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
-
-  private val dataUrl: String = s"${config.enrolmentStoreProxyUrl}/enrolment-store-stub/data"
-
-  object InsertedReads {
-    implicit lazy val httpReads: HttpReads[Unit] =
-      new HttpReads[Unit] {
-        override def read(method: String, url: String, response: HttpResponse) = {
-          // Ignore the response from enrolment-store-stub
-          ()
-        }
-      }
-  }
-
-  def insert(user: JsValue)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
-    val headers = Seq(
-      ("content-type", "application/json")
-    )
-    http.POST[JsValue, Unit](dataUrl, user, headers)(implicitly[Writes[JsValue]], InsertedReads.httpReads, hc, ec)
-  }
-
-  def delete()(implicit hc: HeaderCarrier, ec: ExecutionContext) : Future[HttpResponse] = {
-    http.DELETE[HttpResponse](dataUrl)
-  }
-}
+import scala.concurrent.ExecutionContext
 
 class EnrolmentStoreStubController @Inject()(
                                               connector: TestUserConnector,
-                                              override val controllerComponents: ControllerComponents
-                                            )(implicit ec: ExecutionContext) extends BackendBaseController with Logging {
+                                              override val controllerComponents: MessagesControllerComponents
+                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
 
   def insertTestUserIntoEnrolmentStore = Action.async(parse.json) {
     implicit request =>
