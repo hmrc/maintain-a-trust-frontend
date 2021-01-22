@@ -22,11 +22,17 @@
 
 @main_template(
     title = messages("session_expired.title"),
-    timeoutEnabled = false
+    timeoutEnabled = false,
+    canSignOut = false
     ) {
 
     @components.heading("session_expired.heading")
 
     <p>@messages("session_expired.guidance")</p>
     <p>@messages("session_expired.guidance.2")</p>
+
+@components.button_link(
+        messageKey = messages("site.sign_in"),
+        href = appConfig.loginUrl
+        )
 }

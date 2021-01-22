@@ -204,6 +204,7 @@ site.no = No
 site.confirm-send = Confirm and send
 site.try-again = Try again
 site.sign_out = Sign out
+site.sign_in = Sign in
 site.warning = Warning
 site.or = or
 site.and = and
