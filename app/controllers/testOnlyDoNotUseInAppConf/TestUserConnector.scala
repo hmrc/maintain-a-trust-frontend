@@ -18,18 +18,20 @@ package controllers.testOnlyDoNotUseInAppConf
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
+import play.api.{Logger, Logging}
 import play.api.libs.json.{JsValue, Writes}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TestUserConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
+class TestUserConnector @Inject()(http: HttpClient, config: FrontendAppConfig) extends Logging {
 
   private val dataUrl: String = s"${config.enrolmentStoreProxyUrl}/enrolment-store-stub/data"
 
   object InsertedReads {
-    implicit lazy val httpReads: HttpReads[Unit] = (_: String, _: String, _: HttpResponse) => {
+    implicit lazy val httpReads: HttpReads[Unit] = (_: String, _: String, response: HttpResponse) => {
         // Ignore the response from enrolment-store-stub
+        logger.info(s"[TestUserConnector] response from inserting test user: status ${response.status}, body: ${response.body}")
         ()
       }
   }
