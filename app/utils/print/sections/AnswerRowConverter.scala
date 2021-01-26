@@ -38,7 +38,7 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     userAnswers.get(query) map {x =>
       AnswerRow(
         messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        HtmlFormat.escape(checkAnswersFormatters.formatNino(x)),
+        checkAnswersFormatters.formatNino(x),
         None
       )
     }
