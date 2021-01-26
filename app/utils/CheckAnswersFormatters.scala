@@ -27,6 +27,8 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.language.LanguageUtils
 import utils.countryoptions.CountryOptions
 
+import scala.util.Try
+
 class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
                                       (implicit countryOptions: CountryOptions) {
 
@@ -47,10 +49,9 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     }
   }
 
-  def formatNino(nino: String): String = try {
-    Nino(nino).formatted
-  } catch {
-    case _: IllegalArgumentException => nino
+  def formatNino(nino: String): Html = {
+    val formatted = Try(Nino(nino).formatted).getOrElse(nino)
+    HtmlFormat.escape(formatted)
   }
 
   private def country(code: String)(implicit messages: Messages): String =
