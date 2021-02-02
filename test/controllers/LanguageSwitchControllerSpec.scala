@@ -128,6 +128,7 @@ class LanguageSwitchControllerSpec extends SpecBase {
       when(mockConfig.routeToSwitchLanguage).thenReturn(frontendAppConfig.routeToSwitchLanguage)
       when(mockConfig.reportAProblemPartialUrl).thenReturn(frontendAppConfig.reportAProblemPartialUrl)
       when(mockConfig.reportAProblemNonJSUrl).thenReturn(frontendAppConfig.reportAProblemNonJSUrl)
+      when(mockConfig.loginContinueUrl).thenReturn(frontendAppConfig.loginContinueUrl)
 
       "redirect to internal server error template" in {
 
@@ -139,7 +140,9 @@ class LanguageSwitchControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual INTERNAL_SERVER_ERROR
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual frontendAppConfig.loginContinueUrl
 
         application.stop()
       }
