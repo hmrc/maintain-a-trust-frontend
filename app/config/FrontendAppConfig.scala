@@ -59,6 +59,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   lazy val declarationEmailEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.declaration.email.enabled")
 
+  lazy val trustsIndividualCheck: String = configuration.get[Service]("microservice.services.trusts-individual-check").baseUrl
+
   lazy val authUrl: String = configuration.get[Service]("auth").baseUrl
   lazy val loginUrl: String = configuration.get[String]("urls.login")
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
