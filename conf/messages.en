@@ -740,3 +740,6 @@ playbackProblemContactHMRC.p1.beforeLink = You need to
 playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
 playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
 playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment ready when you contact HMRC.
+
+testOnly.fourOrFiveMLD.four = 4MLD
+testOnly.fourOrFiveMLD.five = 5MLD
