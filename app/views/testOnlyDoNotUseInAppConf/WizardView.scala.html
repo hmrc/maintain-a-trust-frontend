@@ -25,7 +25,7 @@ formHelper: FormWithCSRF
 @(form: Form[_])(implicit request: Request[_], messages: Messages, flash: Flash)
 
 @main_template(
-title = s"${errorPrefix(form)} Test Wizard"
+title = s"${errorPrefix(form)} Trust Wizard"
 ) {
 
  @formHelper(action = TestWizardController.onSubmit(), 'autoComplete -> "off") {
