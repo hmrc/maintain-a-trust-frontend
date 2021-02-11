@@ -36,18 +36,23 @@ title = s"${errorPrefix(form)} Test Wizard"
 
     @flash.get("wizard").map{ msg =>
 
-        <div class="heading-confirmation heading-large">
-            <h1 class="heading-large">
-                @msg
-            </h1>
-        </div>
+    <div class="heading-confirmation heading-large">
+        <h1 class="heading-large">
+            @msg
+        </h1>
+    </div>
     }
+
+    <h2>Legislation</h2>
 
    @components.input_radio(
     field = form("mode"),
     legend = "Which mode do you want to test?",
-    inputs = FourOrFiveMLD.options.toSeq
+    inputs = FourOrFiveMLD.options.toSeq,
+    fieldsetClass=Some("inline")
    )
+
+    <h2>Test Users</h2>
 
    @components.input_yes_no(
     field = form("cleanup"),
