@@ -24,8 +24,8 @@ import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, RequestHeader}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
+import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.testOnlyDoNotUseInAppConf.WizardView
 
@@ -54,9 +54,10 @@ class TestWizardController @Inject()(val controllerComponents: MessagesControlle
       val form: Form[TestWizardForm] = formProvider()
 
       form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
-
+        (formWithErrors: Form[_]) => {
+          logger.info(s"[Wizard] error validating the form")
+          Future.successful(BadRequest(view(formWithErrors)))
+        },
         values =>
           for {
             _ <- setMode(values.mode)
@@ -81,8 +82,9 @@ class TestWizardController @Inject()(val controllerComponents: MessagesControlle
     user match {
       case Some(value) =>
         Try(Json.parse(value)).fold(
-          _ =>
-            Future.successful(()),
+          _ => {
+            Future.successful(())
+          },
           json =>
             http.POST[JsValue, HttpResponse](
               routes.EnrolmentStoreStubController.insertTestUserIntoEnrolmentStore().absoluteURL,
