@@ -59,11 +59,6 @@ class ActiveSessionRepositoryImpl @Inject()(
     options = BSONDocument("expireAfterSeconds" -> cacheTtl)
   )
 
-  private val utrIndex = Index(
-    key = Seq("utr" -> IndexType.Ascending),
-    name = Some("utr-index")
-  )
-
   private val identifierIndex = Index(
     key = Seq("identifier" -> IndexType.Ascending),
     name = Some("identifier-index")
