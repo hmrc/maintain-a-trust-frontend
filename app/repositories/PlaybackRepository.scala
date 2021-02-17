@@ -132,7 +132,7 @@ class PlaybackRepositoryImpl @Inject()(
 
     val selector = Json.obj(
       "internalId" -> userAnswers.internalId,
-      "utr" -> userAnswers.utr
+      "utr" -> userAnswers.identifier
     )
 
     val modifier = Json.obj(

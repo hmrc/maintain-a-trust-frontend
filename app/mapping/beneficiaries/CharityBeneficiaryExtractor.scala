@@ -34,7 +34,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
       case None => Left(FailedToExtractData("No Charity Beneficiary"))
       case Some(charities) =>
 
-        logger.debug(s"[UTR: ${answers.utr}] Extracting $charities")
+        logger.debug(s"[UTR/URN: ${answers.identifier}] Extracting $charities")
 
         val updated = charities.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
           case (answers, (charityBeneficiary, index)) =>
@@ -60,7 +60,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
           case Success(a) =>
             Right(a)
           case Failure(exception) =>
-            logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
+            logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
             Left(FailedToExtractData(DisplayTrustCharityType.toString))
         }
     }
@@ -76,7 +76,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
         extractAddress(address.convert, index, answers)
 
       case _ =>
-        logger.error(s"[UTR: ${answers.utr}] both utr and address parsed")
+        logger.error(s"[UTR/URN: ${answers.identifier}] both utr and address parsed")
         Failure(InvalidExtractorState)
 
     } getOrElse {

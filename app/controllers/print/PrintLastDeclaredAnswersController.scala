@@ -34,7 +34,7 @@ class PrintLastDeclaredAnswersController @Inject()(
                                                     printPlaybackAnswersHelper: PrintPlaybackHelper
                                                   ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
       val entities = printPlaybackAnswersHelper.people(request.userAnswers)

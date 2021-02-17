@@ -20,33 +20,33 @@ import java.time.LocalDateTime
 
 import play.api.libs.json._
 
-final case class UtrSession(internalId: String,
-                            utr: String,
-                            updatedAt: LocalDateTime = LocalDateTime.now
+final case class IdentifierSession(internalId: String,
+                                   identifier: String,
+                                   updatedAt: LocalDateTime = LocalDateTime.now
                            )
 
-object UtrSession {
+object IdentifierSession {
 
-  implicit lazy val reads: Reads[UtrSession] = {
+  implicit lazy val reads: Reads[IdentifierSession] = {
 
     import play.api.libs.functional.syntax._
 
     (
       (__ \ "internalId").read[String] and
-        (__ \ "utr").read[String] and
+        (__ \ "identifier").read[String] and
         (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
-      ) (UtrSession.apply _)
+      ) (IdentifierSession.apply _)
   }
 
-  implicit lazy val writes: OWrites[UtrSession] = {
+  implicit lazy val writes: OWrites[IdentifierSession] = {
 
     import play.api.libs.functional.syntax._
 
     (
       (__ \ "internalId").write[String] and
-        (__ \ "utr").write[String] and
+        (__ \ "identifier").write[String] and
         (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
-      ) (unlift(UtrSession.unapply))
+      ) (unlift(IdentifierSession.unapply))
   }
 
 }

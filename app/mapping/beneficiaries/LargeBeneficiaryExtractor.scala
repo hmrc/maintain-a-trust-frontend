@@ -73,7 +73,7 @@ class LargeBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
             case Success(a) =>
               Right(a)
             case Failure(exception) =>
-              logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
+              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustCompanyType.toString))
           }
       }
@@ -89,7 +89,7 @@ class LargeBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
         extractAddress(address.convert, index, answers)
 
       case _ =>
-        logger.error(s"[UTR: ${answers.utr}] only both utr and address parsed")
+        logger.error(s"[UTR/URN: ${answers.identifier}] only both utr and address parsed")
         Failure(InvalidExtractorState)
 
     } getOrElse {

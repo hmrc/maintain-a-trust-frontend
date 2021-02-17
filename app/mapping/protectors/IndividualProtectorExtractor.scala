@@ -78,7 +78,7 @@ class IndividualProtectorExtractor extends Logging {
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
-        logger.error(s"[UTR: ${answers.utr}] only passport identification returned in DisplayTrustIdentificationType")
+        logger.error(s"[UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustIdentificationType")
         Failure(InvalidExtractorState)
 
       case _ =>

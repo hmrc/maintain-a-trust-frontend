@@ -35,7 +35,7 @@ abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnecto
   private def redirectAndResetTaskList(updatedAnswers: UserAnswers)
                                       (implicit request: DataRequest[AnyContent], hc: HeaderCarrier) =
       for {
-        _ <- trustStoreConnector.set(request.userAnswers.utr, updatedAnswers)
+        _ <- trustStoreConnector.set(request.userAnswers.identifier, updatedAnswers)
       } yield {
         Redirect(controllers.task_list.routes.TaskListController.onPageLoad())
       }
@@ -51,7 +51,7 @@ abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnecto
 
   protected def routeToAddOrUpdateProtectors()(implicit request: DataRequest[AnyContent]) = {
       for {
-        existsF <- trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.utr)
+        existsF <- trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.identifier)
         exist = existsF.value
       } yield if (exist) {
         Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
@@ -62,7 +62,7 @@ abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnecto
 
   protected def routeToAddOrUpdateOtherIndividuals()(implicit request: DataRequest[AnyContent]) = {
       for {
-        existsF <- trustConnector.getDoOtherIndividualsAlreadyExist(request.userAnswers.utr)
+        existsF <- trustConnector.getDoOtherIndividualsAlreadyExist(request.userAnswers.identifier)
         exist = existsF.value
       } yield if (exist) {
         Redirect(controllers.makechanges.routes.UpdateOtherIndividualsYesNoController.onPageLoad())

@@ -33,7 +33,7 @@ class TrustNotClaimedController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      val utr = request.userAnswers.utr
+      val utr = request.userAnswers.identifier
       Ok(view(utr))
   }
 }

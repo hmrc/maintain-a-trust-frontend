@@ -34,7 +34,7 @@ class UnavailableSectionsController @Inject()(
                                                config: FrontendAppConfig
                                      ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
 
       case class AvailableSections(

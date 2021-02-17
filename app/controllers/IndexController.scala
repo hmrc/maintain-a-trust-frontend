@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.Actions
-import models.{UserAnswers, UtrSession}
+import models.{UserAnswers, IdentifierSession}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -49,7 +49,7 @@ class IndexController @Inject()(val controllerComponents: MessagesControllerComp
         } {
           utr =>
 
-            val activeSession = UtrSession(request.user.internalId, utr)
+            val activeSession = IdentifierSession(request.user.internalId, utr)
             val newEmptyAnswers = UserAnswers.startNewSession(request.user.internalId, utr)
 
             for {

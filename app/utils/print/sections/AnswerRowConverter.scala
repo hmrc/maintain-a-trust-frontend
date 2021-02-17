@@ -51,7 +51,7 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
 
     Some(AnswerRow(
       messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-      checkAnswersFormatters.utr(userAnswers.utr),
+      checkAnswersFormatters.utr(userAnswers.identifier),
       None
     ))
   }

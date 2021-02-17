@@ -107,7 +107,7 @@ class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[Liv
           .flatMap(_.set(SettlorIndividualNINOPage(index), nino))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(passport), None)) =>
-        logger.error(s"[UTR: ${answers.utr}] only passport identification returned in DisplayTrustOrEstate api")
+        logger.error(s"[UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustOrEstate api")
         case object InvalidExtractorState extends RuntimeException
         Failure(InvalidExtractorState)
 

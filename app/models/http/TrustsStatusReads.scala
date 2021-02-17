@@ -29,7 +29,7 @@ case object Processing extends TrustStatus
 case object Closed extends TrustStatus
 case class Processed(playback: GetTrust, formBundleNumber : String) extends TrustStatus
 case object SorryThereHasBeenAProblem extends TrustStatus
-case object UtrNotFound extends TrustsResponse
+case object IdentifierNotFound extends TrustsResponse
 case object TrustServiceUnavailable extends TrustsResponse
 case object ClosedRequestResponse extends TrustsResponse
 case object ServerError extends TrustsResponse
@@ -82,7 +82,7 @@ object TrustsStatusReads extends Logging {
           case NO_CONTENT =>
             SorryThereHasBeenAProblem
           case NOT_FOUND =>
-            UtrNotFound
+            IdentifierNotFound
           case SERVICE_UNAVAILABLE =>
             TrustServiceUnavailable
           case CLOSED_REQUEST =>
