@@ -18,8 +18,9 @@ package controllers.testOnlyDoNotUseInAppConf
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import play.api.{Logger, Logging}
+import play.api.Logging
 import play.api.libs.json.{JsValue, Writes}
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -16,17 +16,17 @@
 
 package controllers.testOnlyDoNotUseInAppConf
 
-import java.util.UUID
-
 import config.FrontendAppConfig
 import controllers.actions.Actions
-import javax.inject.Inject
 import play.api.Logging
-import play.api.libs.json.{Format, JsObject, JsString, JsValue, Json, OWrites, Reads, __}
-import play.api.mvc.MessagesControllerComponents
+import play.api.libs.json.{Format, JsValue, Json}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import java.util.UUID
+import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class TestLeadTrusteeMatchingController @Inject()(actions: Actions,
@@ -35,18 +35,16 @@ class TestLeadTrusteeMatchingController @Inject()(actions: Actions,
                                                   config: FrontendAppConfig
                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
 
-  final case class IdMatchRequest(id: String, nino: String, surname: String, forename: String, birthDate: String)
+  case class IdMatchRequest(id: String, nino: String, surname: String, forename: String, birthDate: String)
 
   object IdMatchRequest {
-
     implicit lazy val formats: Format[IdMatchRequest] = Json.format[IdMatchRequest]
-
   }
 
   def matchLeadTrustee(nino: String,
                        forename: String,
                        surname: String,
-                       dob: String) = actions.auth.async {
+                       dob: String): Action[AnyContent] = actions.auth.async {
     implicit request =>
 
       val url = s"${config.trustsIndividualCheck}/trusts-individual-check/individual-check"
@@ -57,7 +55,7 @@ class TestLeadTrusteeMatchingController @Inject()(actions: Actions,
 
       // Implicitly passes through the current header carrier
       http.POST[IdMatchRequest, JsValue](url, payload, Seq(
-        "Content-Type" -> "application/json"
+        CONTENT_TYPE -> "application/json"
       )).map(Ok(_))
   }
 

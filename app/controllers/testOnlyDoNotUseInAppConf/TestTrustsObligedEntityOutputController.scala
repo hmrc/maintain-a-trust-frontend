@@ -38,14 +38,29 @@ class TestTrustsObligedEntityOutputController @Inject()(actions: Actions,
       connector.getPdf(identifier).map { response =>
 
         if (response.status == OK) {
-          val contentType = response.header(CONTENT_TYPE).getOrElse("application/pdf")
-          val contentDisposition = CONTENT_DISPOSITION -> response.header(CONTENT_DISPOSITION).getOrElse("inline")
-
-          response.headers.get(CONTENT_LENGTH) match {
-            case Some(Seq(length)) =>
-              Ok.sendEntity(HttpEntity.Streamed(response.bodyAsSource, Some(length.toLong), Some(contentType))).withHeaders(contentDisposition)
+          val contentType = response.header(CONTENT_TYPE) match {
+            case Some(value) =>
+              logger.info(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] $CONTENT_TYPE header found: $value.")
+              value
             case _ =>
-              Ok.chunked(response.bodyAsSource).as(contentType).withHeaders(contentDisposition)
+              logger.info(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] $CONTENT_TYPE header not found. Defaulting to application/pdf.")
+              "application/pdf"
+          }
+
+          response.header(CONTENT_DISPOSITION) match {
+            case Some(value) =>
+              val contentDisposition = CONTENT_DISPOSITION -> value
+              response.headers.get(CONTENT_LENGTH) match {
+                case Some(Seq(length)) =>
+                  logger.info(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] $CONTENT_LENGTH header found. Streaming response.")
+                  Ok.sendEntity(HttpEntity.Streamed(response.bodyAsSource, Some(length.toLong), Some(contentType))).withHeaders(contentDisposition)
+                case _ =>
+                  logger.info(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] $CONTENT_LENGTH header not found. Chunking response.")
+                  Ok.chunked(response.bodyAsSource).as(contentType).withHeaders(contentDisposition)
+              }
+            case _ =>
+              logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] $CONTENT_DISPOSITION header not found.")
+              InternalServerError
           }
         } else {
           logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Error retrieving pdf: $response.")
