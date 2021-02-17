@@ -27,9 +27,10 @@ import utils.Session
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class TestTrustsObligedEntityOutputController @Inject()(actions: Actions,
-                                                        connector: TrustsObligedEntityOutputConnector,
-                                                        val controllerComponents: MessagesControllerComponents
+class TestTrustsObligedEntityOutputController @Inject()(
+                                                         actions: Actions,
+                                                         connector: TrustsObligedEntityOutputConnector,
+                                                         val controllerComponents: MessagesControllerComponents
                                                        )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
 
   def getPdf(identifier: String): Action[AnyContent] = actions.auth.async {
@@ -38,28 +39,26 @@ class TestTrustsObligedEntityOutputController @Inject()(actions: Actions,
       connector.getPdf(identifier).map { response =>
 
         if (response.status == OK) {
-          val contentType = response.header(CONTENT_TYPE) match {
-            case Some(value) =>
-              logger.info(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] $CONTENT_TYPE header found: $value.")
-              value
-            case _ =>
-              logger.info(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] $CONTENT_TYPE header not found. Defaulting to application/pdf.")
-              "application/pdf"
+
+          case class Headers(contentDisposition: String, contentType: String, contentLength: Long)
+
+          val headers: Option[Headers] = for {
+            contentDisposition <- response.header(CONTENT_DISPOSITION)
+            contentType <- response.header(CONTENT_TYPE)
+            contentLength <- response.header(CONTENT_LENGTH)
+          } yield {
+            Headers(contentDisposition, contentType, contentLength.toLong)
           }
 
-          response.header(CONTENT_DISPOSITION) match {
-            case Some(value) =>
-              val contentDisposition = CONTENT_DISPOSITION -> value
-              response.headers.get(CONTENT_LENGTH) match {
-                case Some(Seq(length)) =>
-                  logger.info(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] $CONTENT_LENGTH header found. Streaming response.")
-                  Ok.sendEntity(HttpEntity.Streamed(response.bodyAsSource, Some(length.toLong), Some(contentType))).withHeaders(contentDisposition)
-                case _ =>
-                  logger.info(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] $CONTENT_LENGTH header not found. Chunking response.")
-                  Ok.chunked(response.bodyAsSource).as(contentType).withHeaders(contentDisposition)
-              }
+          headers match {
+            case Some(h) =>
+              Ok.sendEntity(HttpEntity.Streamed(
+                data = response.bodyAsSource,
+                contentLength = Some(h.contentLength),
+                contentType = Some(h.contentType)
+              )).withHeaders(CONTENT_DISPOSITION -> h.contentDisposition)
             case _ =>
-              logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] $CONTENT_DISPOSITION header not found.")
+              logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Response has insufficient headers: ${response.headers}.")
               InternalServerError
           }
         } else {
