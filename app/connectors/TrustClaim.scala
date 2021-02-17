@@ -23,7 +23,7 @@ import play.api.libs.json.{Json, OFormat}
 
 import scala.language.implicitConversions
 
-case class TrustClaim(identifier:String, managedByAgent: Boolean, trustLocked:Boolean)
+case class TrustClaim(id:String, managedByAgent: Boolean, trustLocked:Boolean)
 
 object TrustClaim extends Logging {
 
@@ -38,7 +38,7 @@ object TrustClaim extends Logging {
           case OK =>
             response.json.asOpt[TrustClaim] match {
               case validClaim @ Some(c) =>
-                if (c.identifier.toLowerCase.trim == identifier.toLowerCase.trim) {
+                if (c.id.toLowerCase.trim == identifier.toLowerCase.trim) {
                   if (c.trustLocked) {
                     logger.info(s"[UTR/URN: $identifier] User has been locked out of Trust IV for 30 minutes")
                   } else {
