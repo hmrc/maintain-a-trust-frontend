@@ -33,11 +33,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ActiveSessionRepositoryImpl @Inject()(
-                                             mongo: MongoDriver,
+                                             override val mongo: MongoDriver,
                                              config: Configuration
-                                           )(implicit ec: ExecutionContext) extends ActiveSessionRepository with Logging {
+                                           )(override implicit val ec: ExecutionContext)
+  extends ActiveSessionRepository
+    with IndexManager
+    with Logging {
 
-  private val collectionName: String = "session"
+  override val collectionName: String = "session"
+
+  override val dropIndexes: Boolean =
+    config.get[Boolean]("microservice.services.features.mongo.dropIndexes")
 
   private val cacheTtl = config.get[Int]("mongodb.session.ttlSeconds")
 
@@ -51,6 +57,11 @@ class ActiveSessionRepositoryImpl @Inject()(
     key = Seq("updatedAt" -> IndexType.Ascending),
     name = Some("session-updated-at-index"),
     options = BSONDocument("expireAfterSeconds" -> cacheTtl)
+  )
+
+  private val utrIndex = Index(
+    key = Seq("utr" -> IndexType.Ascending),
+    name = Some("utr-index")
   )
 
   private val identifierIndex = Index(

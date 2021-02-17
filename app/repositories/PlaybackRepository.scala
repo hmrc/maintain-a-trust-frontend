@@ -32,11 +32,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PlaybackRepositoryImpl @Inject()(
-                                        mongo: MongoDriver,
+                                        override val mongo: MongoDriver,
                                         config: Configuration
-                                      )(implicit ec: ExecutionContext) extends PlaybackRepository with Logging {
+                                      )(override implicit val ec: ExecutionContext)
+  extends PlaybackRepository
+    with IndexManager
+    with Logging {
 
-  private val collectionName: String = "user-answers"
+  override val collectionName: String = "user-answers"
+
+  override val dropIndexes: Boolean =
+    config.get[Boolean]("microservice.services.features.mongo.dropIndexes")
 
   private val cacheTtl = config.get[Int]("mongodb.playback.ttlSeconds")
 
