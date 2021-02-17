@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 
 import com.google.inject.ImplementedBy
 import javax.inject.{Inject, Singleton}
-import models.{MongoDateTimeFormats, UtrSession}
+import models.{MongoDateTimeFormats, IdentifierSession}
 import play.api.libs.json._
 import play.api.{Configuration, Logging}
 import reactivemongo.api.WriteConcern
@@ -33,11 +33,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ActiveSessionRepositoryImpl @Inject()(
-                                             mongo: MongoDriver,
+                                             override val mongo: MongoDriver,
                                              config: Configuration
-                                           )(implicit ec: ExecutionContext) extends ActiveSessionRepository with Logging {
+                                           )(override implicit val ec: ExecutionContext)
+  extends ActiveSessionRepository
+    with IndexManager
+    with Logging {
 
-  private val collectionName: String = "session"
+  override val collectionName: String = "session"
+
+  override val dropIndexes: Boolean =
+    config.get[Boolean]("microservice.services.features.mongo.dropIndexes")
 
   private val cacheTtl = config.get[Int]("mongodb.session.ttlSeconds")
 
@@ -53,9 +59,9 @@ class ActiveSessionRepositoryImpl @Inject()(
     options = BSONDocument("expireAfterSeconds" -> cacheTtl)
   )
 
-  private val utrIndex = Index(
-    key = Seq("utr" -> IndexType.Ascending),
-    name = Some("utr-index")
+  private val identifierIndex = Index(
+    key = Seq("identifier" -> IndexType.Ascending),
+    name = Some("identifier-index")
   )
 
   private lazy val ensureIndexes = {
@@ -63,13 +69,13 @@ class ActiveSessionRepositoryImpl @Inject()(
     for {
       collection              <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
       createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
-      createdIdIndex          <- collection.indexesManager.ensure(utrIndex)
+      createdIdIndex          <- collection.indexesManager.ensure(identifierIndex)
     } yield createdLastUpdatedIndex && createdIdIndex
   }
 
-  override def get(internalId: String): Future[Option[UtrSession]] = {
+  override def get(internalId: String): Future[Option[IdentifierSession]] = {
 
-    logger.debug(s"ActiveUtrRepository getting active utr for $internalId")
+    logger.debug(s"ActiveIdentifierRepository getting active identifier for $internalId")
 
     val selector = Json.obj("internalId" -> internalId)
 
@@ -94,10 +100,10 @@ class ActiveSessionRepositoryImpl @Inject()(
         collation = None,
         arrayFilters = Nil
       )
-    } yield r.result[UtrSession]
+    } yield r.result[IdentifierSession]
   }
 
-  override def set(session: UtrSession): Future[Boolean] = {
+  override def set(session: IdentifierSession): Future[Boolean] = {
 
     val selector = Json.obj("internalId" -> session.internalId)
 
@@ -115,7 +121,7 @@ class ActiveSessionRepositoryImpl @Inject()(
 @ImplementedBy(classOf[ActiveSessionRepositoryImpl])
 trait ActiveSessionRepository {
 
-  def get(internalId: String): Future[Option[UtrSession]]
+  def get(internalId: String): Future[Option[IdentifierSession]]
 
-  def set(session: UtrSession): Future[Boolean]
+  def set(session: IdentifierSession): Future[Boolean]
 }

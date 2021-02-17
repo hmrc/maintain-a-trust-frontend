@@ -39,7 +39,7 @@ class RequireClosingTrustAnswerAction @Inject()(errorHandler: ErrorHandler)
     Future.successful(
       request.userAnswers.get(WhatIsNextPage) match {
         case None =>
-          logger.error(s"[Session ID: ${Session.id(hc)}][UTR: ${request.userAnswers.utr}] " +
+          logger.error(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}] " +
             s"no answer for 'What next' found in user answers, cannot determine if user is closing the trust, cannot continue with journey")
           Left(
             Results.InternalServerError(errorHandler.internalServerErrorTemplate(request.request))

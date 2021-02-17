@@ -47,17 +47,17 @@ class AuthenticationServiceImpl @Inject()(errorHandler: ErrorHandler,
     }
   }
 
-  override def authenticateForUtr[A](utr: String)
-                                    (implicit request: DataRequest[A],
+  override def authenticateForIdentifier[A](identifier: String)
+                                           (implicit request: DataRequest[A],
                                      hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] =
   {
-    trustAuthConnector.authorisedForUtr(utr).flatMap {
+    trustAuthConnector.authorisedForIdentifier(identifier).flatMap {
       case _: TrustAuthAllowed =>
         Future.successful(Right(request))
       case TrustAuthDenied(redirectUrl) =>
         Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
-        logger.warn(s"[Session ID: ${Session.id(hc)}][UTR: $utr] Unable to authenticate organisation with trusts-auth")
+        logger.warn(s"[Session ID: ${Session.id(hc)}][UTR/URN: $identifier] Unable to authenticate organisation with trusts-auth")
         Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
     }
   }
@@ -69,7 +69,7 @@ trait AuthenticationService {
   def authenticateAgent[A]()
                        (implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]]
 
-  def authenticateForUtr[A](utr: String)
-                           (implicit request: DataRequest[A],
+  def authenticateForIdentifier[A](identifier: String)
+                                  (implicit request: DataRequest[A],
                             hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]]
 }

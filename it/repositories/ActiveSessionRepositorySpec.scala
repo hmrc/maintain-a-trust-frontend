@@ -1,6 +1,6 @@
 package repositories
 
-import models.UtrSession
+import models.IdentifierSession
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 
@@ -27,13 +27,13 @@ class ActiveSessionRepositorySpec extends AsyncFreeSpec with MustMatchers
 
         val repository = app.injector.instanceOf[ActiveSessionRepository]
 
-        val session = UtrSession(internalId, "utr")
+        val session = IdentifierSession(internalId, "utr")
 
         val initial = repository.set(session).futureValue
 
         initial mustBe true
 
-        repository.get(internalId).futureValue.value.utr mustBe "utr"
+        repository.get(internalId).futureValue.value.identifier mustBe "utr"
     }
 
     "must override an existing session for an internalId" in assertMongoTest(application) {
@@ -43,20 +43,20 @@ class ActiveSessionRepositorySpec extends AsyncFreeSpec with MustMatchers
 
         val repository = app.injector.instanceOf[ActiveSessionRepository]
 
-        val session = UtrSession(internalId, "utr")
+        val session = IdentifierSession(internalId, "utr")
 
         repository.set(session).futureValue
 
-        repository.get(internalId).futureValue.value.utr mustBe "utr"
+        repository.get(internalId).futureValue.value.identifier mustBe "utr"
         repository.get(internalId).futureValue.value.internalId mustBe internalId
 
         // update
 
-        val session2 = UtrSession(internalId, "utr2")
+        val session2 = IdentifierSession(internalId, "utr2")
 
         repository.set(session2).futureValue
 
-        repository.get(internalId).futureValue.value.utr mustBe "utr2"
+        repository.get(internalId).futureValue.value.identifier mustBe "utr2"
         repository.get(internalId).futureValue.value.internalId mustBe internalId
     }
   }

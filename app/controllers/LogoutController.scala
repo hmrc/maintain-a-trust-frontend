@@ -19,12 +19,12 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import forms.Validation
 import play.api.Logger.logger
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 
@@ -48,12 +48,14 @@ class LogoutController @Inject()(
 
       if(appConfig.logoutAudit) {
 
+        val identifierKey = if (request.userAnswers.identifier.matches(Validation.utrRegex)) "utr" else "urn"
+
         val auditData = Map(
           "sessionId" -> Session.id(hc),
           "event" -> "signout",
           "service" -> "maintain-a-trust-frontend",
           "userGroup" -> request.user.affinityGroup.toString,
-          "utr" -> request.userAnswers.utr
+          identifierKey -> request.userAnswers.identifier
         )
 
         auditConnector.sendExplicitAudit(

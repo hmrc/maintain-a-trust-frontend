@@ -58,7 +58,7 @@ class TrustBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
             case Success(a) =>
               Right(a)
             case Failure(exception) =>
-              logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
+              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustBeneficiaryTrustType.toString))
           }
       }
@@ -85,7 +85,7 @@ class TrustBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
         extractAddress(address.convert, index, answers)
 
       case _ =>
-        logger.error(s"[UTR: ${answers.utr}] both utr and address parsed")
+        logger.error(s"[UTR/URN: ${answers.identifier}] both utr/urn and address parsed")
         Failure(InvalidExtractorState)
 
     } getOrElse {

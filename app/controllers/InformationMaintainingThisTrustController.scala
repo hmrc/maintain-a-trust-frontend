@@ -36,16 +36,16 @@ class InformationMaintainingThisTrustController @Inject()(
                                                          )(implicit config: FrontendAppConfig)
   extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
 
-      val utr = request.userAnswers.utr
+      val identifier = request.userAnswers.identifier
 
-      logger.info(s"[Session ID: ${Session.id(hc)}] showing information about this trust $utr")
+      logger.info(s"[Session ID: ${Session.id(hc)}] showing information about this trust $identifier")
 
       request.user.affinityGroup match {
-        case Agent if !config.playbackEnabled => Ok(agentCannotAccessTrustYetView(utr))
-        case _ => Ok(maintainingTrustView(utr))
+        case Agent if !config.playbackEnabled => Ok(agentCannotAccessTrustYetView(identifier))
+        case _ => Ok(maintainingTrustView(identifier))
       }
   }
 }

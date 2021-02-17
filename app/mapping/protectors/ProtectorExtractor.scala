@@ -69,7 +69,7 @@ class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProte
       case Success(a) =>
         Right(a)
       case Failure(_) =>
-        logger.warn(s"[UTR: ${answers.utr}] failed to extract data")
+        logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data")
         Left(FailedToExtractData(DisplayTrustProtectorsType.toString))
     }
   }

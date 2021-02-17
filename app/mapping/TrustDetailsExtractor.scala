@@ -40,7 +40,7 @@ class TrustDetailsExtractor @Inject() extends PlaybackExtractor[TrustDetailsType
         case Success(a) =>
           Right(a)
         case Failure(exception) =>
-          logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
+          logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
           Left(FailedToExtractData(TrustDetailsType.toString))
       }
     }

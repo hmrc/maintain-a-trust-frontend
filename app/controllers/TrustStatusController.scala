@@ -58,17 +58,17 @@ class TrustStatusController @Inject()(
 
   def closed(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(closedView(request.user.affinityGroup, request.userAnswers.utr)))
+      Future.successful(Ok(closedView(request.user.affinityGroup, request.userAnswers.identifier)))
   }
 
   def processing(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(stillProcessingView(request.user.affinityGroup, request.userAnswers.utr)))
+      Future.successful(Ok(stillProcessingView(request.user.affinityGroup, request.userAnswers.identifier)))
   }
 
   def sorryThereHasBeenAProblem(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(playbackProblemContactHMRCView(request.userAnswers.utr)))
+      Future.successful(Ok(playbackProblemContactHMRCView(request.userAnswers.identifier)))
   }
 
   def notFound(): Action[AnyContent] = actions.authWithData.async {
@@ -78,100 +78,100 @@ class TrustStatusController @Inject()(
 
   def locked(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(lockedView(request.userAnswers.utr)))
+      Future.successful(Ok(lockedView(request.userAnswers.identifier)))
   }
 
   def down(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(ServiceUnavailable(ivDownView(request.userAnswers.utr)))
+      Future.successful(ServiceUnavailable(ivDownView(request.userAnswers.identifier)))
   }
 
   def alreadyClaimed(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(alreadyClaimedView(request.userAnswers.utr)))
+      Future.successful(Ok(alreadyClaimedView(request.userAnswers.identifier)))
   }
 
   def status(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      checkIfLocked(request.userAnswers.utr, fromVerify = false )
+      checkIfLocked(request.userAnswers.identifier, fromVerify = false )
   }
 
   def statusAfterVerify(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      checkIfLocked(request.userAnswers.utr, fromVerify = true)
+      checkIfLocked(request.userAnswers.identifier, fromVerify = true)
   }
 
-  private def checkIfLocked(utr: String, fromVerify: Boolean)(implicit request: DataRequest[AnyContent]): Future[Result] = {
-    trustStoreConnector.get(utr).flatMap {
+  private def checkIfLocked(identifier: String, fromVerify: Boolean)(implicit request: DataRequest[AnyContent]): Future[Result] = {
+    trustStoreConnector.get(identifier).flatMap {
       case Some(claim) if claim.trustLocked =>
-        logger.info(s"[Session ID: ${Session.id(hc)}] $utr user has failed IV 3 times, locked out for 30 minutes")
+        logger.info(s"[Session ID: ${Session.id(hc)}] $identifier user has failed IV 3 times, locked out for 30 minutes")
         Future.successful(Redirect(controllers.routes.TrustStatusController.locked()))
       case _ =>
-        logger.info(s"[Session ID: ${Session.id(hc)}] $utr user has not been locked out from IV")
-        tryToPlayback(utr, fromVerify)
+        logger.info(s"[Session ID: ${Session.id(hc)}] $identifier user has not been locked out from IV")
+        tryToPlayback(identifier, fromVerify)
     }
   }
 
-  private def tryToPlayback(utr: String, fromVerify: Boolean)(implicit request: DataRequest[AnyContent]): Future[Result] = {
-    trustConnector.playbackfromEtmp(utr) flatMap {
+  private def tryToPlayback(identifier: String, fromVerify: Boolean)(implicit request: DataRequest[AnyContent]): Future[Result] = {
+    trustConnector.playbackfromEtmp(identifier) flatMap {
       case Closed =>
-        logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due it being closed")
+        logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due it being closed")
         Future.successful(Redirect(controllers.routes.TrustStatusController.closed()))
       case Processing =>
-        logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to trust change processing")
+        logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to trust change processing")
         Future.successful(Redirect(controllers.routes.TrustStatusController.processing()))
-      case UtrNotFound =>
-        logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to UTR not found")
+      case IdentifierNotFound =>
+        logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to UTR/URN not found")
         Future.successful(Redirect(controllers.routes.TrustStatusController.notFound()))
       case Processed(playback, _) =>
-        authenticateForUtrAndExtract(utr, playback, fromVerify)
+        authenticateForIdentifierAndExtract(identifier, playback, fromVerify)
       case SorryThereHasBeenAProblem =>
-        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to status")
+        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to status")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
       case TrustServiceUnavailable =>
-        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to the service being unavailable")
+        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to the service being unavailable")
         Future.successful(Redirect(routes.TrustStatusController.down()))
       case ClosedRequestResponse =>
-        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to the service closing the request")
+        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to the service closing the request")
         Future.successful(Redirect(routes.TrustStatusController.down()))
       case response =>
-        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr unable to retrieve trust due to an error ${response}")
+        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to an error ${response}")
         Future.successful(Redirect(routes.TrustStatusController.down()))
     }
   }
 
-  private def authenticateForUtrAndExtract(utr: String, playback : GetTrust, fromVerify: Boolean)
+  private def authenticateForIdentifierAndExtract(identifier: String, playback : GetTrust, fromVerify: Boolean)
                                           (implicit request: DataRequest[AnyContent]) = {
-    logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $utr trust is in a processed state")
-    authenticationService.authenticateForUtr(utr) flatMap {
+    logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier trust is in a processed state")
+    authenticationService.authenticateForIdentifier(identifier) flatMap {
       case Left(failure) =>
         val location = failure.header.headers.getOrElse(LOCATION, "no location header")
         val failureStatus = failure.header.status
-        logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] unable to authenticate user for $utr, " +
+        logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] unable to authenticate user for $identifier, " +
           s"due to $failureStatus status, sending user to $location")
 
         Future.successful(failure)
       case Right(_) =>
-        extract(utr, playback, fromVerify)
+        extract(identifier, playback, fromVerify)
     }
   }
 
-  private def extract(utr: String, playback: GetTrust, fromVerify: Boolean)
+  private def extract(identifier: String, playback: GetTrust, fromVerify: Boolean)
                      (implicit request: DataRequest[AnyContent]) : Future[Result] = {
 
-    logger.info(s"[extract][Session ID: ${Session.id(hc)}] user authenticated for $utr, attempting to extract to user answers")
+    logger.info(s"[extract][Session ID: ${Session.id(hc)}] user authenticated for $identifier, attempting to extract to user answers")
 
     playbackExtractor.extract(request.userAnswers, playback) match {
       case Right(answers) =>
         playbackRepository.set(answers) map { _ =>
-          logger.info(s"[extract][Session ID: ${Session.id(hc)}] $utr successfully extracted, showing information about maintaining")
+          logger.info(s"[extract][Session ID: ${Session.id(hc)}] $identifier successfully extracted, showing information about maintaining")
           (request.user.affinityGroup, fromVerify) match {
             case (AffinityGroup.Organisation, false) => Redirect(routes.MaintainThisTrustController.onPageLoad(needsIv = false))
             case (_,_) => Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
           }
         }
       case Left(reason) =>
-        logger.warn(s"[extract][Session ID: ${Session.id(hc)}] $utr unable to extract user answers due to $reason")
+        logger.warn(s"[extract][Session ID: ${Session.id(hc)}] $identifier unable to extract user answers due to $reason")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
     }
   }

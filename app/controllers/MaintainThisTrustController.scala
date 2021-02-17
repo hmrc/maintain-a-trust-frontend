@@ -37,7 +37,7 @@ class MaintainThisTrustController @Inject()(
   def onPageLoad(needsIv: Boolean) = actions.authWithData {
     implicit request =>
 
-      val utr = request.userAnswers.utr
+      val utr = request.userAnswers.identifier
 
       @scala.annotation.tailrec
       def commaSeparate(connective: String, list: List[String], acc: String = "")

@@ -45,7 +45,7 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
                                              playbackExtractor: UserAnswersExtractor
                                             )(override implicit val executionContext: ExecutionContext) extends RefreshedDataRetrievalAction with Logging {
 
-  case class SubmissionData(utr: String, whatIsNext: WhatIsNext, tvn: String, date: LocalDateTime, agent: Option[AgentDeclaration], endDate: Option[LocalDate])
+  case class SubmissionData(identifier: String, whatIsNext: WhatIsNext, tvn: String, date: LocalDateTime, agent: Option[AgentDeclaration], endDate: Option[LocalDate])
 
   override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
@@ -59,26 +59,26 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
       optionalEndDate = request.userAnswers.get(DateLastAssetSharedOutPage)
     } yield {
 
-      val utr = request.userAnswers.utr
+      val identifier = request.userAnswers.identifier
 
-      val submissionData = SubmissionData(utr, whatIsNext, tvn, submissionDate, optionalAgentInformation, optionalEndDate)
+      val submissionData = SubmissionData(identifier, whatIsNext, tvn, submissionDate, optionalAgentInformation, optionalEndDate)
 
-      trustConnector.playback(utr).flatMap {
-        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, utr, playback)(request)
+      trustConnector.playback(identifier).flatMap {
+        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, identifier, playback)(request)
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
-            logger.error(s"[Session ID: ${Session.id(hc)}][UTR: ${request.userAnswers.utr}] unable to get data from user answers")
+            logger.error(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}] unable to get data from user answers")
             Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
   }
 
-  private def extractAndRefreshUserAnswers[A](data: SubmissionData, utr: String, playback: GetTrust)
+  private def extractAndRefreshUserAnswers[A](data: SubmissionData, identifier: String, playback: GetTrust)
                         (implicit request: DataRequest[A]) : Future[Either[Result, DataRequest[A]]] = {
 
     val hc = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
 
-    val newSession = UserAnswers.startNewSession(request.user.internalId, utr)
+    val newSession = UserAnswers.startNewSession(request.user.internalId, identifier)
 
     playbackExtractor.extract(newSession, playback) match {
       case Right(answers) =>
@@ -93,7 +93,7 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
           }
           _ <- playbackRepository.set(updatedAnswers)
         } yield {
-          logger.debug(s"[Session ID: ${Session.id(hc)}][UTR: ${answers.utr}] Set updated user answers in db")
+          logger.debug(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${answers.identifier}] Set updated user answers in db")
           Right(DataRequest(request.request, updatedAnswers, request.user))
         }
       case Left(reason) =>

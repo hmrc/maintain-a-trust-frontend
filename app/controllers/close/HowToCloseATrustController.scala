@@ -30,9 +30,9 @@ class HowToCloseATrustController @Inject()(
                                             view: HowToCloseATrustView
                                            ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
 
-      Ok(view(request.userAnswers.utr))
+      Ok(view(request.userAnswers.identifier))
   }
 }

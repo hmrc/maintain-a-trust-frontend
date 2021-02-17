@@ -62,7 +62,7 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
             case Success(a) =>
               Right(a)
             case Failure(exception) =>
-              logger.warn(s"[UTR: ${answers.utr}] failed to extract data due to ${exception.getMessage}")
+              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
               Left(FailedToExtractData(DisplayTrustIndividualDetailsType.toString))
           }
       }
@@ -86,7 +86,7 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
-        logger.error(s"[UTR: ${answers.utr}] only passport identification returned in DisplayTrustOrEstate api")
+        logger.error(s"[UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustOrEstate api")
         case object InvalidExtractorState extends RuntimeException
         Failure(InvalidExtractorState)
 

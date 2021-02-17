@@ -42,7 +42,7 @@ class TaskListController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.refreshAndRequireIsClosingAnswer.async {
     implicit request =>
 
-      val utr = request.userAnswers.utr
+      val utr = request.userAnswers.identifier
 
       storeConnector.getStatusOfTasks(utr) map {
         tasks =>
