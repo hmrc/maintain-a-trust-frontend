@@ -28,7 +28,7 @@ PUT       /maintain-a-trust/test-only/set-5mld                  controllers.test
 GET       /maintain-a-trust/test-only/get-pdf/:identifier       controllers.testOnlyDoNotUseInAppConf.TestTrustsObligedEntityOutputController.getPdf(identifier)
 
 + nocsrf
-GET       /maintain-a-trust/test-only/match-lead-trustee       controllers.testOnlyDoNotUseInAppConf.TestLeadTrusteeMatchingController.matchLeadTrustee(nino: String, forename: String, surname: String, dob: String)
+GET       /maintain-a-trust/test-only/match-lead-trustee        controllers.testOnlyDoNotUseInAppConf.TestLeadTrusteeMatchingController.matchLeadTrustee(nino: String, forename: String, surname: String, dob: String)
 
 GET       /maintain-a-trust/test-only/wizard                    controllers.testOnlyDoNotUseInAppConf.TestWizardController.onPageLoad
 POST      /maintain-a-trust/test-only/wizard                    controllers.testOnlyDoNotUseInAppConf.TestWizardController.onSubmit

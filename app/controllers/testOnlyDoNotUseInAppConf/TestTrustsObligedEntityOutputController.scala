@@ -20,7 +20,7 @@ import connectors.TrustsObligedEntityOutputConnector
 import controllers.actions.Actions
 import play.api.Logging
 import play.api.http.HttpEntity
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 
@@ -32,12 +32,12 @@ class TestTrustsObligedEntityOutputController @Inject()(actions: Actions,
                                                         val controllerComponents: MessagesControllerComponents
                                                        )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
 
-  def getPdf(identifier: String) = actions.auth.async {
+  def getPdf(identifier: String): Action[AnyContent] = actions.auth.async {
     implicit request =>
 
       connector.getPdf(identifier).map { response =>
 
-        if (response.status == 200) {
+        if (response.status == OK) {
           val contentType = response.header(CONTENT_TYPE).getOrElse("application/pdf")
           val contentDisposition = CONTENT_DISPOSITION -> response.header(CONTENT_DISPOSITION).getOrElse("inline")
 

@@ -20,19 +20,15 @@ import config.FrontendAppConfig
 import play.api.libs.ws.{WSClient, WSResponse}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpVerbs.GET
-import uk.gov.hmrc.http.HttpClient
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class TrustsObligedEntityOutputConnector @Inject()(http: HttpClient, ws: WSClient, config: FrontendAppConfig) {
+class TrustsObligedEntityOutputConnector @Inject()(ws: WSClient, config: FrontendAppConfig) {
 
-
-  private def getPdfUrl(identifier: String) = s"${config.trustsObligedEntityOutputUrl}/trusts-obliged-entity-output/get-pdf/$identifier"
-
-
-  def getPdf(identifier : String)(implicit hc : HeaderCarrier): Future[WSResponse] = {
-    ws.url(getPdfUrl(identifier)).withMethod(GET).withHttpHeaders(hc.headers: _*).stream()
+  def getPdf(identifier: String)(implicit hc: HeaderCarrier): Future[WSResponse] = {
+    val url: String = s"${config.trustsObligedEntityOutputUrl}/trusts-obliged-entity-output/get-pdf/$identifier"
+    ws.url(url).withMethod(GET).withHttpHeaders(hc.headers: _*).stream()
   }
 
 }
