@@ -41,7 +41,7 @@ class DateLastAssetSharedOutYesNoController @Inject()(
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("dateLastAssetSharedOutYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(DateLastAssetSharedOutYesNoPage) match {
@@ -49,15 +49,15 @@ class DateLastAssetSharedOutYesNoController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, request.userAnswers.utr))
+      Ok(view(preparedForm, request.userAnswers.identifier))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.utr))),
+          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.identifier))),
 
         value => {
           for {

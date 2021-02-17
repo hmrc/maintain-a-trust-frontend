@@ -170,7 +170,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
                 .withStatus(Status.NOT_FOUND)))
 
         val result  = Await.result(connector.playback(utr),Duration.Inf)
-        result mustBe UtrNotFound
+        result mustBe IdentifierNotFound
 
         application.stop()
       }

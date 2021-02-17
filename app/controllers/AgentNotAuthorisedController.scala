@@ -32,6 +32,6 @@ class AgentNotAuthorisedController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      Ok(view(request.userAnswers.utr))
+      Ok(view(request.userAnswers.identifier))
   }
 }

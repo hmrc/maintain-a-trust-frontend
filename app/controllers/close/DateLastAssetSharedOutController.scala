@@ -45,11 +45,11 @@ class DateLastAssetSharedOutController @Inject()(
 
   val prefix: String = "dateLastAssetSharedOut"
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
       for {
-        startDate <- trustConnector.getStartDate(request.userAnswers.utr)
+        startDate <- trustConnector.getStartDate(request.userAnswers.identifier)
       } yield {
         val form = formProvider.withPrefixAndTrustStartDate(prefix, startDate)
 
@@ -62,7 +62,7 @@ class DateLastAssetSharedOutController @Inject()(
       }
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
       def render(startDate: LocalDate) = {
@@ -81,7 +81,7 @@ class DateLastAssetSharedOutController @Inject()(
       }
 
       for {
-        startDate <- trustConnector.getStartDate(request.userAnswers.utr)
+        startDate <- trustConnector.getStartDate(request.userAnswers.identifier)
         result <- render(startDate)
       } yield result
   }

@@ -56,13 +56,13 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
   "invoking authenticateForUtr" when {
     "user is authenticated" must {
       "return the data request" in {
-        when(trustAuthConnector.authorisedForUtr(any())(any(), any())).thenReturn(Future.successful(TrustAuthAllowed()))
+        when(trustAuthConnector.authorisedForIdentifier(any())(any(), any())).thenReturn(Future.successful(TrustAuthAllowed()))
 
         val app = buildApp
 
         val service = app.injector.instanceOf[AuthenticationService]
 
-        whenReady(service.authenticateForUtr[AnyContent](utr)) {
+        whenReady(service.authenticateForIdentifier[AnyContent](utr)) {
           result =>
             result.right.value mustBe dataRequest
         }
@@ -70,13 +70,13 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
     }
     "user requires additional action" must {
       "redirect to desired url" in {
-        when(trustAuthConnector.authorisedForUtr(any())(any(), any())).thenReturn(Future.successful(TrustAuthDenied("some-url")))
+        when(trustAuthConnector.authorisedForIdentifier(any())(any(), any())).thenReturn(Future.successful(TrustAuthDenied("some-url")))
 
         val app = buildApp
 
         val service = app.injector.instanceOf[AuthenticationService]
 
-        whenReady(service.authenticateForUtr[AnyContent](utr)) {
+        whenReady(service.authenticateForIdentifier[AnyContent](utr)) {
           result =>
             val r = Future.successful(result.left.value)
             status(r) mustBe SEE_OTHER
@@ -86,13 +86,13 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
     }
     "an internal server error is returned" must {
       "return an internal server error result" in {
-        when(trustAuthConnector.authorisedForUtr(any())(any(), any())).thenReturn(Future.successful(TrustAuthInternalServerError))
+        when(trustAuthConnector.authorisedForIdentifier(any())(any(), any())).thenReturn(Future.successful(TrustAuthInternalServerError))
 
         val app = buildApp
 
         val service = app.injector.instanceOf[AuthenticationService]
 
-        whenReady(service.authenticateForUtr[AnyContent](utr)) {
+        whenReady(service.authenticateForIdentifier[AnyContent](utr)) {
           result =>
             result.left.value.header.status mustBe INTERNAL_SERVER_ERROR
         }

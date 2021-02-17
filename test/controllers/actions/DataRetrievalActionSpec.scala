@@ -17,7 +17,7 @@
 package controllers.actions
 
 import base.SpecBase
-import models.UtrSession
+import models.IdentifierSession
 import models.requests.{IdentifierRequest, OptionalDataRequest, OrganisationUser}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
@@ -64,7 +64,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
 
         val playbackRepository = mock[PlaybackRepository]
 
-        when(mockSessionRepository.get("id")).thenReturn(Future.successful(Some(UtrSession("id", "utr"))))
+        when(mockSessionRepository.get("id")).thenReturn(Future.successful(Some(IdentifierSession("id", "utr"))))
         when(playbackRepository.get("id", "utr")) thenReturn Future(None)
 
         val action = new Harness(playbackRepository)
@@ -83,7 +83,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
 
         val playbackRepository = mock[PlaybackRepository]
 
-        when(mockSessionRepository.get("id")).thenReturn(Future.successful(Some(UtrSession("id", "utr"))))
+        when(mockSessionRepository.get("id")).thenReturn(Future.successful(Some(IdentifierSession("id", "utr"))))
         when(playbackRepository.get("id", "utr")) thenReturn Future(Some(TestUserAnswers.emptyUserAnswers))
 
         val action = new Harness(playbackRepository)

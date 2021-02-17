@@ -27,8 +27,8 @@ class FakeAuthenticationService extends AuthenticationService {
   override def authenticateAgent[A]()(implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]]
   = Future.successful(Right("SomeARN"))
 
-  override def authenticateForUtr[A](utr: String)
-                                    (implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]]
+  override def authenticateForIdentifier[A](identifier: String)
+                                           (implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]]
   = Future.successful(Right(request))
 
 }
@@ -38,8 +38,8 @@ class FakeFailingAuthenticationService extends AuthenticationService {
   override def authenticateAgent[A]()(implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]]
   = Future.successful(Left(Results.Unauthorized))
 
-  override def authenticateForUtr[A](utr: String)
-                                    (implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]]
+  override def authenticateForIdentifier[A](identifier: String)
+                                           (implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]]
   = Future.successful(Left(Results.Unauthorized))
 
 }

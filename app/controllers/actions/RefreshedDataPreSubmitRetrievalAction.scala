@@ -56,7 +56,7 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(val parser: BodyParser
       optionalEndDate = request.userAnswers.get(DateLastAssetSharedOutPage)
     } yield {
 
-      val utr = request.userAnswers.utr
+      val utr = request.userAnswers.identifier
 
       val submissionData = SubmissionData(utr, whatIsNext, optionalAgentInformation, optionalEndDate)
 

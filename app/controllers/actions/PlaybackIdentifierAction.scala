@@ -33,7 +33,7 @@ class PlaybackIdentifierActionImpl @Inject()(val parser: BodyParsers.Default,
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    playbackAuthenticationService.authenticateForUtr(request.userAnswers.utr)(request, hc)
+    playbackAuthenticationService.authenticateForIdentifier(request.userAnswers.identifier)(request, hc)
   }
 
 }

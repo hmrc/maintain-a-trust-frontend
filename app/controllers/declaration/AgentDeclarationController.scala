@@ -79,7 +79,7 @@ class AgentDeclarationController @Inject()(
                 submitDeclaration(
                   declaration,
                   agentUser,
-                  request.userAnswers.utr,
+                  request.userAnswers.identifier,
                   agencyAddress,
                   request.userAnswers.get(DateLastAssetSharedOutPage)
                 )(request.request)
@@ -117,7 +117,7 @@ class AgentDeclarationController @Inject()(
           _ <- playbackRepository.set(updatedAnswers)
         } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
       case _ =>
-        handleError(s"[Session ID: ${Session.id(hc)}][UTR: ${utr}] Failed to declare")
+        handleError(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${utr}] Failed to declare")
     }
   }
 

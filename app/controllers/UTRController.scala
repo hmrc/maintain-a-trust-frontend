@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.Actions
 import forms.UTRFormProvider
-import models.{UserAnswers, UtrSession}
+import models.{UserAnswers, IdentifierSession}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -54,7 +54,7 @@ class UTRController @Inject()(
           Future.successful(BadRequest(view(formWithErrors, routes.UTRController.onSubmit()))),
         utr => {
 
-          val activeSession = UtrSession(request.user.internalId, utr)
+          val activeSession = IdentifierSession(request.user.internalId, utr)
           val newEmptyAnswers = UserAnswers.startNewSession(request.user.internalId, utr)
 
           for {

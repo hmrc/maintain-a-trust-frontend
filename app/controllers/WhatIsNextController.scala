@@ -50,7 +50,7 @@ class WhatIsNextController @Inject()(
 
   val form: Form[WhatIsNext] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForUtr {
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
 
       val preparedForm = request.userAnswers.get(WhatIsNextPage) match {
@@ -61,7 +61,7 @@ class WhatIsNextController @Inject()(
       Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForUtr.async {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
       form.bindFromRequest().fold(

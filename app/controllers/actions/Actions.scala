@@ -38,16 +38,16 @@ class Actions @Inject()(
   def authWithData: ActionBuilder[DataRequest, AnyContent] =
     authWithOptionalData andThen requireData
 
-  def verifiedForUtr: ActionBuilder[DataRequest, AnyContent] =
+  def verifiedForIdentifier: ActionBuilder[DataRequest, AnyContent] =
     authWithData andThen playbackIdentifier
 
   def refreshedData: ActionBuilder[DataRequest, AnyContent] =
-    verifiedForUtr andThen refreshedDataRetrieval
+    verifiedForIdentifier andThen refreshedDataRetrieval
 
   def requireIsClosingAnswer: ActionBuilder[ClosingTrustRequest, AnyContent] =
-    verifiedForUtr andThen requireClosingTrustAnswer
+    verifiedForIdentifier andThen requireClosingTrustAnswer
 
   def refreshAndRequireIsClosingAnswer: ActionBuilder[ClosingTrustRequest, AnyContent] =
-    verifiedForUtr andThen refreshedDraftDataRetrieval andThen requireClosingTrustAnswer
+    verifiedForIdentifier andThen refreshedDraftDataRetrieval andThen requireClosingTrustAnswer
 
 }

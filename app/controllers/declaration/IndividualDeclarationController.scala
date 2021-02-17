@@ -69,7 +69,7 @@ class IndividualDeclarationController @Inject()(
 
         declaration =>
           service.individualDeclaration(
-            request.userAnswers.utr,
+            request.userAnswers.identifier,
             declaration,
             request.userAnswers.get(DateLastAssetSharedOutPage)
           ) flatMap {

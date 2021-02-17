@@ -57,10 +57,10 @@ class UserAnswersExtractorImpl @Inject()(beneficiary: BeneficiaryExtractor,
 
     answersCombined match {
       case Left(error) =>
-        logger.error(s"[UTR: ${answers.utr}] failed to unpack data to user answers, failed for $error")
+        logger.error(s"[UTR/URN: ${answers.identifier}] failed to unpack data to user answers, failed for $error")
         Left(error)
       case Right(None) =>
-        logger.error(s"[UTR: ${answers.utr}] failed to combine user answers")
+        logger.error(s"[UTR/URN: ${answers.identifier}] failed to combine user answers")
         Left(FailedToCombineAnswers)
       case Right(Some(ua)) =>
         Right(ua)
