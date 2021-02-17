@@ -58,7 +58,7 @@ class TestTrustsObligedEntityOutputController @Inject()(
                 contentType = Some(h.contentType)
               )).withHeaders(CONTENT_DISPOSITION -> h.contentDisposition)
             case _ =>
-              logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Response has insufficient headers.")
+              logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Response has insufficient headers: ${response.headers}.")
               InternalServerError
           }
         } else {
