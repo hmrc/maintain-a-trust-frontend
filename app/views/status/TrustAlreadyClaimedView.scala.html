@@ -22,13 +22,13 @@
     config: FrontendAppConfig
 )
 
-@(utr: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("trustAlreadyClaimed.title")
 ) {
 
-    @components.heading_with_caption(headingKey = "trustAlreadyClaimed.heading", caption = "trustAlreadyClaimed.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "trustAlreadyClaimed.heading", caption = s"trustAlreadyClaimed.$identifierType.caption", captionParam = identifier)
 
     <p>@messages("trustAlreadyClaimed.p1")</p>
 

@@ -143,7 +143,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr)(request, messages).toString
+        view(utr, UTR)(request, messages).toString
 
       application.stop()
     }

@@ -88,7 +88,7 @@ class TrustStatusController @Inject()(
 
   def alreadyClaimed(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(alreadyClaimedView(request.userAnswers.identifier)))
+      Future.successful(Ok(alreadyClaimedView(request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def status(): Action[AnyContent] = actions.authWithData.async {
