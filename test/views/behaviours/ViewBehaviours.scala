@@ -66,6 +66,7 @@ trait ViewBehaviours extends ViewSpecBase {
 
   def normalPageTitleWithCaption(view: HtmlFormat.Appendable,
                                  messageKeyPrefix: String,
+                                 captionPrefix: Option[String],
                                  captionParam: String,
                                  expectedGuidanceKeys: String*): Unit = {
 
@@ -90,7 +91,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "display the correct page title with caption" in {
 
           val doc = asDocument(view)
-          assertPageTitleWithCaptionEqualsMessages(doc, s"$messageKeyPrefix.caption",  captionParam, s"$messageKeyPrefix.heading")
+          assertPageTitleWithCaptionEqualsMessages(doc, s"$messageKeyPrefix.${captionPrefix.map(_ + ".").getOrElse("")}caption",  captionParam, s"$messageKeyPrefix.heading")
         }
 
         "display the correct guidance" in {

@@ -35,7 +35,7 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
 
   val formProvider = new YesNoFormProvider()
   val form: Form[Boolean] = formProvider.withPrefix("dateLastAssetSharedOutYesNo")
-  val utr: String = "utr"
+  val utr: String = "1234567890"
   lazy val dateLastAssetSharedOutYesNoRoute: String = routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
 
   override val emptyUserAnswers: UserAnswers = super.emptyUserAnswers

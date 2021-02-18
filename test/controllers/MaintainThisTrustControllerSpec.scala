@@ -37,12 +37,14 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
       val view = application.injector.instanceOf[MaintainThisTrustView]
 
+      val utr = "1234567890"
+
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view("utr",
+        view(utr,
           "settlors, trustees, beneficiaries, protectors and other individuals",
-          frontendAppConfig.verifyIdentityForATrustUrl("utr")
+          frontendAppConfig.verifyIdentityForATrustUrl(utr)
         )(request, messages).toString
 
       application.stop()
@@ -60,10 +62,12 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
       val view = application.injector.instanceOf[MaintainThisTrustView]
 
+      val utr = "1234567890"
+
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view("utr",
+        view(utr,
           "settlors, trustees, beneficiaries, protectors and other individuals",
           routes.InformationMaintainingThisTrustController.onPageLoad().url
         )(request, messages).toString

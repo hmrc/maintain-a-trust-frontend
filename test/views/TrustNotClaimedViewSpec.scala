@@ -31,6 +31,7 @@ class TrustNotClaimedViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "trustNotClaimed",
+      None,
       utr,
     "bullet.1.title", "bullet.1.p1", "bullet.1.p2", "bullet.1.p3", "bullet.1.p4",
     "bullet.2.title", "bullet.2.p1", "bullet.2.p2", "bullet.2.p3", "bullet.2.p4")

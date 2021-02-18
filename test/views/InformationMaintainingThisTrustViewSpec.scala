@@ -31,6 +31,7 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "informationMaintainingThisTrust",
+      None,
       utr,
       "warning",
       "viewLastDeclaration",

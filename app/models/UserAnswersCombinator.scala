@@ -29,7 +29,6 @@ object UserAnswersCombinator {
           data = x.data.deepMerge(y.data),
           internalId = x.internalId,
           identifier = x.identifier,
-          isIdentifierUtr = x.isIdentifierUtr,
           updatedAt = LocalDateTime.now
         )
     }

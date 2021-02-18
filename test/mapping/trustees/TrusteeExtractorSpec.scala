@@ -44,7 +44,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
           DisplayTrustLeadTrusteeType(None, None),
           None, None, None)
 
-        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 
@@ -81,7 +81,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
           None, None)
 
 
-        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 
@@ -129,7 +129,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
           None, None)
 
 
-        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 
@@ -185,7 +185,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
           None, None)
 
 
-        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 

@@ -28,10 +28,11 @@ import scala.util.{Failure, Success, Try}
 final case class UserAnswers(
                               internalId: String,
                               identifier: String,
-                              isIdentifierUtr: Boolean,
                               data: JsObject = Json.obj(),
                               updatedAt: LocalDateTime = LocalDateTime.now
                             ) extends Logging {
+
+  def identifierType: IdentifierType = if (identifier.matches(Validation.utrRegex)) UTR else URN
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     Reads.at(page.path).reads(data) match {
@@ -88,7 +89,7 @@ final case class UserAnswers(
 object UserAnswers {
 
   def startNewSession(internalId: String, identifier: String) : UserAnswers =
-    UserAnswers(internalId = internalId, identifier = identifier, isIdentifierUtr = identifier.matches(Validation.utrRegex))
+    UserAnswers(internalId = internalId, identifier = identifier)
 
   implicit lazy val reads: Reads[UserAnswers] = {
 
@@ -97,7 +98,6 @@ object UserAnswers {
     (
       (__ \ "internalId").read[String] and
         (__ \ "identifier").read[String] and
-        (__ \ "isIdentifierUtr").read[Boolean] and
         (__ \ "data").read[JsObject] and
         (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
       ) (UserAnswers.apply _)
@@ -110,7 +110,6 @@ object UserAnswers {
     (
       (__ \ "internalId").write[String] and
         (__ \ "identifier").write[String] and
-        (__ \ "isIdentifierUtr").write[Boolean] and
         (__ \ "data").write[JsObject] and
         (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
       ) (unlift(UserAnswers.unapply))

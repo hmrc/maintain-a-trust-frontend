@@ -19,7 +19,6 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import forms.Validation
 import play.api.Logger.logger
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -48,7 +47,7 @@ class LogoutController @Inject()(
 
       if(appConfig.logoutAudit) {
 
-        val identifierKey = if (request.userAnswers.isIdentifierUtr) "utr" else "urn"
+        val identifierKey: String = request.userAnswers.identifierType.toString.toLowerCase
 
         val auditData = Map(
           "sessionId" -> Session.id(hc),

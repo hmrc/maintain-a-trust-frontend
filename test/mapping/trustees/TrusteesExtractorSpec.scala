@@ -109,7 +109,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
           val trusts = None
 
-          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+          val ua = UserAnswers("fakeId", "utr")
 
           val extraction = trusteesExtractor.extract(ua, trusts)
 
@@ -132,7 +132,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+          val ua = UserAnswers("fakeId", "utr")
 
           val extraction = trusteesExtractor.extract(ua, Some(trust))
 
@@ -154,7 +154,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val trusts = (for (index <- 0 to 2) yield generateTrusteeCompany(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+          val ua = UserAnswers("fakeId", "utr")
 
           val extraction = trusteesExtractor.extract(ua, Some(trusts))
 
@@ -206,7 +206,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
           val trusts = None
 
-          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+          val ua = UserAnswers("fakeId", "utr")
 
           val extraction = trusteesExtractor.extract(ua, trusts)
 
@@ -229,7 +229,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+          val ua = UserAnswers("fakeId", "utr")
 
           val extraction = trusteesExtractor.extract(ua, Some(trust))
 
@@ -252,7 +252,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val trusts = (for(index <- 0 to 2) yield generateTrusteeIndividual(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+          val ua = UserAnswers("fakeId", "utr")
 
           val extraction = trusteesExtractor.extract(ua, Some(trusts))
 
@@ -311,7 +311,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
           val trusts = None
 
-          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+          val ua = UserAnswers("fakeId", "utr")
 
           val extraction = trusteesExtractor.extract(ua, trusts)
 
@@ -397,7 +397,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+          val ua = UserAnswers("fakeId", "utr")
 
           val extraction = trusteesExtractor.extract(ua, Some(trusts))
 

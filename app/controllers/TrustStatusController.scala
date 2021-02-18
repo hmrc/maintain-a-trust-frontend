@@ -78,7 +78,7 @@ class TrustStatusController @Inject()(
 
   def locked(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(lockedView(request.userAnswers.identifier)))
+      Future.successful(Ok(lockedView(request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def down(): Action[AnyContent] = actions.authWithData.async {

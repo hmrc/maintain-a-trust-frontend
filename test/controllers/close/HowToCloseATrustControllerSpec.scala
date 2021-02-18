@@ -25,7 +25,7 @@ import views.html.close.HowToCloseATrustView
 
 class HowToCloseATrustControllerSpec extends SpecBase with MockitoSugar {
 
-  val utr: String = "utr"
+  val utr: String = "1234567890"
   lazy val howToCloseATrustRoute: String = routes.HowToCloseATrustController.onPageLoad().url
 
   override val emptyUserAnswers: UserAnswers = super.emptyUserAnswers

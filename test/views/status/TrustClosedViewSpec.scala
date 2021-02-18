@@ -33,6 +33,7 @@ class TrustClosedViewSpec extends ViewBehaviours {
     behave like normalPageTitleWithCaption(
       applyView,
       "trustClosed",
+      None,
       utr,
       "p1",
       "p2",

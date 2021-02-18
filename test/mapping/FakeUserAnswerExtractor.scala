@@ -23,7 +23,7 @@ import models.http.GetTrust
 
 class FakeUserAnswerExtractor @Inject() extends UserAnswersExtractor {
   override def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionErrors.PlaybackExtractionError, UserAnswers] =
-    Right(UserAnswers("id","utr", isIdentifierUtr = true))
+    Right(UserAnswers("id","utr"))
 }
 
 class FakeFailingUserAnswerExtractor @Inject() extends UserAnswersExtractor {

@@ -36,13 +36,15 @@ class TrustDetailsPrinterSpec extends SpecBase {
 
       val actualSection = helper.trustDetails(answers)
 
+      val utr = "1234567890"
+
       actualSection mustBe Seq(
         AnswerSection(
           headingKey = None,
           rows = Seq(
             AnswerRow("What is the trust’s name?", Html("Trust Ltd."), None),
             AnswerRow("When was the trust created?", Html("1 June 2019"), None),
-            AnswerRow("What is the trust’s Unique Taxpayer Reference (UTR)?", Html("utr"), None)
+            AnswerRow("What is the trust’s Unique Taxpayer Reference (UTR)?", Html(utr), None)
           ),
           sectionKey = Some("Trust details")
         )

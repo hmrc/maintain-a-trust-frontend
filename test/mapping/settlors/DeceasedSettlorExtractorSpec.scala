@@ -41,7 +41,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val deceasedSettlor = None
 
-        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, deceasedSettlor)
 
@@ -65,7 +65,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -102,7 +102,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -139,7 +139,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId","utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId","utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -175,7 +175,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId","utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId","utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -213,7 +213,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId","utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId","utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -251,7 +251,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -289,7 +289,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 
@@ -325,7 +325,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         )
 
-        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
+        val ua = UserAnswers("fakeId", "utr")
 
         val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
 

@@ -19,6 +19,7 @@ package controllers
 import base.SpecBase
 import connectors.{TrustClaim, TrustConnector, TrustsStoreConnector}
 import mapping.{FakeFailingUserAnswerExtractor, FakeUserAnswerExtractor, UserAnswersExtractor}
+import models.UTR
 import models.http._
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -44,7 +45,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     val builder: GuiceApplicationBuilder
 
-    def utr = "utr"
+    def utr = "1234567890"
 
     def userAnswers = emptyUserAnswers
 
@@ -128,7 +129,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr)(request, messages).toString
+        view(utr, UTR)(request, messages).toString
 
       application.stop()
     }

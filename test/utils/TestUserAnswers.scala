@@ -22,8 +22,8 @@ object TestUserAnswers extends TryValues {
 
   lazy val draftId = "id"
   lazy val userInternalId = "internalId"
-  lazy val utr = "utr"
+  lazy val utr = "1234567890"
 
-  def emptyUserAnswers = models.UserAnswers(userInternalId, utr, isIdentifierUtr = true)
+  def emptyUserAnswers = models.UserAnswers(userInternalId, utr)
 
 }
