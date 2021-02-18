@@ -60,9 +60,9 @@ class PlaybackRepositoryImpl @Inject()(
     options = BSONDocument("expireAfterSeconds" -> cacheTtl)
   )
 
-  private val internalIdAndUtrIndex = Index(
-    key = Seq("internalId" -> IndexType.Ascending, "utr" -> IndexType.Ascending),
-    name = Some("internal-id-and-utr-compound-index")
+  private val internalIdAndIdentifierIndex = Index(
+    key = Seq("internalId" -> IndexType.Ascending, "identifier" -> IndexType.Ascending),
+    name = Some("internal-id-and-identifier-compound-index")
   )
 
   private lazy val ensureIndexes = {
@@ -70,7 +70,7 @@ class PlaybackRepositoryImpl @Inject()(
     for {
       collection              <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
       createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
-      createdIdIndex          <- collection.indexesManager.ensure(internalIdAndUtrIndex)
+      createdIdIndex          <- collection.indexesManager.ensure(internalIdAndIdentifierIndex)
     } yield createdLastUpdatedIndex && createdIdIndex
   }
 
@@ -101,13 +101,13 @@ class PlaybackRepositoryImpl @Inject()(
     } yield ()
   }
 
-  override def get(internalId: String, utr: String): Future[Option[UserAnswers]] = {
+  override def get(internalId: String, identifier: String): Future[Option[UserAnswers]] = {
 
     logger.debug(s"PlaybackRepository getting user answers for $internalId")
 
     val selector = Json.obj(
       "internalId" -> internalId,
-      "utr" -> utr
+      "identifier" -> identifier
     )
 
     val modifier = Json.obj(
@@ -138,7 +138,7 @@ class PlaybackRepositoryImpl @Inject()(
 
     val selector = Json.obj(
       "internalId" -> userAnswers.internalId,
-      "utr" -> userAnswers.identifier
+      "identifier" -> userAnswers.identifier
     )
 
     val modifier = Json.obj(
@@ -151,13 +151,13 @@ class PlaybackRepositoryImpl @Inject()(
     } yield r.ok
   }
 
-  override def resetCache(internalId: String, utr: String): Future[Option[JsObject]] = {
+  override def resetCache(internalId: String, identifier: String): Future[Option[JsObject]] = {
 
     logger.debug(s"PlaybackRepository resetting cache for $internalId")
 
     val selector = Json.obj(
       "internalId" -> internalId,
-      "utr" -> utr
+      "identifier" -> identifier
     )
 
     for {
@@ -169,9 +169,9 @@ class PlaybackRepositoryImpl @Inject()(
 
 trait PlaybackRepository {
 
-  def get(internalId: String, utr: String): Future[Option[UserAnswers]]
+  def get(internalId: String, identifier: String): Future[Option[UserAnswers]]
 
   def set(userAnswers: UserAnswers): Future[Boolean]
 
-  def resetCache(internalId: String, utr: String): Future[Option[JsObject]]
+  def resetCache(internalId: String, identifier: String): Future[Option[JsObject]]
 }
