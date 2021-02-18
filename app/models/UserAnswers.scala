@@ -16,8 +16,9 @@
 
 package models
 
-import java.time.LocalDateTime
+import forms.Validation
 
+import java.time.LocalDateTime
 import play.api.Logging
 import play.api.libs.json._
 import queries.{Gettable, Settable}
@@ -30,6 +31,8 @@ final case class UserAnswers(
                               data: JsObject = Json.obj(),
                               updatedAt: LocalDateTime = LocalDateTime.now
                             ) extends Logging {
+
+  def identifierType: IdentifierType = if (identifier.matches(Validation.utrRegex)) UTR else URN
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     Reads.at(page.path).reads(data) match {

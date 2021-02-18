@@ -21,13 +21,13 @@
     config: FrontendAppConfig
 )
 
-@(utr: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("trustLocked.title")
     ) {
 
-    @components.heading_with_caption(headingKey = "trustLocked.heading", caption = "trustLocked.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "trustLocked.heading", caption = s"trustLocked.$identifierType.caption", captionParam = identifier)
     <p>@messages("trustLocked.p1")</p>
     <p>@messages("trustLocked.p2")</p>
     <p>@messages("trustLocked.p3") <a target="_blank" href="@config.helplineUrl">@messages("trustLocked.link1")</a>.</p>

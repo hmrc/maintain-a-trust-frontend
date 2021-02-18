@@ -246,13 +246,14 @@ trustClosed.p3 = to reopen the records. HMRC will contact you if a tax return is
 trustClosed.p4 = You can
 trustClosed.return.link = return to register and maintain a trust for a client
 
-trustLocked.title = Sorry, you cannot access this trust
-trustLocked.heading = Sorry, you cannot access this trust
-trustLocked.p1 = You have not passed the security questions asked by HMRC.
-trustLocked.p2 = Try again in 30 minutes.
+trustLocked.title = You cannot access this trust
+trustLocked.heading = You cannot access this trust
+trustLocked.p1 = You have not passed the security questions for this trust.
+trustLocked.p2 = Access to this trust has been locked for 30 minutes. You can try to access this trust again after this time.
 trustLocked.p3 = If you need help with the service
 trustLocked.link1 = contact the trusts helpline (opens in a new window or tab)
-trustLocked.caption = This trust’s UTR: {0}
+trustLocked.UTR.caption = This trust’s UTR: {0}
+trustLocked.URN.caption = This trust’s URN: {0}
 
 trustNotClaimed.title = Your client must claim the trust and authorise your access
 trustNotClaimed.heading = Your client must claim the trust and authorise your access

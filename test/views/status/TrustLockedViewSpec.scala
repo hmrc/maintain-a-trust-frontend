@@ -16,6 +16,7 @@
 
 package views.status
 
+import models.UTR
 import views.behaviours.ViewBehaviours
 import views.html.status.TrustLockedView
 
@@ -27,10 +28,11 @@ class TrustLockedViewSpec extends ViewBehaviours {
 
     val view = viewFor[TrustLockedView](Some(emptyUserAnswers))
 
-    val applyView = view.apply(utr)(fakeRequest, messages)
+    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "trustLocked",
+      Some("UTR"),
       utr,
       "p1", "p2","p3",
       "link1")
