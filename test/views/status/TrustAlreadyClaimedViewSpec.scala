@@ -31,6 +31,7 @@ class TrustAlreadyClaimedViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "trustAlreadyClaimed",
+      None,
       utr,
       "p1", "p2","p2.a")
 

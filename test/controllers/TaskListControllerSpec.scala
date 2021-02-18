@@ -42,18 +42,18 @@ class TaskListControllerSpec extends SpecBase {
 
   lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
 
-  val fakeUTR = "utr"
+  val utr: String = "1234567890"
 
   val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
   val mandatorySections = List(
-    Task(Link(Settlors, "http://localhost:9795/maintain-a-trust/settlors/utr"), Some(InProgress)),
-    Task(Link(Trustees, "http://localhost:9792/maintain-a-trust/trustees/utr"), Some(InProgress)),
-    Task(Link(Beneficiaries, "http://localhost:9793/maintain-a-trust/beneficiaries/utr"), Some(InProgress))
+    Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$utr"), Some(InProgress)),
+    Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$utr"), Some(InProgress)),
+    Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$utr"), Some(InProgress))
   )
   val optionalSections = List(
-    Task(Link(Protectors, "http://localhost:9796/maintain-a-trust/protectors/utr"), Some(InProgress)),
-    Task(Link(NaturalPeople, "http://localhost:9799/maintain-a-trust/other-individuals/utr"), Some(InProgress))
+    Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$utr"), Some(InProgress)),
+    Task(Link(NaturalPeople, s"http://localhost:9799/maintain-a-trust/other-individuals/$utr"), Some(InProgress))
   )
 
   "TaskListController Controller" must {
@@ -84,7 +84,7 @@ class TaskListControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
+        view(utr, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
 
       application.stop()
     }
@@ -115,7 +115,7 @@ class TaskListControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(fakeUTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
+        view(utr, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
 
       application.stop()
     }

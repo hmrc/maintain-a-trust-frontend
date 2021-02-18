@@ -37,10 +37,12 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
 
       val view = application.injector.instanceOf[InformationMaintainingThisTrustView]
 
+      val utr = "1234567890"
+
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view("utr")(request, messages).toString
+        view(utr)(request, messages).toString
 
       application.stop()
     }
