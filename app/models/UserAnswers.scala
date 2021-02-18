@@ -16,8 +16,9 @@
 
 package models
 
-import java.time.LocalDateTime
+import forms.Validation
 
+import java.time.LocalDateTime
 import play.api.Logging
 import play.api.libs.json._
 import queries.{Gettable, Settable}
@@ -27,6 +28,7 @@ import scala.util.{Failure, Success, Try}
 final case class UserAnswers(
                               internalId: String,
                               identifier: String,
+                              isIdentifierUtr: Boolean,
                               data: JsObject = Json.obj(),
                               updatedAt: LocalDateTime = LocalDateTime.now
                             ) extends Logging {
@@ -86,7 +88,7 @@ final case class UserAnswers(
 object UserAnswers {
 
   def startNewSession(internalId: String, identifier: String) : UserAnswers =
-    UserAnswers(internalId = internalId, identifier = identifier)
+    UserAnswers(internalId = internalId, identifier = identifier, isIdentifierUtr = identifier.matches(Validation.utrRegex))
 
   implicit lazy val reads: Reads[UserAnswers] = {
 
@@ -95,6 +97,7 @@ object UserAnswers {
     (
       (__ \ "internalId").read[String] and
         (__ \ "identifier").read[String] and
+        (__ \ "isIdentifierUtr").read[Boolean] and
         (__ \ "data").read[JsObject] and
         (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
       ) (UserAnswers.apply _)
@@ -107,6 +110,7 @@ object UserAnswers {
     (
       (__ \ "internalId").write[String] and
         (__ \ "identifier").write[String] and
+        (__ \ "isIdentifierUtr").write[Boolean] and
         (__ \ "data").write[JsObject] and
         (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
       ) (unlift(UserAnswers.unapply))

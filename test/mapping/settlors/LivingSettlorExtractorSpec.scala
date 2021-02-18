@@ -103,7 +103,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
 
           val trusts = None
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
           val extraction = livingSettlorExtractor.extract(ua, trusts)
 
@@ -126,7 +126,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
           val extraction = livingSettlorExtractor.extract(ua, Some(trust))
 
@@ -147,7 +147,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val trusts = (for (index <- 0 to 2) yield generateSettlorCompany(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
           val extraction = livingSettlorExtractor.extract(ua, Some(trusts))
 
@@ -201,7 +201,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
 
           val trusts = None
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
           val extraction = livingSettlorExtractor.extract(ua, trusts)
 
@@ -223,7 +223,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
           val extraction = livingSettlorExtractor.extract(ua, Some(trust))
 
@@ -245,7 +245,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val trusts = (for(index <- 0 to 2) yield generateSettlorIndividual(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
           val extraction = livingSettlorExtractor.extract(ua, Some(trusts))
 

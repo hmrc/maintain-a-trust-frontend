@@ -44,7 +44,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
 
         val protector = DisplayTrustProtectorsType(Nil, Nil)
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
         val extraction = protectorExtractor.extract(ua, Some(protector))
 
@@ -53,7 +53,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
 
       "must return false for doesTrustHaveAProtector given no protector" in {
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
         val extraction = protectorExtractor.extract(ua, None)
 
@@ -100,7 +100,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
           protectorCompany = Nil
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
         val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -169,7 +169,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
           )
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
         val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -235,7 +235,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
           )
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
         val extraction = protectorExtractor.extract(ua, Some(protectors))
 

@@ -42,7 +42,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
 
           val trusts = None
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
           val extraction = trustTypeExtractor.extract(ua, trusts)
 
@@ -79,7 +79,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
           )
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
           val extraction = trustTypeExtractor.extract(ua, Some(trust))
 
@@ -122,7 +122,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
           assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
         val extraction = trustTypeExtractor.extract(ua, Some(trust))
 
@@ -165,7 +165,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
           assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
         val extraction = trustTypeExtractor.extract(ua, Some(trust))
 
@@ -208,7 +208,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
           assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
         val extraction = trustTypeExtractor.extract(ua, Some(trust))
 
@@ -247,7 +247,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
           assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
         )
 
-        val ua = UserAnswers("fakeId","utr")
+        val ua = UserAnswers("fakeId","utr", isIdentifierUtr = true)
 
         val extraction = trustTypeExtractor.extract(ua, Some(trust))
 
@@ -290,7 +290,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
           assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
         val extraction = trustTypeExtractor.extract(ua, Some(trust))
 
@@ -333,7 +333,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
           assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
         val extraction = trustTypeExtractor.extract(ua, Some(trust))
 
@@ -376,7 +376,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
           assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", isIdentifierUtr = true)
 
         val extraction = trustTypeExtractor.extract(ua, Some(trust))
 

@@ -48,7 +48,7 @@ class LogoutController @Inject()(
 
       if(appConfig.logoutAudit) {
 
-        val identifierKey = if (request.userAnswers.identifier.matches(Validation.utrRegex)) "utr" else "urn"
+        val identifierKey = if (request.userAnswers.isIdentifierUtr) "utr" else "urn"
 
         val auditData = Map(
           "sessionId" -> Session.id(hc),
