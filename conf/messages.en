@@ -229,8 +229,8 @@ site.address.international.line3 = Address line 3 (optional)
 site.address.international.country = Country
 site.address.international.country.select = Select a country
 
-trustAlreadyClaimed.title = Sorry, you cannot access this trust
-trustAlreadyClaimed.heading = Sorry, you cannot access this trust
+trustAlreadyClaimed.title = You cannot access this trust
+trustAlreadyClaimed.heading = You cannot access this trust
 trustAlreadyClaimed.UTR.caption = This trust’s UTR: {0}
 trustAlreadyClaimed.URN.caption = This trust’s URN: {0}
 trustAlreadyClaimed.p1 = Another Government Gateway account is linked to it. Please sign in with that account.
