@@ -59,7 +59,7 @@ class PlaybackRepositoryImpl @Inject()(
     name = Some("user-answers-updated-at-index"),
     expireAfterSeconds = Some(cacheTtl),
     options = BSONDocument.empty,
-    unique = true,
+    unique = false,
     background = false,
     dropDups = false,
     sparse = false,
