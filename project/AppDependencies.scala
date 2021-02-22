@@ -40,6 +40,7 @@ object AppDependencies {
     "com.typesafe.akka" %% "akka-protobuf_2.12" % akkaVersion,
     "com.typesafe.akka" %% "akka-slf4j_2.12" % akkaVersion,
     "com.typesafe.akka" %% "akka-actor_2.12" % akkaVersion,
-    "com.typesafe.akka" %% "akka-http-core_2.12" % akkaHttpVersion
+    "com.typesafe.akka" %% "akka-http-core_2.12" % akkaHttpVersion,
+    "commons-codec" % "commons-codec" % "1.12"
   )
 }
