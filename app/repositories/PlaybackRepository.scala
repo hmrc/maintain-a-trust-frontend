@@ -84,7 +84,7 @@ class PlaybackRepositoryImpl @Inject()(
     name = Some("internal-id-and-identifier-compound-index"),
     expireAfterSeconds = None,
     options = BSONDocument.empty,
-    unique = true,
+    unique = false,
     background = false,
     dropDups = false,
     sparse = false,
