@@ -55,7 +55,7 @@ class PrintMaintainDeclaredAnswersController @Inject()(
 
       val trnDateTime = request.userAnswers.get(SubmissionDatePage).getOrElse(LocalDateTime.now)
 
-      val declarationSent : String = formatter.formatDate(trnDateTime.toLocalDate)
+      val declarationSent: String = formatter.formatDate(trnDateTime.toLocalDate)
 
       val isAgent = request.user.affinityGroup == Agent
 

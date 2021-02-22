@@ -16,17 +16,19 @@
 
 package utils
 
-import java.time.{LocalDate => JavaDate}
-
-import javax.inject.Inject
+import models.pages.RoleInCompany
+import models.pages.RoleInCompany.NA
 import models.{Address, InternationalAddress, PassportOrIdCardDetails, UKAddress}
 import org.joda.time.{LocalDate => JodaDate}
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.Html
+import play.twirl.api.HtmlFormat.escape
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.language.LanguageUtils
 import utils.countryoptions.CountryOptions
 
+import java.time.{LocalDate => JavaDate}
+import javax.inject.Inject
 import scala.util.Try
 
 class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
@@ -37,21 +39,17 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     languageUtils.Dates.formatDate(convertedDate)
   }
 
-  def utr(answer: String): Html = {
-    HtmlFormat.escape(answer)
-  }
-
   def yesOrNo(answer: Boolean)(implicit messages: Messages): Html = {
     if (answer) {
-      HtmlFormat.escape(messages("site.yes"))
+      escape(messages("site.yes"))
     } else {
-      HtmlFormat.escape(messages("site.no"))
+      escape(messages("site.no"))
     }
   }
 
   def formatNino(nino: String): Html = {
     val formatted = Try(Nino(nino).formatted).getOrElse(nino)
-    HtmlFormat.escape(formatted)
+    escape(formatted)
   }
 
   private def country(code: String)(implicit messages: Messages): String =
@@ -61,16 +59,14 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
 
   def percentage(value: String): Html = escape(s"$value%")
 
-  private def escape(x: String): Html = HtmlFormat.escape(x)
-
   def ukAddress(address: UKAddress): Html = {
     val lines =
       Seq(
-        Some(HtmlFormat.escape(address.line1)),
-        Some(HtmlFormat.escape(address.line2)),
-        address.line3.map(HtmlFormat.escape),
-        address.line4.map(HtmlFormat.escape),
-        Some(HtmlFormat.escape(address.postcode))
+        Some(escape(address.line1)),
+        Some(escape(address.line2)),
+        address.line3.map(escape),
+        address.line4.map(escape),
+        Some(escape(address.postcode))
       ).flatten
 
     Html(lines.mkString("<br />"))
@@ -79,9 +75,9 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
   def internationalAddress(address: InternationalAddress)(implicit messages: Messages): Html = {
     val lines =
       Seq(
-        Some(HtmlFormat.escape(address.line1)),
-        Some(HtmlFormat.escape(address.line2)),
-        address.line3.map(HtmlFormat.escape),
+        Some(escape(address.line1)),
+        Some(escape(address.line2)),
+        address.line3.map(escape),
         Some(country(address.country))
       ).flatten
 
@@ -99,11 +95,22 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     val lines =
       Seq(
         Some(country(passportOrIdCard.country)),
-        Some(HtmlFormat.escape(passportOrIdCard.cardNumber)),
-        Some(HtmlFormat.escape(formatDate(passportOrIdCard.expiryDate)))
+        Some(escape(passportOrIdCard.cardNumber)),
+        Some(escape(formatDate(passportOrIdCard.expiryDate)))
       ).flatten
 
     Html(lines.mkString("<br />"))
+  }
+
+  def formatRoleInCompany(answer: RoleInCompany)(implicit messages: Messages): Html = {
+    answer match {
+      case NA => escape(messages("individualBeneficiary.roleInCompany.checkYourAnswersLabel.na"))
+      case _ => formatEnum("individualBeneficiary.roleInCompany", answer)
+    }
+  }
+
+  def formatEnum[T](key: String, answer: T)(implicit messages: Messages): Html = {
+    escape(messages(s"$key.$answer"))
   }
 
 }

@@ -16,16 +16,13 @@
 
 package utils.print.sections.beneficiaries
 
-import javax.inject.Inject
 import models.UserAnswers
-import models.pages.RoleInCompany
-import models.pages.RoleInCompany.NA
 import pages.beneficiaries.individual._
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import queries.Gettable
 import utils.print.sections.AnswerRowConverter
-import viewmodels.{AnswerRow, AnswerSection}
+import viewmodels.AnswerSection
+
+import javax.inject.Inject
 
 class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
                                             (implicit messages: Messages) {
@@ -38,7 +35,7 @@ class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
           headingKey = Some(messages("answerPage.section.individualBeneficiary.subheading", index + 1)),
           Seq(
             converter.fullNameQuestion(IndividualBeneficiaryNamePage(index), userAnswers, "individualBeneficiaryName"),
-            roleInCompanyQuestion(IndividualBeneficiaryRoleInCompanyPage(index), userAnswers, name),
+            converter.roleInCompanyQuestion(IndividualBeneficiaryRoleInCompanyPage(index), userAnswers, "individualBeneficiaryRoleInCompany", name),
             converter.yesNoQuestion(IndividualBeneficiaryDateOfBirthYesNoPage(index), userAnswers, "individualBeneficiaryDateOfBirthYesNo", name),
             converter.dateQuestion(IndividualBeneficiaryDateOfBirthPage(index), userAnswers, "individualBeneficiaryDateOfBirth", name),
             converter.yesNoQuestion(IndividualBeneficiaryIncomeYesNoPage(index), userAnswers, "individualBeneficiaryIncomeYesNo", name),
@@ -56,21 +53,5 @@ class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
         )
       )
     }.getOrElse(Nil)
-  }
-
-  private def roleInCompanyQuestion(query: Gettable[RoleInCompany],
-                                    userAnswers: UserAnswers,
-                                    messageArg: String): Option[AnswerRow] = {
-
-    userAnswers.get(query) map {x =>
-      AnswerRow(
-        messages("individualBeneficiaryRoleInCompany.checkYourAnswersLabel", messageArg),
-        x match {
-          case NA => HtmlFormat.escape(messages("individualBeneficiary.roleInCompany.checkYourAnswersLabel.na"))
-          case _ => HtmlFormat.escape(messages(s"individualBeneficiary.roleInCompany.$x"))
-        },
-        None
-      )
-    }
   }
 }

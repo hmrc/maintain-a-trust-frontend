@@ -16,16 +16,17 @@
 
 package utils.print.sections
 
-import java.time.LocalDate
-
-import javax.inject.Inject
-import models.{Address, FullName, HowManyBeneficiaries, InternationalAddress, PassportOrIdCardDetails, UKAddress, UserAnswers}
+import models.pages.RoleInCompany
+import models.{Address, FullName, HowManyBeneficiaries, PassportOrIdCardDetails, UserAnswers}
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import queries.Gettable
 import utils.CheckAnswersFormatters
 import viewmodels.AnswerRow
+
+import java.time.LocalDate
+import javax.inject.Inject
 
 class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatters) {
 
@@ -34,41 +35,19 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                    labelKey: String,
                    messageArg: String = "")
                   (implicit messages: Messages): Option[AnswerRow] = {
-
-    userAnswers.get(query) map {x =>
-      AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        checkAnswersFormatters.formatNino(x),
-        None
-      )
-    }
+    val format = (x: String) => checkAnswersFormatters.formatNino(x)
+    question(query, userAnswers, labelKey, format, messageArg)
   }
 
   def utr(userAnswers: UserAnswers,
           labelKey: String,
           messageArg: String = "")
          (implicit messages: Messages): Option[AnswerRow] = {
-
     Some(AnswerRow(
       messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-      checkAnswersFormatters.utr(userAnswers.identifier),
+      HtmlFormat.escape(userAnswers.identifier),
       None
     ))
-  }
-
-  def utrQuestion(query: Gettable[String],
-                  userAnswers: UserAnswers,
-                  labelKey: String,
-                  messageArg: String = "")
-                 (implicit messages: Messages): Option[AnswerRow] = {
-
-    userAnswers.get(query) map {x =>
-      AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        checkAnswersFormatters.utr(x),
-        None
-      )
-    }
   }
 
   def addressQuestion[T <: Address](query: Gettable[T],
@@ -76,46 +55,8 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                                     labelKey: String,
                                     messageArg: String = "")
                                    (implicit messages: Messages, reads: Reads[T]): Option[AnswerRow] = {
-
-    userAnswers.get(query) map { x =>
-        AnswerRow(
-          messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-          checkAnswersFormatters.addressFormatter(x),
-          None
-        )
-    }
-  }
-
-  def internationalAddressQuestion(query: Gettable[InternationalAddress],
-                                   userAnswers: UserAnswers,
-                                   labelKey: String,
-                                   messageArg: String = "")
-                                  (implicit messages: Messages): Option[AnswerRow] = {
-
-    userAnswers.get(query) map {
-      international =>
-        AnswerRow(
-          messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-          checkAnswersFormatters.internationalAddress(international),
-          None
-        )
-    }
-  }
-
-  def ukAddressQuestion(query: Gettable[UKAddress],
-                        userAnswers: UserAnswers,
-                        labelKey: String,
-                        messageArg: String = "")
-                       (implicit messages: Messages): Option[AnswerRow] = {
-
-    userAnswers.get(query) map {
-      uk =>
-        AnswerRow(
-          messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-          checkAnswersFormatters.ukAddress(uk),
-          None
-        )
-    }
+    val format = (x: T) => checkAnswersFormatters.addressFormatter(x)
+    question(query, userAnswers, labelKey, format, messageArg)
   }
 
   def percentageQuestion(query: Gettable[String],
@@ -123,14 +64,8 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                          labelKey: String,
                          messageArg: String = "")
                         (implicit messages: Messages): Option[AnswerRow] = {
-
-    userAnswers.get(query) map {x =>
-      AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        checkAnswersFormatters.percentage(x),
-        None
-      )
-    }
+    val format = (x: String) => checkAnswersFormatters.percentage(x)
+    question(query, userAnswers, labelKey, format, messageArg)
   }
 
   def dateQuestion(query: Gettable[LocalDate],
@@ -138,14 +73,8 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                    labelKey: String,
                    messageArg: String = "")
                   (implicit messages: Messages): Option[AnswerRow] = {
-
-    userAnswers.get(query) map {x =>
-      AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        HtmlFormat.escape(checkAnswersFormatters.formatDate(x)),
-        None
-      )
-    }
+    val format = (x: LocalDate) => HtmlFormat.escape(checkAnswersFormatters.formatDate(x))
+    question(query, userAnswers, labelKey, format, messageArg)
   }
 
   def yesNoQuestion(query: Gettable[Boolean],
@@ -153,14 +82,8 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                     labelKey: String,
                     messageArg: String = "")
                    (implicit messages: Messages): Option[AnswerRow] = {
-
-    userAnswers.get(query) map {x =>
-      AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        checkAnswersFormatters.yesOrNo(x),
-        None
-      )
-    }
+    val format = (x: Boolean) => checkAnswersFormatters.yesOrNo(x)
+    question(query, userAnswers, labelKey, format, messageArg)
   }
 
   def fullNameQuestion(query: Gettable[FullName],
@@ -168,14 +91,8 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                        labelKey: String,
                        messageArg: String = "")
                       (implicit messages: Messages): Option[AnswerRow] = {
-
-    userAnswers.get(query) map {x =>
-      AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        HtmlFormat.escape(x.displayFullName),
-        None
-      )
-    }
+    val format = (x: FullName) => HtmlFormat.escape(x.displayFullName)
+    question(query, userAnswers, labelKey, format, messageArg)
   }
 
   def stringQuestion[T](query: Gettable[T],
@@ -183,29 +100,26 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                         labelKey: String,
                         messageArg: String = "")
                        (implicit messages: Messages, rds: Reads[T]): Option[AnswerRow] = {
-
-    userAnswers.get(query) map {x =>
-      AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        HtmlFormat.escape(x.toString),
-        None
-      )
-    }
+    val format = (x: T) => HtmlFormat.escape(x.toString)
+    question(query, userAnswers, labelKey, format, messageArg)
   }
 
   def numberOfBeneficiariesQuestion(query: Gettable[HowManyBeneficiaries],
-                        userAnswers: UserAnswers,
-                        labelKey: String,
-                        messageArg: String = "")
-                       (implicit messages: Messages): Option[AnswerRow] = {
+                                    userAnswers: UserAnswers,
+                                    labelKey: String,
+                                    messageArg: String = "")
+                                   (implicit messages: Messages): Option[AnswerRow] = {
+    val format = (x: HowManyBeneficiaries) => checkAnswersFormatters.formatEnum("numberOfBeneficiaries", x)
+    question(query, userAnswers, labelKey, format, messageArg)
+  }
 
-    userAnswers.get(query) map {x =>
-      AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        HtmlFormat.escape(messages(s"numberOfBeneficiaries.$x")),
-        None
-      )
-    }
+  def roleInCompanyQuestion(query: Gettable[RoleInCompany],
+                            userAnswers: UserAnswers,
+                            labelKey: String,
+                            messageArg: String = "")
+                           (implicit messages: Messages): Option[AnswerRow] = {
+    val format = (x: RoleInCompany) => checkAnswersFormatters.formatRoleInCompany(x)
+    question(query, userAnswers, labelKey, format, messageArg)
   }
 
   def passportOrIdCardQuestion(query: Gettable[PassportOrIdCardDetails],
@@ -213,12 +127,21 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                                labelKey: String,
                                messageArg: String = "")
                               (implicit messages: Messages): Option[AnswerRow] = {
+    val format = (x: PassportOrIdCardDetails) => checkAnswersFormatters.passportOrIDCard(x)
+    question(query, userAnswers, labelKey, format, messageArg)
+  }
 
-    userAnswers.get(query) map {x =>
+  private def question[T](query: Gettable[T],
+                          userAnswers: UserAnswers,
+                          labelKey: String,
+                          format: T => Html,
+                          messageArg: String)
+                         (implicit messages: Messages, rds: Reads[T]): Option[AnswerRow] = {
+    userAnswers.get(query) map { x =>
       AnswerRow(
-        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        checkAnswersFormatters.passportOrIDCard(x),
-        None
+        label = messages(s"$labelKey.checkYourAnswersLabel", messageArg),
+        answer = format(x),
+        changeUrl = None
       )
     }
   }
