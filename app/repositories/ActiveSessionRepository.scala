@@ -16,19 +16,19 @@
 
 package repositories
 
-import java.time.LocalDateTime
-
 import com.google.inject.ImplementedBy
-import javax.inject.{Inject, Singleton}
-import models.{MongoDateTimeFormats, IdentifierSession}
+import models.{IdentifierSession, MongoDateTimeFormats}
 import play.api.libs.json._
 import play.api.{Configuration, Logging}
 import reactivemongo.api.WriteConcern
+import reactivemongo.api.bson.BSONDocument
+import reactivemongo.api.bson.collection.BSONSerializationPack
 import reactivemongo.api.indexes.{Index, IndexType}
-import reactivemongo.bson.BSONDocument
-import reactivemongo.play.json.ImplicitBSONHandlers.JsObjectDocumentWriter
+import reactivemongo.play.json.collection.Helpers.idWrites
 import reactivemongo.play.json.collection.JSONCollection
 
+import java.time.LocalDateTime
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -53,15 +53,54 @@ class ActiveSessionRepositoryImpl @Inject()(
       res <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
     } yield res
 
-  private val lastUpdatedIndex = Index(
+  private val lastUpdatedIndex = Index.apply(BSONSerializationPack)(
     key = Seq("updatedAt" -> IndexType.Ascending),
     name = Some("session-updated-at-index"),
-    options = BSONDocument("expireAfterSeconds" -> cacheTtl)
+    expireAfterSeconds = Some(cacheTtl),
+    options = BSONDocument.empty,
+    unique = true,
+    background = false,
+    dropDups = false,
+    sparse = false,
+    version = None,
+    partialFilter = None,
+    storageEngine = None,
+    weights = None,
+    defaultLanguage = None,
+    languageOverride = None,
+    textIndexVersion = None,
+    sphereIndexVersion = None,
+    bits = None,
+    min = None,
+    max = None,
+    bucketSize = None,
+    collation = None,
+    wildcardProjection = None
   )
 
-  private val identifierIndex = Index(
+  private val identifierIndex = Index.apply(BSONSerializationPack)(
     key = Seq("identifier" -> IndexType.Ascending),
-    name = Some("identifier-index")
+    name = Some("identifier-index"),
+    expireAfterSeconds = None,
+    options = BSONDocument.empty,
+    unique = true,
+    background = false,
+    dropDups = false,
+    sparse = false,
+    version = None,
+    partialFilter = None,
+    storageEngine = None,
+    weights = None,
+    defaultLanguage = None,
+    languageOverride = None,
+    textIndexVersion = None,
+    sphereIndexVersion = None,
+    bits = None,
+    min = None,
+    max = None,
+    bucketSize = None,
+    collation = None,
+    wildcardProjection = None
   )
 
   private lazy val ensureIndexes = {
@@ -108,7 +147,7 @@ class ActiveSessionRepositoryImpl @Inject()(
     val selector = Json.obj("internalId" -> session.internalId)
 
     val modifier = Json.obj(
-      "$set" -> (session.copy(updatedAt = LocalDateTime.now))
+      "$set" -> session.copy(updatedAt = LocalDateTime.now)
     )
 
     for {
