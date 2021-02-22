@@ -83,7 +83,7 @@ class ActiveSessionRepositoryImpl @Inject()(
     name = Some("identifier-index"),
     expireAfterSeconds = None,
     options = BSONDocument.empty,
-    unique = true,
+    unique = false,
     background = false,
     dropDups = false,
     sparse = false,
