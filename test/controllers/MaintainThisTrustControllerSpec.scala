@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import models.{URN, UTR}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.MaintainThisTrustView
@@ -25,7 +26,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
   "MaintainThisTrust Controller" must {
 
-    "return OK and the correct view for a GET when needs IV" in {
+    "return OK and the correct view for a UTR GET when needs IV" in {
 
       val application = applicationBuilder(
         userAnswers = Some(emptyUserAnswers)
@@ -42,7 +43,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr,
+        view(utr, UTR,
           "settlors, trustees, beneficiaries, protectors and other individuals",
           frontendAppConfig.verifyIdentityForATrustUrl(utr)
         )(request, messages).toString
@@ -50,7 +51,31 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "return OK and the correct view for a GET when doesn't need IV" in {
+    "return OK and the correct view for a URN GET when needs IV" in {
+      val urn = "NTTRUST00000001"
+
+      val application = applicationBuilder(
+        userAnswers = Some(emptyUserAnswers.copy(identifier = urn))
+      ).build()
+
+      val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad(needsIv = true).url)
+
+      val result = route(application, request).value
+
+      val view = application.injector.instanceOf[MaintainThisTrustView]
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(urn, URN,
+          "settlors, trustees, beneficiaries, protectors and other individuals",
+          frontendAppConfig.verifyIdentityForATrustUrl(urn)
+        )(request, messages).toString
+
+      application.stop()
+    }
+
+    "return OK and the correct view for a UTR GET when doesn't need IV" in {
 
       val application = applicationBuilder(
         userAnswers = Some(emptyUserAnswers)
@@ -67,7 +92,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr,
+        view(utr, UTR,
           "settlors, trustees, beneficiaries, protectors and other individuals",
           routes.InformationMaintainingThisTrustController.onPageLoad().url
         )(request, messages).toString

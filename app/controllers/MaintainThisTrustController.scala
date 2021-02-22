@@ -37,7 +37,8 @@ class MaintainThisTrustController @Inject()(
   def onPageLoad(needsIv: Boolean) = actions.authWithData {
     implicit request =>
 
-      val utr = request.userAnswers.identifier
+      val identifier = request.userAnswers.identifier
+      val identifierType = request.userAnswers.identifierType
 
       @scala.annotation.tailrec
       def commaSeparate(connective: String, list: List[String], acc: String = "")
@@ -66,12 +67,12 @@ class MaintainThisTrustController @Inject()(
       )
 
       val continueUrl: String = if (needsIv) {
-        config.verifyIdentityForATrustUrl(utr)
+        config.verifyIdentityForATrustUrl(identifier)
       } else {
         routes.InformationMaintainingThisTrustController.onPageLoad().url
       }
 
-      Ok(view(utr, availableSections, continueUrl))
+      Ok(view(identifier, identifierType, availableSections, continueUrl))
 
   }
 
