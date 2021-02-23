@@ -20,7 +20,7 @@ import base.SpecBase
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.{get, okJson, urlEqualTo, _}
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import models.CompletedMaintenanceTasks
+import models.{CompletedMaintenanceTasks, FeatureResponse}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import pages.makechanges._
@@ -185,6 +185,61 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       application.stop()
     }
 
+    "return a feature flag of true if 5mld is enabled" in {
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts-store.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsStoreConnector]
+
+      server.stubFor(
+        get(urlEqualTo(s"/trusts-store/features/5mld"))
+          .willReturn(
+            aResponse()
+              .withStatus(Status.OK)
+              .withBody(
+                Json.stringify(
+                  Json.toJson(FeatureResponse("5mld", isEnabled = true))
+                )
+              )
+          )
+      )
+
+      val result = Await.result(connector.getFeature("5mld"), Duration.Inf)
+      result mustBe FeatureResponse("5mld", isEnabled = true)
+    }
+
+    "return a feature flag of false if 5mld is not enabled" in {
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts-store.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsStoreConnector]
+
+      server.stubFor(
+        get(urlEqualTo(s"/trusts-store/features/5mld"))
+          .willReturn(
+            aResponse()
+              .withStatus(Status.OK)
+              .withBody(
+                Json.stringify(
+                  Json.toJson(FeatureResponse("5mld", isEnabled = false))
+                )
+              )
+          )
+      )
+
+      val result = Await.result(connector.getFeature("5mld"), Duration.Inf)
+      result mustBe FeatureResponse("5mld", isEnabled = false)
+    }
   }
 
 }

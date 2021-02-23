@@ -22,6 +22,7 @@ object Validation {
   val postcodeRegex = """^[a-zA-Z]{1,2}[0-9][0-9a-zA-Z]?\s?[0-9][a-zA-Z]{2}$"""
   val nameRegex = "^[A-Za-z0-9 ,.()/&'-]*$"
   val utrRegex = "^[0-9]*$"
+  val urnRegex = "^(?i)[a-z]{2}(trust)[0-9]{8}$"
   val ninoRegex =
     """^(?i)[ \t]*[A-Z]{1}[ \t]*[ \t]*[A-Z]{1}[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*""" +
       """[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[A-D]{1}[ \t]*$"""

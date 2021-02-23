@@ -17,8 +17,9 @@
 package connectors
 
 import config.FrontendAppConfig
+
 import javax.inject.Inject
-import models.{CompletedMaintenanceTasks, UserAnswers}
+import models.{CompletedMaintenanceTasks, FeatureResponse, UserAnswers}
 import play.api.libs.json.{JsBoolean, JsValue, Json}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
@@ -54,6 +55,9 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfi
       }
   }
 
+  def getFeature(feature: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[FeatureResponse] = {
+    http.GET[FeatureResponse](featuresUrl(feature))
+  }
   def setFeature(feature: String, state: Boolean)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
     http.PUT[JsValue, HttpResponse](featuresUrl(feature), JsBoolean(state))
   }

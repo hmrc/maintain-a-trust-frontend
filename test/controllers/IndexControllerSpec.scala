@@ -17,57 +17,154 @@
 package controllers
 
 import base.SpecBase
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, route, status, _}
+import services.FeatureFlagService
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, EnrolmentIdentifier, Enrolments}
+
+import scala.concurrent.Future
 
 class IndexControllerSpec extends SpecBase {
 
   lazy val onPageLoad: String = routes.IndexController.onPageLoad().url
 
   val utr: String = "1234567892"
+  val urn: String = "ABTRUST12345678"
 
-  "Index Controller" must {
+  val mockFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
 
-    "redirect to UTR controller when user is not enrolled (agent)" in {
+  "Index Controller" when {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "in 4mld mode" must {
+      "redirect to UTR controller when user is not enrolled (agent)" in {
 
-      val request = FakeRequest(GET, onPageLoad)
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
 
-      val result = route(application, request).value
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
 
-      status(result) mustEqual SEE_OTHER
+        val request = FakeRequest(GET, onPageLoad)
 
-      redirectLocation(result).value mustBe controllers.routes.UTRController.onPageLoad().url
+        val result = route(application, request).value
 
-      application.stop()
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustBe controllers.routes.UTRController.onPageLoad().url
+
+        application.stop()
+      }
+
+      "redirect to status controller when user is a returning user who is enrolled" in {
+
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+
+        val application = applicationBuilder(
+          userAnswers = Some(emptyUserAnswers),
+          affinityGroup = AffinityGroup.Organisation,
+          enrolments = Enrolments(Set(
+            Enrolment(
+              key = "HMRC-TERS-ORG",
+              identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = utr)),
+              state = "Activated"
+            )
+          ))
+        ).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
+
+        val request = FakeRequest(GET, onPageLoad)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+        application.stop()
+      }
     }
 
-    "redirect to status controller when user is a returning user who is enrolled" in {
+    "in 5mld mode" must {
+      "redirect to Which Identifier controller when user is not enrolled (agent)" in {
 
-      val application = applicationBuilder(
-        userAnswers = Some(emptyUserAnswers),
-        affinityGroup = AffinityGroup.Organisation,
-        enrolments = Enrolments(Set(
-          Enrolment(
-            key = "HMRC-TERS-ORG",
-            identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = utr)),
-            state = "Activated"
-          )
-        ))
-      ).build()
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
-      val request = FakeRequest(GET, onPageLoad)
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
 
-      val result = route(application, request).value
+        val request = FakeRequest(GET, onPageLoad)
 
-      status(result) mustEqual SEE_OTHER
+        val result = route(application, request).value
 
-      redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+        status(result) mustEqual SEE_OTHER
 
-      application.stop()
+        redirectLocation(result).value mustBe controllers.routes.WhichIdentifierController.onPageLoad().url
+
+        application.stop()
+      }
+
+      "redirect to status controller when user is a returning taxable user who is enrolled" in {
+
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+        val application = applicationBuilder(
+          userAnswers = Some(emptyUserAnswers),
+          affinityGroup = AffinityGroup.Organisation,
+          enrolments = Enrolments(Set(
+            Enrolment(
+              key = "HMRC-TERS-ORG",
+              identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = utr)),
+              state = "Activated"
+            )
+          ))
+        ).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
+
+        val request = FakeRequest(GET, onPageLoad)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+        application.stop()
+      }
+
+      "redirect to status controller when user is a returning non taxable user who is enrolled" in {
+
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+        val application = applicationBuilder(
+          userAnswers = Some(emptyUserAnswers),
+          affinityGroup = AffinityGroup.Organisation,
+          enrolments = Enrolments(Set(
+            Enrolment(
+              key = "HMRC-TERSNT-ORG",
+              identifiers = Seq(EnrolmentIdentifier(key = "URN", value = urn)),
+              state = "Activated"
+            )
+          ))
+        ).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
+
+        val request = FakeRequest(GET, onPageLoad)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+        application.stop()
+      }
     }
-
   }
 }

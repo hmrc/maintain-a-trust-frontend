@@ -18,11 +18,13 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.Actions
-import models.{UserAnswers, IdentifierSession}
+import models.{IdentifierSession, UserAnswers}
 import play.api.Logging
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.{ActiveSessionRepository, PlaybackRepository}
+import services.{FeatureFlagService, UserAnswersSetupService}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 
@@ -31,36 +33,41 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class IndexController @Inject()(val controllerComponents: MessagesControllerComponents,
                                 actions: Actions,
-                                playbackRepository: PlaybackRepository,
-                                sessionRepository: ActiveSessionRepository
+                                uaSetupService: UserAnswersSetupService,
+                                featureFlagService: FeatureFlagService
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.auth.async {
     implicit request =>
 
-      request.user.enrolments.enrolments
+      val utr = request.user.enrolments.enrolments
         .find(_.key equals "HMRC-TERS-ORG")
         .flatMap(_.identifiers.find(_.key equals "SAUTR"))
         .map(_.value)
-        .fold {
-          logger.info(s"[Session ID: ${Session.id(hc)}]" +
-            s" user is not enrolled, starting maintain journey, redirect to ask for UTR")
-          Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
-        } {
-          utr =>
 
-            val activeSession = IdentifierSession(request.user.internalId, utr)
-            val newEmptyAnswers = UserAnswers.startNewSession(request.user.internalId, utr)
+      val urn = request.user.enrolments.enrolments
+        .find(_.key equals "HMRC-TERSNT-ORG")
+        .flatMap(_.identifiers.find(_.key equals "URN"))
+        .map(_.value)
 
-            for {
-              _ <- playbackRepository.resetCache(utr, request.user.internalId)
-              _ <- playbackRepository.set(newEmptyAnswers)
-              _ <- sessionRepository.set(activeSession)
-            } yield {
-              logger.info(s"[Session ID: ${Session.id(hc)}]" +
-                s" $utr user is enrolled, storing UTR in user answers, checking status of trust")
-              Redirect(controllers.routes.TrustStatusController.status())
-            }
-        }
+      featureFlagService.is5mldEnabled().flatMap {
+        is5mldEnabled =>
+          (utr, urn) match {
+            case (Some(utr), _) => uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled)
+            case (_, Some(urn)) => uaSetupService.setupAndRedirectToStatus(urn, request.user.internalId, is5mldEnabled)
+            case _ =>
+              if (is5mldEnabled) {
+                logger.info(s"[Session ID: ${Session.id(hc)}]" +
+                  s" user is not enrolled, starting 5mld maintain journey, redirect to ask for identifier")
+                Future.successful(Redirect(controllers.routes.WhichIdentifierController.onPageLoad()))
+              } else {
+                logger.info(s"[Session ID: ${Session.id(hc)}]" +
+                  s" user is not enrolled, starting maintain journey, redirect to ask for UTR")
+                Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
+              }
+          }
+      }
   }
+
+
 }
