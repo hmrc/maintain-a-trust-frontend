@@ -25,7 +25,7 @@ case class TrustDetailsType(startDate: LocalDate,
                             lawCountry: Option[String],
                             administrationCountry: Option[String],
                             residentialStatus: Option[ResidentialStatusType],
-                            typeOfTrust: TypeOfTrust,
+                            typeOfTrust: Option[TypeOfTrust],
                             deedOfVariation: Option[DeedOfVariation],
                             interVivos: Option[Boolean],
                             efrbsStartDate: Option[LocalDate])

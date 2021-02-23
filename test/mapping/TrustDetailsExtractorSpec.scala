@@ -44,8 +44,8 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           startDate = LocalDate.of(2019, 6, 1),
           lawCountry = None,
           administrationCountry = None,
-          residentialStatus = Some(ResidentialStatusType(Some(UkType(true, None)), None)),
-          typeOfTrust = WillTrustOrIntestacyTrust,
+          residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, None)), None)),
+          typeOfTrust = Some(WillTrustOrIntestacyTrust),
           deedOfVariation = Some(ReplacedWill),
           interVivos = Some(true),
           efrbsStartDate = Some(LocalDate.of(2018, 4, 20))
@@ -71,8 +71,8 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           startDate = LocalDate.of(2019, 6, 1),
           lawCountry = Some("FR"),
           administrationCountry = Some("IT"),
-          residentialStatus = Some(ResidentialStatusType(None, Some(NonUKType(false, Some(false), Some(true), Some(NonResidentType.toDES(Domiciled)))))),
-          typeOfTrust = WillTrustOrIntestacyTrust,
+          residentialStatus = Some(ResidentialStatusType(None, Some(NonUKType(sch5atcgga92 = false, Some(false), Some(true), Some(NonResidentType.toDES(Domiciled)))))),
+          typeOfTrust = Some(WillTrustOrIntestacyTrust),
           deedOfVariation = Some(ReplacedWill),
           interVivos = Some(true),
           efrbsStartDate = Some(LocalDate.of(2018, 4, 20))

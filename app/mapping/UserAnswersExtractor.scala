@@ -23,36 +23,37 @@ import mapping.protectors.ProtectorExtractor
 import mapping.settlors.{SettlorExtractor, TrustTypeExtractor}
 import mapping.trustees.TrusteeExtractor
 import models.UserAnswers
+import models.UserAnswersCombinator._
 import models.http.GetTrust
 import play.api.Logging
-import models.UserAnswersCombinator._
 
 @ImplementedBy(classOf[UserAnswersExtractorImpl])
 trait UserAnswersExtractor extends PlaybackExtractor[GetTrust]
 
-class UserAnswersExtractorImpl @Inject()(beneficiary: BeneficiaryExtractor,
-                                         trustees: TrusteeExtractor,
-                                         settlors: SettlorExtractor,
-                                         trustType: TrustTypeExtractor,
-                                         protectors: ProtectorExtractor,
-                                         individualExtractor: OtherIndividualExtractor,
-                                         correspondenceExtractor: CorrespondenceExtractor,
-                                         trustDetailsExtractor: TrustDetailsExtractor
+class UserAnswersExtractorImpl @Inject()(
+                                          beneficiariesExtractor: BeneficiaryExtractor,
+                                          trusteesExtractor: TrusteeExtractor,
+                                          settlorsExtractor: SettlorExtractor,
+                                          trustTypeExtractor: TrustTypeExtractor,
+                                          protectorsExtractor: ProtectorExtractor,
+                                          otherIndividualsExtractor: OtherIndividualExtractor,
+                                          correspondenceExtractor: CorrespondenceExtractor,
+                                          trustDetailsExtractor: TrustDetailsExtractor
                                         ) extends UserAnswersExtractor with Logging {
 
   override def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionError, UserAnswers] = {
 
-    def answersCombined = for {
-      ua <- correspondenceExtractor.extract(answers, data.correspondence).right
-      ua1 <- beneficiary.extract(answers, data.trust.entities.beneficiary).right
-      ua2 <- settlors.extract(answers, data.trust.entities).right
-      ua3 <- trustType.extract(answers, Some(data.trust)).right
-      ua4 <- protectors.extract(answers, data.trust.entities.protectors).right
-      ua5 <- individualExtractor.extract(answers, data.trust.entities.naturalPerson).right
-      ua6 <- trustees.extract(answers, data.trust.entities).right
-      ua7 <- trustDetailsExtractor.extract(answers, data.trust.details).right
+    def answersCombined: Either[PlaybackExtractionError, Option[UserAnswers]] = for {
+      correspondence <- correspondenceExtractor.extract(answers, data.correspondence).right
+      beneficiaries <- beneficiariesExtractor.extract(answers, data.trust.entities.beneficiary).right
+      settlors <- settlorsExtractor.extract(answers, data.trust.entities).right
+      trustType <- trustTypeExtractor.extract(answers, data.trust).right
+      protectors <- protectorsExtractor.extract(answers, data.trust.entities.protectors).right
+      otherIndividuals <- otherIndividualsExtractor.extract(answers, data.trust.entities.naturalPerson).right
+      trustees <- trusteesExtractor.extract(answers, data.trust.entities).right
+      trustDetails <- trustDetailsExtractor.extract(answers, data.trust.details).right
     } yield {
-      List(ua, ua1, ua2, ua3, ua4, ua5, ua6, ua7).combine
+      List(correspondence, beneficiaries, settlors, trustType, protectors, otherIndividuals, trustees, trustDetails).combine
     }
 
     answersCombined match {
