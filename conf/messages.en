@@ -394,7 +394,6 @@ urn.heading = What is the trust’s Unique Reference Number (URN)?
 urn.hint = This is 15 numbers and characters, for example ABTRUST12345670.
 urn.hint.reader = This is 15 numbers and characters, for example A B TRUST 1 2 3 4 5 6 7 0.
 urn.error.required = You need to enter a URN
-urn.error.length = You need to enter a valid URN
 urn.error.invalidCharacters = You need to enter a valid URN
 urn.linkMessage = If you do not have your URN,
 urn.linkText = contact the trusts helpline (opens in a new window or tab)

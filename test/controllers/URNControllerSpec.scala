@@ -17,14 +17,21 @@
 package controllers
 
 import base.SpecBase
+import controllers.Assets.Redirect
 import forms.URNFormProvider
+import org.mockito.Matchers.{any, eq => eqTo}
+import org.mockito.Mockito.{verify, when}
 import play.api.data.Form
+import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.UserAnswersSetupService
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.URNView
+
+import scala.concurrent.Future
 
 class URNControllerSpec extends SpecBase {
 
@@ -117,6 +124,45 @@ class URNControllerSpec extends SpecBase {
       application.stop()
     }
 
+    "make call to user answers setup service with uppercase form of input" in {
+
+      val mockService = mock[UserAnswersSetupService]
+      
+      when(mockService.setupAndRedirectToStatus(any(), any(), any())(any(), any()))
+        .thenReturn(Future.successful(Redirect("redirectUrl")))
+
+      val urn = "abtrust12345678"
+
+      val enrolments = Enrolments(Set(Enrolment(
+        "HMRC-TERSNT-ORG", Seq(EnrolmentIdentifier("URN", urn)), "Activated"
+      )))
+
+      val application =
+        applicationBuilder(
+          userAnswers = Some(emptyUserAnswers),
+          affinityGroup = Organisation,
+          enrolments = enrolments
+        ).overrides(
+          bind[UserAnswersSetupService].toInstance(mockService)
+        ).build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+        FakeRequest(POST, trustURNRoute).withFormUrlEncodedBody(("value", urn))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe "redirectUrl"
+
+      verify(mockService).setupAndRedirectToStatus(
+        eqTo("ABTRUST12345678"),
+        eqTo("id"),
+        eqTo(true)
+      )(any(), any())
+
+      application.stop()
+    }
+
     "return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
@@ -138,7 +184,6 @@ class URNControllerSpec extends SpecBase {
 
       application.stop()
     }
-
 
   }
 }

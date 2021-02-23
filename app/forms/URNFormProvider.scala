@@ -27,11 +27,10 @@ class URNFormProvider @Inject() extends Mappings {
       "value" -> text("urn.error.required")
         .verifying(
           firstError(
-            maxLength(15, "urn.error.length"),
-            minLength(15, "urn.error.length"),
-            regexp(Validation.urnRegex, "urn.error.invalidCharacters"),
-            isNotEmpty("value", "urn.error.required")
-          ))
+            isNotEmpty("value", "urn.error.required"),
+            regexp(Validation.urnRegex, "urn.error.invalidCharacters")
+          )
+        )
     )
 }
 

@@ -16,14 +16,13 @@
 
 package models
 
-import java.time.LocalDateTime
-
 import play.api.libs.json._
+
+import java.time.LocalDateTime
 
 final case class IdentifierSession(internalId: String,
                                    identifier: String,
-                                   updatedAt: LocalDateTime = LocalDateTime.now
-                           )
+                                   updatedAt: LocalDateTime = LocalDateTime.now)
 
 object IdentifierSession {
 
@@ -50,4 +49,3 @@ object IdentifierSession {
   }
 
 }
-

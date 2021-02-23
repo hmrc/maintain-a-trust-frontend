@@ -38,7 +38,7 @@ class URNController @Inject()(
                                view: URNView
                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  private val form: Form[String] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.auth {
     implicit request =>
@@ -51,7 +51,7 @@ class URNController @Inject()(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, routes.URNController.onSubmit()))),
         urn => {
-              uaSetupService.setupAndRedirectToStatus(urn, request.user.internalId, is5mldEnabled = true)
+          uaSetupService.setupAndRedirectToStatus(urn.toUpperCase, request.user.internalId, is5mldEnabled = true)
         }
       )
   }
