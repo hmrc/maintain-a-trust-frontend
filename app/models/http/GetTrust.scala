@@ -31,7 +31,7 @@ object GetTrust {
   implicit val reads: Reads[GetTrust] = Json.reads[GetTrust]
 }
 
-case class MatchData(utr: String)
+case class MatchData(utr: Option[String], urn: Option[String])
 
 object MatchData {
   implicit val matchDataFormat: Format[MatchData] = Json.format[MatchData]
