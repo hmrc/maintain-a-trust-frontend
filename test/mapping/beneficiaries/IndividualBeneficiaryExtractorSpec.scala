@@ -255,7 +255,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
 
       "when there are individuals" - {
 
-        "with minimum data must return user answers updated" in {
+        "succeed if vulnerable missing" in {
           val individual = List(DisplayTrustIndividualDetailsType(
             lineNo = Some("1"),
             bpMatchStatus = Some("01"),
@@ -273,22 +273,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
 
           val extraction = individualExtractor.extract(ua, Some(individual))
 
-          extraction.right.value.get(IndividualBeneficiaryNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(IndividualBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-          extraction.right.value.get(IndividualBeneficiaryRoleInCompanyPage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualBeneficiaryVulnerableYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualBeneficiaryDateOfBirthYesNoPage(0)).get mustBe false
-          extraction.right.value.get(IndividualBeneficiaryDateOfBirthPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualBeneficiaryIncomeYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualBeneficiaryIncomePage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualBeneficiaryNationalInsuranceYesNoPage(0)).get mustBe false
-          extraction.right.value.get(IndividualBeneficiaryNationalInsuranceNumberPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualBeneficiaryAddressYesNoPage(0)).get mustBe false
-          extraction.right.value.get(IndividualBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualBeneficiaryAddressPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualBeneficiaryPassportIDCardYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualBeneficiaryPassportIDCardPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualBeneficiarySafeIdPage(0)) mustNot be(defined)
         }
 
       }
