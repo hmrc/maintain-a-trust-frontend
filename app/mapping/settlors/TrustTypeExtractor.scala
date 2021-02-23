@@ -18,7 +18,7 @@ package mapping.settlors
 
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import mapping.PlaybackExtractor
-import models.UserAnswers
+import models.{URN, UserAnswers}
 import models.http.{DisplayTrust, DisplayTrustWillType}
 import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
 import pages.settlors.SetUpAfterSettlorDiedYesNoPage
@@ -27,61 +27,55 @@ import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class TrustTypeExtractor extends PlaybackExtractor[Option[DisplayTrust]] with Logging {
+class TrustTypeExtractor extends PlaybackExtractor[DisplayTrust] with Logging {
 
-  override def extract(answers: UserAnswers, data: Option[DisplayTrust]): Either[PlaybackExtractionError, UserAnswers] =
-  {
-    data match {
-      case None => Left(FailedToExtractData("No Trust Type"))
-      case displayTrust =>
-
-        val updated = displayTrust.foldLeft[Try[UserAnswers]](Success(answers)){
-          case (answers, trust) =>
-            answers
-              .flatMap(answers => extractTrustType(trust, answers))
-        }
-
-        updated match {
-          case Success(a) =>
-            Right(a)
-          case Failure(exception) =>
-            logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-            Left(FailedToExtractData(DisplayTrustWillType.toString))
-        }
+  override def extract(answers: UserAnswers, data: DisplayTrust): Either[PlaybackExtractionError, UserAnswers] = {
+    extractTrustType(data, answers) match {
+      case Success(a) =>
+        Right(a)
+      case Failure(exception) =>
+        logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+        Left(FailedToExtractData(DisplayTrustWillType.toString))
     }
   }
 
-  private def extractTrustType(trust: DisplayTrust, answers: UserAnswers) = {
+  private def extractTrustType(trust: DisplayTrust, answers: UserAnswers): Try[UserAnswers] = {
     trust.details.typeOfTrust match {
-      case TypeOfTrust.DeedOfVariation =>
+      case Some(TypeOfTrust.DeedOfVariation) =>
         answers.set(KindOfTrustPage, KindOfTrust.Deed)
           .flatMap(answers => extractDeedOfVariation(trust, answers))
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-      case TypeOfTrust.IntervivosSettlementTrust =>
+      case Some(TypeOfTrust.IntervivosSettlementTrust) =>
         answers.set(KindOfTrustPage, KindOfTrust.Intervivos)
           .flatMap(_.set(HoldoverReliefYesNoPage, trust.details.interVivos))
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-      case TypeOfTrust.EmployeeRelated =>
+      case Some(TypeOfTrust.EmployeeRelated) =>
         answers.set(KindOfTrustPage, KindOfTrust.Employees)
           .flatMap(answers => extractEfrbs(trust, answers))
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-      case TypeOfTrust.FlatManagementTrust =>
+      case Some(TypeOfTrust.FlatManagementTrust) =>
         answers.set(KindOfTrustPage, KindOfTrust.FlatManagement)
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-      case TypeOfTrust.HeritageTrust =>
+      case Some(TypeOfTrust.HeritageTrust) =>
         answers.set(KindOfTrustPage, KindOfTrust.HeritageMaintenanceFund)
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-      case TypeOfTrust.WillTrustOrIntestacyTrust =>
+      case Some(TypeOfTrust.WillTrustOrIntestacyTrust) =>
         answers.set(SetUpAfterSettlorDiedYesNoPage, true)
+
+      case None if answers.identifierType == URN =>
+        Success(answers)
+
+      case _ =>
+        Failure(new Throwable("No trust type for taxable trust."))
     }
   }
 
-  private def extractDeedOfVariation(trust: DisplayTrust, answers: UserAnswers) = {
+  private def extractDeedOfVariation(trust: DisplayTrust, answers: UserAnswers): Try[UserAnswers] = {
     trust.details.deedOfVariation match {
       case Some(DeedOfVariation.AdditionToWill) =>
         answers.set(SetUpInAdditionToWillTrustYesNoPage, true)
@@ -93,7 +87,7 @@ class TrustTypeExtractor extends PlaybackExtractor[Option[DisplayTrust]] with Lo
     }
   }
 
-  private def extractEfrbs(trust: DisplayTrust, answers: UserAnswers) = {
+  private def extractEfrbs(trust: DisplayTrust, answers: UserAnswers): Try[UserAnswers] = {
     trust.details.efrbsStartDate match {
       case Some(date) =>
         answers.set(EfrbsYesNoPage, true)

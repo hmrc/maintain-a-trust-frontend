@@ -28,72 +28,133 @@ import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors._
 import pages.settlors.living_settlor.trust_type._
 
-class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
-  with EitherValues with Generators with SpecBaseHelpers {
+class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValues with Generators with SpecBaseHelpers {
 
-  val trustTypeExtractor : PlaybackExtractor[Option[DisplayTrust]] =
-    injector.instanceOf[TrustTypeExtractor]
+  val trustTypeExtractor: PlaybackExtractor[DisplayTrust] = injector.instanceOf[TrustTypeExtractor]
 
   "Trust Type Extractor" - {
 
-      "when no trust type" - {
+    "when no trust type" - {
 
-        "must return user answers" in {
+      "taxable" - {
 
-          val trusts = None
+        val trust = DisplayTrust(
+          details = TrustDetailsType(
+            startDate = LocalDate.parse("1970-02-01"),
+            lawCountry = None,
+            administrationCountry = None,
+            residentialStatus = None,
+            typeOfTrust = None,
+            deedOfVariation = None,
+            interVivos = None,
+            efrbsStartDate = None
+          ),
+          entities = DisplayTrustEntitiesType(
+            None,
+            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            None,
+            DisplayTrustLeadTrusteeType(None, None),
+            None,
+            None,
+            None
+          ),
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
+        )
 
-          val ua = UserAnswers("fakeId", "utr")
+        val utr = "1234567890"
 
-          val extraction = trustTypeExtractor.extract(ua, trusts)
+        "must throw error" in {
+
+          val ua = UserAnswers("fakeId", utr)
+
+          val extraction = trustTypeExtractor.extract(ua, trust)
 
           extraction mustBe 'left
 
         }
-
       }
 
-      "when there is a trust type of 'Deed of Variation Trust or Family Arrangement' in addition to a Will Trust" - {
+      "non-taxable" - {
 
-        "with minimum data must return user answers updated" in {
+        val trust = DisplayTrust(
+          details = TrustDetailsType(
+            startDate = LocalDate.parse("1970-02-01"),
+            lawCountry = None,
+            administrationCountry = None,
+            residentialStatus = None,
+            typeOfTrust = None,
+            deedOfVariation = None,
+            interVivos = None,
+            efrbsStartDate = None
+          ),
+          entities = DisplayTrustEntitiesType(
+            None,
+            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            None,
+            DisplayTrustLeadTrusteeType(None, None),
+            None,
+            None,
+            None
+          ),
+          assets = None
+        )
 
-          val trust = DisplayTrust(
-            details = TrustDetailsType(
-              startDate = LocalDate.parse("1970-02-01"),
-              lawCountry = None,
-              administrationCountry = None,
-              residentialStatus = None,
-              typeOfTrust = TypeOfTrust.DeedOfVariation,
-              deedOfVariation = Some(DeedOfVariation.AdditionToWill),
-              interVivos = None,
-              efrbsStartDate = None
-            ),
-            entities = DisplayTrustEntitiesType(
-              None,
-              DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
-              None,
-              DisplayTrustLeadTrusteeType(None, None),
-              None,
-              None,
-              None
-            ),
-            assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
-          )
+        val urn = "NTTRUST00000001"
 
-          val ua = UserAnswers("fakeId", "utr")
+        "must return user answers" in {
 
-          val extraction = trustTypeExtractor.extract(ua, Some(trust))
+          val ua = UserAnswers("fakeId", urn)
 
-          extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
-          extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.Deed
-          extraction.right.value.get(SetUpInAdditionToWillTrustYesNoPage).get mustBe true
-          extraction.right.value.get(HowDeedOfVariationCreatedPage) mustNot be(defined)
-          extraction.right.value.get(HoldoverReliefYesNoPage) mustNot be(defined)
-          extraction.right.value.get(EfrbsYesNoPage) mustNot be(defined)
-          extraction.right.value.get(EfrbsStartDatePage) mustNot be(defined)
+          val extraction = trustTypeExtractor.extract(ua, trust)
+
+          extraction.right.value mustBe ua
 
         }
+      }
+    }
+
+    "when there is a trust type of 'Deed of Variation Trust or Family Arrangement' in addition to a Will Trust" - {
+
+      "with minimum data must return user answers updated" in {
+
+        val trust = DisplayTrust(
+          details = TrustDetailsType(
+            startDate = LocalDate.parse("1970-02-01"),
+            lawCountry = None,
+            administrationCountry = None,
+            residentialStatus = None,
+            typeOfTrust = Some(TypeOfTrust.DeedOfVariation),
+            deedOfVariation = Some(DeedOfVariation.AdditionToWill),
+            interVivos = None,
+            efrbsStartDate = None
+          ),
+          entities = DisplayTrustEntitiesType(
+            None,
+            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            None,
+            DisplayTrustLeadTrusteeType(None, None),
+            None,
+            None,
+            None
+          ),
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
+        )
+
+        val ua = UserAnswers("fakeId", "utr")
+
+        val extraction = trustTypeExtractor.extract(ua, trust)
+
+        extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
+        extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.Deed
+        extraction.right.value.get(SetUpInAdditionToWillTrustYesNoPage).get mustBe true
+        extraction.right.value.get(HowDeedOfVariationCreatedPage) mustNot be(defined)
+        extraction.right.value.get(HoldoverReliefYesNoPage) mustNot be(defined)
+        extraction.right.value.get(EfrbsYesNoPage) mustNot be(defined)
+        extraction.right.value.get(EfrbsStartDatePage) mustNot be(defined)
 
       }
+
+    }
 
     "when there is a trust type of 'Deed of Variation Trust or Family Arrangement' not in addition to a Will Trust" - {
 
@@ -105,7 +166,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
-            typeOfTrust = TypeOfTrust.DeedOfVariation,
+            typeOfTrust = Some(TypeOfTrust.DeedOfVariation),
             deedOfVariation = Some(DeedOfVariation.ReplacedWill),
             interVivos = None,
             efrbsStartDate = None
@@ -119,12 +180,12 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             None,
             None
           ),
-          assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = trustTypeExtractor.extract(ua, Some(trust))
+        val extraction = trustTypeExtractor.extract(ua, trust)
 
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.Deed
@@ -148,7 +209,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
-            typeOfTrust = TypeOfTrust.IntervivosSettlementTrust,
+            typeOfTrust = Some(TypeOfTrust.IntervivosSettlementTrust),
             deedOfVariation = None,
             interVivos = Some(true),
             efrbsStartDate = None
@@ -162,12 +223,12 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             None,
             None
           ),
-          assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = trustTypeExtractor.extract(ua, Some(trust))
+        val extraction = trustTypeExtractor.extract(ua, trust)
 
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.Intervivos
@@ -191,7 +252,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
-            typeOfTrust = TypeOfTrust.EmployeeRelated,
+            typeOfTrust = Some(TypeOfTrust.EmployeeRelated),
             deedOfVariation = None,
             interVivos = None,
             efrbsStartDate = Some(LocalDate.parse("1970-02-01"))
@@ -205,12 +266,12 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             None,
             None
           ),
-          assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = trustTypeExtractor.extract(ua, Some(trust))
+        val extraction = trustTypeExtractor.extract(ua, trust)
 
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.Employees
@@ -230,7 +291,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
-            typeOfTrust = TypeOfTrust.EmployeeRelated,
+            typeOfTrust = Some(TypeOfTrust.EmployeeRelated),
             deedOfVariation = None,
             interVivos = None,
             efrbsStartDate = None
@@ -244,12 +305,12 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             None,
             None
           ),
-          assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId","utr")
 
-        val extraction = trustTypeExtractor.extract(ua, Some(trust))
+        val extraction = trustTypeExtractor.extract(ua, trust)
 
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.Employees
@@ -273,7 +334,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
-            typeOfTrust = TypeOfTrust.FlatManagementTrust,
+            typeOfTrust = Some(TypeOfTrust.FlatManagementTrust),
             deedOfVariation = None,
             interVivos = None,
             efrbsStartDate = None
@@ -287,12 +348,12 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             None,
             None
           ),
-          assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = trustTypeExtractor.extract(ua, Some(trust))
+        val extraction = trustTypeExtractor.extract(ua, trust)
 
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.FlatManagement
@@ -316,7 +377,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
-            typeOfTrust = TypeOfTrust.HeritageTrust,
+            typeOfTrust = Some(TypeOfTrust.HeritageTrust),
             deedOfVariation = None,
             interVivos = None,
             efrbsStartDate = None
@@ -330,12 +391,12 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             None,
             None
           ),
-          assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = trustTypeExtractor.extract(ua, Some(trust))
+        val extraction = trustTypeExtractor.extract(ua, trust)
 
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.HeritageMaintenanceFund
@@ -359,7 +420,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
-            typeOfTrust = TypeOfTrust.WillTrustOrIntestacyTrust,
+            typeOfTrust = Some(TypeOfTrust.WillTrustOrIntestacyTrust),
             deedOfVariation = None,
             interVivos = None,
             efrbsStartDate = None
@@ -373,12 +434,12 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers
             None,
             None
           ),
-          assets = DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil)
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = trustTypeExtractor.extract(ua, Some(trust))
+        val extraction = trustTypeExtractor.extract(ua, trust)
 
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe true
         extraction.right.value.get(KindOfTrustPage) mustNot be(defined)

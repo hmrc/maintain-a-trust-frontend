@@ -247,7 +247,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
             data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
 
-            data.trust.assets.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+            data.trust.assets.get.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
         }
 
         application.stop()
@@ -299,9 +299,9 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
             data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
 
-            data.trust.assets.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
-            data.trust.assets.propertyOrLand.head.valueFull mustBe 999999999999L
-            data.trust.assets.propertyOrLand.head.valuePrevious mustBe None
+            data.trust.assets.get.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+            data.trust.assets.get.propertyOrLand.head.valueFull mustBe 999999999999L
+            data.trust.assets.get.propertyOrLand.head.valuePrevious mustBe None
         }
 
         application.stop()
