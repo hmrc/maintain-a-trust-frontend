@@ -227,7 +227,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
             bundleNumber mustBe "000012345678"
 
-            data.matchData.utr mustBe "1000000007"
+            data.matchData.utr.get mustBe "1000000007"
 
             data.correspondence.name mustBe "Trust of Brian Cloud"
 
@@ -279,7 +279,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
             bundleNumber mustBe "000012345678"
 
-            data.matchData.utr mustBe "1000000007"
+            data.matchData.utr.get mustBe "1000000007"
 
             data.correspondence.name mustBe "Trust of Brian Cloud"
 
@@ -302,6 +302,39 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             data.trust.assets.get.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
             data.trust.assets.get.propertyOrLand.head.valueFull mustBe 999999999999L
             data.trust.assets.get.propertyOrLand.head.valuePrevious mustBe None
+        }
+
+        application.stop()
+      }
+
+      "must playback data for a non-taxable trust" in {
+
+        val urn = "NTTRUST00000001"
+        val payload = Source.fromFile(getClass.getResource("/display-trust-non-taxable.json").getPath).mkString
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(playbackUrl(urn)))
+            .willReturn(okJson(payload))
+        )
+
+        val processed = Await.result(connector.playback(urn), Duration.Inf)
+
+        inside(processed) {
+          case Processed(data, bundleNumber) =>
+
+            bundleNumber mustBe "000012345678"
+
+            data.matchData.urn.get mustBe urn
         }
 
         application.stop()

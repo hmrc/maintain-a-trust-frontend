@@ -1,0 +1,243 @@
+{
+  "getTrust": {
+    "matchData": {
+      "urn": "NTTRUST00000001"
+    },
+    "correspondence": {
+      "abroadIndicator": false,
+      "name": "Trust of Brian Cloud",
+      "address": {
+        "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+        "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+        "postCode": "SR2 7UY",
+        "country": "GB"
+      },
+      "phoneNumber": "+123456789012345678",
+      "welsh": false,
+      "braille": false
+    },
+    "declaration": {
+      "name": {
+        "firstName": "Joe",
+        "lastName": "Bloggs"
+      },
+      "address": {
+        "line1": "DECLARED WITH NINO",
+        "line2": "DECLARED WITH NINO",
+        "postCode": "XX1 1XX",
+        "country": "GB"
+      }
+    },
+    "trust": {
+      "details": {
+        "startDate": "2020-04-06",
+        "trustTaxable": false,
+        "expressTrust": false,
+        "trustUKResident": true,
+        "trustUKProperty": false,
+        "trustRecorded": false,
+        "trustUKRelation": false
+      },
+      "entities": {
+        "beneficiary": {
+          "individualDetails": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "98",
+              "name": {
+                "firstName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                "lastName": "1234567890 QwErTyUiOp ,.(/)&'- name"
+              },
+              "identification": {
+                "safeId": "2222200000000",
+                "address": {
+                  "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line3": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line4": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "postCode": "SR2 7UY",
+                  "country": "GB"
+                }
+              },
+              "entityStart": "2019-09-23"
+            }
+          ],
+          "company": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "98",
+              "organisationName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+              "identification": {
+                "safeId": "2222200000000",
+                "address": {
+                  "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line3": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line4": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "postCode": "SR2 7UY",
+                  "country": "GB"
+                }
+              },
+              "entityStart": "2019-09-23"
+            }
+          ],
+          "trust": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "98",
+              "organisationName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+              "identification": {
+                "safeId": "2222200000000",
+                "address": {
+                  "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line3": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line4": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "postCode": "SR2 7UY",
+                  "country": "GB"
+                }
+              },
+              "entityStart": "2019-09-23"
+            }
+          ],
+          "charity": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "98",
+              "organisationName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+              "identification": {
+                "safeId": "2222200000000",
+                "address": {
+                  "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line3": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line4": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "postCode": "SR2 7UY",
+                  "country": "GB"
+                }
+              },
+              "entityStart": "2019-09-23"
+            }
+          ],
+          "unidentified": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "98",
+              "description": "1234567890&`'^ -QWERTYqwertyzxcvbnmasdfghjklpoiuypoiuytr",
+              "entityStart": "2019-09-23"
+            }
+          ],
+          "large": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "98",
+              "organisationName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+              "description": "1234567890&`'^ -QWERTYqwertyzxcvbnmasdfghjklpoiuypoiuytr",
+              "numberOfBeneficiary": "1",
+              "identification": {
+                "safeId": "2222200000000",
+                "address": {
+                  "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line3": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "line4": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                  "postCode": "SR2 7UY",
+                  "country": "GB"
+                }
+              },
+              "entityStart": "2019-09-23"
+            }
+          ],
+          "other": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "98",
+              "description": "1234567890&`'^ -QWERTYqwertyzxcvbnmasdfghjklpoiuypoiuytr",
+              "entityStart": "2019-09-23"
+            }
+          ]
+        },
+        "deceased": {
+          "lineNo": "1",
+          "bpMatchStatus": "98",
+          "name": {
+            "firstName": "John",
+            "lastName": "O'Connor"
+          },
+          "identification": {
+            "safeId": "2222200000000"
+          },
+          "entityStart": "2019-09-23"
+        },
+        "leadTrustee": {
+          "leadTrusteeInd": {
+            "lineNo": "1",
+            "bpMatchStatus": "01",
+            "name": {
+              "firstName": "Lead",
+              "lastName": "Trustee"
+            },
+            "dateOfBirth": "2015-03-20",
+            "phoneNumber": "+123456789012345678",
+            "identification": {
+              "nino": "SJ123456B"
+            },
+            "countryOfResidence": "DE",
+            "nationality": "DE",
+            "entityStart": "2019-09-23"
+          }
+        },
+        "trustees": [
+          {
+            "trusteeInd": {
+              "lineNo": "1",
+              "bpMatchStatus": "98",
+              "name": {
+                "firstName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+                "lastName": "1234567890 QwErTyUiOp ,.(/)&'- name"
+              },
+              "identification": {
+                "safeId": "2222200000000"
+              },
+              "entityStart": "2019-09-23"
+            }
+          }
+        ],
+        "settlors": {
+          "settlorCompany": [
+            {
+              "lineNo": "1",
+              "bpMatchStatus": "98",
+              "name": "Settlor Org 01",
+              "identification": {
+                "safeId": "2222200000000"
+              },
+              "entityStart": "2019-09-23"
+            }
+          ]
+        }
+      },
+      "assets": {
+        "nonEEABusiness": [
+          {
+            "lineNo": "1",
+            "orgName": "1234567890 QwErTyUiOp ,.(/)&'- name",
+            "address": {
+              "line1": "1234567890 QwErTyUiOp ,.(/)&'- name",
+              "line2": "1234567890 QwErTyUiOp ,.(/)&'- name",
+              "postCode": "Z99 2YY",
+              "country": "GB"
+            },
+            "govLawCountry": "DE",
+            "startDate": "2020-09-02"
+          }
+        ]
+      }
+    },
+    "submissionDate": "2020-09-01"
+  },
+  "responseHeader": {
+    "status": "Processed",
+    "formBundleNo": "000012345678"
+  }
+}
