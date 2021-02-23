@@ -77,7 +77,7 @@ class URNControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val urn = "0987654321"
+      val urn = "ABTRUST12345678"
 
       val request =
         FakeRequest(POST, trustURNRoute)

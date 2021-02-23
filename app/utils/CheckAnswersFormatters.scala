@@ -52,8 +52,8 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     escape(formatted)
   }
 
-  private def country(code: String)(implicit messages: Messages): String =
-    countryOptions.options.find(_.value.equals(code)).map(_.label).getOrElse("")
+  private def country(code: String)(implicit messages: Messages): Html =
+    escape(countryOptions.options.find(_.value.equals(code)).map(_.label).getOrElse(""))
 
   def currency(value: String): Html = escape(s"£$value")
 
@@ -69,7 +69,7 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
         Some(escape(address.postcode))
       ).flatten
 
-    Html(lines.mkString("<br />"))
+    breakLines(lines)
   }
 
   def internationalAddress(address: InternationalAddress)(implicit messages: Messages): Html = {
@@ -81,7 +81,7 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
         Some(country(address.country))
       ).flatten
 
-    Html(lines.mkString("<br />"))
+    breakLines(lines)
   }
 
   def addressFormatter(address: Address)(implicit messages: Messages): Html = {
@@ -99,7 +99,7 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
         Some(escape(formatDate(passportOrIdCard.expiryDate)))
       ).flatten
 
-    Html(lines.mkString("<br />"))
+    breakLines(lines)
   }
 
   def formatRoleInCompany(answer: RoleInCompany)(implicit messages: Messages): Html = {
@@ -111,6 +111,10 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
 
   def formatEnum[T](key: String, answer: T)(implicit messages: Messages): Html = {
     escape(messages(s"$key.$answer"))
+  }
+
+  private def breakLines(lines: Seq[Html]): Html = {
+    Html(lines.mkString("<br />"))
   }
 
 }

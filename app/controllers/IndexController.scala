@@ -18,13 +18,10 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.Actions
-import models.{IdentifierSession, UserAnswers}
 import play.api.Logging
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import repositories.{ActiveSessionRepository, PlaybackRepository}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{FeatureFlagService, UserAnswersSetupService}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 

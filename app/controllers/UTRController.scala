@@ -19,11 +19,9 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.Actions
 import forms.UTRFormProvider
-import models.{IdentifierSession, UserAnswers}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.{ActiveSessionRepository, PlaybackRepository}
 import services.{FeatureFlagService, UserAnswersSetupService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.UTRView

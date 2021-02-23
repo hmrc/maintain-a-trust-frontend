@@ -15,13 +15,14 @@
  *@
 
 @import config.FrontendAppConfig
+@import models.Mode
 
 @this(
     main_template: MainTemplate,
     config: FrontendAppConfig
 )
 
-@(utr: String, availableSections: String, continueUrl: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType, availableSections: String, continueUrl: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("maintainThisTrust.title")
@@ -29,9 +30,9 @@
 
     @components.back_link()
 
-    @components.heading_with_caption(headingKey = "maintainThisTrust.heading", caption = "maintainThisTrust.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "maintainThisTrust.heading", caption = s"maintainThisTrust.$identifierType.caption", captionParam = identifier)
 
-    <p>@messages("maintainThisTrust.p1.a") <span class="weight-bold">@utr</span> @messages("maintainThisTrust.p1.b")</p>
+    <p>@messages(s"maintainThisTrust.$identifierType.p1.a") <span class="weight-bold">@identifier</span> @messages("maintainThisTrust.p1.b")</p>
 
     <p>@messages("maintainThisTrust.p2", availableSections)</p>
 

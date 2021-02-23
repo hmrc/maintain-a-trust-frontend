@@ -16,18 +16,18 @@
 
 package repositories
 
-import java.time.LocalDateTime
-
-import javax.inject.{Inject, Singleton}
 import models.{MongoDateTimeFormats, UserAnswers}
 import play.api.libs.json._
 import play.api.{Configuration, Logging}
 import reactivemongo.api.WriteConcern
+import reactivemongo.api.bson.BSONDocument
+import reactivemongo.api.bson.collection.BSONSerializationPack
 import reactivemongo.api.indexes.{Index, IndexType}
-import reactivemongo.bson.BSONDocument
-import reactivemongo.play.json.ImplicitBSONHandlers.JsObjectDocumentWriter
+import reactivemongo.play.json.collection.Helpers.idWrites
 import reactivemongo.play.json.collection.JSONCollection
 
+import java.time.LocalDateTime
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -54,15 +54,54 @@ class PlaybackRepositoryImpl @Inject()(
       res <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
     } yield res
 
-  private val lastUpdatedIndex = Index(
+  private val lastUpdatedIndex = Index.apply(BSONSerializationPack)(
     key = Seq("updatedAt" -> IndexType.Ascending),
     name = Some("user-answers-updated-at-index"),
-    options = BSONDocument("expireAfterSeconds" -> cacheTtl)
+    expireAfterSeconds = Some(cacheTtl),
+    options = BSONDocument.empty,
+    unique = false,
+    background = false,
+    dropDups = false,
+    sparse = false,
+    version = None,
+    partialFilter = None,
+    storageEngine = None,
+    weights = None,
+    defaultLanguage = None,
+    languageOverride = None,
+    textIndexVersion = None,
+    sphereIndexVersion = None,
+    bits = None,
+    min = None,
+    max = None,
+    bucketSize = None,
+    collation = None,
+    wildcardProjection = None
   )
 
-  private val internalIdAndIdentifierIndex = Index(
+  private val internalIdAndIdentifierIndex = Index.apply(BSONSerializationPack)(
     key = Seq("internalId" -> IndexType.Ascending, "identifier" -> IndexType.Ascending),
-    name = Some("internal-id-and-identifier-compound-index")
+    name = Some("internal-id-and-identifier-compound-index"),
+    expireAfterSeconds = None,
+    options = BSONDocument.empty,
+    unique = false,
+    background = false,
+    dropDups = false,
+    sparse = false,
+    version = None,
+    partialFilter = None,
+    storageEngine = None,
+    weights = None,
+    defaultLanguage = None,
+    languageOverride = None,
+    textIndexVersion = None,
+    sphereIndexVersion = None,
+    bits = None,
+    min = None,
+    max = None,
+    bucketSize = None,
+    collation = None,
+    wildcardProjection = None
   )
 
   private lazy val ensureIndexes = {
@@ -142,7 +181,7 @@ class PlaybackRepositoryImpl @Inject()(
     )
 
     val modifier = Json.obj(
-      "$set" -> (userAnswers.copy(updatedAt = LocalDateTime.now))
+      "$set" -> userAnswers.copy(updatedAt = LocalDateTime.now)
     )
 
     for {
