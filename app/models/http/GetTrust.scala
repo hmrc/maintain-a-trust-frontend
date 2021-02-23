@@ -45,7 +45,6 @@ case class Correspondence(abroadIndicator: Boolean,
 
 object Correspondence {
   implicit val correspondenceFormat : Format[Correspondence] = Json.format[Correspondence]
-
 }
 
 case class Declaration(name: FullName)
@@ -78,10 +77,9 @@ object ResponseHeader {
   implicit val reads: Reads[ResponseHeader] = Json.reads[ResponseHeader]
 }
 
-case class DisplayTrust(
-                         details: TrustDetailsType,
-                         entities: DisplayTrustEntitiesType,
-                         assets: DisplayTrustAssets)
+case class DisplayTrust(details: TrustDetailsType,
+                        entities: DisplayTrustEntitiesType,
+                        assets: Option[DisplayTrustAssets])
 
 object DisplayTrust {
   implicit val trustFormat: Format[DisplayTrust] = Json.format[DisplayTrust]
