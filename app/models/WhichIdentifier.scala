@@ -32,7 +32,10 @@ object WhichIdentifier extends Enumerable.Implicits {
 
   val options: List[(RadioOption, String)] = values.map {
     value =>
-      (RadioOption("whichIdentifier", value.toString), s"whichIdentifier.${value.toString}.hint")
+      (
+        RadioOption("whichIdentifier", value.toString),
+        if (value != NoIdentifier) s"whichIdentifier.${value.toString}.hint" else ""
+      )
   }
 
   implicit val enumerable: Enumerable[WhichIdentifier] =

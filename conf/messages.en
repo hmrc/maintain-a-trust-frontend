@@ -382,22 +382,22 @@ unavailableSections.p3.end = to view the trust’s latest declaration.
 
 whichIdentifier.title = Which unique identifier does the trust have?
 whichIdentifier.heading = Which unique identifier does the trust have?
-whichIdentifier.error.required = Please select which identifier the trust has
+whichIdentifier.error.required = Select a button to let us know if the trust has a unique identifier
 whichIdentifier.UTR = Unique Taxpayer Reference (UTR)
 whichIdentifier.UTR.hint = This is 10 numbers, for example 12345 67890.
 whichIdentifier.URN = Unique Reference Number (URN)
 whichIdentifier.URN.hint = This is 15 numbers and characters, for example ABTRUST12345678.
 whichIdentifier.none = None of the above
-whichIdentifier.none.hint =
 
 urn.title = What is the trust’s Unique Reference Number (URN)?
 urn.heading = What is the trust’s Unique Reference Number (URN)?
 urn.hint = This is 15 numbers and characters, for example ABTRUST12345670.
 urn.hint.reader = This is 15 numbers and characters, for example A B TRUST 1 2 3 4 5 6 7 0.
-urn.error.required = Enter the trust’s Unique Reference Number
-urn.error.length = Unique Reference Number must be 15 numbers and characters
-urn.linkMessage = You can
-urn.linkText = find a lost URN (opens in a new window or tab)
+urn.error.required = You need to enter a URN
+urn.error.length = You need to enter a valid URN
+urn.error.invalidCharacters = You need to enter a valid URN
+urn.linkMessage = If you do not have your URN,
+urn.linkText = contact the trusts helpline (opens in a new window or tab)
 
 utr.title = What is the trust’s Unique Taxpayer Reference (UTR)?
 utr.heading = What is the trust’s Unique Taxpayer Reference (UTR)?
