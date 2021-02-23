@@ -127,7 +127,7 @@ class URNControllerSpec extends SpecBase {
     "make call to user answers setup service with uppercase form of input" in {
 
       val mockService = mock[UserAnswersSetupService]
-      
+
       when(mockService.setupAndRedirectToStatus(any(), any(), any())(any(), any()))
         .thenReturn(Future.successful(Redirect("redirectUrl")))
 
