@@ -34,6 +34,8 @@ import pages.beneficiaries.trust._
 
 class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
+  
+  val utr = "1234567890"
 
   val beneficiaryExtractor : PlaybackExtractor[DisplayTrustBeneficiaryType] =
     injector.instanceOf[BeneficiaryExtractor]
@@ -46,7 +48,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val beneficiary = DisplayTrustBeneficiaryType(None, None, None, None, None, None, None)
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", utr)
 
         val extraction = beneficiaryExtractor.extract(ua, beneficiary)
 
@@ -65,7 +67,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             bpMatchStatus = Some("01"),
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
-            vulnerableBeneficiary = false,
+            vulnerableBeneficiary = Some(false),
             beneficiaryType = None,
             beneficiaryDiscretion = None,
             beneficiaryShareOfIncome = None,
@@ -181,7 +183,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           )
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", utr)
 
         val extraction = beneficiaryExtractor.extract(ua, beneficiary)
 
