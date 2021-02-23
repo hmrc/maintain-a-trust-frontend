@@ -178,8 +178,10 @@ kindOfTrust.Repair = A trust for the repair of historic buildings
 
 maintainThisTrust.title = Maintain this trust
 maintainThisTrust.heading = Maintain this trust
-maintainThisTrust.caption = This trust’s UTR: {0}
-maintainThisTrust.p1.a = The trust with the Unique Taxpayer Reference (UTR)
+maintainThisTrust.UTR.caption = This trust’s UTR: {0}
+maintainThisTrust.URN.caption = This trust’s URN: {0}
+maintainThisTrust.UTR.p1.a = The trust with the Unique Taxpayer Reference (UTR)
+maintainThisTrust.URN.p1.a = The trust with the Unique Reference Number (URN)
 maintainThisTrust.p1.b = has been linked with this account.
 maintainThisTrust.p2 = You can add, remove and update {0} in this trust. Your changes will not be saved until you have declared.
 maintainThisTrust.p3 = If you need to register or maintain another trust, you will need to use another Government Gateway account.
