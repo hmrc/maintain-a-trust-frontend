@@ -66,7 +66,7 @@ class WhichIdentifierControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "UTR"))
+        .withFormUrlEncodedBody(("value", "utr"))
 
       val result = route(application, request).value
 
@@ -84,7 +84,7 @@ class WhichIdentifierControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "URN"))
+        .withFormUrlEncodedBody(("value", "urn"))
 
       val result = route(application, request).value
 
