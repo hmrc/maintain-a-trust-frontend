@@ -22,8 +22,8 @@ sealed trait WhichIdentifier
 
 object WhichIdentifier extends Enumerable.Implicits {
 
-  case object UTRIdentifier extends WithName("UTR") with WhichIdentifier
-  case object URNIdentifier extends WithName("URN") with WhichIdentifier
+  case object UTRIdentifier extends WithName("utr") with WhichIdentifier
+  case object URNIdentifier extends WithName("urn") with WhichIdentifier
   case object NoIdentifier extends WithName("none") with WhichIdentifier
 
   val values: List[WhichIdentifier] = List(
