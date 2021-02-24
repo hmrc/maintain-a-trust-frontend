@@ -18,13 +18,19 @@ package controllers
 
 import base.SpecBase
 import forms.UTRFormProvider
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import play.api.data.Form
+import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.FeatureFlagService
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.UTRView
+
+import scala.concurrent.Future
 
 class UTRControllerSpec extends SpecBase {
 
@@ -35,11 +41,17 @@ class UTRControllerSpec extends SpecBase {
 
   lazy val onSubmit: Call = routes.UTRController.onSubmit()
 
+  val mockFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
+
   "UTR Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
+        bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+      ).build()
 
       val request = FakeRequest(GET, trustUTRRoute)
 
@@ -57,7 +69,11 @@ class UTRControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET if no existing data is found (creating a new session)" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
+        bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+      ).build()
 
       val request = FakeRequest(GET, trustUTRRoute)
 
@@ -75,7 +91,11 @@ class UTRControllerSpec extends SpecBase {
 
     "redirect to trust status for a POST if no existing data is found (creating a new session)" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+
+      val application = applicationBuilder(userAnswers = None).overrides(
+        bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+      ).build()
 
       val utr = "0987654321"
 
@@ -100,11 +120,15 @@ class UTRControllerSpec extends SpecBase {
         "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
       )))
 
+      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+
       val application =
         applicationBuilder(
           userAnswers = Some(emptyUserAnswers),
           affinityGroup = Organisation,
           enrolments = enrolments
+        ).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustUTRRoute).withFormUrlEncodedBody(("value", utr))
@@ -119,7 +143,11 @@ class UTRControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
+        bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+      ).build()
 
       val request =
         FakeRequest(POST, trustUTRRoute)
