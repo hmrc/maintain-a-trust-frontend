@@ -17,6 +17,7 @@
 package controllers.testOnlyDoNotUseInAppConf
 
 import config.FrontendAppConfig
+import connectors.TrustsStoreConnector
 import controllers.actions.Actions
 import controllers.testOnlyDoNotUseInAppConf.FourOrFiveMLD.{FiveMLD, FourMLD}
 import forms.testOnlyDoNotUseInAppConf.{TestWizardForm, TestWizardFormProvider}
@@ -24,9 +25,8 @@ import javax.inject.Inject
 import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
-import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.testOnlyDoNotUseInAppConf.WizardView
 
@@ -37,15 +37,11 @@ class TestWizardController @Inject()(val controllerComponents: MessagesControlle
                                      actions: Actions,
                                      view: WizardView,
                                      formProvider: TestWizardFormProvider,
-                                     http: HttpClient,
-                                     appConfig: FrontendAppConfig
+                                     userConnector: TestUserConnector,
+                                     trustStoreConnector: TrustsStoreConnector
                                     )(implicit ec: ExecutionContext) extends FrontendBaseController
   with I18nSupport
   with Logging {
-
-  import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
-
-  lazy val host: String = appConfig.testWizardHost
 
   def onPageLoad : Action[AnyContent] = actions.auth.async {
     implicit request =>
@@ -75,9 +71,7 @@ class TestWizardController @Inject()(val controllerComponents: MessagesControlle
 
   private def flushTestUsers(cleanup: Boolean)(implicit req: Request[AnyContent]): Future[Unit] = {
     if (cleanup){
-      val url = s"$host${routes.EnrolmentStoreStubController.flush().url}"
-      http.DELETE[HttpResponse](url)
-        .map(_ => ())
+      userConnector.delete().map(_ => ())
     } else {
       Future.successful(())
     }
@@ -86,15 +80,13 @@ class TestWizardController @Inject()(val controllerComponents: MessagesControlle
   private def insertTestUser(user: Option[String])(implicit req: Request[AnyContent]): Future[Unit] = {
     user match {
       case Some(value) =>
-        Try(Json.parse(value)).fold(
-          _ => {
-            Future.successful(())
-          },
-          json => {
-            val url = s"$host${routes.EnrolmentStoreStubController.insertTestUserIntoEnrolmentStore().url}"
-            http.POST[JsValue, HttpResponse](url, json).map(_ => ())
-          }
-        )
+        Try(Json.parse(value))
+          .fold(
+            _ =>
+              Future.successful(()),
+            json =>
+              userConnector.insert(json).map(_ => ())
+          )
       case None =>
         Future.successful(())
     }
@@ -103,11 +95,9 @@ class TestWizardController @Inject()(val controllerComponents: MessagesControlle
   private def setMode(mode: FourOrFiveMLD)(implicit req: Request[AnyContent]): Future[Unit] = {
     mode match {
       case FourMLD =>
-        val url = s"$host${routes.TestTrustsStoreController.set4Mld().url}"
-        http.PUT[Boolean, HttpResponse](url, false).map(_ => ())
+        trustStoreConnector.setFeature("5mld", state = false).map(_ => ())
       case FiveMLD =>
-        val url = s"$host${routes.TestTrustsStoreController.set5Mld().url}"
-        http.PUT[Boolean, HttpResponse](url, true).map(_ => ())
+        trustStoreConnector.setFeature("5mld", state = true).map(_ => ())
     }
   }
 
