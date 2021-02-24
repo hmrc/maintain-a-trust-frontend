@@ -382,7 +382,7 @@ unavailableSections.p3.end = to view the trust’s latest declaration.
 
 whichIdentifier.title = Which unique identifier does the trust have?
 whichIdentifier.heading = Which unique identifier does the trust have?
-whichIdentifier.error.required = Select a button to let us know if the trust has a unique identifier
+whichIdentifier.error.required = Select if the trust has a unique identifier
 whichIdentifier.UTR = Unique Taxpayer Reference (UTR)
 whichIdentifier.UTR.hint = This is 10 numbers, for example 12345 67890.
 whichIdentifier.URN = Unique Reference Number (URN)
