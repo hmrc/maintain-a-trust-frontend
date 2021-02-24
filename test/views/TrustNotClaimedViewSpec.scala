@@ -16,25 +16,42 @@
 
 package views
 
+import models.{URN, UTR}
 import views.behaviours.ViewBehaviours
 import views.html.TrustNotClaimedView
 
 class TrustNotClaimedViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
 
-  "TrustNotClaimed view" must {
 
-    val view = viewFor[TrustNotClaimedView](Some(emptyUserAnswers))
+  "TrustNotClaimed view for UTR" must {
+    val utr = "0987654321"
+    val view = viewFor[TrustNotClaimedView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply("0987654321")(fakeRequest, messages)
+    val applyView = view.apply("0987654321", UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "trustNotClaimed",
-      None,
+      Some("UTR"),
       utr,
     "bullet.1.title", "bullet.1.p1", "bullet.1.p2", "bullet.1.p3", "bullet.1.p4",
     "bullet.2.title", "bullet.2.p1", "bullet.2.p2", "bullet.2.p3", "bullet.2.p4")
+
+    behave like pageWithBackLink(applyView)
+  }
+
+  "TrustNotClaimed view for URN" must {
+    val urn = "XATRUST12345678"
+    val view = viewFor[TrustNotClaimedView](Some(emptyUserAnswersForUtr))
+
+    val applyView = view.apply("XATRUST12345678", URN)(fakeRequest, messages)
+
+    behave like normalPageTitleWithCaption(applyView,
+      "trustNotClaimed",
+      Some("URN"),
+      urn,
+      "bullet.1.title", "bullet.1.p1", "bullet.1.p2", "bullet.1.p3", "bullet.1.p4",
+      "bullet.2.title", "bullet.2.p1", "bullet.2.p2", "bullet.2.p3", "bullet.2.p4")
 
     behave like pageWithBackLink(applyView)
   }

@@ -260,7 +260,8 @@ trustLocked.URN.caption = This trust’s URN: {0}
 
 trustNotClaimed.title = Your client must claim the trust and authorise your access
 trustNotClaimed.heading = Your client must claim the trust and authorise your access
-trustNotClaimed.caption = This trust’s UTR: {0}
+trustNotClaimed.UTR.caption = This trust’s UTR: {0}
+trustNotClaimed.URN.caption = This trust’s URN: {0}
 trustNotClaimed.p1 = One of the trustees must complete these 2 steps so you can maintain the trust online on their behalf.
 trustNotClaimed.bullet.1.title = Trustee must claim the trust
 trustNotClaimed.bullet.1.p1 = A trustee needs to log onto the Trust Registration Service using their Government Gateway account. The account they use must be an organisation account, not an individual account.

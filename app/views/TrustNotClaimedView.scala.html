@@ -15,13 +15,14 @@
  *@
 
 @import config.FrontendAppConfig
+@import models.Mode
 
 @this(
     main_template: MainTemplate,
     appConfig: FrontendAppConfig
 )
 
-@(utr: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("trustNotClaimed.title")
@@ -29,7 +30,7 @@
 
     @components.back_link()
 
-    @components.heading_with_caption(headingKey = "trustNotClaimed.heading", caption = "trustNotClaimed.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "trustNotClaimed.heading", caption = s"trustNotClaimed.$identifierType.caption", captionParam = identifier)
 
     <p>@messages("trustNotClaimed.p1")</p>
 
