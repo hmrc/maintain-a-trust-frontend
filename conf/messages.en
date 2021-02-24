@@ -393,8 +393,9 @@ urn.title = What is the trust’s Unique Reference Number (URN)?
 urn.heading = What is the trust’s Unique Reference Number (URN)?
 urn.hint = This is 15 numbers and characters, for example ABTRUST12345670.
 urn.hint.reader = This is 15 numbers and characters, for example A B TRUST 1 2 3 4 5 6 7 0.
-urn.error.required = You need to enter a URN
-urn.error.invalidCharacters = You need to enter a valid URN
+urn.error.required = Enter the trust’s Unique Reference Number.
+urn.error.length = The Unique Reference Number must be 15 numbers and characters long.
+urn.error.invalidCharacters = Enter the trust’s Unique Reference Number in the correct format.
 urn.linkMessage = If you do not have your URN,
 urn.linkText = contact the trusts helpline (opens in a new window or tab)
 
@@ -404,6 +405,7 @@ utr.hint = This is 10 numbers, for example 1234567890. It will be on the trust�
 utr.hint.reader = This is 10 numbers, for example 1 2 3 4 5 6 7 8 9 0. It will be on the trust’s Self Assessment notice to file (S A 3 1 6). It may be called ‘reference’, ‘UTR’ or ‘official use’.
 utr.error.required = Enter the trust’s Unique Taxpayer Reference
 utr.error.length = Unique Taxpayer Reference must be a 10 digit number
+utr.error.invalidCharacters = Enter the trust’s Unique Taxpayer Reference in the correct format
 utr.linkMessage = You can
 utr.linkText = find a lost UTR (opens in a new window or tab)
 

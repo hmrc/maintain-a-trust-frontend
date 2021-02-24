@@ -27,6 +27,7 @@ class URNFormProviderSpec extends StringFieldBehaviours {
   private val minLength = 15
 
   private val requiredKey = "urn.error.required"
+  private val lengthKey = "urn.error.length"
   private val invalidKey = "urn.error.invalidCharacters"
 
   private val urnRegex = Validation.urnRegex
@@ -47,14 +48,14 @@ class URNFormProviderSpec extends StringFieldBehaviours {
       form = form,
       fieldName = fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, invalidKey, Seq(urnRegex))
+      lengthError = FormError(fieldName, lengthKey)
     )
 
     behave like fieldWithMinLength(
       form = form,
       fieldName = fieldName,
       minLength = minLength,
-      lengthError = FormError(fieldName, invalidKey, Seq(urnRegex))
+      lengthError = FormError(fieldName, lengthKey)
     )
 
     behave like mandatoryField(
@@ -66,15 +67,7 @@ class URNFormProviderSpec extends StringFieldBehaviours {
     behave like nonEmptyField(
       form = form,
       fieldName = fieldName,
-      requiredError = FormError(fieldName, requiredKey, Seq(fieldName))
-    )
-
-    behave like fieldWithRegexpWithGenerator(
-      form = form,
-      fieldName = fieldName,
-      regexp = urnRegex,
-      generator = RegexpGen.from(urnRegex),
-      error = FormError(fieldName, invalidKey, Seq(urnRegex))
+      requiredError = FormError(fieldName, requiredKey)
     )
   }
 }

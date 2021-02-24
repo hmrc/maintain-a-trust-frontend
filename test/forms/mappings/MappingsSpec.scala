@@ -142,6 +142,39 @@ class MappingsSpec extends WordSpec with MustMatchers with OptionValues with Map
     }
   }
 
+  "urn" must {
+
+    val testForm: Form[String] =
+      Form(
+        "value" -> urn()
+      )
+
+    "bind a valid URN" in {
+      val result = testForm.bind(Map("value" -> "ABTRUST12345678"))
+      result.get mustEqual "ABTRUST12345678"
+    }
+
+    "bind a valid URN with spaces in" in {
+      val result = testForm.bind(Map("value" -> "AB TRUST 12345678"))
+      result.get mustEqual "ABTRUST12345678"
+    }
+
+    "not bind an empty value" in {
+      val result = testForm.bind(Map("value" -> ""))
+      result.errors must contain(FormError("value", "urn.error.required"))
+    }
+
+    "not bind an empty map" in {
+      val result = testForm.bind(Map.empty[String, String])
+      result.errors must contain(FormError("value", "urn.error.required"))
+    }
+
+    "unbind a valid value" in {
+      val result = testForm.fill("ABTRUST12345678")
+      result.apply("value").value.value mustEqual "ABTRUST12345678"
+    }
+  }
+
   "enumerable" must {
 
     val testForm = Form(

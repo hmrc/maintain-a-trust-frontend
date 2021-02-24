@@ -51,7 +51,7 @@ class URNController @Inject()(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, routes.URNController.onSubmit()))),
         urn => {
-          uaSetupService.setupAndRedirectToStatus(urn.toUpperCase, request.user.internalId, is5mldEnabled = true)
+          uaSetupService.setupAndRedirectToStatus(urn, request.user.internalId, is5mldEnabled = true)
         }
       )
   }

@@ -24,13 +24,7 @@ class URNFormProvider @Inject() extends Mappings {
 
   def apply(): Form[String] =
     Form(
-      "value" -> text("urn.error.required")
-        .verifying(
-          firstError(
-            isNotEmpty("value", "urn.error.required"),
-            regexp(Validation.urnRegex, "urn.error.invalidCharacters")
-          )
-        )
+      "value" -> urn()
     )
 }
 
