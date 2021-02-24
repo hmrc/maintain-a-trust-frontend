@@ -16,23 +16,51 @@
 
 package views
 
+import models.{URN, UTR}
 import views.behaviours.ViewBehaviours
 import views.html.InformationMaintainingThisTrustView
 
 class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
-  "InformationMaintainingThisTrust view" must {
+  "InformationMaintainingThisTrust view for UTR" must {
 
     val utr = "1234545678"
 
     val view = viewFor[InformationMaintainingThisTrustView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(utr)(fakeRequest, messages)
+    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "informationMaintainingThisTrust",
-      None,
+      Some("UTR"),
       utr,
+      "warning",
+      "viewLastDeclaration",
+      "printsave.link",
+      "updateDetails",
+      "paragraph2",
+      "paragraph3",
+      "paragraph4"
+    )
+
+    behave like pageWithBackLink(applyView)
+
+    behave like pageWithContinueButton(applyView, controllers.routes.WhatIsNextController.onPageLoad().url, Some("site.startMaintaining"))
+
+  }
+
+  "InformationMaintainingThisTrust view for URN" must {
+
+    val urn = "XATRUST12345678"
+
+    val view = viewFor[InformationMaintainingThisTrustView](Some(emptyUserAnswersForUrn))
+
+    val applyView = view.apply(urn, URN)(fakeRequest, messages)
+
+    behave like normalPageTitleWithCaption(applyView,
+      "informationMaintainingThisTrust",
+      Some("URN"),
+      urn,
       "warning",
       "viewLastDeclaration",
       "printsave.link",

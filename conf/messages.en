@@ -138,7 +138,8 @@ featureNotAvailable.heading = This feature is currently not available
 
 informationMaintainingThisTrust.title = Information about maintaining this trust
 informationMaintainingThisTrust.heading = Information about maintaining this trust
-informationMaintainingThisTrust.caption = This trust’s UTR: {0}
+informationMaintainingThisTrust.UTR.caption = This trust’s UTR: {0}
+informationMaintainingThisTrust.URN.caption = This trust’s URN: {0}
 informationMaintainingThisTrust.warning = Some questions may have changed since the trust was registered. You have a legal responsibility to make sure the details held on the register are accurate. You only need to declare the trust is up to date if there is a tax liability.
 informationMaintainingThisTrust.viewLastDeclaration = View the last declaration
 informationMaintainingThisTrust.printsave.link = You can view the trust’s last declaration before you continue

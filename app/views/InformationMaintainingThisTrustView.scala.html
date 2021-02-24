@@ -22,7 +22,7 @@
     main_template: MainTemplate
 )
 
-@(utr: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("informationMaintainingThisTrust.title")
@@ -30,7 +30,7 @@
 
    @components.back_link()
 
-    @components.heading_with_caption(headingKey = "informationMaintainingThisTrust.heading", caption = "informationMaintainingThisTrust.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "informationMaintainingThisTrust.heading", caption = s"informationMaintainingThisTrust.$identifierType.caption", captionParam = identifier)
 
     <div class="info-maintaining-warning-margin-top">
        @components.warning("informationMaintainingThisTrust")
