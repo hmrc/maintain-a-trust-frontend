@@ -32,7 +32,7 @@ class ConfirmationControllerSpec extends SpecBase {
 
       val fakeTvn = "XCTVN0000004912"
 
-      val playbackAnswers = TestUserAnswers.emptyUserAnswers
+      val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
         .set(WhatIsNextPage, MakeChanges).success.value
         .set(TVNPage, fakeTvn).success.value
 

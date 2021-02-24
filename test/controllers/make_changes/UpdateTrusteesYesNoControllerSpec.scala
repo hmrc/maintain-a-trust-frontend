@@ -34,7 +34,7 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
   val form = formProvider.withPrefix(prefix)
   lazy val updateTrusteesYesNoRoute = routes.UpdateTrusteesYesNoController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswers
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
   "UpdateTrusteesYesNo Controller" must {

@@ -25,7 +25,7 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
     val utr = "1234545678"
 
-    val view = viewFor[InformationMaintainingThisTrustView](Some(emptyUserAnswers))
+    val view = viewFor[InformationMaintainingThisTrustView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr)(fakeRequest, messages)
 

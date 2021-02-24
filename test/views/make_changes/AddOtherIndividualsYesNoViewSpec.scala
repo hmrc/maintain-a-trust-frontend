@@ -32,7 +32,7 @@ class AddOtherIndividualsYesNoViewSpec extends YesNoViewBehaviours {
 
   "AddOtherIndividualsYesNo view" must {
 
-    val view = viewFor[AddOtherIndividualsYesNoView](Some(emptyUserAnswers))
+    val view = viewFor[AddOtherIndividualsYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, messageKeyPrefix)(fakeRequest, messages)

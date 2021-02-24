@@ -28,7 +28,7 @@ class UnavailableSectionsControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET when maintain trustees is enabled" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .configure(
           "microservice.services.features.maintain-trustees.enabled" -> true,
           "microservice.services.features.maintain-beneficiaries.enabled" -> false,
@@ -58,7 +58,7 @@ class UnavailableSectionsControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET when maintain trustees and maintain beneficiaries are enabled" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .configure(
           "microservice.services.features.maintain-trustees.enabled" -> true,
           "microservice.services.features.maintain-beneficiaries.enabled" -> true,
@@ -88,7 +88,7 @@ class UnavailableSectionsControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET when maintain trustees, maintain beneficiaries and maintain settlors are enabled" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .configure(
           "microservice.services.features.maintain-trustees.enabled" -> true,
           "microservice.services.features.maintain-beneficiaries.enabled" -> true,

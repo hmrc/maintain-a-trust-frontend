@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import models.UTR
+import models.{URN, UTR}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.TrustNotClaimedView

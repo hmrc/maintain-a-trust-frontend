@@ -27,7 +27,7 @@ class CreateAgentServicesAccountControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request = FakeRequest(GET, routes.CreateAgentServicesAccountController.onPageLoad().url)
 

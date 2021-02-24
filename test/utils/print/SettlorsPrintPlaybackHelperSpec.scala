@@ -41,7 +41,7 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
 
       val name = "Adam Smith"
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
         .set(SettlorDateOfDeathYesNoPage, true).success.value
         .set(SettlorDateOfDeathPage, LocalDate.of(2010, 10, 10)).success.value
@@ -77,7 +77,7 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
 
       val name = "Adam Smith"
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
         .set(SettlorDateOfDeathYesNoPage, false).success.value
         .set(SettlorDateOfBirthYesNoPage, false).success.value
@@ -154,7 +154,7 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         businessSettlorWithNoIdentification(3) andThen
         businessSettlorInEmployeeRelatedTrust(4)
 
-      val helper = new AllSettlorsPrinter(answerRowConverter)(answers.apply(emptyUserAnswers))
+      val helper = new AllSettlorsPrinter(answerRowConverter)(answers.apply(emptyUserAnswersForUtr))
 
       val result = helper.allSettlors
 
@@ -235,7 +235,7 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         individualSettlorWithInternationalAddressAndIdCard(2) andThen
         individualSettlorWithNoId(3)
 
-      val helper = new AllSettlorsPrinter(answerRowConverter)(answers.apply(emptyUserAnswers))
+      val helper = new AllSettlorsPrinter(answerRowConverter)(answers.apply(emptyUserAnswersForUtr))
 
       val result = helper.allSettlors
       

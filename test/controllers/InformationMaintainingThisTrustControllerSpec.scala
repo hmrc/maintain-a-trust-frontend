@@ -27,7 +27,7 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

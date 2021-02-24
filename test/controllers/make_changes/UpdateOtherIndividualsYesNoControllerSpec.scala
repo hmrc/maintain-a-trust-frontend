@@ -45,7 +45,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   lazy val updateOtherIndividualsYesNoRoute = routes.UpdateOtherIndividualsYesNoController.onPageLoad().url
 
-  val baseAnswers = emptyUserAnswers
+  val baseAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
   "UpdateOtherIndividualsYesNoController" must {

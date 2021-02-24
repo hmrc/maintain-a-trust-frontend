@@ -49,7 +49,7 @@ class RequireClosingTrustAnswerActionSpec extends SpecBase with ScalaFutures {
         val futureResult = action.callRefine(
           DataRequest(
             fakeRequest,
-            emptyUserAnswers,
+            emptyUserAnswersForUtr,
             user
           )
         )
@@ -67,7 +67,7 @@ class RequireClosingTrustAnswerActionSpec extends SpecBase with ScalaFutures {
 
         val action = new Harness()
 
-        val userAnswers = emptyUserAnswers.set(WhatIsNextPage, CloseTrust).success.value
+        val userAnswers = emptyUserAnswersForUtr.set(WhatIsNextPage, CloseTrust).success.value
 
         val futureResult = action.callRefine(
           DataRequest(
@@ -89,7 +89,7 @@ class RequireClosingTrustAnswerActionSpec extends SpecBase with ScalaFutures {
 
         val action = new Harness()
 
-        val userAnswers = emptyUserAnswers.set(WhatIsNextPage, MakeChanges).success.value
+        val userAnswers = emptyUserAnswersForUtr.set(WhatIsNextPage, MakeChanges).success.value
 
         val futureResult = action.callRefine(
           DataRequest(

@@ -30,7 +30,7 @@ class TrustDetailsPrinterSpec extends SpecBase {
     "generate an answer section with trust name, created date and utr" in {
       val helper = injector.instanceOf[PrintPlaybackHelper]
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(TrustNamePage, "Trust Ltd.").success.value
         .set(WhenTrustSetupPage, LocalDate.of(2019,6,1)).success.value
 

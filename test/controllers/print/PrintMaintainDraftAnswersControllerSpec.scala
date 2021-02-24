@@ -43,7 +43,7 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val playbackAnswers = TestUserAnswers.emptyUserAnswers
+      val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
         .set(WhatIsNextPage, CloseTrust).success.value
         .set(TVNPage, fakeTvn).success.value
         .set(AgentDeclarationPage, AgentDeclaration(FullName("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value

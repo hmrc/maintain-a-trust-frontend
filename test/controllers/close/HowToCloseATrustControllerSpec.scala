@@ -28,13 +28,13 @@ class HowToCloseATrustControllerSpec extends SpecBase with MockitoSugar {
   val utr: String = "1234567890"
   lazy val howToCloseATrustRoute: String = routes.HowToCloseATrustController.onPageLoad().url
 
-  override val emptyUserAnswers: UserAnswers = super.emptyUserAnswers
+  override val emptyUserAnswersForUtr: UserAnswers = super.emptyUserAnswersForUtr
 
   "HowToCloseATrust Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request = FakeRequest(GET, howToCloseATrustRoute)
 

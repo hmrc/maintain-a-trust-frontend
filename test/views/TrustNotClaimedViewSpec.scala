@@ -42,7 +42,7 @@ class TrustNotClaimedViewSpec extends ViewBehaviours {
 
   "TrustNotClaimed view for URN" must {
     val urn = "XATRUST12345678"
-    val view = viewFor[TrustNotClaimedView](Some(emptyUserAnswersForUtr))
+    val view = viewFor[TrustNotClaimedView](Some(emptyUserAnswersForUrn))
 
     val applyView = view.apply("XATRUST12345678", URN)(fakeRequest, messages)
 

@@ -43,7 +43,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   lazy val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswers
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, MakeChanges).success.value
 
   "AddOtherIndividualsYesNo Controller" must {
@@ -144,7 +144,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad().url
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
         .set(WhatIsNextPage, CloseTrust).success.value
         .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
