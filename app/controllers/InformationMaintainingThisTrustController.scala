@@ -44,7 +44,7 @@ class InformationMaintainingThisTrustController @Inject()(
       logger.info(s"[Session ID: ${Session.id(hc)}] showing information about this trust $identifier")
 
       request.user.affinityGroup match {
-        case Agent if !config.playbackEnabled => Ok(agentCannotAccessTrustYetView(identifier))
+        case Agent if !config.playbackEnabled => Ok(agentCannotAccessTrustYetView(identifier, request.userAnswers.identifierType))
         case _ => Ok(maintainingTrustView(identifier))
       }
   }

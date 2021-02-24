@@ -8,7 +8,8 @@ agencyRegisteredAddressInternational.heading = What is your agency’s registere
 
 agentCannotAccessTrustYet.title = You cannot access this trust yet
 agentCannotAccessTrustYet.heading = You cannot access this trust yet
-agentCannotAccessTrustYet.caption = This trust’s UTR: {0}
+agentCannotAccessTrustYet.UTR.caption = This trust’s UTR: {0}
+agentCannotAccessTrustYet.URN.caption = This trust’s URN: {0}
 agentCannotAccessTrustYet.p1 = You have been authorised by your client and do not need to do anything else at the moment.
 agentCannotAccessTrustYet.p2 = You will be able to access this trust by 2020.
 agentCannotAccessTrustYet.heading.2 = What you need to know about maintaining this trust
