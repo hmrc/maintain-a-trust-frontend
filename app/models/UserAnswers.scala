@@ -29,6 +29,7 @@ final case class UserAnswers(
                               internalId: String,
                               identifier: String,
                               data: JsObject = Json.obj(),
+                              is5mldEnabled: Boolean = false,
                               updatedAt: LocalDateTime = LocalDateTime.now
                             ) extends Logging {
 
@@ -88,8 +89,8 @@ final case class UserAnswers(
 
 object UserAnswers {
 
-  def startNewSession(internalId: String, identifier: String) : UserAnswers =
-    UserAnswers(internalId = internalId, identifier = identifier)
+  def startNewSession(internalId: String, identifier: String, is5mldEnabled: Boolean = false) : UserAnswers =
+    UserAnswers(internalId = internalId, identifier = identifier, is5mldEnabled = is5mldEnabled)
 
   implicit lazy val reads: Reads[UserAnswers] = {
 
@@ -99,6 +100,7 @@ object UserAnswers {
       (__ \ "internalId").read[String] and
         (__ \ "identifier").read[String] and
         (__ \ "data").read[JsObject] and
+        (__ \ "is5mldEnabled").readWithDefault[Boolean](false) and
         (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
       ) (UserAnswers.apply _)
   }
@@ -111,6 +113,7 @@ object UserAnswers {
       (__ \ "internalId").write[String] and
         (__ \ "identifier").write[String] and
         (__ \ "data").write[JsObject] and
+        (__ \ "is5mldEnabled").write[Boolean] and
         (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
       ) (unlift(UserAnswers.unapply))
   }

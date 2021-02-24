@@ -29,7 +29,7 @@ import uk.gov.hmrc.http.HttpReads.Implicits.readFromJson
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
+class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
   private def getTrustDetailsUrl(identifier: String) = s"${config.trustsUrl}/trusts/$identifier/trust-details"
 
@@ -56,23 +56,23 @@ class TrustConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
 
   def declareUrl(identifier: String) = s"${config.trustsUrl}/trusts/declare/$identifier"
 
-  def playback(identifier: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[TrustsResponse] = {
+  def playback(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
     http.GET[TrustsResponse](playbackUrl(identifier))(TrustsStatusReads.httpReads, hc, ec)
   }
 
-  def playbackfromEtmp(identifier: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[TrustsResponse] = {
+  def playbackFromEtmp(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
     http.GET[TrustsResponse](playbackFromEtmpUrl(identifier))(TrustsStatusReads.httpReads, hc, ec)
   }
 
-  def getDoProtectorsAlreadyExist(identifier: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[JsBoolean] = {
+  def getDoProtectorsAlreadyExist(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
     http.GET[JsBoolean](getDoProtectorsAlreadyExistUrl(identifier))
   }
 
-  def getDoOtherIndividualsAlreadyExist(identifier: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[JsBoolean] = {
+  def getDoOtherIndividualsAlreadyExist(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
     http.GET[JsBoolean](getDoOtherIndividualsAlreadyExistUrl(identifier))
   }
 
-  def declare(identifier: String, payload: JsValue)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+  def declare(identifier: String, payload: JsValue)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     http.POST[JsValue, DeclarationResponse](declareUrl(identifier), payload)(implicitly[Writes[JsValue]], DeclarationResponse.httpReads, hc, ec)
   }
 }
