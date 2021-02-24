@@ -86,6 +86,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val locationCanonicalList: String = loadConfig("location.canonical.list.all")
   lazy val locationCanonicalListCY: String = loadConfig("location.canonical.list.allCY")
 
+  lazy val testWizardHost: String = configuration.get[String]("urls.test-only.wizard.host")
+
   lazy val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.welsh-translation")
 
