@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package views.status
+package views
 
-import views.behaviours.ViewBehaviours
-import views.html.status.PlaybackProblemContactHMRCView
+class ViewUtilsSpec extends ViewSpecBase {
 
-class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
+  "View utils" must {
 
-  val utr = "0987654321"
+    "render the subheading for a utr" in {
+      val heading = ViewUtils.subheading("1234567890")
+      heading mustBe "This trust’s UTR: 1234567890"
+    }
 
-  "PlaybackProblemContactHMRC view" must {
-
-    val view = viewFor[PlaybackProblemContactHMRCView](Some(emptyUserAnswers))
-
-    val applyView = view.apply(utr)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "playbackProblemContactHMRC",
-      "utr",
-      utr,
-      "p1.beforeLink", "p1.link", "p1.afterLink","p2")
+    "render the subheading for a urn" in {
+      val heading = ViewUtils.subheading("ABTRUST12345678")
+      heading mustBe "This trust’s URN: ABTRUST12345678"
+    }
 
   }
+
 }

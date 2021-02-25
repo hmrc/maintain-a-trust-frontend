@@ -74,6 +74,9 @@ date.day = Day
 date.month = Month
 date.year = Year
 
+utr.subheading = This trust’s UTR: {0}
+urn.subheading = This trust’s URN: {0}
+
 declaration.title = Declaration
 declaration.heading = Declaration
 declaration.firstName = Your first name
@@ -145,6 +148,13 @@ informationMaintainingThisTrust.updateDetails = Update trust details and make de
 informationMaintainingThisTrust.paragraph2 = You can make changes to the trust, confirm it is up to date or close the trust, and then make a declaration.
 informationMaintainingThisTrust.paragraph3 = Any changes you make will not be saved until you make a declaration. You will not be able to save and continue later. You can print a copy of your draft answers as well as a copy of the declaration.
 informationMaintainingThisTrust.paragraph4 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
+
+viewLastDeclarationYesNo.title = Do you want to view this trust’s last declaration?
+viewLastDeclarationYesNo.heading = Do you want to view this trust’s last declaration?
+viewLastDeclarationYesNo.caption = This trust’s UTR: {0}
+viewLastDeclarationYesNo.hint = Details declared to HMRC about the settlors, trustees, beneficiaries and if added, protectors and other individuals.
+viewLastDeclarationYesNo.checkYourAnswersLabel = Do you want to view this trust’s last declaration?
+viewLastDeclarationYesNo.error.required = Select yes if you want to view this trust’s last declaration
 
 internationalAddress.error.line1.required = Enter address line 1
 internationalAddress.error.line2.required = Enter address line 2

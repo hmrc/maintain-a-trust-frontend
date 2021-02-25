@@ -16,4 +16,4 @@
 
 @(headingKey: String, headingSize: String = "govuk-heading-xl", caption: String, captionParam: String = "")(implicit messages: Messages)
 
-<h1 class="@headingSize">@components.sub_heading(caption, captionParam)@messages(headingKey)</h1>
+<h1 class="@headingSize">@components.sub_heading(caption, captionParam) @messages(headingKey)</h1>

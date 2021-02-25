@@ -31,7 +31,7 @@ class MaintainThisTrustViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "maintainThisTrust",
-      Some("UTR"),
+      "utr",
       utr,
       "UTR.p1.a", "p1.b", "p3", "p4", "p4.a")
 
@@ -45,7 +45,7 @@ class MaintainThisTrustViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "maintainThisTrust",
-      Some("URN"),
+      "urn",
       urn,
       "URN.p1.a", "p1.b", "p3", "p4", "p4.a")
 

@@ -31,11 +31,9 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "informationMaintainingThisTrust",
-      None,
+      "utr",
       utr,
       "warning",
-      "viewLastDeclaration",
-      "printsave.link",
       "updateDetails",
       "paragraph2",
       "paragraph3",
@@ -44,7 +42,7 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
     behave like pageWithBackLink(applyView)
 
-    behave like pageWithContinueButton(applyView, controllers.routes.WhatIsNextController.onPageLoad().url, Some("site.startMaintaining"))
+    behave like pageWithContinueButton(applyView, controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url, Some("site.startMaintaining"))
 
   }
 }

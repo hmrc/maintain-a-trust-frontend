@@ -31,7 +31,7 @@ class TrustAlreadyClaimedViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "trustAlreadyClaimed",
-      Some("UTR"),
+      "utr",
       utr,
       "p1", "p2","p2.a")
 
@@ -45,7 +45,7 @@ class TrustAlreadyClaimedViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "trustAlreadyClaimed",
-      Some("URN"),
+      "urn",
       urn,
       "p1", "p2","p2.a")
 

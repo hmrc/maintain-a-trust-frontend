@@ -14,26 +14,19 @@
  * limitations under the License.
  */
 
-package views.status
+package pages
 
-import views.behaviours.ViewBehaviours
-import views.html.status.PlaybackProblemContactHMRCView
+import pages.behaviours.PageBehaviours
 
-class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
+class ViewLastDeclarationYesNoPageSpec extends PageBehaviours {
 
-  val utr = "0987654321"
+  "ViewLastDeclarationYesNoPage" must {
 
-  "PlaybackProblemContactHMRC view" must {
+    beRetrievable[Boolean](ViewLastDeclarationYesNoPage)
 
-    val view = viewFor[PlaybackProblemContactHMRCView](Some(emptyUserAnswers))
+    beSettable[Boolean](ViewLastDeclarationYesNoPage)
 
-    val applyView = view.apply(utr)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "playbackProblemContactHMRC",
-      "utr",
-      utr,
-      "p1.beforeLink", "p1.link", "p1.afterLink","p2")
-
+    beRemovable[Boolean](ViewLastDeclarationYesNoPage)
   }
+
 }

@@ -14,26 +14,8 @@
  * limitations under the License.
  */
 
-package views.status
+package models
 
-import views.behaviours.ViewBehaviours
-import views.html.status.PlaybackProblemContactHMRCView
-
-class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
-
-  val utr = "0987654321"
-
-  "PlaybackProblemContactHMRC view" must {
-
-    val view = viewFor[PlaybackProblemContactHMRCView](Some(emptyUserAnswers))
-
-    val applyView = view.apply(utr)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "playbackProblemContactHMRC",
-      "utr",
-      utr,
-      "p1.beforeLink", "p1.link", "p1.afterLink","p2")
-
-  }
+case object IsUTR {
+  def apply(identifier: String): Boolean = identifier.length == 10
 }

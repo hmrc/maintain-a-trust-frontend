@@ -36,10 +36,6 @@
        @components.warning("informationMaintainingThisTrust")
     </div>
 
-   <h2>@messages("informationMaintainingThisTrust.viewLastDeclaration")</h2>
-
-   <p class="panel-indent">@components.link(controllers.print.routes.PrintLastDeclaredAnswersController.onPageLoad().url, "print-and-save","informationMaintainingThisTrust.printsave.link", openInNewWindow = false).</p>
-
     <h2>@messages("informationMaintainingThisTrust.updateDetails")</h2>
 
    <p>@messages("informationMaintainingThisTrust.paragraph2")</p>
@@ -48,7 +44,7 @@
 
    <p>@messages("informationMaintainingThisTrust.paragraph4")</p>
 
-    @components.button_link(messages("site.startMaintaining"), controllers.routes.WhatIsNextController.onPageLoad().url)
+    @components.button_link(messages("site.startMaintaining"), controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url)
 
 }
 

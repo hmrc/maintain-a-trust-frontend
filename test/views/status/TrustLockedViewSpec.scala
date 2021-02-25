@@ -32,7 +32,7 @@ class TrustLockedViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "trustLocked",
-      Some("UTR"),
+      "utr",
       utr,
       "p1", "p2","p3",
       "link1")

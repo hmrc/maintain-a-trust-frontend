@@ -14,26 +14,13 @@
  * limitations under the License.
  */
 
-package views.status
+package pages
 
-import views.behaviours.ViewBehaviours
-import views.html.status.PlaybackProblemContactHMRCView
+import play.api.libs.json.JsPath
 
-class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
+object ViewLastDeclarationYesNoPage extends QuestionPage[Boolean] {
 
-  val utr = "0987654321"
+  override def path: JsPath = JsPath \ toString
 
-  "PlaybackProblemContactHMRC view" must {
-
-    val view = viewFor[PlaybackProblemContactHMRCView](Some(emptyUserAnswers))
-
-    val applyView = view.apply(utr)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "playbackProblemContactHMRC",
-      "utr",
-      utr,
-      "p1.beforeLink", "p1.link", "p1.afterLink","p2")
-
-  }
+  override def toString: String = "viewLastDeclarationYesNo"
 }
