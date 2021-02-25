@@ -23,37 +23,65 @@ import views.html.status.IdentifierDoesNotMatchView
 
 class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
 
-  "IdentifierDoesNotMatch view for utr" must {
-
+  "IdentifierDoesNotMatch view for utr for Agent" must {
+    val utr = "0987654321"
     val view = viewFor[IdentifierDoesNotMatchView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(AffinityGroup.Agent, UTR)(fakeRequest, messages)
+    val applyView = view.apply(AffinityGroup.Agent, utr, UTR)(fakeRequest, messages)
 
-    behave like normalPage(
+    behave like normalPageTitleWithCaption(
       applyView,
-      "identifierDoesNotMatch.UTR",
+      "identifierDoesNotMatch",
+      Some("UTR"),
+      utr,
       "p1",
+      "bullet.1.title",
+      "bullet.1.p1",
+      "bullet.1.p2",
       "p2",
       "p3",
-      "contact.link",
-      "p4",
-      "return.link")
+      "return.link"
+    )
   }
 
-  "IdentifierDoesNotMatch view for urn" must {
+  "IdentifierDoesNotMatch view for utr for Organisation" must {
+    val utr = "0987654321"
+    val view = viewFor[IdentifierDoesNotMatchView](Some(emptyUserAnswersForUtr))
 
+    val applyView = view.apply(AffinityGroup.Organisation, utr, UTR)(fakeRequest, messages)
+
+    behave like normalPageTitleWithCaption(
+      applyView,
+      "identifierDoesNotMatch",
+      Some("UTR"),
+      utr,
+      "p1",
+      "bullet.1.title",
+      "bullet.1.p1",
+      "bullet.1.p2",
+      "p2",
+      "sign_out"
+    )
+  }
+
+  "IdentifierDoesNotMatch view for urn for Agent" must {
+    val urn = "XATRUST12345678"
     val view = viewFor[IdentifierDoesNotMatchView](Some(emptyUserAnswersForUrn))
 
-    val applyView = view.apply(AffinityGroup.Agent, URN)(fakeRequest, messages)
+    val applyView = view.apply(AffinityGroup.Agent, urn, URN)(fakeRequest, messages)
 
-    behave like normalPage(
+    behave like normalPageTitleWithCaption(
       applyView,
-      "identifierDoesNotMatch.URN",
+      "identifierDoesNotMatch",
+      Some("URN"),
+      urn,
       "p1",
+      "bullet.1.title",
+      "bullet.1.p1",
+      "bullet.1.p2",
       "p2",
       "p3",
-      "contact.link",
-      "p4",
-      "return.link")
+      "return.link"
+    )
   }
 }

@@ -73,7 +73,7 @@ class TrustStatusController @Inject()(
 
   def notFound(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(identifierDoesNotMatchView(request.user.affinityGroup, request.userAnswers.identifierType)))
+      Future.successful(Ok(identifierDoesNotMatchView(request.user.affinityGroup, request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def locked(): Action[AnyContent] = actions.authWithData.async {

@@ -294,23 +294,18 @@ trustStillProcessing.p3 = You can
 trustStillProcessing.contact.link = contact the trusts helpline (opens in a new window or tab)
 trustStillProcessing.return.link = return to register and maintain a trust for a client
 
-identifierDoesNotMatch.UTR.title = The Unique Taxpayer Reference (UTR) you gave for the trust does not match our records
-identifierDoesNotMatch.UTR.heading = The Unique Taxpayer Reference (UTR) you gave for the trust does not match our records
-identifierDoesNotMatch.UTR.p1 = Check you have entered the trust’s UTR correctly.
-identifierDoesNotMatch.UTR.p2 = If you do not have a UTR for the trust you will need to register the trust first.
-identifierDoesNotMatch.UTR.p3 = If you need help with this service
-identifierDoesNotMatch.UTR.contact.link = contact the trusts helpline (opens in a new window or tab)
-identifierDoesNotMatch.UTR.p4 = You can
-identifierDoesNotMatch.UTR.return.link = return to register and maintain a trust for a client
-
-identifierDoesNotMatch.URN.title = The Unique Reference Number (URN) you gave for the trust does not match our records
-identifierDoesNotMatch.URN.heading = The Unique Reference Number (URN) you gave for the trust does not match our records
-identifierDoesNotMatch.URN.p1 = Check you have entered the trust’s URN correctly.
-identifierDoesNotMatch.URN.p2 = If you do not have a URN for the trust you will need to register the trust first.
-identifierDoesNotMatch.URN.p3 = If you need help with this service
-identifierDoesNotMatch.URN.contact.link = contact the trusts helpline (opens in a new window or tab)
-identifierDoesNotMatch.URN.p4 = You can
-identifierDoesNotMatch.URN.return.link = return to register and maintain a trust for a client
+identifierDoesNotMatch.title = Your Government Gateway account is not linked to this trust
+identifierDoesNotMatch.heading = Your Government Gateway account is not linked to this trust
+identifierDoesNotMatch.UTR.caption = This trust’s UTR: {0}
+identifierDoesNotMatch.URN.caption = This trust’s URN: {0}
+identifierDoesNotMatch.p1 = Check you have entered the trust’s unique identifier correctly.
+identifierDoesNotMatch.bullet.1.title = The unique identifier will be one of the following
+identifierDoesNotMatch.bullet.1.p1 = a Unique Taxpayer Reference (UTR) which is ten numbers long, for example 76543 21234
+identifierDoesNotMatch.bullet.1.p2 = a Unique Reference Number (URN) which has 15 numbers and characters, for example ABTRUST76543212
+identifierDoesNotMatch.p2 = If the URN or UTR is correct, you need to sign in with the Government Gateway account that is linked to this trust.
+identifierDoesNotMatch.p3 = You can
+identifierDoesNotMatch.return.link = return to register and maintain a trust for a client
+identifierDoesNotMatch.sign_out = Sign out of this account
 
 ukAddress.error.line1.required = Enter address line 1
 ukAddress.error.line2.required = Enter address line 2
@@ -807,8 +802,8 @@ playbackProblemContactHMRC.heading = There is a problem accessing your trust’s
 playbackProblemContactHMRC.UTR.caption = This trust’s UTR: {0}
 playbackProblemContactHMRC.URN.caption = This trust’s URN: {0}
 playbackProblemContactHMRC.p1 = To access the trust’s registration, we need to confirm the trust’s details with you.
-playbackProblemContactHMRC.p2.beforeLink = To confirm the trust’s details
-playbackProblemContactHMRC.p2.link = contact the trusts helpline (opens in a new window or tab).
+playbackProblemContactHMRC.p2.beforeLink = To confirm the trust’s details,
+playbackProblemContactHMRC.p2.link = contact the trusts helpline (opens in a new window or tab)
 playbackProblemContactHMRC.p2.afterLink = .
 playbackProblemContactHMRC.p3 = If you have submitted a tax return for this trust, have the relevant documents ready as you may need to refer to them.
 
