@@ -245,7 +245,8 @@ trustAlreadyClaimed.p2.a = contact the trusts helpline (opens in a new window or
 
 trustClosed.title = Sorry, you cannot access this trust
 trustClosed.heading = Sorry, you cannot access this trust
-trustClosed.caption = This trust’s UTR: {0}
+trustClosed.UTR.caption = This trust’s UTR: {0}
+trustClosed.URN.caption = This trust’s URN: {0}
 trustClosed.p1 = You cannot make changes to this trust as it has been closed.
 trustClosed.p2 = If this has been done in error or you need help with the service, please
 trustClosed.contact.link = contact the trusts helpline (opens in a new window or tab)

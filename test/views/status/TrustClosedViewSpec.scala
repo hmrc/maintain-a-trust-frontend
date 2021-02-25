@@ -16,24 +16,23 @@
 
 package views.status
 
+import models.{URN, UTR}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
 import views.html.status.TrustClosedView
 
 class TrustClosedViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
-
-  "TrustClosed view" must {
-
+  "TrustClosed view for UTR" must {
+    val utr = "0987654321"
     val view = viewFor[TrustClosedView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(AffinityGroup.Agent, utr)(fakeRequest, messages)
+    val applyView = view.apply(AffinityGroup.Agent, utr, UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(
       applyView,
       "trustClosed",
-      None,
+      Some("UTR"),
       utr,
       "p1",
       "p2",
@@ -45,4 +44,24 @@ class TrustClosedViewSpec extends ViewBehaviours {
 
   }
 
+  "TrustClosed view for URN" must {
+    val urn = "XATRUST12345678"
+    val view = viewFor[TrustClosedView](Some(emptyUserAnswersForUtr))
+
+    val applyView = view.apply(AffinityGroup.Agent, urn, URN)(fakeRequest, messages)
+
+    behave like normalPageTitleWithCaption(
+      applyView,
+      "trustClosed",
+      Some("URN"),
+      urn,
+      "p1",
+      "p2",
+      "contact.link",
+      "p3",
+      "p4",
+      "return.link"
+    )
+
+  }
 }

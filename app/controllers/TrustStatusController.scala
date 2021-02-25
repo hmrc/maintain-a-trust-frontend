@@ -58,7 +58,7 @@ class TrustStatusController @Inject()(
 
   def closed(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(closedView(request.user.affinityGroup, request.userAnswers.identifier)))
+      Future.successful(Ok(closedView(request.user.affinityGroup, request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def processing(): Action[AnyContent] = actions.authWithData.async {
