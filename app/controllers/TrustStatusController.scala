@@ -83,7 +83,7 @@ class TrustStatusController @Inject()(
 
   def down(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(ServiceUnavailable(ivDownView(request.userAnswers.identifier)))
+      Future.successful(ServiceUnavailable(ivDownView(request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def alreadyClaimed(): Action[AnyContent] = actions.authWithData.async {

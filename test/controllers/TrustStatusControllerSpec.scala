@@ -171,7 +171,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual SERVICE_UNAVAILABLE
 
       contentAsString(result) mustEqual
-        view(utr)(request, messages).toString
+        view(utr, UTR)(request, messages).toString
 
       application.stop()
     }

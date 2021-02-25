@@ -132,7 +132,8 @@ internationalAddress.error.line3.invalidCharacters=Mae’n rhaid i gyfeiriad –
 
 ivDown.title=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
 ivDown.heading=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
-ivDown.caption=UTR yr ymddiriedolaeth hon: {0}
+ivDown.UTR.caption=UTR yr ymddiriedolaeth hon: {0}
+ivDown.URN.caption=URN yr ymddiriedolaeth hon: {0}
 ivDown.p1=Er mwyn eich helpu gyda’r ymddiriedolaeth hon, mae angen i chi
 ivDown.contact.link=anfon rhywfaint o wybodaeth atom
 

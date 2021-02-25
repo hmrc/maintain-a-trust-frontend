@@ -16,23 +16,36 @@
 
 package views.status
 
+import models.{URN, UTR}
 import views.behaviours.ViewBehaviours
 import views.html.status.IVDownView
 
 class IVDownViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
 
-  "IVDown view" must {
-
+  "IVDown view for UTR" must {
+    val utr = "0987654321"
     val view = viewFor[IVDownView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(utr)(fakeRequest, messages)
+    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(view = applyView,
       messageKeyPrefix =  "ivDown",
-      None,
+      Some("UTR"),
       captionParam = utr,
+      "p1")
+  }
+
+  "IVDown view for URN" must {
+    val urn = "XATRUST12345678"
+    val view = viewFor[IVDownView](Some(emptyUserAnswersForUtr))
+
+    val applyView = view.apply(urn, URN)(fakeRequest, messages)
+
+    behave like normalPageTitleWithCaption(view = applyView,
+      messageKeyPrefix =  "ivDown",
+      Some("URN"),
+      captionParam = urn,
       "p1")
   }
 }
