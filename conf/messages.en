@@ -21,8 +21,8 @@ agentCannotAccessTrustYet.bullet.4 = If you need to close the trust, you will ne
 agentCannotAccessTrustYet.heading.3 = Changes you cannot tell us about on this service
 agentCannotAccessTrustYet.p4 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
 
-agentNotAuthorised.title = You cannot access this trust
-agentNotAuthorised.heading = You cannot access this trust
+agentNotAuthorised.title = You have not been authorised by a trustee to access this trust
+agentNotAuthorised.heading = You have not been authorised by a trustee to access this trust
 agentNotAuthorised.UTR.caption = This trust’s UTR: {0}
 agentNotAuthorised.URN.caption = This trust’s URN: {0}
 agentNotAuthorised.p1 = The trustee who claimed the trust needs to give you authorisation.
