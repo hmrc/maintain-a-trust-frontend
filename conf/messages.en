@@ -508,7 +508,8 @@ dateLastAssetSharedOut.error.past = The date the last asset was distributed cann
 
 howToCloseATrust.title = How to close a trust with HMRC
 howToCloseATrust.heading = How to close a trust with HMRC
-howToCloseATrust.caption = This trust’s UTR: {0}
+howToCloseATrust.UTR.caption = This trust’s UTR: {0}
+howToCloseATrust.URN.caption = This trust’s URN: {0}
 howToCloseATrust.p1 = To close a trust register with HMRC, you need to tell us:
 howToCloseATrust.bullet1 = the date the last asset was shared out to the beneficiaries
 howToCloseATrust.bullet2 = a final tax return, using Trust and Estate (SA900) tax return or Self Assessment Online for trusts

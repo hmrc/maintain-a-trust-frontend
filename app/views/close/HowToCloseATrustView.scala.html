@@ -20,7 +20,7 @@
     main_template: MainTemplate
 )
 
-@(utr: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = s"${messages("howToCloseATrust.title")}"
@@ -28,7 +28,7 @@
 
     @components.back_link()
 
-    @components.heading_with_caption(headingKey = "howToCloseATrust.heading", caption = "howToCloseATrust.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "howToCloseATrust.heading", caption = s"howToCloseATrust.$identifierType.caption", captionParam = identifier)
 
     <p>@messages("howToCloseATrust.p1")</p>
 
