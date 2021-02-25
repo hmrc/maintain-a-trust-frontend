@@ -154,7 +154,6 @@ informationMaintainingThisTrust.paragraph4 = You are not required to update the 
 
 viewLastDeclarationYesNo.title = Do you want to view this trust’s last declaration?
 viewLastDeclarationYesNo.heading = Do you want to view this trust’s last declaration?
-viewLastDeclarationYesNo.caption = This trust’s UTR: {0}
 viewLastDeclarationYesNo.hint = Details declared to HMRC about the settlors, trustees, beneficiaries and if added, protectors and other individuals.
 viewLastDeclarationYesNo.checkYourAnswersLabel = Do you want to view this trust’s last declaration?
 viewLastDeclarationYesNo.error.required = Select yes if you want to view this trust’s last declaration
