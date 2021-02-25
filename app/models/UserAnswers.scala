@@ -30,6 +30,7 @@ final case class UserAnswers(
                               identifier: String,
                               data: JsObject = Json.obj(),
                               is5mldEnabled: Boolean = false,
+                              isTrustTaxable: Boolean = true,
                               updatedAt: LocalDateTime = LocalDateTime.now
                             ) extends Logging {
 
@@ -101,6 +102,7 @@ object UserAnswers {
         (__ \ "identifier").read[String] and
         (__ \ "data").read[JsObject] and
         (__ \ "is5mldEnabled").readWithDefault[Boolean](false) and
+        (__ \ "isTrustTaxable").readWithDefault[Boolean](true) and
         (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
       ) (UserAnswers.apply _)
   }
@@ -114,6 +116,7 @@ object UserAnswers {
         (__ \ "identifier").write[String] and
         (__ \ "data").write[JsObject] and
         (__ \ "is5mldEnabled").write[Boolean] and
+        (__ \ "isTrustTaxable").write[Boolean] and
         (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
       ) (unlift(UserAnswers.unapply))
   }

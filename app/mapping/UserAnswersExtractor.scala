@@ -43,15 +43,22 @@ class UserAnswersExtractorImpl @Inject()(
 
   override def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionError, UserAnswers] = {
 
+    val isTrustTaxable: Boolean = data.trust.details.trustTaxable match {
+      case Some(false) => false
+      case _ => true
+    }
+
+    val updatedAnswers = answers.copy(isTrustTaxable = isTrustTaxable)
+
     def answersCombined: Either[PlaybackExtractionError, Option[UserAnswers]] = for {
-      correspondence <- correspondenceExtractor.extract(answers, data.correspondence).right
-      beneficiaries <- beneficiariesExtractor.extract(answers, data.trust.entities.beneficiary).right
-      settlors <- settlorsExtractor.extract(answers, data.trust.entities).right
-      trustType <- trustTypeExtractor.extract(answers, data.trust).right
-      protectors <- protectorsExtractor.extract(answers, data.trust.entities.protectors).right
-      otherIndividuals <- otherIndividualsExtractor.extract(answers, data.trust.entities.naturalPerson).right
-      trustees <- trusteesExtractor.extract(answers, data.trust.entities).right
-      trustDetails <- trustDetailsExtractor.extract(answers, data.trust.details).right
+      correspondence <- correspondenceExtractor.extract(updatedAnswers, data.correspondence).right
+      beneficiaries <- beneficiariesExtractor.extract(updatedAnswers, data.trust.entities.beneficiary).right
+      settlors <- settlorsExtractor.extract(updatedAnswers, data.trust.entities).right
+      trustType <- trustTypeExtractor.extract(updatedAnswers, data.trust).right
+      protectors <- protectorsExtractor.extract(updatedAnswers, data.trust.entities.protectors).right
+      otherIndividuals <- otherIndividualsExtractor.extract(updatedAnswers, data.trust.entities.naturalPerson).right
+      trustees <- trusteesExtractor.extract(updatedAnswers, data.trust.entities).right
+      trustDetails <- trustDetailsExtractor.extract(updatedAnswers, data.trust.details).right
     } yield {
       List(correspondence, beneficiaries, settlors, trustType, protectors, otherIndividuals, trustees, trustDetails).combine
     }

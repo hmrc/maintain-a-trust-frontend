@@ -17,7 +17,6 @@
 package mapping.settlors
 
 import java.time.LocalDate
-
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractor
@@ -27,6 +26,7 @@ import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors._
 import pages.settlors.living_settlor.trust_type._
+import pages.trustdetails.TrustTaxableYesNoPage
 
 class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValues with Generators with SpecBaseHelpers {
 
@@ -41,6 +41,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         val trust = DisplayTrust(
           details = TrustDetailsType(
             startDate = LocalDate.parse("1970-02-01"),
+            trustTaxable = None,
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
@@ -79,6 +80,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         val trust = DisplayTrust(
           details = TrustDetailsType(
             startDate = LocalDate.parse("1970-02-01"),
+            trustTaxable = Some(false),
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
@@ -120,6 +122,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         val trust = DisplayTrust(
           details = TrustDetailsType(
             startDate = LocalDate.parse("1970-02-01"),
+            trustTaxable = None,
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
@@ -144,6 +147,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
 
         val extraction = trustTypeExtractor.extract(ua, trust)
 
+        extraction.right.value.get(TrustTaxableYesNoPage) mustNot be(defined)
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.Deed
         extraction.right.value.get(SetUpInAdditionToWillTrustYesNoPage).get mustBe true
@@ -163,6 +167,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         val trust = DisplayTrust(
           details = TrustDetailsType(
             startDate = LocalDate.parse("1970-02-01"),
+            trustTaxable = None,
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
@@ -187,6 +192,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
 
         val extraction = trustTypeExtractor.extract(ua, trust)
 
+        extraction.right.value.get(TrustTaxableYesNoPage) mustNot be(defined)
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.Deed
         extraction.right.value.get(SetUpInAdditionToWillTrustYesNoPage).get mustBe false
@@ -206,6 +212,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         val trust = DisplayTrust(
           details = TrustDetailsType(
             startDate = LocalDate.parse("1970-02-01"),
+            trustTaxable = None,
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
@@ -230,6 +237,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
 
         val extraction = trustTypeExtractor.extract(ua, trust)
 
+        extraction.right.value.get(TrustTaxableYesNoPage) mustNot be(defined)
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.Intervivos
         extraction.right.value.get(SetUpInAdditionToWillTrustYesNoPage) mustNot be(defined)
@@ -249,6 +257,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         val trust = DisplayTrust(
           details = TrustDetailsType(
             startDate = LocalDate.parse("1970-02-01"),
+            trustTaxable = None,
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
@@ -273,6 +282,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
 
         val extraction = trustTypeExtractor.extract(ua, trust)
 
+        extraction.right.value.get(TrustTaxableYesNoPage) mustNot be(defined)
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.Employees
         extraction.right.value.get(HoldoverReliefYesNoPage) mustNot be(defined)
@@ -288,6 +298,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         val trust = DisplayTrust(
           details = TrustDetailsType(
             startDate = LocalDate.parse("1970-02-01"),
+            trustTaxable = None,
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
@@ -312,6 +323,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
 
         val extraction = trustTypeExtractor.extract(ua, trust)
 
+        extraction.right.value.get(TrustTaxableYesNoPage) mustNot be(defined)
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.Employees
         extraction.right.value.get(SetUpInAdditionToWillTrustYesNoPage) mustNot be(defined)
@@ -331,6 +343,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         val trust = DisplayTrust(
           details = TrustDetailsType(
             startDate = LocalDate.parse("1970-02-01"),
+            trustTaxable = None,
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
@@ -355,6 +368,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
 
         val extraction = trustTypeExtractor.extract(ua, trust)
 
+        extraction.right.value.get(TrustTaxableYesNoPage) mustNot be(defined)
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.FlatManagement
         extraction.right.value.get(SetUpInAdditionToWillTrustYesNoPage) mustNot be(defined)
@@ -374,6 +388,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         val trust = DisplayTrust(
           details = TrustDetailsType(
             startDate = LocalDate.parse("1970-02-01"),
+            trustTaxable = None,
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
@@ -398,6 +413,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
 
         val extraction = trustTypeExtractor.extract(ua, trust)
 
+        extraction.right.value.get(TrustTaxableYesNoPage) mustNot be(defined)
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         extraction.right.value.get(KindOfTrustPage).get mustBe KindOfTrust.HeritageMaintenanceFund
         extraction.right.value.get(SetUpInAdditionToWillTrustYesNoPage) mustNot be(defined)
@@ -417,6 +433,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         val trust = DisplayTrust(
           details = TrustDetailsType(
             startDate = LocalDate.parse("1970-02-01"),
+            trustTaxable = None,
             lawCountry = None,
             administrationCountry = None,
             residentialStatus = None,
@@ -442,6 +459,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         val extraction = trustTypeExtractor.extract(ua, trust)
 
         extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe true
+        extraction.right.value.get(TrustTaxableYesNoPage) mustNot be(defined)
         extraction.right.value.get(KindOfTrustPage) mustNot be(defined)
         extraction.right.value.get(SetUpInAdditionToWillTrustYesNoPage) mustNot be(defined)
         extraction.right.value.get(HowDeedOfVariationCreatedPage) mustNot be(defined)

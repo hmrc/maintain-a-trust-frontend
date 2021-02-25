@@ -42,6 +42,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
 
         val trust = TrustDetailsType(
           startDate = LocalDate.of(2019, 6, 1),
+          trustTaxable = Some(true),
           lawCountry = None,
           administrationCountry = None,
           residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, None)), None)),
@@ -56,6 +57,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
         val extraction = trusteeDetailsExtractor.extract(ua, trust)
 
         extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
+        extraction.right.value.get(TrustTaxableYesNoPage).get mustBe true
         extraction.right.value.get(GovernedInsideTheUKPage).get mustBe true
         extraction.right.value.get(CountryGoverningTrustPage) must not be defined
         extraction.right.value.get(AdministrationInsideUKPage).get mustBe true
@@ -69,6 +71,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
 
         val trust = TrustDetailsType(
           startDate = LocalDate.of(2019, 6, 1),
+          trustTaxable = Some(true),
           lawCountry = Some("FR"),
           administrationCountry = Some("IT"),
           residentialStatus = Some(ResidentialStatusType(None, Some(NonUKType(sch5atcgga92 = false, Some(false), Some(true), Some(NonResidentType.toDES(Domiciled)))))),
@@ -83,6 +86,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
         val extraction = trusteeDetailsExtractor.extract(ua, trust)
 
         extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
+        extraction.right.value.get(TrustTaxableYesNoPage).get mustBe true
         extraction.right.value.get(GovernedInsideTheUKPage).get mustBe false
         extraction.right.value.get(CountryGoverningTrustPage).get mustBe "FR"
         extraction.right.value.get(AdministrationInsideUKPage).get mustBe false
@@ -94,6 +98,63 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
 
       }
 
+      "non taxable" in {
+
+        val trust = TrustDetailsType(
+          startDate = LocalDate.of(2019, 6, 1),
+          trustTaxable = Some(false),
+          lawCountry = None,
+          administrationCountry = None,
+          residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, None)), None)),
+          typeOfTrust = Some(WillTrustOrIntestacyTrust),
+          deedOfVariation = Some(ReplacedWill),
+          interVivos = Some(true),
+          efrbsStartDate = Some(LocalDate.of(2018, 4, 20))
+        )
+
+        val ua = UserAnswers("fakeId", "utr")
+
+        val extraction = trusteeDetailsExtractor.extract(ua, trust)
+
+        extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
+        extraction.right.value.get(TrustTaxableYesNoPage).get mustBe false
+        extraction.right.value.get(GovernedInsideTheUKPage).get mustBe true
+        extraction.right.value.get(CountryGoverningTrustPage) must not be defined
+        extraction.right.value.get(AdministrationInsideUKPage).get mustBe true
+        extraction.right.value.get(CountryAdministeringTrustPage) must not be defined
+        extraction.right.value.get(EstablishedUnderScotsLawPage).get mustBe true
+        extraction.right.value.get(TrustResidentOffshorePage).get mustBe false
+        extraction.right.value.get(TrustPreviouslyResidentPage) must not be defined
+      }
+
+      "assume taxable if trustTaxable is not defined" in {
+
+        val trust = TrustDetailsType(
+          startDate = LocalDate.of(2019, 6, 1),
+          trustTaxable = None,
+          lawCountry = None,
+          administrationCountry = None,
+          residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, None)), None)),
+          typeOfTrust = Some(WillTrustOrIntestacyTrust),
+          deedOfVariation = Some(ReplacedWill),
+          interVivos = Some(true),
+          efrbsStartDate = Some(LocalDate.of(2018, 4, 20))
+        )
+
+        val ua = UserAnswers("fakeId", "utr")
+
+        val extraction = trusteeDetailsExtractor.extract(ua, trust)
+
+        extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
+        extraction.right.value.get(TrustTaxableYesNoPage).get mustBe true
+        extraction.right.value.get(GovernedInsideTheUKPage).get mustBe true
+        extraction.right.value.get(CountryGoverningTrustPage) must not be defined
+        extraction.right.value.get(AdministrationInsideUKPage).get mustBe true
+        extraction.right.value.get(CountryAdministeringTrustPage) must not be defined
+        extraction.right.value.get(EstablishedUnderScotsLawPage).get mustBe true
+        extraction.right.value.get(TrustResidentOffshorePage).get mustBe false
+        extraction.right.value.get(TrustPreviouslyResidentPage) must not be defined
+      }
     }
 
   }

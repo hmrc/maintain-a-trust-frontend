@@ -32,6 +32,7 @@ class TrustDetailsExtractor @Inject() extends PlaybackExtractor[TrustDetailsType
     {
       val updated = answers
         .set(WhenTrustSetupPage, data.startDate)
+        .flatMap(answers => extractTrustTaxable(data, answers))
         .flatMap(answers => extractGovernedBy(data, answers))
         .flatMap(answers => extractAdminBy(data, answers))
         .flatMap(answers => extractResidentialType(data, answers))
@@ -43,6 +44,12 @@ class TrustDetailsExtractor @Inject() extends PlaybackExtractor[TrustDetailsType
           logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
           Left(FailedToExtractData(TrustDetailsType.toString))
       }
+    }
+
+  private def extractTrustTaxable(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] =
+    details.trustTaxable match {
+      case Some(false) => answers.set(TrustTaxableYesNoPage, false)
+      case _ => answers.set(TrustTaxableYesNoPage, true)
     }
 
   private def extractGovernedBy(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] =

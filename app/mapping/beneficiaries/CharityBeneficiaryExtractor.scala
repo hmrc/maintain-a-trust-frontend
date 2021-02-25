@@ -42,7 +42,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
           answers
             .flatMap(_.set(CharityBeneficiaryNamePage(index), charityBeneficiary.organisationName))
             .flatMap(answers => extractShareOfIncome(charityBeneficiary, index, answers))
-            .flatMap(_.set(CharityBeneficiarySafeIdPage(index), charityBeneficiary.identification.flatMap(_.safeId)))
+            .flatMap(answers => extractCountryOfResidence(charityBeneficiary, index, answers))
             .flatMap(answers => extractIdentification(charityBeneficiary.identification, index, answers))
             .flatMap {
               _.set(
@@ -67,24 +67,30 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
   }
 
   private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers) = {
-    identification map {
-      case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
-        answers.set(CharityBeneficiaryUtrPage(index), utr)
-          .flatMap(_.set(CharityBeneficiaryAddressYesNoPage(index), false))
+    if (answers.isTrustTaxable) {
+      identification map {
+        case DisplayTrustIdentificationOrgType(safeId, Some(utr), None) =>
+          answers.set(CharityBeneficiaryUtrPage(index), utr)
+            .flatMap(_.set(CharityBeneficiaryAddressYesNoPage(index), false))
+            .flatMap(_.set(CharityBeneficiarySafeIdPage(index), safeId))
 
-      case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
-        extractAddress(address.convert, index, answers)
+        case DisplayTrustIdentificationOrgType(safeId, None, Some(address)) =>
+          extractAddress(address.convert, index, answers)
+            .flatMap(_.set(CharityBeneficiarySafeIdPage(index), safeId))
+        case _ =>
+          logger.error(s"[UTR/URN: ${answers.identifier}] both utr and address parsed")
+          Failure(InvalidExtractorState)
 
-      case _ =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] both utr and address parsed")
-        Failure(InvalidExtractorState)
-
-    } getOrElse {
-      answers.set(CharityBeneficiaryAddressYesNoPage(index), false)
+      } getOrElse {
+        answers.set(CharityBeneficiaryAddressYesNoPage(index), false)
+      }
+    } else {
+      Try(answers)
     }
   }
 
   private def extractShareOfIncome(charityBeneficiary: DisplayTrustCharityType, index: Int, answers: UserAnswers) = {
+    if (answers.isTrustTaxable) {
     charityBeneficiary.beneficiaryShareOfIncome match {
       case Some(income) =>
         answers.set(CharityBeneficiaryDiscretionYesNoPage(index), false)
@@ -93,18 +99,40 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
         // Assumption that user answered yes as the share of income is not provided
         answers.set(CharityBeneficiaryDiscretionYesNoPage(index), true)
     }
+    } else {
+      Try(answers)
+    }
+  }
+
+  private def extractCountryOfResidence(charityBeneficiary: DisplayTrustCharityType, index: Int, answers: UserAnswers) = {
+    charityBeneficiary.countryOfResidence match {
+      case Some("GB") =>
+        answers.set(CharityBeneficiaryCountryOfResidenceYesNoPage(index), true)
+          .flatMap(_.set(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), true))
+          .flatMap(_.set(CharityBeneficiaryCountryOfResidencePage(index), "GB"))
+      case Some(country) =>
+        answers.set(CharityBeneficiaryCountryOfResidenceYesNoPage(index), true)
+          .flatMap(_.set(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), false))
+          .flatMap(_.set(CharityBeneficiaryCountryOfResidencePage(index), country))
+      case None =>
+        answers.set(CharityBeneficiaryCountryOfResidenceYesNoPage(index), false)
+    }
   }
 
   private def extractAddress(address: Address, index: Int, answers: UserAnswers) = {
-    address match {
-      case uk: UKAddress =>
-        answers.set(CharityBeneficiaryAddressPage(index), uk)
-          .flatMap(_.set(CharityBeneficiaryAddressYesNoPage(index), true))
-          .flatMap(_.set(CharityBeneficiaryAddressUKYesNoPage(index), true))
-      case nonUk: InternationalAddress =>
-        answers.set(CharityBeneficiaryAddressPage(index), nonUk)
-          .flatMap(_.set(CharityBeneficiaryAddressYesNoPage(index), true))
-          .flatMap(_.set(CharityBeneficiaryAddressUKYesNoPage(index), false))
+    if (answers.isTrustTaxable) {
+      address match {
+        case uk: UKAddress =>
+          answers.set(CharityBeneficiaryAddressPage(index), uk)
+            .flatMap(_.set(CharityBeneficiaryAddressYesNoPage(index), true))
+            .flatMap(_.set(CharityBeneficiaryAddressUKYesNoPage(index), true))
+        case nonUk: InternationalAddress =>
+          answers.set(CharityBeneficiaryAddressPage(index), nonUk)
+            .flatMap(_.set(CharityBeneficiaryAddressYesNoPage(index), true))
+            .flatMap(_.set(CharityBeneficiaryAddressUKYesNoPage(index), false))
+      }
+    } else {
+      Try(answers)
     }
   }
 }
