@@ -68,7 +68,7 @@ class TrustStatusController @Inject()(
 
   def sorryThereHasBeenAProblem(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(playbackProblemContactHMRCView(request.userAnswers.identifier)))
+      Future.successful(Ok(playbackProblemContactHMRCView(request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def notFound(): Action[AnyContent] = actions.authWithData.async {

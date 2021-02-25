@@ -22,13 +22,13 @@
     config: FrontendAppConfig
 )
 
-@(utr: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("playbackProblemContactHMRC.title")
 ) {
 
-    @components.heading_with_caption(headingKey = "playbackProblemContactHMRC.heading", caption = "playbackProblemContactHMRC.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "playbackProblemContactHMRC.heading", caption = s"playbackProblemContactHMRC.$identifierType.caption", captionParam = identifier)
 
     <p>@messages("playbackProblemContactHMRC.p1.beforeLink") <a id="help-link" href="@config.helplineUrl" target="_blank">@messages("playbackProblemContactHMRC.p1.link")</a> @messages("playbackProblemContactHMRC.p1.afterLink")</p>
 

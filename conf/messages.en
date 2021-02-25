@@ -797,7 +797,8 @@ playbackFinalDeclarationAnswers.p3 = The trust’s final declaration was sent on
 
 playbackProblemContactHMRC.title = Sorry, there is a problem accessing your trust’s registration
 playbackProblemContactHMRC.heading = Sorry, there is a problem accessing your trust’s registration
-playbackProblemContactHMRC.caption = This trust’s UTR: {0}
+playbackProblemContactHMRC.UTR.caption = This trust’s UTR: {0}
+playbackProblemContactHMRC.URN.caption = This trust’s URN: {0}
 playbackProblemContactHMRC.p1.beforeLink = You need to
 playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
 playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.

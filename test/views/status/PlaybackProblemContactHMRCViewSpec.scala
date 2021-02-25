@@ -21,10 +21,9 @@ import views.html.status.PlaybackProblemContactHMRCView
 
 class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
 
-  "PlaybackProblemContactHMRC view" must {
-
+  "PlaybackProblemContactHMRC view for utr" must {
+    val utr = "0987654321"
     val view = viewFor[PlaybackProblemContactHMRCView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr)(fakeRequest, messages)
