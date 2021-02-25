@@ -38,7 +38,6 @@ class TrustClosedViewSpec extends ViewBehaviours {
       "p2",
       "contact.link",
       "p3",
-      "p4",
       "return.link"
     )
 
@@ -59,7 +58,6 @@ class TrustClosedViewSpec extends ViewBehaviours {
       "p2",
       "contact.link",
       "p3",
-      "p4",
       "return.link"
     )
 

@@ -39,7 +39,6 @@ class TrustStillProcessingViewSpec extends ViewBehaviours {
       "p2",
       "p3",
       "contact.link",
-      "p4",
       "return.link")
 
   }
@@ -59,7 +58,6 @@ class TrustStillProcessingViewSpec extends ViewBehaviours {
       "p2",
       "p3",
       "contact.link",
-      "p4",
       "return.link")
 
   }

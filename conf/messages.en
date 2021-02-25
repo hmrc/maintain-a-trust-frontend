@@ -243,15 +243,14 @@ trustAlreadyClaimed.p1 = Another Government Gateway account is linked to it. Ple
 trustAlreadyClaimed.p2 = If you are unable to do so,
 trustAlreadyClaimed.p2.a = contact the trusts helpline (opens in a new window or tab)
 
-trustClosed.title = Sorry, you cannot access this trust
-trustClosed.heading = Sorry, you cannot access this trust
+trustClosed.title = You cannot access this trust online as it has been closed
+trustClosed.heading = You cannot access this trust online as it has been closed
 trustClosed.UTR.caption = This trust’s UTR: {0}
 trustClosed.URN.caption = This trust’s URN: {0}
-trustClosed.p1 = You cannot make changes to this trust as it has been closed.
-trustClosed.p2 = If this has been done in error or you need help with the service, please
+trustClosed.p1 = If this has been done in error or you need help with the service, please
 trustClosed.contact.link = contact the trusts helpline (opens in a new window or tab)
-trustClosed.p3 = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
-trustClosed.p4 = You can
+trustClosed.p2 = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
+trustClosed.p3 = You can
 trustClosed.return.link = return to register and maintain a trust for a client
 
 trustLocked.title = You cannot access this trust
@@ -285,14 +284,13 @@ trustNotClaimed.bullet.2.p4.a = return to register and maintain a trust for a cl
 trustResidentInTheUK.yes = Based on your answers, the trust is resident in the UK
 trustResidentInTheUK.no = Based on your answers, the trust is not resident in the UK
 
-trustStillProcessing.title = Sorry, you cannot access this trust
-trustStillProcessing.heading = Sorry, you cannot access this trust
+trustStillProcessing.title = We are processing the latest changes made to this trust
+trustStillProcessing.heading = We are processing the latest changes made to this trust
 trustStillProcessing.UTR.caption = This trust’s UTR: {0}
 trustStillProcessing.URN.caption = This trust’s URN: {0}
-trustStillProcessing.p1 = HMRC is still processing changes recently made to this trust.
-trustStillProcessing.p2 = Try again later.
-trustStillProcessing.p3 = If you need help with the service
-trustStillProcessing.p4 = You can
+trustStillProcessing.p1 = Try again later.
+trustStillProcessing.p2 = If you need help with the service
+trustStillProcessing.p3 = You can
 trustStillProcessing.contact.link = contact the trusts helpline (opens in a new window or tab)
 trustStillProcessing.return.link = return to register and maintain a trust for a client
 
@@ -804,14 +802,15 @@ playbackFinalDeclarationAnswers.p3 = The trust’s final declaration was sent on
 
 # Technical difficulties playing back trust
 
-playbackProblemContactHMRC.title = Sorry, there is a problem accessing your trust’s registration
-playbackProblemContactHMRC.heading = Sorry, there is a problem accessing your trust’s registration
+playbackProblemContactHMRC.title = There is a problem accessing your trust’s registration
+playbackProblemContactHMRC.heading = There is a problem accessing your trust’s registration
 playbackProblemContactHMRC.UTR.caption = This trust’s UTR: {0}
 playbackProblemContactHMRC.URN.caption = This trust’s URN: {0}
-playbackProblemContactHMRC.p1.beforeLink = You need to
-playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
-playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
-playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment ready when you contact HMRC.
+playbackProblemContactHMRC.p1 = To access the trust’s registration, we need to confirm the trust’s details with you.
+playbackProblemContactHMRC.p2.beforeLink = To confirm the trust’s details
+playbackProblemContactHMRC.p2.link = contact the trusts helpline (opens in a new window or tab).
+playbackProblemContactHMRC.p2.afterLink = .
+playbackProblemContactHMRC.p3 = If you have submitted a tax return for this trust, have the relevant documents ready as you may need to refer to them.
 
 testOnly.fourOrFiveMLD.four = 4MLD
 testOnly.fourOrFiveMLD.five = 5MLD
