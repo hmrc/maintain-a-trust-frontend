@@ -23,8 +23,10 @@ import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{DisplayTrustCharityType, DisplayTrustIdentificationOrgType}
 import pages.beneficiaries.charity._
 import play.api.Logging
+
 import scala.util.{Failure, Success, Try}
 import mapping.PlaybackImplicits._
+import utils.Constants.GB
 
 class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustCharityType]]] with Logging {
 
@@ -106,10 +108,10 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
 
   private def extractCountryOfResidence(charityBeneficiary: DisplayTrustCharityType, index: Int, answers: UserAnswers) = {
     charityBeneficiary.countryOfResidence match {
-      case Some("GB") =>
+      case Some(GB) =>
         answers.set(CharityBeneficiaryCountryOfResidenceYesNoPage(index), true)
           .flatMap(_.set(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), true))
-          .flatMap(_.set(CharityBeneficiaryCountryOfResidencePage(index), "GB"))
+          .flatMap(_.set(CharityBeneficiaryCountryOfResidencePage(index), GB))
       case Some(country) =>
         answers.set(CharityBeneficiaryCountryOfResidenceYesNoPage(index), true)
           .flatMap(_.set(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), false))

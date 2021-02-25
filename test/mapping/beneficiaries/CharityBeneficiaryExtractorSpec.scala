@@ -23,6 +23,7 @@ import models.http.{AddressType, DisplayTrustCharityType, DisplayTrustIdentifica
 import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.charity._
+import utils.Constants.GB
 
 class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -40,7 +41,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
       case _ => None
     },
     countryOfResidence = index match {
-      case 0 => Some("GB")
+      case 0 => Some(GB)
       case 1 => Some("DE")
       case _ => None
     },
@@ -53,7 +54,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         },
         address = index match {
           case 0 => Some(AddressType(s"line $index", "line2", None, None, None, "DE"))
-          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), "GB"))
+          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
           case _ => None
         }
       )
@@ -131,7 +132,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(CharityBeneficiaryShareOfIncomePage(0)).get mustBe "98"
           extraction.right.value.get(CharityBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-          extraction.right.value.get(CharityBeneficiaryCountryOfResidencePage(0)).get mustBe "GB"
+          extraction.right.value.get(CharityBeneficiaryCountryOfResidencePage(0)).get mustBe GB
           extraction.right.value.get(CharityBeneficiaryUtrPage(0)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiarySafeIdPage(0)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(CharityBeneficiaryAddressYesNoPage(0)).get mustBe true
@@ -213,7 +214,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(CharityBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-          extraction.right.value.get(CharityBeneficiaryCountryOfResidencePage(0)).get mustBe "GB"
+          extraction.right.value.get(CharityBeneficiaryCountryOfResidencePage(0)).get mustBe GB
           extraction.right.value.get(CharityBeneficiaryUtrPage(0)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiarySafeIdPage(0)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiaryAddressYesNoPage(0)) mustNot be(defined)

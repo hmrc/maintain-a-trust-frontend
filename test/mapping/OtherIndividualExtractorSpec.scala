@@ -17,7 +17,6 @@
 package mapping
 
 import java.time.LocalDate
-
 import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{AddressType, DisplayTrustIdentificationType, NaturalPersonType, PassportType}
@@ -25,6 +24,7 @@ import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.individual._
+import utils.Constants.GB
 
 class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -50,7 +50,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
         },
         address = index match {
           case 1 => Some(AddressType(s"line $index", "line2", None, None, None, "DE"))
-          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), "GB"))
+          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
           case _ => None
         }
       )

@@ -23,6 +23,7 @@ import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{AddressType, DisplayTrustCompanyType, DisplayTrustIdentificationOrgType}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.company._
+import utils.Constants.GB
 
 class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -48,7 +49,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         },
         address = index match {
           case 0 => Some(AddressType(s"line $index", "line2", None, None, None, "DE"))
-          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), "GB"))
+          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
           case _ => None
         }
       )
