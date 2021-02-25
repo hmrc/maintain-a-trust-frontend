@@ -31,7 +31,7 @@ class UTRViewSpec extends StringViewBehaviours {
 
   "UTRView view" must {
 
-    val view = viewFor[UTRView](Some(emptyUserAnswers))
+    val view = viewFor[UTRView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, Call("POST", ""))(fakeRequest, messages)

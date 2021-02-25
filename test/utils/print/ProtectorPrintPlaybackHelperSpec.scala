@@ -37,7 +37,7 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
 
     "generate protector sections given individuals" in {
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(ProtectorIndividualOrBusinessPage(0), IndividualOrBusiness.Individual).success.value
         .set(IndividualProtectorNamePage(0), FullName("Joe", None, "Bloggs")).success.value
         .set(IndividualProtectorDateOfBirthYesNoPage(0), false).success.value
@@ -126,7 +126,7 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
 
     "generate protector sections given businesses" in {
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(ProtectorIndividualOrBusinessPage(0), IndividualOrBusiness.Business).success.value
         .set(BusinessProtectorNamePage(0), "Bernardos").success.value
         .set(BusinessProtectorUtrYesNoPage(0), true).success.value
@@ -188,7 +188,7 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
 
     "generate protector sections given an individual and company" in {
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(ProtectorIndividualOrBusinessPage(0), IndividualOrBusiness.Individual).success.value
         .set(IndividualProtectorNamePage(0), FullName("Paul", None, "Chuckle")).success.value
         .set(IndividualProtectorDateOfBirthYesNoPage(0), true).success.value

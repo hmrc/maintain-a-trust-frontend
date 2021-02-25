@@ -29,7 +29,7 @@ class WhatIsNextViewSpec extends ViewBehaviours {
 
   val form = new WhatIsNextFormProvider()()
 
-  val view = viewFor[WhatIsNextView](Some(emptyUserAnswers))
+  val view = viewFor[WhatIsNextView](Some(emptyUserAnswersForUtr))
 
   def applyView(form: Form[_]): HtmlFormat.Appendable =
     view.apply(form)(fakeRequest, messages)

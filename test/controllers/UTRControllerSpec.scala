@@ -49,7 +49,7 @@ class UTRControllerSpec extends SpecBase {
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
         bind[FeatureFlagService].toInstance(mockFeatureFlagService)
       ).build()
 
@@ -71,7 +71,7 @@ class UTRControllerSpec extends SpecBase {
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
         bind[FeatureFlagService].toInstance(mockFeatureFlagService)
       ).build()
 
@@ -124,7 +124,7 @@ class UTRControllerSpec extends SpecBase {
 
       val application =
         applicationBuilder(
-          userAnswers = Some(emptyUserAnswers),
+          userAnswers = Some(emptyUserAnswersForUtr),
           affinityGroup = Organisation,
           enrolments = enrolments
         ).overrides(
@@ -145,7 +145,7 @@ class UTRControllerSpec extends SpecBase {
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
         bind[FeatureFlagService].toInstance(mockFeatureFlagService)
       ).build()
 

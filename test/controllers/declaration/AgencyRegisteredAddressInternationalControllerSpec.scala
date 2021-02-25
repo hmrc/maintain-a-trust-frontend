@@ -33,7 +33,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
   val form = formProvider()
   lazy val agencyRegisteredAddressInternationalRoute = routes.AgencyRegisteredAddressInternationalController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswers
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, MakeChanges).success.value
 
   "AgencyRegisteredAddressInternational Controller" must {

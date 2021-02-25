@@ -30,7 +30,7 @@ class DateLastAssetSharedOutYesNoViewSpec extends YesNoViewBehaviours {
 
   "DateLastAssetSharedOutYesNo view" must {
 
-    val view = viewFor[DateLastAssetSharedOutYesNoView](Some(emptyUserAnswers))
+    val view = viewFor[DateLastAssetSharedOutYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, utr)(fakeRequest, messages)

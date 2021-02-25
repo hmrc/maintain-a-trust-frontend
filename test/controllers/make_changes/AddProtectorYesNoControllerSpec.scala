@@ -44,7 +44,7 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
 
   val utr = "utr"
 
-  val baseAnswers: UserAnswers = emptyUserAnswers
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, MakeChanges).success.value
 
   "AddProtectorYesNo Controller" must {

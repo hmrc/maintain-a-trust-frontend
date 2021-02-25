@@ -30,7 +30,7 @@ class LogoutControllerSpec extends SpecBase {
 
     val mockAuditConnector = mock[AuditConnector]
 
-    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
       .overrides(bind[AuditConnector].toInstance(mockAuditConnector))
       .build()
 

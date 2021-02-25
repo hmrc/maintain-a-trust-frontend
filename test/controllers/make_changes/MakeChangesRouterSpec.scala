@@ -28,7 +28,7 @@ class MakeChangesRouterSpec extends SpecBase {
     "send user to declaration when there are no updates to declare" in {
       val filter = MakeChangesRouter
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
         .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
@@ -41,7 +41,7 @@ class MakeChangesRouterSpec extends SpecBase {
     "allow user to navigate to the task list when selected options are available" in {
       val filter = MakeChangesRouter
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
           .set(UpdateTrusteesYesNoPage, true).success.value
           .set(UpdateBeneficiariesYesNoPage, true).success.value
           .set(UpdateSettlorsYesNoPage, false).success.value
@@ -54,7 +54,7 @@ class MakeChangesRouterSpec extends SpecBase {
     "return an error when there is a problem deciding" in {
       val filter = MakeChangesRouter
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       filter.decide(userAnswers) mustBe UnableToDecide
     }

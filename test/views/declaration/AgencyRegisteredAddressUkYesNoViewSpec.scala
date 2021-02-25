@@ -32,7 +32,7 @@ class AgencyRegisteredAddressUkYesNoViewSpec extends YesNoViewBehaviours {
 
   "AgencyRegisteredAddressUKYesNo view" must {
 
-    val view = viewFor[AgencyRegisteredAddressUkYesNoView](Some(emptyUserAnswers))
+    val view = viewFor[AgencyRegisteredAddressUkYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, onSubmit)(fakeRequest, messages)

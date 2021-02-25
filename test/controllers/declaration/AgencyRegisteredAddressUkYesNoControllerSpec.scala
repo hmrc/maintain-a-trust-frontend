@@ -34,7 +34,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
   lazy val agencyRegisteredAddressUkYesNoRoute = routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
   lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit()
 
-  val baseAnswers: UserAnswers = emptyUserAnswers
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, MakeChanges).success.value
 
   "AgencyRegisteredAddressUkYesNo Controller" must {

@@ -42,7 +42,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
     val group = Organisation
 
-    val userAnswers = emptyUserAnswers
+    val userAnswers = emptyUserAnswersForUtr
 
     val view = viewFor[VariationProgressView](Some(userAnswers))
 
@@ -81,7 +81,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
         val group = Organisation
 
-        val userAnswers = emptyUserAnswers
+        val userAnswers = emptyUserAnswersForUtr
 
         val view = viewFor[VariationProgressView](Some(userAnswers))
 

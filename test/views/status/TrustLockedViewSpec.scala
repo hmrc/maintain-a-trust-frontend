@@ -26,7 +26,7 @@ class TrustLockedViewSpec extends ViewBehaviours {
 
   "TrustLocked view" must {
 
-    val view = viewFor[TrustLockedView](Some(emptyUserAnswers))
+    val view = viewFor[TrustLockedView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 

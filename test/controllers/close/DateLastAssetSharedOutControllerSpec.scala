@@ -49,7 +49,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val dateLastAssetSharedOutRoute: String = routes.DateLastAssetSharedOutController.onPageLoad().url
 
-  override val emptyUserAnswers = TestUserAnswers.emptyUserAnswers
+  override val emptyUserAnswersForUtr = TestUserAnswers.emptyUserAnswersForUtr
 
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, dateLastAssetSharedOutRoute)
@@ -68,7 +68,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
       when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(
           bind[TrustConnector].toInstance(fakeConnector)
         )
@@ -90,7 +90,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
       when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
         .set(DateLastAssetSharedOutPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
@@ -115,7 +115,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
       when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
           .overrides(
             bind[TrustConnector].toInstance(fakeConnector)
           ).build()
@@ -133,7 +133,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
       when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(
           bind[TrustConnector].toInstance(fakeConnector)
         ).build()

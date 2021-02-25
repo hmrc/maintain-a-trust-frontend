@@ -45,7 +45,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
       val charityBen1Name = "Red Cross Ltd."
       val charityBen2Name = "Bernardos"
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(CharityBeneficiaryNamePage(0), charityBen1Name).success.value
         .set(CharityBeneficiaryDiscretionYesNoPage(0), false).success.value
         .set(CharityBeneficiaryShareOfIncomePage(0), "98").success.value
@@ -100,7 +100,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
 
     "generate individual beneficiaries sections" in {
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(IndividualBeneficiaryRoleInCompanyPage(0), RoleInCompany.Director).success.value
         .set(IndividualBeneficiaryNamePage(0), FullName("Michael", None, "Finnegan")).success.value
         .set(IndividualBeneficiaryDateOfBirthYesNoPage(0), true).success.value
@@ -192,7 +192,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
 
     "generate individual beneficiaries sections with bad nino" in {
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(IndividualBeneficiaryRoleInCompanyPage(0), RoleInCompany.Director).success.value
         .set(IndividualBeneficiaryNamePage(0), FullName("Michael", None, "Finnegan")).success.value
         .set(IndividualBeneficiaryDateOfBirthYesNoPage(0), true).success.value
@@ -287,7 +287,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
       val companyBen1Name = "Amazon"
       val companyBen2Name = "Apple"
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(CompanyBeneficiaryNamePage(0), companyBen1Name).success.value
         .set(CompanyBeneficiaryDiscretionYesNoPage(0), false).success.value
         .set(CompanyBeneficiaryShareOfIncomePage(0), "98").success.value
@@ -345,7 +345,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
       val trustBen1Name = "Trust of Adam"
       val trustBen2Name = "Grandchildren of Adam"
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(TrustBeneficiaryNamePage(0), trustBen1Name).success.value
         .set(TrustBeneficiaryDiscretionYesNoPage(0), false).success.value
         .set(TrustBeneficiaryShareOfIncomePage(0), "98").success.value
@@ -403,7 +403,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
       val largeBen1Name = "Amazon"
       val largeBen2Name = "Apple"
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(LargeBeneficiaryNamePage(0), largeBen1Name).success.value
         .set(LargeBeneficiaryDiscretionYesNoPage(0), false).success.value
         .set(LargeBeneficiaryShareOfIncomePage(0), "98").success.value
@@ -466,7 +466,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
       val otherBen1Name = "Dog"
       val otherBen2Name = "Cat"
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(OtherBeneficiaryDescriptionPage(0), otherBen1Name).success.value
         .set(OtherBeneficiaryDiscretionYesNoPage(0), false).success.value
         .set(OtherBeneficiaryShareOfIncomePage(0), "98").success.value
@@ -522,7 +522,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
       val classBenDescription1 = "Grandchildren"
       val classBenDescription2 = "Spouses"
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(ClassOfBeneficiaryDescriptionPage(0), classBenDescription1).success.value
         .set(ClassOfBeneficiaryDiscretionYesNoPage(0), false).success.value
         .set(ClassOfBeneficiaryShareOfIncomePage(0), "55").success.value

@@ -17,6 +17,7 @@
 package controllers
 
 import base.SpecBase
+import models.UTR
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.InformationMaintainingThisTrustView
@@ -27,7 +28,7 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -42,7 +43,7 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr)(request, messages).toString
+        view(utr, UTR)(request, messages).toString
 
       application.stop()
     }

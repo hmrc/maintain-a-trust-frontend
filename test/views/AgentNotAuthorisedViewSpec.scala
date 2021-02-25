@@ -18,36 +18,39 @@ package views
 
 import models.{URN, UTR}
 import views.behaviours.ViewBehaviours
-import views.html.MaintainThisTrustView
+import views.html.AgentNotAuthorisedView
 
-class MaintainThisTrustViewSpec extends ViewBehaviours {
+class AgentNotAuthorisedViewSpec extends ViewBehaviours {
 
 
-  "TrustAlreadyClaimed view for UTR" must {
+
+  "AgentNotAuthorised view for UTR" must {
     val utr = "0987654321"
-    val view = viewFor[MaintainThisTrustView](Some(emptyUserAnswersForUtr))
+    val view = viewFor[AgentNotAuthorisedView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(utr, UTR, "test", "")(fakeRequest, messages)
+    val applyView = view.apply("0987654321", UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
-      "maintainThisTrust",
+      "agentNotAuthorised",
       Some("UTR"),
       utr,
-      "UTR.p1.a", "p1.b", "p3", "p4", "p4.a")
+      "p1", "p2", "p3", "p4", "p5")
 
+    behave like pageWithBackLink(applyView)
   }
 
-  "TrustAlreadyClaimed view for URN" must {
+  "AgentNotAuthorised view for URN" must {
     val urn = "XATRUST12345678"
-    val view = viewFor[MaintainThisTrustView](Some(emptyUserAnswersForUtr))
+    val view = viewFor[AgentNotAuthorisedView](Some(emptyUserAnswersForUrn))
 
-    val applyView = view.apply(urn, URN, "", "")(fakeRequest, messages)
+    val applyView = view.apply("XATRUST12345678", URN)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
-      "maintainThisTrust",
+      "agentNotAuthorised",
       Some("URN"),
       urn,
-      "URN.p1.a", "p1.b", "p3", "p4", "p4.a")
+      "p1", "p2", "p3", "p4", "p5")
 
+    behave like pageWithBackLink(applyView)
   }
 }

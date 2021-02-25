@@ -34,7 +34,7 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
 
   "DeclarationView view for agent" must {
 
-    val view = viewFor[AgentDeclarationView](Some(emptyUserAnswers))
+    val view = viewFor[AgentDeclarationView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, closingTrust = false)(fakeRequest, messages)

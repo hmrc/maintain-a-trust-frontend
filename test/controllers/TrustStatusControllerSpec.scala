@@ -47,7 +47,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     def utr = "1234567890"
 
-    def userAnswers = emptyUserAnswers
+    def userAnswers = emptyUserAnswersForUtr
 
     val fakeTrustConnector: TrustConnector = mock[TrustConnector]
     val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
@@ -356,7 +356,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val fakeTrustConnector: TrustConnector = mock[TrustConnector]
               val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
 
-              val userAnswers = emptyUserAnswers
+              val userAnswers = emptyUserAnswersForUtr
 
               def application: Application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(
                 bind[TrustConnector].to(fakeTrustConnector),
@@ -399,7 +399,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
             lazy val request = FakeRequest(GET, routes.TrustStatusController.status().url)
 
-            def userAnswers = emptyUserAnswers
+            def userAnswers = emptyUserAnswersForUtr
 
             val fakeTrustConnector: TrustConnector = mock[TrustConnector]
             val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]

@@ -32,7 +32,7 @@ class DateLastAssetSharedOutViewSpec extends QuestionViewBehaviours[LocalDate] {
 
   "DateLastAssetSharedOut view" must {
 
-    val view = viewFor[DateLastAssetSharedOutView](Some(emptyUserAnswers))
+    val view = viewFor[DateLastAssetSharedOutView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form)(fakeRequest, messages)

@@ -30,7 +30,7 @@ class AgencyRegisteredAddressInternationalViewSpec extends InternationalAddressV
 
   "AgencyRegisteredAddressInternationalView" must {
 
-    val view = viewFor[AgencyRegisteredAddressInternationalView](Some(emptyUserAnswers))
+    val view = viewFor[AgencyRegisteredAddressInternationalView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, Seq())(fakeRequest, messages)

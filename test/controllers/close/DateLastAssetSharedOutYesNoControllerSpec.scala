@@ -38,13 +38,13 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
   val utr: String = "1234567890"
   lazy val dateLastAssetSharedOutYesNoRoute: String = routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
 
-  override val emptyUserAnswers: UserAnswers = super.emptyUserAnswers
+  override val emptyUserAnswersForUtr: UserAnswers = super.emptyUserAnswersForUtr
 
   "DateLastAssetSharedOutYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request = FakeRequest(GET, dateLastAssetSharedOutYesNoRoute)
 
@@ -62,7 +62,7 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(DateLastAssetSharedOutYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswersForUtr.set(DateLastAssetSharedOutYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -86,7 +86,7 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
 
       when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request =
         FakeRequest(POST, dateLastAssetSharedOutYesNoRoute)
@@ -107,7 +107,7 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
 
       when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request =
         FakeRequest(POST, dateLastAssetSharedOutYesNoRoute)
@@ -124,7 +124,7 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request =
         FakeRequest(POST, dateLastAssetSharedOutYesNoRoute)

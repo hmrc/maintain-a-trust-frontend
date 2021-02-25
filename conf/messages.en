@@ -8,7 +8,8 @@ agencyRegisteredAddressInternational.heading = What is your agency’s registere
 
 agentCannotAccessTrustYet.title = You cannot access this trust yet
 agentCannotAccessTrustYet.heading = You cannot access this trust yet
-agentCannotAccessTrustYet.caption = This trust’s UTR: {0}
+agentCannotAccessTrustYet.UTR.caption = This trust’s UTR: {0}
+agentCannotAccessTrustYet.URN.caption = This trust’s URN: {0}
 agentCannotAccessTrustYet.p1 = You have been authorised by your client and do not need to do anything else at the moment.
 agentCannotAccessTrustYet.p2 = You will be able to access this trust by 2020.
 agentCannotAccessTrustYet.heading.2 = What you need to know about maintaining this trust
@@ -20,9 +21,10 @@ agentCannotAccessTrustYet.bullet.4 = If you need to close the trust, you will ne
 agentCannotAccessTrustYet.heading.3 = Changes you cannot tell us about on this service
 agentCannotAccessTrustYet.p4 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
 
-agentNotAuthorised.title = Sorry, you cannot access this trust
-agentNotAuthorised.heading = Sorry, you cannot access this trust
-agentNotAuthorised.caption = This trust’s UTR: {0}
+agentNotAuthorised.title = You have not been authorised by a trustee to access this trust
+agentNotAuthorised.heading = You have not been authorised by a trustee to access this trust
+agentNotAuthorised.UTR.caption = This trust’s UTR: {0}
+agentNotAuthorised.URN.caption = This trust’s URN: {0}
 agentNotAuthorised.p1 = The trustee who claimed the trust needs to give you authorisation.
 agentNotAuthorised.p2 = You can create an authorisation link to send to the trustee through
 agentNotAuthorised.p2.a = Agent Services.
@@ -137,7 +139,8 @@ featureNotAvailable.heading = This feature is currently not available
 
 informationMaintainingThisTrust.title = Information about maintaining this trust
 informationMaintainingThisTrust.heading = Information about maintaining this trust
-informationMaintainingThisTrust.caption = This trust’s UTR: {0}
+informationMaintainingThisTrust.UTR.caption = This trust’s UTR: {0}
+informationMaintainingThisTrust.URN.caption = This trust’s URN: {0}
 informationMaintainingThisTrust.warning = Some questions may have changed since the trust was registered. You have a legal responsibility to make sure the details held on the register are accurate. You only need to declare the trust is up to date if there is a tax liability.
 informationMaintainingThisTrust.viewLastDeclaration = View the last declaration
 informationMaintainingThisTrust.printsave.link = You can view the trust’s last declaration before you continue
@@ -260,7 +263,8 @@ trustLocked.URN.caption = This trust’s URN: {0}
 
 trustNotClaimed.title = Your client must claim the trust and authorise your access
 trustNotClaimed.heading = Your client must claim the trust and authorise your access
-trustNotClaimed.caption = This trust’s UTR: {0}
+trustNotClaimed.UTR.caption = This trust’s UTR: {0}
+trustNotClaimed.URN.caption = This trust’s URN: {0}
 trustNotClaimed.p1 = One of the trustees must complete these 2 steps so you can maintain the trust online on their behalf.
 trustNotClaimed.bullet.1.title = Trustee must claim the trust
 trustNotClaimed.bullet.1.p1 = A trustee needs to log onto the Trust Registration Service using their Government Gateway account. The account they use must be an organisation account, not an individual account.

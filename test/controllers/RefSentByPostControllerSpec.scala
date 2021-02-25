@@ -29,7 +29,7 @@ class RefSentByPostControllerSpec extends SpecBase {
     "return OK and the correct view for a GET" when {
 
       "an agent user" in {
-        val userAnswers = emptyUserAnswers
+        val userAnswers = emptyUserAnswersForUtr
 
         val application = applicationBuilder(
           affinityGroup = AffinityGroup.Agent,
@@ -51,7 +51,7 @@ class RefSentByPostControllerSpec extends SpecBase {
       }
 
       "an individual user" in {
-        val userAnswers = emptyUserAnswers
+        val userAnswers = emptyUserAnswersForUtr
 
         val application = applicationBuilder(
           affinityGroup = AffinityGroup.Organisation,

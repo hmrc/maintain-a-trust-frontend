@@ -33,7 +33,8 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
   final val ENGLISH = "en"
   final val WELSH = "cy"
 
-  def emptyUserAnswers = TestUserAnswers.emptyUserAnswers
+  def emptyUserAnswersForUtr = TestUserAnswers.emptyUserAnswersForUtr
+  def emptyUserAnswersForUrn = TestUserAnswers.emptyUserAnswersForUrn
 
   val bodyParsers = injector.instanceOf[BodyParsers.Default]
 
