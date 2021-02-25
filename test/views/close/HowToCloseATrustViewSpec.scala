@@ -25,7 +25,7 @@ class HowToCloseATrustViewSpec extends ViewBehaviours {
 
   "HowToCloseATrust view" must {
 
-    val view = viewFor[HowToCloseATrustView](Some(emptyUserAnswers))
+    val view = viewFor[HowToCloseATrustView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr)(fakeRequest, messages)
 

@@ -32,7 +32,7 @@ class ViewLastDeclarationYesNoViewSpec extends YesNoViewBehaviours {
 
   "ViewLastDeclarationYesNo view" must {
 
-    val view = viewFor[ViewLastDeclarationYesNoView](Some(emptyUserAnswers))
+    val view = viewFor[ViewLastDeclarationYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, utr)(fakeRequest, messages)

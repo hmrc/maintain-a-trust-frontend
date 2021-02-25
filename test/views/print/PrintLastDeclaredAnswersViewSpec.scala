@@ -25,7 +25,7 @@ class PrintLastDeclaredAnswersViewSpec extends ViewBehaviours {
 
   "PrintLastDeclaredAnswersView view" must {
 
-    val view = viewFor[PrintLastDeclaredAnswersView](Some(emptyUserAnswers))
+    val view = viewFor[PrintLastDeclaredAnswersView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(Nil, Nil)(fakeRequest, messages)
 

@@ -26,7 +26,7 @@ class TrustClosedViewSpec extends ViewBehaviours {
 
   "TrustClosed view" must {
 
-    val view = viewFor[TrustClosedView](Some(emptyUserAnswers))
+    val view = viewFor[TrustClosedView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(AffinityGroup.Agent, utr)(fakeRequest, messages)
 

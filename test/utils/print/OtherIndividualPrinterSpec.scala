@@ -34,7 +34,7 @@ class OtherIndividualPrinterSpec extends SpecBase {
 
     "generate other individuals sections given individuals" in {
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(OtherIndividualNamePage(0), FullName("Joe", None, "Bloggs")).success.value
         .set(OtherIndividualDateOfBirthYesNoPage(0), false).success.value
         .set(OtherIndividualNationalInsuranceYesNoPage(0), true).success.value

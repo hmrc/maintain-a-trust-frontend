@@ -34,7 +34,7 @@ class IndividualDeclarationViewSpec extends QuestionViewBehaviours[IndividualDec
 
   "DeclarationView view for individual or organisation" must {
 
-    val view = viewFor[IndividualDeclarationView](Some(emptyUserAnswers))
+    val view = viewFor[IndividualDeclarationView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, closingTrust = false)(fakeRequest, messages)

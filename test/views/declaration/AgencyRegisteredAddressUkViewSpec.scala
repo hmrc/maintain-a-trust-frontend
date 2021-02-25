@@ -30,7 +30,7 @@ class AgencyRegisteredAddressUkViewSpec extends UkAddressViewBehaviours {
 
   "AgencyRegisteredAddressUkView" must {
 
-    val view = viewFor[AgencyRegisteredAddressUkView](Some(emptyUserAnswers))
+    val view = viewFor[AgencyRegisteredAddressUkView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form)(fakeRequest, messages)

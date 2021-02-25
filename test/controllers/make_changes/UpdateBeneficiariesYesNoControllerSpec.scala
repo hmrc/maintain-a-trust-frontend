@@ -34,7 +34,7 @@ class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
   val form = formProvider.withPrefix(prefix)
   lazy val updateBeneficiariesYesNoRoute = routes.UpdateBeneficiariesYesNoController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswers
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, MakeChanges).success.value
 
   "UpdateBeneficiariesYesNo Controller" must {

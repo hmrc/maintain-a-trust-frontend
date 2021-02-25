@@ -41,7 +41,7 @@ class AgentDeclarationControllerSpec extends SpecBase {
   lazy val onSubmit: Call = routes.AgentDeclarationController.onSubmit()
 
   val whatIsNext: WhatIsNext = MakeChanges
-  val baseAnswers: UserAnswers = emptyUserAnswers
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, whatIsNext).success.value
 
   "Agent Declaration Controller" must {

@@ -29,7 +29,7 @@ class WhichIdentifierViewSpec extends ViewBehaviours {
 
   val form = new WhichIdentifierFormProvider()()
 
-  val view = viewFor[WhichIdentifierView](Some(emptyUserAnswers))
+  val view = viewFor[WhichIdentifierView](Some(emptyUserAnswersForUtr))
 
   def applyView(form: Form[_]): HtmlFormat.Appendable =
     view.apply(form)(fakeRequest, messages)

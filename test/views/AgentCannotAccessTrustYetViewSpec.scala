@@ -18,40 +18,38 @@ package views
 
 import models.{URN, UTR}
 import views.behaviours.ViewBehaviours
-import views.html.TrustNotClaimedView
+import views.html.AgentCannotAccessTrustYetView
 
-class TrustNotClaimedViewSpec extends ViewBehaviours {
+class AgentCannotAccessTrustYetViewSpec extends ViewBehaviours {
 
 
 
-  "TrustNotClaimed view for UTR" must {
+  "AgentCannotAccessTrustYet view for UTR" must {
     val utr = "0987654321"
-    val view = viewFor[TrustNotClaimedView](Some(emptyUserAnswersForUtr))
+    val view = viewFor[AgentCannotAccessTrustYetView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply("0987654321", UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
-      "trustNotClaimed",
+      "agentCannotAccessTrustYet",
       "utr",
       utr,
-    "bullet.1.title", "bullet.1.p1", "bullet.1.p2", "bullet.1.p3", "bullet.1.p4",
-    "bullet.2.title", "bullet.2.p1", "bullet.2.p2", "bullet.2.p3", "bullet.2.p4")
+    "p1", "p2", "heading.2", "p3", "bullet.1", "bullet.2", "bullet.3", "bullet.4", "heading.3", "p4")
 
     behave like pageWithBackLink(applyView)
   }
 
-  "TrustNotClaimed view for URN" must {
+  "AgentCannotAccessTrustYet view for URN" must {
     val urn = "XATRUST12345678"
-    val view = viewFor[TrustNotClaimedView](Some(emptyUserAnswersForUrn))
+    val view = viewFor[AgentCannotAccessTrustYetView](Some(emptyUserAnswersForUrn))
 
     val applyView = view.apply("XATRUST12345678", URN)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
-      "trustNotClaimed",
+      "agentCannotAccessTrustYet",
       "urn",
       urn,
-      "bullet.1.title", "bullet.1.p1", "bullet.1.p2", "bullet.1.p3", "bullet.1.p4",
-      "bullet.2.title", "bullet.2.p1", "bullet.2.p2", "bullet.2.p3", "bullet.2.p4")
+      "p1", "p2", "heading.2", "p3", "bullet.1", "bullet.2", "bullet.3", "bullet.4", "heading.3", "p4")
 
     behave like pageWithBackLink(applyView)
   }

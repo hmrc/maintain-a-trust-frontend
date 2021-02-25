@@ -39,13 +39,13 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
 
   lazy val viewLastDeclarationYesNoRoute: String = routes.ViewLastDeclarationYesNoController.onPageLoad().url
 
-  override val emptyUserAnswers: UserAnswers = super.emptyUserAnswers
+  override val emptyUserAnswersForUtr: UserAnswers = super.emptyUserAnswersForUtr
 
   "ViewLastDeclarationYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request = FakeRequest(GET, viewLastDeclarationYesNoRoute)
 
@@ -63,7 +63,7 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers.set(ViewLastDeclarationYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswersForUtr.set(ViewLastDeclarationYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -87,7 +87,7 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
 
       when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request =
         FakeRequest(POST, viewLastDeclarationYesNoRoute)
@@ -108,7 +108,7 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
 
       when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request =
         FakeRequest(POST, viewLastDeclarationYesNoRoute)
@@ -125,7 +125,7 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request =
         FakeRequest(POST, viewLastDeclarationYesNoRoute)

@@ -42,7 +42,7 @@ class WhichIdentifierControllerSpec extends SpecBase with MockitoSugar {
 
     "return OK and the correct view for a GET" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -61,7 +61,7 @@ class WhichIdentifierControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "redirect to UTR page when user selects 'UTR'" in {
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -79,7 +79,7 @@ class WhichIdentifierControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "redirect to URN page when user selects 'URN'" in {
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -97,7 +97,7 @@ class WhichIdentifierControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "redirect to Ref Sent By Post page when user selects 'none of the above'" in {
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -116,7 +116,7 @@ class WhichIdentifierControllerSpec extends SpecBase with MockitoSugar {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request =
         FakeRequest(POST, onSubmit.url)

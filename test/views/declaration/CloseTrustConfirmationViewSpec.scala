@@ -54,7 +54,7 @@ class CloseTrustConfirmationViewSpec extends ViewBehaviours {
   }
 
   "Confirmation view for an agent" must {
-    val view = viewFor[CloseTrustConfirmationView](Some(emptyUserAnswers))
+    val view = viewFor[CloseTrustConfirmationView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(
       fakeTvn = fakeTvn,
@@ -68,7 +68,7 @@ class CloseTrustConfirmationViewSpec extends ViewBehaviours {
   }
 
   "Confirmation view for an organisation" must {
-    val view = viewFor[CloseTrustConfirmationView](Some(emptyUserAnswers))
+    val view = viewFor[CloseTrustConfirmationView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(
       fakeTvn = fakeTvn,

@@ -32,7 +32,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
   val form = formProvider()
   lazy val agencyRegisteredAddressUkRoute = routes.AgencyRegisteredAddressUkController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswers
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, MakeChanges).success.value
 
   "AgencyRegisteredAddressUk Controller" must {

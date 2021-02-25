@@ -25,7 +25,7 @@ class IVDownViewSpec extends ViewBehaviours {
 
   "IVDown view" must {
 
-    val view = viewFor[IVDownView](Some(emptyUserAnswers))
+    val view = viewFor[IVDownView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr)(fakeRequest, messages)
 

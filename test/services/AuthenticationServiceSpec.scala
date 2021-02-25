@@ -47,7 +47,7 @@ class AuthenticationServiceSpec extends SpecBase with ScalaFutures with EitherVa
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
   private implicit val dataRequest: DataRequest[AnyContent]
-  = DataRequest[AnyContent](fakeRequest, emptyUserAnswers, AgentUser("internalId", enrolments, "SomeVal"))
+  = DataRequest[AnyContent](fakeRequest, emptyUserAnswersForUtr, AgentUser("internalId", enrolments, "SomeVal"))
 
   type RetrievalType = Option[String] ~ Option[AffinityGroup] ~ Enrolments
 

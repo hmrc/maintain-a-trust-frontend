@@ -31,7 +31,7 @@ class CloseDatePrintPlaybackHelperSpec extends SpecBase {
 
       val helper = injector.instanceOf[PrintPlaybackHelper]
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
 
       val result = helper.closeDate(answers)

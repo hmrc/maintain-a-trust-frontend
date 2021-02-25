@@ -25,7 +25,7 @@ class MaintainThisTrustViewSpec extends ViewBehaviours {
 
   "TrustAlreadyClaimed view for UTR" must {
     val utr = "0987654321"
-    val view = viewFor[MaintainThisTrustView](Some(emptyUserAnswers))
+    val view = viewFor[MaintainThisTrustView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr, UTR, "test", "")(fakeRequest, messages)
 
@@ -39,7 +39,7 @@ class MaintainThisTrustViewSpec extends ViewBehaviours {
 
   "TrustAlreadyClaimed view for URN" must {
     val urn = "XATRUST12345678"
-    val view = viewFor[MaintainThisTrustView](Some(emptyUserAnswers))
+    val view = viewFor[MaintainThisTrustView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(urn, URN, "", "")(fakeRequest, messages)
 

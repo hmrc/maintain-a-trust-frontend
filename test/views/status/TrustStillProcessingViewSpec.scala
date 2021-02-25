@@ -26,7 +26,7 @@ class TrustStillProcessingViewSpec extends ViewBehaviours {
 
   "TrustStillProcessing view" must {
 
-    val view = viewFor[TrustStillProcessingView](Some(emptyUserAnswers))
+    val view = viewFor[TrustStillProcessingView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(AffinityGroup.Agent, utr)(fakeRequest, messages)
 

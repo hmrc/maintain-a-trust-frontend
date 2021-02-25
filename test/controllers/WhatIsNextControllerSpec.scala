@@ -45,7 +45,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
     "return OK and the correct view for a GET" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -65,7 +65,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
         .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -100,7 +100,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "redirect to declaration when user selects 'Declare no changes'" in {
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -119,7 +119,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to do you need to update details for the trustees when user selects 'Make changes'" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -139,7 +139,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
       when(mockAppConfig.closeATrustEnabled) thenReturn true
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
@@ -161,7 +161,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
       when(mockAppConfig.closeATrustEnabled) thenReturn false
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
@@ -181,7 +181,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

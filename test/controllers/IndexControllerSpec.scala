@@ -43,7 +43,7 @@ class IndexControllerSpec extends SpecBase {
 
         when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
           bind[FeatureFlagService].toInstance(mockFeatureFlagService)
         ).build()
 
@@ -63,7 +63,7 @@ class IndexControllerSpec extends SpecBase {
         when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
 
         val application = applicationBuilder(
-          userAnswers = Some(emptyUserAnswers),
+          userAnswers = Some(emptyUserAnswersForUtr),
           affinityGroup = AffinityGroup.Organisation,
           enrolments = Enrolments(Set(
             Enrolment(
@@ -93,7 +93,7 @@ class IndexControllerSpec extends SpecBase {
 
         when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
           bind[FeatureFlagService].toInstance(mockFeatureFlagService)
         ).build()
 
@@ -113,7 +113,7 @@ class IndexControllerSpec extends SpecBase {
         when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
         val application = applicationBuilder(
-          userAnswers = Some(emptyUserAnswers),
+          userAnswers = Some(emptyUserAnswersForUtr),
           affinityGroup = AffinityGroup.Organisation,
           enrolments = Enrolments(Set(
             Enrolment(
@@ -142,7 +142,7 @@ class IndexControllerSpec extends SpecBase {
         when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
         val application = applicationBuilder(
-          userAnswers = Some(emptyUserAnswers),
+          userAnswers = Some(emptyUserAnswersForUtr),
           affinityGroup = AffinityGroup.Organisation,
           enrolments = Enrolments(Set(
             Enrolment(

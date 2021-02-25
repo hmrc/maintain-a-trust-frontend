@@ -84,7 +84,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         val playbackRepository = mock[PlaybackRepository]
 
         when(mockSessionRepository.get("id")).thenReturn(Future.successful(Some(IdentifierSession("id", "utr"))))
-        when(playbackRepository.get("id", "utr")) thenReturn Future(Some(TestUserAnswers.emptyUserAnswers))
+        when(playbackRepository.get("id", "utr")) thenReturn Future(Some(TestUserAnswers.emptyUserAnswersForUtr))
 
         val action = new Harness(playbackRepository)
 
