@@ -287,7 +287,8 @@ trustResidentInTheUK.no = Based on your answers, the trust is not resident in th
 
 trustStillProcessing.title = Sorry, you cannot access this trust
 trustStillProcessing.heading = Sorry, you cannot access this trust
-trustStillProcessing.caption = This trust’s UTR: {0}
+trustStillProcessing.UTR.caption = This trust’s UTR: {0}
+trustStillProcessing.URN.caption = This trust’s URN: {0}
 trustStillProcessing.p1 = HMRC is still processing changes recently made to this trust.
 trustStillProcessing.p2 = Try again later.
 trustStillProcessing.p3 = If you need help with the service

@@ -101,7 +101,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(AffinityGroup.Individual, utr)(request, messages).toString
+        view(AffinityGroup.Individual, utr, UTR)(request, messages).toString
 
       application.stop()
     }

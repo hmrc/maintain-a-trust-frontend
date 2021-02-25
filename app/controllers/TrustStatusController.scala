@@ -63,7 +63,7 @@ class TrustStatusController @Inject()(
 
   def processing(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(stillProcessingView(request.user.affinityGroup, request.userAnswers.identifier)))
+      Future.successful(Ok(stillProcessingView(request.user.affinityGroup, request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def sorryThereHasBeenAProblem(): Action[AnyContent] = actions.authWithData.async {

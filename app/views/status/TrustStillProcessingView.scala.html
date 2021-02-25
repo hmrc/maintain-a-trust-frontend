@@ -24,13 +24,13 @@
     appConfig: FrontendAppConfig
 )
 
-@(affinityGroup: AffinityGroup, utr: String)(implicit request: Request[_], messages: Messages)
+@(affinityGroup: AffinityGroup, identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("trustStillProcessing.title")
 ) {
 
-    @components.heading_with_caption(headingKey = "trustStillProcessing.heading", caption = "trustStillProcessing.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "trustStillProcessing.heading", caption = s"trustStillProcessing.$identifierType.caption", captionParam = identifier)
 
     <p>@messages("trustStillProcessing.p1")</p>
 

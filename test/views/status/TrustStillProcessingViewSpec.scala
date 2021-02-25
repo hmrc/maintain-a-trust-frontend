@@ -16,24 +16,24 @@
 
 package views.status
 
+import models.{URN, UTR}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
 import views.html.status.TrustStillProcessingView
 
 class TrustStillProcessingViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
 
-  "TrustStillProcessing view" must {
-
+  "TrustStillProcessing view for utr" must {
+    val utr = "0987654321"
     val view = viewFor[TrustStillProcessingView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(AffinityGroup.Agent, utr)(fakeRequest, messages)
+    val applyView = view.apply(AffinityGroup.Agent, utr, UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(
       applyView,
       "trustStillProcessing",
-      None,
+      Some("UTR"),
       utr,
       "p1",
       "p2",
@@ -44,4 +44,23 @@ class TrustStillProcessingViewSpec extends ViewBehaviours {
 
   }
 
+  "TrustStillProcessing view for urn" must {
+    val urn = "XATRUST12345678"
+    val view = viewFor[TrustStillProcessingView](Some(emptyUserAnswersForUtr))
+
+    val applyView = view.apply(AffinityGroup.Agent, urn, URN)(fakeRequest, messages)
+
+    behave like normalPageTitleWithCaption(
+      applyView,
+      "trustStillProcessing",
+      Some("URN"),
+      urn,
+      "p1",
+      "p2",
+      "p3",
+      "contact.link",
+      "p4",
+      "return.link")
+
+  }
 }
