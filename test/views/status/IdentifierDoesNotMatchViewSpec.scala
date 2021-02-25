@@ -16,7 +16,7 @@
 
 package views.status
 
-import models.UTR
+import models.{URN, UTR}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
 import views.html.status.IdentifierDoesNotMatchView
@@ -31,7 +31,7 @@ class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
 
     behave like normalPage(
       applyView,
-      "identifierDoesNotMatch",
+      "identifierDoesNotMatch.UTR",
       "p1",
       "p2",
       "p3",
@@ -40,4 +40,20 @@ class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
       "return.link")
   }
 
+  "IdentifierDoesNotMatch view for urn" must {
+
+    val view = viewFor[IdentifierDoesNotMatchView](Some(emptyUserAnswersForUrn))
+
+    val applyView = view.apply(AffinityGroup.Agent, URN)(fakeRequest, messages)
+
+    behave like normalPage(
+      applyView,
+      "identifierDoesNotMatch.URN",
+      "p1",
+      "p2",
+      "p3",
+      "contact.link",
+      "p4",
+      "return.link")
+  }
 }

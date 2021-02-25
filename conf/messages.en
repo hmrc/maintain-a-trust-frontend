@@ -299,14 +299,20 @@ trustStillProcessing.return.link = return to register and maintain a trust for a
 identifierDoesNotMatch.UTR.title = The Unique Taxpayer Reference (UTR) you gave for the trust does not match our records
 identifierDoesNotMatch.UTR.heading = The Unique Taxpayer Reference (UTR) you gave for the trust does not match our records
 identifierDoesNotMatch.UTR.p1 = Check you have entered the trust’s UTR correctly.
+identifierDoesNotMatch.UTR.p2 = If you do not have a UTR for the trust you will need to register the trust first.
+identifierDoesNotMatch.UTR.p3 = If you need help with this service
+identifierDoesNotMatch.UTR.contact.link = contact the trusts helpline (opens in a new window or tab)
+identifierDoesNotMatch.UTR.p4 = You can
+identifierDoesNotMatch.UTR.return.link = return to register and maintain a trust for a client
+
 identifierDoesNotMatch.URN.title = The Unique Reference Number (URN) you gave for the trust does not match our records
 identifierDoesNotMatch.URN.heading = The Unique Reference Number (URN) you gave for the trust does not match our records
 identifierDoesNotMatch.URN.p1 = Check you have entered the trust’s URN correctly.
-identifierDoesNotMatch.p2 = If you do not have a UTR for the trust you will need to register the trust first.
-identifierDoesNotMatch.p3 = If you need help with this service
-identifierDoesNotMatch.contact.link = contact the trusts helpline (opens in a new window or tab)
-identifierDoesNotMatch.p4 = You can
-identifierDoesNotMatch.return.link = return to register and maintain a trust for a client
+identifierDoesNotMatch.URN.p2 = If you do not have a URN for the trust you will need to register the trust first.
+identifierDoesNotMatch.URN.p3 = If you need help with this service
+identifierDoesNotMatch.URN.contact.link = contact the trusts helpline (opens in a new window or tab)
+identifierDoesNotMatch.URN.p4 = You can
+identifierDoesNotMatch.URN.return.link = return to register and maintain a trust for a client
 
 ukAddress.error.line1.required = Enter address line 1
 ukAddress.error.line2.required = Enter address line 2
