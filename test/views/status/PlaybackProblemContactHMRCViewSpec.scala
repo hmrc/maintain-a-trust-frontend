@@ -31,7 +31,7 @@ class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "playbackProblemContactHMRC",
-      None,
+      "utr",
       utr,
       "p1.beforeLink", "p1.link", "p1.afterLink","p2")
 

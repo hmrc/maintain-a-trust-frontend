@@ -32,7 +32,7 @@ class AgentNotAuthorisedViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "agentNotAuthorised",
-      Some("UTR"),
+      "utr",
       utr,
       "p1", "p2", "p3", "p4", "p5")
 
@@ -47,7 +47,7 @@ class AgentNotAuthorisedViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "agentNotAuthorised",
-      Some("URN"),
+      "urn",
       urn,
       "p1", "p2", "p3", "p4", "p5")
 

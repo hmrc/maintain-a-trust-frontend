@@ -31,7 +31,7 @@ class IVDownViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(view = applyView,
       messageKeyPrefix =  "ivDown",
-      None,
+      "utr",
       captionParam = utr,
       "p1")
   }

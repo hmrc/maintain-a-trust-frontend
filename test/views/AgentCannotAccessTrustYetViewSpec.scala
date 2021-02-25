@@ -32,7 +32,7 @@ class AgentCannotAccessTrustYetViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "agentCannotAccessTrustYet",
-      Some("UTR"),
+      "utr",
       utr,
     "p1", "p2", "heading.2", "p3", "bullet.1", "bullet.2", "bullet.3", "bullet.4", "heading.3", "p4")
 
@@ -47,7 +47,7 @@ class AgentCannotAccessTrustYetViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "agentCannotAccessTrustYet",
-      Some("URN"),
+      "urn",
       urn,
       "p1", "p2", "heading.2", "p3", "bullet.1", "bullet.2", "bullet.3", "bullet.4", "heading.3", "p4")
 

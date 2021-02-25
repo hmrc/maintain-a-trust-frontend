@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 
-package views.close
+package pages
 
-import views.behaviours.ViewBehaviours
-import views.html.close.HowToCloseATrustView
+import pages.behaviours.PageBehaviours
 
-class HowToCloseATrustViewSpec extends ViewBehaviours {
+class ViewLastDeclarationYesNoPageSpec extends PageBehaviours {
 
-  val utr = "1234567890"
+  "ViewLastDeclarationYesNoPage" must {
 
-  "HowToCloseATrust view" must {
+    beRetrievable[Boolean](ViewLastDeclarationYesNoPage)
 
-    val view = viewFor[HowToCloseATrustView](Some(emptyUserAnswersForUtr))
+    beSettable[Boolean](ViewLastDeclarationYesNoPage)
 
-    val applyView = view.apply(utr)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "howToCloseATrust",
-      "utr",
-      utr,
-      "p1",
-      "bullet1",
-      "bullet2",
-      "p2"
-    )
+    beRemovable[Boolean](ViewLastDeclarationYesNoPage)
   }
+
 }

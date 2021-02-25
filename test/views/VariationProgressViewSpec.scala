@@ -50,7 +50,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
     behave like normalPageTitleWithCaption(applyView,
       "variationProgress",
-      None,
+      "utr",
       utr,
     "p1", "p2")
 

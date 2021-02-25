@@ -14,29 +14,8 @@
  * limitations under the License.
  */
 
-package views.close
+package models
 
-import views.behaviours.ViewBehaviours
-import views.html.close.HowToCloseATrustView
-
-class HowToCloseATrustViewSpec extends ViewBehaviours {
-
-  val utr = "1234567890"
-
-  "HowToCloseATrust view" must {
-
-    val view = viewFor[HowToCloseATrustView](Some(emptyUserAnswersForUtr))
-
-    val applyView = view.apply(utr)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "howToCloseATrust",
-      "utr",
-      utr,
-      "p1",
-      "bullet1",
-      "bullet2",
-      "p2"
-    )
-  }
+case object IsUTR {
+  def apply(identifier: String): Boolean = identifier.length == 10
 }

@@ -28,6 +28,9 @@ GET        /reference-sent-by-post                      controllers.RefSentByPos
 
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
 
+GET        /view-last-declaration                       controllers.ViewLastDeclarationYesNoController.onPageLoad()
+POST       /view-last-declaration                       controllers.ViewLastDeclarationYesNoController.onSubmit()
+
 GET        /agent-declaration                           controllers.declaration.AgentDeclarationController.onPageLoad()
 POST       /agent-declaration                           controllers.declaration.AgentDeclarationController.onSubmit()
 

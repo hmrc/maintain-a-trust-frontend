@@ -14,29 +14,22 @@
  * limitations under the License.
  */
 
-package views.close
+package views
 
-import views.behaviours.ViewBehaviours
-import views.html.close.HowToCloseATrustView
+class ViewUtilsSpec extends ViewSpecBase {
 
-class HowToCloseATrustViewSpec extends ViewBehaviours {
+  "View utils" must {
 
-  val utr = "1234567890"
+    "render the subheading for a utr" in {
+      val heading = ViewUtils.subheading("1234567890")
+      heading mustBe "This trust’s UTR: 1234567890"
+    }
 
-  "HowToCloseATrust view" must {
+    "render the subheading for a urn" in {
+      val heading = ViewUtils.subheading("ABTRUST12345678")
+      heading mustBe "This trust’s URN: ABTRUST12345678"
+    }
 
-    val view = viewFor[HowToCloseATrustView](Some(emptyUserAnswersForUtr))
-
-    val applyView = view.apply(utr)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "howToCloseATrust",
-      "utr",
-      utr,
-      "p1",
-      "bullet1",
-      "bullet2",
-      "p2"
-    )
   }
+
 }

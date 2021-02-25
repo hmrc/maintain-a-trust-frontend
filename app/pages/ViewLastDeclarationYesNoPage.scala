@@ -14,29 +14,13 @@
  * limitations under the License.
  */
 
-package views.close
+package pages
 
-import views.behaviours.ViewBehaviours
-import views.html.close.HowToCloseATrustView
+import play.api.libs.json.JsPath
 
-class HowToCloseATrustViewSpec extends ViewBehaviours {
+object ViewLastDeclarationYesNoPage extends QuestionPage[Boolean] {
 
-  val utr = "1234567890"
+  override def path: JsPath = JsPath \ toString
 
-  "HowToCloseATrust view" must {
-
-    val view = viewFor[HowToCloseATrustView](Some(emptyUserAnswersForUtr))
-
-    val applyView = view.apply(utr)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "howToCloseATrust",
-      "utr",
-      utr,
-      "p1",
-      "bullet1",
-      "bullet2",
-      "p2"
-    )
-  }
+  override def toString: String = "viewLastDeclarationYesNo"
 }
