@@ -18,46 +18,41 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.Actions
-import forms.UTRFormProvider
+import forms.URNFormProvider
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{FeatureFlagService, UserAnswersSetupService}
+import services.UserAnswersSetupService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.UTRView
+import views.html.URNView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UTRController @Inject()(
+class URNController @Inject()(
                                override val messagesApi: MessagesApi,
                                actions: Actions,
                                uaSetupService: UserAnswersSetupService,
-                               formProvider: UTRFormProvider,
-                               featureFlagService: FeatureFlagService,
+                               formProvider: URNFormProvider,
                                val controllerComponents: MessagesControllerComponents,
-                               view: UTRView
+                               view: URNView
                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  private val form: Form[String] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.auth {
     implicit request =>
-      Ok(view(form, routes.UTRController.onSubmit()))
+      Ok(view(form, routes.URNController.onSubmit()))
   }
 
   def onSubmit(): Action[AnyContent] = actions.auth.async {
     implicit request =>
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, routes.UTRController.onSubmit()))),
-        utr => {
-          featureFlagService.is5mldEnabled().flatMap {
-            is5mldEnabled =>
-              uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled)
-          }
+          Future.successful(BadRequest(view(formWithErrors, routes.URNController.onSubmit()))),
+        urn => {
+          uaSetupService.setupAndRedirectToStatus(urn, request.user.internalId, is5mldEnabled = true)
         }
       )
   }
-
 }

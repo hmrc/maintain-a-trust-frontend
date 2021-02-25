@@ -63,7 +63,27 @@ trait Formatters {
             case false => Left(Seq(FormError(key, invalidKey)))
           }
       }
+    override def unbind(key: String, value: String): Map[String, String] =
+      Map(key -> value)
+  }
 
+  private[mappings] def urnFormatter(requiredKey: String, invalidKey: String, lengthKey: String): Formatter[String] = new Formatter[String] {
+
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
+      data.get(key) match {
+        case None => Left(Seq(FormError(key, requiredKey)))
+        case Some(s) if s.trim == "" => Left(Seq(FormError(key, requiredKey)))
+        case Some(s) =>
+          val trimmed = s.filterNot(_ == ' ').trim.toUpperCase
+          if (trimmed.length != 15) {
+            Left(Seq(FormError(key, lengthKey)))
+          } else {
+            trimmed.matches(Validation.urnRegex) match {
+              case true => Right(trimmed)
+              case false => Left(Seq(FormError(key, invalidKey)))
+            }
+          }
+      }
     override def unbind(key: String, value: String): Map[String, String] =
       Map(key -> value)
   }
