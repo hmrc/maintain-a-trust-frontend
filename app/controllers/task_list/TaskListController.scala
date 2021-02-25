@@ -42,12 +42,12 @@ class TaskListController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.refreshAndRequireIsClosingAnswer.async {
     implicit request =>
 
-      val utr = request.userAnswers.identifier
+      val identifier = request.userAnswers.identifier
 
-      storeConnector.getStatusOfTasks(utr) map {
+      storeConnector.getStatusOfTasks(identifier) map {
         tasks =>
 
-          val sections = generateTaskList(tasks, utr)
+          val sections = generateTaskList(tasks, identifier)
 
           val next = if (request.user.affinityGroup == Agent) {
             controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
@@ -55,7 +55,8 @@ class TaskListController @Inject()(
             controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
           }
 
-          Ok(view(utr,
+          Ok(view(identifier,
+            request.userAnswers.identifierType,
             sections.mandatory,
             sections.other,
             request.user.affinityGroup,

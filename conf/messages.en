@@ -457,7 +457,8 @@ declarationWhatNext.error.required = Select what you want to do next
 
 variationProgress.title = Trust overview
 variationProgress.heading = Trust overview
-variationProgress.caption = This trust’s UTR: {0}
+variationProgress.UTR.caption = This trust’s UTR: {0}
+variationProgress.URN.caption = This trust’s URN: {0}
 variationProgress.p1 = You can change information about the trust and make a declaration once you have confirmed each section is up to date.
 variationProgress.p2 = Any changes you make without declaring will not be saved.
 variationsProgress.return.link = Return to register and maintain a trust for a client
