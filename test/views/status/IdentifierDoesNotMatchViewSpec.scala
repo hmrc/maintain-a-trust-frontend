@@ -16,30 +16,28 @@
 
 package views.status
 
+import models.UTR
 import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
-import views.html.status.TrustUtrDoesNotMatchView
+import views.html.status.IdentifierDoesNotMatchView
 
-class TrustUtrDoesNotMatchViewSpec extends ViewBehaviours {
+class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
 
-  val utr = "0987654321"
+  "IdentifierDoesNotMatch view for utr" must {
 
-  "TrustUtrDoesNotMatch view" must {
+    val view = viewFor[IdentifierDoesNotMatchView](Some(emptyUserAnswersForUtr))
 
-    val view = viewFor[TrustUtrDoesNotMatchView](Some(emptyUserAnswersForUtr))
-
-    val applyView = view.apply(AffinityGroup.Agent)(fakeRequest, messages)
+    val applyView = view.apply(AffinityGroup.Agent, UTR)(fakeRequest, messages)
 
     behave like normalPage(
       applyView,
-      "trustUtrDoesNotMatch",
+      "identifierDoesNotMatch",
       "p1",
       "p2",
       "p3",
       "contact.link",
       "p4",
       "return.link")
-
   }
 
 }

@@ -42,7 +42,7 @@ class TrustStatusController @Inject()(
                                        actions: Actions,
                                        closedView: TrustClosedView,
                                        stillProcessingView: TrustStillProcessingView,
-                                       utrDoesNotMatchView: TrustUtrDoesNotMatchView,
+                                       identifierDoesNotMatchView: IdentifierDoesNotMatchView,
                                        ivDownView: IVDownView,
                                        trustConnector: TrustConnector,
                                        trustStoreConnector: TrustsStoreConnector,
@@ -73,7 +73,7 @@ class TrustStatusController @Inject()(
 
   def notFound(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(utrDoesNotMatchView(request.user.affinityGroup)))
+      Future.successful(Ok(identifierDoesNotMatchView(request.user.affinityGroup, request.userAnswers.identifierType)))
   }
 
   def locked(): Action[AnyContent] = actions.authWithData.async {
