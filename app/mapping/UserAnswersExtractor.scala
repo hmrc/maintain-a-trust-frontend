@@ -43,10 +43,7 @@ class UserAnswersExtractorImpl @Inject()(
 
   override def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionError, UserAnswers] = {
 
-    val isTrustTaxable: Boolean = data.trust.details.trustTaxable match {
-      case Some(false) => false
-      case _ => true
-    }
+    val isTrustTaxable: Boolean = !data.trust.details.trustTaxable.contains(false)
 
     val updatedAnswers = answers.copy(isTrustTaxable = isTrustTaxable)
 
