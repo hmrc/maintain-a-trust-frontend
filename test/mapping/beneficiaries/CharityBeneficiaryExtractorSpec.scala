@@ -28,6 +28,9 @@ import utils.Constants.GB
 class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
+  private val utr: String = "1234567890"
+  private val urn: String = "NTTRUST00000001"
+  
   def generateCharity(index: Int, isTaxable: Boolean) = DisplayTrustCharityType(
     lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
@@ -73,7 +76,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val charities = None
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", utr)
 
         val extraction = charityExtractor.extract(ua, charities)
 
@@ -99,7 +102,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", utr)
 
           val extraction = charityExtractor.extract(ua, Some(charity))
 
@@ -120,7 +123,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val charities = (for (index <- 0 to 2) yield generateCharity(index, isTaxable = true)).toList
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", utr)
 
           val extraction = charityExtractor.extract(ua, Some(charities))
 
@@ -181,7 +184,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
 
           val extraction = charityExtractor.extract(ua, Some(charity))
 
@@ -202,7 +205,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val charities = (for (index <- 0 to 2) yield generateCharity(index, isTaxable = false)).toList
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
 
           val extraction = charityExtractor.extract(ua, Some(charities))
 

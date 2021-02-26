@@ -30,14 +30,13 @@ import scala.util.{Failure, Success, Try}
 
 class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustCompanyType]]] with Logging {
 
-  override def extract(answers: UserAnswers, data: Option[List[DisplayTrustCompanyType]]): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      data match {
-        case None => Left(FailedToExtractData("No Company Beneficiary"))
-        case Some(companies) =>
+  override def extract(answers: UserAnswers, data: Option[List[DisplayTrustCompanyType]]): Either[PlaybackExtractionError, UserAnswers] = {
+    data match {
+      case None => Left(FailedToExtractData("No Company Beneficiary"))
+      case Some(companies) =>
 
-          val updated = companies.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
-            case (answers, (companyBeneficiary, index)) =>
+        val updated = companies.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)) {
+          case (answers, (companyBeneficiary, index)) =>
 
             answers
               .flatMap(_.set(CompanyBeneficiaryNamePage(index), companyBeneficiary.organisationName))
@@ -55,52 +54,52 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
                   )
                 )
               }
-          }
+        }
 
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(DisplayTrustCompanyType.toString))
-          }
-      }
+        updated match {
+          case Success(a) =>
+            Right(a)
+          case Failure(exception) =>
+            logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+            Left(FailedToExtractData(DisplayTrustCompanyType.toString))
+        }
     }
+  }
 
   private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {
-    identification map {
-      case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
-        answers.set(CompanyBeneficiaryUtrPage(index), utr)
-          .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), false))
+      identification map {
+        case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
+          answers.set(CompanyBeneficiaryUtrPage(index), utr)
+            .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), false))
 
-      case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
-        extractAddress(address.convert, index, answers)
+        case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
+          extractAddress(address.convert, index, answers)
 
-      case _ =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] only both utr and address parsed")
-        Failure(InvalidExtractorState)
+        case _ =>
+          logger.error(s"[UTR/URN: ${answers.identifier}] only both utr and address parsed")
+          Failure(InvalidExtractorState)
 
-    } getOrElse {
-      answers.set(CompanyBeneficiaryAddressYesNoPage(index), false)
-    }
+      } getOrElse {
+        answers.set(CompanyBeneficiaryAddressYesNoPage(index), false)
+      }
     } else {
-      Try(answers)
+      Success(answers)
     }
   }
 
   private def extractShareOfIncome(companyBeneficiary: DisplayTrustCompanyType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {
-    companyBeneficiary.beneficiaryShareOfIncome match {
-      case Some(income) =>
-        answers.set(CompanyBeneficiaryDiscretionYesNoPage(index), false)
-          .flatMap(_.set(CompanyBeneficiaryShareOfIncomePage(index), income))
-      case None =>
-        // Assumption that user answered yes as the share of income is not provided
-        answers.set(CompanyBeneficiaryDiscretionYesNoPage(index), true)
-    }
+      companyBeneficiary.beneficiaryShareOfIncome match {
+        case Some(income) =>
+          answers.set(CompanyBeneficiaryDiscretionYesNoPage(index), false)
+            .flatMap(_.set(CompanyBeneficiaryShareOfIncomePage(index), income))
+        case None =>
+          // Assumption that user answered yes as the share of income is not provided
+          answers.set(CompanyBeneficiaryDiscretionYesNoPage(index), true)
+      }
     } else {
-      Try(answers)
+      Success(answers)
     }
   }
 
@@ -118,6 +117,7 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
         answers.set(CompanyBeneficiaryCountryOfResidenceYesNoPage(index), false)
     }
   }
+
   private def extractAddress(address: Address, index: Int, answers: UserAnswers): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {
       address match {
@@ -131,7 +131,7 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
             .flatMap(_.set(CompanyBeneficiaryAddressUKYesNoPage(index), false))
       }
     } else {
-      Try(answers)
+      Success(answers)
     }
   }
 }

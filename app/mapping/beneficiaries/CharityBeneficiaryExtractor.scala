@@ -38,25 +38,25 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
 
         logger.debug(s"[UTR/URN: ${answers.identifier}] Extracting $charities")
 
-        val updated = charities.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
+        val updated = charities.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)) {
           case (answers, (charityBeneficiary, index)) =>
 
-          answers
-            .flatMap(_.set(CharityBeneficiaryNamePage(index), charityBeneficiary.organisationName))
-            .flatMap(answers => extractShareOfIncome(charityBeneficiary, index, answers))
-            .flatMap(_.set(CharityBeneficiarySafeIdPage(index), charityBeneficiary.identification.flatMap(_.safeId)))
-            .flatMap(answers => extractCountryOfResidence(charityBeneficiary, index, answers))
-            .flatMap(answers => extractIdentification(charityBeneficiary.identification, index, answers))
-            .flatMap {
-              _.set(
-                CharityBeneficiaryMetaData(index),
-                MetaData(
-                  lineNo = charityBeneficiary.lineNo.getOrElse(""),
-                  bpMatchStatus = charityBeneficiary.bpMatchStatus,
-                  entityStart = charityBeneficiary.entityStart
+            answers
+              .flatMap(_.set(CharityBeneficiaryNamePage(index), charityBeneficiary.organisationName))
+              .flatMap(answers => extractShareOfIncome(charityBeneficiary, index, answers))
+              .flatMap(_.set(CharityBeneficiarySafeIdPage(index), charityBeneficiary.identification.flatMap(_.safeId)))
+              .flatMap(answers => extractCountryOfResidence(charityBeneficiary, index, answers))
+              .flatMap(answers => extractIdentification(charityBeneficiary.identification, index, answers))
+              .flatMap {
+                _.set(
+                  CharityBeneficiaryMetaData(index),
+                  MetaData(
+                    lineNo = charityBeneficiary.lineNo.getOrElse(""),
+                    bpMatchStatus = charityBeneficiary.bpMatchStatus,
+                    entityStart = charityBeneficiary.entityStart
+                  )
                 )
-              )
-            }
+              }
         }
 
         updated match {
@@ -86,22 +86,22 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
         answers.set(CharityBeneficiaryAddressYesNoPage(index), false)
       }
     } else {
-      Try(answers)
+      Success(answers)
     }
   }
 
   private def extractShareOfIncome(charityBeneficiary: DisplayTrustCharityType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {
-    charityBeneficiary.beneficiaryShareOfIncome match {
-      case Some(income) =>
-        answers.set(CharityBeneficiaryDiscretionYesNoPage(index), false)
-          .flatMap(_.set(CharityBeneficiaryShareOfIncomePage(index), income))
-      case None =>
-        // Assumption that user answered yes as the share of income is not provided
-        answers.set(CharityBeneficiaryDiscretionYesNoPage(index), true)
-    }
+      charityBeneficiary.beneficiaryShareOfIncome match {
+        case Some(income) =>
+          answers.set(CharityBeneficiaryDiscretionYesNoPage(index), false)
+            .flatMap(_.set(CharityBeneficiaryShareOfIncomePage(index), income))
+        case None =>
+          // Assumption that user answered yes as the share of income is not provided
+          answers.set(CharityBeneficiaryDiscretionYesNoPage(index), true)
+      }
     } else {
-      Try(answers)
+      Success(answers)
     }
   }
 
@@ -133,7 +133,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
             .flatMap(_.set(CharityBeneficiaryAddressUKYesNoPage(index), false))
       }
     } else {
-      Try(answers)
+      Success(answers)
     }
   }
 }

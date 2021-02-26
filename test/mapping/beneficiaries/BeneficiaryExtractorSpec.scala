@@ -68,6 +68,8 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             bpMatchStatus = Some("01"),
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
+            countryOfResidence = Some(GB),
+            countryOfNationality = Some(GB),
             vulnerableBeneficiary = Some(false),
             beneficiaryType = None,
             beneficiaryDiscretion = None,
@@ -245,6 +247,12 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(IndividualBeneficiaryVulnerableYesNoPage(0)).get mustBe false
         extraction.right.value.get(IndividualBeneficiaryDateOfBirthYesNoPage(0)).get mustBe false
         extraction.right.value.get(IndividualBeneficiaryDateOfBirthPage(0)) mustNot be(defined)
+        extraction.right.value.get(IndividualBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(IndividualBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(IndividualBeneficiaryCountryOfResidencePage(0)).get mustBe GB
+        extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityYesNoPage(0)).get mustBe true
+        extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityPage(0)).get mustBe GB
         extraction.right.value.get(IndividualBeneficiaryIncomeYesNoPage(0)).get mustBe true
         extraction.right.value.get(IndividualBeneficiaryIncomePage(0)) mustNot be(defined)
         extraction.right.value.get(IndividualBeneficiaryNationalInsuranceYesNoPage(0)).get mustBe false
