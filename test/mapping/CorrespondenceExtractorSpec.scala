@@ -18,8 +18,8 @@ package mapping
 
 import base.SpecBaseHelpers
 import generators.Generators
-import models.{UKAddress, UserAnswers}
 import models.http.{AddressType, Correspondence}
+import models.{UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.correspondence._
 import pages.trustdetails.TrustNamePage
@@ -27,7 +27,7 @@ import utils.Constants.GB
 
 class CorrespondenceExtractorSpec extends FreeSpec with MustMatchers with EitherValues with Generators with SpecBaseHelpers {
 
-  val correspondenceExtractor: PlaybackExtractor[Correspondence] =
+  val correspondenceExtractor: CorrespondenceExtractor =
     injector.instanceOf[CorrespondenceExtractor]
 
   "Correspondence Extractor" - {

@@ -29,8 +29,11 @@ import scala.util.{Failure, Success, Try}
 
 abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
 
+  val optionalEntity: Boolean
+
   def extract(answers: UserAnswers, data: Option[List[T]]): Either[PlaybackExtractionError, UserAnswers] = {
     data match {
+      case None if optionalEntity => Right(answers)
       case None => Left(FailedToExtractData(s"No entities of type ${classTag[T].runtimeClass.getSimpleName}"))
       case Some(entities) =>
 

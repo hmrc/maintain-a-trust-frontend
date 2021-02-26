@@ -19,7 +19,6 @@ package mapping.beneficiaries
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
-import mapping.PlaybackExtractor
 import models.HowManyBeneficiaries.Over1
 import models.http._
 import models.{Description, FullName, MetaData, UKAddress, UserAnswers}
@@ -38,7 +37,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   
   val utr = "1234567890"
 
-  val beneficiaryExtractor : PlaybackExtractor[DisplayTrustBeneficiaryType] =
+  val beneficiaryExtractor : BeneficiaryExtractor =
     injector.instanceOf[BeneficiaryExtractor]
 
   "Beneficiary Extractor" - {

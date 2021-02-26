@@ -19,10 +19,9 @@ package mapping.trustees
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
-import mapping.PlaybackExtractor
-import models.{MetaData, UserAnswers}
-import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType, Trustees}
+import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType}
 import models.pages.IndividualOrBusiness
+import models.{MetaData, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
 import utils.Constants.GB
@@ -30,7 +29,7 @@ import utils.Constants.GB
 class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val leadTrusteeOrgExtractor : PlaybackExtractor[Option[List[Trustees]]] =
+  val leadTrusteeOrgExtractor : TrusteesExtractor =
     injector.instanceOf[TrusteesExtractor]
 
   "Lead Trustee Organisation Extractor" - {

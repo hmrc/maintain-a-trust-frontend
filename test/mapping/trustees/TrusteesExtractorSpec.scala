@@ -16,10 +16,8 @@
 
 package mapping.trustees
 
-import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
@@ -27,6 +25,8 @@ import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
 import utils.Constants.GB
+
+import java.time.LocalDate
 
 class TrusteesExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -96,7 +96,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
   )
 
 
-  val trusteesExtractor : PlaybackExtractor[Option[List[Trustees]]] =
+  val trusteesExtractor : TrusteesExtractor =
     injector.instanceOf[TrusteesExtractor]
 
   "Trustees Extractor" - {

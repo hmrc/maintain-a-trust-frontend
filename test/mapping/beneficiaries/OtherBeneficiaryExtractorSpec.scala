@@ -18,9 +18,8 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
-import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{AddressType, DisplayTrustOtherType}
+import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.other._
 import utils.Constants.GB
@@ -51,7 +50,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
     entityStart = "2019-11-26"
   )
 
-  val otherExtractor : PlaybackExtractor[Option[List[DisplayTrustOtherType]]] =
+  val otherExtractor : OtherBeneficiaryExtractor =
     injector.instanceOf[OtherBeneficiaryExtractor]
 
   "Other Beneficiary Extractor" - {

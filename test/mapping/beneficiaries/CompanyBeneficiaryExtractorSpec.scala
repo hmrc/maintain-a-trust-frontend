@@ -18,9 +18,8 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
-import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{AddressType, DisplayTrustCompanyType, DisplayTrustIdentificationOrgType}
+import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.company._
 import utils.Constants.GB
@@ -62,7 +61,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
     entityStart = "2019-11-26"
   )
 
-  val companyExtractor : PlaybackExtractor[Option[List[DisplayTrustCompanyType]]] =
+  val companyExtractor : CompanyBeneficiaryExtractor =
     injector.instanceOf[CompanyBeneficiaryExtractor]
 
   "Company Beneficiary Extractor" - {

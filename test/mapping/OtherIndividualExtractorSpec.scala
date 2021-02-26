@@ -16,7 +16,6 @@
 
 package mapping
 
-import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{AddressType, DisplayTrustIdentificationType, NaturalPersonType, PassportType}
@@ -25,6 +24,8 @@ import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.individual._
 import utils.Constants.GB
+
+import java.time.LocalDate
 
 class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -58,7 +59,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
     entityStart = "2019-11-26"
   )
 
-  val individualExtractor : PlaybackExtractor[Option[List[NaturalPersonType]]] =
+  val individualExtractor : OtherIndividualExtractor =
     injector.instanceOf[OtherIndividualExtractor]
 
   "Other Individual Extractor" - {

@@ -19,7 +19,6 @@ package mapping.settlors
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
-import mapping.PlaybackExtractor
 import models.http._
 import models.pages.KindOfBusiness.Trading
 import models.pages.{IndividualOrBusiness, KindOfBusiness}
@@ -28,11 +27,10 @@ import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.deceased_settlor._
 import pages.settlors.living_settlor._
 
-
 class SettlorExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val settlorExtractor: PlaybackExtractor[DisplayTrustEntitiesType] =
+  val settlorExtractor: SettlorExtractor =
     injector.instanceOf[SettlorExtractor]
 
   "Settlor Extractor" - {

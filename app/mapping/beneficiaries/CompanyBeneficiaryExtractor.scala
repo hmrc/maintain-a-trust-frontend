@@ -27,8 +27,8 @@ import scala.util.{Failure, Try}
 
 class CompanyBeneficiaryExtractor @Inject() extends BeneficiaryPlaybackExtractor[DisplayTrustCompanyType] {
 
-  override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryCountryOfResidenceYesNoPage(index)
-  override def shareOfIncomePage(index: Int): QuestionPage[String] = CompanyBeneficiaryCountryOfResidencePage(index)
+  override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryDiscretionYesNoPage(index)
+  override def shareOfIncomePage(index: Int): QuestionPage[String] = CompanyBeneficiaryShareOfIncomePage(index)
 
   override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryCountryOfResidenceYesNoPage(index)
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)

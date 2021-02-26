@@ -18,10 +18,9 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
 import models.HowManyBeneficiaries.{Over1, Over1001, Over201}
-import models.{Description, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLargeType}
+import models.{Description, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.large._
 import utils.Constants.GB
@@ -68,7 +67,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
     entityStart = "2019-11-26"
   )
 
-  val largeBeneficiaryExtractor : PlaybackExtractor[Option[List[DisplayTrustLargeType]]] =
+  val largeBeneficiaryExtractor : LargeBeneficiaryExtractor =
     injector.instanceOf[LargeBeneficiaryExtractor]
 
   "Large Beneficiary Extractor" - {

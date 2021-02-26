@@ -16,8 +16,6 @@
 
 package mapping
 
-import java.time.LocalDate
-
 import base.SpecBaseHelpers
 import generators.Generators
 import models.UserAnswers
@@ -29,9 +27,11 @@ import models.pages.TypeOfTrust.WillTrustOrIntestacyTrust
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustdetails._
 
+import java.time.LocalDate
+
 class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherValues with Generators with SpecBaseHelpers {
 
-  val trusteeDetailsExtractor : PlaybackExtractor[TrustDetailsType] =
+  val trusteeDetailsExtractor : TrustDetailsExtractor =
     injector.instanceOf[TrustDetailsExtractor]
 
   "Trust Details Extractor" - {

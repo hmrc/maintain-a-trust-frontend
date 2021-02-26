@@ -16,10 +16,8 @@
 
 package mapping.settlors
 
-import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
 import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustWillType, PassportType}
 import models.{FullName, MetaData, UserAnswers}
 import org.joda.time.DateTime
@@ -27,10 +25,12 @@ import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.deceased_settlor._
 import utils.Constants.GB
 
+import java.time.LocalDate
+
 class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val deceasedSettlorExtractor : PlaybackExtractor[Option[DisplayTrustWillType]] =
+  val deceasedSettlorExtractor : DeceasedSettlorExtractor =
     injector.instanceOf[DeceasedSettlorExtractor]
 
   "Deceased Settlor Extractor" - {

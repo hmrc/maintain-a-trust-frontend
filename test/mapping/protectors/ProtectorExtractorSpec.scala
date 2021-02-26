@@ -16,11 +16,8 @@
 
 package mapping.protectors
 
-import java.time.LocalDate
-
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, MetaData, UserAnswers}
@@ -30,10 +27,12 @@ import pages.protectors._
 import pages.protectors.business._
 import pages.protectors.individual._
 
+import java.time.LocalDate
+
 class ProtectorExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val protectorExtractor : PlaybackExtractor[Option[DisplayTrustProtectorsType]] =
+  val protectorExtractor : ProtectorExtractor =
     injector.instanceOf[ProtectorExtractor]
 
   "Protector Extractor" - {

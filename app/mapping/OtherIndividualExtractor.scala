@@ -17,15 +17,22 @@
 package mapping
 
 import com.google.inject.Inject
+import mapping.PlaybackImplicits._
 import models.http.{DisplayTrustIdentificationType, NaturalPersonType, PassportType}
-import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
+import models.{Address, MetaData, UserAnswers}
+import pages.QuestionPage
 import pages.individual._
 
 import scala.util.{Failure, Try}
 
 class OtherIndividualExtractor @Inject() extends PlaybackExtractor[NaturalPersonType] {
 
-  import PlaybackImplicits._
+  override val optionalEntity: Boolean = true
+
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualAddressUKYesNoPage(index)
+  override def ukAddressPage(index: Int): QuestionPage[Address] = OtherIndividualAddressPage(index)
+  override def nonUkAddressPage(index: Int): QuestionPage[Address] = OtherIndividualAddressPage(index)
 
   override def updateUserAnswers(answers: Try[UserAnswers], entity: NaturalPersonType, index: Int): Try[UserAnswers] = {
     answers
@@ -55,11 +62,11 @@ class OtherIndividualExtractor @Inject() extends PlaybackExtractor[NaturalPerson
       case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
         answers.set(OtherIndividualNationalInsuranceYesNoPage(index), false)
           .flatMap(_.set(OtherIndividualPassportIDCardYesNoPage(index), false))
-          .flatMap(answers => extractAddress(address.convert, index, answers))
+          .flatMap(answers => extractAddress(address, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
         answers.set(OtherIndividualNationalInsuranceYesNoPage(index), false)
-          .flatMap(answers => extractAddress(address.convert, index, answers))
+          .flatMap(answers => extractAddress(address, index, answers))
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
@@ -88,19 +95,6 @@ class OtherIndividualExtractor @Inject() extends PlaybackExtractor[NaturalPerson
   private def extractPassportIdCard(passport: PassportType, index: Int, answers: UserAnswers) = {
       answers.set(OtherIndividualPassportIDCardYesNoPage(index), true)
         .flatMap(_.set(OtherIndividualPassportIDCardPage(index), passport.convert))
-  }
-
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers) = {
-    address match {
-      case uk: UKAddress =>
-        answers.set(OtherIndividualAddressPage(index), uk)
-          .flatMap(_.set(OtherIndividualAddressYesNoPage(index), true))
-          .flatMap(_.set(OtherIndividualAddressUKYesNoPage(index), true))
-      case nonUk: InternationalAddress =>
-        answers.set(OtherIndividualAddressPage(index), nonUk)
-          .flatMap(_.set(OtherIndividualAddressYesNoPage(index), true))
-          .flatMap(_.set(OtherIndividualAddressUKYesNoPage(index), false))
-    }
   }
 
 }

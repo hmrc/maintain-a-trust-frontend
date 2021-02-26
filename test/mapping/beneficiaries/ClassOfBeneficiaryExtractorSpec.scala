@@ -18,9 +18,8 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
-import models.{MetaData, UserAnswers}
 import models.http.DisplayTrustUnidentifiedType
+import models.{MetaData, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.classOfBeneficiary._
 
@@ -45,7 +44,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
     entityStart = "2019-11-26"
   )
 
-  val classOfBeneficiaryExtractor : PlaybackExtractor[Option[List[DisplayTrustUnidentifiedType]]] =
+  val classOfBeneficiaryExtractor : ClassOfBeneficiaryExtractor =
     injector.instanceOf[ClassOfBeneficiaryExtractor]
 
   "Class Of Beneficiary Extractor" - {

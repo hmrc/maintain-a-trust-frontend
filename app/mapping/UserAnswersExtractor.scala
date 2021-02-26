@@ -16,7 +16,7 @@
 
 package mapping
 
-import com.google.inject.Inject
+import com.google.inject.{ImplementedBy, Inject}
 import mapping.PlaybackExtractionErrors.{FailedToCombineAnswers, PlaybackExtractionError}
 import mapping.beneficiaries.BeneficiaryExtractor
 import mapping.protectors.ProtectorExtractor
@@ -27,21 +27,21 @@ import models.UserAnswersCombinator._
 import models.http.GetTrust
 import play.api.Logging
 
-//@ImplementedBy(classOf[UserAnswersExtractorImpl])
-//trait UserAnswersExtractor {
-//  def extract(userAnswers: UserAnswers, playback: GetTrust): Either[PlaybackExtractionError, UserAnswers]
-//}
+@ImplementedBy(classOf[UserAnswersExtractorImpl])
+trait UserAnswersExtractor {
+  def extract(userAnswers: UserAnswers, playback: GetTrust): Either[PlaybackExtractionError, UserAnswers]
+}
 
-class UserAnswersExtractor @Inject()(
-                                      beneficiariesExtractor: BeneficiaryExtractor,
-                                      trusteesExtractor: TrusteeExtractor,
-                                      settlorsExtractor: SettlorExtractor,
-                                      trustTypeExtractor: TrustTypeExtractor,
-                                      protectorsExtractor: ProtectorExtractor,
-                                      otherIndividualsExtractor: OtherIndividualExtractor,
-                                      correspondenceExtractor: CorrespondenceExtractor,
-                                      trustDetailsExtractor: TrustDetailsExtractor
-                                    ) extends Logging {
+class UserAnswersExtractorImpl @Inject()(
+                                          beneficiariesExtractor: BeneficiaryExtractor,
+                                          trusteesExtractor: TrusteeExtractor,
+                                          settlorsExtractor: SettlorExtractor,
+                                          trustTypeExtractor: TrustTypeExtractor,
+                                          protectorsExtractor: ProtectorExtractor,
+                                          otherIndividualsExtractor: OtherIndividualExtractor,
+                                          correspondenceExtractor: CorrespondenceExtractor,
+                                          trustDetailsExtractor: TrustDetailsExtractor
+                                        ) extends UserAnswersExtractor with Logging {
 
   def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionError, UserAnswers] = {
 

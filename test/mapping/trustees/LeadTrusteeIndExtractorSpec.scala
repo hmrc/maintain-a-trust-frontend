@@ -16,11 +16,9 @@
 
 package mapping.trustees
 
-import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
-import mapping.PlaybackExtractor
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, MetaData, UserAnswers}
@@ -29,10 +27,12 @@ import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
 import utils.Constants.GB
 
+import java.time.LocalDate
+
 class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val leadTrusteeIndExtractor : PlaybackExtractor[Option[List[Trustees]]] =
+  val leadTrusteeIndExtractor : TrusteesExtractor =
     injector.instanceOf[TrusteesExtractor]
 
   "Lead Trustee Individual Extractor" - {

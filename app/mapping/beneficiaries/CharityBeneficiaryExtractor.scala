@@ -19,7 +19,7 @@ package mapping.beneficiaries
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import models.http.{DisplayTrustCharityType, DisplayTrustIdentificationOrgType}
-import models.{MetaData, UserAnswers}
+import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.beneficiaries.charity._
 
@@ -29,6 +29,15 @@ class CharityBeneficiaryExtractor @Inject() extends BeneficiaryPlaybackExtractor
 
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = CharityBeneficiaryShareOfIncomePage(index)
+
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryCountryOfResidenceYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = CharityBeneficiaryCountryOfResidencePage(index)
+
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryAddressUKYesNoPage(index)
+  override def ukAddressPage(index: Int): QuestionPage[Address] = CharityBeneficiaryAddressPage(index)
+  override def nonUkAddressPage(index: Int): QuestionPage[Address] = CharityBeneficiaryAddressPage(index)
 
   override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustCharityType, index: Int): Try[UserAnswers] = {
     answers

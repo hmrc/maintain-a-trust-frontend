@@ -16,10 +16,8 @@
 
 package mapping.settlors
 
-import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
 import models.http._
 import models.pages.KindOfBusiness._
 import models.pages.{IndividualOrBusiness, KindOfBusiness}
@@ -28,6 +26,8 @@ import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.living_settlor._
 import utils.Constants.GB
+
+import java.time.LocalDate
 
 class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -90,7 +90,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
   )
 
 
-  val livingSettlorExtractor : PlaybackExtractor[Option[List[LivingSettlor]]] =
+  val livingSettlorExtractor : LivingSettlorExtractor =
     injector.instanceOf[LivingSettlorExtractor]
 
   "Living Settlor Extractor" - {

@@ -18,10 +18,9 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
-import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, PassportType}
 import models.pages.RoleInCompany
+import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.individual._
@@ -77,7 +76,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
     entityStart = "2019-11-26"
   )
 
-  val individualExtractor : PlaybackExtractor[Option[List[DisplayTrustIndividualDetailsType]]] =
+  val individualExtractor : IndividualBeneficiaryExtractor =
     injector.instanceOf[IndividualBeneficiaryExtractor]
 
   "Individual Beneficiary Extractor" - {
