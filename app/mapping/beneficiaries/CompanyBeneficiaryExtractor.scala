@@ -24,6 +24,7 @@ import models.http.{DisplayTrustCompanyType, DisplayTrustIdentificationOrgType}
 import pages.beneficiaries.company._
 import play.api.Logging
 import mapping.PlaybackImplicits._
+import utils.Constants.GB
 
 import scala.util.{Failure, Success, Try}
 
@@ -41,6 +42,7 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
             answers
               .flatMap(_.set(CompanyBeneficiaryNamePage(index), companyBeneficiary.organisationName))
               .flatMap(answers => extractShareOfIncome(companyBeneficiary, index, answers))
+              .flatMap(answers => extractCountryOfResidence(companyBeneficiary, index, answers))
               .flatMap(_.set(CompanyBeneficiarySafeIdPage(index), companyBeneficiary.identification.flatMap(_.safeId)))
               .flatMap(answers => extractIdentification(companyBeneficiary.identification, index, answers))
               .flatMap {
@@ -65,7 +67,8 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
       }
     }
 
-  private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers) = {
+  private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers): Try[UserAnswers] = {
+    if (answers.isTrustTaxable) {
     identification map {
       case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
         answers.set(CompanyBeneficiaryUtrPage(index), utr)
@@ -81,9 +84,13 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
     } getOrElse {
       answers.set(CompanyBeneficiaryAddressYesNoPage(index), false)
     }
+    } else {
+      Try(answers)
+    }
   }
 
-  private def extractShareOfIncome(companyBeneficiary: DisplayTrustCompanyType, index: Int, answers: UserAnswers) = {
+  private def extractShareOfIncome(companyBeneficiary: DisplayTrustCompanyType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
+    if (answers.isTrustTaxable) {
     companyBeneficiary.beneficiaryShareOfIncome match {
       case Some(income) =>
         answers.set(CompanyBeneficiaryDiscretionYesNoPage(index), false)
@@ -92,18 +99,39 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
         // Assumption that user answered yes as the share of income is not provided
         answers.set(CompanyBeneficiaryDiscretionYesNoPage(index), true)
     }
+    } else {
+      Try(answers)
+    }
   }
 
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers) = {
-    address match {
-      case uk: UKAddress =>
-        answers.set(CompanyBeneficiaryAddressPage(index), uk)
-          .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), true))
-          .flatMap(_.set(CompanyBeneficiaryAddressUKYesNoPage(index), true))
-      case nonUk: InternationalAddress =>
-        answers.set(CompanyBeneficiaryAddressPage(index), nonUk)
-          .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), true))
-          .flatMap(_.set(CompanyBeneficiaryAddressUKYesNoPage(index), false))
+  private def extractCountryOfResidence(companyBeneficiary: DisplayTrustCompanyType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
+    companyBeneficiary.countryOfResidence match {
+      case Some(GB) =>
+        answers.set(CompanyBeneficiaryCountryOfResidenceYesNoPage(index), true)
+          .flatMap(_.set(CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), true))
+          .flatMap(_.set(CompanyBeneficiaryCountryOfResidencePage(index), GB))
+      case Some(country) =>
+        answers.set(CompanyBeneficiaryCountryOfResidenceYesNoPage(index), true)
+          .flatMap(_.set(CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), false))
+          .flatMap(_.set(CompanyBeneficiaryCountryOfResidencePage(index), country))
+      case None =>
+        answers.set(CompanyBeneficiaryCountryOfResidenceYesNoPage(index), false)
+    }
+  }
+  private def extractAddress(address: Address, index: Int, answers: UserAnswers): Try[UserAnswers] = {
+    if (answers.isTrustTaxable) {
+      address match {
+        case uk: UKAddress =>
+          answers.set(CompanyBeneficiaryAddressPage(index), uk)
+            .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), true))
+            .flatMap(_.set(CompanyBeneficiaryAddressUKYesNoPage(index), true))
+        case nonUk: InternationalAddress =>
+          answers.set(CompanyBeneficiaryAddressPage(index), nonUk)
+            .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), true))
+            .flatMap(_.set(CompanyBeneficiaryAddressUKYesNoPage(index), false))
+      }
+    } else {
+      Try(answers)
     }
   }
 }

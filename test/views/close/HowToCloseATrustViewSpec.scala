@@ -30,7 +30,7 @@ class HowToCloseATrustViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "howToCloseATrust",
-      Some("UTR"),
+      "utr",
       utr,
       "p1",
       "bullet1",
@@ -47,7 +47,7 @@ class HowToCloseATrustViewSpec extends ViewBehaviours {
 
     behave like normalPageTitleWithCaption(applyView,
       "howToCloseATrust",
-      Some("URN"),
+      "urn",
       urn,
       "p1",
       "bullet1",

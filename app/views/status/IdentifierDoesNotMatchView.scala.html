@@ -27,14 +27,14 @@ main_template: MainTemplate
 @(affinityGroup: AffinityGroup, identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-title = messages(s"identifierDoesNotMatch.title")
+title = messages("identifierDoesNotMatch.title")
 ) {
 
  @components.heading_with_caption(headingKey = "identifierDoesNotMatch.heading", caption = s"identifierDoesNotMatch.$identifierType.caption", captionParam = identifier)
 
- <p>@messages(s"identifierDoesNotMatch.p1")</p>
+ <p>@messages("identifierDoesNotMatch.p1")</p>
 
-<p>@messages(s"identifierDoesNotMatch.p2")</p>
+ <p>@messages("identifierDoesNotMatch.p2")</p>
  <ul class="bullet-list">
   <li>@messages("identifierDoesNotMatch.bullet.1")</li>
   <li>@messages("identifierDoesNotMatch.bullet.2")</li>

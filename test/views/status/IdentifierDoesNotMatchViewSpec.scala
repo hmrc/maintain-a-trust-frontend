@@ -32,7 +32,7 @@ class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
     behave like normalPageTitleWithCaption(
       applyView,
       "identifierDoesNotMatch",
-      Some("UTR"),
+      "utr",
       utr,
       "p1",
       "p2",
@@ -55,14 +55,13 @@ class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
     behave like normalPageTitleWithCaption(
       applyView,
       "identifierDoesNotMatch",
-      Some("UTR"),
+      "utr",
       utr,
       "p1",
       "p2",
       "bullet.1",
       "bullet.2",
       "p3",
-      "p4",
       "sign_out",
       "p5",
       "contact.link"
@@ -78,7 +77,7 @@ class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
     behave like normalPageTitleWithCaption(
       applyView,
       "identifierDoesNotMatch",
-      Some("URN"),
+      "urn",
       urn,
       "p1",
       "p2",

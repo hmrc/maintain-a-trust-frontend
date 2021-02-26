@@ -14,29 +14,8 @@
  * limitations under the License.
  */
 
-package views.status
+package models
 
-import models.UTR
-import views.behaviours.ViewBehaviours
-import views.html.status.TrustLockedView
-
-class TrustLockedViewSpec extends ViewBehaviours {
-
-  val utr = "0987654321"
-
-  "TrustLocked view" must {
-
-    val view = viewFor[TrustLockedView](Some(emptyUserAnswersForUtr))
-
-    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "trustLocked",
-      "utr",
-      utr,
-      "p1", "p2","p3",
-      "link1")
-
-  }
-
+case object IsUTR {
+  def apply(identifier: String): Boolean = identifier.length == 10
 }

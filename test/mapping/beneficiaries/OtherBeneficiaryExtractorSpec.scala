@@ -23,6 +23,7 @@ import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{AddressType, DisplayTrustOtherType}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.other._
+import utils.Constants.GB
 
 class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -44,7 +45,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
     },
     address = index match {
       case 0 => Some(AddressType(s"line $index", "line2", None, None, None, "DE"))
-      case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), "GB"))
+      case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
       case _ => None
     },
     entityStart = "2019-11-26"

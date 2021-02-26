@@ -35,7 +35,7 @@ trait Mappings extends Formatters with Constraints {
     of(postcodeFormatter(requiredKey, invalidKey))
 
   protected def urn(requiredKey: String = "urn.error.required",
-                         invalidKey: String = "urn.error.invalidCharacters",
+                    invalidKey: String = "urn.error.invalidCharacters",
                     lengthKey: String = "urn.error.length"): FieldMapping[String] =
     of(urnFormatter(requiredKey, invalidKey, lengthKey))
 
@@ -57,10 +57,9 @@ trait Mappings extends Formatters with Constraints {
                               invalidKey: String = "error.invalid")(implicit ev: Enumerable[A]): FieldMapping[A] =
     of(enumerableFormatter[A](requiredKey, invalidKey))
 
-  protected def localDate(
-                           invalidKey: String,
-                           allRequiredKey: String,
-                           twoRequiredKey: String,
-                           requiredKey: String): FieldMapping[LocalDate] =
+  protected def localDate(invalidKey: String,
+                          allRequiredKey: String,
+                          twoRequiredKey: String,
+                          requiredKey: String): FieldMapping[LocalDate] =
     of(new LocalDateFormatter(invalidKey, allRequiredKey, twoRequiredKey, requiredKey))
 }

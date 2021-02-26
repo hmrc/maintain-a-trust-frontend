@@ -23,6 +23,7 @@ import models.http.{AddressType, Correspondence}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.correspondence._
 import pages.trustdetails.TrustNamePage
+import utils.Constants.GB
 
 class CorrespondenceExtractorSpec extends FreeSpec with MustMatchers with EitherValues with Generators with SpecBaseHelpers {
 
@@ -37,7 +38,7 @@ class CorrespondenceExtractorSpec extends FreeSpec with MustMatchers with Either
         abroadIndicator = false,
         name = "Trust Ltd",
         address = AddressType(
-          "line1", "line2", None, None, Some("NE991NE"), "GB"
+          "line1", "line2", None, None, Some("NE991NE"), GB
         ),
         bpMatchStatus = None,
         phoneNumber = "1225645"

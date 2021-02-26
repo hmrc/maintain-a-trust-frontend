@@ -14,28 +14,21 @@
  * limitations under the License.
  */
 
-package views.status
+package views
 
-import models.UTR
-import views.behaviours.ViewBehaviours
-import views.html.status.TrustLockedView
+class ViewUtilsSpec extends ViewSpecBase {
 
-class TrustLockedViewSpec extends ViewBehaviours {
+  "View utils" must {
 
-  val utr = "0987654321"
+    "render the subheading for a utr" in {
+      val heading = ViewUtils.subheading("1234567890")
+      heading mustBe "This trust’s UTR: 1234567890"
+    }
 
-  "TrustLocked view" must {
-
-    val view = viewFor[TrustLockedView](Some(emptyUserAnswersForUtr))
-
-    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "trustLocked",
-      "utr",
-      utr,
-      "p1", "p2","p3",
-      "link1")
+    "render the subheading for a urn" in {
+      val heading = ViewUtils.subheading("ABTRUST12345678")
+      heading mustBe "This trust’s URN: ABTRUST12345678"
+    }
 
   }
 

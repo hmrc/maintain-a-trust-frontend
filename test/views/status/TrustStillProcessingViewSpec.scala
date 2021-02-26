@@ -33,7 +33,7 @@ class TrustStillProcessingViewSpec extends ViewBehaviours {
     behave like normalPageTitleWithCaption(
       applyView,
       "trustStillProcessing",
-      Some("UTR"),
+      "utr",
       utr,
       "p1",
       "p2",
@@ -52,7 +52,7 @@ class TrustStillProcessingViewSpec extends ViewBehaviours {
     behave like normalPageTitleWithCaption(
       applyView,
       "trustStillProcessing",
-      Some("URN"),
+      "urn",
       urn,
       "p1",
       "p2",

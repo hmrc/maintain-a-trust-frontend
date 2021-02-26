@@ -31,6 +31,7 @@ import pages.beneficiaries.individual._
 import pages.beneficiaries.large._
 import pages.beneficiaries.other._
 import pages.beneficiaries.trust._
+import utils.Constants.GB
 
 class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -82,11 +83,12 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
                 organisationName = s"Company 1",
                 beneficiaryDiscretion = Some(false),
                 beneficiaryShareOfIncome = Some("10"),
+                countryOfResidence = Some(GB),
                 identification = Some(
                   DisplayTrustIdentificationOrgType(
                     safeId = Some("8947584-94759745-84758745"),
                     utr = None,
-                    address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), "GB"))
+                    address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), GB))
                   )
                 ),
                 entityStart = "2019-11-26"
@@ -105,7 +107,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
                   DisplayTrustIdentificationOrgType(
                     safeId = Some("8947584-94759745-84758745"),
                     utr = None,
-                    address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), "GB"))
+                    address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), GB))
                   )
                 ),
                 entityStart = "2019-11-26"
@@ -120,11 +122,12 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
                 organisationName = s"Charity 1",
                 beneficiaryDiscretion = Some(false),
                 beneficiaryShareOfIncome = Some("10"),
+                countryOfResidence = Some(GB),
                 identification = Some(
                   DisplayTrustIdentificationOrgType(
                     safeId = Some("8947584-94759745-84758745"),
                     utr = None,
-                    address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), "GB"))
+                    address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), GB))
                   )
                 ),
                 entityStart = "2019-11-26"
@@ -159,7 +162,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
                   DisplayTrustIdentificationOrgType(
                     safeId = Some("8947584-94759745-84758745"),
                     utr = None,
-                    address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), "GB"))
+                    address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), GB))
                   )
                 ),
                 beneficiaryDiscretion = Some(false),
@@ -176,7 +179,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
                 description = s"Other 1",
                 beneficiaryDiscretion = Some(false),
                 beneficiaryShareOfIncome = Some("10"),
-                address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), "GB")),
+                address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), GB)),
                 entityStart = "2019-11-26"
               )
             )
@@ -190,6 +193,9 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(CompanyBeneficiaryNamePage(0)).get mustBe "Company 1"
         extraction.right.value.get(CompanyBeneficiaryDiscretionYesNoPage(0)).get mustBe false
         extraction.right.value.get(CompanyBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+        extraction.right.value.get(CompanyBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(CompanyBeneficiaryCountryOfResidencePage(0)).get mustBe GB
         extraction.right.value.get(CompanyBeneficiaryAddressYesNoPage(0)).get mustBe true
         extraction.right.value.get(CompanyBeneficiaryAddressUKYesNoPage(0)).get mustBe true
         extraction.right.value.get(CompanyBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
@@ -210,6 +216,9 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(CharityBeneficiaryNamePage(0)).get mustBe "Charity 1"
         extraction.right.value.get(CharityBeneficiaryDiscretionYesNoPage(0)).get mustBe false
         extraction.right.value.get(CharityBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+        extraction.right.value.get(CharityBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(CharityBeneficiaryCountryOfResidencePage(0)).get mustBe GB
         extraction.right.value.get(CharityBeneficiaryAddressYesNoPage(0)).get mustBe true
         extraction.right.value.get(CharityBeneficiaryAddressUKYesNoPage(0)).get mustBe true
         extraction.right.value.get(CharityBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")

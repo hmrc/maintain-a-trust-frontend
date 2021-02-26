@@ -24,6 +24,7 @@ import models.{Description, InternationalAddress, MetaData, UKAddress, UserAnswe
 import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLargeType}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.large._
+import utils.Constants.GB
 
 class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -51,7 +52,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         },
         address = index match {
           case 0 => Some(AddressType(s"line $index", "line2", None, None, None, "DE"))
-          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), "GB"))
+          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
           case _ => None
         }
       )
@@ -106,7 +107,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
               DisplayTrustIdentificationOrgType(
                 safeId = Some("8947584-94759745-84758745"),
                 utr = None,
-                address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), "GB"))
+                address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), GB))
               )
             ),
             beneficiaryDiscretion = Some(false),

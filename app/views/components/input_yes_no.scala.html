@@ -17,16 +17,17 @@
 @import viewmodels.Link
 
 @(
-field: Field,
-label: String,
-secondaryLabel: Option[String] = None,
-inputClass: Option[String] = None,
-hint: Option[String] = None,
-yesAssoc: Option[String] = None,
-noAssoc: Option[String] = None,
-legendClass: Option[String] = None,
-link : Option[Link] = None,
-legendAsHeading: Boolean = false
+    field: Field,
+    label: String,
+    caption: Option[String] = None,
+    secondaryLabel: Option[String] = None,
+    inputClass: Option[String] = None,
+    hint: Option[String] = None,
+    yesAssoc: Option[String] = None,
+    noAssoc: Option[String] = None,
+    legendClass: Option[String] = None,
+    link : Option[Link] = None,
+    legendAsHeading: Boolean = false
 )(implicit messages: Messages)
 
 
@@ -38,7 +39,10 @@ legendAsHeading: Boolean = false
         }
     >
         <legend class="form-field" id="@{field.id}-legend">
-            @if(legendAsHeading){<h1 id="@{field.id}-id" class="legend-as-heading heading-large">}
+            @if(legendAsHeading){
+                <h1 id="@{field.id}-id" class="legend-as-heading heading-large">
+                @if(caption.isDefined){<span id="caption" class="govuk-caption-xl">@caption.get</span>}
+            }
             @label
             @if(legendAsHeading){</h1>}
         </legend>

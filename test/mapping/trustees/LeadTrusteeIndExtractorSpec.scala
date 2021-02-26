@@ -17,7 +17,6 @@
 package mapping.trustees
 
 import java.time.LocalDate
-
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
@@ -28,6 +27,7 @@ import models.{FullName, MetaData, UserAnswers}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
+import utils.Constants.GB
 
 class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -67,7 +67,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
               safeId = Some("8947584-94759745-84758745"),
               nino = Some("NA1111111A"),
               passport = None,
-              address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), "GB"))
+              address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
             ),
           entityStart = "2019-11-26"
         ))
@@ -143,7 +143,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
               safeId = Some("8947584-94759745-84758745"),
               nino = None,
               passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), "DE")),
-              address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), "GB"))
+              address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
             ),
           entityStart = "2019-11-26"
         ))

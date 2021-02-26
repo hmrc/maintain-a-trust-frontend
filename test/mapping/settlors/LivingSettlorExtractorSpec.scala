@@ -17,7 +17,6 @@
 package mapping.settlors
 
 import java.time.LocalDate
-
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractor
@@ -28,6 +27,7 @@ import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.living_settlor._
+import utils.Constants.GB
 
 class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -55,7 +55,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
         },
         address = index match {
           case 0 => Some(AddressType(s"line $index", "line2", None, None, None, "DE"))
-          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), "GB"))
+          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
           case _ => None
         }
       )
@@ -81,7 +81,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
         },
         address = index match {
           case 1 => Some(AddressType(s"line $index", "line2", None, None, None, "DE"))
-          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), "GB"))
+          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
           case _ => None
         }
       )

@@ -14,29 +14,16 @@
  * limitations under the License.
  */
 
-package views.status
+package pages.beneficiaries.charity
 
-import models.UTR
-import views.behaviours.ViewBehaviours
-import views.html.status.TrustLockedView
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+import sections.beneficiaries.{Beneficiaries, CharityBeneficiaries}
 
-class TrustLockedViewSpec extends ViewBehaviours {
+final case class CharityBeneficiaryCountryOfResidenceYesNoPage(index : Int) extends QuestionPage[Boolean] {
 
-  val utr = "0987654321"
+  override def path: JsPath = JsPath \ Beneficiaries \ CharityBeneficiaries \ index \ toString
 
-  "TrustLocked view" must {
-
-    val view = viewFor[TrustLockedView](Some(emptyUserAnswersForUtr))
-
-    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "trustLocked",
-      "utr",
-      utr,
-      "p1", "p2","p3",
-      "link1")
-
-  }
+  override def toString: String = "countryOfResidenceYesNo"
 
 }

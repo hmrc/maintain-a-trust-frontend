@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 
-package views.status
+package pages
 
-import models.UTR
-import views.behaviours.ViewBehaviours
-import views.html.status.TrustLockedView
+import pages.behaviours.PageBehaviours
 
-class TrustLockedViewSpec extends ViewBehaviours {
+class ViewLastDeclarationYesNoPageSpec extends PageBehaviours {
 
-  val utr = "0987654321"
+  "ViewLastDeclarationYesNoPage" must {
 
-  "TrustLocked view" must {
+    beRetrievable[Boolean](ViewLastDeclarationYesNoPage)
 
-    val view = viewFor[TrustLockedView](Some(emptyUserAnswersForUtr))
+    beSettable[Boolean](ViewLastDeclarationYesNoPage)
 
-    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "trustLocked",
-      "utr",
-      utr,
-      "p1", "p2","p3",
-      "link1")
-
+    beRemovable[Boolean](ViewLastDeclarationYesNoPage)
   }
 
 }
