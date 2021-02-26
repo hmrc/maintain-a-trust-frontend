@@ -67,7 +67,7 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
   }
 
   private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       identification map {
         case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
           answers.set(CompanyBeneficiaryUtrPage(index), utr)
@@ -83,13 +83,11 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
       } getOrElse {
         answers.set(CompanyBeneficiaryAddressYesNoPage(index), false)
       }
-    } else {
-      Success(answers)
     }
   }
 
   private def extractShareOfIncome(companyBeneficiary: DisplayTrustCompanyType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       companyBeneficiary.beneficiaryShareOfIncome match {
         case Some(income) =>
           answers.set(CompanyBeneficiaryDiscretionYesNoPage(index), false)
@@ -98,8 +96,6 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
           // Assumption that user answered yes as the share of income is not provided
           answers.set(CompanyBeneficiaryDiscretionYesNoPage(index), true)
       }
-    } else {
-      Success(answers)
     }
   }
 
@@ -119,7 +115,7 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
   }
 
   private def extractAddress(address: Address, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       address match {
         case uk: UKAddress =>
           answers.set(CompanyBeneficiaryAddressPage(index), uk)
@@ -130,8 +126,6 @@ class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
             .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), true))
             .flatMap(_.set(CompanyBeneficiaryAddressUKYesNoPage(index), false))
       }
-    } else {
-      Success(answers)
     }
   }
 }

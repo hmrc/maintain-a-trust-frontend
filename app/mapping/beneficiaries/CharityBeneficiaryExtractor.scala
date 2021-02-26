@@ -70,7 +70,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
   }
 
   private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       identification map {
         case DisplayTrustIdentificationOrgType(safeId, Some(utr), None) =>
           answers.set(CharityBeneficiaryUtrPage(index), utr)
@@ -85,13 +85,11 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
       } getOrElse {
         answers.set(CharityBeneficiaryAddressYesNoPage(index), false)
       }
-    } else {
-      Success(answers)
     }
   }
 
   private def extractShareOfIncome(charityBeneficiary: DisplayTrustCharityType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       charityBeneficiary.beneficiaryShareOfIncome match {
         case Some(income) =>
           answers.set(CharityBeneficiaryDiscretionYesNoPage(index), false)
@@ -100,8 +98,6 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
           // Assumption that user answered yes as the share of income is not provided
           answers.set(CharityBeneficiaryDiscretionYesNoPage(index), true)
       }
-    } else {
-      Success(answers)
     }
   }
 
@@ -121,7 +117,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
   }
 
   private def extractAddress(address: Address, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       address match {
         case uk: UKAddress =>
           answers.set(CharityBeneficiaryAddressPage(index), uk)
@@ -132,8 +128,6 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
             .flatMap(_.set(CharityBeneficiaryAddressYesNoPage(index), true))
             .flatMap(_.set(CharityBeneficiaryAddressUKYesNoPage(index), false))
       }
-    } else {
-      Success(answers)
     }
   }
 }
