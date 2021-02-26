@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package forms
+package pages.beneficiaries.individual
 
-import com.google.inject.Inject
-import forms.mappings.Mappings
-import play.api.data.Form
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+import sections.beneficiaries.{Beneficiaries, IndividualBeneficiaries}
 
-class URNFormProvider @Inject() extends Mappings {
+final case class IndividualBeneficiaryCountryOfResidencePage(index : Int) extends QuestionPage[String] {
 
-  def apply(): Form[String] =
-    Form(
-      "value" -> urn()
-    )
+  override def path: JsPath = JsPath \ Beneficiaries \ IndividualBeneficiaries \ index \ toString
+
+  override def toString: String = "countryOfResidence"
+
 }

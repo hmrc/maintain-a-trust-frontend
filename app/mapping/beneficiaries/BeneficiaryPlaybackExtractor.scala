@@ -21,10 +21,9 @@ import models.UserAnswers
 import models.http.BeneficiaryType
 import pages.{EmptyPage, QuestionPage}
 
-import scala.reflect.ClassTag
 import scala.util.{Success, Try}
 
-abstract class BeneficiaryPlaybackExtractor[T <: BeneficiaryType : ClassTag] extends PlaybackExtractor[T] {
+trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtractor[T] {
 
   override val optionalEntity: Boolean = false
 

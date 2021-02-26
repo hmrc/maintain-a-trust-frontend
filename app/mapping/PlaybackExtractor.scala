@@ -62,17 +62,48 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
   def extractCountryOfResidence(countryOfResidence: Option[String],
                                 index: Int,
                                 answers: UserAnswers): Try[UserAnswers] = {
-    countryOfResidence match {
+
+    extractCountryOfResidenceOrNationality(
+      country = countryOfResidence,
+      answers = answers,
+      yesNoPage = countryOfResidenceYesNoPage(index),
+      ukYesNoPage = ukCountryOfResidenceYesNoPage(index),
+      page = countryOfResidencePage(index)
+    )
+  }
+
+  def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def countryOfNationalityPage(index: Int): QuestionPage[String] = new EmptyPage[String]
+
+  def extractCountryOfNationality(countryOfNationality: Option[String],
+                                  index: Int,
+                                  answers: UserAnswers): Try[UserAnswers] = {
+    extractCountryOfResidenceOrNationality(
+      country = countryOfNationality,
+      answers = answers,
+      yesNoPage = countryOfNationalityYesNoPage(index),
+      ukYesNoPage = ukCountryOfNationalityYesNoPage(index),
+      page = countryOfNationalityPage(index)
+    )
+  }
+
+  private def extractCountryOfResidenceOrNationality(country: Option[String],
+                                                     answers: UserAnswers,
+                                                     yesNoPage: QuestionPage[Boolean],
+                                                     ukYesNoPage: QuestionPage[Boolean],
+                                                     page: QuestionPage[String]): Try[UserAnswers] = {
+    country match {
       case Some(GB) =>
-        answers.set(countryOfResidenceYesNoPage(index), true)
-          .flatMap(_.set(ukCountryOfResidenceYesNoPage(index), true))
-          .flatMap(_.set(countryOfResidencePage(index), GB))
+        answers.set(yesNoPage, true)
+          .flatMap(_.set(ukYesNoPage, true))
+          .flatMap(_.set(page, GB))
       case Some(country) =>
-        answers.set(countryOfResidenceYesNoPage(index), true)
-          .flatMap(_.set(ukCountryOfResidenceYesNoPage(index), false))
-          .flatMap(_.set(countryOfResidencePage(index), country))
+        answers.set(yesNoPage, true)
+          .flatMap(_.set(ukYesNoPage, false))
+          .flatMap(_.set(page, country))
       case None =>
-        answers.set(countryOfResidenceYesNoPage(index), false)
+        answers.set(yesNoPage, false)
     }
   }
 
@@ -85,7 +116,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
                      index: Int,
                      answers: UserAnswers): Try[UserAnswers] = {
 
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       address.convert match {
         case uk: UKAddress =>
           answers.set(addressYesNoPage(index), true)
@@ -96,8 +127,6 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
             .flatMap(_.set(ukAddressYesNoPage(index), false))
             .flatMap(_.set(nonUkAddressPage(index), nonUk))
       }
-    } else {
-      Success(answers)
     }
   }
 
@@ -105,7 +134,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
                              index: Int,
                              answers: UserAnswers): Try[UserAnswers] = {
 
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       address.convert match {
         case Some(uk: UKAddress) =>
           answers.set(addressYesNoPage(index), true)
@@ -118,6 +147,12 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
         case None =>
           answers.set(addressYesNoPage(index), false)
       }
+    }
+  }
+
+  def extractIfTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
+    if (answers.isTrustTaxable) {
+      block
     } else {
       Success(answers)
     }

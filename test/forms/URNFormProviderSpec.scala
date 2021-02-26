@@ -27,7 +27,6 @@ class URNFormProviderSpec extends StringFieldBehaviours {
 
   private val requiredKey = "urn.error.required"
   private val lengthKey = "urn.error.length"
-  private val invalidKey = "urn.error.invalidCharacters"
 
   private val urnRegex = Validation.urnRegex
 
@@ -40,7 +39,8 @@ class URNFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form = form,
       fieldName = fieldName,
-      validDataGenerator = RegexpGen.from(urnRegex)
+      validDataGenerator = RegexpGen.from(urnRegex),
+      fieldLength = Some(requiredLength)
     )
 
     behave like fieldWithMaxLength(
@@ -67,14 +67,6 @@ class URNFormProviderSpec extends StringFieldBehaviours {
       form = form,
       fieldName = fieldName,
       requiredError = FormError(fieldName, requiredKey)
-    )
-
-    behave like fieldWithRegexpWithGenerator(
-      form,
-      fieldName,
-      regexp = Validation.descriptionRegex,
-      generator = stringsOfLength(requiredLength),
-      error = FormError(fieldName, invalidKey)
     )
   }
 }

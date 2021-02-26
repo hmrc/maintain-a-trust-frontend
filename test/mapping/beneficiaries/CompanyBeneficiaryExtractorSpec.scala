@@ -27,6 +27,9 @@ import utils.Constants.GB
 class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
+  private val utr: String = "1234567890"
+  private val urn: String = "NTTRUST00000001"
+  
   def generateCompany(index: Int) = DisplayTrustCompanyType(
     lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
@@ -72,7 +75,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val companies = None
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", utr)
 
         val extraction = companyExtractor.extract(ua, companies)
 
@@ -98,7 +101,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", utr)
 
           val extraction = companyExtractor.extract(ua, Some(company))
 
@@ -118,7 +121,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val companies = (for (index <- 0 to 2) yield generateCompany(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", utr)
 
           val extraction = companyExtractor.extract(ua, Some(companies))
 
@@ -180,7 +183,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
 
           val extraction = companyExtractor.extract(ua, Some(company))
 
@@ -200,7 +203,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val companies = (for (index <- 0 to 2) yield generateCompany(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
 
           val extraction = companyExtractor.extract(ua, Some(companies))
 
