@@ -71,15 +71,13 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
   }
 
   private def extractRoleInCompany(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       answers.set(IndividualBeneficiaryRoleInCompanyPage(index), individualBeneficiary.beneficiaryType)
-    } else {
-      Success(answers)
     }
   }
 
     private def extractIdentification(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+      extractIfTaxable(answers) {
       individualBeneficiary.identification match {
 
         case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
@@ -106,8 +104,6 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
             .flatMap(_.set(IndividualBeneficiaryAddressYesNoPage(index), false))
 
       }
-    } else {
-      Success(answers)
     }
   }
 
@@ -154,7 +150,7 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
   }
   
   private def extractShareOfIncome(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       individualBeneficiary.beneficiaryShareOfIncome match {
         case Some(income) =>
           answers.set(IndividualBeneficiaryIncomeYesNoPage(index), false)
@@ -163,22 +159,18 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
           // Assumption that user answered yes as the share of income is not provided
           answers.set(IndividualBeneficiaryIncomeYesNoPage(index), true)
       }
-    } else {
-      Success(answers)
     }
   }
 
   private def extractPassportIdCard(passport: PassportType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       answers.set(IndividualBeneficiaryPassportIDCardYesNoPage(index), true)
         .flatMap(_.set(IndividualBeneficiaryPassportIDCardPage(index), passport.convert))
-    } else {
-      Success(answers)
     }
   }
 
   private def extractAddress(address: Address, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       address match {
         case uk: UKAddress =>
           answers.set(IndividualBeneficiaryAddressPage(index), uk)
@@ -189,20 +181,16 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
             .flatMap(_.set(IndividualBeneficiaryAddressYesNoPage(index), true))
             .flatMap(_.set(IndividualBeneficiaryAddressUKYesNoPage(index), false))
       }
-    } else {
-      Success(answers)
     }
   }
 
   private def extractVulnerability(vulnerable: Option[Boolean], index: Int, answers: UserAnswers): Try[UserAnswers] = {
     // TODO - will this statement hold if migrating from non-taxable to taxable?
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       vulnerable match {
         case Some(value) => answers.set(IndividualBeneficiaryVulnerableYesNoPage(index), value)
         case None => Failure(new Throwable("Vulnerability must be answered for taxable trust."))
       }
-    } else {
-      Success(answers)
     }
   }
 

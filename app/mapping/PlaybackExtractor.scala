@@ -19,7 +19,17 @@ package mapping
 import mapping.PlaybackExtractionErrors.PlaybackExtractionError
 import models.UserAnswers
 
+import scala.util.{Success, Try}
+
 trait PlaybackExtractor[T] {
 
   def extract(answers: UserAnswers, data: T): Either[PlaybackExtractionError, UserAnswers]
+
+  def extractIfTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
+    if (answers.isTrustTaxable) {
+      block
+    } else {
+      Success(answers)
+    }
+  }
 }
