@@ -35,12 +35,14 @@ class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
       Some("UTR"),
       utr,
       "p1",
-      "bullet.1.title",
-      "bullet.1.p1",
-      "bullet.1.p2",
       "p2",
+      "bullet.1",
+      "bullet.2",
       "p3",
-      "return.link"
+      "p4",
+      "return.link",
+      "p5",
+      "contact.link"
     )
   }
 
@@ -56,11 +58,14 @@ class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
       Some("UTR"),
       utr,
       "p1",
-      "bullet.1.title",
-      "bullet.1.p1",
-      "bullet.1.p2",
       "p2",
-      "sign_out"
+      "bullet.1",
+      "bullet.2",
+      "p3",
+      "p4",
+      "sign_out",
+      "p5",
+      "contact.link"
     )
   }
 
@@ -76,12 +81,14 @@ class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
       Some("URN"),
       urn,
       "p1",
-      "bullet.1.title",
-      "bullet.1.p1",
-      "bullet.1.p2",
       "p2",
+      "bullet.1",
+      "bullet.2",
       "p3",
-      "return.link"
+      "p4",
+      "return.link",
+      "p5",
+      "contact.link"
     )
   }
 }

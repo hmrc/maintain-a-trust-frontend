@@ -34,18 +34,19 @@ title = messages(s"identifierDoesNotMatch.title")
 
  <p>@messages(s"identifierDoesNotMatch.p1")</p>
 
- <ol class="govuk-list--number">
-  <li class="bold">@messages("identifierDoesNotMatch.bullet.1.title")
-   <p>@messages("identifierDoesNotMatch.bullet.1.p1")</p>
-   <p>@messages("identifierDoesNotMatch.bullet.1.p2")</p>
-  </li>
- </ol>
-
- <p>@messages("identifierDoesNotMatch.p2")</p>
+<p>@messages(s"identifierDoesNotMatch.p2")</p>
+ <ul class="bullet-list">
+  <li>@messages("identifierDoesNotMatch.bullet.1")</li>
+  <li>@messages("identifierDoesNotMatch.bullet.2")</li>
+ </ul>
+ <p>@messages("identifierDoesNotMatch.p3")</p>
 
   @if(affinityGroup == AffinityGroup.Agent) {
-   <p>@messages(s"identifierDoesNotMatch.p3") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages(s"identifierDoesNotMatch.return.link")</a>.</p>
+   <p>@messages(s"identifierDoesNotMatch.p4") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages(s"identifierDoesNotMatch.return.link")</a>.</p>
   } else {
-   @components.button_link("identifierDoesNotMatch.sign_out", controllers.routes.LogoutController.logout().url)
+<p>@components.button_link("identifierDoesNotMatch.sign_out", controllers.routes.LogoutController.logout().url)</p>
   }
+
+  <p>@messages("identifierDoesNotMatch.p5") <a id="help-link" target="_blank" href="@appConfig.helplineUrl">@messages("identifierDoesNotMatch.contact.link")</a>.</p>
+
 }
