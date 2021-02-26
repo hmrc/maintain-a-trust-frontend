@@ -21,7 +21,6 @@ import generators.Generators
 import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, PassportType}
 import models.pages.RoleInCompany
 import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
-import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.individual._
 import utils.Constants.GB
@@ -38,7 +37,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
     bpMatchStatus = Some("01"),
     name = FullName(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = index match {
-      case 0 => Some(DateTime.parse("1970-02-01"))
+      case 0 => Some(LocalDate.parse("1970-02-01"))
       case _ => None
     },
     countryOfResidence = index match {

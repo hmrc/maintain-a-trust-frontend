@@ -18,18 +18,19 @@ package mapping
 
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import mapping.PlaybackImplicits._
-import models.http.{AddressType, EntityType}
+import models.http.{AddressType, DisplayTrustIdentificationOrgType, EntityType}
 import models.{Address, InternationalAddress, UKAddress, UserAnswers}
 import pages.{EmptyPage, QuestionPage}
 import play.api.Logging
 import utils.Constants.GB
 
+import java.time.LocalDate
 import scala.reflect.{ClassTag, classTag}
 import scala.util.{Failure, Success, Try}
 
 abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
 
-  val optionalEntity: Boolean
+  val optionalEntity: Boolean = false
 
   def extract(answers: UserAnswers, data: List[T]): Either[PlaybackExtractionError, UserAnswers] = {
     data match {
@@ -39,7 +40,6 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
 
         val updated = entities.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
           case (answers, (entity, index)) =>
-
             updateUserAnswers(answers, entity, index)
         }
 
@@ -62,7 +62,6 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
   def extractCountryOfResidence(countryOfResidence: Option[String],
                                 index: Int,
                                 answers: UserAnswers): Try[UserAnswers] = {
-
     extractCountryOfResidenceOrNationality(
       country = countryOfResidence,
       answers = answers,
@@ -149,6 +148,30 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
       }
     }
   }
+
+  def utrYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def utrPage(index: Int): QuestionPage[String] = new EmptyPage[String]
+
+  def extractOrgIdentification(identification: Option[DisplayTrustIdentificationOrgType],
+                               index: Int,
+                               answers: UserAnswers): Try[UserAnswers] = {
+    extractIfTaxable(answers) {
+      identification match {
+        case Some(DisplayTrustIdentificationOrgType(_, Some(utr), None)) =>
+          answers.set(utrYesNoPage(index), true)
+            .flatMap(_.set(utrPage(index), utr))
+        case Some(DisplayTrustIdentificationOrgType(_, None, Some(address))) =>
+          answers.set(utrYesNoPage(index), false)
+            .flatMap(answers => extractAddress(address, index, answers))
+        case _ =>
+          answers.set(utrYesNoPage(index), false)
+            .flatMap(_.set(addressYesNoPage(index), false))
+      }
+    }
+  }
+
+  def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = new EmptyPage[LocalDate]
 
   def extractIfTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {

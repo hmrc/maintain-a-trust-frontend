@@ -16,10 +16,10 @@
 
 package models.http
 
-import models.Constant.dateTimePattern
 import models.FullName
-import org.joda.time.DateTime
 import play.api.libs.json._
+
+import java.time.LocalDate
 
 sealed trait Trustees extends EntityType
 
@@ -27,7 +27,6 @@ case class DisplayTrustLeadTrusteeType(leadTrusteeInd: Option[DisplayTrustLeadTr
                                        leadTrusteeOrg: Option[DisplayTrustLeadTrusteeOrgType] = None)
 
 object DisplayTrustLeadTrusteeType {
-  implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))
   implicit val writes: Writes[DisplayTrustLeadTrusteeType] = Json.writes[DisplayTrustLeadTrusteeType]
   implicit val reads : Reads[DisplayTrustLeadTrusteeType] = Json.reads[DisplayTrustLeadTrusteeType]
 }
@@ -35,18 +34,14 @@ object DisplayTrustLeadTrusteeType {
 case class DisplayTrustLeadTrusteeIndType(lineNo: Option[String],
                                           bpMatchStatus: Option[String],
                                           name: FullName,
-                                          dateOfBirth: DateTime,
+                                          dateOfBirth: LocalDate,
                                           phoneNumber: String,
                                           email: Option[String] = None,
                                           identification: DisplayTrustIdentificationType,
-                                          entityStart: String
-                                         ) extends Trustees
+                                          entityStart: String) extends Trustees
 
 object DisplayTrustLeadTrusteeIndType {
-
-  implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))
   implicit val leadTrusteeIndTypeFormat: Format[DisplayTrustLeadTrusteeIndType] = Json.format[DisplayTrustLeadTrusteeIndType]
-
 }
 
 case class DisplayTrustLeadTrusteeOrgType(lineNo: Option[String],
@@ -55,8 +50,7 @@ case class DisplayTrustLeadTrusteeOrgType(lineNo: Option[String],
                                           phoneNumber: String,
                                           email: Option[String] = None,
                                           identification: DisplayTrustIdentificationOrgType,
-                                          entityStart: String
-                                         ) extends Trustees
+                                          entityStart: String) extends Trustees
 
 object DisplayTrustLeadTrusteeOrgType {
   implicit val leadTrusteeOrgTypeFormat: Format[DisplayTrustLeadTrusteeOrgType] = Json.format[DisplayTrustLeadTrusteeOrgType]
@@ -72,13 +66,12 @@ object DisplayTrustTrusteeType {
 case class DisplayTrustTrusteeIndividualType(lineNo: Option[String],
                                              bpMatchStatus: Option[String],
                                              name: FullName,
-                                             dateOfBirth: Option[DateTime],
+                                             dateOfBirth: Option[LocalDate],
                                              phoneNumber: Option[String],
                                              identification: Option[DisplayTrustIdentificationType],
                                              entityStart: String) extends Trustees
 
 object DisplayTrustTrusteeIndividualType {
-  implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))
   implicit val trusteeIndividualTypeFormat: Format[DisplayTrustTrusteeIndividualType] = Json.format[DisplayTrustTrusteeIndividualType]
 }
 

@@ -16,24 +16,31 @@
 
 package mapping.protectors
 
-import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.DisplayTrustProtectorBusiness
+import models.pages.IndividualOrBusiness
+import models.{Address, MetaData, UserAnswers}
+import pages.QuestionPage
 import pages.protectors._
 import pages.protectors.business._
 
-import scala.util.{Success, Try}
-import mapping.PlaybackImplicits._
-import models.pages.IndividualOrBusiness
+import scala.util.Try
 
 class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrustProtectorBusiness] {
+
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorAddressUKYesNoPage(index)
+  override def ukAddressPage(index: Int): QuestionPage[Address] = BusinessProtectorAddressPage(index)
+  override def nonUkAddressPage(index: Int): QuestionPage[Address] = BusinessProtectorAddressPage(index)
+
+  override def utrYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorUtrYesNoPage(index)
+  override def utrPage(index: Int): QuestionPage[String] = BusinessProtectorUtrPage(index)
 
   override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustProtectorBusiness, index: Int): Try[UserAnswers] = {
     answers
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(BusinessProtectorNamePage(index), entity.name))
       .flatMap(_.set(BusinessProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap(answers => extractUtr(entity, index, answers))
-      .flatMap(answers => extractAddress(entity, index, answers))
+      .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
       .flatMap {
         _.set(
           BusinessProtectorMetaData(index),
@@ -45,30 +52,4 @@ class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrust
         )
       }
   }
-
-  private def extractUtr(protector: DisplayTrustProtectorBusiness, index: Int, answers: UserAnswers): Try[UserAnswers] =
-    protector.identification.flatMap(_.utr) match {
-      case Some(utr) =>
-        answers.set(BusinessProtectorUtrYesNoPage(index), true)
-          .flatMap(_.set(BusinessProtectorUtrPage(index), utr))
-      case None =>
-        answers.set(BusinessProtectorUtrYesNoPage(index), false)
-    }
-
-  private def extractAddress(protector: DisplayTrustProtectorBusiness, index: Int, answers: UserAnswers): Try[UserAnswers] =
-    protector.identification.flatMap(_.address).convert match {
-      case Some(uk: UKAddress) =>
-        answers.set(BusinessProtectorAddressPage(index), uk)
-          .flatMap(_.set(BusinessProtectorAddressUKYesNoPage(index), true))
-          .flatMap(_.set(BusinessProtectorAddressYesNoPage(index), true))
-      case Some(nonUk: InternationalAddress) =>
-        answers.set(BusinessProtectorAddressPage(index), nonUk)
-          .flatMap(_.set(BusinessProtectorAddressUKYesNoPage(index), false))
-          .flatMap(_.set(BusinessProtectorAddressYesNoPage(index), true))
-      case None =>
-        protector.identification.flatMap(_.utr) match {
-          case None => answers.set(BusinessProtectorAddressYesNoPage(index), false)
-          case _ => Success(answers)
-        }
-    }
 }

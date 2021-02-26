@@ -57,7 +57,7 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
     individualProtector.dateOfBirth match {
       case Some(dateOfBirth) =>
         answers.set(IndividualProtectorDateOfBirthYesNoPage(index), true)
-          .flatMap(_.set(IndividualProtectorDateOfBirthPage(index), dateOfBirth.convert))
+          .flatMap(_.set(IndividualProtectorDateOfBirthPage(index), dateOfBirth))
       case None =>
         // Assumption that user answered no as the date of birth is not provided
         answers.set(IndividualProtectorDateOfBirthYesNoPage(index), false)

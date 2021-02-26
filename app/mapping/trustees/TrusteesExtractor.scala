@@ -63,7 +63,7 @@ class TrusteesExtractor @Inject() extends Logging {
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(TrusteeNamePage(index), leadIndividual.name))
-      .flatMap(_.set(TrusteeDateOfBirthPage(index), leadIndividual.dateOfBirth.convert))
+      .flatMap(_.set(TrusteeDateOfBirthPage(index), leadIndividual.dateOfBirth))
       .flatMap(answers => extractLeadIndividualIdentification(leadIndividual, index, answers))
       .flatMap(answers => extractEmail(leadIndividual.email, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), leadIndividual.phoneNumber))
@@ -251,7 +251,7 @@ class TrusteesExtractor @Inject() extends Logging {
     trusteeIndividual.dateOfBirth match {
       case Some(dob) =>
         answers.set(TrusteeDateOfBirthYesNoPage(index), true)
-          .flatMap(_.set(TrusteeDateOfBirthPage(index), dob.convert))
+          .flatMap(_.set(TrusteeDateOfBirthPage(index), dob))
       case None =>
         // Assumption that user answered no as utr is not provided
         answers.set(TrusteeDateOfBirthYesNoPage(index), false)

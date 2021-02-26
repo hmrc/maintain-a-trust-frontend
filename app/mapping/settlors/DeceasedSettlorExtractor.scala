@@ -16,58 +16,40 @@
 
 package mapping.settlors
 
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
+import mapping.PlaybackExtractor
 import mapping.PlaybackImplicits._
 import models.http.{DisplayTrustIdentificationType, DisplayTrustWillType}
 import models.{Address, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import pages.settlors.deceased_settlor._
-import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
-class DeceasedSettlorExtractor extends Logging {
+class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
 
-  def extract(answers: UserAnswers, data: Option[DisplayTrustWillType]): Either[PlaybackExtractionError, UserAnswers] = {
-    data match {
-      case None => Left(FailedToExtractData("No Deceased Settlor"))
-      case deceasedSettlor =>
-
-        val updated = deceasedSettlor.foldLeft[Try[UserAnswers]](Success(answers)){
-          case (answers, deceasedSettlor) =>
-
-            answers
-              .flatMap(_.set(SettlorNamePage, deceasedSettlor.name))
-              .flatMap(answers => extractDateOfDeath(deceasedSettlor, answers))
-              .flatMap(answers => extractDateOfBirth(deceasedSettlor, answers))
-              .flatMap(answers => extractIdentification(deceasedSettlor.identification, answers))
-              .flatMap(_.set(DeceasedSettlorSafeIdPage, deceasedSettlor.identification.flatMap(_.safeId)))
-              .flatMap {
-                _.set(
-                  DeceasedSettlorMetaData,
-                  MetaData(
-                    lineNo = deceasedSettlor.lineNo,
-                    bpMatchStatus = deceasedSettlor.bpMatchStatus,
-                    entityStart = deceasedSettlor.entityStart
-                  )
-                )
-              }
-        }
-
-        updated match {
-          case Success(a) =>
-            Right(a)
-          case Failure(exception) =>
-            logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-            Left(FailedToExtractData(DisplayTrustWillType.toString))
-        }
-    }
+  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustWillType, index: Int): Try[UserAnswers] = {
+    answers
+      .flatMap(_.set(SettlorNamePage, entity.name))
+      .flatMap(answers => extractDateOfDeath(entity, answers))
+      .flatMap(answers => extractDateOfBirth(entity, answers))
+      .flatMap(answers => extractIdentification(entity.identification, answers))
+      .flatMap(_.set(DeceasedSettlorSafeIdPage, entity.identification.flatMap(_.safeId)))
+      .flatMap {
+        _.set(
+          DeceasedSettlorMetaData,
+          MetaData(
+            lineNo = entity.lineNo,
+            bpMatchStatus = entity.bpMatchStatus,
+            entityStart = entity.entityStart
+          )
+        )
+      }
   }
 
   private def extractDateOfDeath(deceasedSettlor: DisplayTrustWillType, answers: UserAnswers) = {
     deceasedSettlor.dateOfDeath match {
       case Some(dateOfDeath) =>
         answers.set(SettlorDateOfDeathYesNoPage, true)
-          .flatMap(_.set(SettlorDateOfDeathPage, dateOfDeath.convert))
+          .flatMap(_.set(SettlorDateOfDeathPage, dateOfDeath))
       case None =>
         // Assumption that user answered no as the date of death is not provided
         answers.set(SettlorDateOfDeathYesNoPage, false)
@@ -78,7 +60,7 @@ class DeceasedSettlorExtractor extends Logging {
     deceasedSettlor.dateOfBirth match {
       case Some(dateOfBirth) =>
         answers.set(SettlorDateOfBirthYesNoPage, true)
-          .flatMap(_.set(SettlorDateOfBirthPage, dateOfBirth.convert))
+          .flatMap(_.set(SettlorDateOfBirthPage, dateOfBirth))
       case None =>
         // Assumption that user answered no as the date of birth is not provided
         answers.set(SettlorDateOfBirthYesNoPage, false)

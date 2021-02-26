@@ -82,29 +82,32 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
           trustees = None,
           protectors = None,
           settlors = Some(DisplayTrustSettlors(
-            settlor = Some(List(DisplayTrustSettlor(
-              lineNo = Some(s"1"),
-              bpMatchStatus = Some("01"),
-              name = FullName("individual", Some("living"), "settlor"),
-              dateOfBirth = None,
-              identification = None,
-              entityStart = "2019-11-26"
-            ))),
-            settlorCompany = Some(List(DisplayTrustSettlorCompany(
-              lineNo = Some(s"1"),
-              bpMatchStatus = Some("01"),
-              name = s"Company Settlor 1",
-              companyType = Some(KindOfBusiness.Trading),
-              companyTime = Some(false),
-              identification = Some(
-                DisplayTrustIdentificationOrgType(
-                  safeId = Some("8947584-94759745-84758745"),
-                  utr = Some("1234567890"),
-                  address = None
-                )
-              ),
-              entityStart = "2019-11-26"
+            settlor = List(
+              DisplayTrustSettlor(
+                lineNo = Some(s"1"),
+                bpMatchStatus = Some("01"),
+                name = FullName("individual", Some("living"), "settlor"),
+                dateOfBirth = None,
+                identification = None,
+                entityStart = "2019-11-26"
+              )
             ),
+            settlorCompany = List(
+              DisplayTrustSettlorCompany(
+                lineNo = Some(s"1"),
+                bpMatchStatus = Some("01"),
+                name = s"Company Settlor 1",
+                companyType = Some(KindOfBusiness.Trading),
+                companyTime = Some(false),
+                identification = Some(
+                  DisplayTrustIdentificationOrgType(
+                    safeId = Some("8947584-94759745-84758745"),
+                    utr = Some("1234567890"),
+                    address = None
+                  )
+                ),
+                entityStart = "2019-11-26"
+              ),
               DisplayTrustSettlorCompany(
                 lineNo = Some(s"1"),
                 bpMatchStatus = Some("01"),
@@ -120,7 +123,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
                 ),
                 entityStart = "2019-11-26"
               )
-            ))
+            )
           ))
         )
 
@@ -146,8 +149,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorUtrPage(0)).get mustBe "1234567890"
         extraction.right.value.get(SettlorAddressYesNoPage(0)) mustNot be(defined)
         extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressUKPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressInternationalPage(0)) mustNot be(defined)
+        extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
         extraction.right.value.get(SettlorCompanyTypePage(0)).get mustBe Trading
         extraction.right.value.get(SettlorCompanyTimePage(0)).get mustBe false
         extraction.right.value.get(SettlorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
@@ -159,8 +161,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorUtrPage(1)).get mustBe "1234567890"
         extraction.right.value.get(SettlorAddressYesNoPage(1)) mustNot be(defined)
         extraction.right.value.get(SettlorAddressUKYesNoPage(1)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressUKPage(1)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressInternationalPage(1)) mustNot be(defined)
+        extraction.right.value.get(SettlorAddressPage(1)) mustNot be(defined)
         extraction.right.value.get(SettlorCompanyTypePage(1)).get mustBe Trading
         extraction.right.value.get(SettlorCompanyTimePage(1)).get mustBe false
         extraction.right.value.get(SettlorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
@@ -172,8 +173,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorIndividualNINOPage(2)) mustNot be(defined)
         extraction.right.value.get(SettlorAddressYesNoPage(2)).get mustBe false
         extraction.right.value.get(SettlorAddressUKYesNoPage(2)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressUKPage(2)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressInternationalPage(2)) mustNot be(defined)
+        extraction.right.value.get(SettlorAddressPage(2)) mustNot be(defined)
         extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(2)) mustNot be(defined)
         extraction.right.value.get(SettlorIndividualPassportIDCardPage(2)) mustNot be(defined)
         extraction.right.value.get(SettlorSafeIdPage(2)) mustNot be(defined)

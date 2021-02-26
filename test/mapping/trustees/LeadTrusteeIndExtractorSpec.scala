@@ -22,7 +22,6 @@ import mapping.PlaybackExtractionErrors.FailedToExtractData
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, MetaData, UserAnswers}
-import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
 import utils.Constants.GB
@@ -59,7 +58,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = DateTime.parse("2018-02-01"),
+          dateOfBirth = LocalDate.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),
           identification =
@@ -97,7 +96,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = DateTime.parse("2018-02-01"),
+          dateOfBirth = LocalDate.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),
           identification =
@@ -135,7 +134,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = DateTime.parse("2018-02-01"),
+          dateOfBirth = LocalDate.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),
           identification =
@@ -174,7 +173,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = DateTime.parse("2018-02-01"),
+          dateOfBirth = LocalDate.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),
           identification =

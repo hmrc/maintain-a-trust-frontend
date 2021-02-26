@@ -132,13 +132,13 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         uaSet(SettlorUtrYesNoPage(index), false) andThen
         uaSet(SettlorAddressYesNoPage(index), true) andThen
         uaSet(SettlorAddressUKYesNoPage(index), true) andThen
-        uaSet(SettlorAddressUKPage(index), UKAddress("Line1", "Line2", Some("Line3"), None, "POSTCODE"))
+        uaSet(SettlorAddressPage(index), UKAddress("Line1", "Line2", Some("Line3"), None, "POSTCODE"))
 
       def businessSettlorWithNonUKAddress(index: Int) = businessSettlorBase(index) andThen
         uaSet(SettlorUtrYesNoPage(index), false) andThen
         uaSet(SettlorAddressYesNoPage(index), true) andThen
         uaSet(SettlorAddressUKYesNoPage(index), false) andThen
-        uaSet(SettlorAddressInternationalPage(index), InternationalAddress( "Line1", "Line2", Some("Line3"), "AN"))
+        uaSet(SettlorAddressPage(index), InternationalAddress( "Line1", "Line2", Some("Line3"), "AN"))
 
       def businessSettlorWithNoIdentification(index: Int) = businessSettlorBase(index) andThen
         uaSet(SettlorUtrYesNoPage(index), false) andThen
@@ -215,14 +215,14 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         uaSet(SettlorIndividualNINOYesNoPage(index), false) andThen
         uaSet(SettlorAddressYesNoPage(index), true) andThen
         uaSet(SettlorAddressUKYesNoPage(index), true) andThen
-        uaSet(SettlorAddressUKPage(index), UKAddress("Line1", "Line2", Some("Line3"), None, "POSTCODE")) andThen
+        uaSet(SettlorAddressPage(index), UKAddress("Line1", "Line2", Some("Line3"), None, "POSTCODE")) andThen
         uaSet(SettlorIndividualPassportIDCardYesNoPage(index), false)
 
       def individualSettlorWithInternationalAddressAndIdCard(index: Int) = baseIndividualSettlor(index) andThen
         uaSet(SettlorIndividualNINOYesNoPage(index), false) andThen
         uaSet(SettlorAddressYesNoPage(index), true) andThen
         uaSet(SettlorAddressUKYesNoPage(index), false) andThen
-        uaSet(SettlorAddressInternationalPage(index), InternationalAddress("Line1", "Line2", Some("Line3"), "DE")) andThen
+        uaSet(SettlorAddressPage(index), InternationalAddress("Line1", "Line2", Some("Line3"), "DE")) andThen
         uaSet(SettlorIndividualPassportIDCardYesNoPage(index), true) andThen
         uaSet(SettlorIndividualPassportIDCardPage(index), PassportOrIdCardDetails("DE", "1234567890", LocalDate.of(2020, 1, 1)))
 

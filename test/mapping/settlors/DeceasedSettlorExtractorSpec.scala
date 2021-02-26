@@ -20,7 +20,6 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustWillType, PassportType}
 import models.{FullName, MetaData, UserAnswers}
-import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.deceased_settlor._
 import utils.Constants.GB
@@ -39,7 +38,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
       "must return user answers" in {
 
-        val deceasedSettlor = None
+        val deceasedSettlor = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -67,7 +66,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
@@ -90,7 +89,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
-          dateOfDeath = Some(DateTime.parse("2019-02-01")),
+          dateOfDeath = Some(LocalDate.parse("2019-02-01")),
           identification = Some(
             DisplayTrustIdentificationType(
               safeId = Some("34234234-34234-234234"),
@@ -104,7 +103,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
@@ -141,7 +140,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId","utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
@@ -177,7 +176,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId","utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
@@ -215,7 +214,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId","utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
@@ -253,7 +252,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
@@ -276,8 +275,8 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           lineNo = "1",
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = Some(DateTime.parse("1970-10-15")),
-          dateOfDeath = Some(DateTime.parse("2019-02-01")),
+          dateOfBirth = Some(LocalDate.parse("1970-10-15")),
+          dateOfDeath = Some(LocalDate.parse("2019-02-01")),
           identification = Some(
             DisplayTrustIdentificationType(
               safeId = None,
@@ -291,7 +290,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
@@ -327,7 +326,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false

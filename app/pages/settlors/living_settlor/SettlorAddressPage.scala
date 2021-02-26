@@ -16,12 +16,12 @@
 
 package pages.settlors.living_settlor
 
-import models.UKAddress
+import models.Address
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.LivingSettlors
 
-final case class SettlorAddressUKPage(index : Int) extends QuestionPage[UKAddress] {
+final case class SettlorAddressPage(index : Int) extends QuestionPage[Address] {
 
   override def path: JsPath = LivingSettlors.path \ index \ toString
 

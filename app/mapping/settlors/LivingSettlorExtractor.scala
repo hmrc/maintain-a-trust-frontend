@@ -16,46 +16,39 @@
 
 package mapping.settlors
 
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
+import mapping.PlaybackExtractor
 import mapping.PlaybackImplicits._
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
-import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
+import models.{Address, MetaData, UserAnswers}
+import pages.QuestionPage
 import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
-import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
-class LivingSettlorExtractor extends Logging {
+class LivingSettlorExtractor extends PlaybackExtractor[LivingSettlor] {
 
-  def extract(answers: UserAnswers, data: Option[List[LivingSettlor]]): Either[PlaybackExtractionError, UserAnswers] = {
-      data match {
-        case None => Left(FailedToExtractData("No Living Settlors"))
-        case Some(settlors) =>
+  override def utrYesNoPage(index: Int): QuestionPage[Boolean] = SettlorUtrYesNoPage(index)
+  override def utrPage(index: Int): QuestionPage[String] = SettlorUtrPage(index)
 
-          val updated = settlors.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
-            case (answers, (settlor, index)) =>
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = SettlorAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = SettlorAddressUKYesNoPage(index)
+  override def ukAddressPage(index: Int): QuestionPage[Address] = SettlorAddressPage(index)
+  override def nonUkAddressPage(index: Int): QuestionPage[Address] = SettlorAddressPage(index)
 
-              settlor match {
-                case x : DisplayTrustSettlorCompany => extractSettlorCompany(answers, index, x)
-                case x : DisplayTrustSettlor => extractSettlorIndividual(answers, index, x)
-                case _ => Failure(new RuntimeException("Unexpected settlor type"))
-              }
-          }
-
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[SettlorCompanyExtractor] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(DisplayTrustSettlors.toString))
-          }
-      }
+  override def updateUserAnswers(answers: Try[UserAnswers], entity: LivingSettlor, index: Int): Try[UserAnswers] = {
+    entity match {
+      case x: DisplayTrustSettlorCompany => extractSettlorCompany(answers, index, x)
+      case x: DisplayTrustSettlor => extractSettlorIndividual(answers, index, x)
+      case _ => Failure(new RuntimeException("Unexpected settlor type"))
     }
+  }
 
-  private def extractSettlorIndividual(answers: Try[UserAnswers], index: Int, individual : DisplayTrustSettlor): Try[UserAnswers] = {
+  private def extractSettlorIndividual(answers: Try[UserAnswers],
+                                       index: Int,
+                                       individual: DisplayTrustSettlor): Try[UserAnswers] = {
     answers
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(SettlorIndividualNamePage(index), individual.name))
@@ -75,11 +68,13 @@ class LivingSettlorExtractor extends Logging {
       .flatMap(_.set(LivingSettlorStatus(index), UpToDate))
   }
 
-  private def extractSettlorCompany(answers: Try[UserAnswers], index: Int, company : DisplayTrustSettlorCompany): Try[UserAnswers] = {
+  private def extractSettlorCompany(answers: Try[UserAnswers],
+                                    index: Int,
+                                    company: DisplayTrustSettlorCompany): Try[UserAnswers] = {
     answers
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(SettlorBusinessNamePage(index), company.name))
-      .flatMap(answers => extractCompanyIdentification(company, index, answers))
+      .flatMap(answers => extractOrgIdentification(company.identification, index, answers))
       .flatMap {
         _.set(
           SettlorMetaData(index),
@@ -111,11 +106,11 @@ class LivingSettlorExtractor extends Logging {
       case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
         answers.set(SettlorIndividualNINOYesNoPage(index), false)
           .flatMap(_.set(SettlorIndividualPassportIDCardYesNoPage(index), false))
-          .flatMap(answers => extractAddress(address.convert, index, answers))
+          .flatMap(answers => extractAddress(address, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
         answers.set(SettlorIndividualNINOYesNoPage(index), false)
-          .flatMap(answers => extractAddress(address.convert, index, answers))
+          .flatMap(answers => extractAddress(address, index, answers))
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
       case _ =>
@@ -125,29 +120,11 @@ class LivingSettlorExtractor extends Logging {
     }
   }
 
-  private def extractCompanyIdentification(company: DisplayTrustSettlorCompany, index: Int, answers: UserAnswers) = {
-    company.identification match {
-
-      case Some(DisplayTrustIdentificationOrgType(_, Some(utr), None)) =>
-        answers.set(SettlorUtrYesNoPage(index), true)
-          .flatMap(_.set(SettlorUtrPage(index), utr))
-
-      case Some(DisplayTrustIdentificationOrgType(_, None, Some(address))) =>
-        answers.set(SettlorUtrYesNoPage(index), false)
-          .flatMap(answers => extractAddress(address.convert, index, answers))
-
-      case _ =>
-        answers.set(SettlorUtrYesNoPage(index), false)
-          .flatMap(_.set(SettlorAddressYesNoPage(index), false))
-
-    }
-  }
-
   private def extractDateOfBirth(settlorIndividual: DisplayTrustSettlor, index: Int, answers: UserAnswers) = {
     settlorIndividual.dateOfBirth match {
       case Some(dob) =>
         answers.set(SettlorIndividualDateOfBirthYesNoPage(index), true)
-          .flatMap(_.set(SettlorIndividualDateOfBirthPage(index), dob.convert))
+          .flatMap(_.set(SettlorIndividualDateOfBirthPage(index), dob))
       case None =>
         // Assumption that user answered no as utr is not provided
         answers.set(SettlorIndividualDateOfBirthYesNoPage(index), false)
@@ -157,18 +134,5 @@ class LivingSettlorExtractor extends Logging {
   private def extractPassportIdCard(passport: PassportType, index: Int, answers: UserAnswers) = {
     answers.set(SettlorIndividualPassportIDCardYesNoPage(index), true)
       .flatMap(_.set(SettlorIndividualPassportIDCardPage(index), passport.convert))
-  }
-
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers) = {
-    address match {
-      case uk: UKAddress =>
-        answers.set(SettlorAddressUKPage(index), uk)
-          .flatMap(_.set(SettlorAddressYesNoPage(index), true))
-          .flatMap(_.set(SettlorAddressUKYesNoPage(index), true))
-      case nonUk: InternationalAddress =>
-        answers.set(SettlorAddressInternationalPage(index), nonUk)
-          .flatMap(_.set(SettlorAddressYesNoPage(index), true))
-          .flatMap(_.set(SettlorAddressUKYesNoPage(index), false))
-    }
   }
 }

@@ -16,12 +16,12 @@
 
 package models.http
 
-import models.Constant.dateTimePattern
 import models.FullName
 import models.pages.RoleInCompany
-import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+
+import java.time.LocalDate
 
 sealed trait BeneficiaryType extends EntityType
 
@@ -35,7 +35,7 @@ case class DisplayTrustBeneficiaryType(individualDetails: List[DisplayTrustIndiv
 
 object DisplayTrustBeneficiaryType {
 
-  implicit val protectorReads: Reads[DisplayTrustBeneficiaryType] = (
+  implicit val reads: Reads[DisplayTrustBeneficiaryType] = (
     (__ \ "individualDetails").readWithDefault[List[DisplayTrustIndividualDetailsType]](Nil) and
       (__ \ "company").readWithDefault[List[DisplayTrustCompanyType]](Nil) and
       (__ \ "trust").readWithDefault[List[DisplayTrustBeneficiaryTrustType]](Nil) and
@@ -43,16 +43,16 @@ object DisplayTrustBeneficiaryType {
       (__ \ "unidentified").readWithDefault[List[DisplayTrustUnidentifiedType]](Nil) and
       (__ \ "large").readWithDefault[List[DisplayTrustLargeType]](Nil) and
       (__ \ "other").readWithDefault[List[DisplayTrustOtherType]](Nil)
-    ) (DisplayTrustBeneficiaryType.apply _)
+    )(DisplayTrustBeneficiaryType.apply _)
 
-  implicit val protectorWrites: Writes[DisplayTrustBeneficiaryType] = Json.writes[DisplayTrustBeneficiaryType]
+  implicit val writes: Writes[DisplayTrustBeneficiaryType] = Json.writes[DisplayTrustBeneficiaryType]
 
 }
 
 case class DisplayTrustIndividualDetailsType(lineNo: Option[String],
                                              bpMatchStatus: Option[String],
                                              name: FullName,
-                                             dateOfBirth: Option[DateTime],
+                                             dateOfBirth: Option[LocalDate],
                                              countryOfResidence: Option[String],
                                              countryOfNationality: Option[String],
                                              vulnerableBeneficiary: Option[Boolean],
@@ -63,7 +63,6 @@ case class DisplayTrustIndividualDetailsType(lineNo: Option[String],
                                              entityStart: String) extends BeneficiaryType
 
 object DisplayTrustIndividualDetailsType {
-  implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))
   implicit val individualDetailsTypeFormat: Format[DisplayTrustIndividualDetailsType] = Json.format[DisplayTrustIndividualDetailsType]
 }
 

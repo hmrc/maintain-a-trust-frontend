@@ -85,7 +85,7 @@ class OtherIndividualExtractor @Inject() extends PlaybackExtractor[NaturalPerson
     individual.dateOfBirth match {
       case Some(dob) =>
         answers.set(OtherIndividualDateOfBirthYesNoPage(index), true)
-          .flatMap(_.set(OtherIndividualDateOfBirthPage(index), dob.convert))
+          .flatMap(_.set(OtherIndividualDateOfBirthPage(index), dob))
       case None =>
         // Assumption that user answered no as dob is not provided
         answers.set(OtherIndividualDateOfBirthYesNoPage(index), false)

@@ -106,7 +106,7 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
     individualBeneficiary.dateOfBirth match {
       case Some(dob) =>
         answers.set(IndividualBeneficiaryDateOfBirthYesNoPage(index), true)
-          .flatMap(_.set(IndividualBeneficiaryDateOfBirthPage(index), dob.convert))
+          .flatMap(_.set(IndividualBeneficiaryDateOfBirthPage(index), dob))
       case None =>
         // Assumption that user answered no as dob is not provided
         answers.set(IndividualBeneficiaryDateOfBirthYesNoPage(index), false)
@@ -121,7 +121,6 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
   }
 
   private def extractVulnerability(vulnerable: Option[Boolean], index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    // TODO - will this statement hold if migrating from non-taxable to taxable?
     extractIfTaxable(answers) {
       vulnerable match {
         case Some(value) => answers.set(IndividualBeneficiaryVulnerableYesNoPage(index), value)

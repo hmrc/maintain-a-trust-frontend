@@ -21,7 +21,6 @@ import generators.Generators
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
-import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
 import utils.Constants.GB
@@ -67,7 +66,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
     bpMatchStatus = Some("01"),
     name = FullName(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = index match {
-      case 1 => Some(DateTime.parse("1970-02-01"))
+      case 1 => Some(LocalDate.parse("1970-02-01"))
       case _ => None
     },
     phoneNumber = index match {
@@ -330,7 +329,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
               lineNo = Some("01"),
               bpMatchStatus = Some("01"),
               name = FullName("individual", None, "trustee 1"),
-              dateOfBirth = Some(DateTime.parse("1970-02-01")),
+              dateOfBirth = Some(LocalDate.parse("1970-02-01")),
               phoneNumber = Some("01911112222"),
               identification = Some(DisplayTrustIdentificationType(
                 safeId = Some("8947584-94759745-84758745"),
@@ -355,7 +354,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
               lineNo = Some("01"),
               bpMatchStatus = Some("01"),
               name = FullName("individual", None, "trustee 2"),
-              dateOfBirth = Some(DateTime.parse("1970-02-01")),
+              dateOfBirth = Some(LocalDate.parse("1970-02-01")),
               phoneNumber = Some("01911112222"),
               identification = Some(DisplayTrustIdentificationType(
                 safeId = Some("8947584-94759745-84758745"),

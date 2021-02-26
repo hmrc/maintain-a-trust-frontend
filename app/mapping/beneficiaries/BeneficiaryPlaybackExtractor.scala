@@ -25,8 +25,6 @@ import scala.util.{Success, Try}
 
 trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtractor[T] {
 
-  override val optionalEntity: Boolean = false
-
   def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
   def shareOfIncomePage(index: Int): QuestionPage[String] = new EmptyPage[String]
 

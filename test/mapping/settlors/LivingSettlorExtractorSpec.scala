@@ -22,7 +22,6 @@ import models.http._
 import models.pages.KindOfBusiness._
 import models.pages.{IndividualOrBusiness, KindOfBusiness}
 import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
-import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.living_settlor._
 import utils.Constants.GB
@@ -67,7 +66,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
     lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     name = FullName(s"First Name $index", None, s"Last Name $index"),
-    dateOfBirth = Some(DateTime.parse("1970-02-01")),
+    dateOfBirth = Some(LocalDate.parse("1970-02-01")),
     identification = Some(
       DisplayTrustIdentificationType(
         safeId = Some("8947584-94759745-84758745"),
@@ -101,11 +100,11 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         "must return user answers" in {
 
-          val trusts = None
+          val settlors = Nil
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = livingSettlorExtractor.extract(ua, trusts)
+          val extraction = livingSettlorExtractor.extract(ua, settlors)
 
           extraction mustBe 'left
 
@@ -116,7 +115,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
       "when there are companies" - {
 
         "with minimum data must return user answers updated" in {
-          val trust = List(DisplayTrustSettlorCompany(
+          val settlors = List(DisplayTrustSettlorCompany(
             lineNo = Some(s"1"),
             bpMatchStatus = Some("01"),
             name = s"Company Settlor 1",
@@ -128,7 +127,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = livingSettlorExtractor.extract(ua, Some(trust))
+          val extraction = livingSettlorExtractor.extract(ua, settlors)
 
           extraction.right.value.get(SettlorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
           extraction.right.value.get(SettlorBusinessNamePage(0)).get mustBe "Company Settlor 1"
@@ -136,8 +135,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorUtrPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorAddressYesNoPage(0)).get mustBe false
           extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(SettlorAddressUKPage(0)) mustNot be(defined)
-          extraction.right.value.get(SettlorAddressInternationalPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorCompanyTypePage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorCompanyTimePage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorSafeIdPage(0)) mustNot be(defined)
@@ -145,11 +143,11 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
         }
 
         "with full data must return user answers updated" in {
-          val trusts = (for (index <- 0 to 2) yield generateSettlorCompany(index)).toList
+          val settlors = (for (index <- 0 to 2) yield generateSettlorCompany(index)).toList
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = livingSettlorExtractor.extract(ua, Some(trusts))
+          val extraction = livingSettlorExtractor.extract(ua, settlors)
 
           extraction mustBe 'right
 
@@ -161,8 +159,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorUtrPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(SettlorAddressYesNoPage(0)).get mustBe true
-          extraction.right.value.get(SettlorAddressInternationalPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "DE")
-          extraction.right.value.get(SettlorAddressUKPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "DE")
           extraction.right.value.get(SettlorAddressUKYesNoPage(0)).get mustBe false
 
           extraction.right.value.get(SettlorBusinessNamePage(1)).get mustBe "Company Settlor 1"
@@ -173,8 +170,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorUtrPage(1)).get mustBe "1234567890"
           extraction.right.value.get(SettlorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(SettlorAddressYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(SettlorAddressInternationalPage(1)) mustNot be(defined)
-          extraction.right.value.get(SettlorAddressUKPage(1)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(1)) mustNot be(defined)
           extraction.right.value.get(SettlorAddressUKYesNoPage(1)) mustNot be(defined)
 
           extraction.right.value.get(SettlorBusinessNamePage(2)).get mustBe "Company Settlor 2"
@@ -185,8 +181,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorUtrPage(2)) mustNot be(defined)
           extraction.right.value.get(SettlorSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(SettlorAddressYesNoPage(2)).get mustBe true
-          extraction.right.value.get(SettlorAddressInternationalPage(2)) mustNot be(defined)
-          extraction.right.value.get(SettlorAddressUKPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+          extraction.right.value.get(SettlorAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
           extraction.right.value.get(SettlorAddressUKYesNoPage(2)).get mustBe true
         }
 
@@ -199,11 +194,11 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         "must return user answers" in {
 
-          val trusts = None
+          val settlors = Nil
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = livingSettlorExtractor.extract(ua, trusts)
+          val extraction = livingSettlorExtractor.extract(ua, settlors)
 
           extraction mustBe 'left
 
@@ -214,7 +209,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
       "when there are individuals" - {
 
         "with minimum data must return user answers updated" in {
-          val trust = List(DisplayTrustSettlor(
+          val settlors = List(DisplayTrustSettlor(
             lineNo = Some(s"1"),
             bpMatchStatus = Some("01"),
             name = FullName("First Name", None, "Last Name"),
@@ -225,7 +220,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = livingSettlorExtractor.extract(ua, Some(trust))
+          val extraction = livingSettlorExtractor.extract(ua, settlors)
 
           extraction.right.value.get(SettlorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
           extraction.right.value.get(SettlorIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
@@ -234,8 +229,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorAddressYesNoPage(0)).get mustBe false
           extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(SettlorAddressUKPage(0)) mustNot be(defined)
-          extraction.right.value.get(SettlorAddressInternationalPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorIndividualPassportIDCardPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorSafeIdPage(0)) mustNot be(defined)
@@ -243,11 +237,11 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
         }
 
         "with full data must return user answers updated" in {
-          val trusts = (for(index <- 0 to 2) yield generateSettlorIndividual(index)).toList
+          val settlors = (for(index <- 0 to 2) yield generateSettlorIndividual(index)).toList
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = livingSettlorExtractor.extract(ua, Some(trusts))
+          val extraction = livingSettlorExtractor.extract(ua, settlors)
 
           extraction mustBe 'right
 
@@ -257,8 +251,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)).get mustBe true
           extraction.right.value.get(SettlorIndividualNINOPage(0)).get mustBe "0234567890"
           extraction.right.value.get(SettlorAddressYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(SettlorAddressInternationalPage(0)) mustNot be(defined)
-          extraction.right.value.get(SettlorAddressUKPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorIndividualPassportIDCardPage(0)) mustNot be(defined)
@@ -270,8 +263,7 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorIndividualNINOYesNoPage(1)).get mustBe false
           extraction.right.value.get(SettlorIndividualNINOPage(1)) mustNot be(defined)
           extraction.right.value.get(SettlorAddressYesNoPage(1)).get mustBe true
-          extraction.right.value.get(SettlorAddressInternationalPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
-          extraction.right.value.get(SettlorAddressUKPage(1)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
           extraction.right.value.get(SettlorAddressUKYesNoPage(1)).get mustBe false
           extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(1)).get mustBe false
           extraction.right.value.get(SettlorIndividualPassportIDCardPage(1)) mustNot be(defined)
@@ -283,21 +275,14 @@ class LivingSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorIndividualNINOYesNoPage(2)).get mustBe false
           extraction.right.value.get(SettlorIndividualNINOPage(2)) mustNot be(defined)
           extraction.right.value.get(SettlorAddressYesNoPage(2)).get mustBe true
-          extraction.right.value.get(SettlorAddressInternationalPage(2)) mustNot be(defined)
-          extraction.right.value.get(SettlorAddressUKPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+          extraction.right.value.get(SettlorAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
           extraction.right.value.get(SettlorAddressUKYesNoPage(2)).get mustBe true
           extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(2)).get mustBe true
           extraction.right.value.get(SettlorIndividualPassportIDCardPage(2)).get.country mustBe "DE"
           extraction.right.value.get(SettlorSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
 
         }
-
       }
-
-
     }
-
-
   }
-
 }
