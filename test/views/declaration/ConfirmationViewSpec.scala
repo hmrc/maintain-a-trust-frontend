@@ -61,7 +61,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
   }
 
   "Confirmation view for an agent" must {
-    val view = viewFor[ConfirmationView](Some(emptyUserAnswers))
+    val view = viewFor[ConfirmationView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(
       fakeTvn = fakeTvn,
@@ -75,7 +75,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
   }
 
   "Confirmation view for an organisation" must {
-    val view = viewFor[ConfirmationView](Some(emptyUserAnswers))
+    val view = viewFor[ConfirmationView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(
       fakeTvn = fakeTvn,

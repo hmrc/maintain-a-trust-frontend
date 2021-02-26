@@ -45,7 +45,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- TrusteeEmailYesNoPage(0) is true
         _ <- TrusteeEmailPage(0) is "aa@aabb.com"
         _ <- IsThisLeadTrusteePage(0) is true
-      } yield Unit).run(emptyUserAnswers).value
+      } yield Unit).run(emptyUserAnswersForUtr).value
 
       val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 
@@ -82,7 +82,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- IsThisLeadTrusteePage(0) is true
         _ <- TrusteePassportIDCardPage(0) is PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))
         _ <- TrusteePassportIDCardYesNoPage(0) is true
-      } yield Unit).run(emptyUserAnswers).value
+      } yield Unit).run(emptyUserAnswersForUtr).value
 
       val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 
@@ -120,7 +120,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- TrusteeEmailYesNoPage(0) is true
         _ <- TrusteeEmailPage(0) is "aa@aabb.com"
         _ <- IsThisLeadTrusteePage(0) is true
-      } yield Unit).run(emptyUserAnswers).value
+      } yield Unit).run(emptyUserAnswersForUtr).value
 
       val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 
@@ -154,7 +154,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- TrusteeEmailYesNoPage(0) is false
         _ <- TrusteeTelephoneNumberPage(0) is "67676767676"
         _ <- IsThisLeadTrusteePage(0) is true
-      } yield Unit).run(emptyUserAnswers).value
+      } yield Unit).run(emptyUserAnswersForUtr).value
 
       val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 
@@ -189,7 +189,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- TrusteeEmailPage(0) is "aa@aabb.com"
         _ <- TrusteeTelephoneNumberPage(0) is "67676767676"
         _ <- IsThisLeadTrusteePage(0) is true
-      } yield Unit).run(emptyUserAnswers).value
+      } yield Unit).run(emptyUserAnswersForUtr).value
 
       val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 
@@ -229,7 +229,7 @@ class TrusteesPrintPlaybackHelperSpec extends SpecBase with AnswerSectionMatcher
         _ <- TrusteeNinoYesNoPage(2) is true
         _ <- TrusteeNinoPage(2) is "NH111111A"
         _ <- IsThisLeadTrusteePage(2) is false
-      } yield Unit).run(emptyUserAnswers).value
+      } yield Unit).run(emptyUserAnswersForUtr).value
 
       val helper = new AllTrusteesPrinter(answerRowConverter)(answers)
 

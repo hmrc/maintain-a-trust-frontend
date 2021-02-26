@@ -42,7 +42,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
     val group = Organisation
 
-    val userAnswers = emptyUserAnswers
+    val userAnswers = emptyUserAnswersForUtr
 
     val view = viewFor[VariationProgressView](Some(userAnswers))
 
@@ -50,7 +50,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
     behave like normalPageTitleWithCaption(applyView,
       "variationProgress",
-      None,
+      "utr",
       utr,
     "p1", "p2")
 
@@ -81,7 +81,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
         val group = Organisation
 
-        val userAnswers = emptyUserAnswers
+        val userAnswers = emptyUserAnswersForUtr
 
         val view = viewFor[VariationProgressView](Some(userAnswers))
 

@@ -41,7 +41,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
   "PlaybackDeclaredAnswersController Controller" must {
 
-    def playbackAnswers(whatIsNext: WhatIsNext) = emptyUserAnswers
+    def playbackAnswers(whatIsNext: WhatIsNext) = emptyUserAnswersForUtr
       .set(WhatIsNextPage, whatIsNext).success.value
       .set(TVNPage, fakeTvn).success.value
       .set(AgentDeclarationPage, AgentDeclaration(FullName("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value

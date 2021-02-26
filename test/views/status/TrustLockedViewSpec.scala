@@ -26,13 +26,13 @@ class TrustLockedViewSpec extends ViewBehaviours {
 
   "TrustLocked view" must {
 
-    val view = viewFor[TrustLockedView](Some(emptyUserAnswers))
+    val view = viewFor[TrustLockedView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "trustLocked",
-      Some("UTR"),
+      "utr",
       utr,
       "p1", "p2","p3",
       "link1")

@@ -62,7 +62,7 @@ class TaskListControllerSpec extends SpecBase {
 
       val mockConnector = mock[TrustsStoreConnector]
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
       val application = applicationBuilder(userAnswers = Some(answers))
@@ -93,7 +93,7 @@ class TaskListControllerSpec extends SpecBase {
 
       val mockConnector = mock[TrustsStoreConnector]
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
         .set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
 
       val application = applicationBuilder(userAnswers = Some(answers))
@@ -122,7 +122,7 @@ class TaskListControllerSpec extends SpecBase {
 
     "redirect to Technical difficulties page when no value found for What do you want to do next" in {
 
-      val answers = emptyUserAnswers
+      val answers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 

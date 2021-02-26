@@ -33,7 +33,7 @@ class PrintLastDeclaredAnswersControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val playbackAnswers = TestUserAnswers.emptyUserAnswers
+      val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
         .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value
         .set(CharityBeneficiaryDiscretionYesNoPage(0), true).success.value
         .set(CharityBeneficiaryShareOfIncomePage(0), "10").success.value

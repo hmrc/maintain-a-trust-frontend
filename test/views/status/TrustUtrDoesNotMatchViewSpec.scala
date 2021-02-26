@@ -26,7 +26,7 @@ class TrustUtrDoesNotMatchViewSpec extends ViewBehaviours {
 
   "TrustUtrDoesNotMatch view" must {
 
-    val view = viewFor[TrustUtrDoesNotMatchView](Some(emptyUserAnswers))
+    val view = viewFor[TrustUtrDoesNotMatchView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(AffinityGroup.Agent)(fakeRequest, messages)
 

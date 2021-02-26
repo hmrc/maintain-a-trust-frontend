@@ -23,7 +23,8 @@ object TestUserAnswers extends TryValues {
   lazy val draftId = "id"
   lazy val userInternalId = "internalId"
   lazy val utr = "1234567890"
+  lazy val urn = "XATRUST12345678"
 
-  def emptyUserAnswers = models.UserAnswers(userInternalId, utr)
-
+  def emptyUserAnswersForUtr = models.UserAnswers(userInternalId, utr)
+  def emptyUserAnswersForUrn = models.UserAnswers(userInternalId, urn)
 }

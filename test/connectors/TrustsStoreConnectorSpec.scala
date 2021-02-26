@@ -102,7 +102,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
 
       val connector = application.injector.instanceOf[TrustsStoreConnector]
 
-      val userAnswers = emptyUserAnswers
+      val userAnswers = emptyUserAnswersForUtr
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value

@@ -32,7 +32,7 @@ class AddProtectorYesNoViewSpec extends YesNoViewBehaviours {
 
   "AddProtectorYesNo view" must {
 
-    val view = viewFor[AddProtectorYesNoView](Some(emptyUserAnswers))
+    val view = viewFor[AddProtectorYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, messageKeyPrefix)(fakeRequest, messages)

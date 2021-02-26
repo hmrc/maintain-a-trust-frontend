@@ -28,7 +28,7 @@ class UnavailableSectionsViewSpec extends ViewBehaviours {
     val future = "future section"
     val messageKeyPrefix = "unavailableSections"
 
-    val view = viewFor[UnavailableSectionsView](Some(emptyUserAnswers))
+    val view = viewFor[UnavailableSectionsView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(available, unavailable, future)(fakeRequest, messages)
 

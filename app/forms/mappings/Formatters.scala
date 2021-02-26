@@ -69,7 +69,7 @@ trait Formatters {
 
   private[mappings] def urnFormatter(requiredKey: String, invalidKey: String, lengthKey: String): Formatter[String] = new Formatter[String] {
 
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
       data.get(key) match {
         case None => Left(Seq(FormError(key, requiredKey)))
         case Some(s) if s.trim == "" => Left(Seq(FormError(key, requiredKey)))
@@ -84,6 +84,8 @@ trait Formatters {
             }
           }
       }
+    }
+
     override def unbind(key: String, value: String): Map[String, String] =
       Map(key -> value)
   }

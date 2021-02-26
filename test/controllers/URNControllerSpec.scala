@@ -46,7 +46,7 @@ class URNControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request = FakeRequest(GET, trustURNRoute)
 
@@ -109,7 +109,7 @@ class URNControllerSpec extends SpecBase {
 
       val application =
         applicationBuilder(
-          userAnswers = Some(emptyUserAnswers),
+          userAnswers = Some(emptyUserAnswersForUtr),
           affinityGroup = Organisation,
           enrolments = enrolments
         ).build()
@@ -139,7 +139,7 @@ class URNControllerSpec extends SpecBase {
 
       val application =
         applicationBuilder(
-          userAnswers = Some(emptyUserAnswers),
+          userAnswers = Some(emptyUserAnswersForUtr),
           affinityGroup = Organisation,
           enrolments = enrolments
         ).overrides(
@@ -165,7 +165,7 @@ class URNControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request =
         FakeRequest(POST, trustURNRoute)

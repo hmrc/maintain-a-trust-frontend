@@ -24,7 +24,7 @@ class ProblemDeclaringViewSpec extends ViewBehaviours {
 
   "ProblemDeclaring view" must {
 
-    val view = viewFor[ProblemDeclaringView](Some(emptyUserAnswers))
+    val view = viewFor[ProblemDeclaringView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(AffinityGroup.Agent)(fakeRequest, messages)
 

@@ -23,7 +23,7 @@ class CreateAgentServicesAccountViewSpec extends ViewBehaviours {
 
   "CreateAgentServicesAccount view" must {
 
-    val view = viewFor[CreateAgentServicesAccountView](Some(emptyUserAnswers))
+    val view = viewFor[CreateAgentServicesAccountView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply()(fakeRequest, messages)
 

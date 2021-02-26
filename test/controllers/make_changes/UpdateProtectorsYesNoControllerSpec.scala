@@ -41,7 +41,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
 
   lazy val updateProtectorYesNoRoute = routes.UpdateProtectorYesNoController.onPageLoad().url
 
-  val baseAnswers = emptyUserAnswers
+  val baseAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
   "UpdateProtectorYesNo Controller" must {

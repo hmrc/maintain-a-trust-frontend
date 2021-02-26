@@ -31,7 +31,7 @@ class URNViewSpec extends StringViewBehaviours {
 
   "URNView view" must {
 
-    val view = viewFor[URNView](Some(emptyUserAnswers))
+    val view = viewFor[URNView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, Call("POST", ""))(fakeRequest, messages)

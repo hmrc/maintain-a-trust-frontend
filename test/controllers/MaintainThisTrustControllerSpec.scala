@@ -29,7 +29,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
     "return OK and the correct view for a UTR GET when needs IV" in {
 
       val application = applicationBuilder(
-        userAnswers = Some(emptyUserAnswers)
+        userAnswers = Some(emptyUserAnswersForUtr)
       ).build()
 
       val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad(needsIv = true).url)
@@ -55,7 +55,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       val urn = "NTTRUST00000001"
 
       val application = applicationBuilder(
-        userAnswers = Some(emptyUserAnswers.copy(identifier = urn))
+        userAnswers = Some(emptyUserAnswersForUtr.copy(identifier = urn))
       ).build()
 
       val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad(needsIv = true).url)
@@ -78,7 +78,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
     "return OK and the correct view for a UTR GET when doesn't need IV" in {
 
       val application = applicationBuilder(
-        userAnswers = Some(emptyUserAnswers)
+        userAnswers = Some(emptyUserAnswersForUtr)
       ).build()
 
       val request = FakeRequest(GET, routes.MaintainThisTrustController.onPageLoad(needsIv = false).url)

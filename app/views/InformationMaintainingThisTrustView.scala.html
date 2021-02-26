@@ -22,7 +22,7 @@
     main_template: MainTemplate
 )
 
-@(utr: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("informationMaintainingThisTrust.title")
@@ -30,15 +30,11 @@
 
    @components.back_link()
 
-    @components.heading_with_caption(headingKey = "informationMaintainingThisTrust.heading", caption = "informationMaintainingThisTrust.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "informationMaintainingThisTrust.heading", caption = s"informationMaintainingThisTrust.$identifierType.caption", captionParam = identifier)
 
     <div class="info-maintaining-warning-margin-top">
        @components.warning("informationMaintainingThisTrust")
     </div>
-
-   <h2>@messages("informationMaintainingThisTrust.viewLastDeclaration")</h2>
-
-   <p class="panel-indent">@components.link(controllers.print.routes.PrintLastDeclaredAnswersController.onPageLoad().url, "print-and-save","informationMaintainingThisTrust.printsave.link", openInNewWindow = false).</p>
 
     <h2>@messages("informationMaintainingThisTrust.updateDetails")</h2>
 
@@ -48,7 +44,7 @@
 
    <p>@messages("informationMaintainingThisTrust.paragraph4")</p>
 
-    @components.button_link(messages("site.startMaintaining"), controllers.routes.WhatIsNextController.onPageLoad().url)
+    @components.button_link(messages("site.startMaintaining"), controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url)
 
 }
 

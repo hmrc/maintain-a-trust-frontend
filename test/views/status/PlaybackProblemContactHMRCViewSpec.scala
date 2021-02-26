@@ -25,13 +25,13 @@ class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
 
   "PlaybackProblemContactHMRC view" must {
 
-    val view = viewFor[PlaybackProblemContactHMRCView](Some(emptyUserAnswers))
+    val view = viewFor[PlaybackProblemContactHMRCView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "playbackProblemContactHMRC",
-      None,
+      "utr",
       utr,
       "p1.beforeLink", "p1.link", "p1.afterLink","p2")
 

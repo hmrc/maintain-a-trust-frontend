@@ -22,7 +22,7 @@
     config: FrontendAppConfig
 )
 
-@(utr: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("agentNotAuthorised.title")
@@ -30,7 +30,7 @@
 
     @components.back_link()
 
-    @components.heading_with_caption(headingKey = "agentNotAuthorised.heading", caption = "agentNotAuthorised.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "agentNotAuthorised.heading", caption = s"agentNotAuthorised.$identifierType.caption", captionParam = identifier)
 
     <p>@messages("agentNotAuthorised.p1")</p>
     <p>@messages("agentNotAuthorised.p2") <a href="@config.agentInvitationsUrl">@messages("agentNotAuthorised.p2.a")</a></p>

@@ -42,7 +42,7 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
   lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswers
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, MakeChanges).success.value
 
   "UpdateSettlorsYesNo Controller" must {

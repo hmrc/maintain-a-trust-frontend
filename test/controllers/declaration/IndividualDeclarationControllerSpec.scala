@@ -42,7 +42,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
   lazy val onSubmit: Call = routes.IndividualDeclarationController.onSubmit()
 
   val whatIsNext: WhatIsNext = MakeChanges
-  val baseAnswers: UserAnswers = emptyUserAnswers
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, whatIsNext).success.value
 
   "Individual Declaration Controller" must {

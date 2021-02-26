@@ -23,7 +23,7 @@ class RefSentByPostAgentViewSpec extends ViewBehaviours {
 
   "RefSentByPost Agent view" must {
 
-    val view = viewFor[RefSentByPostAgentView](Some(emptyUserAnswers))
+    val view = viewFor[RefSentByPostAgentView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply()(fakeRequest, messages)
 

@@ -23,8 +23,7 @@ import wolfendale.scalacheck.regexp.RegexpGen
 
 class URNFormProviderSpec extends StringFieldBehaviours {
 
-  private val maxLength = 15
-  private val minLength = 15
+  private val requiredLength = 15
 
   private val requiredKey = "urn.error.required"
   private val lengthKey = "urn.error.length"
@@ -41,20 +40,20 @@ class URNFormProviderSpec extends StringFieldBehaviours {
       form = form,
       fieldName = fieldName,
       validDataGenerator = RegexpGen.from(urnRegex),
-      fieldLength = Some(maxLength)
+      fieldLength = Some(requiredLength)
     )
 
     behave like fieldWithMaxLength(
       form = form,
       fieldName = fieldName,
-      maxLength = maxLength,
+      maxLength = requiredLength,
       lengthError = FormError(fieldName, lengthKey)
     )
 
     behave like fieldWithMinLength(
       form = form,
       fieldName = fieldName,
-      minLength = minLength,
+      minLength = requiredLength,
       lengthError = FormError(fieldName, lengthKey)
     )
 
