@@ -85,8 +85,14 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     arbitrary[String] suchThat (_.nonEmpty)
 
   def stringsWithMaxLength(maxLength: Int): Gen[String] =
+    stringGenerator(1, maxLength)
+
+  def stringsOfLength(length: Int): Gen[String] =
+    stringGenerator(length, length)
+
+  private def stringGenerator(minLength: Int, maxLength: Int): Gen[String] =
     for {
-      length <- choose(1, maxLength)
+      length <- choose(minLength, maxLength)
       chars <- listOfN(length, arbitrary[Char])
     } yield chars.mkString
 

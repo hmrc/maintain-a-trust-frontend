@@ -31,11 +31,8 @@ object ViewUtils {
   }
 
   def subheading(identifier: String)(implicit messages: Messages) : String = {
-    if (IsUTR(identifier)) {
-      s"${messages("utr.subheading", identifier)}"
-    } else {
-      s"${messages("urn.subheading", identifier)}"
-    }
+    val identifierType = if (IsUTR(identifier)) "utr" else "urn"
+    messages(s"$identifierType.subheading", identifier)
   }
 
 }

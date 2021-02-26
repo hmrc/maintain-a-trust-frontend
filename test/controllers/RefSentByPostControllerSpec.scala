@@ -20,7 +20,7 @@ import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
-import views.html.{InformationMaintainingThisTrustView, RefSentByPostAgentView, RefSentByPostView}
+import views.html.{RefSentByPostAgentView, RefSentByPostView}
 
 class RefSentByPostControllerSpec extends SpecBase {
 

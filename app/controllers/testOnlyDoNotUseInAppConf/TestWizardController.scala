@@ -16,12 +16,10 @@
 
 package controllers.testOnlyDoNotUseInAppConf
 
-import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions.Actions
-import controllers.testOnlyDoNotUseInAppConf.FourOrFiveMLD.{FiveMLD, FourMLD}
+import controllers.testOnlyDoNotUseInAppConf.FourOrFiveMLD.FiveMLD
 import forms.testOnlyDoNotUseInAppConf.{TestWizardForm, TestWizardFormProvider}
-import javax.inject.Inject
 import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.I18nSupport
@@ -30,15 +28,17 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.testOnlyDoNotUseInAppConf.WizardView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class TestWizardController @Inject()(val controllerComponents: MessagesControllerComponents,
-                                     actions: Actions,
-                                     view: WizardView,
-                                     formProvider: TestWizardFormProvider,
-                                     userConnector: TestUserConnector,
-                                     trustStoreConnector: TrustsStoreConnector
+class TestWizardController @Inject()(
+                                      val controllerComponents: MessagesControllerComponents,
+                                      actions: Actions,
+                                      view: WizardView,
+                                      formProvider: TestWizardFormProvider,
+                                      userConnector: TestUserConnector,
+                                      trustStoreConnector: TrustsStoreConnector
                                     )(implicit ec: ExecutionContext) extends FrontendBaseController
   with I18nSupport
   with Logging {
@@ -93,12 +93,8 @@ class TestWizardController @Inject()(val controllerComponents: MessagesControlle
   }
 
   private def setMode(mode: FourOrFiveMLD)(implicit req: Request[AnyContent]): Future[Unit] = {
-    mode match {
-      case FourMLD =>
-        trustStoreConnector.setFeature("5mld", state = false).map(_ => ())
-      case FiveMLD =>
-        trustStoreConnector.setFeature("5mld", state = true).map(_ => ())
-    }
+    val state = mode == FiveMLD
+    trustStoreConnector.setFeature("5mld", state).map(_ => ())
   }
 
 }
