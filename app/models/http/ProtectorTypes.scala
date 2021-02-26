@@ -22,7 +22,7 @@ import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-sealed trait Protector
+sealed trait Protector extends EntityType
 
 case class DisplayTrustProtectorsType(protector: List[DisplayTrustProtector],
                                       protectorCompany: List[DisplayTrustProtectorBusiness])

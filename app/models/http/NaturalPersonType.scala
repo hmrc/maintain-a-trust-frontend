@@ -26,7 +26,7 @@ case class NaturalPersonType(lineNo: Option[String],
                              name: FullName,
                              dateOfBirth: Option[DateTime],
                              identification: Option[DisplayTrustIdentificationType],
-                             entityStart: String)
+                             entityStart: String) extends EntityType
 
 object NaturalPersonType {
   implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))

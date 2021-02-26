@@ -17,54 +17,43 @@
 package mapping.beneficiaries
 
 import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
 import mapping.PlaybackImplicits._
 import models.http.{DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, PassportType}
-import models.{Address, InternationalAddress, MetaData, UKAddress, UTR, UserAnswers}
+import models.{Address, MetaData, UTR, UserAnswers}
+import pages.QuestionPage
 import pages.beneficiaries.individual._
-import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustIndividualDetailsType]]] with Logging {
+class IndividualBeneficiaryExtractor @Inject() extends BeneficiaryPlaybackExtractor[DisplayTrustIndividualDetailsType] {
 
-  override def extract(answers: UserAnswers, data: Option[List[DisplayTrustIndividualDetailsType]]): Either[PlaybackExtractionError, UserAnswers] = {
-    data match {
-      case None => Left(FailedToExtractData("No Individual Beneficiary"))
-      case Some(individual) =>
+  override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryIncomeYesNoPage(index)
+  override def shareOfIncomePage(index: Int): QuestionPage[String] = IndividualBeneficiaryIncomePage(index)
 
-        val updated = individual.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
-          case (answers, (individualBeneficiary, index)) =>
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryAddressUKYesNoPage(index)
+  override def ukAddressPage(index: Int): QuestionPage[Address] = IndividualBeneficiaryAddressPage(index)
+  override def nonUkAddressPage(index: Int): QuestionPage[Address] = IndividualBeneficiaryAddressPage(index)
 
-            answers
-              .flatMap(_.set(IndividualBeneficiaryNamePage(index), individualBeneficiary.name))
-              .flatMap(_.set(IndividualBeneficiaryRoleInCompanyPage(index), individualBeneficiary.beneficiaryType))
-              .flatMap(answers => extractDateOfBirth(individualBeneficiary, index, answers))
-              .flatMap(answers => extractShareOfIncome(individualBeneficiary, index, answers))
-              .flatMap(answers => extractIdentification(individualBeneficiary, index, answers))
-              .flatMap(answers => extractVulnerability(individualBeneficiary.vulnerableBeneficiary, index, answers))
-              .flatMap {
-                _.set(
-                  IndividualBeneficiaryMetaData(index),
-                  MetaData(
-                    lineNo = individualBeneficiary.lineNo.getOrElse(""),
-                    bpMatchStatus = individualBeneficiary.bpMatchStatus,
-                    entityStart = individualBeneficiary.entityStart
-                  )
-                )
-              }
-              .flatMap(_.set(IndividualBeneficiarySafeIdPage(index), individualBeneficiary.identification.flatMap(_.safeId)))
-        }
-
-        updated match {
-          case Success(a) =>
-            Right(a)
-          case Failure(exception) =>
-            logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-            Left(FailedToExtractData(DisplayTrustIndividualDetailsType.toString))
-        }
-    }
+  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustIndividualDetailsType, index: Int): Try[UserAnswers] = {
+    answers
+      .flatMap(_.set(IndividualBeneficiaryNamePage(index), entity.name))
+      .flatMap(_.set(IndividualBeneficiaryRoleInCompanyPage(index), entity.beneficiaryType))
+      .flatMap(answers => extractDateOfBirth(entity, index, answers))
+      .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
+      .flatMap(answers => extractIdentification(entity, index, answers))
+      .flatMap(answers => extractVulnerability(entity.vulnerableBeneficiary, index, answers))
+      .flatMap {
+        _.set(
+          IndividualBeneficiaryMetaData(index),
+          MetaData(
+            lineNo = entity.lineNo.getOrElse(""),
+            bpMatchStatus = entity.bpMatchStatus,
+            entityStart = entity.entityStart
+          )
+        )
+      }
+      .flatMap(_.set(IndividualBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
   }
 
   private def extractIdentification(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
@@ -77,11 +66,11 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
       case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
         answers.set(IndividualBeneficiaryNationalInsuranceYesNoPage(index), false)
           .flatMap(_.set(IndividualBeneficiaryPassportIDCardYesNoPage(index), false))
-          .flatMap(answers => extractAddress(address.convert, index, answers))
+          .flatMap(answers => extractAddress(address, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
         answers.set(IndividualBeneficiaryNationalInsuranceYesNoPage(index), false)
-          .flatMap(answers => extractAddress(address.convert, index, answers))
+          .flatMap(answers => extractAddress(address, index, answers))
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
@@ -96,7 +85,6 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
     }
   }
 
-
   private def extractDateOfBirth(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
     individualBeneficiary.dateOfBirth match {
       case Some(dob) =>
@@ -108,33 +96,9 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
     }
   }
 
-  private def extractShareOfIncome(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    individualBeneficiary.beneficiaryShareOfIncome match {
-      case Some(income) =>
-        answers.set(IndividualBeneficiaryIncomeYesNoPage(index), false)
-          .flatMap(_.set(IndividualBeneficiaryIncomePage(index), income))
-      case None =>
-        // Assumption that user answered yes as the share of income is not provided
-        answers.set(IndividualBeneficiaryIncomeYesNoPage(index), true)
-    }
-  }
-
   private def extractPassportIdCard(passport: PassportType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
     answers.set(IndividualBeneficiaryPassportIDCardYesNoPage(index), true)
       .flatMap(_.set(IndividualBeneficiaryPassportIDCardPage(index), passport.convert))
-  }
-
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    address match {
-      case uk: UKAddress =>
-        answers.set(IndividualBeneficiaryAddressPage(index), uk)
-          .flatMap(_.set(IndividualBeneficiaryAddressYesNoPage(index), true))
-          .flatMap(_.set(IndividualBeneficiaryAddressUKYesNoPage(index), true))
-      case nonUk: InternationalAddress =>
-        answers.set(IndividualBeneficiaryAddressPage(index), nonUk)
-          .flatMap(_.set(IndividualBeneficiaryAddressYesNoPage(index), true))
-          .flatMap(_.set(IndividualBeneficiaryAddressUKYesNoPage(index), false))
-    }
   }
 
   private def extractVulnerability(vulnerable: Option[Boolean], index: Int, answers: UserAnswers): Try[UserAnswers] = {

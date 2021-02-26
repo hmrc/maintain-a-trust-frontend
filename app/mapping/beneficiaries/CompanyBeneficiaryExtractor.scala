@@ -17,118 +17,63 @@
 package mapping.beneficiaries
 
 import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorState, PlaybackExtractionError}
-import mapping.PlaybackExtractor
-import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
+import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import models.http.{DisplayTrustCompanyType, DisplayTrustIdentificationOrgType}
+import models.{Address, MetaData, UserAnswers}
+import pages.QuestionPage
 import pages.beneficiaries.company._
-import play.api.Logging
-import mapping.PlaybackImplicits._
-import utils.Constants.GB
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
-class CompanyBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustCompanyType]]] with Logging {
+class CompanyBeneficiaryExtractor @Inject() extends BeneficiaryPlaybackExtractor[DisplayTrustCompanyType] {
 
-  override def extract(answers: UserAnswers, data: Option[List[DisplayTrustCompanyType]]): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      data match {
-        case None => Left(FailedToExtractData("No Company Beneficiary"))
-        case Some(companies) =>
+  override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryCountryOfResidenceYesNoPage(index)
+  override def shareOfIncomePage(index: Int): QuestionPage[String] = CompanyBeneficiaryCountryOfResidencePage(index)
 
-          val updated = companies.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
-            case (answers, (companyBeneficiary, index)) =>
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryCountryOfResidenceYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = CompanyBeneficiaryCountryOfResidencePage(index)
 
-            answers
-              .flatMap(_.set(CompanyBeneficiaryNamePage(index), companyBeneficiary.organisationName))
-              .flatMap(answers => extractShareOfIncome(companyBeneficiary, index, answers))
-              .flatMap(answers => extractCountryOfResidence(companyBeneficiary, index, answers))
-              .flatMap(_.set(CompanyBeneficiarySafeIdPage(index), companyBeneficiary.identification.flatMap(_.safeId)))
-              .flatMap(answers => extractIdentification(companyBeneficiary.identification, index, answers))
-              .flatMap {
-                _.set(
-                  CompanyBeneficiaryMetaData(index),
-                  MetaData(
-                    lineNo = companyBeneficiary.lineNo.getOrElse(""),
-                    bpMatchStatus = companyBeneficiary.bpMatchStatus,
-                    entityStart = companyBeneficiary.entityStart
-                  )
-                )
-              }
-          }
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryAddressUKYesNoPage(index)
+  override def ukAddressPage(index: Int): QuestionPage[Address] = CompanyBeneficiaryAddressPage(index)
+  override def nonUkAddressPage(index: Int): QuestionPage[Address] = CompanyBeneficiaryAddressPage(index)
 
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(DisplayTrustCompanyType.toString))
-          }
+  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustCompanyType, index: Int): Try[UserAnswers] = {
+    answers
+      .flatMap(_.set(CompanyBeneficiaryNamePage(index), entity.organisationName))
+      .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
+      .flatMap(_.set(CompanyBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
+      .flatMap(answers => extractIdentification(entity.identification, index, answers))
+      .flatMap {
+        _.set(
+          CompanyBeneficiaryMetaData(index),
+          MetaData(
+            lineNo = entity.lineNo.getOrElse(""),
+            bpMatchStatus = entity.bpMatchStatus,
+            entityStart = entity.entityStart
+          )
+        )
       }
-    }
+  }
 
   private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {
-    identification map {
-      case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
-        answers.set(CompanyBeneficiaryUtrPage(index), utr)
-          .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), false))
+      identification map {
+        case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
+          answers.set(CompanyBeneficiaryUtrPage(index), utr)
+            .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), false))
 
-      case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
-        extractAddress(address.convert, index, answers)
+        case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
+          extractAddress(address, index, answers)
 
-      case _ =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] only both utr and address parsed")
-        Failure(InvalidExtractorState)
+        case _ =>
+          logger.error(s"[UTR/URN: ${answers.identifier}] only both utr and address parsed")
+          Failure(InvalidExtractorState)
 
-    } getOrElse {
-      answers.set(CompanyBeneficiaryAddressYesNoPage(index), false)
-    }
-    } else {
-      Try(answers)
-    }
-  }
-
-  private def extractShareOfIncome(companyBeneficiary: DisplayTrustCompanyType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
-    companyBeneficiary.beneficiaryShareOfIncome match {
-      case Some(income) =>
-        answers.set(CompanyBeneficiaryDiscretionYesNoPage(index), false)
-          .flatMap(_.set(CompanyBeneficiaryShareOfIncomePage(index), income))
-      case None =>
-        // Assumption that user answered yes as the share of income is not provided
-        answers.set(CompanyBeneficiaryDiscretionYesNoPage(index), true)
-    }
-    } else {
-      Try(answers)
-    }
-  }
-
-  private def extractCountryOfResidence(companyBeneficiary: DisplayTrustCompanyType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    companyBeneficiary.countryOfResidence match {
-      case Some(GB) =>
-        answers.set(CompanyBeneficiaryCountryOfResidenceYesNoPage(index), true)
-          .flatMap(_.set(CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), true))
-          .flatMap(_.set(CompanyBeneficiaryCountryOfResidencePage(index), GB))
-      case Some(country) =>
-        answers.set(CompanyBeneficiaryCountryOfResidenceYesNoPage(index), true)
-          .flatMap(_.set(CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), false))
-          .flatMap(_.set(CompanyBeneficiaryCountryOfResidencePage(index), country))
-      case None =>
-        answers.set(CompanyBeneficiaryCountryOfResidenceYesNoPage(index), false)
-    }
-  }
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
-      address match {
-        case uk: UKAddress =>
-          answers.set(CompanyBeneficiaryAddressPage(index), uk)
-            .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), true))
-            .flatMap(_.set(CompanyBeneficiaryAddressUKYesNoPage(index), true))
-        case nonUk: InternationalAddress =>
-          answers.set(CompanyBeneficiaryAddressPage(index), nonUk)
-            .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), true))
-            .flatMap(_.set(CompanyBeneficiaryAddressUKYesNoPage(index), false))
+      } getOrElse {
+        answers.set(CompanyBeneficiaryAddressYesNoPage(index), false)
       }
     } else {
       Try(answers)

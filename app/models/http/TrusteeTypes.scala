@@ -21,7 +21,7 @@ import models.FullName
 import org.joda.time.DateTime
 import play.api.libs.json._
 
-sealed trait Trustees
+sealed trait Trustees extends EntityType
 
 case class DisplayTrustLeadTrusteeType(leadTrusteeInd: Option[DisplayTrustLeadTrusteeIndType] = None,
                                        leadTrusteeOrg: Option[DisplayTrustLeadTrusteeOrgType] = None)

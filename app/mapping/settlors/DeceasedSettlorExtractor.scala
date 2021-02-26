@@ -16,27 +16,24 @@
 
 package mapping.settlors
 
-import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
-import models.{Address, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
+import mapping.PlaybackImplicits._
 import models.http.{DisplayTrustIdentificationType, DisplayTrustWillType}
+import models.{Address, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import pages.settlors.deceased_settlor._
 import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
-import mapping.PlaybackImplicits._
 
-class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[DisplayTrustWillType]] with Logging {
+class DeceasedSettlorExtractor extends Logging {
 
-  override def extract(answers: UserAnswers, data: Option[DisplayTrustWillType]): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      data match {
-        case None => Left(FailedToExtractData("No Deceased Settlor"))
-        case deceasedSettlor =>
+  def extract(answers: UserAnswers, data: Option[DisplayTrustWillType]): Either[PlaybackExtractionError, UserAnswers] = {
+    data match {
+      case None => Left(FailedToExtractData("No Deceased Settlor"))
+      case deceasedSettlor =>
 
-          val updated = deceasedSettlor.foldLeft[Try[UserAnswers]](Success(answers)){
-            case (answers, deceasedSettlor) =>
+        val updated = deceasedSettlor.foldLeft[Try[UserAnswers]](Success(answers)){
+          case (answers, deceasedSettlor) =>
 
             answers
               .flatMap(_.set(SettlorNamePage, deceasedSettlor.name))
@@ -54,17 +51,17 @@ class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[Displa
                   )
                 )
               }
-          }
+        }
 
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(DisplayTrustWillType.toString))
-          }
-      }
+        updated match {
+          case Success(a) =>
+            Right(a)
+          case Failure(exception) =>
+            logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+            Left(FailedToExtractData(DisplayTrustWillType.toString))
+        }
     }
+  }
 
   private def extractDateOfDeath(deceasedSettlor: DisplayTrustWillType, answers: UserAnswers) = {
     deceasedSettlor.dateOfDeath match {

@@ -17,67 +17,51 @@
 package mapping.beneficiaries
 
 import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorState, PlaybackExtractionError}
-import mapping.PlaybackExtractor
+import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import mapping.PlaybackImplicits._
 import models.HowManyBeneficiaries.{Over1, Over1001, Over101, Over201, Over501}
-import models.http.{DisplayTrustCompanyType, DisplayTrustIdentificationOrgType, DisplayTrustLargeType}
+import models.http.{DisplayTrustIdentificationOrgType, DisplayTrustLargeType}
 import models.{Address, Description, InternationalAddress, MetaData, UKAddress, UserAnswers}
+import pages.QuestionPage
 import pages.beneficiaries.large._
-import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
-class LargeBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustLargeType]]] with Logging {
+class LargeBeneficiaryExtractor @Inject() extends BeneficiaryPlaybackExtractor[DisplayTrustLargeType] {
 
-  override def extract(answers: UserAnswers, data: Option[List[DisplayTrustLargeType]]): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      data match {
-        case None => Left(FailedToExtractData("No Large Beneficiary"))
-        case Some(largeBeneficiaries) =>
+  override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = LargeBeneficiaryDiscretionYesNoPage(index)
+  override def shareOfIncomePage(index: Int): QuestionPage[String] = LargeBeneficiaryShareOfIncomePage(index)
 
-          val updated = largeBeneficiaries.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)) {
-            case (answers, (largeBeneficiary, index)) =>
-
-              answers
-                .flatMap(_.set(LargeBeneficiaryNamePage(index), largeBeneficiary.organisationName))
-                .flatMap(answers => extractShareOfIncome(largeBeneficiary, index, answers))
-                .flatMap(answers => extractIdentification(largeBeneficiary.identification, index, answers))
-                .flatMap(
-                  _.set(
-                    LargeBeneficiaryDescriptionPage(index),
-                    Description(
-                      largeBeneficiary.description,
-                      largeBeneficiary.description1,
-                      largeBeneficiary.description2,
-                      largeBeneficiary.description3,
-                      largeBeneficiary.description4
-                    )
-                  )
-                )
-                .flatMap(answers => extractNumberOfBeneficiaries(largeBeneficiary.numberOfBeneficiary, index, answers))
-                .flatMap(_.set(LargeBeneficiarySafeIdPage(index), largeBeneficiary.identification.flatMap(_.safeId)))
-                .flatMap {
-                  _.set(
-                    LargeBeneficiaryMetaData(index),
-                    MetaData(
-                      lineNo = largeBeneficiary.lineNo.getOrElse(""),
-                      bpMatchStatus = largeBeneficiary.bpMatchStatus,
-                      entityStart = largeBeneficiary.entityStart
-                    )
-                  )
-                }
-          }
-
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(DisplayTrustCompanyType.toString))
-          }
+  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustLargeType, index: Int): Try[UserAnswers] = {
+    answers
+      .flatMap(_.set(LargeBeneficiaryNamePage(index), entity.organisationName))
+      .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
+      .flatMap(answers => extractIdentification(entity.identification, index, answers))
+      .flatMap(
+        _.set(
+          LargeBeneficiaryDescriptionPage(index),
+          Description(
+            entity.description,
+            entity.description1,
+            entity.description2,
+            entity.description3,
+            entity.description4
+          )
+        )
+      )
+      .flatMap(answers => extractNumberOfBeneficiaries(entity.numberOfBeneficiary, index, answers))
+      .flatMap(_.set(LargeBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
+      .flatMap {
+        _.set(
+          LargeBeneficiaryMetaData(index),
+          MetaData(
+            lineNo = entity.lineNo.getOrElse(""),
+            bpMatchStatus = entity.bpMatchStatus,
+            entityStart = entity.entityStart
+          )
+        )
       }
-    }
+  }
 
   private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers) = {
     identification map {
@@ -94,17 +78,6 @@ class LargeBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[
 
     } getOrElse {
       answers.set(LargeBeneficiaryAddressYesNoPage(index), false)
-    }
-  }
-
-  private def extractShareOfIncome(largeBeneficiary: DisplayTrustLargeType, index: Int, answers: UserAnswers) = {
-    largeBeneficiary.beneficiaryShareOfIncome match {
-      case Some(income) =>
-        answers.set(LargeBeneficiaryDiscretionYesNoPage(index), false)
-          .flatMap(_.set(LargeBeneficiaryShareOfIncomePage(index), income))
-      case None =>
-        // Assumption that user answered yes as the share of income is not provided
-        answers.set(LargeBeneficiaryDiscretionYesNoPage(index), true)
     }
   }
 

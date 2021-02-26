@@ -18,7 +18,6 @@ package mapping.protectors
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
 import models.UserAnswers
 import models.http.{DisplayTrustProtector, DisplayTrustProtectorBusiness, DisplayTrustProtectorsType, Protector}
 import pages.protectors._
@@ -27,9 +26,9 @@ import play.api.Logging
 import scala.util.{Failure, Success, Try}
 
 class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProtectorExtractor,
-                                   businessProtectorExtractor: BusinessProtectorExtractor) extends PlaybackExtractor[Option[DisplayTrustProtectorsType]] with Logging {
+                                   businessProtectorExtractor: BusinessProtectorExtractor) extends Logging {
 
-  override def extract(answers: UserAnswers, data: Option[DisplayTrustProtectorsType]): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: Option[DisplayTrustProtectorsType]): Either[PlaybackExtractionError, UserAnswers] = {
 
     data match {
       case Some(p) =>

@@ -17,53 +17,33 @@
 package mapping
 
 import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.http.{DisplayTrustIdentificationType, NaturalPersonType, PassportType}
 import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.individual._
-import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
-class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[NaturalPersonType]]] with Logging {
+class OtherIndividualExtractor @Inject() extends PlaybackExtractor[NaturalPersonType] {
 
   import PlaybackImplicits._
 
-  override def extract(answers: UserAnswers, data: Option[List[NaturalPersonType]]): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      data match {
-        case None => Right(answers)
-        case Some(individual) =>
-
-          val updated = individual.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
-            case (answers, (individual, index)) =>
-
-            answers
-              .flatMap(_.set(OtherIndividualNamePage(index), individual.name))
-              .flatMap(answers => extractDateOfBirth(individual, index, answers))
-              .flatMap(answers => extractIdentification(individual, index, answers))
-              .flatMap {
-                _.set(
-                  OtherIndividualMetaData(index),
-                  MetaData(
-                    lineNo = individual.lineNo.getOrElse(""),
-                    bpMatchStatus = individual.bpMatchStatus,
-                    entityStart = individual.entityStart
-                  )
-                )
-              }
-              .flatMap(_.set(OtherIndividualSafeIdPage(index), individual.identification.flatMap(_.safeId)))
-          }
-
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(NaturalPersonType.toString))
-          }
+  override def updateUserAnswers(answers: Try[UserAnswers], entity: NaturalPersonType, index: Int): Try[UserAnswers] = {
+    answers
+      .flatMap(_.set(OtherIndividualNamePage(index), entity.name))
+      .flatMap(answers => extractDateOfBirth(entity, index, answers))
+      .flatMap(answers => extractIdentification(entity, index, answers))
+      .flatMap {
+        _.set(
+          OtherIndividualMetaData(index),
+          MetaData(
+            lineNo = entity.lineNo.getOrElse(""),
+            bpMatchStatus = entity.bpMatchStatus,
+            entityStart = entity.entityStart
+          )
+        )
       }
-    }
+      .flatMap(_.set(OtherIndividualSafeIdPage(index), entity.identification.flatMap(_.safeId)))
+  }
 
   private def extractIdentification(individual: NaturalPersonType, index: Int, answers: UserAnswers) = {
     individual.identification match {

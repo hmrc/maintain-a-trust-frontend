@@ -22,7 +22,9 @@ import models.pages.KindOfBusiness
 import org.joda.time.DateTime
 import play.api.libs.json.{Format, JodaReads, JodaWrites, Json}
 
-sealed trait LivingSettlor
+sealed trait SettlorType extends EntityType
+
+sealed trait LivingSettlor extends SettlorType
 
 case class DisplayTrustSettlors(settlor: Option[List[DisplayTrustSettlor]],
                                 settlorCompany: Option[List[DisplayTrustSettlorCompany]])
@@ -61,7 +63,7 @@ case class DisplayTrustWillType(lineNo: String,
                                 dateOfBirth: Option[DateTime],
                                 dateOfDeath: Option[DateTime],
                                 identification: Option[DisplayTrustIdentificationType],
-                                entityStart: String)
+                                entityStart: String) extends SettlorType
 
 object DisplayTrustWillType {
   implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))

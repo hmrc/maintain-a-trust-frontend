@@ -25,12 +25,11 @@ import pages.trustdetails.TrustNamePage
 import play.api.Logging
 import scala.util.{Failure, Success}
 
-class CorrespondenceExtractor @Inject() extends PlaybackExtractor[models.http.Correspondence] with Logging {
+class CorrespondenceExtractor @Inject() extends Logging {
 
   import PlaybackImplicits._
 
-  override def extract(answers: UserAnswers, data: Correspondence): Either[PlaybackExtractionError, UserAnswers] =
-  {
+  def extract(answers: UserAnswers, data: Correspondence): Either[PlaybackExtractionError, UserAnswers] = {
     val updated = answers
       .set(CorrespondenceAbroadIndicatorPage, data.abroadIndicator)
       .flatMap(_.set(TrustNamePage, data.name))

@@ -18,15 +18,14 @@ package mapping.settlors
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
 import models.UserAnswers
-import models.http.DisplayTrustEntitiesType
 import models.UserAnswersCombinator._
+import models.http.DisplayTrustEntitiesType
 
 class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtractor,
-                                 livingSettlorExtractor: LivingSettlorExtractor) extends PlaybackExtractor[DisplayTrustEntitiesType] {
+                                 livingSettlorExtractor: LivingSettlorExtractor) {
 
-  override def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
 
     val livingSettlors = for {
       settlors <- data.settlors

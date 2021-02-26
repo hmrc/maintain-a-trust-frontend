@@ -18,7 +18,7 @@ package mapping.trustees
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorState, PlaybackExtractionError}
-import mapping.{PlaybackExtractor, PlaybackImplicits}
+import mapping.PlaybackImplicits
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
@@ -29,35 +29,34 @@ import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class TrusteesExtractor @Inject() extends PlaybackExtractor[Option[List[Trustees]]] with Logging {
+class TrusteesExtractor @Inject() extends Logging {
 
   import PlaybackImplicits._
 
-  override def extract(answers: UserAnswers, data: Option[List[Trustees]]): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      data match {
-        case None =>
-          Left(FailedToExtractData("No Trustees"))
-        case Some(trustees) =>
-          val updated = trustees.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
-            case (answers, (trustee, index)) =>
-              trustee match {
-                case x : DisplayTrustLeadTrusteeIndType => extractLeadTrusteeIndividual(answers, index, x)
-                case x : DisplayTrustLeadTrusteeOrgType => extractLeadTrusteeCompany(answers, index, x)
-                case x : DisplayTrustTrusteeOrgType => extractTrusteeCompany(answers, index, x)
-                case x : DisplayTrustTrusteeIndividualType => extractTrusteeIndividual(answers, index, x)
-                case _ => Failure(new RuntimeException("Unexpected trustee type"))
-              }
-          }
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(DisplayTrustTrusteeType.toString))
-          }
-      }
+  def extract(answers: UserAnswers, data: Option[List[Trustees]]): Either[PlaybackExtractionError, UserAnswers] = {
+    data match {
+      case None =>
+        Left(FailedToExtractData("No Trustees"))
+      case Some(trustees) =>
+        val updated = trustees.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
+          case (answers, (trustee, index)) =>
+            trustee match {
+              case x : DisplayTrustLeadTrusteeIndType => extractLeadTrusteeIndividual(answers, index, x)
+              case x : DisplayTrustLeadTrusteeOrgType => extractLeadTrusteeCompany(answers, index, x)
+              case x : DisplayTrustTrusteeOrgType => extractTrusteeCompany(answers, index, x)
+              case x : DisplayTrustTrusteeIndividualType => extractTrusteeIndividual(answers, index, x)
+              case _ => Failure(new RuntimeException("Unexpected trustee type"))
+            }
+        }
+        updated match {
+          case Success(a) =>
+            Right(a)
+          case Failure(exception) =>
+            logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+            Left(FailedToExtractData(DisplayTrustTrusteeType.toString))
+        }
     }
+  }
 
   private def extractLeadTrusteeIndividual(answers: Try[UserAnswers], index: Int, leadIndividual : DisplayTrustLeadTrusteeIndType): Try[UserAnswers] = {
     answers

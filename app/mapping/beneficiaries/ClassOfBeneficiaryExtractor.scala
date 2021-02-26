@@ -17,59 +17,31 @@
 package mapping.beneficiaries
 
 import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
-import models.{MetaData, UserAnswers}
 import models.http.DisplayTrustUnidentifiedType
+import models.{MetaData, UserAnswers}
+import pages.QuestionPage
 import pages.beneficiaries.classOfBeneficiary._
-import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
-class ClassOfBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustUnidentifiedType]]] with Logging {
+class ClassOfBeneficiaryExtractor @Inject() extends BeneficiaryPlaybackExtractor[DisplayTrustUnidentifiedType] {
 
-  override def extract(answers: UserAnswers, data: Option[List[DisplayTrustUnidentifiedType]]): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      data match {
-        case None => Left(FailedToExtractData("No Class Of Beneficiary"))
-        case Some(classOfBeneficiaries) =>
+  override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = ClassOfBeneficiaryDiscretionYesNoPage(index)
+  override def shareOfIncomePage(index: Int): QuestionPage[String] = ClassOfBeneficiaryShareOfIncomePage(index)
 
-          val updated = classOfBeneficiaries.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
-            case (answers, (classOfBeneficiary, index)) =>
-
-            answers
-              .flatMap(_.set(ClassOfBeneficiaryDescriptionPage(index), classOfBeneficiary.description))
-              .flatMap(answers => extractShareOfIncome(classOfBeneficiary, index, answers))
-              .flatMap {
-                _.set(
-                  ClassOfBeneficiaryMetaData(index),
-                  MetaData(
-                    lineNo = classOfBeneficiary.lineNo.getOrElse(""),
-                    bpMatchStatus = classOfBeneficiary.bpMatchStatus.fold(Some("98"))(x => Some(x)),
-                    entityStart = classOfBeneficiary.entityStart
-                  )
-                )
-              }
-          }
-
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(DisplayTrustUnidentifiedType.toString))
-          }
+  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustUnidentifiedType, index: Int): Try[UserAnswers] = {
+    answers
+      .flatMap(_.set(ClassOfBeneficiaryDescriptionPage(index), entity.description))
+      .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
+      .flatMap {
+        _.set(
+          ClassOfBeneficiaryMetaData(index),
+          MetaData(
+            lineNo = entity.lineNo.getOrElse(""),
+            bpMatchStatus = entity.bpMatchStatus.fold(Some("98"))(x => Some(x)),
+            entityStart = entity.entityStart
+          )
+        )
       }
-    }
-
-  private def extractShareOfIncome(classOfBeneficiary: DisplayTrustUnidentifiedType, index: Int, answers: UserAnswers) = {
-    classOfBeneficiary.beneficiaryShareOfIncome match {
-      case Some(income) =>
-        answers.set(ClassOfBeneficiaryDiscretionYesNoPage(index), false)
-          .flatMap(_.set(ClassOfBeneficiaryShareOfIncomePage(index), income))
-      case None =>
-        // Assumption that user answered yes as the share of income is not provided
-        answers.set(ClassOfBeneficiaryDiscretionYesNoPage(index), true)
-    }
   }
 }

@@ -18,7 +18,6 @@ package mapping.beneficiaries
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
 import models.UserAnswers
 import models.http.DisplayTrustBeneficiaryType
 
@@ -28,9 +27,9 @@ class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBenefic
                                      otherBeneficiaryExtractor: OtherBeneficiaryExtractor,
                                      classOfBeneficiaryExtractor: ClassOfBeneficiaryExtractor,
                                      individualBeneficiaryExtractor: IndividualBeneficiaryExtractor,
-                                     largeBeneficiaryExtractor: LargeBeneficiaryExtractor) extends PlaybackExtractor[DisplayTrustBeneficiaryType] {
+                                     largeBeneficiaryExtractor: LargeBeneficiaryExtractor) {
 
-  override def extract(answers: UserAnswers, data: DisplayTrustBeneficiaryType): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: DisplayTrustBeneficiaryType): Either[PlaybackExtractionError, UserAnswers] = {
 
     import models.UserAnswersCombinator._
 

@@ -16,9 +16,7 @@
 
 package mapping.settlors
 
-import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
 import mapping.PlaybackImplicits._
 import models.http._
 import models.pages.IndividualOrBusiness
@@ -30,10 +28,9 @@ import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class LivingSettlorExtractor @Inject() extends PlaybackExtractor[Option[List[LivingSettlor]]] with Logging {
+class LivingSettlorExtractor extends Logging {
 
-  override def extract(answers: UserAnswers, data: Option[List[LivingSettlor]]): Either[PlaybackExtractionError, UserAnswers] =
-    {
+  def extract(answers: UserAnswers, data: Option[List[LivingSettlor]]): Either[PlaybackExtractionError, UserAnswers] = {
       data match {
         case None => Left(FailedToExtractData("No Living Settlors"))
         case Some(settlors) =>

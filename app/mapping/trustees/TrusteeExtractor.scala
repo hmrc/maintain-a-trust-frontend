@@ -18,13 +18,12 @@ package mapping.trustees
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
 import models.UserAnswers
 import models.http.{DisplayTrustEntitiesType, Trustees}
 
-class TrusteeExtractor @Inject()(trusteesExtractor: TrusteesExtractor) extends PlaybackExtractor[DisplayTrustEntitiesType] {
+class TrusteeExtractor @Inject()(trusteesExtractor: TrusteesExtractor) {
 
-  override def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
 
     import models.UserAnswersCombinator._
 

@@ -22,6 +22,8 @@ import models.pages.RoleInCompany
 import org.joda.time.DateTime
 import play.api.libs.json._
 
+sealed trait BeneficiaryType extends EntityType
+
 case class DisplayTrustBeneficiaryType(individualDetails: Option[List[DisplayTrustIndividualDetailsType]],
                                        company: Option[List[DisplayTrustCompanyType]],
                                        trust: Option[List[DisplayTrustBeneficiaryTrustType]],
@@ -43,7 +45,7 @@ case class DisplayTrustIndividualDetailsType(lineNo: Option[String],
                                              beneficiaryDiscretion: Option[Boolean],
                                              beneficiaryShareOfIncome: Option[String],
                                              identification: Option[DisplayTrustIdentificationType],
-                                             entityStart: String)
+                                             entityStart: String) extends BeneficiaryType
 
 object DisplayTrustIndividualDetailsType {
   implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))
@@ -56,7 +58,7 @@ case class DisplayTrustCompanyType(lineNo: Option[String],
                                    beneficiaryShareOfIncome: Option[String],
                                    countryOfResidence: Option[String],
                                    identification: Option[DisplayTrustIdentificationOrgType],
-                                   entityStart: String)
+                                   entityStart: String) extends BeneficiaryType
 
 object DisplayTrustCompanyType {
   implicit val companyTypeFormat: Format[DisplayTrustCompanyType] = Json.format[DisplayTrustCompanyType]
@@ -68,7 +70,7 @@ case class DisplayTrustBeneficiaryTrustType(lineNo: Option[String],
                                             beneficiaryDiscretion: Option[Boolean],
                                             beneficiaryShareOfIncome: Option[String],
                                             identification: Option[DisplayTrustIdentificationOrgType],
-                                            entityStart: String)
+                                            entityStart: String) extends BeneficiaryType
 
 object DisplayTrustBeneficiaryTrustType {
   implicit val beneficiaryTrustTypeFormat: Format[DisplayTrustBeneficiaryTrustType] = Json.format[DisplayTrustBeneficiaryTrustType]
@@ -81,7 +83,7 @@ case class DisplayTrustCharityType(lineNo: Option[String],
                                    beneficiaryShareOfIncome: Option[String],
                                    countryOfResidence: Option[String],
                                    identification: Option[DisplayTrustIdentificationOrgType],
-                                   entityStart: String)
+                                   entityStart: String) extends BeneficiaryType
 
 object DisplayTrustCharityType {
   implicit val charityTypeFormat: Format[DisplayTrustCharityType] = Json.format[DisplayTrustCharityType]
@@ -92,7 +94,7 @@ case class DisplayTrustUnidentifiedType(lineNo: Option[String],
                                         description: String,
                                         beneficiaryDiscretion: Option[Boolean],
                                         beneficiaryShareOfIncome: Option[String],
-                                        entityStart: String)
+                                        entityStart: String) extends BeneficiaryType
 
 object DisplayTrustUnidentifiedType {
   implicit val unidentifiedTypeFormat: Format[DisplayTrustUnidentifiedType] = Json.format[DisplayTrustUnidentifiedType]
@@ -111,7 +113,7 @@ case class DisplayTrustLargeType(lineNo: Option[String],
                                  identification: Option[DisplayTrustIdentificationOrgType],
                                  beneficiaryDiscretion: Option[Boolean],
                                  beneficiaryShareOfIncome: Option[String],
-                                 entityStart: String)
+                                 entityStart: String) extends BeneficiaryType
 
 object DisplayTrustLargeType {
   implicit val largeTypeFormat: Format[DisplayTrustLargeType] = Json.format[DisplayTrustLargeType]
@@ -123,7 +125,7 @@ case class DisplayTrustOtherType(lineNo: Option[String],
                                  address: Option[AddressType],
                                  beneficiaryDiscretion: Option[Boolean],
                                  beneficiaryShareOfIncome: Option[String],
-                                 entityStart: String)
+                                 entityStart: String) extends BeneficiaryType
 
 object DisplayTrustOtherType {
   implicit val otherTypeFormat: Format[DisplayTrustOtherType] = Json.format[DisplayTrustOtherType]

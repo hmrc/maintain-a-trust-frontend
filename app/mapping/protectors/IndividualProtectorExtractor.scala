@@ -29,25 +29,24 @@ import scala.util.{Failure, Try}
 
 class IndividualProtectorExtractor extends Logging {
 
-  def extract(answers: Try[UserAnswers], index: Int, individualProtector : DisplayTrustProtector): Try[UserAnswers] =
-    {
-      answers
-        .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
-        .flatMap(_.set(IndividualProtectorNamePage(index), individualProtector.name))
-        .flatMap(answers => extractDateOfBirth(individualProtector, index, answers))
-        .flatMap(answers => extractIdentification(individualProtector, index, answers))
-        .flatMap(_.set(IndividualProtectorSafeIdPage(index), individualProtector.identification.flatMap(_.safeId)))
-        .flatMap {
-          _.set(
-            IndividualProtectorMetaData(index),
-            MetaData(
-              lineNo = individualProtector.lineNo.getOrElse(""),
-              bpMatchStatus = individualProtector.bpMatchStatus,
-              entityStart = individualProtector.entityStart
-            )
+  def extract(answers: Try[UserAnswers], index: Int, individualProtector : DisplayTrustProtector): Try[UserAnswers] = {
+    answers
+      .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
+      .flatMap(_.set(IndividualProtectorNamePage(index), individualProtector.name))
+      .flatMap(answers => extractDateOfBirth(individualProtector, index, answers))
+      .flatMap(answers => extractIdentification(individualProtector, index, answers))
+      .flatMap(_.set(IndividualProtectorSafeIdPage(index), individualProtector.identification.flatMap(_.safeId)))
+      .flatMap {
+        _.set(
+          IndividualProtectorMetaData(index),
+          MetaData(
+            lineNo = individualProtector.lineNo.getOrElse(""),
+            bpMatchStatus = individualProtector.bpMatchStatus,
+            entityStart = individualProtector.entityStart
           )
-        }
-    }
+        )
+      }
+  }
 
   private def extractDateOfBirth(individualProtector: DisplayTrustProtector, index: Int, answers: UserAnswers) = {
     individualProtector.dateOfBirth match {
