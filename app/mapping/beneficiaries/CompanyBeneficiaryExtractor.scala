@@ -16,7 +16,6 @@
 
 package mapping.beneficiaries
 
-import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import models.http.{DisplayTrustCompanyType, DisplayTrustIdentificationOrgType}
 import models.{Address, MetaData, UserAnswers}
@@ -25,7 +24,7 @@ import pages.beneficiaries.company._
 
 import scala.util.{Failure, Try}
 
-class CompanyBeneficiaryExtractor @Inject() extends BeneficiaryPlaybackExtractor[DisplayTrustCompanyType] {
+class CompanyBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustCompanyType] {
 
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = CompanyBeneficiaryShareOfIncomePage(index)

@@ -16,7 +16,6 @@
 
 package mapping.beneficiaries
 
-import com.google.inject.Inject
 import mapping.PlaybackImplicits._
 import models.http.{DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, PassportType}
 import models.{Address, MetaData, UserAnswers}
@@ -25,7 +24,7 @@ import pages.beneficiaries.individual._
 
 import scala.util.{Failure, Try}
 
-class IndividualBeneficiaryExtractor @Inject() extends BeneficiaryPlaybackExtractor[DisplayTrustIndividualDetailsType] {
+class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustIndividualDetailsType] {
 
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryIncomeYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = IndividualBeneficiaryIncomePage(index)

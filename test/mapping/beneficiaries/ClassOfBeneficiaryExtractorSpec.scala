@@ -53,7 +53,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "must return user answers" in {
 
-        val classesOfBeneficiaries = None
+        val classesOfBeneficiaries = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -79,7 +79,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = classOfBeneficiaryExtractor.extract(ua, Some(classOfBeneficiary))
+        val extraction = classOfBeneficiaryExtractor.extract(ua, classOfBeneficiary)
 
         extraction.right.value.get(ClassOfBeneficiaryDescriptionPage(0)).get mustBe "Class Of Beneficiary 1"
         extraction.right.value.get(ClassOfBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
@@ -92,7 +92,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = classOfBeneficiaryExtractor.extract(ua, Some(charities))
+        val extraction = classOfBeneficiaryExtractor.extract(ua, charities)
 
         extraction mustBe 'right
 

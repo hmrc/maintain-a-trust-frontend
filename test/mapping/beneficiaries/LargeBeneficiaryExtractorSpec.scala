@@ -76,7 +76,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "must return user answers" in {
 
-        val largeBeneficiaries = None
+        val largeBeneficiaries = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -117,7 +117,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = largeBeneficiaryExtractor.extract(ua, Some(largeBeneficiary))
+        val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiary)
 
         extraction.right.value.get(LargeBeneficiaryNamePage(0)).get mustBe "Large 1"
         extraction.right.value.get(LargeBeneficiaryDescriptionPage(0)).get mustBe Description("Description", Some("Description 1"), None, None, None)
@@ -137,7 +137,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = largeBeneficiaryExtractor.extract(ua, Some(largeBeneficiaries))
+        val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiaries)
 
         extraction mustBe 'right
 

@@ -25,22 +25,22 @@ import scala.util.{Success, Try}
 import mapping.PlaybackImplicits._
 import models.pages.IndividualOrBusiness
 
-class BusinessProtectorExtractor {
+class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrustProtectorBusiness] {
 
-  def extract(answers: Try[UserAnswers], index: Int, businessProtector : DisplayTrustProtectorBusiness): Try[UserAnswers] = {
+  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustProtectorBusiness, index: Int): Try[UserAnswers] = {
     answers
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
-      .flatMap(_.set(BusinessProtectorNamePage(index), businessProtector.name))
-      .flatMap(_.set(BusinessProtectorSafeIdPage(index), businessProtector.identification.flatMap(_.safeId)))
-      .flatMap(answers => extractUtr(businessProtector, index, answers))
-      .flatMap(answers => extractAddress(businessProtector, index, answers))
+      .flatMap(_.set(BusinessProtectorNamePage(index), entity.name))
+      .flatMap(_.set(BusinessProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
+      .flatMap(answers => extractUtr(entity, index, answers))
+      .flatMap(answers => extractAddress(entity, index, answers))
       .flatMap {
         _.set(
           BusinessProtectorMetaData(index),
           MetaData(
-            lineNo = businessProtector.lineNo.getOrElse(""),
-            bpMatchStatus = businessProtector.bpMatchStatus,
-            entityStart = businessProtector.entityStart
+            lineNo = entity.lineNo.getOrElse(""),
+            bpMatchStatus = entity.bpMatchStatus,
+            entityStart = entity.entityStart
           )
         )
       }

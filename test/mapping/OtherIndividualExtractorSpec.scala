@@ -68,7 +68,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
 
       "must return user answers" in {
 
-        val individual = None
+        val individual = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -94,7 +94,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = individualExtractor.extract(ua, Some(individual))
+        val extraction = individualExtractor.extract(ua, individual)
 
         extraction.right.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
@@ -115,7 +115,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = individualExtractor.extract(ua, Some(individuals))
+        val extraction = individualExtractor.extract(ua, individuals)
 
         extraction mustBe 'right
 

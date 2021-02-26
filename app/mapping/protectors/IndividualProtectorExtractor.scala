@@ -20,29 +20,34 @@ import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import mapping.PlaybackImplicits._
 import models.http.{DisplayTrustIdentificationType, DisplayTrustProtector, PassportType}
 import models.pages.IndividualOrBusiness
-import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
+import models.{Address, MetaData, UserAnswers}
+import pages.QuestionPage
 import pages.protectors.ProtectorIndividualOrBusinessPage
 import pages.protectors.individual._
-import play.api.Logging
 
 import scala.util.{Failure, Try}
 
-class IndividualProtectorExtractor extends Logging {
+class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrustProtector] {
 
-  def extract(answers: Try[UserAnswers], index: Int, individualProtector : DisplayTrustProtector): Try[UserAnswers] = {
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorAddressUKYesNoPage(index)
+  override def ukAddressPage(index: Int): QuestionPage[Address] = IndividualProtectorAddressPage(index)
+  override def nonUkAddressPage(index: Int): QuestionPage[Address] = IndividualProtectorAddressPage(index)
+
+  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustProtector, index: Int): Try[UserAnswers] = {
     answers
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
-      .flatMap(_.set(IndividualProtectorNamePage(index), individualProtector.name))
-      .flatMap(answers => extractDateOfBirth(individualProtector, index, answers))
-      .flatMap(answers => extractIdentification(individualProtector, index, answers))
-      .flatMap(_.set(IndividualProtectorSafeIdPage(index), individualProtector.identification.flatMap(_.safeId)))
+      .flatMap(_.set(IndividualProtectorNamePage(index), entity.name))
+      .flatMap(answers => extractDateOfBirth(entity, index, answers))
+      .flatMap(answers => extractIdentification(entity, index, answers))
+      .flatMap(_.set(IndividualProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap {
         _.set(
           IndividualProtectorMetaData(index),
           MetaData(
-            lineNo = individualProtector.lineNo.getOrElse(""),
-            bpMatchStatus = individualProtector.bpMatchStatus,
-            entityStart = individualProtector.entityStart
+            lineNo = entity.lineNo.getOrElse(""),
+            bpMatchStatus = entity.bpMatchStatus,
+            entityStart = entity.entityStart
           )
         )
       }
@@ -69,11 +74,11 @@ class IndividualProtectorExtractor extends Logging {
       case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
         answers.set(IndividualProtectorNINOYesNoPage(index), false)
           .flatMap(_.set(IndividualProtectorPassportIDCardYesNoPage(index), false))
-          .flatMap(answers => extractAddress(address.convert, index, answers))
+          .flatMap(answers => extractAddress(address, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
         answers.set(IndividualProtectorNINOYesNoPage(index), false)
-          .flatMap(answers => extractAddress(address.convert, index, answers))
+          .flatMap(answers => extractAddress(address, index, answers))
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
 
       case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
@@ -92,16 +97,4 @@ class IndividualProtectorExtractor extends Logging {
       .flatMap(_.set(IndividualProtectorPassportIDCardPage(index), passport.convert))
   }
 
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers) = {
-    address match {
-      case uk: UKAddress =>
-        answers.set(IndividualProtectorAddressPage(index), uk)
-          .flatMap(_.set(IndividualProtectorAddressYesNoPage(index), true))
-          .flatMap(_.set(IndividualProtectorAddressUKYesNoPage(index), true))
-      case nonUk: InternationalAddress =>
-        answers.set(IndividualProtectorAddressPage(index), nonUk)
-          .flatMap(_.set(IndividualProtectorAddressYesNoPage(index), true))
-          .flatMap(_.set(IndividualProtectorAddressUKYesNoPage(index), false))
-    }
-  }
 }

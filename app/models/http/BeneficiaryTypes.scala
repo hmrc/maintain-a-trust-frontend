@@ -20,20 +20,33 @@ import models.Constant.dateTimePattern
 import models.FullName
 import models.pages.RoleInCompany
 import org.joda.time.DateTime
+import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 sealed trait BeneficiaryType extends EntityType
 
-case class DisplayTrustBeneficiaryType(individualDetails: Option[List[DisplayTrustIndividualDetailsType]],
-                                       company: Option[List[DisplayTrustCompanyType]],
-                                       trust: Option[List[DisplayTrustBeneficiaryTrustType]],
-                                       charity: Option[List[DisplayTrustCharityType]],
-                                       unidentified: Option[List[DisplayTrustUnidentifiedType]],
-                                       large: Option[List[DisplayTrustLargeType]],
-                                       other: Option[List[DisplayTrustOtherType]])
+case class DisplayTrustBeneficiaryType(individualDetails: List[DisplayTrustIndividualDetailsType],
+                                       company: List[DisplayTrustCompanyType],
+                                       trust: List[DisplayTrustBeneficiaryTrustType],
+                                       charity: List[DisplayTrustCharityType],
+                                       unidentified: List[DisplayTrustUnidentifiedType],
+                                       large: List[DisplayTrustLargeType],
+                                       other: List[DisplayTrustOtherType])
 
 object DisplayTrustBeneficiaryType {
-  implicit val beneficiaryTypeFormat: Format[DisplayTrustBeneficiaryType] = Json.format[DisplayTrustBeneficiaryType]
+
+  implicit val protectorReads: Reads[DisplayTrustBeneficiaryType] = (
+    (__ \ "individualDetails").readWithDefault[List[DisplayTrustIndividualDetailsType]](Nil) and
+      (__ \ "company").readWithDefault[List[DisplayTrustCompanyType]](Nil) and
+      (__ \ "trust").readWithDefault[List[DisplayTrustBeneficiaryTrustType]](Nil) and
+      (__ \ "charity").readWithDefault[List[DisplayTrustCharityType]](Nil) and
+      (__ \ "unidentified").readWithDefault[List[DisplayTrustUnidentifiedType]](Nil) and
+      (__ \ "large").readWithDefault[List[DisplayTrustLargeType]](Nil) and
+      (__ \ "other").readWithDefault[List[DisplayTrustOtherType]](Nil)
+    ) (DisplayTrustBeneficiaryType.apply _)
+
+  implicit val protectorWrites: Writes[DisplayTrustBeneficiaryType] = Json.writes[DisplayTrustBeneficiaryType]
+
 }
 
 case class DisplayTrustIndividualDetailsType(lineNo: Option[String],

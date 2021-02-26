@@ -55,7 +55,7 @@ class UserAnswersExtractorImpl @Inject()(
       settlors <- settlorsExtractor.extract(updatedAnswers, data.trust.entities).right
       trustType <- trustTypeExtractor.extract(updatedAnswers, data.trust).right
       protectors <- protectorsExtractor.extract(updatedAnswers, data.trust.entities.protectors).right
-      otherIndividuals <- otherIndividualsExtractor.extract(updatedAnswers, data.trust.entities.naturalPerson).right
+      otherIndividuals <- otherIndividualsExtractor.extract(updatedAnswers, data.trust.entities.naturalPerson.getOrElse(Nil)).right
       trustees <- trusteesExtractor.extract(updatedAnswers, data.trust.entities).right
       trustDetails <- trustDetailsExtractor.extract(updatedAnswers, data.trust.details).right
     } yield {

@@ -40,7 +40,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
       "must return an error" in {
 
         val entities = DisplayTrustEntitiesType(None,
-          DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+          DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
           None, DisplayTrustLeadTrusteeType(None, None),
           None, None, None)
 
@@ -61,13 +61,14 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
         val entities = DisplayTrustEntitiesType(
           naturalPerson = None,
           beneficiary = DisplayTrustBeneficiaryType(
-            individualDetails = None,
-            company = None,
-            trust = None,
-            charity = None,
-            unidentified = None,
-            large = None,
-            other = None),
+            individualDetails = Nil,
+            company = Nil,
+            trust = Nil,
+            charity = Nil,
+            unidentified = Nil,
+            large = Nil,
+            other = Nil
+          ),
           deceased = Some(DisplayTrustWillType(
             lineNo = "1",
             bpMatchStatus = Some("01"),

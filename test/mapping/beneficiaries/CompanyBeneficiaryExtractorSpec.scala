@@ -73,7 +73,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "must return user answers" in {
 
-        val companies = None
+        val companies = Nil
 
         val ua = UserAnswers("fakeId", utr)
 
@@ -103,7 +103,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", utr)
 
-          val extraction = companyExtractor.extract(ua, Some(company))
+          val extraction = companyExtractor.extract(ua, company)
 
           extraction.right.value.get(CompanyBeneficiaryNamePage(0)).get mustBe "Company 1"
           extraction.right.value.get(CompanyBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
@@ -123,7 +123,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", utr)
 
-          val extraction = companyExtractor.extract(ua, Some(companies))
+          val extraction = companyExtractor.extract(ua, companies)
 
           extraction mustBe 'right
 
@@ -185,7 +185,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
 
-          val extraction = companyExtractor.extract(ua, Some(company))
+          val extraction = companyExtractor.extract(ua, company)
 
           extraction.right.value.get(CompanyBeneficiaryNamePage(0)).get mustBe "Company 1"
           extraction.right.value.get(CompanyBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
@@ -205,7 +205,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
 
-          val extraction = companyExtractor.extract(ua, Some(companies))
+          val extraction = companyExtractor.extract(ua, companies)
 
           extraction mustBe 'right
 

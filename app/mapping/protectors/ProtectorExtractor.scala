@@ -19,11 +19,13 @@ package mapping.protectors
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
-import models.http.{DisplayTrustProtector, DisplayTrustProtectorBusiness, DisplayTrustProtectorsType, Protector}
+import models.UserAnswersCombinator._
+import models.http.DisplayTrustProtectorsType
 import pages.protectors._
 import play.api.Logging
+import sections.Protectors
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Success
 
 class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProtectorExtractor,
                                    businessProtectorExtractor: BusinessProtectorExtractor) extends Logging {
@@ -33,43 +35,31 @@ class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProte
     data match {
       case Some(p) =>
 
-        val protectors: List[Protector] = p.protector ++ p.protectorCompany
+        val protectors: List[UserAnswers] = List(
+          individualProtectorExtractor.extract(answers, p.protector),
+          businessProtectorExtractor.extract(answers, p.protectorCompany)
+        ).collect {
+          case Right(z) => z
+        }
 
-        protectors match {
-          case Nil =>
+        p.count match {
+          case 0 =>
             Right(updateAnswers(answers, doesTrustHaveProtector = false))
           case _ =>
-            extractProtectors(updateAnswers(answers, doesTrustHaveProtector = true), protectors)
+            protectors.combineArraysWithKey(Protectors) match {
+              case Some(value) => Right(updateAnswers(value, doesTrustHaveProtector = true))
+              case None => Left(FailedToExtractData("Protector Extraction Error"))
+            }
         }
       case None =>
         Right(updateAnswers(answers, doesTrustHaveProtector = false))
     }
   }
 
-  def updateAnswers(answers: UserAnswers, doesTrustHaveProtector: Boolean): UserAnswers = {
+  private def updateAnswers(answers: UserAnswers, doesTrustHaveProtector: Boolean): UserAnswers = {
     answers.set(DoesTrustHaveAProtectorYesNoPage(), doesTrustHaveProtector) match {
       case Success(ua) => ua
       case _ => answers
-    }
-  }
-
-  def extractProtectors(answers: UserAnswers, data: List[Protector]): Either[PlaybackExtractionError, UserAnswers] = {
-    val updated = data.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
-      case (answers, (protector, index)) =>
-
-        protector match {
-          case x : DisplayTrustProtector => individualProtectorExtractor.extract(answers, index, x)
-          case x : DisplayTrustProtectorBusiness => businessProtectorExtractor.extract(answers, index, x)
-          case _ => Failure(new RuntimeException("Unexpected protector type"))
-        }
-    }
-
-    updated match {
-      case Success(a) =>
-        Right(a)
-      case Failure(_) =>
-        logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data")
-        Left(FailedToExtractData(DisplayTrustProtectorsType.toString))
     }
   }
 }

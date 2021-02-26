@@ -52,7 +52,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
           ),
           entities = DisplayTrustEntitiesType(
             None,
-            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
             None,
             DisplayTrustLeadTrusteeType(None, None),
             None,
@@ -91,7 +91,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
           ),
           entities = DisplayTrustEntitiesType(
             None,
-            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
             None,
             DisplayTrustLeadTrusteeType(None, None),
             None,
@@ -133,7 +133,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
           ),
           entities = DisplayTrustEntitiesType(
             None,
-            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
             None,
             DisplayTrustLeadTrusteeType(None, None),
             None,
@@ -178,7 +178,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
           ),
           entities = DisplayTrustEntitiesType(
             None,
-            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
             None,
             DisplayTrustLeadTrusteeType(None, None),
             None,
@@ -223,7 +223,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
           ),
           entities = DisplayTrustEntitiesType(
             None,
-            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
             None,
             DisplayTrustLeadTrusteeType(None, None),
             None,
@@ -268,7 +268,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
           ),
           entities = DisplayTrustEntitiesType(
             None,
-            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
             None,
             DisplayTrustLeadTrusteeType(None, None),
             None,
@@ -309,7 +309,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
           ),
           entities = DisplayTrustEntitiesType(
             None,
-            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
             None,
             DisplayTrustLeadTrusteeType(None, None),
             None,
@@ -354,7 +354,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
           ),
           entities = DisplayTrustEntitiesType(
             None,
-            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
             None,
             DisplayTrustLeadTrusteeType(None, None),
             None,
@@ -399,7 +399,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
           ),
           entities = DisplayTrustEntitiesType(
             None,
-            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
             None,
             DisplayTrustLeadTrusteeType(None, None),
             None,
@@ -444,7 +444,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
           ),
           entities = DisplayTrustEntitiesType(
             None,
-            DisplayTrustBeneficiaryType(None, None, None, None, None, None, None),
+            DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
             None,
             DisplayTrustLeadTrusteeType(None, None),
             None,

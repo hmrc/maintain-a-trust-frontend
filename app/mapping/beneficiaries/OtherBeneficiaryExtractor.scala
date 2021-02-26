@@ -16,7 +16,6 @@
 
 package mapping.beneficiaries
 
-import com.google.inject.Inject
 import models.http.DisplayTrustOtherType
 import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
@@ -24,7 +23,7 @@ import pages.beneficiaries.other._
 
 import scala.util.Try
 
-class OtherBeneficiaryExtractor @Inject() extends BeneficiaryPlaybackExtractor[DisplayTrustOtherType] {
+class OtherBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustOtherType] {
 
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = OtherBeneficiaryShareOfIncomePage(index)

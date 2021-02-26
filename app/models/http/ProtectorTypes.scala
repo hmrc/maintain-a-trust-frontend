@@ -25,13 +25,16 @@ import play.api.libs.json._
 sealed trait Protector extends EntityType
 
 case class DisplayTrustProtectorsType(protector: List[DisplayTrustProtector],
-                                      protectorCompany: List[DisplayTrustProtectorBusiness])
+                                      protectorCompany: List[DisplayTrustProtectorBusiness]) {
+
+  val count: Int = protector.size + protectorCompany.size
+}
 
 object DisplayTrustProtectorsType {
 
   implicit val protectorReads : Reads[DisplayTrustProtectorsType] = (
-    (__ \ "protector").read[List[DisplayTrustProtector]].orElse(Reads.pure(Nil)) and
-      (__ \ "protectorCompany").read[List[DisplayTrustProtectorBusiness]].orElse(Reads.pure(Nil))
+    (__ \ "protector").readWithDefault[List[DisplayTrustProtector]](Nil) and
+      (__ \ "protectorCompany").readWithDefault[List[DisplayTrustProtectorBusiness]](Nil)
     ) (DisplayTrustProtectorsType.apply _)
 
   implicit val protectorWrites : Writes[DisplayTrustProtectorsType] = Json.writes[DisplayTrustProtectorsType]

@@ -16,7 +16,6 @@
 
 package mapping.beneficiaries
 
-import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import mapping.PlaybackImplicits._
 import models.HowManyBeneficiaries.{Over1, Over1001, Over101, Over201, Over501}
@@ -27,7 +26,7 @@ import pages.beneficiaries.large._
 
 import scala.util.{Failure, Try}
 
-class LargeBeneficiaryExtractor @Inject() extends BeneficiaryPlaybackExtractor[DisplayTrustLargeType] {
+class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustLargeType] {
 
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = LargeBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = LargeBeneficiaryShareOfIncomePage(index)

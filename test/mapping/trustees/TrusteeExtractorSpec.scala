@@ -39,7 +39,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
       "must return an error" in {
 
         val leadTrustee = DisplayTrustEntitiesType(None,
-          DisplayTrustBeneficiaryType(None, None, None,None,None,None,None),
+          DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
           None,
           DisplayTrustLeadTrusteeType(None, None),
           None, None, None)
@@ -59,7 +59,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
       "return user answers updated" in {
 
         val leadTrustee = DisplayTrustEntitiesType(None,
-          DisplayTrustBeneficiaryType(None, None, None,None,None,None,None),
+          DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
           None,
           DisplayTrustLeadTrusteeType(None,
             Some(DisplayTrustLeadTrusteeOrgType(
@@ -107,7 +107,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
       "return user answers updated" in {
 
         val leadTrustee = DisplayTrustEntitiesType(None,
-          DisplayTrustBeneficiaryType(None, None, None,None,None,None,None),
+          DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
           None,
           DisplayTrustLeadTrusteeType(None,
             Some(DisplayTrustLeadTrusteeOrgType(
@@ -155,7 +155,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
       "return user answers updated" in {
 
         val leadTrustee = DisplayTrustEntitiesType(None,
-          DisplayTrustBeneficiaryType(None, None, None,None,None,None,None),
+          DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
           None,
           DisplayTrustLeadTrusteeType(None,
             Some(DisplayTrustLeadTrusteeOrgType(

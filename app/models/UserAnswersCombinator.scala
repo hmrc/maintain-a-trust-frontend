@@ -16,22 +16,19 @@
 
 package models
 
-import java.time.LocalDateTime
 import cats.kernel.Semigroup
+import play.api.libs.json.{JsArray, JsPath, JsSuccess, Json}
+
 import scala.util.{Success, Try}
 
 object UserAnswersCombinator {
 
-  implicit val userAnswersSemigroup : Semigroup[UserAnswers] = new Semigroup[UserAnswers] {
-
-    override def combine(x: UserAnswers, y: UserAnswers): UserAnswers = {
-        UserAnswers(
-          data = x.data.deepMerge(y.data),
-          internalId = x.internalId,
-          identifier = x.identifier,
-          updatedAt = LocalDateTime.now
-        )
-    }
+  implicit val userAnswersSemigroup: Semigroup[UserAnswers] = (x: UserAnswers, y: UserAnswers) => {
+    UserAnswers(
+      data = x.data.deepMerge(y.data),
+      internalId = x.internalId,
+      identifier = x.identifier
+    )
   }
 
   implicit class Combinator(answers: List[UserAnswers]) {
@@ -40,11 +37,23 @@ object UserAnswersCombinator {
       Semigroup[UserAnswers].combineAllOption(answers)
     }
 
+    def combineArraysWithKey(key: String): Option[UserAnswers] = {
+
+      val combinedArray = answers.foldLeft(JsArray())((acc, ua) => {
+        ua.data.transform((JsPath \ key).json.pick[JsArray]) match {
+          case JsSuccess(array, _) => acc ++ array
+          case _ => acc
+        }
+      })
+
+      answers.map(ua => ua.copy(data = Json.obj(key -> combinedArray))).combine
+    }
+
   }
 
   implicit class UserAnswersCollector(answers: List[Try[UserAnswers]]) {
 
-    def collectAnswers : List[UserAnswers] = answers.collect {
+    def collectAnswers: List[UserAnswers] = answers.collect {
       case Success(answer) => answer
     }
 

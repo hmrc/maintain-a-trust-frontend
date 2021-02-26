@@ -31,11 +31,11 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
 
   val optionalEntity: Boolean
 
-  def extract(answers: UserAnswers, data: Option[List[T]]): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: List[T]): Either[PlaybackExtractionError, UserAnswers] = {
     data match {
-      case None if optionalEntity => Right(answers)
-      case None => Left(FailedToExtractData(s"No entities of type ${classTag[T].runtimeClass.getSimpleName}"))
-      case Some(entities) =>
+      case Nil if optionalEntity => Right(answers)
+      case Nil => Left(FailedToExtractData(s"No entities of type ${classTag[T].runtimeClass.getSimpleName}"))
+      case entities =>
 
         val updated = entities.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
           case (answers, (entity, index)) =>
