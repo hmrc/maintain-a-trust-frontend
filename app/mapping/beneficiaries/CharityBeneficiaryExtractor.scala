@@ -69,7 +69,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
     }
   }
 
-  private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers) = {
+  private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {
       identification map {
         case DisplayTrustIdentificationOrgType(safeId, Some(utr), None) =>
@@ -90,7 +90,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
     }
   }
 
-  private def extractShareOfIncome(charityBeneficiary: DisplayTrustCharityType, index: Int, answers: UserAnswers) = {
+  private def extractShareOfIncome(charityBeneficiary: DisplayTrustCharityType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {
     charityBeneficiary.beneficiaryShareOfIncome match {
       case Some(income) =>
@@ -105,7 +105,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
     }
   }
 
-  private def extractCountryOfResidence(charityBeneficiary: DisplayTrustCharityType, index: Int, answers: UserAnswers) = {
+  private def extractCountryOfResidence(charityBeneficiary: DisplayTrustCharityType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
     charityBeneficiary.countryOfResidence match {
       case Some(GB) =>
         answers.set(CharityBeneficiaryCountryOfResidenceYesNoPage(index), true)
@@ -120,7 +120,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
     }
   }
 
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers) = {
+  private def extractAddress(address: Address, index: Int, answers: UserAnswers): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {
       address match {
         case uk: UKAddress =>
