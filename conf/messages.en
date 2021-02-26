@@ -258,7 +258,8 @@ trustClosed.UTR.caption = This trust’s UTR: {0}
 trustClosed.URN.caption = This trust’s URN: {0}
 trustClosed.p1 = If this has been done in error or you need help with the service, please
 trustClosed.contact.link = contact the trusts helpline (opens in a new window or tab)
-trustClosed.p2 = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
+trustClosed.UTR.p2 = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
+trustClosed.URN.p2 = to reopen the records.
 trustClosed.p3 = You can
 trustClosed.return.link = return to register and maintain a trust for a client
 

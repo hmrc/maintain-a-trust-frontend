@@ -35,7 +35,7 @@ class TrustClosedViewSpec extends ViewBehaviours {
       "utr",
       utr,
       "p1",
-      "p2",
+      "UTR.p2",
       "contact.link",
       "p3",
       "return.link"
@@ -55,7 +55,7 @@ class TrustClosedViewSpec extends ViewBehaviours {
       "urn",
       urn,
       "p1",
-      "p2",
+      "URN.p2",
       "contact.link",
       "p3",
       "return.link"
