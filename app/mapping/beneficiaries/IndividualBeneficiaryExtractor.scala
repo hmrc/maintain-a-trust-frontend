@@ -195,4 +195,3 @@ class IndividualBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[
   }
 
 }
-
