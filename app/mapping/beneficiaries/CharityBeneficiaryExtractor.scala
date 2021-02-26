@@ -44,6 +44,7 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
           answers
             .flatMap(_.set(CharityBeneficiaryNamePage(index), charityBeneficiary.organisationName))
             .flatMap(answers => extractShareOfIncome(charityBeneficiary, index, answers))
+            .flatMap(_.set(CharityBeneficiarySafeIdPage(index), charityBeneficiary.identification.flatMap(_.safeId)))
             .flatMap(answers => extractCountryOfResidence(charityBeneficiary, index, answers))
             .flatMap(answers => extractIdentification(charityBeneficiary.identification, index, answers))
             .flatMap {
@@ -74,11 +75,9 @@ class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[Lis
         case DisplayTrustIdentificationOrgType(safeId, Some(utr), None) =>
           answers.set(CharityBeneficiaryUtrPage(index), utr)
             .flatMap(_.set(CharityBeneficiaryAddressYesNoPage(index), false))
-            .flatMap(_.set(CharityBeneficiarySafeIdPage(index), safeId))
 
         case DisplayTrustIdentificationOrgType(safeId, None, Some(address)) =>
           extractAddress(address.convert, index, answers)
-            .flatMap(_.set(CharityBeneficiarySafeIdPage(index), safeId))
         case _ =>
           logger.error(s"[UTR/URN: ${answers.identifier}] both utr and address parsed")
           Failure(InvalidExtractorState)

@@ -216,7 +216,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(CharityBeneficiaryCountryOfResidencePage(0)).get mustBe GB
           extraction.right.value.get(CharityBeneficiaryUtrPage(0)) mustNot be(defined)
-          extraction.right.value.get(CharityBeneficiarySafeIdPage(0)) mustNot be(defined)
+          extraction.right.value.get(CharityBeneficiarySafeIdPage(0)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(CharityBeneficiaryAddressYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiaryAddressPage(0)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
@@ -229,7 +229,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
           extraction.right.value.get(CharityBeneficiaryCountryOfResidencePage(1)).get mustBe "DE"
           extraction.right.value.get(CharityBeneficiaryUtrPage(1)) mustNot be(defined)
-          extraction.right.value.get(CharityBeneficiarySafeIdPage(1)) mustNot be(defined)
+          extraction.right.value.get(CharityBeneficiarySafeIdPage(1)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(CharityBeneficiaryAddressYesNoPage(1)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiaryAddressPage(1)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiaryAddressUKYesNoPage(1)) mustNot be(defined)
@@ -242,7 +242,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiaryCountryOfResidencePage(2)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiaryUtrPage(2)) mustNot be(defined)
-          extraction.right.value.get(CharityBeneficiarySafeIdPage(2)) mustNot be(defined)
+          extraction.right.value.get(CharityBeneficiarySafeIdPage(2)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(CharityBeneficiaryAddressYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiaryAddressPage(2)) mustNot be(defined)
           extraction.right.value.get(CharityBeneficiaryAddressUKYesNoPage(2)) mustNot be(defined)
