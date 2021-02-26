@@ -22,6 +22,7 @@ import models.pages.{DeedOfVariation, TypeOfTrust}
 import play.api.libs.json._
 
 case class TrustDetailsType(startDate: LocalDate,
+                            trustTaxable: Option[Boolean],
                             lawCountry: Option[String],
                             administrationCountry: Option[String],
                             residentialStatus: Option[ResidentialStatusType],

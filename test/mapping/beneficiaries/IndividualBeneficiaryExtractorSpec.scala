@@ -25,6 +25,7 @@ import models.pages.RoleInCompany
 import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.individual._
+import utils.Constants.GB
 
 import java.time.LocalDate
 
@@ -68,7 +69,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
         },
         address = index match {
           case 1 => Some(AddressType(s"line $index", "line2", None, None, None, "DE"))
-          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), "GB"))
+          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
           case _ => None
         }
       )

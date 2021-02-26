@@ -25,6 +25,7 @@ import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrust
 import models.pages.IndividualOrBusiness
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
+import utils.Constants.GB
 
 class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -63,7 +64,7 @@ class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
             DisplayTrustIdentificationOrgType(
               safeId = Some("8947584-94759745-84758745"),
               utr = Some("1234567890"),
-              address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), "GB"))
+              address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
             ),
           entityStart = "2019-11-26"
         ))

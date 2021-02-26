@@ -17,10 +17,10 @@
 package mapping
 
 import java.time.LocalDate
-
 import models._
 import models.http.{AddressType, PassportType}
 import org.joda.time.DateTime
+import utils.Constants.GB
 
 object PlaybackImplicits {
 
@@ -51,7 +51,7 @@ object PlaybackImplicits {
           line3,
           line4,
           postCode = Some(postcode),
-          country = "GB"
+          country = GB
         )
       case InternationalAddress(line1, line2, line3, country) =>
         AddressType(

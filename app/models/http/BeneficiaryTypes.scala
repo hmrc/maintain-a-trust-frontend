@@ -54,6 +54,7 @@ case class DisplayTrustCompanyType(lineNo: Option[String],
                                    bpMatchStatus: Option[String], organisationName: String,
                                    beneficiaryDiscretion: Option[Boolean],
                                    beneficiaryShareOfIncome: Option[String],
+                                   countryOfResidence: Option[String],
                                    identification: Option[DisplayTrustIdentificationOrgType],
                                    entityStart: String)
 
@@ -78,6 +79,7 @@ case class DisplayTrustCharityType(lineNo: Option[String],
                                    organisationName: String,
                                    beneficiaryDiscretion: Option[Boolean],
                                    beneficiaryShareOfIncome: Option[String],
+                                   countryOfResidence: Option[String],
                                    identification: Option[DisplayTrustIdentificationOrgType],
                                    entityStart: String)
 
