@@ -31,8 +31,8 @@ class TrusteeExtractor @Inject()(individualLeadTrusteeExtractor: IndividualLeadT
   def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
 
     val trustees: List[UserAnswers] = List(
-      individualLeadTrusteeExtractor.extract(answers, data.leadTrustee.leadTrusteeInd.map(List(_)).getOrElse(Nil)),
-      organisationLeadTrusteeExtractor.extract(answers, data.leadTrustee.leadTrusteeOrg.map(List(_)).getOrElse(Nil)),
+      individualLeadTrusteeExtractor.extract(answers, data.leadTrustee.leadTrusteeInd.toList),
+      organisationLeadTrusteeExtractor.extract(answers, data.leadTrustee.leadTrusteeOrg.toList),
       individualTrusteeExtractor.extract(answers, data.trustees.getOrElse(Nil).flatMap(_.trusteeInd)),
       organisationTrusteeExtractor.extract(answers, data.trustees.getOrElse(Nil).flatMap(_.trusteeOrg))
     ).collect {

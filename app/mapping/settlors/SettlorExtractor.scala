@@ -30,7 +30,7 @@ class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtrac
   def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
 
     val settlors: List[UserAnswers] = List(
-      deceasedSettlorExtractor.extract(answers, data.deceased.map(List(_)).getOrElse(Nil)),
+      deceasedSettlorExtractor.extract(answers, data.deceased.toList),
       individualSettlorExtractor.extract(answers, data.settlors.map(_.settlor).getOrElse(Nil)),
       businessSettlorExtractor.extract(answers, data.settlors.map(_.settlorCompany).getOrElse(Nil))
     ).collect {
