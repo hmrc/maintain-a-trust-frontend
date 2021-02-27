@@ -17,15 +17,15 @@
 package mapping.settlors
 
 import mapping.PlaybackExtractor
-import mapping.PlaybackImplicits._
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
-import models.{Address, MetaData, UserAnswers}
+import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
 import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
 
+import java.time.LocalDate
 import scala.util.{Failure, Try}
 
 class LivingSettlorExtractor extends PlaybackExtractor[LivingSettlor] {
@@ -35,8 +35,16 @@ class LivingSettlorExtractor extends PlaybackExtractor[LivingSettlor] {
 
   override def addressYesNoPage(index: Int): QuestionPage[Boolean] = SettlorAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = SettlorAddressUKYesNoPage(index)
-  override def ukAddressPage(index: Int): QuestionPage[Address] = SettlorAddressPage(index)
-  override def nonUkAddressPage(index: Int): QuestionPage[Address] = SettlorAddressPage(index)
+  override def addressPage(index: Int): QuestionPage[Address] = SettlorAddressPage(index)
+
+  override def ninoYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualNINOYesNoPage(index)
+  override def ninoPage(index: Int): QuestionPage[String] = SettlorIndividualNINOPage(index)
+
+  override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualPassportIDCardYesNoPage(index)
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = SettlorIndividualPassportIDCardPage(index)
+
+  override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualDateOfBirthYesNoPage(index)
+  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = SettlorIndividualDateOfBirthPage(index)
 
   override def updateUserAnswers(answers: Try[UserAnswers], entity: LivingSettlor, index: Int): Try[UserAnswers] = {
     entity match {
@@ -52,8 +60,8 @@ class LivingSettlorExtractor extends PlaybackExtractor[LivingSettlor] {
     answers
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(SettlorIndividualNamePage(index), individual.name))
-      .flatMap(answers => extractDateOfBirth(individual, index, answers))
-      .flatMap(answers => extractIndividualIdentification(individual, index, answers))
+      .flatMap(answers => extractDateOfBirth(individual.dateOfBirth, index, answers))
+      .flatMap(answers => extractIndIdentification(individual.identification, index, answers))
       .flatMap {
         _.set(
           SettlorMetaData(index),
@@ -91,48 +99,4 @@ class LivingSettlorExtractor extends PlaybackExtractor[LivingSettlor] {
       .flatMap(_.set(LivingSettlorStatus(index), UpToDate))
   }
 
-  private def extractIndividualIdentification(individual: DisplayTrustSettlor, index: Int, answers: UserAnswers) = {
-    individual.identification match {
-
-      case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
-        answers.set(SettlorIndividualNINOYesNoPage(index), true)
-          .flatMap(_.set(SettlorIndividualNINOPage(index), nino))
-
-      case Some(DisplayTrustIdentificationType(_, None, Some(passport), None)) =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustOrEstate api")
-        case object InvalidExtractorState extends RuntimeException
-        Failure(InvalidExtractorState)
-
-      case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
-        answers.set(SettlorIndividualNINOYesNoPage(index), false)
-          .flatMap(_.set(SettlorIndividualPassportIDCardYesNoPage(index), false))
-          .flatMap(answers => extractAddress(address, index, answers))
-
-      case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
-        answers.set(SettlorIndividualNINOYesNoPage(index), false)
-          .flatMap(answers => extractAddress(address, index, answers))
-          .flatMap(answers => extractPassportIdCard(passport, index, answers))
-
-      case _ =>
-        answers.set(SettlorIndividualNINOYesNoPage(index), false)
-          .flatMap(_.set(SettlorAddressYesNoPage(index), false))
-
-    }
-  }
-
-  private def extractDateOfBirth(settlorIndividual: DisplayTrustSettlor, index: Int, answers: UserAnswers) = {
-    settlorIndividual.dateOfBirth match {
-      case Some(dob) =>
-        answers.set(SettlorIndividualDateOfBirthYesNoPage(index), true)
-          .flatMap(_.set(SettlorIndividualDateOfBirthPage(index), dob))
-      case None =>
-        // Assumption that user answered no as utr is not provided
-        answers.set(SettlorIndividualDateOfBirthYesNoPage(index), false)
-    }
-  }
-
-  private def extractPassportIdCard(passport: PassportType, index: Int, answers: UserAnswers) = {
-    answers.set(SettlorIndividualPassportIDCardYesNoPage(index), true)
-      .flatMap(_.set(SettlorIndividualPassportIDCardPage(index), passport.convert))
-  }
 }

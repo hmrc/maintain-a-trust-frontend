@@ -16,12 +16,12 @@
 
 package mapping.beneficiaries
 
-import mapping.PlaybackImplicits._
-import models.http.{DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, PassportType}
-import models.{Address, MetaData, UserAnswers}
+import models.http.DisplayTrustIndividualDetailsType
+import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
 import pages.beneficiaries.individual._
 
+import java.time.LocalDate
 import scala.util.{Failure, Try}
 
 class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustIndividualDetailsType] {
@@ -39,18 +39,28 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
 
   override def addressYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryAddressUKYesNoPage(index)
-  override def ukAddressPage(index: Int): QuestionPage[Address] = IndividualBeneficiaryAddressPage(index)
-  override def nonUkAddressPage(index: Int): QuestionPage[Address] = IndividualBeneficiaryAddressPage(index)
+  override def addressPage(index: Int): QuestionPage[Address] = IndividualBeneficiaryAddressPage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustIndividualDetailsType, index: Int): Try[UserAnswers] = {
+  override def ninoYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryNationalInsuranceYesNoPage(index)
+  override def ninoPage(index: Int): QuestionPage[String] = IndividualBeneficiaryNationalInsuranceNumberPage(index)
+
+  override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryPassportIDCardYesNoPage(index)
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = IndividualBeneficiaryPassportIDCardPage(index)
+
+  override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryDateOfBirthYesNoPage(index)
+  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = IndividualBeneficiaryDateOfBirthPage(index)
+
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: DisplayTrustIndividualDetailsType,
+                                 index: Int): Try[UserAnswers] = {
     answers
       .flatMap(_.set(IndividualBeneficiaryNamePage(index), entity.name))
       .flatMap(answers => extractRoleInCompany(entity, index, answers))
-      .flatMap(answers => extractDateOfBirth(entity, index, answers))
+      .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
-      .flatMap(answers => extractIdentification(entity, index, answers))
+      .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(answers => extractVulnerability(entity.vulnerableBeneficiary, index, answers))
       .flatMap {
         _.set(
@@ -68,55 +78,6 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
   private def extractRoleInCompany(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
     extractIfTaxable(answers) {
       answers.set(IndividualBeneficiaryRoleInCompanyPage(index), individualBeneficiary.beneficiaryType)
-    }
-  }
-
-  private def extractIdentification(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
-      individualBeneficiary.identification match {
-
-        case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
-          answers.set(IndividualBeneficiaryNationalInsuranceYesNoPage(index), true)
-            .flatMap(_.set(IndividualBeneficiaryNationalInsuranceNumberPage(index), nino))
-
-        case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
-          answers.set(IndividualBeneficiaryNationalInsuranceYesNoPage(index), false)
-            .flatMap(_.set(IndividualBeneficiaryPassportIDCardYesNoPage(index), false))
-            .flatMap(answers => extractAddress(address, index, answers))
-
-        case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
-          answers.set(IndividualBeneficiaryNationalInsuranceYesNoPage(index), false)
-            .flatMap(answers => extractAddress(address, index, answers))
-            .flatMap(answers => extractPassportIdCard(passport, index, answers))
-
-        case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
-          logger.error(s"[UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustOrEstate api")
-          case object InvalidExtractorState extends RuntimeException
-          Failure(InvalidExtractorState)
-
-        case _ =>
-          answers.set(IndividualBeneficiaryNationalInsuranceYesNoPage(index), false)
-            .flatMap(_.set(IndividualBeneficiaryAddressYesNoPage(index), false))
-
-      }
-    }
-  }
-
-  private def extractDateOfBirth(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    individualBeneficiary.dateOfBirth match {
-      case Some(dob) =>
-        answers.set(IndividualBeneficiaryDateOfBirthYesNoPage(index), true)
-          .flatMap(_.set(IndividualBeneficiaryDateOfBirthPage(index), dob))
-      case None =>
-        // Assumption that user answered no as dob is not provided
-        answers.set(IndividualBeneficiaryDateOfBirthYesNoPage(index), false)
-    }
-  }
-
-  private def extractPassportIdCard(passport: PassportType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
-      answers.set(IndividualBeneficiaryPassportIDCardYesNoPage(index), true)
-        .flatMap(_.set(IndividualBeneficiaryPassportIDCardPage(index), passport.convert))
     }
   }
 

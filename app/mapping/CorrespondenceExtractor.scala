@@ -23,7 +23,8 @@ import models.http.Correspondence
 import pages.correspondence._
 import pages.trustdetails.TrustNamePage
 import play.api.Logging
-import scala.util.{Failure, Success}
+
+import scala.util.{Failure, Success, Try}
 
 class CorrespondenceExtractor @Inject() extends Logging {
 
@@ -46,7 +47,7 @@ class CorrespondenceExtractor @Inject() extends Logging {
     }
   }
 
-  private def extractAddress(address: Address, answers: UserAnswers) = {
+  private def extractAddress(address: Address, answers: UserAnswers): Try[UserAnswers] = {
     address match {
       case uk: UKAddress => answers.set(CorrespondenceAddressPage, uk)
         .flatMap(_.set(CorrespondenceAddressInTheUKPage, true))

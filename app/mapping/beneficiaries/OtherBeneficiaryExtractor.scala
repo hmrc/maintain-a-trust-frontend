@@ -30,10 +30,11 @@ class OtherBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
 
   override def addressYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryAddressUKYesNoPage(index)
-  override def ukAddressPage(index: Int): QuestionPage[Address] = OtherBeneficiaryAddressPage(index)
-  override def nonUkAddressPage(index: Int): QuestionPage[Address] = OtherBeneficiaryAddressPage(index)
+  override def addressPage(index: Int): QuestionPage[Address] = OtherBeneficiaryAddressPage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustOtherType, index: Int): Try[UserAnswers] = {
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: DisplayTrustOtherType,
+                                 index: Int): Try[UserAnswers] = {
     answers
       .flatMap(_.set(OtherBeneficiaryDescriptionPage(index), entity.description))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))

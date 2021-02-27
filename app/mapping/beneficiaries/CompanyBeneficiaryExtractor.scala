@@ -16,13 +16,12 @@
 
 package mapping.beneficiaries
 
-import mapping.PlaybackExtractionErrors.InvalidExtractorState
-import models.http.{DisplayTrustCompanyType, DisplayTrustIdentificationOrgType}
+import models.http.DisplayTrustCompanyType
 import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.beneficiaries.company._
 
-import scala.util.{Failure, Try}
+import scala.util.Try
 
 class CompanyBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustCompanyType] {
 
@@ -35,16 +34,19 @@ class CompanyBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTr
 
   override def addressYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = CompanyBeneficiaryAddressUKYesNoPage(index)
-  override def ukAddressPage(index: Int): QuestionPage[Address] = CompanyBeneficiaryAddressPage(index)
-  override def nonUkAddressPage(index: Int): QuestionPage[Address] = CompanyBeneficiaryAddressPage(index)
+  override def addressPage(index: Int): QuestionPage[Address] = CompanyBeneficiaryAddressPage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustCompanyType, index: Int): Try[UserAnswers] = {
+  override def utrPage(index: Int): QuestionPage[String] = CompanyBeneficiaryUtrPage(index)
+
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: DisplayTrustCompanyType,
+                                 index: Int): Try[UserAnswers] = {
     answers
       .flatMap(_.set(CompanyBeneficiaryNamePage(index), entity.organisationName))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(_.set(CompanyBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap(answers => extractIdentification(entity.identification, index, answers))
+      .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
       .flatMap {
         _.set(
           CompanyBeneficiaryMetaData(index),
@@ -55,27 +57,5 @@ class CompanyBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTr
           )
         )
       }
-  }
-
-  private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
-      identification map {
-        case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
-          answers.set(CompanyBeneficiaryUtrPage(index), utr)
-            .flatMap(_.set(CompanyBeneficiaryAddressYesNoPage(index), false))
-
-        case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
-          extractAddress(address, index, answers)
-
-        case _ =>
-          logger.error(s"[UTR/URN: ${answers.identifier}] only both utr and address parsed")
-          Failure(InvalidExtractorState)
-
-      } getOrElse {
-        answers.set(CompanyBeneficiaryAddressYesNoPage(index), false)
-      }
-    } else {
-      Try(answers)
-    }
   }
 }

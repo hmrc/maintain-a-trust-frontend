@@ -16,10 +16,10 @@
 
 package mapping
 
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
+import mapping.PlaybackExtractionErrors._
 import mapping.PlaybackImplicits._
-import models.http.{AddressType, DisplayTrustIdentificationOrgType, EntityType}
-import models.{Address, InternationalAddress, UKAddress, UserAnswers}
+import models.http._
+import models.{Address, InternationalAddress, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import pages.{EmptyPage, QuestionPage}
 import play.api.Logging
 import utils.Constants.GB
@@ -59,6 +59,26 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
   def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
   def countryOfResidencePage(index: Int): QuestionPage[String] = new EmptyPage[String]
 
+  def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def countryOfNationalityPage(index: Int): QuestionPage[String] = new EmptyPage[String]
+
+  def addressYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def addressPage(index: Int): QuestionPage[Address] = new EmptyPage[Address]
+
+  def utrYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def utrPage(index: Int): QuestionPage[String] = new EmptyPage[String]
+
+  def ninoYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def ninoPage(index: Int): QuestionPage[String] = new EmptyPage[String]
+
+  def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = new EmptyPage[PassportOrIdCardDetails]
+
+  def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = new EmptyPage[LocalDate]
+
   def extractCountryOfResidence(countryOfResidence: Option[String],
                                 index: Int,
                                 answers: UserAnswers): Try[UserAnswers] = {
@@ -70,10 +90,6 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
       page = countryOfResidencePage(index)
     )
   }
-
-  def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def countryOfNationalityPage(index: Int): QuestionPage[String] = new EmptyPage[String]
 
   def extractCountryOfNationality(countryOfNationality: Option[String],
                                   index: Int,
@@ -106,25 +122,19 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
     }
   }
 
-  def addressYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def ukAddressPage(index: Int): QuestionPage[Address] = new EmptyPage[Address]
-  def nonUkAddressPage(index: Int): QuestionPage[Address] = new EmptyPage[Address]
-
   def extractAddress(address: AddressType,
                      index: Int,
                      answers: UserAnswers): Try[UserAnswers] = {
-
     extractIfTaxable(answers) {
       address.convert match {
         case uk: UKAddress =>
           answers.set(addressYesNoPage(index), true)
             .flatMap(_.set(ukAddressYesNoPage(index), true))
-            .flatMap(_.set(ukAddressPage(index), uk))
+            .flatMap(_.set(addressPage(index), uk))
         case nonUk: InternationalAddress =>
           answers.set(addressYesNoPage(index), true)
             .flatMap(_.set(ukAddressYesNoPage(index), false))
-            .flatMap(_.set(nonUkAddressPage(index), nonUk))
+            .flatMap(_.set(addressPage(index), nonUk))
       }
     }
   }
@@ -132,25 +142,54 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
   def extractOptionalAddress(address: Option[AddressType],
                              index: Int,
                              answers: UserAnswers): Try[UserAnswers] = {
-
     extractIfTaxable(answers) {
       address.convert match {
         case Some(uk: UKAddress) =>
           answers.set(addressYesNoPage(index), true)
             .flatMap(_.set(ukAddressYesNoPage(index), true))
-            .flatMap(_.set(ukAddressPage(index), uk))
+            .flatMap(_.set(addressPage(index), uk))
         case Some(nonUk: InternationalAddress) =>
           answers.set(addressYesNoPage(index), true)
             .flatMap(_.set(ukAddressYesNoPage(index), false))
-            .flatMap(_.set(nonUkAddressPage(index), nonUk))
+            .flatMap(_.set(addressPage(index), nonUk))
         case None =>
           answers.set(addressYesNoPage(index), false)
       }
     }
   }
 
-  def utrYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def utrPage(index: Int): QuestionPage[String] = new EmptyPage[String]
+  def extractIndIdentification(identification: Option[DisplayTrustIdentificationType],
+                               index: Int,
+                               answers: UserAnswers): Try[UserAnswers] = {
+    extractIfTaxable(answers) {
+      identification match {
+        case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
+          answers.set(ninoYesNoPage(index), true)
+            .flatMap(_.set(ninoPage(index), nino))
+        case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
+          answers.set(ninoYesNoPage(index), false)
+            .flatMap(answers => extractAddress(address, index, answers))
+            .flatMap(_.set(passportOrIdCardYesNoPage(index), false))
+        case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
+          answers.set(ninoYesNoPage(index), false)
+            .flatMap(answers => extractAddress(address, index, answers))
+            .flatMap(answers => extractPassportIdCard(passport, index, answers))
+        case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
+          logger.error(s"[UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustIdentificationType")
+          Failure(InvalidExtractorState)
+        case _ =>
+          answers.set(ninoYesNoPage(index), false)
+            .flatMap(_.set(addressYesNoPage(index), false))
+      }
+    }
+  }
+
+  private def extractPassportIdCard(passport: PassportType,
+                                    index: Int,
+                                    answers: UserAnswers): Try[UserAnswers] = {
+    answers.set(passportOrIdCardYesNoPage(index), true)
+      .flatMap(_.set(passportOrIdCardPage(index), passport.convert))
+  }
 
   def extractOrgIdentification(identification: Option[DisplayTrustIdentificationOrgType],
                                index: Int,
@@ -170,8 +209,17 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
     }
   }
 
-  def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = new EmptyPage[LocalDate]
+  def extractDateOfBirth(dateOfBirth: Option[LocalDate],
+                         index: Int,
+                         answers: UserAnswers): Try[UserAnswers] = {
+    dateOfBirth match {
+      case Some(dateOfBirth) =>
+        answers.set(dateOfBirthYesNoPage(index), true)
+          .flatMap(_.set(dateOfBirthPage(index), dateOfBirth))
+      case None =>
+        answers.set(dateOfBirthYesNoPage(index), false)
+    }
+  }
 
   def extractIfTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {
@@ -180,4 +228,5 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
       Success(answers)
     }
   }
+
 }

@@ -28,7 +28,9 @@ class ClassOfBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTr
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = ClassOfBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = ClassOfBeneficiaryShareOfIncomePage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustUnidentifiedType, index: Int): Try[UserAnswers] = {
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: DisplayTrustUnidentifiedType,
+                                 index: Int): Try[UserAnswers] = {
     answers
       .flatMap(_.set(ClassOfBeneficiaryDescriptionPage(index), entity.description))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))

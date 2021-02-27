@@ -20,11 +20,15 @@ import mapping.PlaybackExtractor
 import mapping.PlaybackImplicits._
 import models.http.{DisplayTrustIdentificationType, DisplayTrustWillType}
 import models.{Address, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
+import pages.QuestionPage
 import pages.settlors.deceased_settlor._
 
 import scala.util.Try
 
 class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
+
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = SettlorLastKnownAddressYesNoPage
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = SettlorLastKnownAddressUKYesNoPage
 
   override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustWillType, index: Int): Try[UserAnswers] = {
     answers

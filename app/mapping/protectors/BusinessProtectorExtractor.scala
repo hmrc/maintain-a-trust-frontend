@@ -29,13 +29,14 @@ class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrust
 
   override def addressYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorAddressUKYesNoPage(index)
-  override def ukAddressPage(index: Int): QuestionPage[Address] = BusinessProtectorAddressPage(index)
-  override def nonUkAddressPage(index: Int): QuestionPage[Address] = BusinessProtectorAddressPage(index)
+  override def addressPage(index: Int): QuestionPage[Address] = BusinessProtectorAddressPage(index)
 
   override def utrYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorUtrYesNoPage(index)
   override def utrPage(index: Int): QuestionPage[String] = BusinessProtectorUtrPage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayTrustProtectorBusiness, index: Int): Try[UserAnswers] = {
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: DisplayTrustProtectorBusiness,
+                                 index: Int): Try[UserAnswers] = {
     answers
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(BusinessProtectorNamePage(index), entity.name))

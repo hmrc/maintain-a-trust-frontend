@@ -16,12 +16,13 @@
 
 package mapping.beneficiaries
 
+import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import mapping.PlaybackExtractor
 import models.UserAnswers
-import models.http.BeneficiaryType
+import models.http.{BeneficiaryType, DisplayTrustIdentificationOrgType}
 import pages.{EmptyPage, QuestionPage}
 
-import scala.util.{Success, Try}
+import scala.util.{Failure, Success, Try}
 
 trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtractor[T] {
 
@@ -41,6 +42,25 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
       }
     } else {
       Success(answers)
+    }
+  }
+
+  override def extractOrgIdentification(identification: Option[DisplayTrustIdentificationOrgType],
+                                        index: Int,
+                                        answers: UserAnswers): Try[UserAnswers] = {
+    extractIfTaxable(answers) {
+      identification map {
+        case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
+          answers.set(utrPage(index), utr)
+            .flatMap(_.set(addressYesNoPage(index), false))
+        case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
+          extractAddress(address, index, answers)
+        case _ =>
+          logger.error(s"[UTR/URN: ${answers.identifier}] both utr/urn and address parsed")
+          Failure(InvalidExtractorState)
+      } getOrElse {
+        answers.set(addressYesNoPage(index), false)
+      }
     }
   }
 
