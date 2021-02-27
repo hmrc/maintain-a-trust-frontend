@@ -45,7 +45,7 @@ class TrusteeExtractor @Inject()(individualLeadTrusteeExtractor: IndividualLeadT
       case (Nil, false) => Left(FailedToExtractData("Trustee Extraction Error"))
       case (_, true) => Left(FailedToExtractData("Lead Trustee Extraction Error - Missing Lead Trustee"))
       case _ =>
-        trustees.combineArraysWithKey(Trustees) match {
+        trustees.combineArraysWithPath(Trustees.path) match {
           case Some(value) => Right(value)
           case None => Left(FailedToExtractData("Trustee Extraction Error"))
         }

@@ -21,29 +21,28 @@ import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtraction
 import models.UserAnswers
 import models.UserAnswersCombinator._
 import models.http.DisplayTrustEntitiesType
+import sections.settlors.LivingSettlors
 
 class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtractor,
-                                 livingSettlorExtractor: LivingSettlorExtractor) {
+                                 individualSettlorExtractor: IndividualSettlorExtractor,
+                                 businessSettlorExtractor: BusinessSettlorExtractor) {
 
   def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
 
-    val livingSettlors = for {
-      settlors <- data.settlors
-      companies = settlors.settlorCompany
-      individuals = settlors.settlor
-    } yield companies ++ individuals
-
     val settlors: List[UserAnswers] = List(
       deceasedSettlorExtractor.extract(answers, data.deceased.map(List(_)).getOrElse(Nil)),
-      livingSettlorExtractor.extract(answers, livingSettlors.getOrElse(Nil))
+      individualSettlorExtractor.extract(answers, data.settlors.map(_.settlor).getOrElse(Nil)),
+      businessSettlorExtractor.extract(answers, data.settlors.map(_.settlorCompany).getOrElse(Nil))
     ).collect {
       case Right(z) => z
     }
 
-    settlors match {
-      case Nil => Left(FailedToExtractData("Settlor Extraction Error"))
-      case _ => settlors.combine.map(Right.apply).getOrElse(Left(FailedToExtractData("Settlor Extraction Error")))
-    }
+    val noDeceasedSettlor: Boolean = data.deceased.isEmpty
+
+    (settlors, noDeceasedSettlor) match {
+      case (Nil, _) => Left(FailedToExtractData("Settlor Extraction Error"))
+      case (_, true) => settlors.combineArraysWithPath(LivingSettlors.path).map(Right(_)).getOrElse(Left(FailedToExtractData("Settlor Extraction Error")))
+      case (_, false) => settlors.combine.map(Right(_)).getOrElse(Left(FailedToExtractData("Settlor Extraction Error")))}
   }
 
 }

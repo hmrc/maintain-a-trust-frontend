@@ -62,7 +62,7 @@ class OrganisationTrusteeExtractorSpec extends FreeSpec with MustMatchers
   val trusteesExtractor : OrganisationTrusteeExtractor =
     injector.instanceOf[OrganisationTrusteeExtractor]
 
-  "Trustees Extractor" - {
+  "Organisation Trustee Extractor" - {
 
     "when no companies" - {
 

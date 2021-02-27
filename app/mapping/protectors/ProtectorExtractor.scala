@@ -46,7 +46,7 @@ class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProte
           case 0 =>
             Right(updateAnswers(answers, doesTrustHaveProtector = false))
           case _ =>
-            protectors.combineArraysWithKey(Protectors) match {
+            protectors.combineArraysWithPath(Protectors.path) match {
               case Some(value) => Right(updateAnswers(value, doesTrustHaveProtector = true))
               case None => Left(FailedToExtractData("Protector Extraction Error"))
             }

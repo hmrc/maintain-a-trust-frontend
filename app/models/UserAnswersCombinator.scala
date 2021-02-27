@@ -17,7 +17,7 @@
 package models
 
 import cats.kernel.Semigroup
-import play.api.libs.json.{JsArray, JsPath, JsSuccess, Json}
+import play.api.libs.json._
 
 import scala.util.{Success, Try}
 
@@ -37,16 +37,24 @@ object UserAnswersCombinator {
       Semigroup[UserAnswers].combineAllOption(answers)
     }
 
-    def combineArraysWithKey(key: String): Option[UserAnswers] = {
+    def combineArraysWithPath(path: JsPath): Option[UserAnswers] = {
 
       val combinedArray = answers.foldLeft(JsArray())((acc, ua) => {
-        ua.data.transform((JsPath \ key).json.pick[JsArray]) match {
+        ua.data.transform(path.json.pick[JsArray]) match {
           case JsSuccess(array, _) => acc ++ array
           case _ => acc
         }
       })
 
-      answers.map(ua => ua.copy(data = Json.obj(key -> combinedArray))).combine
+      def createJsObject(path: JsPath, value: JsValue) = {
+        val initial = Json.obj()
+        initial.transform(path.json.put(value)) match {
+          case JsSuccess(value, _) => value
+          case _ => initial
+        }
+      }
+
+      answers.map(ua => ua.copy(data = createJsObject(path, combinedArray))).combine
     }
 
   }
