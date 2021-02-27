@@ -19,58 +19,58 @@ package models
 import cats.kernel.Semigroup
 import play.api.libs.json._
 
-import scala.util.{Success, Try}
-
 object UserAnswersCombinator {
-
-  implicit val userAnswersSemigroup: Semigroup[UserAnswers] = (x: UserAnswers, y: UserAnswers) => {
-    UserAnswers(
-      data = x.data.deepMerge(y.data),
-      internalId = x.internalId,
-      identifier = x.identifier
-    )
-  }
 
   implicit class Combinator(answers: List[UserAnswers]) {
 
     def combine: Option[UserAnswers] = {
+      implicit val userAnswersSemigroup: Semigroup[UserAnswers] = (x: UserAnswers, y: UserAnswers) => {
+        val merge = (x: UserAnswers, y: UserAnswers) => x.data.deepMerge(y.data)
+        applyMerge(merge, x, y)
+      }
       Semigroup[UserAnswers].combineAllOption(answers)
     }
 
     def combineArraysWithPath(path: JsPath): Option[UserAnswers] = {
+      implicit val userAnswersSemigroup: Semigroup[UserAnswers] = (x: UserAnswers, y: UserAnswers) => {
+        val merge = (x: UserAnswers, y: UserAnswers) => x.data.mergeArrays(y.data, path)
+        applyMerge(merge, x, y)
+      }
+      Semigroup[UserAnswers].combineAllOption(answers)
+    }
 
-      val combinedArray = answers.foldLeft(JsArray())((acc, ua) => {
-        ua.data.transform(path.json.pick[JsArray]) match {
-          case JsSuccess(array, _) => acc ++ array
+    private def applyMerge(merge: (UserAnswers, UserAnswers) => JsObject,
+                           x: UserAnswers,
+                           y: UserAnswers): UserAnswers = {
+      UserAnswers(
+        data = merge(x, y),
+        internalId = x.internalId,
+        identifier = x.identifier
+      )
+    }
+  }
+
+  implicit class ArrayCombinator(x: JsObject) {
+    def mergeArrays(y: JsObject, path: JsPath): JsObject = {
+      
+      val pick = (obj: JsObject) => obj.transform(path.json.pick[JsArray])
+      val mergedArrays: JsArray = Seq(pick(x), pick(y)).foldLeft(JsArray())((acc, pickResult) => {
+        pickResult match {
+          case JsSuccess(arr, _) => acc ++ arr
           case _ => acc
         }
       })
 
-      def createJsObject(path: JsPath, value: JsValue) = {
-        val initial = Json.obj()
-        initial.transform(path.json.put(value)) match {
-          case JsSuccess(value, _) => value
-          case _ => initial
+      if (mergedArrays.value.nonEmpty) {
+        val replaceArray = path.json.prune andThen __.json.update(path.json.put(mergedArrays))
+        x.transform(replaceArray) match {
+          case JsSuccess(updated, _) => updated
+          case _ => x
         }
+      } else {
+        x
       }
-
-      answers.map { ua =>
-        if (combinedArray.value.isEmpty) {
-          ua
-        } else {
-          ua.copy(data = createJsObject(path, combinedArray))
-        }
-      }.combine
     }
-
-  }
-
-  implicit class UserAnswersCollector(answers: List[Try[UserAnswers]]) {
-
-    def collectAnswers: List[UserAnswers] = answers.collect {
-      case Success(answer) => answer
-    }
-
   }
 
 }
