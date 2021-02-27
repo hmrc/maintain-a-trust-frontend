@@ -54,7 +54,13 @@ object UserAnswersCombinator {
         }
       }
 
-      answers.map(ua => ua.copy(data = createJsObject(path, combinedArray))).combine
+      answers.map { ua =>
+        if (combinedArray.value.isEmpty) {
+          ua
+        } else {
+          ua.copy(data = createJsObject(path, combinedArray))
+        }
+      }.combine
     }
 
   }

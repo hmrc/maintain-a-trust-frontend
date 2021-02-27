@@ -21,14 +21,10 @@ import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtraction
 import models.UserAnswers
 import models.UserAnswersCombinator._
 import models.http.DisplayTrustProtectorsType
-import pages.protectors._
-import play.api.Logging
 import sections.Protectors
 
-import scala.util.Success
-
 class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProtectorExtractor,
-                                   businessProtectorExtractor: BusinessProtectorExtractor) extends Logging {
+                                   businessProtectorExtractor: BusinessProtectorExtractor) {
 
   def extract(answers: UserAnswers, data: Option[DisplayTrustProtectorsType]): Either[PlaybackExtractionError, UserAnswers] = {
 
@@ -42,24 +38,12 @@ class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProte
           case Right(z) => z
         }
 
-        p.count match {
-          case 0 =>
-            Right(updateAnswers(answers, doesTrustHaveProtector = false))
-          case _ =>
-            protectors.combineArraysWithPath(Protectors.path) match {
-              case Some(value) => Right(updateAnswers(value, doesTrustHaveProtector = true))
-              case None => Left(FailedToExtractData("Protector Extraction Error"))
-            }
+        protectors.combineArraysWithPath(Protectors.path) match {
+          case Some(value) => Right(value)
+          case None => Left(FailedToExtractData("Protector Extraction Error"))
         }
       case None =>
-        Right(updateAnswers(answers, doesTrustHaveProtector = false))
-    }
-  }
-
-  private def updateAnswers(answers: UserAnswers, doesTrustHaveProtector: Boolean): UserAnswers = {
-    answers.set(DoesTrustHaveAProtectorYesNoPage(), doesTrustHaveProtector) match {
-      case Success(ua) => ua
-      case _ => answers
+        Right(answers)
     }
   }
 }

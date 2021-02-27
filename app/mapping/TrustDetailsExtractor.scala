@@ -16,7 +16,6 @@
 
 package mapping
 
-import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
 import models.http.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
@@ -26,7 +25,7 @@ import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class TrustDetailsExtractor @Inject() extends Logging {
+class TrustDetailsExtractor extends Logging {
 
   def extract(answers: UserAnswers, data: TrustDetailsType): Either[PlaybackExtractionError, UserAnswers] = {
     val updated = answers

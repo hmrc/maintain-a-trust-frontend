@@ -38,7 +38,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
 
     "when no protectors" - {
 
-      "must return false for doesTrustHaveAProtector given no individual protector and no company protector" in {
+      "must return right given no individual protector and no company protector" in {
 
         val protector = DisplayTrustProtectorsType(Nil, Nil)
 
@@ -46,16 +46,18 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
 
         val extraction = protectorExtractor.extract(ua, Some(protector))
 
-        extraction.right.value.get(DoesTrustHaveAProtectorYesNoPage()).get mustBe false
+        extraction mustBe 'right
+        extraction.right.value.data mustBe ua.data
       }
 
-      "must return false for doesTrustHaveAProtector given no protector" in {
+      "must return right given no protector" in {
 
         val ua = UserAnswers("fakeId", "utr")
 
         val extraction = protectorExtractor.extract(ua, None)
 
-        extraction.right.value.get(DoesTrustHaveAProtectorYesNoPage()).get mustBe false
+        extraction mustBe 'right
+        extraction.right.value.data mustBe ua.data
       }
     }
 
@@ -101,8 +103,6 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
         val ua = UserAnswers("fakeId", "utr")
 
         val extraction = protectorExtractor.extract(ua, Some(protectors))
-
-        extraction.right.value.get(DoesTrustHaveAProtectorYesNoPage()).get mustBe true
 
         extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
         extraction.right.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
@@ -171,8 +171,6 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
 
         val extraction = protectorExtractor.extract(ua, Some(protectors))
 
-        extraction.right.value.get(DoesTrustHaveAProtectorYesNoPage()).get mustBe true
-
         extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
         extraction.right.value.get(BusinessProtectorNamePage(0)).get mustBe "Business 1"
         extraction.right.value.get(BusinessProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
@@ -236,8 +234,6 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
         val ua = UserAnswers("fakeId", "utr")
 
         val extraction = protectorExtractor.extract(ua, Some(protectors))
-
-        extraction.right.value.get(DoesTrustHaveAProtectorYesNoPage()).get mustBe true
 
         extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
         extraction.right.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")

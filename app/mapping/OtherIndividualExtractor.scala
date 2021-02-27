@@ -16,7 +16,6 @@
 
 package mapping
 
-import com.google.inject.Inject
 import models.http.NaturalPersonType
 import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
@@ -25,7 +24,7 @@ import pages.individual._
 import java.time.LocalDate
 import scala.util.Try
 
-class OtherIndividualExtractor @Inject() extends PlaybackExtractor[NaturalPersonType] {
+class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
 
   override val optionalEntity: Boolean = true
 
