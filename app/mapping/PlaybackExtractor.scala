@@ -139,19 +139,13 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
     }
   }
 
-  def extractOptionalAddress(address: Option[AddressType],
+  def extractOptionalAddress(optionalAddress: Option[AddressType],
                              index: Int,
                              answers: UserAnswers): Try[UserAnswers] = {
     extractIfTaxable(answers) {
-      address.convert match {
-        case Some(uk: UKAddress) =>
-          answers.set(addressYesNoPage(index), true)
-            .flatMap(_.set(ukAddressYesNoPage(index), true))
-            .flatMap(_.set(addressPage(index), uk))
-        case Some(nonUk: InternationalAddress) =>
-          answers.set(addressYesNoPage(index), true)
-            .flatMap(_.set(ukAddressYesNoPage(index), false))
-            .flatMap(_.set(addressPage(index), nonUk))
+      optionalAddress match {
+        case Some(address) =>
+          extractAddress(address, index, answers)
         case None =>
           answers.set(addressYesNoPage(index), false)
       }
@@ -184,7 +178,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
     }
   }
 
-  private def extractPassportIdCard(passport: PassportType,
+  def extractPassportIdCard(passport: PassportType,
                                     index: Int,
                                     answers: UserAnswers): Try[UserAnswers] = {
     answers.set(passportOrIdCardYesNoPage(index), true)

@@ -16,6 +16,7 @@
 
 package mapping.beneficiaries
 
+import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import models.http.DisplayTrustIndividualDetailsType
 import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
@@ -85,7 +86,9 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
     extractIfTaxable(answers) {
       vulnerable match {
         case Some(value) => answers.set(IndividualBeneficiaryVulnerableYesNoPage(index), value)
-        case None => Failure(new Throwable("Vulnerability must be answered for taxable trust."))
+        case None =>
+          logger.error(s"[UTR/URN: ${answers.identifier}] Vulnerability must be answered for taxable trust.")
+          Failure(InvalidExtractorState)
       }
     }
   }

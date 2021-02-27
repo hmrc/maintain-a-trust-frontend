@@ -84,7 +84,7 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         .set(SettlorNationalInsuranceYesNoPage, false).success.value
         .set(SettlorLastKnownAddressYesNoPage, true).success.value
         .set(SettlorLastKnownAddressUKYesNoPage, true).success.value
-        .set(SettlorUKAddressPage, UKAddress(
+        .set(SettlorLastKnownAddressPage, UKAddress(
           line1 = "line 1",
           line2 = "line 2",
           line3 = Some("line 3"),

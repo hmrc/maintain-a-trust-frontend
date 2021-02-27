@@ -16,12 +16,12 @@
 
 package pages.settlors.deceased_settlor
 
-import models.UKAddress
+import models.Address
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.DeceasedSettlor
 
-case object SettlorUKAddressPage extends QuestionPage[UKAddress] {
+case object SettlorLastKnownAddressPage extends QuestionPage[Address] {
 
   override def path: JsPath = DeceasedSettlor.path \ toString
 

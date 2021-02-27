@@ -139,8 +139,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
 
         extraction.right.value.get(SettlorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business

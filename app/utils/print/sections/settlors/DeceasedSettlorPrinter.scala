@@ -41,8 +41,7 @@ class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter)
             converter.ninoQuestion(SettlorNationalInsuranceNumberPage, userAnswers, "settlorNationalInsuranceNumber", name),
             converter.yesNoQuestion(SettlorLastKnownAddressYesNoPage, userAnswers, "settlorLastKnownAddressYesNo", name),
             converter.yesNoQuestion(SettlorLastKnownAddressUKYesNoPage, userAnswers, "settlorLastKnownAddressUKYesNo", name),
-            converter.addressQuestion(SettlorUKAddressPage, userAnswers, "settlorUKAddress", name),
-            converter.addressQuestion(SettlorInternationalAddressPage, userAnswers, "settlorInternationalAddress", name),
+            converter.addressQuestion(SettlorLastKnownAddressPage, userAnswers, "settlorUKAddress", name),
             converter.passportOrIdCardQuestion(SettlorPassportIDCardPage, userAnswers, "settlorPassportOrIdCard", name)
           ).flatten,
           sectionKey = None

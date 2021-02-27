@@ -17,54 +17,56 @@
 package mapping.trustees
 
 import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorState, PlaybackExtractionError}
-import mapping.PlaybackImplicits
+import mapping.PlaybackExtractionErrors.InvalidExtractorState
+import mapping.PlaybackExtractor
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
-import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
+import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
+import pages.QuestionPage
 import pages.entitystatus.TrusteeStatus
 import pages.trustees._
-import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
+import java.time.LocalDate
+import scala.util.{Failure, Try}
 
-class TrusteesExtractor @Inject() extends Logging {
+class TrusteesExtractor @Inject() extends PlaybackExtractor[Trustees] {
 
-  import PlaybackImplicits._
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeAddressInTheUKPage(index)
+  override def addressPage(index: Int): QuestionPage[Address] = TrusteeAddressPage(index)
 
-  def extract(answers: UserAnswers, data: Option[List[Trustees]]): Either[PlaybackExtractionError, UserAnswers] = {
-    data match {
-      case None =>
-        Left(FailedToExtractData("No Trustees"))
-      case Some(trustees) =>
-        val updated = trustees.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
-          case (answers, (trustee, index)) =>
-            trustee match {
-              case x : DisplayTrustLeadTrusteeIndType => extractLeadTrusteeIndividual(answers, index, x)
-              case x : DisplayTrustLeadTrusteeOrgType => extractLeadTrusteeCompany(answers, index, x)
-              case x : DisplayTrustTrusteeOrgType => extractTrusteeCompany(answers, index, x)
-              case x : DisplayTrustTrusteeIndividualType => extractTrusteeIndividual(answers, index, x)
-              case _ => Failure(new RuntimeException("Unexpected trustee type"))
-            }
-        }
-        updated match {
-          case Success(a) =>
-            Right(a)
-          case Failure(exception) =>
-            logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-            Left(FailedToExtractData(DisplayTrustTrusteeType.toString))
-        }
+  override def utrYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeUtrYesNoPage(index)
+  override def utrPage(index: Int): QuestionPage[String] = TrusteeUtrPage(index)
+
+  override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeDateOfBirthYesNoPage(index)
+  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = TrusteeDateOfBirthPage(index)
+
+  override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = TrusteePassportIDCardYesNoPage(index)
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = TrusteePassportIDCardPage(index)
+
+  override def ninoYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeNinoYesNoPage(index)
+  override def ninoPage(index: Int): QuestionPage[String] = TrusteeNinoPage(index)
+
+  override def updateUserAnswers(answers: Try[UserAnswers], entity: Trustees, index: Int): Try[UserAnswers] = {
+    entity match {
+      case x: DisplayTrustLeadTrusteeIndType => extractLeadTrusteeIndividual(answers, index, x)
+      case x: DisplayTrustLeadTrusteeOrgType => extractLeadTrusteeCompany(answers, index, x)
+      case x: DisplayTrustTrusteeOrgType => extractTrusteeCompany(answers, index, x)
+      case x: DisplayTrustTrusteeIndividualType => extractTrusteeIndividual(answers, index, x)
+      case _ => Failure(new RuntimeException("Unexpected trustee type"))
     }
   }
 
-  private def extractLeadTrusteeIndividual(answers: Try[UserAnswers], index: Int, leadIndividual : DisplayTrustLeadTrusteeIndType): Try[UserAnswers] = {
+  private def extractLeadTrusteeIndividual(answers: Try[UserAnswers],
+                                           index: Int,
+                                           leadIndividual: DisplayTrustLeadTrusteeIndType): Try[UserAnswers] = {
     answers
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(TrusteeNamePage(index), leadIndividual.name))
       .flatMap(_.set(TrusteeDateOfBirthPage(index), leadIndividual.dateOfBirth))
-      .flatMap(answers => extractLeadIndividualIdentification(leadIndividual, index, answers))
+      .flatMap(answers => extractLeadIndividualIdentification(leadIndividual.identification, index, answers))
       .flatMap(answers => extractEmail(leadIndividual.email, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), leadIndividual.phoneNumber))
       .flatMap(_.set(TrusteeSafeIdPage(index), leadIndividual.identification.safeId))
@@ -80,12 +82,14 @@ class TrusteesExtractor @Inject() extends Logging {
       }
   }
 
-  private def extractLeadTrusteeCompany(answers: Try[UserAnswers], index: Int, leadCompany : DisplayTrustLeadTrusteeOrgType): Try[UserAnswers] = {
+  private def extractLeadTrusteeCompany(answers: Try[UserAnswers],
+                                        index: Int,
+                                        leadCompany: DisplayTrustLeadTrusteeOrgType): Try[UserAnswers] = {
     answers
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(TrusteeOrgNamePage(index), leadCompany.name))
-      .flatMap(answers => extractLeadOrgIdentification(leadCompany, index, answers))
+      .flatMap(answers => extractLeadOrgIdentification(leadCompany.identification, index, answers))
       .flatMap(answers => extractEmail(leadCompany.email, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), leadCompany.phoneNumber))
       .flatMap(_.set(TrusteeSafeIdPage(index), leadCompany.identification.safeId))
@@ -101,14 +105,16 @@ class TrusteesExtractor @Inject() extends Logging {
       }
   }
 
-  private def extractTrusteeIndividual(answers: Try[UserAnswers], index: Int, individual : DisplayTrustTrusteeIndividualType): Try[UserAnswers] = {
+  private def extractTrusteeIndividual(answers: Try[UserAnswers],
+                                       index: Int,
+                                       individual: DisplayTrustTrusteeIndividualType): Try[UserAnswers] = {
     answers
       .flatMap(_.set(IsThisLeadTrusteePage(index), false))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(TrusteeNamePage(index), individual.name))
-      .flatMap(answers => extractDateOfBirth(individual, index, answers))
+      .flatMap(answers => extractDateOfBirth(individual.dateOfBirth, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), individual.phoneNumber))
-      .flatMap(answers => extractIndividualIdentification(individual, index, answers))
+      .flatMap(answers => extractIndIdentification(individual.identification, index, answers))
       .flatMap {
         _.set(
           TrusteeMetaData(index),
@@ -123,12 +129,14 @@ class TrusteesExtractor @Inject() extends Logging {
       .flatMap(_.set(TrusteeStatus(index), UpToDate))
   }
 
-  private def extractTrusteeCompany(answers: Try[UserAnswers], index: Int, company: DisplayTrustTrusteeOrgType): Try[UserAnswers] = {
+  private def extractTrusteeCompany(answers: Try[UserAnswers],
+                                    index: Int,
+                                    company: DisplayTrustTrusteeOrgType): Try[UserAnswers] = {
     answers
       .flatMap(_.set(IsThisLeadTrusteePage(index), false))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(TrusteeOrgNamePage(index), company.name))
-      .flatMap(answers => extractCompanyIdentification(company, index, answers))
+      .flatMap(answers => extractOrgIdentification(company.identification, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), company.phoneNumber))
       .flatMap(_.set(TrusteeEmailPage(index), company.email))
       .flatMap(_.set(TrusteeSafeIdPage(index), company.identification.flatMap(_.safeId)))
@@ -145,79 +153,45 @@ class TrusteesExtractor @Inject() extends Logging {
       .flatMap(_.set(TrusteeStatus(index), UpToDate))
   }
 
-  private def extractLeadIndividualIdentification(leadIndividual: DisplayTrustLeadTrusteeIndType, index: Int, answers: UserAnswers) = {
-    leadIndividual.identification match {
-
+  private def extractLeadIndividualIdentification(identification: DisplayTrustIdentificationType,
+                                                  index: Int,
+                                                  answers: UserAnswers): Try[UserAnswers] = {
+    identification match {
       case DisplayTrustIdentificationType(_, Some(nino), None, Some(address)) =>
         answers.set(TrusteeAUKCitizenPage(index), true)
           .flatMap(_.set(TrusteeNinoPage(index), nino))
-          .flatMap(answers => extractAddress(address.convert, index, answers))
-
+          .flatMap(answers => extractAddress(address, index, answers))
       case DisplayTrustIdentificationType(_, None, Some(passport), Some(address)) =>
         answers.set(TrusteeAUKCitizenPage(index), false)
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
-          .flatMap(answers => extractAddress(address.convert, index, answers))
-
+          .flatMap(answers => extractAddress(address, index, answers))
       case DisplayTrustIdentificationType(_, None, Some(_), None) =>
         logger.error(s"[UTR/URN: ${answers.identifier}] only passport identification for lead trustee individual returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
-
       case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
         answers.set(TrusteeAUKCitizenPage(index), true)
           .flatMap(_.set(TrusteeNinoPage(index), nino))
-
       case DisplayTrustIdentificationType(_, None, None, Some(_)) =>
         logger.error(s"[UTR/URN: ${answers.identifier}] only address identification for lead trustee individual returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
-
       case DisplayTrustIdentificationType(_, _, _, _) =>
         logger.error(s"[UTR/URN: ${answers.identifier}] no identification for lead trustee individual returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
     }
   }
 
-  private def extractIndividualIdentification(individual: DisplayTrustTrusteeIndividualType, index: Int, answers: UserAnswers) = {
-    individual.identification map {
-
-      case DisplayTrustIdentificationType(_, Some(nino), _, _) =>
-        answers.set(TrusteeNinoYesNoPage(index), true)
-          .flatMap(_.set(TrusteeNinoPage(index), nino))
-
-      case DisplayTrustIdentificationType(_, None, Some(_), None) =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] only passport identification returned for trustee individual in DisplayTrustOrEstate api")
-        Failure(InvalidExtractorState)
-
-      case DisplayTrustIdentificationType(_, None, None, Some(address)) =>
-        answers.set(TrusteeNinoYesNoPage(index), false)
-          .flatMap(_.set(TrusteePassportIDCardYesNoPage(index), false))
-          .flatMap(answers => extractAddress(address.convert, index, answers))
-
-      case DisplayTrustIdentificationType(_, None, Some(passport), Some(address)) =>
-        answers.set(TrusteeNinoYesNoPage(index), false)
-          .flatMap(answers => extractAddress(address.convert, index, answers))
-          .flatMap(answers => extractPassportIdCard(passport, index, answers))
-
-      case DisplayTrustIdentificationType(_, None, None, None) =>
-        answers.set(TrusteeNinoYesNoPage(index), false)
-          .flatMap(_.set(TrusteeAddressYesNoPage(index), false))
-
-    } getOrElse {
-      answers.set(TrusteeNinoYesNoPage(index), false)
-        .flatMap(_.set(TrusteeAddressYesNoPage(index), false))
-    }
-  }
-
-  private def extractLeadOrgIdentification(leadIndividual: DisplayTrustLeadTrusteeOrgType, index: Int, answers: UserAnswers) = {
-    leadIndividual.identification match {
-
+  private def extractLeadOrgIdentification(identification: DisplayTrustIdentificationOrgType,
+                                           index: Int,
+                                           answers: UserAnswers): Try[UserAnswers] = {
+    identification match {
       case DisplayTrustIdentificationOrgType(_, Some(utr), Some(address)) =>
         answers.set(TrusteeUtrYesNoPage(index), true)
           .flatMap(_.set(TrusteeUtrPage(index), utr))
-          .flatMap(answers => extractAddress(address.convert, index, answers))
+          .flatMap(answers => extractAddress(address, index, answers))
 
       case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
         answers.set(TrusteeUtrYesNoPage(index), false)
-          .flatMap(answers => extractAddress(address.convert, index, answers))
+          .flatMap(answers => extractAddress(address, index, answers))
 
       case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
         answers.set(TrusteeUtrYesNoPage(index), true)
@@ -229,61 +203,16 @@ class TrusteesExtractor @Inject() extends Logging {
     }
   }
 
-  private def extractCompanyIdentification(company: DisplayTrustTrusteeOrgType, index: Int, answers: UserAnswers) = {
-    company.identification match {
-
-      case Some(DisplayTrustIdentificationOrgType(_, Some(utr), None)) =>
-        answers.set(TrusteeUtrYesNoPage(index), true)
-          .flatMap(_.set(TrusteeUtrPage(index), utr))
-
-      case Some(DisplayTrustIdentificationOrgType(_, None, Some(address))) =>
-        answers.set(TrusteeUtrYesNoPage(index), false)
-          .flatMap(answers => extractAddress(address.convert, index, answers))
-
-      case _ =>
-        answers.set(TrusteeUtrYesNoPage(index), false)
-          .flatMap(_.set(TrusteeAddressYesNoPage(index), false))
-
-    }
-  }
-
-  private def extractDateOfBirth(trusteeIndividual: DisplayTrustTrusteeIndividualType, index: Int, answers: UserAnswers) = {
-    trusteeIndividual.dateOfBirth match {
-      case Some(dob) =>
-        answers.set(TrusteeDateOfBirthYesNoPage(index), true)
-          .flatMap(_.set(TrusteeDateOfBirthPage(index), dob))
-      case None =>
-        // Assumption that user answered no as utr is not provided
-        answers.set(TrusteeDateOfBirthYesNoPage(index), false)
-    }
-  }
-
-  private def extractPassportIdCard(passport: PassportType, index: Int, answers: UserAnswers) = {
-    answers.set(TrusteePassportIDCardYesNoPage(index), true)
-      .flatMap(_.set(TrusteePassportIDCardPage(index), passport.convert))
-  }
-
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers) = {
-    address match {
-      case uk: UKAddress =>
-        answers.set(TrusteeAddressPage(index), uk)
-          .flatMap(_.set(TrusteeAddressYesNoPage(index), true))
-          .flatMap(_.set(TrusteeAddressInTheUKPage(index), true))
-      case nonUk: InternationalAddress =>
-        answers.set(TrusteeAddressPage(index), nonUk)
-          .flatMap(_.set(TrusteeAddressYesNoPage(index), true))
-          .flatMap(_.set(TrusteeAddressInTheUKPage(index), false))
-    }
-  }
-
-  private def extractEmail(email: Option[String], index: Int, answers: UserAnswers) = {
+  private def extractEmail(email: Option[String],
+                           index: Int,
+                           answers: UserAnswers): Try[UserAnswers] = {
     email match {
-      case Some(x) =>
+      case Some(value) =>
         answers.set(TrusteeEmailYesNoPage(index), true)
-          .flatMap(_.set(TrusteeEmailPage(index), x))
+          .flatMap(_.set(TrusteeEmailPage(index), value))
       case _ =>
         answers.set(TrusteeEmailYesNoPage(index), false)
     }
   }
-
+  
 }

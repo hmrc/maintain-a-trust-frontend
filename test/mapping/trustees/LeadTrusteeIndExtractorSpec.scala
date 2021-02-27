@@ -40,7 +40,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
       "must return an error" in {
 
-        val leadTrustee = None
+        val leadTrustee = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -73,7 +73,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeIndExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
@@ -111,7 +111,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeIndExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
@@ -149,7 +149,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeIndExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
@@ -188,7 +188,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeIndExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual

@@ -106,11 +106,11 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
         "must return user answers" in {
 
-          val trusts = None
+          val trustees = Nil
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = trusteesExtractor.extract(ua, trusts)
+          val extraction = trusteesExtractor.extract(ua, trustees)
 
           extraction mustBe 'left
 
@@ -121,7 +121,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
       "when there are companies" - {
 
         "with minimum data must return user answers updated" in {
-          val trust = List(DisplayTrustTrusteeOrgType(
+          val trustees = List(DisplayTrustTrusteeOrgType(
             lineNo = Some("1"),
             bpMatchStatus = Some("01"),
             name = s"Trustee Company 1",
@@ -133,7 +133,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = trusteesExtractor.extract(ua, Some(trust))
+          val extraction = trusteesExtractor.extract(ua, trustees)
 
           extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe false
           extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
@@ -151,11 +151,11 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
         }
 
         "with full data must return user answers updated" in {
-          val trusts = (for (index <- 0 to 2) yield generateTrusteeCompany(index)).toList
+          val trustees = (for (index <- 0 to 2) yield generateTrusteeCompany(index)).toList
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = trusteesExtractor.extract(ua, Some(trusts))
+          val extraction = trusteesExtractor.extract(ua, trustees)
 
           extraction mustBe 'right
 
@@ -203,11 +203,11 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
         "must return user answers" in {
 
-          val trusts = None
+          val trustees = Nil
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = trusteesExtractor.extract(ua, trusts)
+          val extraction = trusteesExtractor.extract(ua, trustees)
 
           extraction mustBe 'left
 
@@ -218,7 +218,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
       "when there are individuals" - {
 
         "with minimum data must return user answers updated" in {
-          val trust = List(DisplayTrustTrusteeIndividualType(
+          val trustees = List(DisplayTrustTrusteeIndividualType(
             lineNo = Some(s"1"),
             bpMatchStatus = Some("01"),
             name = FullName("First Name", None, "Last Name"),
@@ -230,7 +230,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = trusteesExtractor.extract(ua, Some(trust))
+          val extraction = trusteesExtractor.extract(ua, trustees)
 
           extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe false
           extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
@@ -249,11 +249,11 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
         }
 
         "with full data must return user answers updated" in {
-          val trusts = (for(index <- 0 to 2) yield generateTrusteeIndividual(index)).toList
+          val trustees = (for(index <- 0 to 2) yield generateTrusteeIndividual(index)).toList
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = trusteesExtractor.extract(ua, Some(trusts))
+          val extraction = trusteesExtractor.extract(ua, trustees)
 
           extraction mustBe 'right
 
@@ -308,11 +308,11 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
         "must return user answers" in {
 
-          val trusts = None
+          val trustees = Nil
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = trusteesExtractor.extract(ua, trusts)
+          val extraction = trusteesExtractor.extract(ua, trustees)
 
           extraction mustBe 'left
 
@@ -324,7 +324,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
         "must return user answers updated" in {
 
-          val trusts = List(
+          val trustees = List(
             DisplayTrustTrusteeIndividualType(
               lineNo = Some("01"),
               bpMatchStatus = Some("01"),
@@ -398,7 +398,7 @@ class TrusteesExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = trusteesExtractor.extract(ua, Some(trusts))
+          val extraction = trusteesExtractor.extract(ua, trustees)
 
           extraction mustBe 'right
 

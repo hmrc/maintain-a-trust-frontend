@@ -19,7 +19,7 @@ package mapping.settlors
 import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustWillType, PassportType}
-import models.{FullName, MetaData, UserAnswers}
+import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.deceased_settlor._
 import utils.Constants.GB
@@ -76,8 +76,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
       }
 
@@ -113,8 +112,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         extraction.right.value.get(DeceasedSettlorSafeIdPage).get mustBe "34234234-34234-234234"
       }
@@ -150,8 +148,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe true
         extraction.right.value.get(SettlorNationalInsuranceNumberPage).get mustBe "NA1111111A"
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
       }
 
@@ -187,9 +184,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
         extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe true
-        extraction.right.value.get(SettlorUKAddressPage) must be(defined)
-        extraction.right.value.get(SettlorUKAddressPage).get.postcode mustBe "NE11NE"
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage).get mustBe UKAddress("line 1", "line2", None, None, "NE11NE")
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
       }
 
@@ -225,9 +220,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
         extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe false
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) must be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage).get.country mustBe "DE"
+        extraction.right.value.get(SettlorLastKnownAddressPage).get mustBe InternationalAddress("Int line 1", "Int line2", None, "DE")
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
       }
 
@@ -263,8 +256,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
         extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) must be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage).get.country mustBe "DE"
       }
@@ -300,8 +292,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe true
         extraction.right.value.get(SettlorNationalInsuranceNumberPage).get mustBe "NA1111111A"
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
       }
 
@@ -337,8 +328,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
         extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe true
-        extraction.right.value.get(SettlorUKAddressPage) must be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) must be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) must be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage).get.country mustBe "DE"
         extraction.right.value.get(DeceasedSettlorSafeIdPage).get mustBe "XK0000100152366"

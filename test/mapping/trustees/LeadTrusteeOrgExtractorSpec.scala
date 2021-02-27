@@ -38,7 +38,7 @@ class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
 
       "must return an error" in {
 
-        val leadTrustee = None
+        val leadTrustee = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -70,7 +70,7 @@ class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeOrgExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
@@ -105,7 +105,7 @@ class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeOrgExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business

@@ -27,7 +27,10 @@ class TrusteeExtractor @Inject()(trusteesExtractor: TrusteesExtractor) {
 
     import models.UserAnswersCombinator._
 
-    val leadTrustee: List[Trustees] = List(data.leadTrustee.leadTrusteeOrg, data.leadTrustee.leadTrusteeInd).collect {
+    val leadTrustee: List[Trustees] = List(
+      data.leadTrustee.leadTrusteeOrg,
+      data.leadTrustee.leadTrusteeInd
+    ).collect {
       case Some(x) => x
     }
 
@@ -42,7 +45,7 @@ class TrusteeExtractor @Inject()(trusteesExtractor: TrusteesExtractor) {
     val allTrustees: List[Trustees] = leadTrustee ++ nonLeadTrustees.getOrElse(Nil)
 
     val trustees: List[UserAnswers] = List(
-      trusteesExtractor.extract(answers, Some(allTrustees))
+      trusteesExtractor.extract(answers, allTrustees)
     ).collect {
       case Right(z) => z
     }
