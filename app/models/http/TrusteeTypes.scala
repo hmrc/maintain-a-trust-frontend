@@ -21,7 +21,7 @@ import play.api.libs.json._
 
 import java.time.LocalDate
 
-sealed trait Trustees extends EntityType
+sealed trait TrusteeType extends EntityType
 
 case class DisplayTrustLeadTrusteeType(leadTrusteeInd: Option[DisplayTrustLeadTrusteeIndType] = None,
                                        leadTrusteeOrg: Option[DisplayTrustLeadTrusteeOrgType] = None)
@@ -38,7 +38,7 @@ case class DisplayTrustLeadTrusteeIndType(lineNo: Option[String],
                                           phoneNumber: String,
                                           email: Option[String] = None,
                                           identification: DisplayTrustIdentificationType,
-                                          entityStart: String) extends Trustees
+                                          entityStart: String) extends TrusteeType
 
 object DisplayTrustLeadTrusteeIndType {
   implicit val leadTrusteeIndTypeFormat: Format[DisplayTrustLeadTrusteeIndType] = Json.format[DisplayTrustLeadTrusteeIndType]
@@ -50,7 +50,7 @@ case class DisplayTrustLeadTrusteeOrgType(lineNo: Option[String],
                                           phoneNumber: String,
                                           email: Option[String] = None,
                                           identification: DisplayTrustIdentificationOrgType,
-                                          entityStart: String) extends Trustees
+                                          entityStart: String) extends TrusteeType
 
 object DisplayTrustLeadTrusteeOrgType {
   implicit val leadTrusteeOrgTypeFormat: Format[DisplayTrustLeadTrusteeOrgType] = Json.format[DisplayTrustLeadTrusteeOrgType]
@@ -69,7 +69,7 @@ case class DisplayTrustTrusteeIndividualType(lineNo: Option[String],
                                              dateOfBirth: Option[LocalDate],
                                              phoneNumber: Option[String],
                                              identification: Option[DisplayTrustIdentificationType],
-                                             entityStart: String) extends Trustees
+                                             entityStart: String) extends TrusteeType
 
 object DisplayTrustTrusteeIndividualType {
   implicit val trusteeIndividualTypeFormat: Format[DisplayTrustTrusteeIndividualType] = Json.format[DisplayTrustTrusteeIndividualType]
@@ -81,7 +81,7 @@ case class DisplayTrustTrusteeOrgType(lineNo: Option[String],
                                       phoneNumber: Option[String] = None,
                                       email: Option[String] = None,
                                       identification: Option[DisplayTrustIdentificationOrgType],
-                                      entityStart: String) extends Trustees
+                                      entityStart: String) extends TrusteeType
 
 object DisplayTrustTrusteeOrgType {
   implicit val trusteeOrgTypeFormat: Format[DisplayTrustTrusteeOrgType] = Json.format[DisplayTrustTrusteeOrgType]

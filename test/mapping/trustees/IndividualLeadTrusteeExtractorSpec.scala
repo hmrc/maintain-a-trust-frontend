@@ -28,11 +28,11 @@ import utils.Constants.GB
 
 import java.time.LocalDate
 
-class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
+class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val leadTrusteeIndExtractor : TrusteesExtractor =
-    injector.instanceOf[TrusteesExtractor]
+  val leadTrusteeIndExtractor : IndividualLeadTrusteeExtractor =
+    injector.instanceOf[IndividualLeadTrusteeExtractor]
 
   "Lead Trustee Individual Extractor" - {
 

@@ -26,11 +26,11 @@ import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
 import utils.Constants.GB
 
-class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
+class OrganisationLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val leadTrusteeOrgExtractor : TrusteesExtractor =
-    injector.instanceOf[TrusteesExtractor]
+  val leadTrusteeOrgExtractor : OrganisationLeadTrusteeExtractor =
+    injector.instanceOf[OrganisationLeadTrusteeExtractor]
 
   "Lead Trustee Organisation Extractor" - {
 
