@@ -45,8 +45,11 @@ class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBenefic
     }
     
     beneficiaries match {
-      case Nil => Left(FailedToExtractData("Beneficiary Extraction Error"))
-      case _ => beneficiaries.combine.map(Right.apply).getOrElse(Left(FailedToExtractData("Beneficiary Extraction Error")))
+      case Nil => Left(FailedToExtractData("Beneficiary Extraction Error - No beneficiaries"))
+      case _ => beneficiaries.combine match {
+        case Some(value) => Right(value)
+        case None => Left(FailedToExtractData("Beneficiary Extraction Error - Failed to combine beneficiary answers"))
+      }
     }
   }
 }

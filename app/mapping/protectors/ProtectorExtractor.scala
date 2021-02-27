@@ -40,7 +40,7 @@ class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProte
 
         protectors.combineArraysWithPath(Protectors.path) match {
           case Some(value) => Right(value)
-          case None => Left(FailedToExtractData("Protector Extraction Error"))
+          case None => Left(FailedToExtractData("Protector Extraction Error - Failed to combine protector answers"))
         }
       case None =>
         Right(answers)

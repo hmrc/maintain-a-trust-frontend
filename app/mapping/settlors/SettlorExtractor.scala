@@ -40,9 +40,16 @@ class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtrac
     val noDeceasedSettlor: Boolean = data.deceased.isEmpty
 
     (settlors, noDeceasedSettlor) match {
-      case (Nil, _) => Left(FailedToExtractData("Settlor Extraction Error"))
-      case (_, true) => settlors.combineArraysWithPath(LivingSettlors.path).map(Right(_)).getOrElse(Left(FailedToExtractData("Settlor Extraction Error")))
-      case (_, false) => settlors.combine.map(Right(_)).getOrElse(Left(FailedToExtractData("Settlor Extraction Error")))}
+      case (Nil, _) => Left(FailedToExtractData("Settlor Extraction Error - No settlors"))
+      case (_, true) => settlors.combineArraysWithPath(LivingSettlors.path) match {
+        case Some(value) => Right(value)
+        case None => Left(FailedToExtractData("Settlor Extraction Error - Failed to combine living settlor answers"))
+      }
+      case (_, false) => settlors.combine match {
+        case Some(value) => Right(value)
+        case None => Left(FailedToExtractData("Settlor Extraction Error - Failed to combine deceased settlor answers"))
+      }
+    }
   }
 
 }

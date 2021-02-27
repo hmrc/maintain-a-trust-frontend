@@ -16,17 +16,16 @@
 
 package mapping
 
-import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import models.{Address, InternationalAddress, UKAddress, UserAnswers}
 import models.http.Correspondence
+import models.{Address, InternationalAddress, UKAddress, UserAnswers}
 import pages.correspondence._
 import pages.trustdetails.TrustNamePage
 import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class CorrespondenceExtractor @Inject() extends Logging {
+class CorrespondenceExtractor extends Logging {
 
   import PlaybackImplicits._
 
