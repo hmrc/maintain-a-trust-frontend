@@ -77,8 +77,8 @@ class TrustDetailsExtractor extends Logging {
 
     def extractOffShore(answers: UserAnswers): Try[UserAnswers] = uk.preOffShore match {
       case Some(country) => answers
-        .set(TrustPreviouslyResidentPage, country)
-        .flatMap(_.set(TrustResidentOffshorePage, true))
+        .set(TrustResidentOffshorePage, true)
+        .flatMap(_.set(TrustPreviouslyResidentPage, country))
       case _ => answers
         .set(TrustResidentOffshorePage, false)
     }
@@ -91,17 +91,17 @@ class TrustDetailsExtractor extends Logging {
   private def nonUKTrust(nonUK: NonUKType, answers: UserAnswers): Try[UserAnswers] = {
 
     def inheritanceTaxAct(answers: UserAnswers): Try[UserAnswers] = nonUK.s218ihta84 match {
-      case Some(iht) => answers.set(InheritanceTaxActPage, iht)
+      case Some(value) => answers.set(InheritanceTaxActPage, value)
       case _ => Success(answers)
     }
 
     def agentOtherThanBarrister(answers: UserAnswers): Try[UserAnswers] = nonUK.agentS218IHTA84 match {
-      case Some(iht) => answers.set(AgentOtherThanBarristerPage, iht)
+      case Some(value) => answers.set(AgentOtherThanBarristerPage, value)
       case _ => Success(answers)
     }
 
     def nonResidentType(answers: UserAnswers): Try[UserAnswers] = nonUK.trusteeStatus.map(NonResidentType.fromDES) match {
-      case Some(status) => answers.set(NonResidentTypePage, status)
+      case Some(value) => answers.set(NonResidentTypePage, value)
       case _ => Success(answers)
     }
 

@@ -47,11 +47,11 @@ class CorrespondenceExtractor extends Logging {
 
   private def extractAddress(address: Address, answers: UserAnswers): Try[UserAnswers] = address match {
     case uk: UKAddress => answers
-      .set(CorrespondenceAddressPage, uk)
-      .flatMap(_.set(CorrespondenceAddressInTheUKPage, true))
+      .set(CorrespondenceAddressInTheUKPage, true)
+      .flatMap(_.set(CorrespondenceAddressPage, uk))
     case nonUk: InternationalAddress => answers
-      .set(CorrespondenceAddressPage, nonUk)
-      .flatMap(_.set(CorrespondenceAddressInTheUKPage, false))
+      .set(CorrespondenceAddressInTheUKPage, false)
+      .flatMap(_.set(CorrespondenceAddressPage, nonUk))
   }
 
 }
