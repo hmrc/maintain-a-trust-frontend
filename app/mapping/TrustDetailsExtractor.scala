@@ -30,7 +30,7 @@ class TrustDetailsExtractor extends Logging {
   def extract(answers: UserAnswers, data: TrustDetailsType): Either[PlaybackExtractionError, UserAnswers] = {
     val updated = answers
       .set(WhenTrustSetupPage, data.startDate)
-      .flatMap(answers => extractTrustTaxable(data.trustTaxable, answers))
+      .flatMap(_.set(TrustTaxableYesNoPage, data.isTaxable))
       .flatMap(answers => extractGovernedBy(data.lawCountry, answers))
       .flatMap(answers => extractAdminBy(data.administrationCountry, answers))
       .flatMap(answers => extractResidentialType(data.residentialStatus, answers))
@@ -43,10 +43,6 @@ class TrustDetailsExtractor extends Logging {
         Left(FailedToExtractData(TrustDetailsType.toString))
     }
   }
-
-  private def extractTrustTaxable(trustTaxable: Option[Boolean],
-                                  answers: UserAnswers): Try[UserAnswers] =
-    answers.set(TrustTaxableYesNoPage, !trustTaxable.contains(false))
 
   private def extractGovernedBy(lawCountry: Option[String],
                                 answers: UserAnswers): Try[UserAnswers] = lawCountry match {

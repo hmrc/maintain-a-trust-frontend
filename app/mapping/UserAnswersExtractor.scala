@@ -45,9 +45,7 @@ class UserAnswersExtractorImpl @Inject()(
 
   def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionError, UserAnswers] = {
 
-    val isTrustTaxable: Boolean = !data.trust.details.trustTaxable.contains(false)
-
-    val updatedAnswers = answers.copy(isTrustTaxable = isTrustTaxable)
+    val updatedAnswers = answers.copy(isTrustTaxable = data.trust.details.isTaxable)
 
     def answersCombined: Either[PlaybackExtractionError, Option[UserAnswers]] = for {
       correspondence <- correspondenceExtractor.extract(updatedAnswers, data.correspondence).right

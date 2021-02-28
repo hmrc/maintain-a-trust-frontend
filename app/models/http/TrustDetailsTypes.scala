@@ -29,7 +29,10 @@ case class TrustDetailsType(startDate: LocalDate,
                             typeOfTrust: Option[TypeOfTrust],
                             deedOfVariation: Option[DeedOfVariation],
                             interVivos: Option[Boolean],
-                            efrbsStartDate: Option[LocalDate])
+                            efrbsStartDate: Option[LocalDate]) {
+
+  def isTaxable: Boolean = !trustTaxable.contains(false)
+}
 
 object TrustDetailsType {
   implicit val trustDetailsTypeFormat: Format[TrustDetailsType] = Json.format[TrustDetailsType]
