@@ -70,7 +70,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
             other = Nil
           ),
           deceased = Some(DisplayTrustWillType(
-            lineNo = "1",
+            lineNo = Some("1"),
             bpMatchStatus = Some("01"),
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,

@@ -34,6 +34,8 @@ class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrust
   override def utrYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorUtrYesNoPage(index)
   override def utrPage(index: Int): QuestionPage[String] = BusinessProtectorUtrPage(index)
 
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = BusinessProtectorMetaData(index)
+
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustProtectorBusiness,
                                  index: Int): Try[UserAnswers] = {
@@ -42,15 +44,6 @@ class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrust
       .flatMap(_.set(BusinessProtectorNamePage(index), entity.name))
       .flatMap(_.set(BusinessProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
-      .flatMap {
-        _.set(
-          BusinessProtectorMetaData(index),
-          MetaData(
-            lineNo = entity.lineNo.getOrElse(""),
-            bpMatchStatus = entity.bpMatchStatus,
-            entityStart = entity.entityStart
-          )
-        )
-      }
+      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 }

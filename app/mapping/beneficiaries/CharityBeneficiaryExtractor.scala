@@ -25,6 +25,10 @@ import scala.util.Try
 
 class CharityBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustCharityType] {
 
+  override def namePage(index: Int): QuestionPage[String] = CharityBeneficiaryNamePage(index)
+  override def safeIdPage(index: Int): QuestionPage[String] = CharityBeneficiarySafeIdPage(index)
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = CharityBeneficiaryMetaData(index)
+
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = CharityBeneficiaryShareOfIncomePage(index)
 
@@ -41,21 +45,6 @@ class CharityBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTr
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustCharityType,
                                  index: Int): Try[UserAnswers] = {
-    answers
-      .flatMap(_.set(CharityBeneficiaryNamePage(index), entity.organisationName))
-      .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
-      .flatMap(_.set(CharityBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
-      .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
-      .flatMap {
-        _.set(
-          CharityBeneficiaryMetaData(index),
-          MetaData(
-            lineNo = entity.lineNo.getOrElse(""),
-            bpMatchStatus = entity.bpMatchStatus,
-            entityStart = entity.entityStart
-          )
-        )
-      }
+    updateUserAnswersForOrgBeneficiary(answers, entity, index)
   }
 }

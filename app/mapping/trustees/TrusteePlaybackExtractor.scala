@@ -18,7 +18,7 @@ package mapping.trustees
 
 import mapping.PlaybackExtractor
 import models.http.TrusteeType
-import models.{Address, PassportOrIdCardDetails, UserAnswers}
+import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
 import pages.trustees._
 
@@ -42,6 +42,8 @@ trait TrusteePlaybackExtractor[T <: TrusteeType] extends PlaybackExtractor[T] {
 
   override def ninoYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeNinoYesNoPage(index)
   override def ninoPage(index: Int): QuestionPage[String] = TrusteeNinoPage(index)
+
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = TrusteeMetaData(index)
 
   def extractEmail(email: Option[String],
                    index: Int,

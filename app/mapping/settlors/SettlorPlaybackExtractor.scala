@@ -17,15 +17,17 @@
 package mapping.settlors
 
 import mapping.PlaybackExtractor
-import models.Address
+import models.{Address, MetaData}
 import models.http.SettlorType
 import pages.QuestionPage
-import pages.settlors.living_settlor.{SettlorAddressPage, SettlorAddressUKYesNoPage, SettlorAddressYesNoPage}
+import pages.settlors.living_settlor.{SettlorAddressPage, SettlorAddressUKYesNoPage, SettlorAddressYesNoPage, SettlorMetaData}
 
 trait SettlorPlaybackExtractor[T <: SettlorType] extends PlaybackExtractor[T] {
 
   override def addressYesNoPage(index: Int): QuestionPage[Boolean] = SettlorAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = SettlorAddressUKYesNoPage(index)
   override def addressPage(index: Int): QuestionPage[Address] = SettlorAddressPage(index)
+
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = SettlorMetaData(index)
 
 }

@@ -40,6 +40,8 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = SettlorDateOfBirthYesNoPage
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = SettlorDateOfBirthPage
 
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = DeceasedSettlorMetaData
+
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustWillType,
                                  index: Int): Try[UserAnswers] = {
@@ -49,16 +51,7 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(DeceasedSettlorSafeIdPage, entity.identification.flatMap(_.safeId)))
-      .flatMap {
-        _.set(
-          DeceasedSettlorMetaData,
-          MetaData(
-            lineNo = entity.lineNo,
-            bpMatchStatus = entity.bpMatchStatus,
-            entityStart = entity.entityStart
-          )
-        )
-      }
+      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 
   private def extractDateOfDeath(dateOfDeath: Option[LocalDate],

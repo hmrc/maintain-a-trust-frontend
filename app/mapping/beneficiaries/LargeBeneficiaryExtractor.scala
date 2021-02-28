@@ -26,6 +26,8 @@ import scala.util.Try
 
 class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustLargeType] {
 
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = LargeBeneficiaryMetaData(index)
+
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = LargeBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = LargeBeneficiaryShareOfIncomePage(index)
 
@@ -56,16 +58,7 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
       )
       .flatMap(answers => extractNumberOfBeneficiaries(entity.numberOfBeneficiary, index, answers))
       .flatMap(_.set(LargeBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap {
-        _.set(
-          LargeBeneficiaryMetaData(index),
-          MetaData(
-            lineNo = entity.lineNo.getOrElse(""),
-            bpMatchStatus = entity.bpMatchStatus,
-            entityStart = entity.entityStart
-          )
-        )
-      }
+      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 
   private def extractNumberOfBeneficiaries(numberOfBeneficiary: String,

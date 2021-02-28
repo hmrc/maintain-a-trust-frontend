@@ -19,7 +19,7 @@ package mapping
 import mapping.PlaybackExtractionErrors._
 import mapping.PlaybackImplicits._
 import models.http._
-import models.{Address, InternationalAddress, PassportOrIdCardDetails, UKAddress, UserAnswers}
+import models.{Address, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import pages.{EmptyPage, QuestionPage}
 import play.api.Logging
 import utils.Constants.GB
@@ -78,6 +78,9 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
 
   def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
   def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = new EmptyPage[LocalDate]
+
+  def safeIdPage(index: Int): QuestionPage[String] = new EmptyPage[String]
+  def metaDataPage(index: Int): QuestionPage[MetaData] = new EmptyPage[MetaData]
 
   def extractCountryOfResidence(countryOfResidence: Option[String],
                                 index: Int,
@@ -222,5 +225,19 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
       Success(answers)
     }
   }
+
+  def extractMetaData(entity: T,
+                      index: Int,
+                      answers: UserAnswers): Try[UserAnswers] = {
+    val metaData = MetaData(
+      lineNo = entity.lineNo.getOrElse(""),
+      bpMatchStatus = bpMatchStatus(entity),
+      entityStart = entity.entityStart
+    )
+
+    answers.set(metaDataPage(index), metaData)
+  }
+
+  def bpMatchStatus(entity: T): Option[String] = entity.bpMatchStatus
 
 }

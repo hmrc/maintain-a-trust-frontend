@@ -41,6 +41,8 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = IndividualProtectorDateOfBirthPage(index)
 
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = IndividualProtectorMetaData(index)
+
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustProtector,
                                  index: Int): Try[UserAnswers] = {
@@ -50,16 +52,7 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(IndividualProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap {
-        _.set(
-          IndividualProtectorMetaData(index),
-          MetaData(
-            lineNo = entity.lineNo.getOrElse(""),
-            bpMatchStatus = entity.bpMatchStatus,
-            entityStart = entity.entityStart
-          )
-        )
-      }
+      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 
 }

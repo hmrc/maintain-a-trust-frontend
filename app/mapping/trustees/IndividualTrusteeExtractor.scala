@@ -16,10 +16,10 @@
 
 package mapping.trustees
 
+import models.UserAnswers
 import models.http.DisplayTrustTrusteeIndividualType
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
-import models.{MetaData, UserAnswers}
 import pages.entitystatus.TrusteeStatus
 import pages.trustees._
 
@@ -37,16 +37,7 @@ class IndividualTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrustTr
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
-      .flatMap {
-        _.set(
-          TrusteeMetaData(index),
-          MetaData(
-            lineNo = entity.lineNo.getOrElse(""),
-            bpMatchStatus = entity.bpMatchStatus,
-            entityStart = entity.entityStart
-          )
-        )
-      }
+      .flatMap(answers => extractMetaData(entity, index, answers))
       .flatMap(_.set(TrusteeSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(_.set(TrusteeStatus(index), UpToDate))
   }

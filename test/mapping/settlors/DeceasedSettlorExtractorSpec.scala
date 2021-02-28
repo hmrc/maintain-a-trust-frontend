@@ -55,7 +55,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with minimum data of name, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -84,7 +84,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with name and date of death, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -120,7 +120,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with name and nino, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -155,7 +155,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with name and UK address, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -191,7 +191,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with name and International address, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -227,7 +227,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with name and passport/ID Card, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -264,7 +264,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with name, date of death, date of birth and nino, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = Some(LocalDate.parse("1970-10-15")),
@@ -299,7 +299,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with name, UK Address, passport/ID Card, metaData and safeId, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,

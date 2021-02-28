@@ -16,10 +16,10 @@
 
 package mapping.settlors
 
+import models.UserAnswers
 import models.http.DisplayTrustSettlorCompany
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
-import models.{MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
@@ -38,16 +38,7 @@ class BusinessSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSett
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(SettlorBusinessNamePage(index), entity.name))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
-      .flatMap {
-        _.set(
-          SettlorMetaData(index),
-          MetaData(
-            lineNo = entity.lineNo.getOrElse(""),
-            bpMatchStatus = entity.bpMatchStatus,
-            entityStart = entity.entityStart
-          )
-        )
-      }
+      .flatMap(answers => extractMetaData(entity, index, answers))
       .flatMap(_.set(SettlorCompanyTypePage(index), entity.companyType))
       .flatMap(_.set(SettlorCompanyTimePage(index), entity.companyTime))
       .flatMap(_.set(SettlorSafeIdPage(index), entity.identification.flatMap(_.safeId)))

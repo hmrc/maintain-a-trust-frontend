@@ -19,12 +19,14 @@ package mapping.beneficiaries
 import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import mapping.PlaybackExtractor
 import models.UserAnswers
-import models.http.{BeneficiaryType, DisplayTrustIdentificationOrgType}
+import models.http.{BeneficiaryType, DisplayTrustIdentificationOrgType, OrgBeneficiaryType}
 import pages.{EmptyPage, QuestionPage}
 
 import scala.util.{Failure, Success, Try}
 
 trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtractor[T] {
+
+  def namePage(index: Int): QuestionPage[String] = new EmptyPage[String]
 
   def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
   def shareOfIncomePage(index: Int): QuestionPage[String] = new EmptyPage[String]
@@ -62,6 +64,18 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
         answers.set(addressYesNoPage(index), false)
       }
     }
+  }
+
+  def updateUserAnswersForOrgBeneficiary(answers: Try[UserAnswers],
+                                         entity: OrgBeneficiaryType,
+                                         index: Int): Try[UserAnswers] = {
+    answers
+      .flatMap(_.set(namePage(index), entity.organisationName))
+      .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
+      .flatMap(_.set(safeIdPage(index), entity.identification.flatMap(_.safeId)))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
+      .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
+      .flatMap(answers => extractMetaData(entity.asInstanceOf[T], index, answers))
   }
 
 }

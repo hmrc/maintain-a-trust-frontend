@@ -17,9 +17,9 @@
 package mapping.trustees
 
 import mapping.PlaybackExtractionErrors.InvalidExtractorState
+import models.UserAnswers
 import models.http.{DisplayTrustIdentificationType, DisplayTrustLeadTrusteeIndType}
 import models.pages.IndividualOrBusiness
-import models.{MetaData, UserAnswers}
 import pages.trustees._
 
 import scala.util.{Failure, Try}
@@ -38,16 +38,7 @@ class IndividualLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTru
       .flatMap(answers => extractEmail(entity.email, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber))
       .flatMap(_.set(TrusteeSafeIdPage(index), entity.identification.safeId))
-      .flatMap {
-        _.set(
-          TrusteeMetaData(index),
-          MetaData(
-            lineNo = entity.lineNo.getOrElse(""),
-            bpMatchStatus = entity.bpMatchStatus,
-            entityStart = entity.entityStart
-          )
-        )
-      }
+      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 
   private def extractIdentification(identification: DisplayTrustIdentificationType,

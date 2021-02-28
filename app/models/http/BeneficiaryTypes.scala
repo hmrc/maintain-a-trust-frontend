@@ -25,6 +25,13 @@ import java.time.LocalDate
 
 sealed trait BeneficiaryType extends EntityType
 
+sealed trait OrgBeneficiaryType extends BeneficiaryType {
+  val organisationName: String
+  val beneficiaryShareOfIncome: Option[String]
+  val identification: Option[DisplayTrustIdentificationOrgType]
+  val countryOfResidence: Option[String]
+}
+
 case class DisplayTrustBeneficiaryType(individualDetails: List[DisplayTrustIndividualDetailsType],
                                        company: List[DisplayTrustCompanyType],
                                        trust: List[DisplayTrustBeneficiaryTrustType],
@@ -67,12 +74,13 @@ object DisplayTrustIndividualDetailsType {
 }
 
 case class DisplayTrustCompanyType(lineNo: Option[String],
-                                   bpMatchStatus: Option[String], organisationName: String,
+                                   bpMatchStatus: Option[String],
+                                   organisationName: String,
                                    beneficiaryDiscretion: Option[Boolean],
                                    beneficiaryShareOfIncome: Option[String],
                                    countryOfResidence: Option[String],
                                    identification: Option[DisplayTrustIdentificationOrgType],
-                                   entityStart: String) extends BeneficiaryType
+                                   entityStart: String) extends OrgBeneficiaryType
 
 object DisplayTrustCompanyType {
   implicit val companyTypeFormat: Format[DisplayTrustCompanyType] = Json.format[DisplayTrustCompanyType]
@@ -97,7 +105,7 @@ case class DisplayTrustCharityType(lineNo: Option[String],
                                    beneficiaryShareOfIncome: Option[String],
                                    countryOfResidence: Option[String],
                                    identification: Option[DisplayTrustIdentificationOrgType],
-                                   entityStart: String) extends BeneficiaryType
+                                   entityStart: String) extends OrgBeneficiaryType
 
 object DisplayTrustCharityType {
   implicit val charityTypeFormat: Format[DisplayTrustCharityType] = Json.format[DisplayTrustCharityType]

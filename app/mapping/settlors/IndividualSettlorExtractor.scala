@@ -19,7 +19,7 @@ package mapping.settlors
 import models.http.DisplayTrustSettlor
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
-import models.{MetaData, PassportOrIdCardDetails, UserAnswers}
+import models.{PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
 import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
@@ -46,16 +46,7 @@ class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSe
       .flatMap(_.set(SettlorIndividualNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
-      .flatMap {
-        _.set(
-          SettlorMetaData(index),
-          MetaData(
-            lineNo = entity.lineNo.getOrElse(""),
-            bpMatchStatus = entity.bpMatchStatus,
-            entityStart = entity.entityStart
-          )
-        )
-      }
+      .flatMap(answers => extractMetaData(entity, index, answers))
       .flatMap(_.set(SettlorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(_.set(LivingSettlorStatus(index), UpToDate))
   }

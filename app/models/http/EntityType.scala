@@ -16,4 +16,8 @@
 
 package models.http
 
-trait EntityType
+trait EntityType {
+  val bpMatchStatus: Option[String]
+  val lineNo: Option[String]
+  val entityStart: String
+}

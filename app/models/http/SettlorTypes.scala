@@ -64,7 +64,7 @@ object DisplayTrustSettlorCompany {
   implicit val settlorCompanyFormat: Format[DisplayTrustSettlorCompany] = Json.format[DisplayTrustSettlorCompany]
 }
 
-case class DisplayTrustWillType(lineNo: String,
+case class DisplayTrustWillType(lineNo: Option[String],
                                 bpMatchStatus: Option[String],
                                 name: FullName,
                                 dateOfBirth: Option[LocalDate],

@@ -25,6 +25,8 @@ import scala.util.Try
 
 class OtherBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustOtherType] {
 
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = OtherBeneficiaryMetaData(index)
+
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = OtherBeneficiaryShareOfIncomePage(index)
 
@@ -39,15 +41,10 @@ class OtherBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
       .flatMap(_.set(OtherBeneficiaryDescriptionPage(index), entity.description))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
       .flatMap(answers => extractOptionalAddress(entity.address, index, answers))
-      .flatMap {
-        _.set(
-          OtherBeneficiaryMetaData(index),
-          MetaData(
-            lineNo = entity.lineNo.getOrElse(""),
-            bpMatchStatus = entity.bpMatchStatus.fold(Some("98"))(x => Some(x)),
-            entityStart = entity.entityStart
-          )
-        )
-      }
+      .flatMap(answers => extractMetaData(entity, index, answers))
+  }
+
+  override def bpMatchStatus(entity: DisplayTrustOtherType): Option[String] = {
+    entity.bpMatchStatus.fold(Some("98"))(Some(_))
   }
 }
