@@ -17,6 +17,7 @@
 package mapping
 
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
+import mapping.PlaybackImplicits._
 import models.http.Correspondence
 import models.{Address, InternationalAddress, UKAddress, UserAnswers}
 import pages.correspondence._
@@ -26,8 +27,6 @@ import play.api.Logging
 import scala.util.{Failure, Success, Try}
 
 class CorrespondenceExtractor extends Logging {
-
-  import PlaybackImplicits._
 
   def extract(answers: UserAnswers, data: Correspondence): Either[PlaybackExtractionError, UserAnswers] = {
     val updated = answers
@@ -46,13 +45,13 @@ class CorrespondenceExtractor extends Logging {
     }
   }
 
-  private def extractAddress(address: Address, answers: UserAnswers): Try[UserAnswers] = {
-    address match {
-      case uk: UKAddress => answers.set(CorrespondenceAddressPage, uk)
-        .flatMap(_.set(CorrespondenceAddressInTheUKPage, true))
-      case nonUk: InternationalAddress => answers.set(CorrespondenceAddressPage, nonUk)
-        .flatMap(_.set(CorrespondenceAddressInTheUKPage, false))
-    }
+  private def extractAddress(address: Address, answers: UserAnswers): Try[UserAnswers] = address match {
+    case uk: UKAddress => answers
+      .set(CorrespondenceAddressPage, uk)
+      .flatMap(_.set(CorrespondenceAddressInTheUKPage, true))
+    case nonUk: InternationalAddress => answers
+      .set(CorrespondenceAddressPage, nonUk)
+      .flatMap(_.set(CorrespondenceAddressInTheUKPage, false))
   }
 
 }
