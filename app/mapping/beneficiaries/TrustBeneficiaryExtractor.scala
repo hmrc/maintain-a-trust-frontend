@@ -25,6 +25,8 @@ import scala.util.Try
 
 class TrustBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustBeneficiaryTrustType] {
 
+  override def namePage(index: Int): QuestionPage[String] = TrustBeneficiaryNamePage(index)
+  override def safeIdPage(index: Int): QuestionPage[String] = TrustBeneficiarySafeIdPage(index)
   override def metaDataPage(index: Int): QuestionPage[MetaData] = TrustBeneficiaryMetaData(index)
 
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryDiscretionYesNoPage(index)
@@ -40,9 +42,9 @@ class TrustBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
                                  entity: DisplayTrustBeneficiaryTrustType,
                                  index: Int): Try[UserAnswers] = {
     answers
-      .flatMap(_.set(TrustBeneficiaryNamePage(index), entity.organisationName))
+      .flatMap(_.set(namePage(index), entity.organisationName))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
-      .flatMap(_.set(TrustBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
+      .flatMap(_.set(safeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
       .flatMap(answers => extractMetaData(entity, index, answers))
   }

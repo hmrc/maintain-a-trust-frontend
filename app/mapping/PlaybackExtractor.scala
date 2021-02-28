@@ -19,8 +19,8 @@ package mapping
 import mapping.PlaybackExtractionErrors._
 import mapping.PlaybackImplicits._
 import models.http._
-import models.{Address, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
-import pages.{EmptyPage, QuestionPage}
+import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
+import pages.QuestionPage
 import play.api.Logging
 import utils.Constants.GB
 
@@ -28,7 +28,7 @@ import java.time.LocalDate
 import scala.reflect.{ClassTag, classTag}
 import scala.util.{Failure, Success, Try}
 
-abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
+abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with Logging {
 
   val optionalEntity: Boolean = false
 
@@ -54,33 +54,6 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
   }
 
   def updateUserAnswers(answers: Try[UserAnswers], entity: T, index: Int): Try[UserAnswers]
-
-  def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def countryOfResidencePage(index: Int): QuestionPage[String] = new EmptyPage[String]
-
-  def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def countryOfNationalityPage(index: Int): QuestionPage[String] = new EmptyPage[String]
-
-  def addressYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def addressPage(index: Int): QuestionPage[Address] = new EmptyPage[Address]
-
-  def utrYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def utrPage(index: Int): QuestionPage[String] = new EmptyPage[String]
-
-  def ninoYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def ninoPage(index: Int): QuestionPage[String] = new EmptyPage[String]
-
-  def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = new EmptyPage[PassportOrIdCardDetails]
-
-  def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = new EmptyPage[LocalDate]
-
-  def safeIdPage(index: Int): QuestionPage[String] = new EmptyPage[String]
-  def metaDataPage(index: Int): QuestionPage[MetaData] = new EmptyPage[MetaData]
 
   def extractCountryOfResidence(countryOfResidence: Option[String],
                                 index: Int,
@@ -182,8 +155,8 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Logging {
   }
 
   def extractPassportIdCard(passport: PassportType,
-                                    index: Int,
-                                    answers: UserAnswers): Try[UserAnswers] = {
+                            index: Int,
+                            answers: UserAnswers): Try[UserAnswers] = {
     answers.set(passportOrIdCardYesNoPage(index), true)
       .flatMap(_.set(passportOrIdCardPage(index), passport.convert))
   }
