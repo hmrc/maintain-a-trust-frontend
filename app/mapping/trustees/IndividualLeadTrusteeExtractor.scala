@@ -29,7 +29,7 @@ class IndividualLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTru
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustLeadTrusteeIndType,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(TrusteeNamePage(index), entity.name))
@@ -38,7 +38,6 @@ class IndividualLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTru
       .flatMap(answers => extractEmail(entity.email, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber))
       .flatMap(_.set(TrusteeSafeIdPage(index), entity.identification.safeId))
-      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 
   private def extractIdentification(identification: DisplayTrustIdentificationType,

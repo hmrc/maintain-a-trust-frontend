@@ -46,13 +46,12 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustProtector,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(IndividualProtectorNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(IndividualProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 
 }

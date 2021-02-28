@@ -69,13 +69,12 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
   def updateUserAnswersForOrgBeneficiary(answers: Try[UserAnswers],
                                          entity: OrgBeneficiaryType,
                                          index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity.asInstanceOf[T], index)
       .flatMap(_.set(namePage(index), entity.organisationName))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
       .flatMap(_.set(safeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
-      .flatMap(answers => extractMetaData(entity.asInstanceOf[T], index, answers))
   }
 
 }

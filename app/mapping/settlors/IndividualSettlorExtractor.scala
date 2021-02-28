@@ -41,12 +41,11 @@ class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSe
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustSettlor,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(SettlorIndividualNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
-      .flatMap(answers => extractMetaData(entity, index, answers))
       .flatMap(_.set(SettlorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(_.set(LivingSettlorStatus(index), UpToDate))
   }

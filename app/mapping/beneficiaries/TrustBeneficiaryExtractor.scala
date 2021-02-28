@@ -41,11 +41,10 @@ class TrustBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustBeneficiaryTrustType,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(namePage(index), entity.organisationName))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
       .flatMap(_.set(safeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
-      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 }

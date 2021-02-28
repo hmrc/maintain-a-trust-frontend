@@ -33,10 +33,9 @@ class ClassOfBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTr
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustUnidentifiedType,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(ClassOfBeneficiaryDescriptionPage(index), entity.description))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
-      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 
   override def bpMatchStatus(entity: DisplayTrustUnidentifiedType): Option[String] = {

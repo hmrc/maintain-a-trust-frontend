@@ -38,11 +38,10 @@ class OtherBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustOtherType,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(namePage(index), entity.description))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
       .flatMap(answers => extractOptionalAddress(entity.address, index, answers))
-      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 
   override def bpMatchStatus(entity: DisplayTrustOtherType): Option[String] = {

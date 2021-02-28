@@ -45,13 +45,12 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustWillType,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(SettlorNamePage, entity.name))
       .flatMap(answers => extractDateOfDeath(entity.dateOfDeath, answers))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(DeceasedSettlorSafeIdPage, entity.identification.flatMap(_.safeId)))
-      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 
   private def extractDateOfDeath(dateOfDeath: Option[LocalDate],
@@ -66,8 +65,8 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
   }
 
   override def extractIndIdentification(identification: Option[DisplayTrustIdentificationType],
-                               index: Int,
-                               answers: UserAnswers): Try[UserAnswers] = {
+                                        index: Int,
+                                        answers: UserAnswers): Try[UserAnswers] = {
     extractIfTaxable(answers) {
       identification match {
         case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>

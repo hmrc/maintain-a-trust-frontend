@@ -53,7 +53,9 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
     }
   }
 
-  def updateUserAnswers(answers: Try[UserAnswers], entity: T, index: Int): Try[UserAnswers]
+  def updateUserAnswers(answers: Try[UserAnswers], entity: T, index: Int): Try[UserAnswers] = {
+    answers.flatMap(answers => extractMetaData(entity, index, answers))
+  }
 
   def extractCountryOfResidence(countryOfResidence: Option[String],
                                 index: Int,

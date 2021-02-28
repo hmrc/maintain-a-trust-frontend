@@ -39,11 +39,10 @@ class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrust
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustProtectorBusiness,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(BusinessProtectorNamePage(index), entity.name))
       .flatMap(_.set(BusinessProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
-      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 }

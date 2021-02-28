@@ -56,7 +56,7 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustIndividualDetailsType,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(IndividualBeneficiaryNamePage(index), entity.name))
       .flatMap(answers => extractRoleInCompany(entity, index, answers))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
@@ -65,7 +65,6 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(answers => extractVulnerability(entity.vulnerableBeneficiary, index, answers))
-      .flatMap(answers => extractMetaData(entity, index, answers))
       .flatMap(_.set(IndividualBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
   }
 

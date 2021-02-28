@@ -29,7 +29,7 @@ class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayT
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustLeadTrusteeOrgType,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(TrusteeOrgNamePage(index), entity.name))
@@ -37,7 +37,6 @@ class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayT
       .flatMap(answers => extractEmail(entity.email, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber))
       .flatMap(_.set(TrusteeSafeIdPage(index), entity.identification.safeId))
-      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 
   private def extractIdentification(identification: DisplayTrustIdentificationOrgType,

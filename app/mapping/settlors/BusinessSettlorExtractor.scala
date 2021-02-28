@@ -34,11 +34,10 @@ class BusinessSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSett
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustSettlorCompany,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(SettlorBusinessNamePage(index), entity.name))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
-      .flatMap(answers => extractMetaData(entity, index, answers))
       .flatMap(_.set(SettlorCompanyTypePage(index), entity.companyType))
       .flatMap(_.set(SettlorCompanyTimePage(index), entity.companyTime))
       .flatMap(_.set(SettlorSafeIdPage(index), entity.identification.flatMap(_.safeId)))

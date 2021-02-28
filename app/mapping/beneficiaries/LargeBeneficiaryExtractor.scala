@@ -40,7 +40,7 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustLargeType,
                                  index: Int): Try[UserAnswers] = {
-    answers
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(LargeBeneficiaryNamePage(index), entity.organisationName))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
@@ -58,7 +58,6 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
       )
       .flatMap(answers => extractNumberOfBeneficiaries(entity.numberOfBeneficiary, index, answers))
       .flatMap(_.set(LargeBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap(answers => extractMetaData(entity, index, answers))
   }
 
   private def extractNumberOfBeneficiaries(numberOfBeneficiary: String,

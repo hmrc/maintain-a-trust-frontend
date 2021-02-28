@@ -41,21 +41,15 @@ class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = OtherIndividualDateOfBirthPage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers], entity: NaturalPersonType, index: Int): Try[UserAnswers] = {
-    answers
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = OtherIndividualMetaData(index)
+
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: NaturalPersonType,
+                                 index: Int): Try[UserAnswers] = {
+    super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(OtherIndividualNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
-      .flatMap {
-        _.set(
-          OtherIndividualMetaData(index),
-          MetaData(
-            lineNo = entity.lineNo.getOrElse(""),
-            bpMatchStatus = entity.bpMatchStatus,
-            entityStart = entity.entityStart
-          )
-        )
-      }
       .flatMap(_.set(OtherIndividualSafeIdPage(index), entity.identification.flatMap(_.safeId)))
   }
 
