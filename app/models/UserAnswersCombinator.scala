@@ -25,34 +25,22 @@ object UserAnswersCombinator {
 
     def combine: Option[UserAnswers] = {
       implicit val userAnswersSemigroup: Semigroup[UserAnswers] = (x: UserAnswers, y: UserAnswers) => {
-        val merge = (x: UserAnswers, y: UserAnswers) => x.data.deepMerge(y.data)
-        applyMerge(merge, x, y)
+        x.copy(data = x.data.deepMerge(y.data))
       }
       Semigroup[UserAnswers].combineAllOption(answers)
     }
 
     def combineArraysWithPath(path: JsPath): Option[UserAnswers] = {
       implicit val userAnswersSemigroup: Semigroup[UserAnswers] = (x: UserAnswers, y: UserAnswers) => {
-        val merge = (x: UserAnswers, y: UserAnswers) => x.data.mergeArrays(y.data, path)
-        applyMerge(merge, x, y)
+        x.copy(data = x.data.mergeArrays(y.data, path))
       }
       Semigroup[UserAnswers].combineAllOption(answers)
-    }
-
-    private def applyMerge(merge: (UserAnswers, UserAnswers) => JsObject,
-                           x: UserAnswers,
-                           y: UserAnswers): UserAnswers = {
-      UserAnswers(
-        data = merge(x, y),
-        internalId = x.internalId,
-        identifier = x.identifier
-      )
     }
   }
 
   implicit class ArrayCombinator(x: JsObject) {
     def mergeArrays(y: JsObject, path: JsPath): JsObject = {
-      
+
       val pick = (obj: JsObject) => obj.transform(path.json.pick[JsArray])
       val mergedArrays: JsArray = Seq(pick(x), pick(y)).foldLeft(JsArray())((acc, pickResult) => {
         pickResult match {
