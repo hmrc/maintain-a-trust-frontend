@@ -18,7 +18,7 @@ package mapping.beneficiaries
 
 import models.HowManyBeneficiaries.{Over1, Over1001, Over101, Over201, Over501}
 import models.http.DisplayTrustLargeType
-import models.{Address, Description, MetaData, UserAnswers}
+import models.{Address, Description, HowManyBeneficiaries, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.beneficiaries.large._
 
@@ -64,12 +64,13 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
   private def extractNumberOfBeneficiaries(numberOfBeneficiary: String,
                                            index: Int,
                                            answers: UserAnswers): Try[UserAnswers] = {
+    val setValue = (x: HowManyBeneficiaries) => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), x)
     numberOfBeneficiary.toInt match {
-      case x if 0 to 100 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over1)
-      case x if 101 to 200 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over101)
-      case x if 201 to 500 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over201)
-      case x if 501 to 999 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over501)
-      case _ => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over1001)
+      case x if 0 to 100 contains x => setValue(Over1)
+      case x if 101 to 200 contains x => setValue(Over101)
+      case x if 201 to 500 contains x => setValue(Over201)
+      case x if 501 to 999 contains x => setValue(Over501)
+      case _ => setValue(Over1001)
     }
   }
 }
