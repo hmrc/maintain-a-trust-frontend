@@ -146,6 +146,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
               lineNo = Some("1"),
               bpMatchStatus = Some("01"),
               organisationName = "Large 1",
+              countryOfResidence = Some(GB),
               description = s"Description",
               description1 = Some("Description 1"),
               description2 = None,
@@ -254,6 +255,9 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(IndividualBeneficiarySafeIdPage(0)) mustNot be(defined)
 
         extraction.right.value.get(LargeBeneficiaryNamePage(0)).get mustBe "Large 1"
+        extraction.right.value.get(LargeBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(LargeBeneficiaryCountryOfResidencePage(0)).get mustBe GB
         extraction.right.value.get(LargeBeneficiaryDescriptionPage(0)).get mustBe Description("Description", Some("Description 1"), None, None, None)
         extraction.right.value.get(LargeBeneficiaryDiscretionYesNoPage(0)).get mustBe false
         extraction.right.value.get(LargeBeneficiaryShareOfIncomePage(0)).get mustBe "10"

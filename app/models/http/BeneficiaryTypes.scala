@@ -126,6 +126,7 @@ object DisplayTrustUnidentifiedType {
 case class DisplayTrustLargeType(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  organisationName: String,
+                                 countryOfResidence: Option[String],
                                  description: String,
                                  description1: Option[String],
                                  description2: Option[String],
