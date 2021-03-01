@@ -145,6 +145,7 @@ object DisplayTrustLargeType {
 case class DisplayTrustOtherType(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  description: String,
+                                 countryOfResidence: Option[String],
                                  address: Option[AddressType],
                                  beneficiaryDiscretion: Option[Boolean],
                                  beneficiaryShareOfIncome: Option[String],

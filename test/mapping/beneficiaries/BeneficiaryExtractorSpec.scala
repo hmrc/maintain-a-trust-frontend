@@ -172,6 +172,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
               description = s"Other 1",
               beneficiaryDiscretion = Some(false),
               beneficiaryShareOfIncome = Some("10"),
+              countryOfResidence = Some(GB),
               address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), GB)),
               entityStart = "2019-11-26"
             )
@@ -221,6 +222,9 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
         extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get mustBe false
         extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+        extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(0)).get mustBe GB
         extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(0)).get mustBe true
         extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(0)).get mustBe true
         extraction.right.value.get(OtherBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
