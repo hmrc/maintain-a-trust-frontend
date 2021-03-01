@@ -1,0 +1,52 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.Mode
+@import uk.gov.hmrc.auth.core.AffinityGroup
+@import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
+@import config.FrontendAppConfig
+
+@this(
+appConfig: FrontendAppConfig,
+main_template: MainTemplate
+)
+
+@(affinityGroup: AffinityGroup, identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
+
+@main_template(
+title = messages("identifierDoesNotMatch.title")
+) {
+
+ @components.heading_with_caption(headingKey = "identifierDoesNotMatch.heading", caption = s"identifierDoesNotMatch.$identifierType.caption", captionParam = identifier)
+
+ <p>@messages("identifierDoesNotMatch.p1")</p>
+
+ <p>@messages("identifierDoesNotMatch.p2")</p>
+ <ul class="bullet-list">
+  <li>@messages("identifierDoesNotMatch.bullet.1")</li>
+  <li>@messages("identifierDoesNotMatch.bullet.2")</li>
+ </ul>
+ <p>@messages("identifierDoesNotMatch.p3")</p>
+
+  @if(affinityGroup == AffinityGroup.Agent) {
+   <p>@messages(s"identifierDoesNotMatch.p4") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages(s"identifierDoesNotMatch.return.link")</a>.</p>
+  } else {
+<p>@components.button_link("identifierDoesNotMatch.sign_out", controllers.routes.LogoutController.logout().url)</p>
+  }
+
+  <p>@messages("identifierDoesNotMatch.p5") <a id="help-link" target="_blank" href="@appConfig.helplineUrl">@messages("identifierDoesNotMatch.contact.link")</a>.</p>
+
+}

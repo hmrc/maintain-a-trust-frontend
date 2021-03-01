@@ -16,6 +16,7 @@
 
 package views
 
+import models.{URN, UTR}
 import models.pages.Tag.UpToDate
 import sections.Protectors
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
@@ -28,7 +29,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
   val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
-  "VariationProgress view" must {
+  "VariationProgress view for utr" must {
 
     val utr = "utr"
 
@@ -46,7 +47,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
     val view = viewFor[VariationProgressView](Some(userAnswers))
 
-    val applyView = view.apply(utr, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(fakeRequest, messages)
+    val applyView = view.apply(utr, UTR, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "variationProgress",
@@ -63,9 +64,44 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
   }
 
+  "VariationProgress view for urn" must {
+
+    val urn = "urn"
+
+    val mandatorySections = List(
+      Task(Link(Settlors, ""), None),
+      Task(Link(Trustees, ""), None),
+      Task(Link(Beneficiaries, ""), None)
+    )
+    val optionalSections = List(
+      Task(Link(NaturalPeople, ""),None))
+
+    val group = Organisation
+
+    val userAnswers = emptyUserAnswersForUtr
+
+    val view = viewFor[VariationProgressView](Some(userAnswers))
+
+    val applyView = view.apply(urn, URN, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(fakeRequest, messages)
+
+    behave like normalPageTitleWithCaption(applyView,
+      "variationProgress",
+      "urn",
+      urn,
+      "p1", "p2")
+
+    behave like pageWithBackLink(applyView)
+
+    behave like taskListHeading(applyView)
+
+    behave like taskList(applyView, mandatorySections)
+    behave like taskList(applyView, optionalSections)
+
+  }
+
   "render summary" when {
 
-    "all sections are completed" in {
+    "all sections are completed for utr" in {
 
         val utr = "utr"
 
@@ -85,7 +121,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
         val view = viewFor[VariationProgressView](Some(userAnswers))
 
-        val applyView = view.apply(utr, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = true, closingTrust = false)(fakeRequest, messages)
+        val applyView = view.apply(utr, UTR, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = true, closingTrust = false)(fakeRequest, messages)
 
         val doc = asDocument(applyView)
 

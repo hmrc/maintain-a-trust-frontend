@@ -33,6 +33,6 @@ class HowToCloseATrustController @Inject()(
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
 
-      Ok(view(request.userAnswers.identifier))
+      Ok(view(request.userAnswers.identifier, request.userAnswers.identifierType))
   }
 }

@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import connectors.TrustsStoreConnector
-import models.CompletedMaintenanceTasks
+import models.{CompletedMaintenanceTasks, UTR}
 import models.pages.Tag.InProgress
 import models.pages.WhatIsNext
 import org.mockito.Matchers.any
@@ -84,7 +84,7 @@ class TaskListControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
+        view(utr, UTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
 
       application.stop()
     }
@@ -115,7 +115,7 @@ class TaskListControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
+        view(utr, UTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
 
       application.stop()
     }

@@ -24,20 +24,18 @@
     appConfig: FrontendAppConfig
 )
 
-@(affinityGroup: AffinityGroup, utr: String)(implicit request: Request[_], messages: Messages)
+@(affinityGroup: AffinityGroup, identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("trustStillProcessing.title")
 ) {
 
-    @components.heading_with_caption(headingKey = "trustStillProcessing.heading", caption = "trustStillProcessing.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "trustStillProcessing.heading", caption = s"trustStillProcessing.$identifierType.caption", captionParam = identifier)
 
     <p>@messages("trustStillProcessing.p1")</p>
 
-    <p>@messages("trustStillProcessing.p2")</p>
-
-    <p>@messages("trustStillProcessing.p3") <a id="help-link" target="_blank" href="@appConfig.helplineUrl">@messages("trustStillProcessing.contact.link")</a>.</p>
+    <p>@messages("trustStillProcessing.p2") <a id="help-link" target="_blank" href="@appConfig.helplineUrl">@messages("trustStillProcessing.contact.link")</a>.</p>
     @if(affinityGroup == AffinityGroup.Agent) {
-        <p>@messages("trustStillProcessing.p4") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("trustStillProcessing.return.link")</a>.</p>
+        <p>@messages("trustStillProcessing.p3") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("trustStillProcessing.return.link")</a>.</p>
     }
 }

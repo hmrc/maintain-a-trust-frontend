@@ -17,9 +17,9 @@
 package mapping.settlors
 
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
+import models.UserAnswers
 import models.http.{DisplayTrust, DisplayTrustWillType}
 import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
-import models.{URN, UserAnswers}
 import pages.settlors.SetUpAfterSettlorDiedYesNoPage
 import pages.settlors.living_settlor.trust_type._
 import play.api.Logging

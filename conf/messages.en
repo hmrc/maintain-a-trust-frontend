@@ -170,7 +170,8 @@ internationalAddress.error.line3.invalidCharacters = Address line 3 must only in
 
 ivDown.heading = Sorry, there is a problem with the service
 ivDown.title = Sorry, there is a problem with the service
-ivDown.caption = This trust’s UTR: {0}
+ivDown.UTR.caption = This trust’s UTR: {0}
+ivDown.URN.caption = This trust’s URN: {0}
 ivDown.p1 = To help you with this trust, we need you to
 ivDown.contact.link = send some information to us
 
@@ -251,14 +252,15 @@ trustAlreadyClaimed.p1 = Another Government Gateway account is linked to it. Ple
 trustAlreadyClaimed.p2 = If you are unable to do so,
 trustAlreadyClaimed.p2.a = contact the trusts helpline (opens in a new window or tab)
 
-trustClosed.title = Sorry, you cannot access this trust
-trustClosed.heading = Sorry, you cannot access this trust
-trustClosed.caption = This trust’s UTR: {0}
-trustClosed.p1 = You cannot make changes to this trust as it has been closed.
-trustClosed.p2 = If this has been done in error or you need help with the service, please
+trustClosed.title = You cannot access this trust online as it has been closed
+trustClosed.heading = You cannot access this trust online as it has been closed
+trustClosed.UTR.caption = This trust’s UTR: {0}
+trustClosed.URN.caption = This trust’s URN: {0}
+trustClosed.p1 = If this has been done in error or you need help with the service, please
 trustClosed.contact.link = contact the trusts helpline (opens in a new window or tab)
-trustClosed.p3 = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
-trustClosed.p4 = You can
+trustClosed.UTR.p2 = to reopen the records. HMRC will contact you if a tax return is required or for any further information.
+trustClosed.URN.p2 = to reopen the records.
+trustClosed.p3 = You can
 trustClosed.return.link = return to register and maintain a trust for a client
 
 trustLocked.title = You cannot access this trust
@@ -292,24 +294,30 @@ trustNotClaimed.bullet.2.p4.a = return to register and maintain a trust for a cl
 trustResidentInTheUK.yes = Based on your answers, the trust is resident in the UK
 trustResidentInTheUK.no = Based on your answers, the trust is not resident in the UK
 
-trustStillProcessing.title = Sorry, you cannot access this trust
-trustStillProcessing.heading = Sorry, you cannot access this trust
-trustStillProcessing.caption = This trust’s UTR: {0}
-trustStillProcessing.p1 = HMRC is still processing changes recently made to this trust.
-trustStillProcessing.p2 = Try again later.
-trustStillProcessing.p3 = If you need help with the service
-trustStillProcessing.p4 = You can
+trustStillProcessing.title = We are processing the latest changes made to this trust
+trustStillProcessing.heading = We are processing the latest changes made to this trust
+trustStillProcessing.UTR.caption = This trust’s UTR: {0}
+trustStillProcessing.URN.caption = This trust’s URN: {0}
+trustStillProcessing.p1 = Try again later.
+trustStillProcessing.p2 = If you need help with the service
+trustStillProcessing.p3 = You can
 trustStillProcessing.contact.link = contact the trusts helpline (opens in a new window or tab)
 trustStillProcessing.return.link = return to register and maintain a trust for a client
 
-trustUtrDoesNotMatch.title = The Unique Taxpayer Reference (UTR) you gave for the trust does not match our records
-trustUtrDoesNotMatch.heading = The Unique Taxpayer Reference (UTR) you gave for the trust does not match our records
-trustUtrDoesNotMatch.p1 = Check you have entered the trust’s UTR correctly.
-trustUtrDoesNotMatch.p2 = If you do not have a UTR for the trust you will need to register the trust first.
-trustUtrDoesNotMatch.p3 = If you need help with this service
-trustUtrDoesNotMatch.contact.link = contact the trusts helpline (opens in a new window or tab)
-trustUtrDoesNotMatch.p4 = You can
-trustUtrDoesNotMatch.return.link = return to register and maintain a trust for a client
+identifierDoesNotMatch.title = Your Government Gateway account is not linked to this trust
+identifierDoesNotMatch.heading = Your Government Gateway account is not linked to this trust
+identifierDoesNotMatch.UTR.caption = This trust’s UTR: {0}
+identifierDoesNotMatch.URN.caption = This trust’s URN: {0}
+identifierDoesNotMatch.p1 = Check you have entered the trust’s unique identifier correctly.
+identifierDoesNotMatch.p2 = The unique identifier will be one of the following:
+identifierDoesNotMatch.bullet.1 = a Unique Taxpayer Reference (UTR) which is ten numbers long, for example 76543 21234
+identifierDoesNotMatch.bullet.2 = a Unique Reference Number (URN) which has 15 numbers and characters, for example ABTRUST76543212
+identifierDoesNotMatch.p3 = If the URN or UTR is correct, you need to sign in with the Government Gateway account that is linked to this trust.
+identifierDoesNotMatch.p4 = You can
+identifierDoesNotMatch.return.link = return to register and maintain a trust for a client
+identifierDoesNotMatch.sign_out = Sign out of this account
+identifierDoesNotMatch.p5 = If you are unable to do so,
+identifierDoesNotMatch.contact.link = contact the trusts helpline (opens in a new window or tab)
 
 ukAddress.error.line1.required = Enter address line 1
 ukAddress.error.line2.required = Enter address line 2
@@ -463,7 +471,8 @@ declarationWhatNext.error.required = Select what you want to do next
 
 variationProgress.title = Trust overview
 variationProgress.heading = Trust overview
-variationProgress.caption = This trust’s UTR: {0}
+variationProgress.UTR.caption = This trust’s UTR: {0}
+variationProgress.URN.caption = This trust’s URN: {0}
 variationProgress.p1 = You can change information about the trust and make a declaration once you have confirmed each section is up to date.
 variationProgress.p2 = Any changes you make without declaring will not be saved.
 variationsProgress.return.link = Return to register and maintain a trust for a client
@@ -513,7 +522,8 @@ dateLastAssetSharedOut.error.past = The date the last asset was distributed cann
 
 howToCloseATrust.title = How to close a trust with HMRC
 howToCloseATrust.heading = How to close a trust with HMRC
-howToCloseATrust.caption = This trust’s UTR: {0}
+howToCloseATrust.UTR.caption = This trust’s UTR: {0}
+howToCloseATrust.URN.caption = This trust’s URN: {0}
 howToCloseATrust.p1 = To close a trust register with HMRC, you need to tell us:
 howToCloseATrust.bullet1 = the date the last asset was shared out to the beneficiaries
 howToCloseATrust.bullet2 = a final tax return, using Trust and Estate (SA900) tax return or Self Assessment Online for trusts
@@ -799,13 +809,15 @@ playbackFinalDeclarationAnswers.p3 = The trust’s final declaration was sent on
 
 # Technical difficulties playing back trust
 
-playbackProblemContactHMRC.title = Sorry, there is a problem accessing your trust’s registration
-playbackProblemContactHMRC.heading = Sorry, there is a problem accessing your trust’s registration
-playbackProblemContactHMRC.caption = This trust’s UTR: {0}
-playbackProblemContactHMRC.p1.beforeLink = You need to
-playbackProblemContactHMRC.p1.link = contact the trusts helpline (opens in a new window or tab)
-playbackProblemContactHMRC.p1.afterLink = so we can confirm details with you about the trust.
-playbackProblemContactHMRC.p2 = Please have the relevant documents relating to the trust and its Self Assessment ready when you contact HMRC.
+playbackProblemContactHMRC.title = There is a problem accessing your trust’s registration
+playbackProblemContactHMRC.heading = There is a problem accessing your trust’s registration
+playbackProblemContactHMRC.UTR.caption = This trust’s UTR: {0}
+playbackProblemContactHMRC.URN.caption = This trust’s URN: {0}
+playbackProblemContactHMRC.p1 = To access the trust’s registration, we need to confirm the trust’s details with you.
+playbackProblemContactHMRC.p2.beforeLink = To confirm the trust’s details,
+playbackProblemContactHMRC.p2.link = contact the trusts helpline (opens in a new window or tab)
+playbackProblemContactHMRC.p2.afterLink = .
+playbackProblemContactHMRC.p3 = If you have submitted a tax return for this trust, have the relevant documents ready as you may need to refer to them.
 
 testOnly.fourOrFiveMLD.four = 4MLD
 testOnly.fourOrFiveMLD.five = 5MLD

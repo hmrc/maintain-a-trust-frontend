@@ -16,23 +16,39 @@
 
 package views.close
 
+import models.{URN, UTR}
 import views.behaviours.ViewBehaviours
 import views.html.close.HowToCloseATrustView
 
 class HowToCloseATrustViewSpec extends ViewBehaviours {
 
-  val utr = "1234567890"
-
-  "HowToCloseATrust view" must {
-
+  "HowToCloseATrust view for utr" must {
+    val utr = "1234567890"
     val view = viewFor[HowToCloseATrustView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(utr)(fakeRequest, messages)
+    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "howToCloseATrust",
       "utr",
       utr,
+      "p1",
+      "bullet1",
+      "bullet2",
+      "p2"
+    )
+  }
+
+  "HowToCloseATrust view for urn" must {
+    val urn = "XATRUST12345678"
+    val view = viewFor[HowToCloseATrustView](Some(emptyUserAnswersForUtr))
+
+    val applyView = view.apply(urn, URN)(fakeRequest, messages)
+
+    behave like normalPageTitleWithCaption(applyView,
+      "howToCloseATrust",
+      "urn",
+      urn,
       "p1",
       "bullet1",
       "bullet2",

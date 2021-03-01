@@ -17,7 +17,7 @@
 package controllers.close
 
 import base.SpecBase
-import models.UserAnswers
+import models.{UTR, UserAnswers}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -45,7 +45,7 @@ class HowToCloseATrustControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr)(request, messages).toString
+        view(utr, UTR)(request, messages).toString
 
       application.stop()
     }

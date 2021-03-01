@@ -23,13 +23,13 @@
     main_template: MainTemplate
 )
 
-@(utr: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("ivDown.title")
     ) {
 
-    @components.heading_with_caption(headingKey = "ivDown.heading", caption = "ivDown.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "ivDown.heading", caption = s"ivDown.$identifierType.caption", captionParam = identifier)
 
     <p>@messages("ivDown.p1") <a id="register-and-maintain-link" href="@{appConfig.serviceDownContactUrl}">@messages("ivDown.contact.link")</a>.</p>
 }

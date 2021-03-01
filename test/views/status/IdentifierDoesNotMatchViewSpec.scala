@@ -19,46 +19,75 @@ package views.status
 import models.{URN, UTR}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
-import views.html.status.TrustStillProcessingView
+import views.html.status.IdentifierDoesNotMatchView
 
-class TrustStillProcessingViewSpec extends ViewBehaviours {
+class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
 
-
-  "TrustStillProcessing view for utr" must {
+  "IdentifierDoesNotMatch view for utr for Agent" must {
     val utr = "0987654321"
-    val view = viewFor[TrustStillProcessingView](Some(emptyUserAnswersForUtr))
+    val view = viewFor[IdentifierDoesNotMatchView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(AffinityGroup.Agent, utr, UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(
       applyView,
-      "trustStillProcessing",
+      "identifierDoesNotMatch",
       "utr",
       utr,
       "p1",
       "p2",
+      "bullet.1",
+      "bullet.2",
       "p3",
-      "contact.link",
-      "return.link")
-
+      "p4",
+      "return.link",
+      "p5",
+      "contact.link"
+    )
   }
 
-  "TrustStillProcessing view for urn" must {
+  "IdentifierDoesNotMatch view for utr for Organisation" must {
+    val utr = "0987654321"
+    val view = viewFor[IdentifierDoesNotMatchView](Some(emptyUserAnswersForUtr))
+
+    val applyView = view.apply(AffinityGroup.Organisation, utr, UTR)(fakeRequest, messages)
+
+    behave like normalPageTitleWithCaption(
+      applyView,
+      "identifierDoesNotMatch",
+      "utr",
+      utr,
+      "p1",
+      "p2",
+      "bullet.1",
+      "bullet.2",
+      "p3",
+      "sign_out",
+      "p5",
+      "contact.link"
+    )
+  }
+
+  "IdentifierDoesNotMatch view for urn for Agent" must {
     val urn = "XATRUST12345678"
-    val view = viewFor[TrustStillProcessingView](Some(emptyUserAnswersForUtr))
+    val view = viewFor[IdentifierDoesNotMatchView](Some(emptyUserAnswersForUrn))
 
     val applyView = view.apply(AffinityGroup.Agent, urn, URN)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(
       applyView,
-      "trustStillProcessing",
+      "identifierDoesNotMatch",
       "urn",
       urn,
       "p1",
       "p2",
+      "bullet.1",
+      "bullet.2",
       "p3",
-      "contact.link",
-      "return.link")
-
+      "p4",
+      "return.link",
+      "p5",
+      "contact.link"
+    )
   }
 }
