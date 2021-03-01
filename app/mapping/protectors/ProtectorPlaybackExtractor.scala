@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package pages.settlors.deceased_settlor
+package mapping.protectors
 
-import models.UKAddress
-import pages.QuestionPage
-import play.api.libs.json.JsPath
-import sections.settlors.DeceasedSettlor
+import mapping.PlaybackExtractor
+import models.http.Protector
 
-case object SettlorUKAddressPage extends QuestionPage[UKAddress] {
+trait ProtectorPlaybackExtractor[T <: Protector] extends PlaybackExtractor[T] {
 
-  override def path: JsPath = DeceasedSettlor.path \ toString
-
-  override def toString: String = "address"
+  override val optionalEntity: Boolean = true
 }

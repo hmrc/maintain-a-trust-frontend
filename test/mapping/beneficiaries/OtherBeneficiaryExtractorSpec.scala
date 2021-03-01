@@ -18,9 +18,8 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
-import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{AddressType, DisplayTrustOtherType}
+import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.other._
 import utils.Constants.GB
@@ -51,7 +50,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
     entityStart = "2019-11-26"
   )
 
-  val otherExtractor : PlaybackExtractor[Option[List[DisplayTrustOtherType]]] =
+  val otherExtractor : OtherBeneficiaryExtractor =
     injector.instanceOf[OtherBeneficiaryExtractor]
 
   "Other Beneficiary Extractor" - {
@@ -60,7 +59,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "must return user answers" in {
 
-        val others = None
+        val others = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -87,7 +86,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = otherExtractor.extract(ua, Some(other))
+        val extraction = otherExtractor.extract(ua, other)
 
         extraction.right.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
         extraction.right.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
@@ -103,7 +102,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = otherExtractor.extract(ua, Some(others))
+        val extraction = otherExtractor.extract(ua, others)
 
         extraction mustBe 'right
 

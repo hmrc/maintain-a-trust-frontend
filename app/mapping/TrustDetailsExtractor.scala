@@ -16,7 +16,6 @@
 
 package mapping
 
-import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
 import models.http.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
@@ -26,79 +25,87 @@ import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class TrustDetailsExtractor @Inject() extends PlaybackExtractor[TrustDetailsType] with Logging {
+class TrustDetailsExtractor extends Logging {
 
-  override def extract(answers: UserAnswers, data: TrustDetailsType): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      val updated = answers
-        .set(WhenTrustSetupPage, data.startDate)
-        .flatMap(answers => extractTrustTaxable(data, answers))
-        .flatMap(answers => extractGovernedBy(data, answers))
-        .flatMap(answers => extractAdminBy(data, answers))
-        .flatMap(answers => extractResidentialType(data, answers))
+  def extract(answers: UserAnswers, data: TrustDetailsType): Either[PlaybackExtractionError, UserAnswers] = {
+    val updated = answers
+      .set(WhenTrustSetupPage, data.startDate)
+      .flatMap(_.set(TrustTaxableYesNoPage, data.isTaxable))
+      .flatMap(answers => extractGovernedBy(data.lawCountry, answers))
+      .flatMap(answers => extractAdminBy(data.administrationCountry, answers))
+      .flatMap(answers => extractResidentialType(data.residentialStatus, answers))
 
-      updated match {
-        case Success(a) =>
-          Right(a)
-        case Failure(exception) =>
-          logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-          Left(FailedToExtractData(TrustDetailsType.toString))
-      }
+    updated match {
+      case Success(a) =>
+        Right(a)
+      case Failure(exception) =>
+        logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+        Left(FailedToExtractData(TrustDetailsType.toString))
     }
+  }
 
-  private def extractTrustTaxable(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] =
-    details.trustTaxable match {
-      case Some(false) => answers.set(TrustTaxableYesNoPage, false)
-      case _ => answers.set(TrustTaxableYesNoPage, true)
-    }
+  private def extractGovernedBy(lawCountry: Option[String],
+                                answers: UserAnswers): Try[UserAnswers] = lawCountry match {
+    case Some(country) => answers
+      .set(GovernedInsideTheUKPage, false)
+      .flatMap(_.set(CountryGoverningTrustPage, country))
+    case _ => answers
+      .set(GovernedInsideTheUKPage, true)
+  }
 
-  private def extractGovernedBy(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] =
-    details.lawCountry match {
-      case Some(country) => answers.set(GovernedInsideTheUKPage, false)
-        .flatMap(_.set(CountryGoverningTrustPage, country))
-      case _ => answers.set(GovernedInsideTheUKPage, true)
-    }
+  private def extractAdminBy(administrationCountry: Option[String],
+                             answers: UserAnswers): Try[UserAnswers] = administrationCountry match {
+    case Some(country) => answers
+      .set(AdministrationInsideUKPage, false)
+      .flatMap(_.set(CountryAdministeringTrustPage, country))
+    case _ => answers
+      .set(AdministrationInsideUKPage, true)
+  }
 
-  private def extractAdminBy(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] =
-    details.administrationCountry match {
-      case Some(country) => answers.set(AdministrationInsideUKPage, false)
-        .flatMap(_.set(CountryAdministeringTrustPage, country))
-      case _ => answers.set(AdministrationInsideUKPage, true)
-    }
-
-  private def extractResidentialType(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] =
-    details.residentialStatus match {
-      case Some(ResidentialStatusType(Some(uk), None)) => ukTrust(uk, answers)
-      case Some(ResidentialStatusType(None, Some(nonUK))) => nonUKTrust(nonUK, answers)
-      case _ => Success(answers)
-    }
+  private def extractResidentialType(residentialStatus: Option[ResidentialStatusType],
+                                     answers: UserAnswers): Try[UserAnswers] = residentialStatus match {
+    case Some(ResidentialStatusType(Some(uk), None)) => ukTrust(uk, answers)
+    case Some(ResidentialStatusType(None, Some(nonUK))) => nonUKTrust(nonUK, answers)
+    case _ => Success(answers)
+  }
 
   private def ukTrust(uk: UkType, answers: UserAnswers): Try[UserAnswers] = {
-    val extractOffShore = uk.preOffShore match {
-      case Some(country) => answers.set(TrustPreviouslyResidentPage, country)
-        .flatMap(_.set(TrustResidentOffshorePage, true))
-      case _ => answers.set(TrustResidentOffshorePage, false)
+
+    def extractOffShore(answers: UserAnswers): Try[UserAnswers] = uk.preOffShore match {
+      case Some(country) => answers
+        .set(TrustResidentOffshorePage, true)
+        .flatMap(_.set(TrustPreviouslyResidentPage, country))
+      case _ => answers
+        .set(TrustResidentOffshorePage, false)
     }
-    extractOffShore.flatMap(_.set(EstablishedUnderScotsLawPage, uk.scottishLaw))
+
+    answers
+      .set(EstablishedUnderScotsLawPage, uk.scottishLaw)
+      .flatMap(answers => extractOffShore(answers))
   }
 
   private def nonUKTrust(nonUK: NonUKType, answers: UserAnswers): Try[UserAnswers] = {
-    val registeringTrustFor5A = answers.set(RegisteringTrustFor5APage, nonUK.sch5atcgga92)
 
-    val inheritanceTax = nonUK.s218ihta84 match {
-      case Some(iht) => registeringTrustFor5A.flatMap(_.set(InheritanceTaxActPage, iht))
-      case _ => registeringTrustFor5A
+    def inheritanceTaxAct(answers: UserAnswers): Try[UserAnswers] = nonUK.s218ihta84 match {
+      case Some(value) => answers.set(InheritanceTaxActPage, value)
+      case _ => Success(answers)
     }
 
-    val agentInheritance = nonUK.agentS218IHTA84 match {
-      case Some(iht) => inheritanceTax.flatMap(_.set(AgentOtherThanBarristerPage, iht))
-      case _ => inheritanceTax
+    def agentOtherThanBarrister(answers: UserAnswers): Try[UserAnswers] = nonUK.agentS218IHTA84 match {
+      case Some(value) => answers.set(AgentOtherThanBarristerPage, value)
+      case _ => Success(answers)
     }
 
-    nonUK.trusteeStatus.map(NonResidentType.fromDES) match {
-      case Some(status) => agentInheritance.flatMap(_.set(NonResidentTypePage, status))
-      case _ => agentInheritance
+    def nonResidentType(answers: UserAnswers): Try[UserAnswers] = nonUK.trusteeStatus.map(NonResidentType.fromDES) match {
+      case Some(value) => answers.set(NonResidentTypePage, value)
+      case _ => Success(answers)
     }
+
+    answers
+      .set(RegisteringTrustFor5APage, nonUK.sch5atcgga92)
+      .flatMap(answers => inheritanceTaxAct(answers))
+      .flatMap(answers => agentOtherThanBarrister(answers))
+      .flatMap(answers => nonResidentType(answers))
   }
 
 }

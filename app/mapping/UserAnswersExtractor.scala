@@ -28,7 +28,9 @@ import models.http.GetTrust
 import play.api.Logging
 
 @ImplementedBy(classOf[UserAnswersExtractorImpl])
-trait UserAnswersExtractor extends PlaybackExtractor[GetTrust]
+trait UserAnswersExtractor {
+  def extract(userAnswers: UserAnswers, playback: GetTrust): Either[PlaybackExtractionError, UserAnswers]
+}
 
 class UserAnswersExtractorImpl @Inject()(
                                           beneficiariesExtractor: BeneficiaryExtractor,
@@ -41,11 +43,9 @@ class UserAnswersExtractorImpl @Inject()(
                                           trustDetailsExtractor: TrustDetailsExtractor
                                         ) extends UserAnswersExtractor with Logging {
 
-  override def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionError, UserAnswers] = {
 
-    val isTrustTaxable: Boolean = !data.trust.details.trustTaxable.contains(false)
-
-    val updatedAnswers = answers.copy(isTrustTaxable = isTrustTaxable)
+    val updatedAnswers = answers.copy(isTrustTaxable = data.trust.details.isTaxable)
 
     def answersCombined: Either[PlaybackExtractionError, Option[UserAnswers]] = for {
       correspondence <- correspondenceExtractor.extract(updatedAnswers, data.correspondence).right
@@ -53,7 +53,7 @@ class UserAnswersExtractorImpl @Inject()(
       settlors <- settlorsExtractor.extract(updatedAnswers, data.trust.entities).right
       trustType <- trustTypeExtractor.extract(updatedAnswers, data.trust).right
       protectors <- protectorsExtractor.extract(updatedAnswers, data.trust.entities.protectors).right
-      otherIndividuals <- otherIndividualsExtractor.extract(updatedAnswers, data.trust.entities.naturalPerson).right
+      otherIndividuals <- otherIndividualsExtractor.extract(updatedAnswers, data.trust.entities.naturalPerson.getOrElse(Nil)).right
       trustees <- trusteesExtractor.extract(updatedAnswers, data.trust.entities).right
       trustDetails <- trustDetailsExtractor.extract(updatedAnswers, data.trust.details).right
     } yield {

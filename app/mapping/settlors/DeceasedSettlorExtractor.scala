@@ -16,126 +16,84 @@
 
 package mapping.settlors
 
-import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import mapping.PlaybackExtractor
-import models.{Address, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
-import models.http.{DisplayTrustIdentificationType, DisplayTrustWillType}
-import pages.settlors.deceased_settlor._
-import play.api.Logging
-
-import scala.util.{Failure, Success, Try}
 import mapping.PlaybackImplicits._
+import models.http.{DisplayTrustIdentificationType, DisplayTrustWillType, PassportType}
+import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
+import pages.QuestionPage
+import pages.settlors.deceased_settlor._
 
-class DeceasedSettlorExtractor @Inject() extends PlaybackExtractor[Option[DisplayTrustWillType]] with Logging {
+import java.time.LocalDate
+import scala.util.Try
 
-  override def extract(answers: UserAnswers, data: Option[DisplayTrustWillType]): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      data match {
-        case None => Left(FailedToExtractData("No Deceased Settlor"))
-        case deceasedSettlor =>
+class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
 
-          val updated = deceasedSettlor.foldLeft[Try[UserAnswers]](Success(answers)){
-            case (answers, deceasedSettlor) =>
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = SettlorLastKnownAddressYesNoPage
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = SettlorLastKnownAddressUKYesNoPage
+  override def addressPage(index: Int): QuestionPage[Address] = SettlorLastKnownAddressPage
 
-            answers
-              .flatMap(_.set(SettlorNamePage, deceasedSettlor.name))
-              .flatMap(answers => extractDateOfDeath(deceasedSettlor, answers))
-              .flatMap(answers => extractDateOfBirth(deceasedSettlor, answers))
-              .flatMap(answers => extractIdentification(deceasedSettlor.identification, answers))
-              .flatMap(_.set(DeceasedSettlorSafeIdPage, deceasedSettlor.identification.flatMap(_.safeId)))
-              .flatMap {
-                _.set(
-                  DeceasedSettlorMetaData,
-                  MetaData(
-                    lineNo = deceasedSettlor.lineNo,
-                    bpMatchStatus = deceasedSettlor.bpMatchStatus,
-                    entityStart = deceasedSettlor.entityStart
-                  )
-                )
-              }
-          }
+  override def ninoYesNoPage(index: Int): QuestionPage[Boolean] = SettlorNationalInsuranceYesNoPage
+  override def ninoPage(index: Int): QuestionPage[String] = SettlorNationalInsuranceNumberPage
 
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(DisplayTrustWillType.toString))
-          }
-      }
-    }
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = SettlorPassportIDCardPage
 
-  private def extractDateOfDeath(deceasedSettlor: DisplayTrustWillType, answers: UserAnswers) = {
-    deceasedSettlor.dateOfDeath match {
-      case Some(dateOfDeath) =>
+  override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = SettlorDateOfBirthYesNoPage
+  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = SettlorDateOfBirthPage
+
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = DeceasedSettlorMetaData
+
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: DisplayTrustWillType,
+                                 index: Int): Try[UserAnswers] = {
+    super.updateUserAnswers(answers, entity, index)
+      .flatMap(_.set(SettlorNamePage, entity.name))
+      .flatMap(answers => extractDateOfDeath(entity.dateOfDeath, answers))
+      .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
+      .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
+      .flatMap(_.set(DeceasedSettlorSafeIdPage, entity.identification.flatMap(_.safeId)))
+  }
+
+  private def extractDateOfDeath(dateOfDeath: Option[LocalDate],
+                                 answers: UserAnswers): Try[UserAnswers] = {
+    dateOfDeath match {
+      case Some(value) =>
         answers.set(SettlorDateOfDeathYesNoPage, true)
-          .flatMap(_.set(SettlorDateOfDeathPage, dateOfDeath.convert))
+          .flatMap(_.set(SettlorDateOfDeathPage, value))
       case None =>
-        // Assumption that user answered no as the date of death is not provided
         answers.set(SettlorDateOfDeathYesNoPage, false)
     }
   }
 
-  private def extractDateOfBirth(deceasedSettlor: DisplayTrustWillType, answers: UserAnswers) = {
-    deceasedSettlor.dateOfBirth match {
-      case Some(dateOfBirth) =>
-        answers.set(SettlorDateOfBirthYesNoPage, true)
-          .flatMap(_.set(SettlorDateOfBirthPage, dateOfBirth.convert))
-      case None =>
-        // Assumption that user answered no as the date of birth is not provided
-        answers.set(SettlorDateOfBirthYesNoPage, false)
+  override def extractIndIdentification(identification: Option[DisplayTrustIdentificationType],
+                                        index: Int,
+                                        answers: UserAnswers): Try[UserAnswers] = {
+    extractIfTaxable(answers) {
+      identification match {
+        case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
+          answers.set(ninoYesNoPage(index), true)
+            .flatMap(_.set(ninoPage(index), nino))
+        case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
+          answers.set(ninoYesNoPage(index), false)
+            .flatMap(answers => extractAddress(address, index, answers))
+        case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
+          answers.set(ninoYesNoPage(index), false)
+            .flatMap(answers => extractAddress(address, index, answers))
+            .flatMap(answers => extractPassportIdCard(passport, index, answers))
+        case Some(DisplayTrustIdentificationType(_, None, Some(passport), None)) =>
+          answers.set(ninoYesNoPage(index), false)
+            .flatMap(_.set(addressYesNoPage(index), false))
+            .flatMap(answers => extractPassportIdCard(passport, index, answers))
+        case _ =>
+          answers.set(ninoYesNoPage(index), false)
+            .flatMap(_.set(addressYesNoPage(index), false))
+      }
     }
   }
 
-  private def extractIdentification(identification : Option[DisplayTrustIdentificationType], answers: UserAnswers) = {
-    identification match {
-      case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
-        extractNino(nino, answers)
-
-      case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
-        extractPassportIdCard(passport.convert, answers)
-          .flatMap(updated => extractAddress(address.convert, updated))
-
-      case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
-        extractAddress(address.convert, answers)
-
-      case Some(DisplayTrustIdentificationType(_, None, Some(passport), None)) =>
-        extractPassportIdCard(passport.convert, answers)
-
-      case _ =>
-        answers.set(SettlorNationalInsuranceYesNoPage, false)
-          .flatMap(_.set(SettlorLastKnownAddressYesNoPage, false))
-
-    }
+  override def extractPassportIdCard(passport: PassportType,
+                                     index: Int,
+                                     answers: UserAnswers): Try[UserAnswers] = {
+    answers.set(SettlorPassportIDCardPage, passport.convert)
   }
-
-  private def extractNino(nino: String, answers: UserAnswers) = {
-    answers.set(SettlorNationalInsuranceNumberPage, nino)
-      .flatMap(_.set(SettlorNationalInsuranceYesNoPage, true))
-  }
-
-  private def extractAddress(address: Address, answers: UserAnswers) = {
-    address match {
-      case uk: UKAddress =>
-        answers
-          .set(SettlorNationalInsuranceYesNoPage, false)
-          .flatMap(_.set(SettlorUKAddressPage, uk))
-          .flatMap(_.set(SettlorLastKnownAddressYesNoPage, true))
-          .flatMap(_.set(SettlorLastKnownAddressUKYesNoPage, true))
-      case nonUk: InternationalAddress =>
-        answers
-          .set(SettlorNationalInsuranceYesNoPage, false)
-          .flatMap(_.set(SettlorInternationalAddressPage, nonUk))
-          .flatMap(_.set(SettlorLastKnownAddressYesNoPage, true))
-          .flatMap(_.set(SettlorLastKnownAddressUKYesNoPage, false))
-    }
-  }
-
-  private def extractPassportIdCard(passport: PassportOrIdCardDetails, answers: UserAnswers) =
-    answers
-      .set(SettlorPassportIDCardPage, passport)
-      .flatMap(_.set(SettlorNationalInsuranceYesNoPage, false))
-      .flatMap(_.set(SettlorLastKnownAddressYesNoPage, false))
 
 }

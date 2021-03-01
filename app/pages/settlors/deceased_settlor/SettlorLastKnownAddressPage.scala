@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package pages.settlors.living_settlor
+package pages.settlors.deceased_settlor
 
-import models.UKAddress
+import models.Address
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.settlors.LivingSettlors
+import sections.settlors.DeceasedSettlor
 
-final case class SettlorAddressUKPage(index : Int) extends QuestionPage[UKAddress] {
+case object SettlorLastKnownAddressPage extends QuestionPage[Address] {
 
-  override def path: JsPath = LivingSettlors.path \ index \ toString
+  override def path: JsPath = DeceasedSettlor.path \ toString
 
   override def toString: String = "address"
 }

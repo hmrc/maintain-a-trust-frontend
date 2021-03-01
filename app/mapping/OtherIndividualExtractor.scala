@@ -16,111 +16,41 @@
 
 package mapping
 
-import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import models.http.{DisplayTrustIdentificationType, NaturalPersonType, PassportType}
-import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
+import models.http.NaturalPersonType
+import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
+import pages.QuestionPage
 import pages.individual._
-import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
+import java.time.LocalDate
+import scala.util.Try
 
-class OtherIndividualExtractor @Inject() extends PlaybackExtractor[Option[List[NaturalPersonType]]] with Logging {
+class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
 
-  import PlaybackImplicits._
+  override val optionalEntity: Boolean = true
 
-  override def extract(answers: UserAnswers, data: Option[List[NaturalPersonType]]): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      data match {
-        case None => Right(answers)
-        case Some(individual) =>
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualAddressUKYesNoPage(index)
+  override def addressPage(index: Int): QuestionPage[Address] = OtherIndividualAddressPage(index)
 
-          val updated = individual.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
-            case (answers, (individual, index)) =>
+  override def ninoYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualNationalInsuranceYesNoPage(index)
+  override def ninoPage(index: Int): QuestionPage[String] = OtherIndividualNationalInsuranceNumberPage(index)
 
-            answers
-              .flatMap(_.set(OtherIndividualNamePage(index), individual.name))
-              .flatMap(answers => extractDateOfBirth(individual, index, answers))
-              .flatMap(answers => extractIdentification(individual, index, answers))
-              .flatMap {
-                _.set(
-                  OtherIndividualMetaData(index),
-                  MetaData(
-                    lineNo = individual.lineNo.getOrElse(""),
-                    bpMatchStatus = individual.bpMatchStatus,
-                    entityStart = individual.entityStart
-                  )
-                )
-              }
-              .flatMap(_.set(OtherIndividualSafeIdPage(index), individual.identification.flatMap(_.safeId)))
-          }
+  override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualPassportIDCardYesNoPage(index)
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = OtherIndividualPassportIDCardPage(index)
 
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(NaturalPersonType.toString))
-          }
-      }
-    }
+  override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualDateOfBirthYesNoPage(index)
+  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = OtherIndividualDateOfBirthPage(index)
 
-  private def extractIdentification(individual: NaturalPersonType, index: Int, answers: UserAnswers) = {
-    individual.identification match {
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = OtherIndividualMetaData(index)
 
-      case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
-        answers.set(OtherIndividualNationalInsuranceYesNoPage(index), true)
-          .flatMap(_.set(OtherIndividualNationalInsuranceNumberPage(index), nino))
-
-      case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
-        answers.set(OtherIndividualNationalInsuranceYesNoPage(index), false)
-          .flatMap(_.set(OtherIndividualPassportIDCardYesNoPage(index), false))
-          .flatMap(answers => extractAddress(address.convert, index, answers))
-
-      case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
-        answers.set(OtherIndividualNationalInsuranceYesNoPage(index), false)
-          .flatMap(answers => extractAddress(address.convert, index, answers))
-          .flatMap(answers => extractPassportIdCard(passport, index, answers))
-
-      case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustOrEstate api")
-        case object InvalidExtractorState extends RuntimeException
-        Failure(InvalidExtractorState)
-
-      case _ =>
-        answers.set(OtherIndividualNationalInsuranceYesNoPage(index), false)
-          .flatMap(_.set(OtherIndividualAddressYesNoPage(index), false))
-
-    }
-  }
-
-  private def extractDateOfBirth(individual: NaturalPersonType, index: Int, answers: UserAnswers) = {
-    individual.dateOfBirth match {
-      case Some(dob) =>
-        answers.set(OtherIndividualDateOfBirthYesNoPage(index), true)
-          .flatMap(_.set(OtherIndividualDateOfBirthPage(index), dob.convert))
-      case None =>
-        // Assumption that user answered no as dob is not provided
-        answers.set(OtherIndividualDateOfBirthYesNoPage(index), false)
-    }
-  }
-
-  private def extractPassportIdCard(passport: PassportType, index: Int, answers: UserAnswers) = {
-      answers.set(OtherIndividualPassportIDCardYesNoPage(index), true)
-        .flatMap(_.set(OtherIndividualPassportIDCardPage(index), passport.convert))
-  }
-
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers) = {
-    address match {
-      case uk: UKAddress =>
-        answers.set(OtherIndividualAddressPage(index), uk)
-          .flatMap(_.set(OtherIndividualAddressYesNoPage(index), true))
-          .flatMap(_.set(OtherIndividualAddressUKYesNoPage(index), true))
-      case nonUk: InternationalAddress =>
-        answers.set(OtherIndividualAddressPage(index), nonUk)
-          .flatMap(_.set(OtherIndividualAddressYesNoPage(index), true))
-          .flatMap(_.set(OtherIndividualAddressUKYesNoPage(index), false))
-    }
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: NaturalPersonType,
+                                 index: Int): Try[UserAnswers] = {
+    super.updateUserAnswers(answers, entity, index)
+      .flatMap(_.set(OtherIndividualNamePage(index), entity.name))
+      .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
+      .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
+      .flatMap(_.set(OtherIndividualSafeIdPage(index), entity.identification.flatMap(_.safeId)))
   }
 
 }

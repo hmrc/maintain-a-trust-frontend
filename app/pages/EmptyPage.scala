@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-package pages.settlors.deceased_settlor
+package pages
 
-import models.InternationalAddress
-import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.settlors.DeceasedSettlor
 
-case object SettlorInternationalAddressPage extends QuestionPage[InternationalAddress] {
-
-  override def path: JsPath = DeceasedSettlor.path \ toString
-
-  override def toString: String = "address"
+class EmptyPage[T] extends QuestionPage[T] {
+  override def path: JsPath = JsPath
 }

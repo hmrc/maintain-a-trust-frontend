@@ -16,21 +16,19 @@
 
 package mapping
 
-import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import models.{Address, InternationalAddress, UKAddress, UserAnswers}
+import mapping.PlaybackImplicits._
 import models.http.Correspondence
+import models.{Address, InternationalAddress, UKAddress, UserAnswers}
 import pages.correspondence._
 import pages.trustdetails.TrustNamePage
 import play.api.Logging
-import scala.util.{Failure, Success}
 
-class CorrespondenceExtractor @Inject() extends PlaybackExtractor[models.http.Correspondence] with Logging {
+import scala.util.{Failure, Success, Try}
 
-  import PlaybackImplicits._
+class CorrespondenceExtractor extends Logging {
 
-  override def extract(answers: UserAnswers, data: Correspondence): Either[PlaybackExtractionError, UserAnswers] =
-  {
+  def extract(answers: UserAnswers, data: Correspondence): Either[PlaybackExtractionError, UserAnswers] = {
     val updated = answers
       .set(CorrespondenceAbroadIndicatorPage, data.abroadIndicator)
       .flatMap(_.set(TrustNamePage, data.name))
@@ -47,13 +45,13 @@ class CorrespondenceExtractor @Inject() extends PlaybackExtractor[models.http.Co
     }
   }
 
-  private def extractAddress(address: Address, answers: UserAnswers) = {
-    address match {
-      case uk: UKAddress => answers.set(CorrespondenceAddressPage, uk)
-        .flatMap(_.set(CorrespondenceAddressInTheUKPage, true))
-      case nonUk: InternationalAddress => answers.set(CorrespondenceAddressPage, nonUk)
-        .flatMap(_.set(CorrespondenceAddressInTheUKPage, false))
-    }
+  private def extractAddress(address: Address, answers: UserAnswers): Try[UserAnswers] = address match {
+    case uk: UKAddress => answers
+      .set(CorrespondenceAddressInTheUKPage, true)
+      .flatMap(_.set(CorrespondenceAddressPage, uk))
+    case nonUk: InternationalAddress => answers
+      .set(CorrespondenceAddressInTheUKPage, false)
+      .flatMap(_.set(CorrespondenceAddressPage, nonUk))
   }
 
 }

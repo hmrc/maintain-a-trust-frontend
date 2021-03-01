@@ -41,8 +41,7 @@ class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter)
             converter.stringQuestion(SettlorUtrPage(index), userAnswers, "settlorBusinessUtr", name),
             converter.yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorBusinessAddressYesNo", name),
             converter.yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorBusinessAddressUKYesNo", name),
-            converter.addressQuestion(SettlorAddressUKPage(index), userAnswers, "settlorBusinessAddressUK", name),
-            converter.addressQuestion(SettlorAddressInternationalPage(index), userAnswers, "settlorBusinessAddressUK", name),
+            converter.addressQuestion(SettlorAddressPage(index), userAnswers, "settlorBusinessAddressUK", name),
             kindOfBusinessQuestion(SettlorCompanyTypePage(index), userAnswers, name, messages),
             converter.yesNoQuestion(SettlorCompanyTimePage(index), userAnswers, "settlorBusinessTime", name)
           ).flatten,

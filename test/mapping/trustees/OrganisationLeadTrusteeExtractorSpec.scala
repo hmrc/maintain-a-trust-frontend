@@ -19,19 +19,18 @@ package mapping.trustees
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
-import mapping.PlaybackExtractor
-import models.{MetaData, UserAnswers}
-import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType, Trustees}
+import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType}
 import models.pages.IndividualOrBusiness
+import models.{MetaData, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
 import utils.Constants.GB
 
-class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
+class OrganisationLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val leadTrusteeOrgExtractor : PlaybackExtractor[Option[List[Trustees]]] =
-    injector.instanceOf[TrusteesExtractor]
+  val leadTrusteeOrgExtractor : OrganisationLeadTrusteeExtractor =
+    injector.instanceOf[OrganisationLeadTrusteeExtractor]
 
   "Lead Trustee Organisation Extractor" - {
 
@@ -39,7 +38,7 @@ class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
 
       "must return an error" in {
 
-        val leadTrustee = None
+        val leadTrustee = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -71,7 +70,7 @@ class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeOrgExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
@@ -106,7 +105,7 @@ class LeadTrusteeOrgExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeOrgExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business

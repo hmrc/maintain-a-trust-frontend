@@ -18,40 +18,37 @@ package mapping.trustees
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
 import models.UserAnswers
-import models.http.{DisplayTrustEntitiesType, Trustees}
+import models.UserAnswersCombinator._
+import models.http.DisplayTrustEntitiesType
+import sections.Trustees
 
-class TrusteeExtractor @Inject()(trusteesExtractor: TrusteesExtractor) extends PlaybackExtractor[DisplayTrustEntitiesType] {
+class TrusteeExtractor @Inject()(individualLeadTrusteeExtractor: IndividualLeadTrusteeExtractor,
+                                 organisationLeadTrusteeExtractor: OrganisationLeadTrusteeExtractor,
+                                 individualTrusteeExtractor: IndividualTrusteeExtractor,
+                                 organisationTrusteeExtractor: OrganisationTrusteeExtractor) {
 
-  override def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
-
-    import models.UserAnswersCombinator._
-
-    val leadTrustee: List[Trustees] = List(data.leadTrustee.leadTrusteeOrg, data.leadTrustee.leadTrusteeInd).collect {
-      case Some(x) => x
-    }
-
-    val nonLeadTrustees: Option[List[Trustees]] = for {
-      trustees <- data.trustees
-      companies = trustees.flatMap(_.trusteeOrg)
-      individuals = trustees.flatMap(_.trusteeInd)
-    } yield {
-      companies ++ individuals
-    }
-
-    val allTrustees: List[Trustees] = leadTrustee ++ nonLeadTrustees.getOrElse(Nil)
+  def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
 
     val trustees: List[UserAnswers] = List(
-      trusteesExtractor.extract(answers, Some(allTrustees))
+      individualLeadTrusteeExtractor.extract(answers, data.leadTrustee.leadTrusteeInd.toList),
+      organisationLeadTrusteeExtractor.extract(answers, data.leadTrustee.leadTrusteeOrg.toList),
+      individualTrusteeExtractor.extract(answers, data.trustees.getOrElse(Nil).flatMap(_.trusteeInd)),
+      organisationTrusteeExtractor.extract(answers, data.trustees.getOrElse(Nil).flatMap(_.trusteeOrg))
     ).collect {
       case Right(z) => z
     }
 
-    (trustees, leadTrustee.isEmpty) match {
-      case (Nil, false) => Left(FailedToExtractData("Trustee Extraction Error"))
-      case (_, true) => Left(FailedToExtractData("Lead Trustee Extraction Error - Missing Lead Trustee"))
-      case _ => trustees.combine.map(Right.apply).getOrElse(Left(FailedToExtractData("Trustee Extraction Error")))
+    val noLeadTrustee: Boolean = data.leadTrustee.leadTrusteeInd.isEmpty && data.leadTrustee.leadTrusteeOrg.isEmpty
+
+    (trustees, noLeadTrustee) match {
+      case (Nil, _) => Left(FailedToExtractData("Trustee Extraction Error - No trustees"))
+      case (_, true) => Left(FailedToExtractData("Trustee Extraction Error - Missing lead trustee"))
+      case (_, false) =>
+        trustees.combineArraysWithPath(Trustees.path) match {
+          case Some(value) => Right(value)
+          case None => Left(FailedToExtractData("Trustee Extraction Error - Failed to combine trustee answers"))
+        }
     }
   }
 

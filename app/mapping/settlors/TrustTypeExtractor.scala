@@ -17,19 +17,18 @@
 package mapping.settlors
 
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
-import models.{URN, UserAnswers}
 import models.http.{DisplayTrust, DisplayTrustWillType}
 import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
+import models.{URN, UserAnswers}
 import pages.settlors.SetUpAfterSettlorDiedYesNoPage
 import pages.settlors.living_settlor.trust_type._
 import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class TrustTypeExtractor extends PlaybackExtractor[DisplayTrust] with Logging {
+class TrustTypeExtractor extends Logging {
 
-  override def extract(answers: UserAnswers, data: DisplayTrust): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: DisplayTrust): Either[PlaybackExtractionError, UserAnswers] = {
     extractTrustType(data, answers) match {
       case Success(a) =>
         Right(a)

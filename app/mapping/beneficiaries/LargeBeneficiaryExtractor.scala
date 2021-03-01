@@ -16,118 +16,60 @@
 
 package mapping.beneficiaries
 
-import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorState, PlaybackExtractionError}
-import mapping.PlaybackExtractor
-import mapping.PlaybackImplicits._
 import models.HowManyBeneficiaries.{Over1, Over1001, Over101, Over201, Over501}
-import models.http.{DisplayTrustCompanyType, DisplayTrustIdentificationOrgType, DisplayTrustLargeType}
-import models.{Address, Description, InternationalAddress, MetaData, UKAddress, UserAnswers}
+import models.http.DisplayTrustLargeType
+import models.{Address, Description, HowManyBeneficiaries, MetaData, UserAnswers}
+import pages.QuestionPage
 import pages.beneficiaries.large._
-import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
-class LargeBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustLargeType]]] with Logging {
+class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustLargeType] {
 
-  override def extract(answers: UserAnswers, data: Option[List[DisplayTrustLargeType]]): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      data match {
-        case None => Left(FailedToExtractData("No Large Beneficiary"))
-        case Some(largeBeneficiaries) =>
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = LargeBeneficiaryMetaData(index)
 
-          val updated = largeBeneficiaries.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)) {
-            case (answers, (largeBeneficiary, index)) =>
+  override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = LargeBeneficiaryDiscretionYesNoPage(index)
+  override def shareOfIncomePage(index: Int): QuestionPage[String] = LargeBeneficiaryShareOfIncomePage(index)
 
-              answers
-                .flatMap(_.set(LargeBeneficiaryNamePage(index), largeBeneficiary.organisationName))
-                .flatMap(answers => extractShareOfIncome(largeBeneficiary, index, answers))
-                .flatMap(answers => extractIdentification(largeBeneficiary.identification, index, answers))
-                .flatMap(
-                  _.set(
-                    LargeBeneficiaryDescriptionPage(index),
-                    Description(
-                      largeBeneficiary.description,
-                      largeBeneficiary.description1,
-                      largeBeneficiary.description2,
-                      largeBeneficiary.description3,
-                      largeBeneficiary.description4
-                    )
-                  )
-                )
-                .flatMap(answers => extractNumberOfBeneficiaries(largeBeneficiary.numberOfBeneficiary, index, answers))
-                .flatMap(_.set(LargeBeneficiarySafeIdPage(index), largeBeneficiary.identification.flatMap(_.safeId)))
-                .flatMap {
-                  _.set(
-                    LargeBeneficiaryMetaData(index),
-                    MetaData(
-                      lineNo = largeBeneficiary.lineNo.getOrElse(""),
-                      bpMatchStatus = largeBeneficiary.bpMatchStatus,
-                      entityStart = largeBeneficiary.entityStart
-                    )
-                  )
-                }
-          }
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = LargeBeneficiaryAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = LargeBeneficiaryAddressUKYesNoPage(index)
+  override def addressPage(index: Int): QuestionPage[Address] = LargeBeneficiaryAddressPage(index)
 
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(DisplayTrustCompanyType.toString))
-          }
-      }
-    }
+  override def utrPage(index: Int): QuestionPage[String] = LargeBeneficiaryUtrPage(index)
 
-  private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers) = {
-    identification map {
-      case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
-        answers.set(LargeBeneficiaryUtrPage(index), utr)
-          .flatMap(_.set(LargeBeneficiaryAddressYesNoPage(index), false))
-
-      case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
-        extractAddress(address.convert, index, answers)
-
-      case _ =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] only both utr and address parsed")
-        Failure(InvalidExtractorState)
-
-    } getOrElse {
-      answers.set(LargeBeneficiaryAddressYesNoPage(index), false)
-    }
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: DisplayTrustLargeType,
+                                 index: Int): Try[UserAnswers] = {
+    super.updateUserAnswers(answers, entity, index)
+      .flatMap(_.set(LargeBeneficiaryNamePage(index), entity.organisationName))
+      .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
+      .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
+      .flatMap(
+        _.set(
+          LargeBeneficiaryDescriptionPage(index),
+          Description(
+            entity.description,
+            entity.description1,
+            entity.description2,
+            entity.description3,
+            entity.description4
+          )
+        )
+      )
+      .flatMap(answers => extractNumberOfBeneficiaries(entity.numberOfBeneficiary, index, answers))
+      .flatMap(_.set(LargeBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
   }
 
-  private def extractShareOfIncome(largeBeneficiary: DisplayTrustLargeType, index: Int, answers: UserAnswers) = {
-    largeBeneficiary.beneficiaryShareOfIncome match {
-      case Some(income) =>
-        answers.set(LargeBeneficiaryDiscretionYesNoPage(index), false)
-          .flatMap(_.set(LargeBeneficiaryShareOfIncomePage(index), income))
-      case None =>
-        // Assumption that user answered yes as the share of income is not provided
-        answers.set(LargeBeneficiaryDiscretionYesNoPage(index), true)
-    }
-  }
-
-  private def extractNumberOfBeneficiaries(numberOfBeneficiary: String, index: Int, answers: UserAnswers): Try[UserAnswers] = {
+  private def extractNumberOfBeneficiaries(numberOfBeneficiary: String,
+                                           index: Int,
+                                           answers: UserAnswers): Try[UserAnswers] = {
+    val setValue = (x: HowManyBeneficiaries) => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), x)
     numberOfBeneficiary.toInt match {
-      case x if 0 to 100 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over1)
-      case x if 101 to 200 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over101)
-      case x if 201 to 500 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over201)
-      case x if 501 to 999 contains x => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over501)
-      case _ => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), Over1001)
-    }
-  }
-
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers) = {
-    address match {
-      case uk: UKAddress =>
-        answers.set(LargeBeneficiaryAddressPage(index), uk)
-          .flatMap(_.set(LargeBeneficiaryAddressYesNoPage(index), true))
-          .flatMap(_.set(LargeBeneficiaryAddressUKYesNoPage(index), true))
-      case nonUk: InternationalAddress =>
-        answers.set(LargeBeneficiaryAddressPage(index), nonUk)
-          .flatMap(_.set(LargeBeneficiaryAddressYesNoPage(index), true))
-          .flatMap(_.set(LargeBeneficiaryAddressUKYesNoPage(index), false))
+      case x if 0 to 100 contains x => setValue(Over1)
+      case x if 101 to 200 contains x => setValue(Over101)
+      case x if 201 to 500 contains x => setValue(Over201)
+      case x if 501 to 999 contains x => setValue(Over501)
+      case _ => setValue(Over1001)
     }
   }
 }

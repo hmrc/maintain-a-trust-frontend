@@ -16,19 +16,18 @@
 
 package models.http
 
-import models.Constant.dateTimePattern
 import models.FullName
-import org.joda.time.DateTime
-import play.api.libs.json.{Format, JodaReads, JodaWrites, Json}
+import play.api.libs.json.{Format, Json}
+
+import java.time.LocalDate
 
 case class NaturalPersonType(lineNo: Option[String],
                              bpMatchStatus: Option[String],
                              name: FullName,
-                             dateOfBirth: Option[DateTime],
+                             dateOfBirth: Option[LocalDate],
                              identification: Option[DisplayTrustIdentificationType],
-                             entityStart: String)
+                             entityStart: String) extends EntityType
 
 object NaturalPersonType {
-  implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))
   implicit val naturalPersonTypeFormat: Format[NaturalPersonType] = Json.format[NaturalPersonType]
 }

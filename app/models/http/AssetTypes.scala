@@ -16,11 +16,11 @@
 
 package models.http
 
-import models.Constant.dateTimePattern
 import models.pages.{ShareClass, ShareType}
-import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+
+import java.time.LocalDate
 
 sealed trait Asset
 
@@ -33,17 +33,16 @@ case class DisplayTrustAssets(monetary: List[AssetMonetaryAmount],
 
 object DisplayTrustAssets {
 
-  implicit val assetReads : Reads[DisplayTrustAssets] = (
+  implicit val reads : Reads[DisplayTrustAssets] = (
     (__ \ "monetary").read[List[AssetMonetaryAmount]].orElse(Reads.pure(Nil)) and
       (__ \ "propertyOrLand").read[List[PropertyLandType]].orElse(Reads.pure(Nil)) and
       (__ \ "shares").read[List[DisplaySharesType]].orElse(Reads.pure(Nil)) and
       (__ \ "business").read[List[DisplayBusinessAssetType]].orElse(Reads.pure(Nil)) and
       (__ \ "partnerShip").read[List[DisplayTrustPartnershipType]].orElse(Reads.pure(Nil)) and
       (__ \ "other").read[List[DisplayOtherAssetType]].orElse(Reads.pure(Nil))
-
     )(DisplayTrustAssets.apply _)
 
-  implicit val assetWrites : Writes[DisplayTrustAssets] = Json.writes[DisplayTrustAssets]
+  implicit val writes : Writes[DisplayTrustAssets] = Json.writes[DisplayTrustAssets]
 
 }
 
@@ -85,10 +84,9 @@ object DisplayBusinessAssetType {
 
 case class DisplayTrustPartnershipType(utr: Option[String],
                                        description: String,
-                                       partnershipStart: Option[DateTime]) extends Asset
+                                       partnershipStart: Option[LocalDate]) extends Asset
 
 object DisplayTrustPartnershipType {
-  implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))
   implicit val partnershipTypeFormat: Format[DisplayTrustPartnershipType] = Json.format[DisplayTrustPartnershipType]
 }
 

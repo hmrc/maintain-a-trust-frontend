@@ -16,37 +16,39 @@
 
 package models.http
 
-import models.Constant.dateTimePattern
 import models.FullName
-import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-sealed trait Protector
+import java.time.LocalDate
+
+sealed trait Protector extends EntityType
 
 case class DisplayTrustProtectorsType(protector: List[DisplayTrustProtector],
-                                      protectorCompany: List[DisplayTrustProtectorBusiness])
+                                      protectorCompany: List[DisplayTrustProtectorBusiness]) {
+
+  val count: Int = protector.size + protectorCompany.size
+}
 
 object DisplayTrustProtectorsType {
 
-  implicit val protectorReads : Reads[DisplayTrustProtectorsType] = (
-    (__ \ "protector").read[List[DisplayTrustProtector]].orElse(Reads.pure(Nil)) and
-      (__ \ "protectorCompany").read[List[DisplayTrustProtectorBusiness]].orElse(Reads.pure(Nil))
-    ) (DisplayTrustProtectorsType.apply _)
+  implicit val reads: Reads[DisplayTrustProtectorsType] = (
+    (__ \ "protector").readWithDefault[List[DisplayTrustProtector]](Nil) and
+      (__ \ "protectorCompany").readWithDefault[List[DisplayTrustProtectorBusiness]](Nil)
+    )(DisplayTrustProtectorsType.apply _)
 
-  implicit val protectorWrites : Writes[DisplayTrustProtectorsType] = Json.writes[DisplayTrustProtectorsType]
+  implicit val writes: Writes[DisplayTrustProtectorsType] = Json.writes[DisplayTrustProtectorsType]
 
 }
 
 case class DisplayTrustProtector(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  name: FullName,
-                                 dateOfBirth: Option[DateTime],
+                                 dateOfBirth: Option[LocalDate],
                                  identification: Option[DisplayTrustIdentificationType],
                                  entityStart: String) extends Protector
 
 object DisplayTrustProtector {
-  implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))
   implicit val protectorFormat: Format[DisplayTrustProtector] = Json.format[DisplayTrustProtector]
 }
 

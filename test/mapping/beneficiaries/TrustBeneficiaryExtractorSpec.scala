@@ -18,9 +18,8 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
-import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{AddressType, DisplayTrustBeneficiaryTrustType, DisplayTrustIdentificationOrgType}
+import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.trust._
 import utils.Constants.GB
@@ -57,7 +56,7 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
     entityStart = "2019-11-26"
   )
 
-  val trustExtractor : PlaybackExtractor[Option[List[DisplayTrustBeneficiaryTrustType]]] =
+  val trustExtractor : TrustBeneficiaryExtractor =
     injector.instanceOf[TrustBeneficiaryExtractor]
 
   "Trust Beneficiary Extractor" - {
@@ -66,7 +65,7 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "must return user answers" in {
 
-        val trusts = None
+        val trusts = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -93,7 +92,7 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = trustExtractor.extract(ua, Some(trust))
+        val extraction = trustExtractor.extract(ua, trust)
 
         extraction.right.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 1"
         extraction.right.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
@@ -111,7 +110,7 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = trustExtractor.extract(ua, Some(trusts))
+        val extraction = trustExtractor.extract(ua, trusts)
 
         extraction mustBe 'right
 

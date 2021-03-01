@@ -16,94 +16,35 @@
 
 package mapping.beneficiaries
 
-import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorState, PlaybackExtractionError}
-import mapping.PlaybackExtractor
-import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http._
+import models.{Address, MetaData, UserAnswers}
+import pages.QuestionPage
 import pages.beneficiaries.trust._
-import play.api.Logging
-import scala.util.{Failure, Success, Try}
-import mapping.PlaybackImplicits._
 
-class TrustBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustBeneficiaryTrustType]]] with Logging {
+import scala.util.Try
 
-  override def extract(answers: UserAnswers, data: Option[List[DisplayTrustBeneficiaryTrustType]]): Either[PlaybackExtractionError, UserAnswers] =
-    {
-      data match {
-        case None => Left(FailedToExtractData("No Trust Beneficiary"))
-        case Some(trusts) =>
+class TrustBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustBeneficiaryTrustType] {
 
-          val updated = trusts.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
-            case (answers, (trustBeneficiary, index)) =>
+  override def namePage(index: Int): QuestionPage[String] = TrustBeneficiaryNamePage(index)
+  override def safeIdPage(index: Int): QuestionPage[String] = TrustBeneficiarySafeIdPage(index)
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = TrustBeneficiaryMetaData(index)
 
-            answers
-              .flatMap(_.set(TrustBeneficiaryNamePage(index), trustBeneficiary.organisationName))
-              .flatMap(answers => extractShareOfIncome(trustBeneficiary, index, answers))
-              .flatMap(_.set(TrustBeneficiarySafeIdPage(index), trustBeneficiary.identification.flatMap(_.safeId)))
-              .flatMap(answers => extractIdentification(trustBeneficiary.identification, index, answers))
-              .flatMap {
-                _.set(
-                  TrustBeneficiaryMetaData(index),
-                  MetaData(
-                    lineNo = trustBeneficiary.lineNo.getOrElse(""),
-                    bpMatchStatus = trustBeneficiary.bpMatchStatus,
-                    entityStart = trustBeneficiary.entityStart
-                  )
-                )
-              }
-          }
+  override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryDiscretionYesNoPage(index)
+  override def shareOfIncomePage(index: Int): QuestionPage[String] = TrustBeneficiaryShareOfIncomePage(index)
 
-          updated match {
-            case Success(a) =>
-              Right(a)
-            case Failure(exception) =>
-              logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-              Left(FailedToExtractData(DisplayTrustBeneficiaryTrustType.toString))
-          }
-      }
-    }
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryAddressUKYesNoPage(index)
+  override def addressPage(index: Int): QuestionPage[Address] = TrustBeneficiaryAddressPage(index)
 
-  private def extractShareOfIncome(trustBeneficiary: DisplayTrustBeneficiaryTrustType, index: Int, answers: UserAnswers) = {
-    trustBeneficiary.beneficiaryShareOfIncome match {
-      case Some(income) =>
-        answers.set(TrustBeneficiaryDiscretionYesNoPage(index), false)
-          .flatMap(_.set(TrustBeneficiaryShareOfIncomePage(index), income))
-      case None =>
-        // Assumption that user answered yes as the share of income is not provided
-        answers.set(TrustBeneficiaryDiscretionYesNoPage(index), true)
-    }
+  override def utrPage(index: Int): QuestionPage[String] = TrustBeneficiaryUtrPage(index)
+
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: DisplayTrustBeneficiaryTrustType,
+                                 index: Int): Try[UserAnswers] = {
+    super.updateUserAnswers(answers, entity, index)
+      .flatMap(_.set(namePage(index), entity.organisationName))
+      .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
+      .flatMap(_.set(safeIdPage(index), entity.identification.flatMap(_.safeId)))
+      .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
   }
-
-  private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers) = {
-    identification map {
-      case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
-        answers.set(TrustBeneficiaryUtrPage(index), utr)
-          .flatMap(_.set(TrustBeneficiaryAddressYesNoPage(index), false))
-
-      case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
-        extractAddress(address.convert, index, answers)
-
-      case _ =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] both utr/urn and address parsed")
-        Failure(InvalidExtractorState)
-
-    } getOrElse {
-      answers.set(TrustBeneficiaryAddressYesNoPage(index), false)
-    }
-  }
-
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers) = {
-    address match {
-      case uk: UKAddress =>
-        answers.set(TrustBeneficiaryAddressPage(index), uk)
-          .flatMap(_.set(TrustBeneficiaryAddressYesNoPage(index), true))
-          .flatMap(_.set(TrustBeneficiaryAddressUKYesNoPage(index), true))
-      case nonUk: InternationalAddress =>
-        answers.set(TrustBeneficiaryAddressPage(index), nonUk)
-          .flatMap(_.set(TrustBeneficiaryAddressYesNoPage(index), true))
-          .flatMap(_.set(TrustBeneficiaryAddressUKYesNoPage(index), false))
-    }
-  }
-
 }

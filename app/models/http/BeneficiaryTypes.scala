@@ -16,28 +16,50 @@
 
 package models.http
 
-import models.Constant.dateTimePattern
 import models.FullName
 import models.pages.RoleInCompany
-import org.joda.time.DateTime
+import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class DisplayTrustBeneficiaryType(individualDetails: Option[List[DisplayTrustIndividualDetailsType]],
-                                       company: Option[List[DisplayTrustCompanyType]],
-                                       trust: Option[List[DisplayTrustBeneficiaryTrustType]],
-                                       charity: Option[List[DisplayTrustCharityType]],
-                                       unidentified: Option[List[DisplayTrustUnidentifiedType]],
-                                       large: Option[List[DisplayTrustLargeType]],
-                                       other: Option[List[DisplayTrustOtherType]])
+import java.time.LocalDate
+
+sealed trait BeneficiaryType extends EntityType
+
+sealed trait OrgBeneficiaryType extends BeneficiaryType {
+  val organisationName: String
+  val beneficiaryShareOfIncome: Option[String]
+  val identification: Option[DisplayTrustIdentificationOrgType]
+  val countryOfResidence: Option[String]
+}
+
+case class DisplayTrustBeneficiaryType(individualDetails: List[DisplayTrustIndividualDetailsType],
+                                       company: List[DisplayTrustCompanyType],
+                                       trust: List[DisplayTrustBeneficiaryTrustType],
+                                       charity: List[DisplayTrustCharityType],
+                                       unidentified: List[DisplayTrustUnidentifiedType],
+                                       large: List[DisplayTrustLargeType],
+                                       other: List[DisplayTrustOtherType])
 
 object DisplayTrustBeneficiaryType {
-  implicit val beneficiaryTypeFormat: Format[DisplayTrustBeneficiaryType] = Json.format[DisplayTrustBeneficiaryType]
+
+  implicit val reads: Reads[DisplayTrustBeneficiaryType] = (
+    (__ \ "individualDetails").readWithDefault[List[DisplayTrustIndividualDetailsType]](Nil) and
+      (__ \ "company").readWithDefault[List[DisplayTrustCompanyType]](Nil) and
+      (__ \ "trust").readWithDefault[List[DisplayTrustBeneficiaryTrustType]](Nil) and
+      (__ \ "charity").readWithDefault[List[DisplayTrustCharityType]](Nil) and
+      (__ \ "unidentified").readWithDefault[List[DisplayTrustUnidentifiedType]](Nil) and
+      (__ \ "large").readWithDefault[List[DisplayTrustLargeType]](Nil) and
+      (__ \ "other").readWithDefault[List[DisplayTrustOtherType]](Nil)
+    )(DisplayTrustBeneficiaryType.apply _)
+
+  implicit val writes: Writes[DisplayTrustBeneficiaryType] = Json.writes[DisplayTrustBeneficiaryType]
+
 }
 
 case class DisplayTrustIndividualDetailsType(lineNo: Option[String],
                                              bpMatchStatus: Option[String],
                                              name: FullName,
-                                             dateOfBirth: Option[DateTime],
+                                             dateOfBirth: Option[LocalDate],
                                              countryOfResidence: Option[String],
                                              countryOfNationality: Option[String],
                                              vulnerableBeneficiary: Option[Boolean],
@@ -45,20 +67,20 @@ case class DisplayTrustIndividualDetailsType(lineNo: Option[String],
                                              beneficiaryDiscretion: Option[Boolean],
                                              beneficiaryShareOfIncome: Option[String],
                                              identification: Option[DisplayTrustIdentificationType],
-                                             entityStart: String)
+                                             entityStart: String) extends BeneficiaryType
 
 object DisplayTrustIndividualDetailsType {
-  implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))
   implicit val individualDetailsTypeFormat: Format[DisplayTrustIndividualDetailsType] = Json.format[DisplayTrustIndividualDetailsType]
 }
 
 case class DisplayTrustCompanyType(lineNo: Option[String],
-                                   bpMatchStatus: Option[String], organisationName: String,
+                                   bpMatchStatus: Option[String],
+                                   organisationName: String,
                                    beneficiaryDiscretion: Option[Boolean],
                                    beneficiaryShareOfIncome: Option[String],
                                    countryOfResidence: Option[String],
                                    identification: Option[DisplayTrustIdentificationOrgType],
-                                   entityStart: String)
+                                   entityStart: String) extends OrgBeneficiaryType
 
 object DisplayTrustCompanyType {
   implicit val companyTypeFormat: Format[DisplayTrustCompanyType] = Json.format[DisplayTrustCompanyType]
@@ -70,7 +92,7 @@ case class DisplayTrustBeneficiaryTrustType(lineNo: Option[String],
                                             beneficiaryDiscretion: Option[Boolean],
                                             beneficiaryShareOfIncome: Option[String],
                                             identification: Option[DisplayTrustIdentificationOrgType],
-                                            entityStart: String)
+                                            entityStart: String) extends BeneficiaryType
 
 object DisplayTrustBeneficiaryTrustType {
   implicit val beneficiaryTrustTypeFormat: Format[DisplayTrustBeneficiaryTrustType] = Json.format[DisplayTrustBeneficiaryTrustType]
@@ -83,7 +105,7 @@ case class DisplayTrustCharityType(lineNo: Option[String],
                                    beneficiaryShareOfIncome: Option[String],
                                    countryOfResidence: Option[String],
                                    identification: Option[DisplayTrustIdentificationOrgType],
-                                   entityStart: String)
+                                   entityStart: String) extends OrgBeneficiaryType
 
 object DisplayTrustCharityType {
   implicit val charityTypeFormat: Format[DisplayTrustCharityType] = Json.format[DisplayTrustCharityType]
@@ -94,7 +116,7 @@ case class DisplayTrustUnidentifiedType(lineNo: Option[String],
                                         description: String,
                                         beneficiaryDiscretion: Option[Boolean],
                                         beneficiaryShareOfIncome: Option[String],
-                                        entityStart: String)
+                                        entityStart: String) extends BeneficiaryType
 
 object DisplayTrustUnidentifiedType {
   implicit val unidentifiedTypeFormat: Format[DisplayTrustUnidentifiedType] = Json.format[DisplayTrustUnidentifiedType]
@@ -113,7 +135,7 @@ case class DisplayTrustLargeType(lineNo: Option[String],
                                  identification: Option[DisplayTrustIdentificationOrgType],
                                  beneficiaryDiscretion: Option[Boolean],
                                  beneficiaryShareOfIncome: Option[String],
-                                 entityStart: String)
+                                 entityStart: String) extends BeneficiaryType
 
 object DisplayTrustLargeType {
   implicit val largeTypeFormat: Format[DisplayTrustLargeType] = Json.format[DisplayTrustLargeType]
@@ -125,7 +147,7 @@ case class DisplayTrustOtherType(lineNo: Option[String],
                                  address: Option[AddressType],
                                  beneficiaryDiscretion: Option[Boolean],
                                  beneficiaryShareOfIncome: Option[String],
-                                 entityStart: String)
+                                 entityStart: String) extends BeneficiaryType
 
 object DisplayTrustOtherType {
   implicit val otherTypeFormat: Format[DisplayTrustOtherType] = Json.format[DisplayTrustOtherType]

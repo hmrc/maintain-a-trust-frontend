@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package pages.protectors
+package models.http
 
-import pages.QuestionPage
-import play.api.libs.json.JsPath
-
-case class DoesTrustHaveAProtectorYesNoPage() extends QuestionPage[Boolean] {
-
-  override def toString: String = "doesTrustHaveProtectorYesNo"
-
-  override def path: JsPath = JsPath \ toString
+trait EntityType {
+  val bpMatchStatus: Option[String]
+  val lineNo: Option[String]
+  val entityStart: String
 }

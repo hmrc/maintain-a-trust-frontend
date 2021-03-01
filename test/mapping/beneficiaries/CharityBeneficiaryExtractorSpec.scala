@@ -18,7 +18,6 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
 import models.http.{AddressType, DisplayTrustCharityType, DisplayTrustIdentificationOrgType}
 import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
@@ -65,7 +64,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
     entityStart = "2019-11-26"
   )
 
-  val charityExtractor: PlaybackExtractor[Option[List[DisplayTrustCharityType]]] =
+  val charityExtractor: CharityBeneficiaryExtractor =
     injector.instanceOf[CharityBeneficiaryExtractor]
 
   "Charity Beneficiary Extractor" - {
@@ -74,7 +73,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "must return user answers" in {
 
-        val charities = None
+        val charities = Nil
 
         val ua = UserAnswers("fakeId", utr)
 
@@ -104,7 +103,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", utr)
 
-          val extraction = charityExtractor.extract(ua, Some(charity))
+          val extraction = charityExtractor.extract(ua, charity)
 
           extraction.right.value.get(CharityBeneficiaryNamePage(0)).get mustBe "Charity 1"
           extraction.right.value.get(CharityBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
@@ -125,7 +124,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", utr)
 
-          val extraction = charityExtractor.extract(ua, Some(charities))
+          val extraction = charityExtractor.extract(ua, charities)
 
           extraction mustBe 'right
 
@@ -186,7 +185,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
 
-          val extraction = charityExtractor.extract(ua, Some(charity))
+          val extraction = charityExtractor.extract(ua, charity)
 
           extraction.right.value.get(CharityBeneficiaryNamePage(0)).get mustBe "Charity 1"
           extraction.right.value.get(CharityBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
@@ -207,7 +206,7 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
           val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
 
-          val extraction = charityExtractor.extract(ua, Some(charities))
+          val extraction = charityExtractor.extract(ua, charities)
 
           extraction mustBe 'right
 

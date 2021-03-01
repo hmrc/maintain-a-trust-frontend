@@ -16,118 +16,35 @@
 
 package mapping.beneficiaries
 
-import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, InvalidExtractorState, PlaybackExtractionError}
-import mapping.PlaybackExtractor
-import models.{Address, InternationalAddress, MetaData, UKAddress, UserAnswers}
-import models.http.{DisplayTrustCharityType, DisplayTrustIdentificationOrgType}
+import models.http.DisplayTrustCharityType
+import models.{Address, MetaData, UserAnswers}
+import pages.QuestionPage
 import pages.beneficiaries.charity._
-import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
-import mapping.PlaybackImplicits._
-import utils.Constants.GB
+import scala.util.Try
 
-class CharityBeneficiaryExtractor @Inject() extends PlaybackExtractor[Option[List[DisplayTrustCharityType]]] with Logging {
+class CharityBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustCharityType] {
 
-  override def extract(answers: UserAnswers, data: Option[List[DisplayTrustCharityType]]): Either[PlaybackExtractionError, UserAnswers] = {
+  override def namePage(index: Int): QuestionPage[String] = CharityBeneficiaryNamePage(index)
+  override def safeIdPage(index: Int): QuestionPage[String] = CharityBeneficiarySafeIdPage(index)
+  override def metaDataPage(index: Int): QuestionPage[MetaData] = CharityBeneficiaryMetaData(index)
 
-    data match {
-      case None => Left(FailedToExtractData("No Charity Beneficiary"))
-      case Some(charities) =>
+  override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryDiscretionYesNoPage(index)
+  override def shareOfIncomePage(index: Int): QuestionPage[String] = CharityBeneficiaryShareOfIncomePage(index)
 
-        logger.debug(s"[UTR/URN: ${answers.identifier}] Extracting $charities")
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryCountryOfResidenceYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = CharityBeneficiaryCountryOfResidencePage(index)
 
-        val updated = charities.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)) {
-          case (answers, (charityBeneficiary, index)) =>
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryAddressYesNoPage(index)
+  override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryAddressUKYesNoPage(index)
+  override def addressPage(index: Int): QuestionPage[Address] = CharityBeneficiaryAddressPage(index)
 
-            answers
-              .flatMap(_.set(CharityBeneficiaryNamePage(index), charityBeneficiary.organisationName))
-              .flatMap(answers => extractShareOfIncome(charityBeneficiary, index, answers))
-              .flatMap(_.set(CharityBeneficiarySafeIdPage(index), charityBeneficiary.identification.flatMap(_.safeId)))
-              .flatMap(answers => extractCountryOfResidence(charityBeneficiary, index, answers))
-              .flatMap(answers => extractIdentification(charityBeneficiary.identification, index, answers))
-              .flatMap {
-                _.set(
-                  CharityBeneficiaryMetaData(index),
-                  MetaData(
-                    lineNo = charityBeneficiary.lineNo.getOrElse(""),
-                    bpMatchStatus = charityBeneficiary.bpMatchStatus,
-                    entityStart = charityBeneficiary.entityStart
-                  )
-                )
-              }
-        }
+  override def utrPage(index: Int): QuestionPage[String] = CharityBeneficiaryUtrPage(index)
 
-        updated match {
-          case Success(a) =>
-            Right(a)
-          case Failure(exception) =>
-            logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-            Left(FailedToExtractData(DisplayTrustCharityType.toString))
-        }
-    }
-  }
-
-  private def extractIdentification(identification: Option[DisplayTrustIdentificationOrgType], index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
-      identification map {
-        case DisplayTrustIdentificationOrgType(safeId, Some(utr), None) =>
-          answers.set(CharityBeneficiaryUtrPage(index), utr)
-            .flatMap(_.set(CharityBeneficiaryAddressYesNoPage(index), false))
-
-        case DisplayTrustIdentificationOrgType(safeId, None, Some(address)) =>
-          extractAddress(address.convert, index, answers)
-        case _ =>
-          logger.error(s"[UTR/URN: ${answers.identifier}] both utr and address parsed")
-          Failure(InvalidExtractorState)
-
-      } getOrElse {
-        answers.set(CharityBeneficiaryAddressYesNoPage(index), false)
-      }
-    }
-  }
-
-  private def extractShareOfIncome(charityBeneficiary: DisplayTrustCharityType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
-      charityBeneficiary.beneficiaryShareOfIncome match {
-        case Some(income) =>
-          answers.set(CharityBeneficiaryDiscretionYesNoPage(index), false)
-            .flatMap(_.set(CharityBeneficiaryShareOfIncomePage(index), income))
-        case None =>
-          // Assumption that user answered yes as the share of income is not provided
-          answers.set(CharityBeneficiaryDiscretionYesNoPage(index), true)
-      }
-    }
-  }
-
-  private def extractCountryOfResidence(charityBeneficiary: DisplayTrustCharityType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    charityBeneficiary.countryOfResidence match {
-      case Some(GB) =>
-        answers.set(CharityBeneficiaryCountryOfResidenceYesNoPage(index), true)
-          .flatMap(_.set(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), true))
-          .flatMap(_.set(CharityBeneficiaryCountryOfResidencePage(index), GB))
-      case Some(country) =>
-        answers.set(CharityBeneficiaryCountryOfResidenceYesNoPage(index), true)
-          .flatMap(_.set(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), false))
-          .flatMap(_.set(CharityBeneficiaryCountryOfResidencePage(index), country))
-      case None =>
-        answers.set(CharityBeneficiaryCountryOfResidenceYesNoPage(index), false)
-    }
-  }
-
-  private def extractAddress(address: Address, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
-      address match {
-        case uk: UKAddress =>
-          answers.set(CharityBeneficiaryAddressPage(index), uk)
-            .flatMap(_.set(CharityBeneficiaryAddressYesNoPage(index), true))
-            .flatMap(_.set(CharityBeneficiaryAddressUKYesNoPage(index), true))
-        case nonUk: InternationalAddress =>
-          answers.set(CharityBeneficiaryAddressPage(index), nonUk)
-            .flatMap(_.set(CharityBeneficiaryAddressYesNoPage(index), true))
-            .flatMap(_.set(CharityBeneficiaryAddressUKYesNoPage(index), false))
-      }
-    }
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: DisplayTrustCharityType,
+                                 index: Int): Try[UserAnswers] = {
+    updateUserAnswersForOrgBeneficiary(answers, entity, index)
   }
 }

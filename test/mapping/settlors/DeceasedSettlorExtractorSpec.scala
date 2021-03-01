@@ -16,21 +16,20 @@
 
 package mapping.settlors
 
-import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
 import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustWillType, PassportType}
-import models.{FullName, MetaData, UserAnswers}
-import org.joda.time.DateTime
+import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.deceased_settlor._
 import utils.Constants.GB
 
+import java.time.LocalDate
+
 class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val deceasedSettlorExtractor : PlaybackExtractor[Option[DisplayTrustWillType]] =
+  val deceasedSettlorExtractor : DeceasedSettlorExtractor =
     injector.instanceOf[DeceasedSettlorExtractor]
 
   "Deceased Settlor Extractor" - {
@@ -39,7 +38,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
       "must return user answers" in {
 
-        val deceasedSettlor = None
+        val deceasedSettlor = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -56,7 +55,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with minimum data of name, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -67,7 +66,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
@@ -77,8 +76,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
       }
 
@@ -86,11 +84,11 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with name and date of death, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
-          dateOfDeath = Some(DateTime.parse("2019-02-01")),
+          dateOfDeath = Some(LocalDate.parse("2019-02-01")),
           identification = Some(
             DisplayTrustIdentificationType(
               safeId = Some("34234234-34234-234234"),
@@ -104,7 +102,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
@@ -114,8 +112,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         extraction.right.value.get(DeceasedSettlorSafeIdPage).get mustBe "34234234-34234-234234"
       }
@@ -123,7 +120,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with name and nino, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -141,7 +138,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId","utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
@@ -151,15 +148,14 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe true
         extraction.right.value.get(SettlorNationalInsuranceNumberPage).get mustBe "NA1111111A"
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
       }
 
       "with name and UK address, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -177,7 +173,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId","utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
@@ -188,16 +184,14 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
         extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe true
-        extraction.right.value.get(SettlorUKAddressPage) must be(defined)
-        extraction.right.value.get(SettlorUKAddressPage).get.postcode mustBe "NE11NE"
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage).get mustBe UKAddress("line 1", "line2", None, None, "NE11NE")
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
       }
 
       "with name and International address, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -215,7 +209,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId","utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
@@ -226,16 +220,14 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
         extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe false
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) must be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage).get.country mustBe "DE"
+        extraction.right.value.get(SettlorLastKnownAddressPage).get mustBe InternationalAddress("Int line 1", "Int line2", None, "DE")
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
       }
 
       "with name and passport/ID Card, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -253,7 +245,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
@@ -264,8 +256,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
         extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) must be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage).get.country mustBe "DE"
       }
@@ -273,11 +264,11 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
       "with name, date of death, date of birth and nino, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = Some(DateTime.parse("1970-10-15")),
-          dateOfDeath = Some(DateTime.parse("2019-02-01")),
+          dateOfBirth = Some(LocalDate.parse("1970-10-15")),
+          dateOfDeath = Some(LocalDate.parse("2019-02-01")),
           identification = Some(
             DisplayTrustIdentificationType(
               safeId = None,
@@ -291,7 +282,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
@@ -301,15 +292,14 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe true
         extraction.right.value.get(SettlorNationalInsuranceNumberPage).get mustBe "NA1111111A"
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-        extraction.right.value.get(SettlorUKAddressPage) mustNot be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
       }
 
       "with name, UK Address, passport/ID Card, metaData and safeId, must return user answers updated" in {
 
         val deceasedSettlor = DisplayTrustWillType(
-          lineNo = "1",
+          lineNo = Some("1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
           dateOfBirth = None,
@@ -327,7 +317,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = deceasedSettlorExtractor.extract(ua, Some(deceasedSettlor))
+        val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
         extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
@@ -338,8 +328,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
         extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe true
-        extraction.right.value.get(SettlorUKAddressPage) must be(defined)
-        extraction.right.value.get(SettlorInternationalAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressPage) must be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage) must be(defined)
         extraction.right.value.get(SettlorPassportIDCardPage).get.country mustBe "DE"
         extraction.right.value.get(DeceasedSettlorSafeIdPage).get mustBe "XK0000100152366"

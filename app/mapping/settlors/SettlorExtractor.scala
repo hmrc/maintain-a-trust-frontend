@@ -18,32 +18,37 @@ package mapping.settlors
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
 import models.UserAnswers
-import models.http.DisplayTrustEntitiesType
 import models.UserAnswersCombinator._
+import models.http.DisplayTrustEntitiesType
+import sections.settlors.LivingSettlors
 
 class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtractor,
-                                 livingSettlorExtractor: LivingSettlorExtractor) extends PlaybackExtractor[DisplayTrustEntitiesType] {
+                                 individualSettlorExtractor: IndividualSettlorExtractor,
+                                 businessSettlorExtractor: BusinessSettlorExtractor) {
 
-  override def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
-
-    val livingSettlors = for {
-      settlors <- data.settlors
-      companies = settlors.settlorCompany.getOrElse(Nil)
-      living = settlors.settlor.getOrElse(Nil)
-    } yield  companies ++ living
+  def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
 
     val settlors: List[UserAnswers] = List(
-      deceasedSettlorExtractor.extract(answers, data.deceased),
-      livingSettlorExtractor.extract(answers, livingSettlors)
+      deceasedSettlorExtractor.extract(answers, data.deceased.toList),
+      individualSettlorExtractor.extract(answers, data.settlors.map(_.settlor).getOrElse(Nil)),
+      businessSettlorExtractor.extract(answers, data.settlors.map(_.settlorCompany).getOrElse(Nil))
     ).collect {
       case Right(z) => z
     }
 
-    settlors match {
-      case Nil => Left(FailedToExtractData("Settlor Extraction Error"))
-      case _ => settlors.combine.map(Right.apply).getOrElse(Left(FailedToExtractData("Settlor Extraction Error")))
+    val noDeceasedSettlor: Boolean = data.deceased.isEmpty
+
+    (settlors, noDeceasedSettlor) match {
+      case (Nil, _) => Left(FailedToExtractData("Settlor Extraction Error - No settlors"))
+      case (_, true) => settlors.combineArraysWithPath(LivingSettlors.path) match {
+        case Some(value) => Right(value)
+        case None => Left(FailedToExtractData("Settlor Extraction Error - Failed to combine living settlor answers"))
+      }
+      case (_, false) => settlors.combine match {
+        case Some(value) => Right(value)
+        case None => Left(FailedToExtractData("Settlor Extraction Error - Failed to combine deceased settlor answers"))
+      }
     }
   }
 

@@ -18,10 +18,9 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
 import models.HowManyBeneficiaries.{Over1, Over1001, Over201}
-import models.{Description, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLargeType}
+import models.{Description, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.large._
 import utils.Constants.GB
@@ -68,7 +67,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
     entityStart = "2019-11-26"
   )
 
-  val largeBeneficiaryExtractor : PlaybackExtractor[Option[List[DisplayTrustLargeType]]] =
+  val largeBeneficiaryExtractor : LargeBeneficiaryExtractor =
     injector.instanceOf[LargeBeneficiaryExtractor]
 
   "Large Beneficiary Extractor" - {
@@ -77,7 +76,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
       "must return user answers" in {
 
-        val largeBeneficiaries = None
+        val largeBeneficiaries = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -118,7 +117,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = largeBeneficiaryExtractor.extract(ua, Some(largeBeneficiary))
+        val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiary)
 
         extraction.right.value.get(LargeBeneficiaryNamePage(0)).get mustBe "Large 1"
         extraction.right.value.get(LargeBeneficiaryDescriptionPage(0)).get mustBe Description("Description", Some("Description 1"), None, None, None)
@@ -138,7 +137,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = largeBeneficiaryExtractor.extract(ua, Some(largeBeneficiaries))
+        val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiaries)
 
         extraction mustBe 'right
 

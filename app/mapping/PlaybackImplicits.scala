@@ -16,15 +16,13 @@
 
 package mapping
 
-import java.time.LocalDate
 import models._
 import models.http.{AddressType, PassportType}
-import org.joda.time.DateTime
 import utils.Constants.GB
 
 object PlaybackImplicits {
 
-  private def convertAddress(address: AddressType) : Address = address.postCode match {
+  private def convertAddress(address: AddressType): Address = address.postCode match {
     case Some(post) =>
       UKAddress(
         line1 = address.line1,
@@ -42,7 +40,7 @@ object PlaybackImplicits {
       )
   }
 
-  private def convertAddress(address: Address) : AddressType = {
+  private def convertAddress(address: Address): AddressType = {
     address match {
       case UKAddress(line1, line2, line3, line4, postcode) =>
         AddressType(
@@ -65,25 +63,21 @@ object PlaybackImplicits {
     }
   }
 
-  implicit class DateTimeConverter(date : DateTime) {
-    def convert : LocalDate = LocalDate.of(date.getYear, date.getMonthOfYear, date.getDayOfMonth)
-  }
-
   implicit class PassportTypeConverter(passport: PassportType) {
-    def convert : PassportOrIdCardDetails =
+    def convert: PassportOrIdCardDetails =
       PassportOrIdCardDetails(passport.countryOfIssue, passport.number, passport.expirationDate)
   }
 
-  implicit class AddressOptionConverter(address : Option[AddressType]) {
-    def convert : Option[Address] = address.map(convertAddress)
+  implicit class AddressOptionConverter(address: Option[AddressType]) {
+    def convert: Option[Address] = address.map(convertAddress)
   }
 
-  implicit class AddressConverter(address : AddressType) {
-    def convert : Address = convertAddress(address)
+  implicit class AddressConverter(address: AddressType) {
+    def convert: Address = convertAddress(address)
   }
 
   implicit class UkOrNonUkAddressConverter(address: Address) {
-    def convert : AddressType = convertAddress(address)
+    def convert: AddressType = convertAddress(address)
   }
 
 }

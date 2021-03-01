@@ -16,30 +16,39 @@
 
 package models.http
 
-import models.Constant.dateTimePattern
 import models.FullName
 import models.pages.KindOfBusiness
-import org.joda.time.DateTime
-import play.api.libs.json.{Format, JodaReads, JodaWrites, Json}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-sealed trait LivingSettlor
+import java.time.LocalDate
 
-case class DisplayTrustSettlors(settlor: Option[List[DisplayTrustSettlor]],
-                                settlorCompany: Option[List[DisplayTrustSettlorCompany]])
+sealed trait SettlorType extends EntityType
+
+sealed trait LivingSettlor extends SettlorType
+
+case class DisplayTrustSettlors(settlor: List[DisplayTrustSettlor],
+                                settlorCompany: List[DisplayTrustSettlorCompany])
 
 object DisplayTrustSettlors {
-  implicit val settlorsFormat: Format[DisplayTrustSettlors] = Json.format[DisplayTrustSettlors]
+
+  implicit val reads: Reads[DisplayTrustSettlors] = (
+    (__ \ "settlor").readWithDefault[List[DisplayTrustSettlor]](Nil) and
+      (__ \ "settlorCompany").readWithDefault[List[DisplayTrustSettlorCompany]](Nil)
+    )(DisplayTrustSettlors.apply _)
+
+  implicit val writes: Writes[DisplayTrustSettlors] = Json.writes[DisplayTrustSettlors]
+
 }
 
 case class DisplayTrustSettlor(lineNo: Option[String],
                                bpMatchStatus: Option[String],
                                name: FullName,
-                               dateOfBirth: Option[DateTime],
+                               dateOfBirth: Option[LocalDate],
                                identification: Option[DisplayTrustIdentificationType],
                                entityStart: String) extends LivingSettlor
 
 object DisplayTrustSettlor {
-  implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))
   implicit val settlorFormat: Format[DisplayTrustSettlor] = Json.format[DisplayTrustSettlor]
 }
 
@@ -55,15 +64,14 @@ object DisplayTrustSettlorCompany {
   implicit val settlorCompanyFormat: Format[DisplayTrustSettlorCompany] = Json.format[DisplayTrustSettlorCompany]
 }
 
-case class DisplayTrustWillType(lineNo: String,
+case class DisplayTrustWillType(lineNo: Option[String],
                                 bpMatchStatus: Option[String],
                                 name: FullName,
-                                dateOfBirth: Option[DateTime],
-                                dateOfDeath: Option[DateTime],
+                                dateOfBirth: Option[LocalDate],
+                                dateOfDeath: Option[LocalDate],
                                 identification: Option[DisplayTrustIdentificationType],
-                                entityStart: String)
+                                entityStart: String) extends SettlorType
 
 object DisplayTrustWillType {
-  implicit val dateFormat: Format[DateTime] = Format[DateTime](JodaReads.jodaDateReads(dateTimePattern), JodaWrites.jodaDateWrites(dateTimePattern))
   implicit val willTypeFormat: Format[DisplayTrustWillType] = Json.format[DisplayTrustWillType]
 }

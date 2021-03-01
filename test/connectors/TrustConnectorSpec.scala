@@ -241,7 +241,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
             data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
 
-            data.trust.entities.settlors.value.settlorCompany.value.head.name mustBe "Settlor Org 01"
+            data.trust.entities.settlors.value.settlorCompany.head.name mustBe "Settlor Org 01"
 
             data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe Some("1")
             data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
@@ -293,7 +293,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
             data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
 
-            data.trust.entities.settlors.value.settlorCompany.value.head.name mustBe "Settlor Org 01"
+            data.trust.entities.settlors.value.settlorCompany.head.name mustBe "Settlor Org 01"
 
             data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe Some("1")
             data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"

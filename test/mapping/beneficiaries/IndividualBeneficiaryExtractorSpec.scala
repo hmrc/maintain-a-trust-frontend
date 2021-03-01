@@ -18,11 +18,9 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractor
-import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, PassportType}
 import models.pages.RoleInCompany
-import org.joda.time.DateTime
+import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.individual._
 import utils.Constants.GB
@@ -39,7 +37,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
     bpMatchStatus = Some("01"),
     name = FullName(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = index match {
-      case 0 => Some(DateTime.parse("1970-02-01"))
+      case 0 => Some(LocalDate.parse("1970-02-01"))
       case _ => None
     },
     countryOfResidence = index match {
@@ -87,7 +85,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
     entityStart = "2019-11-26"
   )
 
-  val individualExtractor : PlaybackExtractor[Option[List[DisplayTrustIndividualDetailsType]]] =
+  val individualExtractor : IndividualBeneficiaryExtractor =
     injector.instanceOf[IndividualBeneficiaryExtractor]
 
   "Individual Beneficiary Extractor" - {
@@ -98,7 +96,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
 
         "must return user answers" in {
 
-          val individual = None
+          val individual = Nil
 
           val ua = UserAnswers("fakeId", utr)
 
@@ -130,7 +128,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
 
           val ua = UserAnswers("fakeId", utr)
 
-          val extraction = individualExtractor.extract(ua, Some(individual))
+          val extraction = individualExtractor.extract(ua, individual)
 
           extraction mustBe 'left
         }
@@ -153,7 +151,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
 
           val ua = UserAnswers("fakeId", utr)
 
-          val extraction = individualExtractor.extract(ua, Some(individual))
+          val extraction = individualExtractor.extract(ua, individual)
 
           extraction.right.value.get(IndividualBeneficiaryNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
           extraction.right.value.get(IndividualBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
@@ -181,7 +179,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
 
           val ua = UserAnswers("fakeId", utr)
 
-          val extraction = individualExtractor.extract(ua, Some(individuals))
+          val extraction = individualExtractor.extract(ua, individuals)
 
           extraction mustBe 'right
 
@@ -283,7 +281,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
 
         "must return user answers" in {
 
-          val individual = None
+          val individual = Nil
 
           val ua = UserAnswers("fakeId", urn)
 
@@ -315,7 +313,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
 
           val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
 
-          val extraction = individualExtractor.extract(ua, Some(individual))
+          val extraction = individualExtractor.extract(ua, individual)
 
           extraction.right.value.get(IndividualBeneficiaryVulnerableYesNoPage(0)) mustNot be(defined)
         }
@@ -338,7 +336,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
 
           val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
 
-          val extraction = individualExtractor.extract(ua, Some(individual))
+          val extraction = individualExtractor.extract(ua, individual)
 
           extraction.right.value.get(IndividualBeneficiaryNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
           extraction.right.value.get(IndividualBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
@@ -366,7 +364,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
 
           val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
 
-          val extraction = individualExtractor.extract(ua, Some(individuals))
+          val extraction = individualExtractor.extract(ua, individuals)
 
           extraction mustBe 'right
 

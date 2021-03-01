@@ -16,15 +16,15 @@
 
 package mapping
 
-import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{AddressType, DisplayTrustIdentificationType, NaturalPersonType, PassportType}
 import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
-import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.individual._
 import utils.Constants.GB
+
+import java.time.LocalDate
 
 class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -34,7 +34,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
     bpMatchStatus = Some("01"),
     name = FullName(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = index match {
-      case 0 => Some(DateTime.parse("1970-02-01"))
+      case 0 => Some(LocalDate.parse("1970-02-01"))
       case _ => None
     },
     identification = Some(
@@ -58,7 +58,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
     entityStart = "2019-11-26"
   )
 
-  val individualExtractor : PlaybackExtractor[Option[List[NaturalPersonType]]] =
+  val individualExtractor : OtherIndividualExtractor =
     injector.instanceOf[OtherIndividualExtractor]
 
   "Other Individual Extractor" - {
@@ -67,7 +67,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
 
       "must return user answers" in {
 
-        val individual = None
+        val individual = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -93,7 +93,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = individualExtractor.extract(ua, Some(individual))
+        val extraction = individualExtractor.extract(ua, individual)
 
         extraction.right.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
@@ -114,7 +114,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = individualExtractor.extract(ua, Some(individuals))
+        val extraction = individualExtractor.extract(ua, individuals)
 
         extraction mustBe 'right
 

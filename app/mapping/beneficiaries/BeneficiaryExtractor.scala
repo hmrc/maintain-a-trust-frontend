@@ -18,8 +18,8 @@ package mapping.beneficiaries
 
 import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
-import mapping.PlaybackExtractor
 import models.UserAnswers
+import models.UserAnswersCombinator._
 import models.http.DisplayTrustBeneficiaryType
 
 class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBeneficiaryExtractor,
@@ -28,11 +28,9 @@ class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBenefic
                                      otherBeneficiaryExtractor: OtherBeneficiaryExtractor,
                                      classOfBeneficiaryExtractor: ClassOfBeneficiaryExtractor,
                                      individualBeneficiaryExtractor: IndividualBeneficiaryExtractor,
-                                     largeBeneficiaryExtractor: LargeBeneficiaryExtractor) extends PlaybackExtractor[DisplayTrustBeneficiaryType] {
+                                     largeBeneficiaryExtractor: LargeBeneficiaryExtractor) {
 
-  override def extract(answers: UserAnswers, data: DisplayTrustBeneficiaryType): Either[PlaybackExtractionError, UserAnswers] = {
-
-    import models.UserAnswersCombinator._
+  def extract(answers: UserAnswers, data: DisplayTrustBeneficiaryType): Either[PlaybackExtractionError, UserAnswers] = {
 
     val beneficiaries: List[UserAnswers] = List(
       individualBeneficiaryExtractor.extract(answers, data.individualDetails),
@@ -47,8 +45,11 @@ class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBenefic
     }
     
     beneficiaries match {
-      case Nil => Left(FailedToExtractData("Beneficiary Extraction Error"))
-      case _ => beneficiaries.combine.map(Right.apply).getOrElse(Left(FailedToExtractData("Beneficiary Extraction Error")))
+      case Nil => Left(FailedToExtractData("Beneficiary Extraction Error - No beneficiaries"))
+      case _ => beneficiaries.combine match {
+        case Some(value) => Right(value)
+        case None => Left(FailedToExtractData("Beneficiary Extraction Error - Failed to combine beneficiary answers"))
+      }
     }
   }
 }

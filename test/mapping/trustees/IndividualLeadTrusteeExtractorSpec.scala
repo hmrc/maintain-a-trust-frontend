@@ -16,24 +16,23 @@
 
 package mapping.trustees
 
-import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
-import mapping.PlaybackExtractor
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, MetaData, UserAnswers}
-import org.joda.time.DateTime
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustees._
 import utils.Constants.GB
 
-class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
+import java.time.LocalDate
+
+class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val leadTrusteeIndExtractor : PlaybackExtractor[Option[List[Trustees]]] =
-    injector.instanceOf[TrusteesExtractor]
+  val leadTrusteeIndExtractor : IndividualLeadTrusteeExtractor =
+    injector.instanceOf[IndividualLeadTrusteeExtractor]
 
   "Lead Trustee Individual Extractor" - {
 
@@ -41,7 +40,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
       "must return an error" in {
 
-        val leadTrustee = None
+        val leadTrustee = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
@@ -59,7 +58,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = DateTime.parse("2018-02-01"),
+          dateOfBirth = LocalDate.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),
           identification =
@@ -74,7 +73,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeIndExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
@@ -97,7 +96,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = DateTime.parse("2018-02-01"),
+          dateOfBirth = LocalDate.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),
           identification =
@@ -112,7 +111,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeIndExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
@@ -135,7 +134,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = DateTime.parse("2018-02-01"),
+          dateOfBirth = LocalDate.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),
           identification =
@@ -150,7 +149,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeIndExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
@@ -174,7 +173,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
           lineNo = Some(s"1"),
           bpMatchStatus = Some("01"),
           name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = DateTime.parse("2018-02-01"),
+          dateOfBirth = LocalDate.parse("2018-02-01"),
           phoneNumber = "+441234567890",
           email = Some("test@test.com"),
           identification =
@@ -189,7 +188,7 @@ class LeadTrusteeIndExtractorSpec extends FreeSpec with MustMatchers
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = leadTrusteeIndExtractor.extract(ua, Some(leadTrustee))
+        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
