@@ -41,6 +41,14 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = IndividualProtectorDateOfBirthPage(index)
 
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfNationalityYesNoPage(index)
+  override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfNationalityInTheUkYesNoPage(index)
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] = IndividualProtectorCountryOfNationalityPage(index)
+  
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfResidenceYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = IndividualProtectorCountryOfResidencePage(index)
+
   override def metaDataPage(index: Int): QuestionPage[MetaData] = IndividualProtectorMetaData(index)
 
   override def updateUserAnswers(answers: Try[UserAnswers],
@@ -50,6 +58,8 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(IndividualProtectorNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
+      .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(IndividualProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
   }

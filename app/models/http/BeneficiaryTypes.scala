@@ -93,7 +93,7 @@ case class DisplayTrustBeneficiaryTrustType(lineNo: Option[String],
                                             beneficiaryShareOfIncome: Option[String],
                                             countryOfResidence: Option[String],
                                             identification: Option[DisplayTrustIdentificationOrgType],
-                                            entityStart: String) extends BeneficiaryType
+                                            entityStart: String) extends OrgBeneficiaryType
 
 object DisplayTrustBeneficiaryTrustType {
   implicit val beneficiaryTrustTypeFormat: Format[DisplayTrustBeneficiaryTrustType] = Json.format[DisplayTrustBeneficiaryTrustType]
