@@ -39,6 +39,11 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
       case 0 => Some("98")
       case _ => None
     },
+    countryOfResidence = index match {
+      case 0 => Some(GB)
+      case 1 => Some("DE")
+      case _ => None
+    },
     identification = Some(
       DisplayTrustIdentificationOrgType(
         safeId = Some("8947584-94759745-84758745"),
@@ -79,78 +84,189 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
     "when there are trusts" - {
 
-      "with minimum data must return user answers updated" in {
-        val trust = List(DisplayTrustBeneficiaryTrustType(
-          lineNo = Some(s"1"),
-          bpMatchStatus = Some("01"),
-          organisationName = s"Trust 1",
-          beneficiaryDiscretion = None,
-          beneficiaryShareOfIncome = None,
-          identification = None,
-          entityStart = "2019-11-26"
-        ))
+      "for a taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "with minimum data must return user answers updated" in {
+          val trust = List(DisplayTrustBeneficiaryTrustType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            organisationName = s"Trust 1",
+            beneficiaryDiscretion = None,
+            beneficiaryShareOfIncome = None,
+            countryOfResidence = None,
+            identification = None,
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = trustExtractor.extract(ua, trust)
+          val ua = UserAnswers("fakeId", "utr")
 
-        extraction.right.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 1"
-        extraction.right.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(0)).get mustBe true
-        extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
-        extraction.right.value.get(TrustBeneficiaryUtrPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrustBeneficiarySafeIdPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(0)).get mustBe false
-        extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrustBeneficiaryAddressPage(0)) mustNot be(defined)
+          val extraction = trustExtractor.extract(ua, trust)
+
+          extraction.right.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 1"
+          extraction.right.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiarySafeIdPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressPage(0)) mustNot be(defined)
+        }
+
+        "with full data must return user answers updated" in {
+          val trusts = (for (index <- 0 to 2) yield generateTrust(index)).toList
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = trustExtractor.extract(ua, trusts)
+
+          extraction mustBe 'right
+
+          extraction.right.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 0"
+          extraction.right.value.get(TrustBeneficiaryNamePage(1)).get mustBe "Trust 1"
+          extraction.right.value.get(TrustBeneficiaryNamePage(2)).get mustBe "Trust 2"
+
+          extraction.right.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrustBeneficiaryMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrustBeneficiaryMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
+
+          extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(1)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(2)).get mustBe true
+
+          extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(0)).get mustBe "98"
+          extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(1)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(2)).get mustBe false
+
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidencePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(TrustBeneficiaryUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryUtrPage(1)).get mustBe "1234567890"
+          extraction.right.value.get(TrustBeneficiaryUtrPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(TrustBeneficiarySafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrustBeneficiarySafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrustBeneficiarySafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+
+          extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(1)).get mustBe false
+          extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(2)).get mustBe true
+
+          extraction.right.value.get(TrustBeneficiaryAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "DE")
+          extraction.right.value.get(TrustBeneficiaryAddressPage(1)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+
+          extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(2)).get mustBe true
+        }
+
       }
 
-      "with full data must return user answers updated" in {
-        val trusts = (for(index <- 0 to 2) yield generateTrust(index)).toList
+      "for a non taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "with minimum data must return user answers updated" in {
+          val trust = List(DisplayTrustBeneficiaryTrustType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            organisationName = s"Trust 1",
+            beneficiaryDiscretion = None,
+            beneficiaryShareOfIncome = None,
+            countryOfResidence = None,
+            identification = None,
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = trustExtractor.extract(ua, trusts)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
 
-        extraction mustBe 'right
+          val extraction = trustExtractor.extract(ua, trust)
 
-        extraction.right.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 0"
-        extraction.right.value.get(TrustBeneficiaryNamePage(1)).get mustBe "Trust 1"
-        extraction.right.value.get(TrustBeneficiaryNamePage(2)).get mustBe "Trust 2"
+          extraction.right.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 1"
+          extraction.right.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiarySafeIdPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressPage(0)) mustNot be(defined)
+        }
 
-        extraction.right.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrustBeneficiaryMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrustBeneficiaryMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
+        "with full data must return user answers updated" in {
+          val trusts = (for (index <- 0 to 2) yield generateTrust(index)).toList
 
-        extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(0)).get mustBe false
-        extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(1)).get mustBe true
-        extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(2)).get mustBe true
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
 
-        extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(0)).get mustBe "98"
-        extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(1)) mustNot be(defined)
-        extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(2)) mustNot be(defined)
+          val extraction = trustExtractor.extract(ua, trusts)
 
-        extraction.right.value.get(TrustBeneficiaryUtrPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrustBeneficiaryUtrPage(1)).get mustBe "1234567890"
-        extraction.right.value.get(TrustBeneficiaryUtrPage(2)) mustNot be(defined)
+          extraction mustBe 'right
 
-        extraction.right.value.get(TrustBeneficiarySafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-        extraction.right.value.get(TrustBeneficiarySafeIdPage(1)).get mustBe "8947584-94759745-84758745"
-        extraction.right.value.get(TrustBeneficiarySafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 0"
+          extraction.right.value.get(TrustBeneficiaryNamePage(1)).get mustBe "Trust 1"
+          extraction.right.value.get(TrustBeneficiaryNamePage(2)).get mustBe "Trust 2"
 
-        extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(0)).get mustBe true
-        extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(1)).get mustBe false
-        extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(2)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrustBeneficiaryMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrustBeneficiaryMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
 
-        extraction.right.value.get(TrustBeneficiaryAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "DE")
-        extraction.right.value.get(TrustBeneficiaryAddressPage(1)) mustNot be(defined)
-        extraction.right.value.get(TrustBeneficiaryAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+          extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(2)) mustNot be(defined)
 
-        extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(0)).get mustBe false
-        extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(1)) mustNot be(defined)
-        extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(2)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(1)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(2)).get mustBe false
+
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidencePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(TrustBeneficiaryUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryUtrPage(1)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryUtrPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(TrustBeneficiarySafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrustBeneficiarySafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(TrustBeneficiarySafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+
+          extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(TrustBeneficiaryAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressPage(1)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(2)) mustNot be(defined)
+        }
+
       }
-
     }
 
   }

@@ -91,6 +91,7 @@ case class DisplayTrustBeneficiaryTrustType(lineNo: Option[String],
                                             organisationName: String,
                                             beneficiaryDiscretion: Option[Boolean],
                                             beneficiaryShareOfIncome: Option[String],
+                                            countryOfResidence: Option[String],
                                             identification: Option[DisplayTrustIdentificationOrgType],
                                             entityStart: String) extends BeneficiaryType
 
