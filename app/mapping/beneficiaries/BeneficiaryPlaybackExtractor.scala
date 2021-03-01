@@ -22,7 +22,7 @@ import models.UserAnswers
 import models.http.{BeneficiaryType, DisplayTrustIdentificationOrgType, OrgBeneficiaryType}
 import pages.{EmptyPage, QuestionPage}
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
 trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtractor[T] {
 
@@ -34,7 +34,7 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
   def extractShareOfIncome(shareOfIncome: Option[String],
                            index: Int,
                            answers: UserAnswers): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
+    extractIfTaxable(answers) {
       shareOfIncome match {
         case Some(income) =>
           answers.set(shareOfIncomeYesNoPage(index), false)
@@ -42,8 +42,6 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
         case None =>
           answers.set(shareOfIncomeYesNoPage(index), true)
       }
-    } else {
-      Success(answers)
     }
   }
 

@@ -32,6 +32,10 @@ class TrustBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = TrustBeneficiaryShareOfIncomePage(index)
 
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryCountryOfResidenceYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = TrustBeneficiaryCountryOfResidencePage(index)
+
   override def addressYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryAddressUKYesNoPage(index)
   override def addressPage(index: Int): QuestionPage[Address] = TrustBeneficiaryAddressPage(index)
@@ -41,10 +45,6 @@ class TrustBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustBeneficiaryTrustType,
                                  index: Int): Try[UserAnswers] = {
-    super.updateUserAnswers(answers, entity, index)
-      .flatMap(_.set(namePage(index), entity.organisationName))
-      .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
-      .flatMap(_.set(safeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
+    updateUserAnswersForOrgBeneficiary(answers, entity, index)
   }
 }

@@ -25,11 +25,14 @@ import scala.util.Try
 
 class OtherBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustOtherType] {
 
-  override def namePage(index: Int): QuestionPage[String] = OtherBeneficiaryDescriptionPage(index)
   override def metaDataPage(index: Int): QuestionPage[MetaData] = OtherBeneficiaryMetaData(index)
 
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = OtherBeneficiaryShareOfIncomePage(index)
+
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryCountryOfResidenceYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = OtherBeneficiaryCountryOfResidencePage(index)
 
   override def addressYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryAddressUKYesNoPage(index)
@@ -39,8 +42,9 @@ class OtherBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
                                  entity: DisplayTrustOtherType,
                                  index: Int): Try[UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
-      .flatMap(_.set(namePage(index), entity.description))
+      .flatMap(_.set(OtherBeneficiaryDescriptionPage(index), entity.description))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractOptionalAddress(entity.address, index, answers))
   }
 

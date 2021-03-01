@@ -38,6 +38,11 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
       case 0 => Some(false)
       case _ => None
     },
+    countryOfResidence = index match {
+      case 0 => Some(GB)
+      case 1 => Some("DE")
+      case _ => None
+    },
     beneficiaryShareOfIncome = index match {
       case 0 => Some("98")
       case _ => None
@@ -73,68 +78,169 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
     "when there are others" - {
 
-      "with minimum data must return user answers updated" in {
-        val other = List(DisplayTrustOtherType(
-          lineNo = Some("1"),
-          bpMatchStatus = Some("01"),
-          description = s"Other 1",
-          beneficiaryDiscretion = None,
-          beneficiaryShareOfIncome = None,
-          address = None,
-          entityStart = "2019-11-26"
-        ))
+      "for a taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "with minimum data must return user answers updated" in {
+          val other = List(DisplayTrustOtherType(
+            lineNo = Some("1"),
+            bpMatchStatus = Some("01"),
+            description = s"Other 1",
+            beneficiaryDiscretion = None,
+            beneficiaryShareOfIncome = None,
+            countryOfResidence = None,
+            address = None,
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = otherExtractor.extract(ua, other)
+          val ua = UserAnswers("fakeId", "utr")
 
-        extraction.right.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
-        extraction.right.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get mustBe true
-        extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(0)).get mustBe false
-        extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherBeneficiaryAddressPage(0)) mustNot be(defined)
+          val extraction = otherExtractor.extract(ua, other)
+
+          extraction.right.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
+          extraction.right.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressPage(0)) mustNot be(defined)
+        }
+
+        "with full data must return user answers updated" in {
+          val others = (for (index <- 0 to 2) yield generateOther(index)).toList
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = otherExtractor.extract(ua, others)
+
+          extraction mustBe 'right
+
+          extraction.right.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 0"
+          extraction.right.value.get(OtherBeneficiaryDescriptionPage(1)).get mustBe "Other 1"
+          extraction.right.value.get(OtherBeneficiaryDescriptionPage(2)).get mustBe "Other 2"
+
+          extraction.right.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherBeneficiaryMetaData(1)).get mustBe MetaData("1", Some("98"), "2019-11-26")
+          extraction.right.value.get(OtherBeneficiaryMetaData(2)).get mustBe MetaData("2", Some("98"), "2019-11-26")
+
+          extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(1)).get mustBe true
+          extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(1)).get mustBe true
+
+          extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(0)).get mustBe "98"
+          extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(2)).get mustBe false
+
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(2)).get mustBe true
+
+          extraction.right.value.get(OtherBeneficiaryAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "DE")
+          extraction.right.value.get(OtherBeneficiaryAddressPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+
+          extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(2)).get mustBe true
+        }
+
       }
 
-      "with full data must return user answers updated" in {
-        val others = (for(index <- 0 to 2) yield generateOther(index)).toList
+      "for a non taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "with minimum data must return user answers updated" in {
+          val other = List(DisplayTrustOtherType(
+            lineNo = Some("1"),
+            bpMatchStatus = Some("01"),
+            description = s"Other 1",
+            beneficiaryDiscretion = None,
+            beneficiaryShareOfIncome = None,
+            countryOfResidence = None,
+            address = None,
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = otherExtractor.extract(ua, others)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
 
-        extraction mustBe 'right
+          val extraction = otherExtractor.extract(ua, other)
 
-        extraction.right.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 0"
-        extraction.right.value.get(OtherBeneficiaryDescriptionPage(1)).get mustBe "Other 1"
-        extraction.right.value.get(OtherBeneficiaryDescriptionPage(2)).get mustBe "Other 2"
+          extraction.right.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
+          extraction.right.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressPage(0)) mustNot be(defined)
+        }
 
-        extraction.right.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
-        extraction.right.value.get(OtherBeneficiaryMetaData(1)).get mustBe MetaData("1", Some("98"), "2019-11-26")
-        extraction.right.value.get(OtherBeneficiaryMetaData(2)).get mustBe MetaData("2", Some("98"), "2019-11-26")
+        "with full data must return user answers updated" in {
+          val others = (for (index <- 0 to 2) yield generateOther(index)).toList
 
-        extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get mustBe false
-        extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(1)).get mustBe true
-        extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(1)).get mustBe true
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
 
-        extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(0)).get mustBe "98"
-        extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(1)) mustNot be(defined)
-        extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(2)) mustNot be(defined)
+          val extraction = otherExtractor.extract(ua, others)
 
-        extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(0)).get mustBe true
-        extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(1)).get mustBe false
-        extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(2)).get mustBe true
+          extraction mustBe 'right
 
-        extraction.right.value.get(OtherBeneficiaryAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "DE")
-        extraction.right.value.get(OtherBeneficiaryAddressPage(1)) mustNot be(defined)
-        extraction.right.value.get(OtherBeneficiaryAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+          extraction.right.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 0"
+          extraction.right.value.get(OtherBeneficiaryDescriptionPage(1)).get mustBe "Other 1"
+          extraction.right.value.get(OtherBeneficiaryDescriptionPage(2)).get mustBe "Other 2"
 
-        extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(0)).get mustBe false
-        extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(1)) mustNot be(defined)
-        extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(2)).get mustBe true
+          extraction.right.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherBeneficiaryMetaData(1)).get mustBe MetaData("1", Some("98"), "2019-11-26")
+          extraction.right.value.get(OtherBeneficiaryMetaData(2)).get mustBe MetaData("2", Some("98"), "2019-11-26")
+
+          extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(1)) mustNot be(defined)
+
+          extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(2)).get mustBe false
+
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherBeneficiaryAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(2)) mustNot be(defined)
+        }
+
       }
-
     }
 
   }

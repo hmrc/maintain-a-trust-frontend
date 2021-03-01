@@ -45,6 +45,8 @@ case class DisplayTrustProtector(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  name: FullName,
                                  dateOfBirth: Option[LocalDate],
+                                 countryOfResidence: Option[String],
+                                 countryOfNationality: Option[String],
                                  identification: Option[DisplayTrustIdentificationType],
                                  entityStart: String) extends Protector
 
@@ -55,6 +57,7 @@ object DisplayTrustProtector {
 case class DisplayTrustProtectorBusiness(lineNo: Option[String],
                                          bpMatchStatus: Option[String],
                                          name: String,
+                                         countryOfResidence: Option[String],
                                          identification: Option[DisplayTrustIdentificationOrgType],
                                          entityStart: String) extends Protector
 

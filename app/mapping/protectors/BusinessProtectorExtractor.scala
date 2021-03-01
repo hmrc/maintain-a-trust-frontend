@@ -34,6 +34,10 @@ class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrust
   override def utrYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorUtrYesNoPage(index)
   override def utrPage(index: Int): QuestionPage[String] = BusinessProtectorUtrPage(index)
 
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorCountryOfResidenceYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = BusinessProtectorCountryOfResidencePage(index)
+
   override def metaDataPage(index: Int): QuestionPage[MetaData] = BusinessProtectorMetaData(index)
 
   override def updateUserAnswers(answers: Try[UserAnswers],
@@ -42,6 +46,7 @@ class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrust
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(BusinessProtectorNamePage(index), entity.name))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(_.set(BusinessProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
   }

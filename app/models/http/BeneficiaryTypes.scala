@@ -91,8 +91,9 @@ case class DisplayTrustBeneficiaryTrustType(lineNo: Option[String],
                                             organisationName: String,
                                             beneficiaryDiscretion: Option[Boolean],
                                             beneficiaryShareOfIncome: Option[String],
+                                            countryOfResidence: Option[String],
                                             identification: Option[DisplayTrustIdentificationOrgType],
-                                            entityStart: String) extends BeneficiaryType
+                                            entityStart: String) extends OrgBeneficiaryType
 
 object DisplayTrustBeneficiaryTrustType {
   implicit val beneficiaryTrustTypeFormat: Format[DisplayTrustBeneficiaryTrustType] = Json.format[DisplayTrustBeneficiaryTrustType]
@@ -126,6 +127,7 @@ object DisplayTrustUnidentifiedType {
 case class DisplayTrustLargeType(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  organisationName: String,
+                                 countryOfResidence: Option[String],
                                  description: String,
                                  description1: Option[String],
                                  description2: Option[String],
@@ -144,6 +146,7 @@ object DisplayTrustLargeType {
 case class DisplayTrustOtherType(lineNo: Option[String],
                                  bpMatchStatus: Option[String],
                                  description: String,
+                                 countryOfResidence: Option[String],
                                  address: Option[AddressType],
                                  beneficiaryDiscretion: Option[Boolean],
                                  beneficiaryShareOfIncome: Option[String],

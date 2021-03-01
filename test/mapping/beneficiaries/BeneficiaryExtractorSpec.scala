@@ -103,6 +103,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
               organisationName = s"Trust 1",
               beneficiaryDiscretion = Some(false),
               beneficiaryShareOfIncome = Some("10"),
+              countryOfResidence = Some(GB),
               identification = Some(
                 DisplayTrustIdentificationOrgType(
                   safeId = Some("8947584-94759745-84758745"),
@@ -146,6 +147,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
               lineNo = Some("1"),
               bpMatchStatus = Some("01"),
               organisationName = "Large 1",
+              countryOfResidence = Some(GB),
               description = s"Description",
               description1 = Some("Description 1"),
               description2 = None,
@@ -171,6 +173,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
               description = s"Other 1",
               beneficiaryDiscretion = Some(false),
               beneficiaryShareOfIncome = Some("10"),
+              countryOfResidence = Some(GB),
               address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), GB)),
               entityStart = "2019-11-26"
             )
@@ -197,6 +200,9 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 1"
         extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(0)).get mustBe false
         extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+        extraction.right.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(TrustBeneficiaryCountryOfResidencePage(0)).get mustBe GB
         extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(0)).get mustBe true
         extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(0)).get mustBe true
         extraction.right.value.get(TrustBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
@@ -220,6 +226,9 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
         extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get mustBe false
         extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+        extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(0)).get mustBe GB
         extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(0)).get mustBe true
         extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(0)).get mustBe true
         extraction.right.value.get(OtherBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
@@ -254,6 +263,9 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(IndividualBeneficiarySafeIdPage(0)) mustNot be(defined)
 
         extraction.right.value.get(LargeBeneficiaryNamePage(0)).get mustBe "Large 1"
+        extraction.right.value.get(LargeBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(LargeBeneficiaryCountryOfResidencePage(0)).get mustBe GB
         extraction.right.value.get(LargeBeneficiaryDescriptionPage(0)).get mustBe Description("Description", Some("Description 1"), None, None, None)
         extraction.right.value.get(LargeBeneficiaryDiscretionYesNoPage(0)).get mustBe false
         extraction.right.value.get(LargeBeneficiaryShareOfIncomePage(0)).get mustBe "10"
