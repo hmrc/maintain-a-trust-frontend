@@ -26,6 +26,7 @@ import models.{FullName, MetaData, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.deceased_settlor._
 import pages.settlors.living_settlor._
+import utils.Constants.GB
 
 class SettlorExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -75,6 +76,8 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
+            countryOfNationality = Some(GB),
+            countryOfResidence = Some(GB),
             identification = None,
             entityStart = "2019-11-26"
           )),
@@ -93,6 +96,12 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
         extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
         extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+        extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe true
+        extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage).get mustBe true
+        extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage).get mustBe GB
+        extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe true
+        extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage).get mustBe true
+        extraction.right.value.get(DeceasedSettlorCountryOfResidencePage).get mustBe GB
         extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
         extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
         extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
@@ -127,6 +136,8 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
                 bpMatchStatus = Some("01"),
                 name = FullName("individual", Some("living"), "settlor"),
                 dateOfBirth = None,
+                countryOfNationality = Some(GB),
+                countryOfResidence = Some(GB),
                 identification = None,
                 entityStart = "2019-11-26"
               )
@@ -136,6 +147,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
                 lineNo = Some(s"1"),
                 bpMatchStatus = Some("01"),
                 name = s"Company Settlor 1",
+                countryOfResidence = Some(GB),
                 companyType = Some(KindOfBusiness.Trading),
                 companyTime = Some(false),
                 identification = Some(
@@ -151,6 +163,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
                 lineNo = Some(s"1"),
                 bpMatchStatus = Some("01"),
                 name = s"Company Settlor 2",
+                countryOfResidence = Some("DE"),
                 companyType = Some(KindOfBusiness.Trading),
                 companyTime = Some(false),
                 identification = Some(
@@ -172,6 +185,12 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
 
         extraction.right.value.get(SettlorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
         extraction.right.value.get(SettlorIndividualNamePage(0)).get mustBe FullName("individual", Some("living"), "settlor")
+        extraction.right.value.get(SettlorCountryOfNationalityYesNoPage(0)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfNationalityPage(0)).get mustBe GB
+        extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfResidencePage(0)).get mustBe GB
         extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)).get mustBe false
         extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
         extraction.right.value.get(SettlorAddressYesNoPage(0)).get mustBe false
@@ -184,6 +203,9 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
 
         extraction.right.value.get(SettlorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
         extraction.right.value.get(SettlorBusinessNamePage(1)).get mustBe "Company Settlor 1"
+        extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(1)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfResidencePage(1)).get mustBe GB
         extraction.right.value.get(SettlorUtrYesNoPage(1)).get mustBe true
         extraction.right.value.get(SettlorUtrPage(1)).get mustBe "1234567890"
         extraction.right.value.get(SettlorAddressYesNoPage(1)) mustNot be(defined)
@@ -196,6 +218,9 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
 
         extraction.right.value.get(SettlorIndividualOrBusinessPage(2)).get mustBe IndividualOrBusiness.Business
         extraction.right.value.get(SettlorBusinessNamePage(2)).get mustBe "Company Settlor 2"
+        extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(2)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(2)).get mustBe false
+        extraction.right.value.get(SettlorCountryOfResidencePage(2)).get mustBe "DE"
         extraction.right.value.get(SettlorUtrYesNoPage(2)).get mustBe true
         extraction.right.value.get(SettlorUtrPage(2)).get mustBe "1234567890"
         extraction.right.value.get(SettlorAddressYesNoPage(2)) mustNot be(defined)

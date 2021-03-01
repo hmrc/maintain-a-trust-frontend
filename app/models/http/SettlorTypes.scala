@@ -45,6 +45,8 @@ case class DisplayTrustSettlor(lineNo: Option[String],
                                bpMatchStatus: Option[String],
                                name: FullName,
                                dateOfBirth: Option[LocalDate],
+                               countryOfNationality: Option[String],
+                               countryOfResidence: Option[String],
                                identification: Option[DisplayTrustIdentificationType],
                                entityStart: String) extends LivingSettlor
 
@@ -55,6 +57,7 @@ object DisplayTrustSettlor {
 case class DisplayTrustSettlorCompany(lineNo: Option[String],
                                       bpMatchStatus: Option[String],
                                       name: String,
+                                      countryOfResidence: Option[String],
                                       companyType: Option[KindOfBusiness],
                                       companyTime: Option[Boolean],
                                       identification: Option[DisplayTrustIdentificationOrgType],
@@ -69,6 +72,8 @@ case class DisplayTrustWillType(lineNo: Option[String],
                                 name: FullName,
                                 dateOfBirth: Option[LocalDate],
                                 dateOfDeath: Option[LocalDate],
+                                countryOfNationality: Option[String],
+                                countryOfResidence: Option[String],
                                 identification: Option[DisplayTrustIdentificationType],
                                 entityStart: String) extends SettlorType
 
