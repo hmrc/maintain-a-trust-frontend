@@ -87,7 +87,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(AffinityGroup.Individual, utr)(request, messages).toString
+        view(AffinityGroup.Individual, utr, UTR)(request, messages).toString
 
       application.stop()
     }
@@ -101,7 +101,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(AffinityGroup.Individual, utr)(request, messages).toString
+        view(AffinityGroup.Individual, utr, UTR)(request, messages).toString
 
       application.stop()
     }
@@ -110,12 +110,12 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.notFound().url)
 
-      val view: TrustUtrDoesNotMatchView = application.injector.instanceOf[TrustUtrDoesNotMatchView]
+      val view: IdentifierDoesNotMatchView = application.injector.instanceOf[IdentifierDoesNotMatchView]
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(AffinityGroup.Individual)(request, messages).toString
+        view(AffinityGroup.Individual, utr, UTR)(request, messages).toString
 
       application.stop()
     }
@@ -157,7 +157,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr)(request, messages).toString
+        view(utr, UTR)(request, messages).toString
 
       application.stop()
     }
@@ -171,7 +171,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       status(result) mustEqual SERVICE_UNAVAILABLE
 
       contentAsString(result) mustEqual
-        view(utr)(request, messages).toString
+        view(utr, UTR)(request, messages).toString
 
       application.stop()
     }

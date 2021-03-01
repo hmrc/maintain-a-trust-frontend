@@ -25,7 +25,8 @@
     main_template: MainTemplate
 )
 
-@(utr: String,
+@(identifier: String,
+    identifierType: IdentifierType,
     mandatory : List[Task],
     optional: List[Task],
     affinityGroup : AffinityGroup,
@@ -39,7 +40,7 @@
 
    @components.back_link()
 
-    @components.heading_with_caption(headingKey = "variationProgress.heading", caption = "variationProgress.caption", captionParam = utr)
+    @components.heading_with_caption(headingKey = "variationProgress.heading", caption = s"variationProgress.$identifierType.caption", captionParam = identifier)
 
     <p>@messages("variationProgress.p1")</p>
 

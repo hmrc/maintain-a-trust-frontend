@@ -42,7 +42,7 @@ class TrustStatusController @Inject()(
                                        actions: Actions,
                                        closedView: TrustClosedView,
                                        stillProcessingView: TrustStillProcessingView,
-                                       utrDoesNotMatchView: TrustUtrDoesNotMatchView,
+                                       identifierDoesNotMatchView: IdentifierDoesNotMatchView,
                                        ivDownView: IVDownView,
                                        trustConnector: TrustConnector,
                                        trustStoreConnector: TrustsStoreConnector,
@@ -58,22 +58,22 @@ class TrustStatusController @Inject()(
 
   def closed(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(closedView(request.user.affinityGroup, request.userAnswers.identifier)))
+      Future.successful(Ok(closedView(request.user.affinityGroup, request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def processing(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(stillProcessingView(request.user.affinityGroup, request.userAnswers.identifier)))
+      Future.successful(Ok(stillProcessingView(request.user.affinityGroup, request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def sorryThereHasBeenAProblem(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(playbackProblemContactHMRCView(request.userAnswers.identifier)))
+      Future.successful(Ok(playbackProblemContactHMRCView(request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def notFound(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(utrDoesNotMatchView(request.user.affinityGroup)))
+      Future.successful(Ok(identifierDoesNotMatchView(request.user.affinityGroup, request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def locked(): Action[AnyContent] = actions.authWithData.async {
@@ -83,7 +83,7 @@ class TrustStatusController @Inject()(
 
   def down(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(ServiceUnavailable(ivDownView(request.userAnswers.identifier)))
+      Future.successful(ServiceUnavailable(ivDownView(request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
   def alreadyClaimed(): Action[AnyContent] = actions.authWithData.async {
