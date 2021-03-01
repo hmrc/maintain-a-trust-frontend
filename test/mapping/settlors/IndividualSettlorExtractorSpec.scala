@@ -36,6 +36,16 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
     bpMatchStatus = Some("01"),
     name = FullName(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = Some(LocalDate.parse("1970-02-01")),
+    countryOfNationality = index match {
+      case 0 => Some(GB)
+      case 1 => Some("DE")
+      case _ => None
+    },
+    countryOfResidence = index match {
+      case 0 => Some(GB)
+      case 1 => Some("DE")
+      case _ => None
+    },
     identification = Some(
       DisplayTrustIdentificationType(
         safeId = Some("8947584-94759745-84758745"),
@@ -80,79 +90,212 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
 
     "when there are individuals" - {
 
-      "with minimum data must return user answers updated" in {
-        val settlors = List(DisplayTrustSettlor(
-          lineNo = Some(s"1"),
-          bpMatchStatus = Some("01"),
-          name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = None,
-          identification = None,
-          entityStart = "2019-11-26"
-        ))
+      "for a taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "with minimum data must return user answers updated" in {
+          val settlors = List(DisplayTrustSettlor(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = None,
+            countryOfNationality = None,
+            countryOfResidence = None,
+            identification = None,
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = individualSettlorExtractor.extract(ua, settlors)
+          val ua = UserAnswers("fakeId", "utr")
 
-        extraction.right.value.get(SettlorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-        extraction.right.value.get(SettlorIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-        extraction.right.value.get(SettlorIndividualDateOfBirthPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)).get mustBe false
-        extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressYesNoPage(0)).get mustBe false
-        extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorIndividualPassportIDCardPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorSafeIdPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          val extraction = individualSettlorExtractor.extract(ua, settlors)
+
+          extraction.right.value.get(SettlorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(SettlorIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(SettlorIndividualDateOfBirthPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfNationalityYesNoPage(0)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfNationalityPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)).get mustBe false
+          extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressYesNoPage(0)).get mustBe false
+          extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorSafeIdPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        }
+
+        "with full data must return user answers updated" in {
+          val settlors = (for (index <- 0 to 2) yield generateSettlorIndividual(index)).toList
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = individualSettlorExtractor.extract(ua, settlors)
+
+          extraction mustBe 'right
+
+          extraction.right.value.get(SettlorIndividualNamePage(0)).get mustBe FullName("First Name 0", None, "Last Name 0")
+          extraction.right.value.get(SettlorIndividualDateOfBirthPage(0)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.right.value.get(SettlorCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfNationalityPage(0)).get mustBe GB
+          extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(SettlorMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
+          extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)).get mustBe true
+          extraction.right.value.get(SettlorIndividualNINOPage(0)).get mustBe "0234567890"
+          extraction.right.value.get(SettlorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+
+          extraction.right.value.get(SettlorIndividualNamePage(1)).get mustBe FullName("First Name 1", None, "Last Name 1")
+          extraction.right.value.get(SettlorIndividualDateOfBirthPage(1)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.right.value.get(SettlorCountryOfNationalityYesNoPage(1)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfNationalityInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfNationalityPage(1)).get mustBe "DE"
+          extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(SettlorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(SettlorIndividualNINOYesNoPage(1)).get mustBe false
+          extraction.right.value.get(SettlorIndividualNINOPage(1)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressYesNoPage(1)).get mustBe true
+          extraction.right.value.get(SettlorAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
+          extraction.right.value.get(SettlorAddressUKYesNoPage(1)).get mustBe false
+          extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(1)).get mustBe false
+          extraction.right.value.get(SettlorIndividualPassportIDCardPage(1)) mustNot be(defined)
+          extraction.right.value.get(SettlorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+
+          extraction.right.value.get(SettlorIndividualNamePage(2)).get mustBe FullName("First Name 2", None, "Last Name 2")
+          extraction.right.value.get(SettlorIndividualDateOfBirthPage(2)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.right.value.get(SettlorCountryOfNationalityYesNoPage(2)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfNationalityInTheUkYesNoPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfNationalityPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(2)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfResidencePage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
+          extraction.right.value.get(SettlorIndividualNINOYesNoPage(2)).get mustBe false
+          extraction.right.value.get(SettlorIndividualNINOPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressYesNoPage(2)).get mustBe true
+          extraction.right.value.get(SettlorAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+          extraction.right.value.get(SettlorAddressUKYesNoPage(2)).get mustBe true
+          extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(2)).get mustBe true
+          extraction.right.value.get(SettlorIndividualPassportIDCardPage(2)).get.country mustBe "DE"
+          extraction.right.value.get(SettlorSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+
+        }
       }
 
-      "with full data must return user answers updated" in {
-        val settlors = (for(index <- 0 to 2) yield generateSettlorIndividual(index)).toList
+      "for a non taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "with minimum data must return user answers updated" in {
+          val settlors = List(DisplayTrustSettlor(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = None,
+            countryOfNationality = None,
+            countryOfResidence = None,
+            identification = None,
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = individualSettlorExtractor.extract(ua, settlors)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
 
-        extraction mustBe 'right
+          val extraction = individualSettlorExtractor.extract(ua, settlors)
 
-        extraction.right.value.get(SettlorIndividualNamePage(0)).get mustBe FullName("First Name 0", None, "Last Name 0")
-        extraction.right.value.get(SettlorIndividualDateOfBirthPage(0)).get mustBe LocalDate.of(1970,2,1)
-        extraction.right.value.get(SettlorMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
-        extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)).get mustBe true
-        extraction.right.value.get(SettlorIndividualNINOPage(0)).get mustBe "0234567890"
-        extraction.right.value.get(SettlorAddressYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorIndividualPassportIDCardPage(0)) mustNot be(defined)
-        extraction.right.value.get(SettlorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(SettlorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(SettlorIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(SettlorIndividualDateOfBirthPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfNationalityYesNoPage(0)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfNationalityPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorSafeIdPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        }
 
-        extraction.right.value.get(SettlorIndividualNamePage(1)).get mustBe FullName("First Name 1", None, "Last Name 1")
-        extraction.right.value.get(SettlorIndividualDateOfBirthPage(1)).get mustBe LocalDate.of(1970,2,1)
-        extraction.right.value.get(SettlorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(SettlorIndividualNINOYesNoPage(1)).get mustBe false
-        extraction.right.value.get(SettlorIndividualNINOPage(1)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressYesNoPage(1)).get mustBe true
-        extraction.right.value.get(SettlorAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
-        extraction.right.value.get(SettlorAddressUKYesNoPage(1)).get mustBe false
-        extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(1)).get mustBe false
-        extraction.right.value.get(SettlorIndividualPassportIDCardPage(1)) mustNot be(defined)
-        extraction.right.value.get(SettlorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+        "with full data must return user answers updated" in {
+          val settlors = (for (index <- 0 to 2) yield generateSettlorIndividual(index)).toList
 
-        extraction.right.value.get(SettlorIndividualNamePage(2)).get mustBe FullName("First Name 2", None, "Last Name 2")
-        extraction.right.value.get(SettlorIndividualDateOfBirthPage(2)).get mustBe LocalDate.of(1970,2,1)
-        extraction.right.value.get(SettlorMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
-        extraction.right.value.get(SettlorIndividualNINOYesNoPage(2)).get mustBe false
-        extraction.right.value.get(SettlorIndividualNINOPage(2)) mustNot be(defined)
-        extraction.right.value.get(SettlorAddressYesNoPage(2)).get mustBe true
-        extraction.right.value.get(SettlorAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
-        extraction.right.value.get(SettlorAddressUKYesNoPage(2)).get mustBe true
-        extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(2)).get mustBe true
-        extraction.right.value.get(SettlorIndividualPassportIDCardPage(2)).get.country mustBe "DE"
-        extraction.right.value.get(SettlorSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
 
+          val extraction = individualSettlorExtractor.extract(ua, settlors)
+
+          extraction mustBe 'right
+
+          extraction.right.value.get(SettlorIndividualNamePage(0)).get mustBe FullName("First Name 0", None, "Last Name 0")
+          extraction.right.value.get(SettlorIndividualDateOfBirthPage(0)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.right.value.get(SettlorCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfNationalityPage(0)).get mustBe GB
+          extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(SettlorMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
+          extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+
+          extraction.right.value.get(SettlorIndividualNamePage(1)).get mustBe FullName("First Name 1", None, "Last Name 1")
+          extraction.right.value.get(SettlorIndividualDateOfBirthPage(1)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.right.value.get(SettlorCountryOfNationalityYesNoPage(1)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfNationalityInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfNationalityPage(1)).get mustBe "DE"
+          extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(SettlorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(SettlorIndividualNINOYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualNINOPage(1)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(1)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardPage(1)) mustNot be(defined)
+          extraction.right.value.get(SettlorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+
+          extraction.right.value.get(SettlorIndividualNamePage(2)).get mustBe FullName("First Name 2", None, "Last Name 2")
+          extraction.right.value.get(SettlorIndividualDateOfBirthPage(2)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.right.value.get(SettlorCountryOfNationalityYesNoPage(2)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfNationalityInTheUkYesNoPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfNationalityPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(2)).get mustBe false
+          extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfResidencePage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
+          extraction.right.value.get(SettlorIndividualNINOYesNoPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualNINOPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressYesNoPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressUKYesNoPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardPage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+
+        }
       }
     }
   }

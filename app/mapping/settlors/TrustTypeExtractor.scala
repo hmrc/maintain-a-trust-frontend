@@ -66,7 +66,7 @@ class TrustTypeExtractor extends Logging {
       case Some(TypeOfTrust.WillTrustOrIntestacyTrust) =>
         answers.set(SetUpAfterSettlorDiedYesNoPage, true)
 
-      case None if answers.identifierType == URN =>
+      case None if !answers.isTrustTaxable =>
         Success(answers)
 
       case _ =>

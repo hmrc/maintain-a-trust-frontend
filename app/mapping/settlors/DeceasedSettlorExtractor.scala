@@ -40,6 +40,14 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = SettlorDateOfBirthYesNoPage
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = SettlorDateOfBirthPage
 
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = DeceasedSettlorCountryOfNationalityYesNoPage
+  override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = DeceasedSettlorCountryOfNationalityInTheUkYesNoPage
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] = DeceasedSettlorCountryOfNationalityPage
+
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = DeceasedSettlorCountryOfResidenceYesNoPage
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = DeceasedSettlorCountryOfResidenceInTheUkYesNoPage
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = DeceasedSettlorCountryOfResidencePage
+  
   override def metaDataPage(index: Int): QuestionPage[MetaData] = DeceasedSettlorMetaData
 
   override def updateUserAnswers(answers: Try[UserAnswers],
@@ -49,6 +57,8 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
       .flatMap(_.set(SettlorNamePage, entity.name))
       .flatMap(answers => extractDateOfDeath(entity.dateOfDeath, answers))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
+      .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(DeceasedSettlorSafeIdPage, entity.identification.flatMap(_.safeId)))
   }

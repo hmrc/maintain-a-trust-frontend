@@ -38,6 +38,14 @@ class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSe
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = SettlorIndividualDateOfBirthPage(index)
 
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfNationalityYesNoPage(index)
+  override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfNationalityInTheUkYesNoPage(index)
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] = SettlorCountryOfNationalityPage(index)
+
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfResidenceYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = SettlorCountryOfResidencePage(index)
+
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplayTrustSettlor,
                                  index: Int): Try[UserAnswers] = {
@@ -45,6 +53,8 @@ class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSe
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(SettlorIndividualNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
+      .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(SettlorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(_.set(LivingSettlorStatus(index), UpToDate))
