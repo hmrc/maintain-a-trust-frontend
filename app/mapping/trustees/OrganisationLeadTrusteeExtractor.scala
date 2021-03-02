@@ -33,6 +33,7 @@ class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayT
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(TrusteeOrgNamePage(index), entity.name))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractIdentification(entity.identification, index, answers))
       .flatMap(answers => extractEmail(entity.email, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber))
@@ -61,4 +62,5 @@ class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayT
         Failure(InvalidExtractorState)
     }
   }
+
 }

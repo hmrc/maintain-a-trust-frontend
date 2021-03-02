@@ -67,6 +67,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
               lineNo = Some(s"1"),
               bpMatchStatus = Some("01"),
               name = "org1",
+              countryOfResidence = Some(GB),
               phoneNumber = "+441234567890",
               email = Some("test@test.com"),
               identification =
@@ -89,6 +90,9 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
         extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "org1"
+        extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
         extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe true
         extraction.right.value.get(TrusteeUtrPage(0)).get mustBe "1234567890"
         extraction.right.value.get(TrusteeAddressYesNoPage(0)) mustNot be(defined)
@@ -115,6 +119,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
               lineNo = Some(s"1"),
               bpMatchStatus = Some("01"),
               name = "org1",
+              countryOfResidence = Some(GB),
               phoneNumber = "+441234567890",
               email = Some("test@test.com"),
               identification =
@@ -137,6 +142,9 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
         extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "org1"
+        extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
         extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe true
         extraction.right.value.get(TrusteeUtrPage(0)).get mustBe "1234567890"
         extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
@@ -163,6 +171,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
               lineNo = Some("1"),
               bpMatchStatus = Some("01"),
               name = "org1",
+              countryOfResidence = Some(GB),
               phoneNumber = "+441234567890",
               email = Some("test@test.com"),
               identification =
@@ -181,6 +190,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
                 lineNo = Some("1"),
                 bpMatchStatus = Some("01"),
                 name = s"Trustee Company 1",
+                countryOfResidence = Some(GB),
                 phoneNumber = None,
                 email = None,
                 identification = None,
@@ -193,6 +203,8 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
                 bpMatchStatus = Some("01"),
                 name = FullName("First Name", None, "Last Name"),
                 dateOfBirth = None,
+                countryOfNationality = Some(GB),
+                countryOfResidence = Some(GB),
                 phoneNumber = None,
                 identification = None,
                 entityStart = "2019-11-26"
@@ -211,6 +223,9 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
         extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "org1"
+        extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
         extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe true
         extraction.right.value.get(TrusteeUtrPage(0)).get mustBe "1234567890"
         extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
@@ -227,6 +242,12 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(TrusteeNamePage(1)).get mustBe FullName("First Name", None, "Last Name")
         extraction.right.value.get(TrusteeDateOfBirthYesNoPage(1)).get mustBe false
         extraction.right.value.get(TrusteeDateOfBirthPage(1)) mustNot be(defined)
+        extraction.right.value.get(TrusteeCountryOfNationalityYesNoPage(1)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfNationalityInTheUkYesNoPage(1)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfNationalityPage(1)).get mustBe GB
+        extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(1)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(1)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfResidencePage(1)).get mustBe GB
         extraction.right.value.get(TrusteeNinoYesNoPage(1)).get mustBe false
         extraction.right.value.get(TrusteeNinoPage(1)) mustNot be(defined)
         extraction.right.value.get(TrusteeAddressYesNoPage(1)).get mustBe false
@@ -240,6 +261,9 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(IsThisLeadTrusteePage(2)).get mustBe false
         extraction.right.value.get(TrusteeIndividualOrBusinessPage(2)).get mustBe IndividualOrBusiness.Business
         extraction.right.value.get(TrusteeOrgNamePage(2)).get mustBe "Trustee Company 1"
+        extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(1)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(1)).get mustBe true
+        extraction.right.value.get(TrusteeCountryOfResidencePage(1)).get mustBe GB
         extraction.right.value.get(TrusteeUtrYesNoPage(2)).get mustBe false
         extraction.right.value.get(TrusteeUtrPage(2)) mustNot be(defined)
         extraction.right.value.get(TrusteeAddressYesNoPage(2)).get mustBe false

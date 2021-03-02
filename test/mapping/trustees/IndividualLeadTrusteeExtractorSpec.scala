@@ -53,162 +53,386 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
 
     "when there is a lead trustee individual" - {
 
-      "with nino and UK address, return user answers updated" in {
-        val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
-          lineNo = Some(s"1"),
-          bpMatchStatus = Some("01"),
-          name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = LocalDate.parse("2018-02-01"),
-          phoneNumber = "+441234567890",
-          email = Some("test@test.com"),
-          identification =
-            DisplayTrustIdentificationType(
-              safeId = Some("8947584-94759745-84758745"),
-              nino = Some("NA1111111A"),
-              passport = None,
-              address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
-            ),
-          entityStart = "2019-11-26"
-        ))
+      "for a taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "with nino and UK address, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = LocalDate.parse("2018-02-01"),
+            countryOfNationality = Some(GB),
+            countryOfResidence = Some(GB),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationType(
+                safeId = Some("8947584-94759745-84758745"),
+                nino = Some("NA1111111A"),
+                passport = None,
+                address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
+              ),
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
+          val ua = UserAnswers("fakeId", "utr")
 
-        extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
-        extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-        extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-        extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
-        extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
-        extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
-        extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
-        extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
-        extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
-        extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+          val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018, 2, 1)
+          extraction.right.value.get(TrusteeCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityPage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
+        "with nino and International address, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = LocalDate.parse("2018-02-01"),
+            countryOfNationality = Some("DE"),
+            countryOfResidence = Some("DE"),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationType(
+                safeId = Some("8947584-94759745-84758745"),
+                nino = Some("NA1111111A"),
+                passport = None,
+                address = Some(AddressType("Int line 1", "Int line2", None, None, None, "DE"))
+              ),
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018, 2, 1)
+          extraction.right.value.get(TrusteeCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityInTheUkYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeCountryOfNationalityPage(0)).get mustBe "DE"
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe "DE"
+          extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeUkAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)).get.country mustBe "DE"
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
+        "with Passport/ID Card and UK address, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = LocalDate.parse("2018-02-01"),
+            countryOfNationality = Some(GB),
+            countryOfResidence = Some(GB),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationType(
+                safeId = Some("8947584-94759745-84758745"),
+                nino = None,
+                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
+              ),
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018, 2, 1)
+          extraction.right.value.get(TrusteeCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityPage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
+        "with Passport/ID Card and International address, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = LocalDate.parse("2018-02-01"),
+            countryOfNationality = Some(GB),
+            countryOfResidence = Some(GB),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationType(
+                safeId = Some("8947584-94759745-84758745"),
+                nino = None,
+                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                address = Some(AddressType("Int line 1", "Int line2", None, None, None, "DE"))
+              ),
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018, 2, 1)
+          extraction.right.value.get(TrusteeCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityPage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeUkAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)).get.country mustBe "DE"
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
       }
 
-      "with nino and International address, return user answers updated" in {
-        val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
-          lineNo = Some(s"1"),
-          bpMatchStatus = Some("01"),
-          name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = LocalDate.parse("2018-02-01"),
-          phoneNumber = "+441234567890",
-          email = Some("test@test.com"),
-          identification =
-            DisplayTrustIdentificationType(
-              safeId = Some("8947584-94759745-84758745"),
-              nino = Some("NA1111111A"),
-              passport = None,
-              address = Some(AddressType("Int line 1", "Int line2", None, None, None, "DE"))
-            ),
-          entityStart = "2019-11-26"
-        ))
+      "for a non taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "with nino and UK address, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = LocalDate.parse("2018-02-01"),
+            countryOfNationality = Some(GB),
+            countryOfResidence = Some(GB),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationType(
+                safeId = Some("8947584-94759745-84758745"),
+                nino = Some("NA1111111A"),
+                passport = None,
+                address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
+              ),
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
 
-        extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
-        extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-        extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-        extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
-        extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
-        extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
-        extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
-        extraction.right.value.get(TrusteeUkAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
-        extraction.right.value.get(TrusteeInternationalAddressPage(0)).get.country mustBe "DE"
-        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+          val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018, 2, 1)
+          extraction.right.value.get(TrusteeCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityPage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
+        "with nino and International address, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = LocalDate.parse("2018-02-01"),
+            countryOfNationality = Some("DE"),
+            countryOfResidence = Some("DE"),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationType(
+                safeId = Some("8947584-94759745-84758745"),
+                nino = Some("NA1111111A"),
+                passport = None,
+                address = Some(AddressType("Int line 1", "Int line2", None, None, None, "DE"))
+              ),
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+
+          val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018, 2, 1)
+          extraction.right.value.get(TrusteeCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityInTheUkYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeCountryOfNationalityPage(0)).get mustBe "DE"
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe "DE"
+          extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeUkAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)).get.country mustBe "DE"
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
+        "with Passport/ID Card and UK address, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = LocalDate.parse("2018-02-01"),
+            countryOfNationality = Some(GB),
+            countryOfResidence = Some(GB),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationType(
+                safeId = Some("8947584-94759745-84758745"),
+                nino = None,
+                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
+              ),
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+
+          val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018, 2, 1)
+          extraction.right.value.get(TrusteeCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityPage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
+        "with Passport/ID Card and International address, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = LocalDate.parse("2018-02-01"),
+            countryOfNationality = Some(GB),
+            countryOfResidence = Some(GB),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationType(
+                safeId = Some("8947584-94759745-84758745"),
+                nino = None,
+                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                address = Some(AddressType("Int line 1", "Int line2", None, None, None, "DE"))
+              ),
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+
+          val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018, 2, 1)
+          extraction.right.value.get(TrusteeCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfNationalityPage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeUkAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)).get.country mustBe "DE"
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
       }
-
-      "with Passport/ID Card and UK address, return user answers updated" in {
-        val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
-          lineNo = Some(s"1"),
-          bpMatchStatus = Some("01"),
-          name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = LocalDate.parse("2018-02-01"),
-          phoneNumber = "+441234567890",
-          email = Some("test@test.com"),
-          identification =
-            DisplayTrustIdentificationType(
-              safeId = Some("8947584-94759745-84758745"),
-              nino = None,
-              passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), "DE")),
-              address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
-            ),
-          entityStart = "2019-11-26"
-        ))
-
-        val ua = UserAnswers("fakeId", "utr")
-
-        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
-
-        extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
-        extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-        extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-        extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
-        extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
-        extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
-        extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
-        extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
-        extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
-        extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
-      }
-
-      "with Passport/ID Card and International address, return user answers updated" in {
-        val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
-          lineNo = Some(s"1"),
-          bpMatchStatus = Some("01"),
-          name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = LocalDate.parse("2018-02-01"),
-          phoneNumber = "+441234567890",
-          email = Some("test@test.com"),
-          identification =
-            DisplayTrustIdentificationType(
-              safeId = Some("8947584-94759745-84758745"),
-              nino = None,
-              passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), "DE")),
-              address = Some(AddressType("Int line 1", "Int line2", None, None, None, "DE"))
-            ),
-          entityStart = "2019-11-26"
-        ))
-
-        val ua = UserAnswers("fakeId", "utr")
-
-        val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
-
-        extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
-        extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-        extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-        extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018,2,1)
-        extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
-        extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
-        extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
-        extraction.right.value.get(TrusteeUkAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
-        extraction.right.value.get(TrusteeInternationalAddressPage(0)).get.country mustBe "DE"
-        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
-      }
-
     }
-
   }
 
 }

@@ -33,15 +33,14 @@ class RefSentByPostViewSpec extends ViewBehaviours {
       "paragraph2",
       "bullet1",
       "paragraph3",
-      "paragraph4",
-      "paragraph4.link",
       "subheading2",
-      "paragraph5",
+      "paragraph4",
       "bullet2",
+      "subheading3",
+      "paragraph5",
+      "paragraph5.link",
       "paragraph6",
-      "paragraph6.link",
-      "paragraph7",
-      "paragraph7.link"
+      "paragraph6.link"
     )
 
     behave like pageWithBackLink(applyView)
