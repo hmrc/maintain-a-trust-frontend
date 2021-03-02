@@ -52,77 +52,168 @@ class OrganisationLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
 
     "when there is a lead trustee organisation" - {
 
-      "which is UK registered, return user answers updated" in {
-        val leadTrustee = List(DisplayTrustLeadTrusteeOrgType(
-          lineNo = Some(s"1"),
-          bpMatchStatus = Some("01"),
-          name = "org1",
-          phoneNumber = "+441234567890",
-          email = Some("test@test.com"),
-          identification =
-            DisplayTrustIdentificationOrgType(
-              safeId = Some("8947584-94759745-84758745"),
-              utr = Some("1234567890"),
-              address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
-            ),
-          entityStart = "2019-11-26"
-        ))
+      "for a taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "which is UK registered, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeOrgType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = "org1",
+            countryOfResidence = Some(GB),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationOrgType(
+                safeId = Some("8947584-94759745-84758745"),
+                utr = Some("1234567890"),
+                address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
+              ),
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
+          val ua = UserAnswers("fakeId", "utr")
 
-        extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
-        extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
-        extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "org1"
-        extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe true
-        extraction.right.value.get(TrusteeUtrPage(0)).get mustBe "1234567890"
-        extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
-        extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
-        extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
-        extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+          val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
+          extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "org1"
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeUtrPage(0)).get mustBe "1234567890"
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
+        "which is not UK registered, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeOrgType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = "org1",
+            countryOfResidence = Some("DE"),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationOrgType(
+                safeId = Some("8947584-94759745-84758745"),
+                utr = None,
+                address = Some(AddressType("line 1", "line2", None, None, None, "FR"))
+              ),
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
+          extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "org1"
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe "DE"
+          extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeUkAddressPage(0)) must not be defined
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
       }
 
-      "which is not UK registered, return user answers updated" in {
-        val leadTrustee = List(DisplayTrustLeadTrusteeOrgType(
-          lineNo = Some(s"1"),
-          bpMatchStatus = Some("01"),
-          name = "org1",
-          phoneNumber = "+441234567890",
-          email = Some("test@test.com"),
-          identification =
-            DisplayTrustIdentificationOrgType(
-              safeId = Some("8947584-94759745-84758745"),
-              utr = None,
-              address = Some(AddressType("line 1", "line2", None, None, None, "FR"))
-            ),
-          entityStart = "2019-11-26"
-        ))
+      "for a non taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "which is UK registered, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeOrgType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = "org1",
+            countryOfResidence = Some(GB),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationOrgType(
+                safeId = Some("8947584-94759745-84758745"),
+                utr = Some("1234567890"),
+                address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
+              ),
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
 
-        extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
-        extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
-        extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "org1"
-        extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe false
-        extraction.right.value.get(TrusteeUtrPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
-        extraction.right.value.get(TrusteeUkAddressPage(0)) must not be defined
-        extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
-        extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
-        extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
-        extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+          val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
+          extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "org1"
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeUtrPage(0)).get mustBe "1234567890"
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
+        "which is not UK registered, return user answers updated" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeOrgType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = "org1",
+            countryOfResidence = Some("DE"),
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationOrgType(
+                safeId = Some("8947584-94759745-84758745"),
+                utr = None,
+                address = Some(AddressType("line 1", "line2", None, None, None, "FR"))
+              ),
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+
+          val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
+          extraction.right.value.get(TrusteeOrgNamePage(0)).get mustBe "org1"
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe "DE"
+          extraction.right.value.get(TrusteeUtrYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
+          extraction.right.value.get(TrusteeUkAddressPage(0)) must not be defined
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+
       }
-
     }
-
   }
 
 }

@@ -35,9 +35,19 @@ class IndividualTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrustTr
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(TrusteeNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
-      .flatMap(_.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber))
+      .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
+      .flatMap(answers => extractTelephone(entity, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(TrusteeSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(_.set(TrusteeStatus(index), UpToDate))
+  }
+
+  private def extractTelephone(entity: DisplayTrustTrusteeIndividualType,
+                              index: Int,
+                              answers: UserAnswers): Try[UserAnswers] = {
+    extractIfTaxable(answers) {
+      answers.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber)
+    }
   }
 }

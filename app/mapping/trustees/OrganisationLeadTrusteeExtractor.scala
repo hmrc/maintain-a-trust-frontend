@@ -17,8 +17,9 @@
 package mapping.trustees
 
 import mapping.PlaybackExtractionErrors.InvalidExtractorState
-import models.UserAnswers
-import models.http.{DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType}
+import mapping.PlaybackImplicits.AddressConverter
+import models.{InternationalAddress, UKAddress, UserAnswers}
+import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType}
 import models.pages.IndividualOrBusiness
 import pages.trustees._
 
@@ -33,6 +34,7 @@ class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayT
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(TrusteeOrgNamePage(index), entity.name))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractIdentification(entity.identification, index, answers))
       .flatMap(answers => extractEmail(entity.email, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber))
@@ -61,4 +63,20 @@ class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayT
         Failure(InvalidExtractorState)
     }
   }
+
+  override def extractAddress(address: AddressType,
+                              index: Int,
+                              answers: UserAnswers): Try[UserAnswers] = {
+    address.convert match {
+      case uk: UKAddress =>
+        answers.set(addressYesNoPage(index), true)
+          .flatMap(_.set(ukAddressYesNoPage(index), true))
+          .flatMap(_.set(addressPage(index), uk))
+      case nonUk: InternationalAddress =>
+        answers.set(addressYesNoPage(index), true)
+          .flatMap(_.set(ukAddressYesNoPage(index), false))
+          .flatMap(_.set(addressPage(index), nonUk))
+    }
+  }
+
 }

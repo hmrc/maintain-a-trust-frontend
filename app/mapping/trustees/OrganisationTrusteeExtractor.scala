@@ -17,7 +17,7 @@
 package mapping.trustees
 
 import models.UserAnswers
-import models.http.DisplayTrustTrusteeOrgType
+import models.http.{DisplayTrustTrusteeIndividualType, DisplayTrustTrusteeOrgType}
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
 import pages.entitystatus.TrusteeStatus
@@ -34,10 +34,19 @@ class OrganisationTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrust
       .flatMap(_.set(IsThisLeadTrusteePage(index), false))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(TrusteeOrgNamePage(index), entity.name))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
-      .flatMap(_.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber))
-      .flatMap(_.set(TrusteeEmailPage(index), entity.email))
+      .flatMap(answers => extractTelephoneAndEmail(entity, index, answers))
       .flatMap(_.set(TrusteeSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(_.set(TrusteeStatus(index), UpToDate))
+  }
+
+  private def extractTelephoneAndEmail(entity: DisplayTrustTrusteeOrgType,
+                               index: Int,
+                               answers: UserAnswers): Try[UserAnswers] = {
+    extractIfTaxable(answers) {
+      answers.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber)
+        .flatMap(_.set(TrusteeEmailPage(index), entity.email))
+    }
   }
 }

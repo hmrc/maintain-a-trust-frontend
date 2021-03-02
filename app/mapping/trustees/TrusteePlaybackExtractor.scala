@@ -31,6 +31,14 @@ trait TrusteePlaybackExtractor[T <: TrusteeType] extends PlaybackExtractor[T] {
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeAddressInTheUKPage(index)
   override def addressPage(index: Int): QuestionPage[Address] = TrusteeAddressPage(index)
 
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeCountryOfNationalityYesNoPage(index)
+  override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeCountryOfNationalityInTheUkYesNoPage(index)
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] = TrusteeCountryOfNationalityPage(index)
+
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeCountryOfResidenceYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = TrusteeCountryOfResidencePage(index)
+  
   override def utrYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeUtrYesNoPage(index)
   override def utrPage(index: Int): QuestionPage[String] = TrusteeUtrPage(index)
 
