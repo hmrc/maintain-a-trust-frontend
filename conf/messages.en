@@ -449,12 +449,12 @@ refSentByPost.paragraph6.link = contact the trusts helpline (opens in a new wind
 refSentByPost.agent.title = The trust’s unique identifier has been sent by post
 refSentByPost.agent.heading = The trust’s unique identifier has been sent by post
 refSentByPost.agent.paragraph1 = The unique identifier for the trust has been sent to the lead trustee.
-refSentByPost.agent.paragraph2 = They will have been sent one of the following unique identifiers for the trust:
-refSentByPost.agent.bullet1 = a Unique Taxpayer Reference (UTR) which is ten numbers long, for example 71234567
-refSentByPost.agent.bullet2 = a Unique Reference Number (URN) which has 15 numbers and characters, for example ABTRUST71234567
+refSentByPost.agent.paragraph2 = They will have been sent one of the following unique identifiers:
+refSentByPost.agent.bullet1 = a Unique Taxpayer Reference (UTR) which is ten numbers long, for example 1234567890
+refSentByPost.agent.bullet2 = a Unique Reference Number (URN) which has 15 numbers and characters, for example ABTRUST12345678
 refSentByPost.agent.paragraph3 = It can take 15 working days for the unique identifier to arrive. For addresses outside the UK it can take 21 working days.
 refSentByPost.agent.paragraph4 = If the unique identifier has not arrived after this time,
-refSentByPost.agent.paragraph4.link = contact the trusts helpline.
+refSentByPost.agent.paragraph4.link = contact the trusts helpline (opens in a new window or tab).
 refSentByPost.agent.paragraph5 = Once you have the unique identifier, you can come back to this service to
 refSentByPost.agent.paragraph5.link = register and maintain a trust for a client.
 
