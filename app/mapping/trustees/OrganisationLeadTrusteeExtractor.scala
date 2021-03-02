@@ -17,9 +17,8 @@
 package mapping.trustees
 
 import mapping.PlaybackExtractionErrors.InvalidExtractorState
-import mapping.PlaybackImplicits.AddressConverter
-import models.{InternationalAddress, UKAddress, UserAnswers}
-import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType}
+import models.UserAnswers
+import models.http.{DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType}
 import models.pages.IndividualOrBusiness
 import pages.trustees._
 
@@ -61,21 +60,6 @@ class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayT
       case DisplayTrustIdentificationOrgType(_, _, _) =>
         logger.error(s"[UTR/URN: ${answers.identifier}] no identification for lead trustee company returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
-    }
-  }
-
-  override def extractAddress(address: AddressType,
-                              index: Int,
-                              answers: UserAnswers): Try[UserAnswers] = {
-    address.convert match {
-      case uk: UKAddress =>
-        answers.set(addressYesNoPage(index), true)
-          .flatMap(_.set(ukAddressYesNoPage(index), true))
-          .flatMap(_.set(addressPage(index), uk))
-      case nonUk: InternationalAddress =>
-        answers.set(addressYesNoPage(index), true)
-          .flatMap(_.set(ukAddressYesNoPage(index), false))
-          .flatMap(_.set(addressPage(index), nonUk))
     }
   }
 

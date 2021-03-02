@@ -19,7 +19,7 @@ package mapping.beneficiaries
 import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import mapping.PlaybackExtractor
 import models.UserAnswers
-import models.http.{BeneficiaryType, DisplayTrustIdentificationOrgType, OrgBeneficiaryType}
+import models.http.{AddressType, BeneficiaryType, DisplayTrustIdentificationOrgType, OrgBeneficiaryType}
 import pages.{EmptyPage, QuestionPage}
 
 import scala.util.{Failure, Try}

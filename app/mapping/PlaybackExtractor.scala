@@ -103,7 +103,6 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
   def extractAddress(address: AddressType,
                      index: Int,
                      answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
       address.convert match {
         case uk: UKAddress =>
           answers.set(addressYesNoPage(index), true)
@@ -114,7 +113,6 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
             .flatMap(_.set(ukAddressYesNoPage(index), false))
             .flatMap(_.set(addressPage(index), nonUk))
       }
-    }
   }
 
   def extractOptionalAddress(optionalAddress: Option[AddressType],
