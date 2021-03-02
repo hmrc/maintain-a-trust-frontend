@@ -30,6 +30,8 @@ import scala.concurrent.Future
 class IndexControllerSpec extends SpecBase {
 
   lazy val onPageLoad: String = routes.IndexController.onPageLoad().url
+  lazy val startUtr: String = routes.IndexController.startUtr().url
+  lazy val startUrn: String = routes.IndexController.startUrn().url
 
   val utr: String = "1234567892"
   val urn: String = "ABTRUST12345678"
@@ -38,7 +40,7 @@ class IndexControllerSpec extends SpecBase {
 
   "Index Controller" when {
 
-    "in 4mld mode" must {
+    "onPageLoad in 4mld mode" must {
       "redirect to UTR controller when user is not enrolled (agent)" in {
 
         when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
@@ -88,8 +90,8 @@ class IndexControllerSpec extends SpecBase {
       }
     }
 
-    "in 5mld mode" must {
-      "redirect to Which Identifier controller when user is not enrolled (agent)" in {
+    "onPageLoad in 5mld mode" must {
+      "redirect to UTR controller when user is not enrolled (agent)" in {
 
         when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
@@ -103,7 +105,7 @@ class IndexControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustBe controllers.routes.WhichIdentifierController.onPageLoad().url
+        redirectLocation(result).value mustBe controllers.routes.UTRController.onPageLoad().url
 
         application.stop()
       }
@@ -156,6 +158,164 @@ class IndexControllerSpec extends SpecBase {
         ).build()
 
         val request = FakeRequest(GET, onPageLoad)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+        application.stop()
+      }
+    }
+
+    "startUtr in 5mld mode" must {
+      "redirect to UTR controller when user is not enrolled (agent)" in {
+
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
+
+        val request = FakeRequest(GET, startUtr)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustBe controllers.routes.UTRController.onPageLoad().url
+
+        application.stop()
+      }
+
+      "redirect to status controller when user is a returning taxable user who is enrolled" in {
+
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+        val application = applicationBuilder(
+          userAnswers = Some(emptyUserAnswersForUtr),
+          affinityGroup = AffinityGroup.Organisation,
+          enrolments = Enrolments(Set(
+            Enrolment(
+              key = "HMRC-TERS-ORG",
+              identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = utr)),
+              state = "Activated"
+            )
+          ))
+        ).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
+
+        val request = FakeRequest(GET, startUtr)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+        application.stop()
+      }
+
+      "redirect to status controller when user is a returning non taxable user who is enrolled" in {
+
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+        val application = applicationBuilder(
+          userAnswers = Some(emptyUserAnswersForUtr),
+          affinityGroup = AffinityGroup.Organisation,
+          enrolments = Enrolments(Set(
+            Enrolment(
+              key = "HMRC-TERSNT-ORG",
+              identifiers = Seq(EnrolmentIdentifier(key = "URN", value = urn)),
+              state = "Activated"
+            )
+          ))
+        ).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
+
+        val request = FakeRequest(GET, startUtr)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+        application.stop()
+      }
+    }
+
+    "startUrn in 5mld mode" must {
+      "redirect to URN controller when user is not enrolled (agent)" in {
+
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
+
+        val request = FakeRequest(GET, startUrn)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustBe controllers.routes.URNController.onPageLoad().url
+
+        application.stop()
+      }
+
+      "redirect to status controller when user is a returning taxable user who is enrolled" in {
+
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+        val application = applicationBuilder(
+          userAnswers = Some(emptyUserAnswersForUtr),
+          affinityGroup = AffinityGroup.Organisation,
+          enrolments = Enrolments(Set(
+            Enrolment(
+              key = "HMRC-TERS-ORG",
+              identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = utr)),
+              state = "Activated"
+            )
+          ))
+        ).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
+
+        val request = FakeRequest(GET, startUrn)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+        application.stop()
+      }
+
+      "redirect to status controller when user is a returning non taxable user who is enrolled" in {
+
+        when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+        val application = applicationBuilder(
+          userAnswers = Some(emptyUserAnswersForUtr),
+          affinityGroup = AffinityGroup.Organisation,
+          enrolments = Enrolments(Set(
+            Enrolment(
+              key = "HMRC-TERSNT-ORG",
+              identifiers = Seq(EnrolmentIdentifier(key = "URN", value = urn)),
+              state = "Activated"
+            )
+          ))
+        ).overrides(
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
+
+        val request = FakeRequest(GET, startUrn)
 
         val result = route(application, request).value
 

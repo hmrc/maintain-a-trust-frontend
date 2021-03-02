@@ -2,6 +2,10 @@
 
 GET        /                                            controllers.IndexController.onPageLoad
 
+GET        /start/utr                                   controllers.IndexController.startUtr
+
+GET        /start/urn                                   controllers.IndexController.startUrn
+
 GET        /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
 
 GET        /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
@@ -15,16 +19,11 @@ GET        /logout                                      controllers.LogoutContro
 GET        /keep-alive                                  controllers.SessionTimeoutController.keepAlive
 GET        /timeout                                     controllers.SessionTimeoutController.timeout
 
-GET        /which-reference                             controllers.WhichIdentifierController.onPageLoad()
-POST       /which-reference                             controllers.WhichIdentifierController.onSubmit()
-
 GET        /unique-taxpayer-reference                   controllers.UTRController.onPageLoad()
 POST       /unique-taxpayer-reference                   controllers.UTRController.onSubmit()
 
 GET        /unique-reference-number                     controllers.URNController.onPageLoad()
 POST       /unique-reference-number                     controllers.URNController.onSubmit()
-
-GET        /reference-sent-by-post                      controllers.RefSentByPostController.onPageLoad()
 
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
 

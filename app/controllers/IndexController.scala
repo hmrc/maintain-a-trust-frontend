@@ -17,10 +17,12 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
 import controllers.actions.Actions
+import models.requests.IdentifierRequest
 import play.api.Logging
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{FeatureFlagService, UserAnswersSetupService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
@@ -30,41 +32,47 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class IndexController @Inject()(val controllerComponents: MessagesControllerComponents,
                                 actions: Actions,
+                                appConfig: FrontendAppConfig,
                                 uaSetupService: UserAnswersSetupService,
                                 featureFlagService: FeatureFlagService
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.auth.async {
     implicit request =>
-
-      val utr = request.user.enrolments.enrolments
-        .find(_.key equals "HMRC-TERS-ORG")
-        .flatMap(_.identifiers.find(_.key equals "SAUTR"))
-        .map(_.value)
-
-      val urn = request.user.enrolments.enrolments
-        .find(_.key equals "HMRC-TERSNT-ORG")
-        .flatMap(_.identifiers.find(_.key equals "URN"))
-        .map(_.value)
-
-      featureFlagService.is5mldEnabled().flatMap {
-        is5mldEnabled =>
-          (utr, urn) match {
-            case (Some(utr), _) => uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled)
-            case (_, Some(urn)) => uaSetupService.setupAndRedirectToStatus(urn, request.user.internalId, is5mldEnabled)
-            case _ =>
-              if (is5mldEnabled) {
-                logger.info(s"[Session ID: ${Session.id(hc)}]" +
-                  s" user is not enrolled, starting 5mld maintain journey, redirect to ask for identifier")
-                Future.successful(Redirect(controllers.routes.WhichIdentifierController.onPageLoad()))
-              } else {
-                logger.info(s"[Session ID: ${Session.id(hc)}]" +
-                  s" user is not enrolled, starting maintain journey, redirect to ask for UTR")
-                Future.successful(Redirect(controllers.routes.UTRController.onPageLoad()))
-              }
-          }
-      }
+      initialise(Redirect(controllers.routes.UTRController.onPageLoad()))
   }
 
+  def startUtr(): Action[AnyContent] = actions.auth.async {
+    implicit request =>
+      initialise(Redirect(controllers.routes.UTRController.onPageLoad()))
+  }
 
+  def startUrn(): Action[AnyContent] = actions.auth.async {
+    implicit request =>
+      initialise(Redirect(controllers.routes.URNController.onPageLoad()))
+  }
+
+  private def initialise(redirect: Result)(implicit request: IdentifierRequest[_]): Future[Result] = {
+    val utr = request.user.enrolments.enrolments
+      .find(_.key equals "HMRC-TERS-ORG")
+      .flatMap(_.identifiers.find(_.key equals "SAUTR"))
+      .map(_.value)
+
+    val urn = request.user.enrolments.enrolments
+      .find(_.key equals "HMRC-TERSNT-ORG")
+      .flatMap(_.identifiers.find(_.key equals "URN"))
+      .map(_.value)
+
+    featureFlagService.is5mldEnabled().flatMap {
+      is5mldEnabled =>
+        (utr, urn) match {
+          case (Some(utr), _) => uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled)
+          case (_, Some(urn)) => uaSetupService.setupAndRedirectToStatus(urn, request.user.internalId, is5mldEnabled)
+          case _ =>
+            logger.info(s"[Session ID: ${Session.id(hc)}]" +
+              s" user is not enrolled, starting maintain journey, redirect to ask for UTR")
+            Future.successful(redirect)
+        }
+    }
+  }
 }
