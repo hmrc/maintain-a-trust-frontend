@@ -41,6 +41,14 @@ class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = OtherIndividualDateOfBirthPage(index)
 
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualCountryOfNationalityYesNoPage(index)
+  override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualCountryOfNationalityInTheUkYesNoPage(index)
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] = OtherIndividualCountryOfNationalityPage(index)
+
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualCountryOfResidenceYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = OtherIndividualCountryOfResidencePage(index)
+  
   override def metaDataPage(index: Int): QuestionPage[MetaData] = OtherIndividualMetaData(index)
 
   override def updateUserAnswers(answers: Try[UserAnswers],
@@ -49,6 +57,8 @@ class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(OtherIndividualNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
+      .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
+      .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(OtherIndividualSafeIdPage(index), entity.identification.flatMap(_.safeId)))
   }
