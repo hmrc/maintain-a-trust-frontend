@@ -25,7 +25,7 @@ import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class TrustDetailsExtractor extends Logging {
+class TrustDetailsExtractor extends TaxableExtractor with Logging {
 
   def extract(answers: UserAnswers, data: TrustDetailsType): Either[PlaybackExtractionError, UserAnswers] = {
     val updated = answers
@@ -44,14 +44,6 @@ class TrustDetailsExtractor extends Logging {
       case Failure(exception) =>
         logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
         Left(FailedToExtractData(TrustDetailsType.toString))
-    }
-  }
-
-  private def extractIfTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
-      block
-    } else {
-      Success(answers)
     }
   }
 

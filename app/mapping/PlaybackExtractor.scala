@@ -28,7 +28,7 @@ import java.time.LocalDate
 import scala.reflect.{ClassTag, classTag}
 import scala.util.{Failure, Success, Try}
 
-abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with Logging {
+abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with TaxableExtractor with Logging {
 
   val optionalEntity: Boolean = false
 
@@ -188,14 +188,6 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
           .flatMap(_.set(dateOfBirthPage(index), dateOfBirth))
       case None =>
         answers.set(dateOfBirthYesNoPage(index), false)
-    }
-  }
-
-  def extractIfTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
-    if (answers.isTrustTaxable) {
-      block
-    } else {
-      Success(answers)
     }
   }
 
