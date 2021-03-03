@@ -401,15 +401,6 @@ unavailableSections.p3.start = You can also
 unavailableSections.p3.link = return to information about maintaining this trust
 unavailableSections.p3.end = to view the trust’s latest declaration.
 
-whichIdentifier.title = Which unique identifier does the trust have?
-whichIdentifier.heading = Which unique identifier does the trust have?
-whichIdentifier.error.required = Select if the trust has a unique identifier
-whichIdentifier.utr = Unique Taxpayer Reference (UTR)
-whichIdentifier.utr.hint = This is 10 numbers, for example 12345 67890.
-whichIdentifier.urn = Unique Reference Number (URN)
-whichIdentifier.urn.hint = This is 15 numbers and characters, for example ABTRUST12345678.
-whichIdentifier.none = None of the above
-
 urn.title = What is the trust’s Unique Reference Number (URN)?
 urn.heading = What is the trust’s Unique Reference Number (URN)?
 urn.hint = This is 15 numbers and characters, for example ABTRUST12345670.
@@ -429,34 +420,6 @@ utr.error.length = Unique Taxpayer Reference must be a 10 digit number
 utr.error.invalidCharacters = Enter the trust’s Unique Taxpayer Reference in the correct format
 utr.linkMessage = You can
 utr.linkText = find a lost UTR (opens in a new window or tab)
-
-refSentByPost.title = A unique identifier has been made for the trust
-refSentByPost.heading = A unique identifier has been made for the trust
-refSentByPost.paragraph1 = The type of unique identifier for your trust depends on if the trust needs to pay tax or not.
-refSentByPost.subheading1 = Trusts that need to pay tax
-refSentByPost.paragraph2 = If the trust needs to pay tax, your unique identifier will be a Unique Taxpayer Reference (UTR).
-refSentByPost.bullet1 = A UTR is ten numbers long, for example 1234567890.
-refSentByPost.paragraph3 = The UTR will be sent to you by post. It can take 15 working days for the unique identifier to arrive. For addresses outside the UK it can take 21 working days.
-refSentByPost.subheading2 = Trusts that do not need to pay tax
-refSentByPost.paragraph4 = If the trust does not need to pay tax, your unique identifier will be a Unique Reference Number (URN).
-refSentByPost.bullet2 = A URN has 15 numbers and characters, for example ABTRUST12345678
-refSentByPost.subheading3 = Next steps
-refSentByPost.paragraph5 = Once you have the unique identifier, you can come back to this service to
-refSentByPost.paragraph5.link = register and maintain a trust.
-refSentByPost.paragraph6 = If you do not have the URN or the UTR has not arrived by post,
-refSentByPost.paragraph6.link = contact the trusts helpline (opens in a new window or tab).
-
-refSentByPost.agent.title = The trust’s unique identifier has been sent by post
-refSentByPost.agent.heading = The trust’s unique identifier has been sent by post
-refSentByPost.agent.paragraph1 = The unique identifier for the trust has been sent to the lead trustee.
-refSentByPost.agent.paragraph2 = They will have been sent one of the following unique identifiers:
-refSentByPost.agent.bullet1 = a Unique Taxpayer Reference (UTR) which is ten numbers long, for example 1234567890
-refSentByPost.agent.bullet2 = a Unique Reference Number (URN) which has 15 numbers and characters, for example ABTRUST12345678
-refSentByPost.agent.paragraph3 = It can take 15 working days for the unique identifier to arrive. For addresses outside the UK it can take 21 working days.
-refSentByPost.agent.paragraph4 = If the unique identifier has not arrived after this time,
-refSentByPost.agent.paragraph4.link = contact the trusts helpline (opens in a new window or tab).
-refSentByPost.agent.paragraph5 = Once you have the unique identifier, you can come back to this service to
-refSentByPost.agent.paragraph5.link = register and maintain a trust for a client.
 
 declarationWhatNext.title = What do you want to do next?
 declarationWhatNext.heading = What do you want to do next?
