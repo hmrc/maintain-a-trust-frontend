@@ -37,6 +37,16 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
       case 0 => Some(LocalDate.parse("1970-02-01"))
       case _ => None
     },
+    countryOfNationality = index match {
+      case 0 => Some(GB)
+      case 1 => Some("DE")
+      case _ => None
+    },
+    countryOfResidence = index match {
+      case 0 => Some(GB)
+      case 1 => Some("DE")
+      case _ => None
+    },
     identification = Some(
       DisplayTrustIdentificationType(
         safeId = Some("8947584-94759745-84758745"),
@@ -81,92 +91,246 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
 
     "when there are individuals" - {
 
-      "with minimum data must return user answers updated" in {
-        val individual = List(NaturalPersonType(
-          lineNo = Some("1"),
-          bpMatchStatus = Some("01"),
-          name = FullName("First Name", None, "Last Name"),
-          dateOfBirth = None,
-          identification = None,
-          entityStart = "2019-11-26"
-        ))
+      "for a taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "with minimum data must return user answers updated" in {
+          val individual = List(NaturalPersonType(
+            lineNo = Some("1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = None,
+            countryOfNationality = None,
+            countryOfResidence = None,
+            identification = None,
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = individualExtractor.extract(ua, individual)
+          val ua = UserAnswers("fakeId", "utr")
 
-        extraction.right.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-        extraction.right.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get mustBe false
-        extraction.right.value.get(OtherIndividualDateOfBirthPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(0)).get mustBe false
-        extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualAddressYesNoPage(0)).get mustBe false
-        extraction.right.value.get(OtherIndividualAddressUKYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualPassportIDCardPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualSafeIdPage(0)) mustNot be(defined)
+          val extraction = individualExtractor.extract(ua, individual)
+
+          extraction.right.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherIndividualDateOfBirthPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfNationalityYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfNationalityPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfResidenceYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherIndividualAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualSafeIdPage(0)) mustNot be(defined)
+        }
+
+        "with full data must return user answers updated" in {
+          val individuals = (for (index <- 0 to 2) yield generateIndividual(index)).toList
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = individualExtractor.extract(ua, individuals)
+
+          extraction mustBe 'right
+
+          extraction.right.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name 0", None, "Last Name 0")
+          extraction.right.value.get(OtherIndividualNamePage(1)).get mustBe FullName("First Name 1", None, "Last Name 1")
+          extraction.right.value.get(OtherIndividualNamePage(2)).get mustBe FullName("First Name 2", None, "Last Name 2")
+
+          extraction.right.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherIndividualMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherIndividualMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
+
+          extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(2)).get mustBe false
+
+          extraction.right.value.get(OtherIndividualDateOfBirthPage(0)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.right.value.get(OtherIndividualDateOfBirthPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualDateOfBirthPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfNationalityYesNoPage(1)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfNationalityYesNoPage(2)).get mustBe false
+
+          extraction.right.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualCountryOfNationalityPage(0)).get mustBe GB
+          extraction.right.value.get(OtherIndividualCountryOfNationalityPage(1)).get mustBe "DE"
+          extraction.right.value.get(OtherIndividualCountryOfNationalityPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfResidenceYesNoPage(2)).get mustBe false
+
+          extraction.right.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(OtherIndividualCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(OtherIndividualCountryOfResidencePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(2)).get mustBe false
+
+          extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(0)).get mustBe "0234567890"
+          extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualAddressYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressYesNoPage(1)).get mustBe true
+          extraction.right.value.get(OtherIndividualAddressYesNoPage(2)).get mustBe true
+
+          extraction.right.value.get(OtherIndividualAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressUKYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherIndividualAddressUKYesNoPage(2)).get mustBe true
+
+          extraction.right.value.get(OtherIndividualAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
+          extraction.right.value.get(OtherIndividualAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+
+          extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherIndividualPassportIDCardPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(2)).get mustBe true
+          extraction.right.value.get(OtherIndividualPassportIDCardPage(2)).get.country mustBe "DE"
+
+          extraction.right.value.get(OtherIndividualSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(OtherIndividualSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(OtherIndividualSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+
+        }
       }
 
-      "with full data must return user answers updated" in {
-        val individuals = (for(index <- 0 to 2) yield generateIndividual(index)).toList
+      "for a non taxable trust" - {
 
-        val ua = UserAnswers("fakeId", "utr")
+        "with minimum data must return user answers updated" in {
+          val individual = List(NaturalPersonType(
+            lineNo = Some("1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = None,
+            countryOfNationality = None,
+            countryOfResidence = None,
+            identification = None,
+            entityStart = "2019-11-26"
+          ))
 
-        val extraction = individualExtractor.extract(ua, individuals)
+          val ua = UserAnswers("fakeId", "urn", isTrustTaxable = false)
 
-        extraction mustBe 'right
+          val extraction = individualExtractor.extract(ua, individual)
 
-        extraction.right.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name 0", None, "Last Name 0")
-        extraction.right.value.get(OtherIndividualNamePage(1)).get mustBe FullName("First Name 1", None, "Last Name 1")
-        extraction.right.value.get(OtherIndividualNamePage(2)).get mustBe FullName("First Name 2", None, "Last Name 2")
+          extraction.right.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherIndividualDateOfBirthPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfNationalityYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfNationalityPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfResidenceYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualSafeIdPage(0)) mustNot be(defined)
+        }
 
-        extraction.right.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
-        extraction.right.value.get(OtherIndividualMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(OtherIndividualMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
+        "with full data must return user answers updated" in {
+          val individuals = (for (index <- 0 to 2) yield generateIndividual(index)).toList
 
-        extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get mustBe true
-        extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(1)).get mustBe false
-        extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(2)).get mustBe false
+          val ua = UserAnswers("fakeId", "urn", isTrustTaxable = false)
 
-        extraction.right.value.get(OtherIndividualDateOfBirthPage(0)).get mustBe LocalDate.of(1970,2,1)
-        extraction.right.value.get(OtherIndividualDateOfBirthPage(1)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualDateOfBirthPage(2)) mustNot be(defined)
+          val extraction = individualExtractor.extract(ua, individuals)
 
-        extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(0)).get mustBe true
-        extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(1)).get mustBe false
-        extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(2)).get mustBe false
+          extraction mustBe 'right
 
-        extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(0)).get mustBe "0234567890"
-        extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(1)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(2)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name 0", None, "Last Name 0")
+          extraction.right.value.get(OtherIndividualNamePage(1)).get mustBe FullName("First Name 1", None, "Last Name 1")
+          extraction.right.value.get(OtherIndividualNamePage(2)).get mustBe FullName("First Name 2", None, "Last Name 2")
 
-        extraction.right.value.get(OtherIndividualAddressYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualAddressYesNoPage(1)).get mustBe true
-        extraction.right.value.get(OtherIndividualAddressYesNoPage(2)).get mustBe true
+          extraction.right.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherIndividualMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherIndividualMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
 
-        extraction.right.value.get(OtherIndividualAddressUKYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualAddressUKYesNoPage(1)).get mustBe false
-        extraction.right.value.get(OtherIndividualAddressUKYesNoPage(2)).get mustBe true
+          extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(2)).get mustBe false
 
-        extraction.right.value.get(OtherIndividualAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
-        extraction.right.value.get(OtherIndividualAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+          extraction.right.value.get(OtherIndividualDateOfBirthPage(0)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.right.value.get(OtherIndividualDateOfBirthPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualDateOfBirthPage(2)) mustNot be(defined)
 
-        extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualPassportIDCardPage(0)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(1)).get mustBe false
-        extraction.right.value.get(OtherIndividualPassportIDCardPage(1)) mustNot be(defined)
-        extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(2)).get mustBe true
-        extraction.right.value.get(OtherIndividualPassportIDCardPage(2)).get.country mustBe "DE"
+          extraction.right.value.get(OtherIndividualCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfNationalityYesNoPage(1)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfNationalityYesNoPage(2)).get mustBe false
 
-        extraction.right.value.get(OtherIndividualSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-        extraction.right.value.get(OtherIndividualSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
-        extraction.right.value.get(OtherIndividualSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(2)) mustNot be(defined)
 
+          extraction.right.value.get(OtherIndividualCountryOfNationalityPage(0)).get mustBe GB
+          extraction.right.value.get(OtherIndividualCountryOfNationalityPage(1)).get mustBe "DE"
+          extraction.right.value.get(OtherIndividualCountryOfNationalityPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfResidenceYesNoPage(2)).get mustBe false
+
+          extraction.right.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(OtherIndividualCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(OtherIndividualCountryOfResidencePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualAddressYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressYesNoPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressUKYesNoPage(1)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardPage(1)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(2)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(OtherIndividualSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.right.value.get(OtherIndividualSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+
+        }
       }
-
     }
 
   }

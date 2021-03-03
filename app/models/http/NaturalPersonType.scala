@@ -25,6 +25,8 @@ case class NaturalPersonType(lineNo: Option[String],
                              bpMatchStatus: Option[String],
                              name: FullName,
                              dateOfBirth: Option[LocalDate],
+                             countryOfNationality: Option[String],
+                             countryOfResidence: Option[String],
                              identification: Option[DisplayTrustIdentificationType],
                              entityStart: String) extends EntityType
 
