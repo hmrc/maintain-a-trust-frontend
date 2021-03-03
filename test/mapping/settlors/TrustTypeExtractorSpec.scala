@@ -525,5 +525,4 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
     }
 
   }
-
 }
