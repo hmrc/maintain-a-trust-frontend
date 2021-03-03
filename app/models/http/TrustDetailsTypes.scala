@@ -23,6 +23,9 @@ import play.api.libs.json._
 
 case class TrustDetailsType(startDate: LocalDate,
                             trustTaxable: Option[Boolean],
+                            expressTrust: Option[Boolean],
+                            trustUKResident: Option[Boolean],
+                            trustUKProperty: Option[Boolean],
                             lawCountry: Option[String],
                             administrationCountry: Option[String],
                             residentialStatus: Option[ResidentialStatusType],

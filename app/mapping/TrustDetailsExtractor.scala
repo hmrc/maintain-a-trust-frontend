@@ -31,6 +31,9 @@ class TrustDetailsExtractor extends Logging {
     val updated = answers
       .set(WhenTrustSetupPage, data.startDate)
       .flatMap(_.set(TrustTaxableYesNoPage, data.isTaxable))
+      .flatMap(_.set(ExpressTrustYesNoPage, data.expressTrust))
+      .flatMap(_.set(TrustUkResidentYesNoPage, data.trustUKResident))
+      .flatMap(_.set(TrustUkPropertyYesNoPage, data.trustUKProperty))
       .flatMap(answers => extractGovernedBy(data.lawCountry, answers))
       .flatMap(answers => extractAdminBy(data.administrationCountry, answers))
       .flatMap(answers => extractResidentialType(data.residentialStatus, answers))
@@ -44,29 +47,49 @@ class TrustDetailsExtractor extends Logging {
     }
   }
 
+  private def extractIfTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
+    if (answers.isTrustTaxable) {
+      block
+    } else {
+      Success(answers)
+    }
+  }
+
   private def extractGovernedBy(lawCountry: Option[String],
-                                answers: UserAnswers): Try[UserAnswers] = lawCountry match {
-    case Some(country) => answers
-      .set(GovernedInsideTheUKPage, false)
-      .flatMap(_.set(CountryGoverningTrustPage, country))
-    case _ => answers
-      .set(GovernedInsideTheUKPage, true)
+                                answers: UserAnswers): Try[UserAnswers] = {
+    extractIfTaxable(answers) {
+      lawCountry match {
+        case Some(country) => answers
+          .set(GovernedInsideTheUKPage, false)
+          .flatMap(_.set(CountryGoverningTrustPage, country))
+        case _ => answers
+          .set(GovernedInsideTheUKPage, true)
+      }
+    }
   }
 
   private def extractAdminBy(administrationCountry: Option[String],
-                             answers: UserAnswers): Try[UserAnswers] = administrationCountry match {
-    case Some(country) => answers
-      .set(AdministrationInsideUKPage, false)
-      .flatMap(_.set(CountryAdministeringTrustPage, country))
-    case _ => answers
-      .set(AdministrationInsideUKPage, true)
+                             answers: UserAnswers): Try[UserAnswers] = {
+    extractIfTaxable(answers) {
+      administrationCountry match {
+        case Some(country) => answers
+          .set(AdministrationInsideUKPage, false)
+          .flatMap(_.set(CountryAdministeringTrustPage, country))
+        case _ => answers
+          .set(AdministrationInsideUKPage, true)
+      }
+    }
   }
 
   private def extractResidentialType(residentialStatus: Option[ResidentialStatusType],
-                                     answers: UserAnswers): Try[UserAnswers] = residentialStatus match {
-    case Some(ResidentialStatusType(Some(uk), None)) => ukTrust(uk, answers)
-    case Some(ResidentialStatusType(None, Some(nonUK))) => nonUKTrust(nonUK, answers)
-    case _ => Success(answers)
+                                     answers: UserAnswers): Try[UserAnswers] = {
+    extractIfTaxable(answers) {
+      residentialStatus match {
+        case Some(ResidentialStatusType(Some(uk), None)) => ukTrust(uk, answers)
+        case Some(ResidentialStatusType(None, Some(nonUK))) => nonUKTrust(nonUK, answers)
+        case _ => Success(answers)
+      }
+    }
   }
 
   private def ukTrust(uk: UkType, answers: UserAnswers): Try[UserAnswers] = {
@@ -78,10 +101,11 @@ class TrustDetailsExtractor extends Logging {
       case _ => answers
         .set(TrustResidentOffshorePage, false)
     }
-
-    answers
-      .set(EstablishedUnderScotsLawPage, uk.scottishLaw)
-      .flatMap(answers => extractOffShore(answers))
+    extractIfTaxable(answers) {
+      answers
+        .set(EstablishedUnderScotsLawPage, uk.scottishLaw)
+        .flatMap(answers => extractOffShore(answers))
+    }
   }
 
   private def nonUKTrust(nonUK: NonUKType, answers: UserAnswers): Try[UserAnswers] = {
@@ -101,11 +125,12 @@ class TrustDetailsExtractor extends Logging {
       case _ => Success(answers)
     }
 
-    answers
-      .set(RegisteringTrustFor5APage, nonUK.sch5atcgga92)
-      .flatMap(answers => inheritanceTaxAct(answers))
-      .flatMap(answers => agentOtherThanBarrister(answers))
-      .flatMap(answers => nonResidentType(answers))
+    extractIfTaxable(answers) {
+      answers
+        .set(RegisteringTrustFor5APage, nonUK.sch5atcgga92)
+        .flatMap(answers => inheritanceTaxAct(answers))
+        .flatMap(answers => agentOtherThanBarrister(answers))
+        .flatMap(answers => nonResidentType(answers))
+    }
   }
-
 }
