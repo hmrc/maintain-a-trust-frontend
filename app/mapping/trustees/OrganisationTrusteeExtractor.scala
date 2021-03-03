@@ -17,7 +17,7 @@
 package mapping.trustees
 
 import models.UserAnswers
-import models.http.{DisplayTrustTrusteeIndividualType, DisplayTrustTrusteeOrgType}
+import models.http.DisplayTrustTrusteeOrgType
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
 import pages.entitystatus.TrusteeStatus
