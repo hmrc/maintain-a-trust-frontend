@@ -35,13 +35,13 @@ case class DisplayTrustAssets(monetary: List[AssetMonetaryAmount],
 object DisplayTrustAssets {
 
   implicit val reads : Reads[DisplayTrustAssets] = (
-    (__ \ "monetary").read[List[AssetMonetaryAmount]].orElse(Reads.pure(Nil)) and
-      (__ \ "propertyOrLand").read[List[PropertyLandType]].orElse(Reads.pure(Nil)) and
-      (__ \ "shares").read[List[DisplaySharesType]].orElse(Reads.pure(Nil)) and
-      (__ \ "business").read[List[DisplayBusinessAssetType]].orElse(Reads.pure(Nil)) and
-      (__ \ "partnerShip").read[List[DisplayTrustPartnershipType]].orElse(Reads.pure(Nil)) and
-      (__ \ "other").read[List[DisplayOtherAssetType]].orElse(Reads.pure(Nil)) and
-      (__ \ "nonEEABusiness").read[List[DisplayNonEEABusinessType]].orElse(Reads.pure(Nil))
+    (__ \ "monetary").readWithDefault[List[AssetMonetaryAmount]](Nil) and
+      (__ \ "propertyOrLand").readWithDefault[List[PropertyLandType]](Nil) and
+      (__ \ "shares").readWithDefault[List[DisplaySharesType]](Nil) and
+      (__ \ "business").readWithDefault[List[DisplayBusinessAssetType]](Nil) and
+      (__ \ "partnerShip").readWithDefault[List[DisplayTrustPartnershipType]](Nil) and
+      (__ \ "other").readWithDefault[List[DisplayOtherAssetType]](Nil) and
+      (__ \ "nonEEABusiness").readWithDefault[List[DisplayNonEEABusinessType]](Nil)
     )(DisplayTrustAssets.apply _)
 
   implicit val writes : Writes[DisplayTrustAssets] = Json.writes[DisplayTrustAssets]
