@@ -20,7 +20,6 @@ import mapping.PlaybackExtractor
 import models.http.TrusteeType
 import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
-import pages.beneficiaries.individual.IndividualBeneficiaryMentalCapacityYesNoPage
 import pages.trustees._
 
 import java.time.LocalDate

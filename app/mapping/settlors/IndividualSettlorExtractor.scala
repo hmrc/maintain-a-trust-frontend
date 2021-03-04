@@ -21,7 +21,6 @@ import models.pages.IndividualOrBusiness
 import models.pages.Tag.UpToDate
 import models.{PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
-import pages.beneficiaries.individual.IndividualBeneficiaryMentalCapacityYesNoPage
 import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
 

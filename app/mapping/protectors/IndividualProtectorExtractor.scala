@@ -20,7 +20,6 @@ import models.http.DisplayTrustProtector
 import models.pages.IndividualOrBusiness
 import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
-import pages.beneficiaries.individual.IndividualBeneficiaryMentalCapacityYesNoPage
 import pages.protectors.ProtectorIndividualOrBusinessPage
 import pages.protectors.individual._
 

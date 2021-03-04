@@ -104,8 +104,11 @@ case class DisplayNonEEABusinessType(lineNo: Option[String],
                                      address: AddressType,
                                      govLawCountry: String,
                                      startDate: LocalDate,
-                                     endDate: Option[LocalDate]
-                                    ) extends Asset
+                                     endDate: Option[LocalDate]) extends Asset with EntityType {
+
+  override val bpMatchStatus: Option[String] = None
+  override val entityStart: String = startDate.toString
+}
 
 object DisplayNonEEABusinessType {
   implicit val nonEeaBusinessTypeFormat: Format[DisplayNonEEABusinessType] = Json.format[DisplayNonEEABusinessType]

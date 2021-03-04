@@ -16,7 +16,7 @@
 
 package sections.assets
 
-import pages.{Page, QuestionPage}
+import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object Assets extends QuestionPage[List[Nothing]] {

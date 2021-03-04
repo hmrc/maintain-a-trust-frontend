@@ -23,7 +23,7 @@ import pages.QuestionPage
 import pages.beneficiaries.individual._
 
 import java.time.LocalDate
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
 class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustIndividualDetailsType] {
 

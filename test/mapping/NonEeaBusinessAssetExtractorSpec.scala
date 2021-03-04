@@ -25,7 +25,7 @@ import pages.assets.nonEeaBusiness._
 
 import java.time.LocalDate
 
-class AssetExtractorSpec extends FreeSpec with MustMatchers
+class NonEeaBusinessAssetExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateNonEeaBusiness(index: Int) = DisplayNonEEABusinessType(
@@ -49,20 +49,20 @@ class AssetExtractorSpec extends FreeSpec with MustMatchers
     }
   )
 
-  val assetExtractor : AssetExtractor =
-    injector.instanceOf[AssetExtractor]
+  val assetExtractor : NonEeaBusinessAssetExtractor =
+    injector.instanceOf[NonEeaBusinessAssetExtractor]
 
-  "Asset Extractor" - {
+  "None-EEA business asset Extractor" - {
 
     "when no assets" - {
 
       "must return user answers" in {
 
-        val Assets = None
+        val assets = Nil
 
         val ua = UserAnswers("fakeId", "utr")
 
-        val extraction = assetExtractor.extract(ua, Assets)
+        val extraction = assetExtractor.extract(ua, assets)
 
         extraction mustBe 'right
         extraction.right.value.data mustBe ua.data
@@ -76,7 +76,7 @@ class AssetExtractorSpec extends FreeSpec with MustMatchers
       "for a taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val nonEeaBusiness = List(DisplayNonEEABusinessType(
+          val nonEeaBusinessAssets = List(DisplayNonEEABusinessType(
             lineNo = Some("1"),
             orgName = s"Non EEA Business 1",
             address = AddressType("line 1", "line2", None, None, None, "FR"),
@@ -85,11 +85,9 @@ class AssetExtractorSpec extends FreeSpec with MustMatchers
             endDate = None
           ))
 
-          val assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, nonEeaBusiness))
-
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = assetExtractor.extract(ua, assets)
+          val extraction = assetExtractor.extract(ua, nonEeaBusinessAssets)
 
           extraction.right.value.get(NonEeaBusinessLineNoPage(0)).get mustBe "1"
           extraction.right.value.get(NonEeaBusinessNamePage(0)).get mustBe "Non EEA Business 1"
@@ -100,13 +98,11 @@ class AssetExtractorSpec extends FreeSpec with MustMatchers
         }
 
         "with full data must return user answers updated" in {
-          val nonEeaBusinesses = (for (index <- 0 to 2) yield generateNonEeaBusiness(index)).toList
-
-          val assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, nonEeaBusinesses))
+          val nonEeaBusinessAssets = (for (index <- 0 to 2) yield generateNonEeaBusiness(index)).toList
 
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = assetExtractor.extract(ua, assets)
+          val extraction = assetExtractor.extract(ua, nonEeaBusinessAssets)
 
           extraction mustBe 'right
 
@@ -136,7 +132,7 @@ class AssetExtractorSpec extends FreeSpec with MustMatchers
       "for a non taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val nonEeaBusiness = List(DisplayNonEEABusinessType(
+          val nonEeaBusinessAssets = List(DisplayNonEEABusinessType(
             lineNo = Some("1"),
             orgName = s"Non EEA Business 1",
             address = AddressType("line 1", "line2", None, None, None, "FR"),
@@ -145,11 +141,9 @@ class AssetExtractorSpec extends FreeSpec with MustMatchers
             endDate = None
           ))
 
-          val assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, nonEeaBusiness))
-
           val ua = UserAnswers("fakeId", "utr")
 
-          val extraction = assetExtractor.extract(ua, assets)
+          val extraction = assetExtractor.extract(ua, nonEeaBusinessAssets)
 
           extraction.right.value.get(NonEeaBusinessLineNoPage(0)).get mustBe "1"
           extraction.right.value.get(NonEeaBusinessNamePage(0)).get mustBe "Non EEA Business 1"
@@ -160,13 +154,11 @@ class AssetExtractorSpec extends FreeSpec with MustMatchers
         }
 
         "with full data must return user answers updated" in {
-          val nonEeaBusinesses = (for (index <- 0 to 2) yield generateNonEeaBusiness(index)).toList
-
-          val assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, nonEeaBusinesses))
+          val nonEeaBusinessAssets = (for (index <- 0 to 2) yield generateNonEeaBusiness(index)).toList
 
           val ua = UserAnswers("fakeId", "urn")
 
-          val extraction = assetExtractor.extract(ua, assets)
+          val extraction = assetExtractor.extract(ua, nonEeaBusinessAssets)
 
           extraction mustBe 'right
 

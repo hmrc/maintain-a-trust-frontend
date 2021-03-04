@@ -16,37 +16,20 @@
 
 package mapping
 
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import mapping.PlaybackImplicits.AddressConverter
 import models.UserAnswers
-import models.http.{DisplayNonEEABusinessType, DisplayTrustAssets}
+import models.http.DisplayNonEEABusinessType
 import pages.assets.nonEeaBusiness._
-import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
-class AssetExtractor extends Logging {
+class NonEeaBusinessAssetExtractor extends PlaybackExtractor[DisplayNonEEABusinessType] {
 
-  def extract(answers: UserAnswers, data: Option[DisplayTrustAssets]): Either[PlaybackExtractionError, UserAnswers] = {
-    if (data.isDefined) {
-      val updated = data.get.nonEEABusiness.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)) {
-        case (answers, (entity, index)) =>
-          updateUserAnswers(answers, entity, index)
-      }
+  override val optionalEntity: Boolean = true
 
-      updated match {
-        case Success(a) =>
-          Right(a)
-        case Failure(exception) =>
-          logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
-          Left(FailedToExtractData(DisplayNonEEABusinessType.toString))
-      }
-    } else {
-      Right(answers)
-    }
-  }
-
-  def updateUserAnswers(answers: Try[UserAnswers], entity: DisplayNonEEABusinessType, index: Int): Try[UserAnswers] = {
+  override def updateUserAnswers(answers: Try[UserAnswers],
+                                 entity: DisplayNonEEABusinessType,
+                                 index: Int): Try[UserAnswers] = {
     answers
       .flatMap(_.set(NonEeaBusinessLineNoPage(index), entity.lineNo))
       .flatMap(_.set(NonEeaBusinessNamePage(index), entity.orgName))
