@@ -20,6 +20,7 @@ import mapping.PlaybackExtractor
 import models.http.TrusteeType
 import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
+import pages.beneficiaries.individual.IndividualBeneficiaryMentalCapacityYesNoPage
 import pages.trustees._
 
 import java.time.LocalDate
@@ -38,7 +39,9 @@ trait TrusteePlaybackExtractor[T <: TrusteeType] extends PlaybackExtractor[T] {
   override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeCountryOfResidenceYesNoPage(index)
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeCountryOfResidenceInTheUkYesNoPage(index)
   override def countryOfResidencePage(index: Int): QuestionPage[String] = TrusteeCountryOfResidencePage(index)
-  
+
+  override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeMentalCapacityYesNoPage(index)
+
   override def utrYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeUtrYesNoPage(index)
   override def utrPage(index: Int): QuestionPage[String] = TrusteeUtrPage(index)
 

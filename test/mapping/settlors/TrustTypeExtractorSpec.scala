@@ -65,7 +65,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             None,
             None
           ),
-          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         "must throw error" in {
@@ -148,7 +148,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             None,
             None
           ),
-          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", utr)
@@ -199,7 +199,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             None,
             None
           ),
-          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", utr)
@@ -250,7 +250,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             None,
             None
           ),
-          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", utr)
@@ -301,7 +301,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             None,
             None
           ),
-          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", utr)
@@ -348,7 +348,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             None,
             None
           ),
-          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId",utr)
@@ -399,7 +399,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             None,
             None
           ),
-          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", utr)
@@ -450,7 +450,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             None,
             None
           ),
-          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", utr)
@@ -501,7 +501,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             None,
             None
           ),
-          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil))
+          assets = Some(DisplayTrustAssets(Nil, Nil, Nil, Nil, Nil, Nil, Nil))
         )
 
         val ua = UserAnswers("fakeId", utr)

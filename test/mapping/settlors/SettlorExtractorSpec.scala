@@ -138,6 +138,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
                 dateOfBirth = None,
                 countryOfNationality = Some(GB),
                 countryOfResidence = Some(GB),
+                legallyIncapable = Some(false),
                 identification = None,
                 entityStart = "2019-11-26"
               )
@@ -191,6 +192,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)).get mustBe true
         extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
         extraction.right.value.get(SettlorCountryOfResidencePage(0)).get mustBe GB
+        extraction.right.value.get(SettlorIndividualMentalCapacityYesNoPage(0)).get mustBe true
         extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)).get mustBe false
         extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
         extraction.right.value.get(SettlorAddressYesNoPage(0)).get mustBe false

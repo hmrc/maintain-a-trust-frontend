@@ -46,6 +46,11 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
       case 1 => Some("DE")
       case _ => None
     },
+    legallyIncapable = index match {
+      case 0 => Some(false)
+      case 1 => Some(true)
+      case _ => None
+    },
     identification = Some(
       DisplayTrustIdentificationType(
         safeId = Some("8947584-94759745-84758745"),
@@ -100,6 +105,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = None,
             countryOfNationality = None,
             countryOfResidence = None,
+            legallyIncapable = None,
             identification = None,
             entityStart = "2019-11-26"
           ))
@@ -117,6 +123,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualMentalCapacityYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)).get mustBe false
           extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorAddressYesNoPage(0)).get mustBe false
@@ -145,6 +152,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(SettlorCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(SettlorIndividualMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(SettlorMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
           extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)).get mustBe true
           extraction.right.value.get(SettlorIndividualNINOPage(0)).get mustBe "0234567890"
@@ -163,6 +171,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(1)).get mustBe true
           extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
           extraction.right.value.get(SettlorCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(SettlorIndividualMentalCapacityYesNoPage(1)).get mustBe false
           extraction.right.value.get(SettlorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.right.value.get(SettlorIndividualNINOYesNoPage(1)).get mustBe false
           extraction.right.value.get(SettlorIndividualNINOPage(1)) mustNot be(defined)
@@ -181,6 +190,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(2)).get mustBe false
           extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(SettlorCountryOfResidencePage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualMentalCapacityYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(SettlorMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
           extraction.right.value.get(SettlorIndividualNINOYesNoPage(2)).get mustBe false
           extraction.right.value.get(SettlorIndividualNINOPage(2)) mustNot be(defined)
@@ -204,6 +214,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = None,
             countryOfNationality = None,
             countryOfResidence = None,
+            legallyIncapable = None,
             identification = None,
             entityStart = "2019-11-26"
           ))
@@ -221,6 +232,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualMentalCapacityYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorAddressYesNoPage(0)) mustNot be(defined)
@@ -249,6 +261,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(SettlorCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(SettlorIndividualMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(SettlorMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
           extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
@@ -267,6 +280,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(1)).get mustBe true
           extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
           extraction.right.value.get(SettlorCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(SettlorIndividualMentalCapacityYesNoPage(1)).get mustBe false
           extraction.right.value.get(SettlorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.right.value.get(SettlorIndividualNINOYesNoPage(1)) mustNot be(defined)
           extraction.right.value.get(SettlorIndividualNINOPage(1)) mustNot be(defined)
@@ -285,6 +299,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(2)).get mustBe false
           extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(SettlorCountryOfResidencePage(2)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualMentalCapacityYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(SettlorMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
           extraction.right.value.get(SettlorIndividualNINOYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(SettlorIndividualNINOPage(2)) mustNot be(defined)

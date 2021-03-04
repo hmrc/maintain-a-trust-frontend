@@ -29,7 +29,8 @@ case class DisplayTrustAssets(monetary: List[AssetMonetaryAmount],
                               shares: List[DisplaySharesType],
                               business: List[DisplayBusinessAssetType],
                               partnerShip: List[DisplayTrustPartnershipType],
-                              other: List[DisplayOtherAssetType])
+                              other: List[DisplayOtherAssetType],
+                              nonEEABusiness: List[DisplayNonEEABusinessType])
 
 object DisplayTrustAssets {
 
@@ -39,7 +40,8 @@ object DisplayTrustAssets {
       (__ \ "shares").read[List[DisplaySharesType]].orElse(Reads.pure(Nil)) and
       (__ \ "business").read[List[DisplayBusinessAssetType]].orElse(Reads.pure(Nil)) and
       (__ \ "partnerShip").read[List[DisplayTrustPartnershipType]].orElse(Reads.pure(Nil)) and
-      (__ \ "other").read[List[DisplayOtherAssetType]].orElse(Reads.pure(Nil))
+      (__ \ "other").read[List[DisplayOtherAssetType]].orElse(Reads.pure(Nil)) and
+      (__ \ "nonEEABusiness").read[List[DisplayNonEEABusinessType]].orElse(Reads.pure(Nil))
     )(DisplayTrustAssets.apply _)
 
   implicit val writes : Writes[DisplayTrustAssets] = Json.writes[DisplayTrustAssets]
@@ -95,4 +97,16 @@ case class DisplayOtherAssetType(description: String,
 
 object DisplayOtherAssetType {
   implicit val otherAssetTypeFormat: Format[DisplayOtherAssetType] = Json.format[DisplayOtherAssetType]
+}
+
+case class DisplayNonEEABusinessType(lineNo: Option[String],
+                                     orgName: String,
+                                     address: AddressType,
+                                     govLawCountry: String,
+                                     startDate: LocalDate,
+                                     endDate: Option[LocalDate]
+                                    ) extends Asset
+
+object DisplayNonEEABusinessType {
+  implicit val nonEeaBusinessTypeFormat: Format[DisplayNonEEABusinessType] = Json.format[DisplayNonEEABusinessType]
 }

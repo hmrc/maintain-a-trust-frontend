@@ -205,6 +205,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
                 dateOfBirth = None,
                 countryOfNationality = Some(GB),
                 countryOfResidence = Some(GB),
+                legallyIncapable = Some(false),
                 phoneNumber = None,
                 identification = None,
                 entityStart = "2019-11-26"
@@ -248,6 +249,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(1)).get mustBe true
         extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(1)).get mustBe true
         extraction.right.value.get(TrusteeCountryOfResidencePage(1)).get mustBe GB
+        extraction.right.value.get(TrusteeMentalCapacityYesNoPage(1)).get mustBe true
         extraction.right.value.get(TrusteeNinoYesNoPage(1)).get mustBe false
         extraction.right.value.get(TrusteeNinoPage(1)) mustNot be(defined)
         extraction.right.value.get(TrusteeAddressYesNoPage(1)).get mustBe false

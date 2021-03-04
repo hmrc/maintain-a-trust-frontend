@@ -36,6 +36,7 @@ class IndividualLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTru
       .flatMap(_.set(TrusteeDateOfBirthPage(index), entity.dateOfBirth))
       .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
+      .flatMap(answers => extractMentalCapacity(entity.legallyIncapable, index, answers))
       .flatMap(answers => extractIdentification(entity.identification, index, answers))
       .flatMap(answers => extractEmail(entity.email, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber))

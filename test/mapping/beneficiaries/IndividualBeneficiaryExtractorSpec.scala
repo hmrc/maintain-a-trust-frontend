@@ -50,6 +50,11 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
       case 1 => Some("DE")
       case _ => None
     },
+    legallyIncapable = index match {
+      case 0 => Some(false)
+      case 1 => Some(true)
+      case _ => None
+    },
     vulnerableBeneficiary = Some(true),
     beneficiaryType = index match {
       case 0 => Some(RoleInCompany.Director)
@@ -118,6 +123,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
             dateOfBirth = None,
             countryOfResidence = None,
             countryOfNationality = None,
+            legallyIncapable = None,
             vulnerableBeneficiary = None,
             beneficiaryType = None,
             beneficiaryDiscretion = None,
@@ -141,6 +147,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
             dateOfBirth = None,
             countryOfResidence = None,
             countryOfNationality = None,
+            legallyIncapable = None,
             vulnerableBeneficiary = Some(false),
             beneficiaryType = None,
             beneficiaryDiscretion = None,
@@ -162,6 +169,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
           extraction.right.value.get(IndividualBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.right.value.get(IndividualBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(IndividualBeneficiaryMentalCapacityYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualBeneficiaryIncomeYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualBeneficiaryIncomePage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualBeneficiaryNationalInsuranceYesNoPage(0)).get mustBe false
@@ -230,7 +238,11 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
           extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityPage(0)).get mustBe GB
           extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityPage(1)).get mustBe "DE"
           extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityPage(2)) mustNot be(defined)
-          
+
+          extraction.right.value.get(IndividualBeneficiaryMentalCapacityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(IndividualBeneficiaryMentalCapacityYesNoPage(1)).get mustBe false
+          extraction.right.value.get(IndividualBeneficiaryMentalCapacityYesNoPage(2)) mustNot be(defined)
+
           extraction.right.value.get(IndividualBeneficiaryIncomeYesNoPage(0)).get mustBe false
           extraction.right.value.get(IndividualBeneficiaryIncomeYesNoPage(1)).get mustBe true
           extraction.right.value.get(IndividualBeneficiaryIncomeYesNoPage(2)).get mustBe true
@@ -303,6 +315,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
             dateOfBirth = None,
             countryOfResidence = None,
             countryOfNationality = None,
+            legallyIncapable = None,
             vulnerableBeneficiary = None,
             beneficiaryType = None,
             beneficiaryDiscretion = None,
@@ -326,6 +339,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
             dateOfBirth = None,
             countryOfResidence = None,
             countryOfNationality = None,
+            legallyIncapable = None,
             vulnerableBeneficiary = Some(false),
             beneficiaryType = None,
             beneficiaryDiscretion = None,
@@ -347,6 +361,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
           extraction.right.value.get(IndividualBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.right.value.get(IndividualBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(IndividualBeneficiaryMentalCapacityYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualBeneficiaryIncomeYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualBeneficiaryIncomePage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualBeneficiaryNationalInsuranceYesNoPage(0)) mustNot be(defined)
@@ -415,6 +430,10 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
           extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityPage(0)).get mustBe GB
           extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityPage(1)).get mustBe "DE"
           extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityPage(2)) mustNot be(defined)
+
+          extraction.right.value.get(IndividualBeneficiaryMentalCapacityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(IndividualBeneficiaryMentalCapacityYesNoPage(1)).get mustBe false
+          extraction.right.value.get(IndividualBeneficiaryMentalCapacityYesNoPage(2)) mustNot be(defined)
 
           extraction.right.value.get(IndividualBeneficiaryIncomeYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualBeneficiaryIncomeYesNoPage(1)) mustNot be(defined)
