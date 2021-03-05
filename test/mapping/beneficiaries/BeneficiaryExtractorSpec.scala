@@ -70,6 +70,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
               dateOfBirth = None,
               countryOfResidence = Some(GB),
               countryOfNationality = Some(GB),
+              legallyIncapable = Some(false),
               vulnerableBeneficiary = Some(false),
               beneficiaryType = None,
               beneficiaryDiscretion = None,
@@ -251,6 +252,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityYesNoPage(0)).get mustBe true
         extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
         extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityPage(0)).get mustBe GB
+        extraction.right.value.get(IndividualBeneficiaryMentalCapacityYesNoPage(0)).get mustBe true
         extraction.right.value.get(IndividualBeneficiaryIncomeYesNoPage(0)).get mustBe true
         extraction.right.value.get(IndividualBeneficiaryIncomePage(0)) mustNot be(defined)
         extraction.right.value.get(IndividualBeneficiaryNationalInsuranceYesNoPage(0)).get mustBe false

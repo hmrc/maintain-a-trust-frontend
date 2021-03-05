@@ -29,17 +29,19 @@ case class DisplayTrustAssets(monetary: List[AssetMonetaryAmount],
                               shares: List[DisplaySharesType],
                               business: List[DisplayBusinessAssetType],
                               partnerShip: List[DisplayTrustPartnershipType],
-                              other: List[DisplayOtherAssetType])
+                              other: List[DisplayOtherAssetType],
+                              nonEEABusiness: List[DisplayNonEEABusinessType])
 
 object DisplayTrustAssets {
 
   implicit val reads : Reads[DisplayTrustAssets] = (
-    (__ \ "monetary").read[List[AssetMonetaryAmount]].orElse(Reads.pure(Nil)) and
-      (__ \ "propertyOrLand").read[List[PropertyLandType]].orElse(Reads.pure(Nil)) and
-      (__ \ "shares").read[List[DisplaySharesType]].orElse(Reads.pure(Nil)) and
-      (__ \ "business").read[List[DisplayBusinessAssetType]].orElse(Reads.pure(Nil)) and
-      (__ \ "partnerShip").read[List[DisplayTrustPartnershipType]].orElse(Reads.pure(Nil)) and
-      (__ \ "other").read[List[DisplayOtherAssetType]].orElse(Reads.pure(Nil))
+    (__ \ "monetary").readWithDefault[List[AssetMonetaryAmount]](Nil) and
+      (__ \ "propertyOrLand").readWithDefault[List[PropertyLandType]](Nil) and
+      (__ \ "shares").readWithDefault[List[DisplaySharesType]](Nil) and
+      (__ \ "business").readWithDefault[List[DisplayBusinessAssetType]](Nil) and
+      (__ \ "partnerShip").readWithDefault[List[DisplayTrustPartnershipType]](Nil) and
+      (__ \ "other").readWithDefault[List[DisplayOtherAssetType]](Nil) and
+      (__ \ "nonEEABusiness").readWithDefault[List[DisplayNonEEABusinessType]](Nil)
     )(DisplayTrustAssets.apply _)
 
   implicit val writes : Writes[DisplayTrustAssets] = Json.writes[DisplayTrustAssets]
@@ -95,4 +97,19 @@ case class DisplayOtherAssetType(description: String,
 
 object DisplayOtherAssetType {
   implicit val otherAssetTypeFormat: Format[DisplayOtherAssetType] = Json.format[DisplayOtherAssetType]
+}
+
+case class DisplayNonEEABusinessType(lineNo: Option[String],
+                                     orgName: String,
+                                     address: AddressType,
+                                     govLawCountry: String,
+                                     startDate: LocalDate,
+                                     endDate: Option[LocalDate]) extends Asset with EntityType {
+
+  override val bpMatchStatus: Option[String] = None
+  override val entityStart: String = startDate.toString
+}
+
+object DisplayNonEEABusinessType {
+  implicit val nonEeaBusinessTypeFormat: Format[DisplayNonEEABusinessType] = Json.format[DisplayNonEEABusinessType]
 }

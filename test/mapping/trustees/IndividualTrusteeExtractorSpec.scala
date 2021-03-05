@@ -48,6 +48,11 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
       case 1 => Some("DE")
       case _ => None
     },
+    legallyIncapable = index match {
+      case 0 => Some(false)
+      case 1 => Some(true)
+      case _ => None
+    },
     phoneNumber = index match {
       case 0 => Some(s"${index}111144444")
       case _ => None
@@ -107,6 +112,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = None,
             countryOfNationality = None,
             countryOfResidence = None,
+            legallyIncapable = None,
             phoneNumber = None,
             identification = None,
             entityStart = "2019-11-26"
@@ -127,6 +133,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeNinoYesNoPage(0)).get mustBe false
           extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressYesNoPage(0)).get mustBe false
@@ -156,6 +163,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
           extraction.right.value.get(TrusteeNinoYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "0234567890"
@@ -175,6 +183,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(1)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
           extraction.right.value.get(TrusteeCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(1)).get mustBe false
           extraction.right.value.get(TrusteeMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.right.value.get(TrusteeNinoYesNoPage(1)).get mustBe false
           extraction.right.value.get(TrusteeNinoPage(1)) mustNot be(defined)
@@ -194,6 +203,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(2)).get mustBe false
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(TrusteeCountryOfResidencePage(2)) mustNot be(defined)
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(TrusteeMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
           extraction.right.value.get(TrusteeNinoYesNoPage(2)).get mustBe false
           extraction.right.value.get(TrusteeNinoPage(2)) mustNot be(defined)
@@ -217,6 +227,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = None,
             countryOfNationality = None,
             countryOfResidence = None,
+            legallyIncapable = None,
             phoneNumber = None,
             identification = None,
             entityStart = "2019-11-26"
@@ -237,6 +248,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeNinoYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeAddressYesNoPage(0)) mustNot be(defined)
@@ -266,6 +278,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
           extraction.right.value.get(TrusteeNinoYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
@@ -285,6 +298,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(1)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
           extraction.right.value.get(TrusteeCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(1)).get mustBe false
           extraction.right.value.get(TrusteeMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.right.value.get(TrusteeNinoYesNoPage(1)) mustNot be(defined)
           extraction.right.value.get(TrusteeNinoPage(1)) mustNot be(defined)
@@ -304,6 +318,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(2)).get mustBe false
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(TrusteeCountryOfResidencePage(2)) mustNot be(defined)
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(TrusteeMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
           extraction.right.value.get(TrusteeNinoYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(TrusteeNinoPage(2)) mustNot be(defined)

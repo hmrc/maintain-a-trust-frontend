@@ -31,6 +31,8 @@ trait Pages {
   def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
   def countryOfNationalityPage(index: Int): QuestionPage[String] = new EmptyPage[String]
 
+  def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+
   def addressYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
   def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
   def addressPage(index: Int): QuestionPage[Address] = new EmptyPage[Address]

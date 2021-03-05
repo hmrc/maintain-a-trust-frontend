@@ -76,6 +76,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 dateOfBirth = Some(LocalDate.parse("1970-02-01")),
                 countryOfResidence = Some(GB),
                 countryOfNationality = Some(GB),
+                legallyIncapable = Some(false),
                 identification = Some(
                   DisplayTrustIdentificationType(
                     safeId = Some("8947584-94759745-84758745"),
@@ -93,6 +94,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 dateOfBirth = Some(LocalDate.parse("1980-02-01")),
                 countryOfResidence = Some("DE"),
                 countryOfNationality = Some("DE"),
+                legallyIncapable = Some(true),
                 identification = Some(
                   DisplayTrustIdentificationType(
                     safeId = Some("1234567-12345678-12345678"),
@@ -121,6 +123,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorNINOYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorNINOPage(0)).get mustBe "1234567890"
           extraction.right.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
@@ -140,6 +143,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(1)).get mustBe true
           extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
           extraction.right.value.get(IndividualProtectorCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(1)).get mustBe false
           extraction.right.value.get(IndividualProtectorNINOYesNoPage(1)).get mustBe true
           extraction.right.value.get(IndividualProtectorNINOPage(1)).get mustBe "0987654321"
           extraction.right.value.get(IndividualProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
@@ -232,6 +236,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 dateOfBirth = Some(LocalDate.parse("1970-02-01")),
                 countryOfResidence = Some(GB),
                 countryOfNationality = None,
+                legallyIncapable = Some(false),
                 identification = Some(
                   DisplayTrustIdentificationType(
                     safeId = Some("8947584-94759745-84758745"),
@@ -273,6 +278,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorNINOYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorNINOPage(0)).get mustBe "1234567890"
           extraction.right.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
@@ -312,6 +318,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 dateOfBirth = Some(LocalDate.parse("1970-02-01")),
                 countryOfResidence = Some(GB),
                 countryOfNationality = Some(GB),
+                legallyIncapable = Some(false),
                 identification = Some(
                   DisplayTrustIdentificationType(
                     safeId = Some("8947584-94759745-84758745"),
@@ -329,6 +336,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 dateOfBirth = Some(LocalDate.parse("1980-02-01")),
                 countryOfResidence = Some("DE"),
                 countryOfNationality = Some("DE"),
+                legallyIncapable = Some(true),
                 identification = Some(
                   DisplayTrustIdentificationType(
                     safeId = Some("1234567-12345678-12345678"),
@@ -357,6 +365,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorNINOYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualProtectorNINOPage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
@@ -376,6 +385,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(1)).get mustBe true
           extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
           extraction.right.value.get(IndividualProtectorCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(1)).get mustBe false
           extraction.right.value.get(IndividualProtectorNINOYesNoPage(1)) mustNot be(defined)
           extraction.right.value.get(IndividualProtectorNINOPage(1)) mustNot be(defined)
           extraction.right.value.get(IndividualProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
@@ -468,6 +478,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 dateOfBirth = Some(LocalDate.parse("1970-02-01")),
                 countryOfResidence = Some(GB),
                 countryOfNationality = None,
+                legallyIncapable = Some(false),
                 identification = Some(
                   DisplayTrustIdentificationType(
                     safeId = Some("8947584-94759745-84758745"),
@@ -509,6 +520,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(IndividualProtectorNINOYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualProtectorNINOPage(0)) mustNot be(defined)
           extraction.right.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"

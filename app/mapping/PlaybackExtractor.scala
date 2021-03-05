@@ -57,6 +57,13 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
     answers.flatMap(answers => extractMetaData(entity, index, answers))
   }
 
+  def extractMentalCapacity(legallyIncapable: Option[Boolean], index: Int, answers: UserAnswers): Try[UserAnswers] = {
+    legallyIncapable match {
+      case Some(value) => answers.set(mentalCapacityYesNoPage(index), !value)
+      case None => Success(answers)
+    }
+  }
+
   def extractCountryOfResidence(countryOfResidence: Option[String],
                                 index: Int,
                                 answers: UserAnswers): Try[UserAnswers] = {

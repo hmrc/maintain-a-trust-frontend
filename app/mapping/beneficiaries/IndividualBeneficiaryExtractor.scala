@@ -40,6 +40,8 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
   override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryCountryOfNationalityInTheUkYesNoPage(index)
   override def countryOfNationalityPage(index: Int): QuestionPage[String] = IndividualBeneficiaryCountryOfNationalityPage(index)
 
+  override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryMentalCapacityYesNoPage(index)
+
   override def addressYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryAddressUKYesNoPage(index)
   override def addressPage(index: Int): QuestionPage[Address] = IndividualBeneficiaryAddressPage(index)
@@ -64,6 +66,7 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
       .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
+      .flatMap(answers => extractMentalCapacity(entity.legallyIncapable, index, answers))
       .flatMap(answers => extractVulnerability(entity.vulnerableBeneficiary, index, answers))
       .flatMap(_.set(IndividualBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
   }
@@ -73,6 +76,7 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
       answers.set(IndividualBeneficiaryRoleInCompanyPage(index), individualBeneficiary.beneficiaryType)
     }
   }
+
 
   private def extractVulnerability(vulnerable: Option[Boolean], index: Int, answers: UserAnswers): Try[UserAnswers] = {
     extractIfTaxable(answers) {

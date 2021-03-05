@@ -49,6 +49,8 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfResidenceInTheUkYesNoPage(index)
   override def countryOfResidencePage(index: Int): QuestionPage[String] = IndividualProtectorCountryOfResidencePage(index)
 
+  override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorMentalCapacityYesNoPage(index)
+
   override def metaDataPage(index: Int): QuestionPage[MetaData] = IndividualProtectorMetaData(index)
 
   override def updateUserAnswers(answers: Try[UserAnswers],
@@ -60,6 +62,7 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
       .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
+      .flatMap(answers => extractMentalCapacity(entity.legallyIncapable, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(IndividualProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
   }

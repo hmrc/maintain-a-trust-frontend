@@ -63,6 +63,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = LocalDate.parse("2018-02-01"),
             countryOfNationality = Some(GB),
             countryOfResidence = Some(GB),
+            legallyIncapable = Some(false),
             phoneNumber = "+441234567890",
             email = Some("test@test.com"),
             identification =
@@ -89,6 +90,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
           extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
           extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
@@ -109,6 +111,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = LocalDate.parse("2018-02-01"),
             countryOfNationality = Some("DE"),
             countryOfResidence = Some("DE"),
+            legallyIncapable = Some(true),
             phoneNumber = "+441234567890",
             email = Some("test@test.com"),
             identification =
@@ -135,6 +138,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe false
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe "DE"
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)).get mustBe false
           extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
           extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
           extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
@@ -155,6 +159,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = LocalDate.parse("2018-02-01"),
             countryOfNationality = Some(GB),
             countryOfResidence = Some(GB),
+            legallyIncapable = Some(false),
             phoneNumber = "+441234567890",
             email = Some("test@test.com"),
             identification =
@@ -181,6 +186,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
           extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
@@ -202,6 +208,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = LocalDate.parse("2018-02-01"),
             countryOfNationality = Some(GB),
             countryOfResidence = Some(GB),
+            legallyIncapable = Some(false),
             phoneNumber = "+441234567890",
             email = Some("test@test.com"),
             identification =
@@ -228,6 +235,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
           extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
@@ -253,6 +261,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = LocalDate.parse("2018-02-01"),
             countryOfNationality = Some(GB),
             countryOfResidence = Some(GB),
+            legallyIncapable = Some(false),
             phoneNumber = "+441234567890",
             email = Some("test@test.com"),
             identification =
@@ -279,6 +288,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
           extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
           extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
@@ -299,6 +309,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = LocalDate.parse("2018-02-01"),
             countryOfNationality = Some("DE"),
             countryOfResidence = Some("DE"),
+            legallyIncapable = Some(false),
             phoneNumber = "+441234567890",
             email = Some("test@test.com"),
             identification =
@@ -325,6 +336,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe false
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe "DE"
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
           extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
           extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
@@ -345,6 +357,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = LocalDate.parse("2018-02-01"),
             countryOfNationality = Some(GB),
             countryOfResidence = Some(GB),
+            legallyIncapable = Some(false),
             phoneNumber = "+441234567890",
             email = Some("test@test.com"),
             identification =
@@ -371,6 +384,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
           extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
@@ -392,6 +406,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = LocalDate.parse("2018-02-01"),
             countryOfNationality = Some(GB),
             countryOfResidence = Some(GB),
+            legallyIncapable = Some(false),
             phoneNumber = "+441234567890",
             email = Some("test@test.com"),
             identification =
@@ -418,6 +433,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)).get mustBe true
           extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe false
           extraction.right.value.get(TrusteeNinoPage(0)) mustNot be(defined)
           extraction.right.value.get(TrusteePassportIDCardPage(0)) must be(defined)
