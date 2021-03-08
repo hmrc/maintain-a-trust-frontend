@@ -16,13 +16,12 @@
 
 package connectors
 
-import java.time.LocalDate
-
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.Generators
 import models.http.DeclarationResponse.InternalServerError
 import models.http._
+import models.pages.ShareClass.Ordinary
 import models.{FullName, TrustDetails}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
@@ -31,6 +30,7 @@ import play.api.libs.json.{JsBoolean, Json}
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.WireMockHelper
 
+import java.time.LocalDate
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.io.Source
@@ -277,29 +277,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         inside(processed) {
           case Processed(data, bundleNumber) =>
 
-            bundleNumber mustBe "000012345678"
-
-            data.matchData.utr.get mustBe "2134514321"
-
-            data.correspondence.name mustBe "Trust of Brian Cloud"
-
-            data.declaration.name mustBe FullName("Agent", None, "Agency")
-
-            data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe FullName("Lead", None, "Trustee")
-
-            data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
-
-            data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe Some("1")
-            data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
-            data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
-
-            data.trust.entities.settlors.value.settlorCompany.head.name mustBe "Settlor Org 01"
-
-            data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe Some("1")
-            data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
-            data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
-
-            data.trust.assets.get.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+            data.trust.assets.get.shares.head.shareClass.get mustBe Ordinary
         }
 
         application.stop()
