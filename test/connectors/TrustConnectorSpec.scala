@@ -46,7 +46,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
     "get trusts details" in {
 
-      val utr = "1000000008"
+      val utr = "2134514321"
 
       val json = Json.parse(
         """
@@ -228,6 +228,58 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             bundleNumber mustBe "000012345678"
 
             data.matchData.utr.get mustBe "1000000007"
+
+            data.correspondence.name mustBe "Trust of Brian Cloud"
+
+            data.declaration.name mustBe FullName("Agent", None, "Agency")
+
+            data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe FullName("Lead", None, "Trustee")
+
+            data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
+
+            data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe Some("1")
+            data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
+            data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
+
+            data.trust.entities.settlors.value.settlorCompany.head.name mustBe "Settlor Org 01"
+
+            data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe Some("1")
+            data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
+            data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
+
+            data.trust.assets.get.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+        }
+
+        application.stop()
+      }
+
+      "must return playback data inside a Processed trust with shares asset" in {
+        val utr = "2134514321"
+        val payload = Source.fromFile(getClass.getResource("/display-trust-shares-asset.json").getPath).mkString
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(playbackUrl(utr)))
+            .willReturn(okJson(payload))
+        )
+
+        val processed = Await.result(connector.playback(utr), Duration.Inf)
+
+        inside(processed) {
+          case Processed(data, bundleNumber) =>
+
+            bundleNumber mustBe "000012345678"
+
+            data.matchData.utr.get mustBe "2134514321"
 
             data.correspondence.name mustBe "Trust of Brian Cloud"
 
