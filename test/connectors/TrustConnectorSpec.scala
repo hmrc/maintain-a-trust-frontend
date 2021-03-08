@@ -16,13 +16,12 @@
 
 package connectors
 
-import java.time.LocalDate
-
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.Generators
 import models.http.DeclarationResponse.InternalServerError
 import models.http._
+import models.pages.ShareClass.Ordinary
 import models.{FullName, TrustDetails}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
@@ -31,6 +30,7 @@ import play.api.libs.json.{JsBoolean, Json}
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.WireMockHelper
 
+import java.time.LocalDate
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.io.Source
@@ -46,7 +46,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
     "get trusts details" in {
 
-      val utr = "1000000008"
+      val utr = "2134514321"
 
       val json = Json.parse(
         """
@@ -248,6 +248,36 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
 
             data.trust.assets.get.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+        }
+
+        application.stop()
+      }
+
+      "must return playback data inside a Processed trust with shares asset" in {
+        val utr = "2134514321"
+        val payload = Source.fromFile(getClass.getResource("/display-trust-shares-asset.json").getPath).mkString
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(playbackUrl(utr)))
+            .willReturn(okJson(payload))
+        )
+
+        val processed = Await.result(connector.playback(utr), Duration.Inf)
+
+        inside(processed) {
+          case Processed(data, bundleNumber) =>
+
+            data.trust.assets.get.shares.head.shareClass.get mustBe Ordinary
         }
 
         application.stop()

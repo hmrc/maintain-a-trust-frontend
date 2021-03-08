@@ -28,7 +28,7 @@ class ShareClassSpec extends WordSpec with MustMatchers with ScalaCheckPropertyC
 
     "deserialise valid values" in {
 
-      val gen = Gen.oneOf(ShareClass.values.toSeq)
+      val gen = Gen.oneOf(ShareClass.values)
 
       forAll(gen) {
         shareClass =>
@@ -50,7 +50,7 @@ class ShareClassSpec extends WordSpec with MustMatchers with ScalaCheckPropertyC
 
     "serialise" in {
 
-      val gen = Gen.oneOf(ShareClass.values.toSeq)
+      val gen = Gen.oneOf(ShareClass.values)
 
       forAll(gen) {
         shareClass =>
