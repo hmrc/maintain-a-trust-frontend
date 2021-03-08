@@ -32,7 +32,7 @@ object ShareClass extends Enumerable.Implicits {
   case object OtherClasses extends WithName("Other classes of shares") with ShareClass
   case object Voting extends WithName("Voting shares") with ShareClass
   case object Dividend extends WithName("Dividend shares") with ShareClass
-  case object Capital extends WithName("Capital shares") with ShareClass
+  case object Capital extends WithName("Capital share") with ShareClass
   case object Other extends WithName("Other") with ShareClass
 
   val values: List[ShareClass] = List(
