@@ -60,7 +60,6 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
   }
 
   private def extractBeneficiaryDescription(entity: DisplayTrustLargeType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
       answers.set(
         LargeBeneficiaryDescriptionPage(index),
         Description(
@@ -71,13 +70,11 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
           entity.description4
         )
       )
-    }
   }
 
   private def extractNumberOfBeneficiaries(numberOfBeneficiary: String,
                                            index: Int,
                                            answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
       val setValue = (x: HowManyBeneficiaries) => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), x)
       numberOfBeneficiary.toInt match {
         case x if 0 to 100 contains x => setValue(Over1)
@@ -86,6 +83,5 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
         case x if 501 to 999 contains x => setValue(Over501)
         case _ => setValue(Over1001)
       }
-    }
   }
 }
