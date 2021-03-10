@@ -28,7 +28,7 @@ class WhatIsNextSpec extends WordSpec with MustMatchers with ScalaCheckPropertyC
 
     "deserialise valid values" in {
 
-      val gen = Gen.oneOf(WhatIsNext.values.toSeq)
+      val gen = Gen.oneOf(WhatIsNext.values)
 
       forAll(gen) {
         whatIsNext =>
@@ -50,12 +50,25 @@ class WhatIsNextSpec extends WordSpec with MustMatchers with ScalaCheckPropertyC
 
     "serialise" in {
 
-      val gen = Gen.oneOf(WhatIsNext.values.toSeq)
+      val gen = Gen.oneOf(WhatIsNext.values)
 
       forAll(gen) {
         whatIsNext =>
 
           Json.toJson(whatIsNext) mustEqual JsString(whatIsNext.toString)
+      }
+    }
+
+    "determine options correctly" when {
+
+      "4mld" in {
+        WhatIsNext.options(is5mldEnabled = false).map(_._1.value) mustBe
+          List("declare", "make-changes", "close-trust")
+      }
+
+      "5mld" in {
+        WhatIsNext.options(is5mldEnabled = true).map(_._1.value) mustBe
+          List("declare", "make-changes", "close-trust", "generate-pdf")
       }
     }
   }

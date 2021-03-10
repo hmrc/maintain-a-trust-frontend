@@ -29,7 +29,7 @@ object WhatIsNext extends Enumerable.Implicits {
   case object GeneratePdf extends WithName("generate-pdf") with WhatIsNext
 
   val values: List[WhatIsNext] = List(
-    DeclareTheTrustIsUpToDate, MakeChanges, CloseTrust
+    DeclareTheTrustIsUpToDate, MakeChanges, CloseTrust, GeneratePdf
   )
 
   def options(is5mldEnabled: Boolean): List[(RadioOption, String)] =
