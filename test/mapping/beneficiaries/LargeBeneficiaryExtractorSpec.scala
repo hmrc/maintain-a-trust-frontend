@@ -184,7 +184,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
           extraction.right.value.get(LargeBeneficiaryNamePage(2)).get mustBe "Large 2"
           extraction.right.value.get(LargeBeneficiaryCountryOfResidenceYesNoPage(2)).get mustBe false
-            extraction.right.value.get(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryCountryOfResidencePage(2)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryDescriptionPage(2)).get mustBe Description("Description 2", None, None, None, None)
           extraction.right.value.get(LargeBeneficiaryDiscretionYesNoPage(2)).get mustBe true
@@ -236,7 +236,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(LargeBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.right.value.get(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
-          extraction.right.value.get(LargeBeneficiaryDescriptionPage(0)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryDescriptionPage(0)).get mustBe Description("Description", Some("Description 1"), None, None, None)
           extraction.right.value.get(LargeBeneficiaryDiscretionYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryAddressYesNoPage(0)) mustNot be(defined)
@@ -245,7 +245,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(LargeBeneficiaryUtrPage(0)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.right.value.get(LargeBeneficiarySafeIdPage(0)) must be(defined)
-          extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe Over1
         }
 
         "with full data must return user answers updated" in {
@@ -261,7 +261,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(LargeBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
           extraction.right.value.get(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
           extraction.right.value.get(LargeBeneficiaryCountryOfResidencePage(0)).get mustBe GB
-          extraction.right.value.get(LargeBeneficiaryDescriptionPage(0)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryDescriptionPage(0)).get mustBe Description("Description 0", None, None, None, None)
           extraction.right.value.get(LargeBeneficiaryDiscretionYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryAddressYesNoPage(0)) mustNot be(defined)
@@ -270,13 +270,13 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(LargeBeneficiaryUtrPage(0)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
           extraction.right.value.get(LargeBeneficiarySafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe Over1
 
           extraction.right.value.get(LargeBeneficiaryNamePage(1)).get mustBe "Large 1"
           extraction.right.value.get(LargeBeneficiaryCountryOfResidenceYesNoPage(1)).get mustBe true
           extraction.right.value.get(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
           extraction.right.value.get(LargeBeneficiaryCountryOfResidencePage(1)).get mustBe "DE"
-          extraction.right.value.get(LargeBeneficiaryDescriptionPage(1)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryDescriptionPage(1)).get mustBe Description("Description 1", None, None, None, None)
           extraction.right.value.get(LargeBeneficiaryDiscretionYesNoPage(1)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryShareOfIncomePage(1)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryAddressYesNoPage(1)) mustNot be(defined)
@@ -285,13 +285,13 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(LargeBeneficiaryUtrPage(1)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.right.value.get(LargeBeneficiarySafeIdPage(1)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(1)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(1)).get mustBe Over201
 
           extraction.right.value.get(LargeBeneficiaryNamePage(2)).get mustBe "Large 2"
           extraction.right.value.get(LargeBeneficiaryCountryOfResidenceYesNoPage(2)).get mustBe false
           extraction.right.value.get(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryCountryOfResidencePage(2)) mustNot be(defined)
-          extraction.right.value.get(LargeBeneficiaryDescriptionPage(2)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryDescriptionPage(2)).get mustBe Description("Description 2", None, None, None, None)
           extraction.right.value.get(LargeBeneficiaryDiscretionYesNoPage(2)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryShareOfIncomePage(2)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryAddressYesNoPage(2)) mustNot be(defined)
@@ -300,7 +300,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(LargeBeneficiaryUtrPage(2)) mustNot be(defined)
           extraction.right.value.get(LargeBeneficiaryMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
           extraction.right.value.get(LargeBeneficiarySafeIdPage(2)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(2)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(2)).get mustBe Over1001
         }
 
       }
