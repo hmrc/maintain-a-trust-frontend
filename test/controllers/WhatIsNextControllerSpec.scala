@@ -43,45 +43,92 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
   "WhatIsNext Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "return OK and the correct view for a GET" when {
 
-      val userAnswers = emptyUserAnswersForUtr
+      "4mld" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
 
-      val request = FakeRequest(GET, onPageLoad)
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val result = route(application, request).value
+        val request = FakeRequest(GET, onPageLoad)
 
-      val view = application.injector.instanceOf[WhatIsNextView]
+        val result = route(application, request).value
 
-      status(result) mustEqual OK
+        val view = application.injector.instanceOf[WhatIsNextView]
 
-      contentAsString(result) mustEqual
-        view(form)(request, messages).toString
+        status(result) mustEqual OK
 
-      application.stop()
+        contentAsString(result) mustEqual
+          view(form, is5mldEnabled = false)(request, messages).toString
+
+        application.stop()
+      }
+
+      "5mld" in {
+
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request = FakeRequest(GET, onPageLoad)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[WhatIsNextView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form, is5mldEnabled = true)(request, messages).toString
+
+        application.stop()
+      }
     }
 
-    "populate the view correctly on a GET when the question has previously been answered" in {
+    "populate the view correctly on a GET when the question has previously been answered" when {
 
-      val userAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+      "4mld" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
+          .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
-      val request = FakeRequest(GET, onPageLoad)
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val view = application.injector.instanceOf[WhatIsNextView]
+        val request = FakeRequest(GET, onPageLoad)
 
-      val result = route(application, request).value
+        val view = application.injector.instanceOf[WhatIsNextView]
 
-      status(result) mustEqual OK
+        val result = route(application, request).value
 
-      contentAsString(result) mustEqual
-        view(form.fill(WhatIsNext.MakeChanges))(request, messages).toString
+        status(result) mustEqual OK
 
-      application.stop()
+        contentAsString(result) mustEqual
+          view(form.fill(WhatIsNext.MakeChanges), is5mldEnabled = false)(request, messages).toString
+
+        application.stop()
+      }
+
+      "5mld" in {
+
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
+          .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request = FakeRequest(GET, onPageLoad)
+
+        val view = application.injector.instanceOf[WhatIsNextView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form.fill(WhatIsNext.MakeChanges), is5mldEnabled = true)(request, messages).toString
+
+        application.stop()
+      }
     }
 
     "redirect to Session Expired if no data" in {
@@ -179,28 +226,55 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "return a Bad Request and errors when invalid data is submitted" in {
+    "return a Bad Request and errors when invalid data is submitted" when {
 
-      val userAnswers = emptyUserAnswersForUtr
+      "4mld" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
 
-      val request =
-        FakeRequest(POST, onSubmit.url)
-          .withFormUrlEncodedBody(("value", ""))
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val boundForm = form.bind(Map("value" -> ""))
+        val request =
+          FakeRequest(POST, onSubmit.url)
+            .withFormUrlEncodedBody(("value", ""))
 
-      val view = application.injector.instanceOf[WhatIsNextView]
+        val boundForm = form.bind(Map("value" -> ""))
 
-      val result = route(application, request).value
+        val view = application.injector.instanceOf[WhatIsNextView]
 
-      status(result) mustEqual BAD_REQUEST
+        val result = route(application, request).value
 
-      contentAsString(result) mustEqual
-        view(boundForm)(request, messages).toString
+        status(result) mustEqual BAD_REQUEST
 
-      application.stop()
+        contentAsString(result) mustEqual
+          view(boundForm, is5mldEnabled = false)(request, messages).toString
+
+        application.stop()
+      }
+
+      "5mld" in {
+
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request =
+          FakeRequest(POST, onSubmit.url)
+            .withFormUrlEncodedBody(("value", ""))
+
+        val boundForm = form.bind(Map("value" -> ""))
+
+        val view = application.injector.instanceOf[WhatIsNextView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        contentAsString(result) mustEqual
+          view(boundForm, is5mldEnabled = true)(request, messages).toString
+
+        application.stop()
+      }
     }
   }
 }

@@ -58,7 +58,7 @@ class WhatIsNextController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, request.userAnswers.is5mldEnabled))
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
@@ -66,7 +66,7 @@ class WhatIsNextController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.is5mldEnabled))),
 
         value => {
           for {
