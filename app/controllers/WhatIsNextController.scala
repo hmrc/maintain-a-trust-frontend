@@ -82,6 +82,9 @@ class WhatIsNextController @Inject()(
             case WhatIsNext.CloseTrust if config.closeATrustEnabled =>
               Redirect(controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad())
 
+            case WhatIsNext.GeneratePdf =>
+              Redirect(controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier))
+
             case _ =>
               Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
           }

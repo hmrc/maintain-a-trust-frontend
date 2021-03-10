@@ -226,6 +226,26 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
+    "redirect to Generated PDF when user selects 'generate-pdf'" in {
+
+      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
+        .build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+        .withFormUrlEncodedBody(("value", "generate-pdf"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.routes.ObligedEntityPdfController.getPdf(userAnswers.identifier).url
+
+      application.stop()
+    }
+
     "return a Bad Request and errors when invalid data is submitted" when {
 
       "4mld" in {
