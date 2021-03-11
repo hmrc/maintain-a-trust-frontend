@@ -434,7 +434,7 @@ declarationWhatNext5mld.close-trust.hint = Tell us the end date for the trust, a
 declarationWhatNext5mld.no-longer-taxable = Tell us if the trust no longer needs to pay tax
 declarationWhatNext5mld.no-longer-taxable.hint = Tell us if the trust no longer needs to pay tax or submit tax returns, and declare it to HMRC.
 declarationWhatNext5mld.generate-pdf = Get evidence of the trust’s registration
-declarationWhatNext5mld.generate-pdf.hint = Create a digitally signed PDF, showing the people and companies within the trust, that can be shared with Obliged Entities.
+declarationWhatNext5mld.generate-pdf.hint = Create a digitally signed PDF, which shows the people and companies within the trust, that can be shared with Obliged Entities.
 
 noTaxLiabilityInfo.title = You must contact HMRC
 noTaxLiabilityInfo.heading = You must contact HMRC

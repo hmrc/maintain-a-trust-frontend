@@ -16,11 +16,8 @@
 
 package controllers
 
-import config.FrontendAppConfig
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
-import handlers.ErrorHandler
-import javax.inject.Inject
 import mapping.UserAnswersExtractor
 import models.http._
 import models.requests.DataRequest
@@ -34,6 +31,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 import views.html.status._
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class TrustStatusController @Inject()(
@@ -46,8 +44,6 @@ class TrustStatusController @Inject()(
                                        ivDownView: IVDownView,
                                        trustConnector: TrustConnector,
                                        trustStoreConnector: TrustsStoreConnector,
-                                       config: FrontendAppConfig,
-                                       errorHandler: ErrorHandler,
                                        lockedView: TrustLockedView,
                                        alreadyClaimedView: TrustAlreadyClaimedView,
                                        playbackProblemContactHMRCView: PlaybackProblemContactHMRCView,
@@ -135,13 +131,13 @@ class TrustStatusController @Inject()(
         logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to the service closing the request")
         Future.successful(Redirect(routes.TrustStatusController.down()))
       case response =>
-        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to an error ${response}")
+        logger.warn(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to an error $response")
         Future.successful(Redirect(routes.TrustStatusController.down()))
     }
   }
 
   private def authenticateForIdentifierAndExtract(identifier: String, playback : GetTrust, fromVerify: Boolean)
-                                          (implicit request: DataRequest[AnyContent]) = {
+                                          (implicit request: DataRequest[AnyContent]): Future[Result] = {
     logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier trust is in a processed state")
     authenticationService.authenticateForIdentifier(identifier) flatMap {
       case Left(failure) =>
@@ -161,7 +157,7 @@ class TrustStatusController @Inject()(
 
     logger.info(s"[extract][Session ID: ${Session.id(hc)}] user authenticated for $identifier, attempting to extract to user answers")
 
-    playbackExtractor.extract(request.userAnswers, playback) match {
+    playbackExtractor.extract(request.userAnswers, playback) flatMap {
       case Right(answers) =>
         playbackRepository.set(answers) map { _ =>
           logger.info(s"[extract][Session ID: ${Session.id(hc)}] $identifier successfully extracted, showing information about maintaining")
