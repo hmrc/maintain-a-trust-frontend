@@ -29,7 +29,7 @@ import views.html.NoTaxLiabilityInfoView
 class NoTaxLiabilityInfoController @Inject()(
                                               actions: Actions,
                                               val controllerComponents: MessagesControllerComponents,
-                                              noTaxLiabilityInfoView: NoTaxLiabilityInfoView,
+                                              noTaxLiabilityInfoView: NoTaxLiabilityInfoView
                                             )(implicit config: FrontendAppConfig)
   extends FrontendBaseController with I18nSupport with Logging {
 
