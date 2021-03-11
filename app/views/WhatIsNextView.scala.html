@@ -22,11 +22,11 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], is5mldEnabled: Boolean)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)}${messages("declarationWhatNext.title")}"
-    ) {
+) {
 
     @formHelper(action = WhatIsNextController.onSubmit(), 'autoComplete -> "off") {
 
@@ -38,7 +38,7 @@
             field = form("value"),
             legend = messages("declarationWhatNext.heading"),
             headingIsLegend = true,
-            inputs = WhatIsNext.options
+            inputs = WhatIsNext.options(is5mldEnabled)
         )
 
         @components.submit_button(Some("site.onlyContinue"))

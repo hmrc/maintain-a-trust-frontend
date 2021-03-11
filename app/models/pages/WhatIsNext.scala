@@ -24,19 +24,18 @@ sealed trait WhatIsNext
 object WhatIsNext extends Enumerable.Implicits {
 
   case object DeclareTheTrustIsUpToDate extends WithName("declare") with WhatIsNext
-
   case object MakeChanges extends WithName("make-changes") with WhatIsNext
-
   case object CloseTrust extends WithName("close-trust") with WhatIsNext
+  case object GeneratePdf extends WithName("generate-pdf") with WhatIsNext
 
   val values: List[WhatIsNext] = List(
-    DeclareTheTrustIsUpToDate, MakeChanges, CloseTrust
+    DeclareTheTrustIsUpToDate, MakeChanges, CloseTrust, GeneratePdf
   )
 
-  val options: List[(RadioOption, String)] = values.map {
-    value =>
-      (RadioOption("declarationWhatNext", value.toString), s"declarationWhatNext.${value.toString}.hint")
-  }
+  def options(is5mldEnabled: Boolean): List[(RadioOption, String)] =
+    values
+      .filterNot(_ == GeneratePdf && !is5mldEnabled)
+      .map(value => (RadioOption("declarationWhatNext", value.toString), s"declarationWhatNext.$value.hint"))
 
   implicit val enumerable: Enumerable[WhatIsNext] =
     Enumerable(values.map(v => v.toString -> v): _*)

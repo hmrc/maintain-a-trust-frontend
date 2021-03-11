@@ -116,3 +116,5 @@ GET        /how-to-close-trust                          controllers.close.HowToC
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
 GET        /overview                                    controllers.task_list.TaskListController.onPageLoad()
+
+GET        /get-pdf/:identifier                         controllers.ObligedEntityPdfController.getPdf(identifier)
