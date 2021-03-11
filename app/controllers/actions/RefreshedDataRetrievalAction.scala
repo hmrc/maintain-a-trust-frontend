@@ -16,8 +16,6 @@
 
 package controllers.actions
 
-import java.time.{LocalDate, LocalDateTime}
-
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
 import controllers.routes
@@ -37,15 +35,22 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import utils.Session
 
+import java.time.{LocalDate, LocalDateTime}
 import scala.concurrent.{ExecutionContext, Future}
 
-class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default,
-                                             playbackRepository: PlaybackRepository,
-                                             trustConnector: TrustConnector,
-                                             playbackExtractor: UserAnswersExtractor
-                                            )(override implicit val executionContext: ExecutionContext) extends RefreshedDataRetrievalAction with Logging {
+class RefreshedDataRetrievalActionImpl @Inject()(
+                                                  val parser: BodyParsers.Default,
+                                                  playbackRepository: PlaybackRepository,
+                                                  trustConnector: TrustConnector,
+                                                  playbackExtractor: UserAnswersExtractor
+                                                )(override implicit val executionContext: ExecutionContext) extends RefreshedDataRetrievalAction with Logging {
 
-  case class SubmissionData(identifier: String, whatIsNext: WhatIsNext, tvn: String, date: LocalDateTime, agent: Option[AgentDeclaration], endDate: Option[LocalDate])
+  case class SubmissionData(identifier: String,
+                            whatIsNext: WhatIsNext,
+                            tvn: String,
+                            date: LocalDateTime,
+                            agent: Option[AgentDeclaration],
+                            endDate: Option[LocalDate])
 
   override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
@@ -68,19 +73,19 @@ class RefreshedDataRetrievalActionImpl @Inject()(val parser: BodyParsers.Default
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
-            logger.error(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}] unable to get data from user answers")
-            Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+      logger.error(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}] unable to get data from user answers")
+      Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
   }
 
   private def extractAndRefreshUserAnswers[A](data: SubmissionData, identifier: String, playback: GetTrust)
-                        (implicit request: DataRequest[A]) : Future[Either[Result, DataRequest[A]]] = {
+                                             (implicit request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
-    val hc = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
 
     val newSession = UserAnswers.startNewSession(request.user.internalId, identifier)
 
-    playbackExtractor.extract(newSession, playback) match {
+    playbackExtractor.extract(newSession, playback) flatMap {
       case Right(answers) =>
         for {
           updatedAnswers <- Future.fromTry {

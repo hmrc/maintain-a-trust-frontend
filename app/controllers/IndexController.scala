@@ -17,7 +17,6 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import controllers.actions.Actions
 import models.requests.IdentifierRequest
 import play.api.Logging
@@ -30,11 +29,11 @@ import utils.Session
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IndexController @Inject()(val controllerComponents: MessagesControllerComponents,
-                                actions: Actions,
-                                appConfig: FrontendAppConfig,
-                                uaSetupService: UserAnswersSetupService,
-                                featureFlagService: FeatureFlagService
+class IndexController @Inject()(
+                                 val controllerComponents: MessagesControllerComponents,
+                                 actions: Actions,
+                                 uaSetupService: UserAnswersSetupService,
+                                 featureFlagService: FeatureFlagService
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.auth.async {

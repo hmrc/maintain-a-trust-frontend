@@ -20,13 +20,18 @@ import com.google.inject.Inject
 import mapping.PlaybackExtractionErrors.FailedToExtractData
 import models.UserAnswers
 import models.http.GetTrust
+import uk.gov.hmrc.http.HeaderCarrier
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class FakeUserAnswerExtractor @Inject() extends UserAnswersExtractor {
-  override def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionErrors.PlaybackExtractionError, UserAnswers] =
-    Right(UserAnswers("id","utr"))
+  override def extract(answers: UserAnswers, data: GetTrust)
+                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[PlaybackExtractionErrors.PlaybackExtractionError, UserAnswers]] =
+    Future.successful(Right(UserAnswers("id","utr")))
 }
 
 class FakeFailingUserAnswerExtractor @Inject() extends UserAnswersExtractor {
-  override def extract(answers: UserAnswers, data: GetTrust): Either[PlaybackExtractionErrors.PlaybackExtractionError, UserAnswers] =
-    Left(FailedToExtractData("No beneficiaries"))
+  override def extract(answers: UserAnswers, data: GetTrust)
+                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[PlaybackExtractionErrors.PlaybackExtractionError, UserAnswers]] =
+    Future.successful(Left(FailedToExtractData("No beneficiaries")))
 }
