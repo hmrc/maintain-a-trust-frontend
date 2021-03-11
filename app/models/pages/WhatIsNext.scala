@@ -26,16 +26,21 @@ object WhatIsNext extends Enumerable.Implicits {
   case object DeclareTheTrustIsUpToDate extends WithName("declare") with WhatIsNext
   case object MakeChanges extends WithName("make-changes") with WhatIsNext
   case object CloseTrust extends WithName("close-trust") with WhatIsNext
+  case object NoLongerTaxable extends WithName("no-longer-taxable") with WhatIsNext
   case object GeneratePdf extends WithName("generate-pdf") with WhatIsNext
 
   val values: List[WhatIsNext] = List(
-    DeclareTheTrustIsUpToDate, MakeChanges, CloseTrust, GeneratePdf
+    DeclareTheTrustIsUpToDate, MakeChanges, CloseTrust, NoLongerTaxable, GeneratePdf
   )
 
-  def options(is5mldEnabled: Boolean): List[(RadioOption, String)] =
+  def options(is5mldEnabled: Boolean, isTrust5mldTaxable: Boolean): List[(RadioOption, String)] = {
+    val suffix: String = if (is5mldEnabled){"5mld"}else{""}
     values
       .filterNot(_ == GeneratePdf && !is5mldEnabled)
-      .map(value => (RadioOption("declarationWhatNext", value.toString), s"declarationWhatNext.$value.hint"))
+      .filterNot(_ == NoLongerTaxable && !is5mldEnabled)
+      .filterNot(_ == NoLongerTaxable && !isTrust5mldTaxable)
+      .map(value => (RadioOption(s"declarationWhatNext$suffix", value.toString), s"declarationWhatNext$suffix.$value.hint"))
+  }
 
   implicit val enumerable: Enumerable[WhatIsNext] =
     Enumerable(values.map(v => v.toString -> v): _*)

@@ -20,7 +20,6 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
 import pages.ViewLastDeclarationYesNoPage
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -50,7 +49,7 @@ class ViewLastDeclarationYesNoController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, request.userAnswers.identifier))
+      Ok(view(preparedForm, request.userAnswers.identifier, request.userAnswers.identifierType))
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
@@ -58,7 +57,7 @@ class ViewLastDeclarationYesNoController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.identifier))),
+          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.identifier, request.userAnswers.identifierType))),
 
         value => {
           for {
@@ -71,12 +70,7 @@ class ViewLastDeclarationYesNoController @Inject()(
             if (value) {
               Redirect(controllers.print.routes.PrintLastDeclaredAnswersController.onPageLoad())
             } else {
-              val isTrust5mld = request.userAnswers.get(ExpressTrustYesNoPage).isDefined
-              if (request.userAnswers.is5mldEnabled && isTrust5mld) {
-                Redirect(routes.WhatIsNext5mldController.onPageLoad())
-              } else {
                 Redirect(routes.WhatIsNextController.onPageLoad())
-              }
             }
           }
         }

@@ -23,6 +23,7 @@ import models.pages.WhatIsNext
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.WhatIsNextPage
+import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
@@ -45,7 +46,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
     "return OK and the correct view for a GET" when {
 
-      "4mld" in {
+      "in 4mld mode" in {
 
         val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
 
@@ -60,12 +61,12 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form, is5mldEnabled = false)(request, messages).toString
+          view(form, is5mldEnabled = false, isTrust5mldTaxable = false)(request, messages).toString
 
         application.stop()
       }
 
-      "5mld" in {
+      "in 5mld mode" in {
 
         val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
 
@@ -80,7 +81,28 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form, is5mldEnabled = true)(request, messages).toString
+          view(form, is5mldEnabled = true, isTrust5mldTaxable = false)(request, messages).toString
+
+        application.stop()
+      }
+
+      "in 5mld mode maintaining a 5mld taxable trust" in {
+
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+          .set(ExpressTrustYesNoPage, false).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request = FakeRequest(GET, onPageLoad)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[WhatIsNextView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form, is5mldEnabled = true, isTrust5mldTaxable = true)(request, messages).toString
 
         application.stop()
       }
@@ -88,7 +110,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" when {
 
-      "4mld" in {
+      "in 4mld mode" in {
 
         val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
           .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
@@ -104,12 +126,12 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form.fill(WhatIsNext.MakeChanges), is5mldEnabled = false)(request, messages).toString
+          view(form.fill(WhatIsNext.MakeChanges), is5mldEnabled = false, isTrust5mldTaxable = false)(request, messages).toString
 
         application.stop()
       }
 
-      "5mld" in {
+      "in 5mld mode" in {
 
         val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
           .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
@@ -125,7 +147,29 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form.fill(WhatIsNext.MakeChanges), is5mldEnabled = true)(request, messages).toString
+          view(form.fill(WhatIsNext.MakeChanges), is5mldEnabled = true, isTrust5mldTaxable = false)(request, messages).toString
+
+        application.stop()
+      }
+
+      "in 5mld mode maintaining a 5mld taxable trust" in {
+
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+          .set(WhatIsNextPage, WhatIsNext.NoLongerTaxable).success.value
+          .set(ExpressTrustYesNoPage, false).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request = FakeRequest(GET, onPageLoad)
+
+        val view = application.injector.instanceOf[WhatIsNextView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form.fill(WhatIsNext.NoLongerTaxable), is5mldEnabled = true, isTrust5mldTaxable = true)(request, messages).toString
 
         application.stop()
       }
@@ -248,7 +292,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
     "return a Bad Request and errors when invalid data is submitted" when {
 
-      "4mld" in {
+      "in 4mld mode" in {
 
         val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
 
@@ -267,12 +311,12 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual BAD_REQUEST
 
         contentAsString(result) mustEqual
-          view(boundForm, is5mldEnabled = false)(request, messages).toString
+          view(boundForm, is5mldEnabled = false, isTrust5mldTaxable = false)(request, messages).toString
 
         application.stop()
       }
 
-      "5mld" in {
+      "in 5mld mode" in {
 
         val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
 
@@ -291,7 +335,32 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual BAD_REQUEST
 
         contentAsString(result) mustEqual
-          view(boundForm, is5mldEnabled = true)(request, messages).toString
+          view(boundForm, is5mldEnabled = true, isTrust5mldTaxable = false)(request, messages).toString
+
+        application.stop()
+      }
+
+      "in 5mld mode maintaining a 5mld taxable trust" in {
+
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+          .set(ExpressTrustYesNoPage, false).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request =
+          FakeRequest(POST, onSubmit.url)
+            .withFormUrlEncodedBody(("value", ""))
+
+        val boundForm = form.bind(Map("value" -> ""))
+
+        val view = application.injector.instanceOf[WhatIsNextView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        contentAsString(result) mustEqual
+          view(boundForm, is5mldEnabled = true, isTrust5mldTaxable = true)(request, messages).toString
 
         application.stop()
       }

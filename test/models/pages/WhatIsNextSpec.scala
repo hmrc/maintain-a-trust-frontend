@@ -61,14 +61,19 @@ class WhatIsNextSpec extends WordSpec with MustMatchers with ScalaCheckPropertyC
 
     "determine options correctly" when {
 
-      "4mld" in {
-        WhatIsNext.options(is5mldEnabled = false).map(_._1.value) mustBe
+      "in 4mld mode" in {
+        WhatIsNext.options(is5mldEnabled = false, isTrust5mldTaxable = false).map(_._1.value) mustBe
           List("declare", "make-changes", "close-trust")
       }
 
-      "5mld" in {
-        WhatIsNext.options(is5mldEnabled = true).map(_._1.value) mustBe
+      "in 5mld mode" in {
+        WhatIsNext.options(is5mldEnabled = true, isTrust5mldTaxable = false).map(_._1.value) mustBe
           List("declare", "make-changes", "close-trust", "generate-pdf")
+      }
+
+      "in 5mld mode maintaining a 5mld taxable trust" in {
+        WhatIsNext.options(is5mldEnabled = true, isTrust5mldTaxable = true).map(_._1.value) mustBe
+          List("declare", "make-changes", "close-trust", "no-longer-taxable", "generate-pdf")
       }
     }
   }

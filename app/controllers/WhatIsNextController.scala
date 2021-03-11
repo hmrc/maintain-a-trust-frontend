@@ -24,7 +24,9 @@ import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.WhatIsNextFormProvider
 import models.Enumerable
 import models.pages.WhatIsNext
+import models.requests.{DataRequest, IdentifierRequest}
 import pages.WhatIsNextPage
+import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -58,7 +60,7 @@ class WhatIsNextController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, request.userAnswers.is5mldEnabled))
+      Ok(view(preparedForm, request.userAnswers.is5mldEnabled, isTrust5mldTaxable))
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
@@ -66,7 +68,7 @@ class WhatIsNextController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.is5mldEnabled))),
+          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.is5mldEnabled, isTrust5mldTaxable))),
 
         value => {
           for {
@@ -82,6 +84,9 @@ class WhatIsNextController @Inject()(
             case WhatIsNext.CloseTrust if config.closeATrustEnabled =>
               Redirect(controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad())
 
+            case WhatIsNext.NoLongerTaxable =>
+              Redirect(controllers.routes.NoTaxLiabilityInfoController.onPageLoad())
+
             case WhatIsNext.GeneratePdf =>
               Redirect(controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier))
 
@@ -90,5 +95,9 @@ class WhatIsNextController @Inject()(
           }
         }
       )
+  }
+
+  private def isTrust5mldTaxable(implicit request: DataRequest[_]) = {
+    request.userAnswers.get(ExpressTrustYesNoPage).isDefined && request.userAnswers.isTrustTaxable
   }
 }

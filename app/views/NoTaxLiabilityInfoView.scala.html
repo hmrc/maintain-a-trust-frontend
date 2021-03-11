@@ -29,18 +29,18 @@
 
     @components.back_link()
 
-    @components.heading_with_caption(headingKey = "noTaxLiabilityInfo.heading", caption = s"noTaxLiabilityInfo.$identifierType.caption", captionParam = identifier)
+    @components.heading_with_caption(headingKey = "noTaxLiabilityInfo.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
     <p>@messages("noTaxLiabilityInfo.paragraph1")</p>
 
     <ul class="list list-bullet">
-        <li>@components.link(appConfig.helplineUrl, "help-link", messages("noTaxLiabilityInfo.bullet1"))</li>
-        <li>@components.link(appConfig.sa900Link, "sa900-link", messages("noTaxLiabilityInfo.bullet2"))</li>
+        <li>@components.link(appConfig.helplineUrl, "help-link", messages("noTaxLiabilityInfo.bullet1"), openInNewWindow = true)</li>
+        <li>@components.link(appConfig.sa900Link, "sa900-link", messages("noTaxLiabilityInfo.bullet2"), openInNewWindow = true)</li>
     </ul>
 
     <p>@messages("noTaxLiabilityInfo.paragraph2")</p>
 
-    @components.button_link(messages("site.save.continue"), controllers.routes.WhatIsNext5mldController.onPageLoad().url)
+    @components.button_link(messages("site.save.continue"), controllers.routes.WhatIsNextController.onPageLoad().url)
 
 }
 

@@ -21,7 +21,7 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_], identifier: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)}${messages("viewLastDeclarationYesNo.title")}"
@@ -37,7 +37,7 @@
             field = form("value"),
             label = messages("viewLastDeclarationYesNo.heading"),
             legendAsHeading = true,
-            caption = Some(subheading(identifier)),
+            caption = Some(messages(s"$identifierType.caption", identifier)),
             hint = Some(messages("viewLastDeclarationYesNo.hint"))
         )
 

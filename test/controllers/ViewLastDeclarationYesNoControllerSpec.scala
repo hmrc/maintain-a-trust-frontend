@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.YesNoFormProvider
-import models.UserAnswers
+import models.{UTR, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -56,7 +56,7 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, utr)(request, messages).toString
+        view(form, utr, UTR)(request, messages).toString
 
       application.stop()
     }
@@ -76,7 +76,7 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true), utr)(request, messages).toString
+        view(form.fill(true), utr, UTR)(request, messages).toString
 
       application.stop()
     }
@@ -140,7 +140,7 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, utr)(request, messages).toString
+        view(boundForm, utr, UTR)(request, messages).toString
 
       application.stop()
     }

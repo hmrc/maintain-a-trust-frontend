@@ -30,7 +30,7 @@
 
     @components.back_link()
 
-    @components.heading_with_caption(headingKey = "agentNotAuthorised.heading", caption = s"agentNotAuthorised.$identifierType.caption", captionParam = identifier)
+    @components.heading_with_caption(headingKey = "agentNotAuthorised.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
     <p>@messages("agentNotAuthorised.p1")</p>
     <p>@messages("agentNotAuthorised.p2") <a href="@config.agentInvitationsUrl">@messages("agentNotAuthorised.p2.a")</a></p>

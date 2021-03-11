@@ -22,7 +22,7 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_], is5mldEnabled: Boolean)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], is5mldEnabled: Boolean, isTrust5mldTaxable: Boolean)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)}${messages("declarationWhatNext.title")}"
@@ -38,7 +38,7 @@
             field = form("value"),
             legend = messages("declarationWhatNext.heading"),
             headingIsLegend = true,
-            inputs = WhatIsNext.options(is5mldEnabled)
+            inputs = WhatIsNext.options(is5mldEnabled, isTrust5mldTaxable)
         )
 
         @components.submit_button(Some("site.onlyContinue"))

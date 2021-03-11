@@ -28,7 +28,7 @@
     title = messages("trustAlreadyClaimed.title")
 ) {
 
-    @components.heading_with_caption(headingKey = "trustAlreadyClaimed.heading", caption = s"trustAlreadyClaimed.$identifierType.caption", captionParam = identifier)
+    @components.heading_with_caption(headingKey = "trustAlreadyClaimed.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
     <p>@messages("trustAlreadyClaimed.p1")</p>
 

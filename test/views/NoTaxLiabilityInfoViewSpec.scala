@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-package forms
+package views
 
-import com.google.inject.Inject
-import forms.mappings.Mappings
-import models.pages.WhatIsNext5mld
-import play.api.data.Form
+import models.UTR
+import views.behaviours.ViewBehaviours
+import views.html.NoTaxLiabilityInfoView
 
-class WhatIsNext5mldFormProvider @Inject() extends Mappings {
+class NoTaxLiabilityInfoViewSpec extends ViewBehaviours {
 
-  def apply(): Form[WhatIsNext5mld] =
-    Form(
-      "value" -> enumerable[WhatIsNext5mld]("declarationWhatNext5mld.error.required")
-    )
+  "NoTaxLiabilityInfo view" must {
+    val utr = "0987654321"
+    val view = viewFor[NoTaxLiabilityInfoView](Some(emptyUserAnswersForUtr))
+
+    val applyView = view.apply("0987654321", UTR)(fakeRequest, messages)
+
+    behave like normalPageTitleWithCaption(applyView,
+      "noTaxLiabilityInfo",
+      "utr",
+      utr,
+    "paragraph1", "bullet1", "bullet2", "paragraph2")
+
+    behave like pageWithBackLink(applyView)
+  }
 }
