@@ -19,19 +19,21 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.Actions
+import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
-import views.html.{AgentCannotAccessTrustYetView, InformationMaintainingThisTrustView}
+import views.html.{AgentCannotAccessTrustYetView, InformationMaintaining5mldTrustView, InformationMaintainingThisTrustView}
 
 @Singleton
 class InformationMaintainingThisTrustController @Inject()(
                                                            actions: Actions,
                                                            val controllerComponents: MessagesControllerComponents,
                                                            maintainingTrustView: InformationMaintainingThisTrustView,
+                                                           maintaining5mldTrustView: InformationMaintaining5mldTrustView,
                                                            agentCannotAccessTrustYetView: AgentCannotAccessTrustYetView
                                                          )(implicit config: FrontendAppConfig)
   extends FrontendBaseController with I18nSupport with Logging {
@@ -44,8 +46,15 @@ class InformationMaintainingThisTrustController @Inject()(
       logger.info(s"[Session ID: ${Session.id(hc)}] showing information about this trust $identifier")
 
       request.user.affinityGroup match {
-        case Agent if !config.playbackEnabled => Ok(agentCannotAccessTrustYetView(identifier, identifierType))
-        case _ => Ok(maintainingTrustView(identifier, identifierType))
+        case Agent if !config.playbackEnabled =>
+          Ok(agentCannotAccessTrustYetView(identifier, identifierType))
+        case _ =>
+          val isTrust5mld = request.userAnswers.get(ExpressTrustYesNoPage).isDefined
+          if (request.userAnswers.is5mldEnabled && isTrust5mld) {
+            Ok(maintaining5mldTrustView(identifier, identifierType))
+          } else {
+            Ok(maintainingTrustView(identifier, identifierType))
+          }
       }
   }
 }

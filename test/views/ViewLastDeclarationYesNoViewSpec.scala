@@ -17,6 +17,7 @@
 package views
 
 import forms.YesNoFormProvider
+import models.UTR
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
@@ -35,7 +36,7 @@ class ViewLastDeclarationYesNoViewSpec extends YesNoViewBehaviours {
     val view = viewFor[ViewLastDeclarationYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, utr)(fakeRequest, messages)
+      view.apply(form, utr, UTR)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView(form),
       messageKeyPrefix,

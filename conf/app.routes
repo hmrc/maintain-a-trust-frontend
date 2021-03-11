@@ -41,6 +41,8 @@ GET        /confirmation                                controllers.declaration.
 GET        /declare-what-changed                        controllers.WhatIsNextController.onPageLoad()
 POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()
 
+GET        /declare-tax-change                          controllers.NoTaxLiabilityInfoController.onPageLoad()
+
 GET        /is-agency-address-in-uk                     controllers.declaration.AgencyRegisteredAddressUkYesNoController.onPageLoad()
 POST       /is-agency-address-in-uk                     controllers.declaration.AgencyRegisteredAddressUkYesNoController.onSubmit()
 

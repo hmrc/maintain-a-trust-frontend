@@ -16,20 +16,24 @@
 
 package views
 
-class ViewUtilsSpec extends ViewSpecBase {
+import models.UTR
+import views.behaviours.ViewBehaviours
+import views.html.NoTaxLiabilityInfoView
 
-  "View utils" must {
+class NoTaxLiabilityInfoViewSpec extends ViewBehaviours {
 
-    "render the subheading for a utr" in {
-      val heading = ViewUtils.subheading("1234567890")
-      heading mustBe "This trust’s UTR: 1234567890"
-    }
+  "NoTaxLiabilityInfo view" must {
+    val utr = "0987654321"
+    val view = viewFor[NoTaxLiabilityInfoView](Some(emptyUserAnswersForUtr))
 
-    "render the subheading for a urn" in {
-      val heading = ViewUtils.subheading("ABTRUST12345678")
-      heading mustBe "This trust’s URN: ABTRUST12345678"
-    }
+    val applyView = view.apply("0987654321", UTR)(fakeRequest, messages)
 
+    behave like normalPageTitleWithCaption(applyView,
+      "noTaxLiabilityInfo",
+      "utr",
+      utr,
+    "paragraph1", "bullet1", "bullet2", "paragraph2")
+
+    behave like pageWithBackLink(applyView)
   }
-
 }

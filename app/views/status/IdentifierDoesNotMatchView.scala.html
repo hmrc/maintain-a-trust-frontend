@@ -30,7 +30,7 @@ main_template: MainTemplate
 title = messages("identifierDoesNotMatch.title")
 ) {
 
- @components.heading_with_caption(headingKey = "identifierDoesNotMatch.heading", caption = s"identifierDoesNotMatch.$identifierType.caption", captionParam = identifier)
+ @components.heading_with_caption(headingKey = "identifierDoesNotMatch.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
  <p>@messages("identifierDoesNotMatch.p1")</p>
 

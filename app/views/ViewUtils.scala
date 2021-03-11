@@ -16,7 +16,6 @@
 
 package views
 
-import models.IsUTR
 import play.api.data.Form
 import play.api.i18n.Messages
 
@@ -28,11 +27,6 @@ object ViewUtils {
 
   def breadcrumbTitle(title: String)(implicit messages: Messages): String = {
       s"$title - ${messages("site.service_name")} - GOV.UK"
-  }
-
-  def subheading(identifier: String)(implicit messages: Messages) : String = {
-    val identifierType = if (IsUTR(identifier)) "utr" else "urn"
-    messages(s"$identifierType.subheading", identifier)
   }
 
 }

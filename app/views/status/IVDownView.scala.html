@@ -29,7 +29,7 @@
     title = messages("ivDown.title")
     ) {
 
-    @components.heading_with_caption(headingKey = "ivDown.heading", caption = s"ivDown.$identifierType.caption", captionParam = identifier)
+    @components.heading_with_caption(headingKey = "ivDown.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
     <p>@messages("ivDown.p1") <a id="register-and-maintain-link" href="@{appConfig.serviceDownContactUrl}">@messages("ivDown.contact.link")</a>.</p>
 }

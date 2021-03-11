@@ -33,7 +33,7 @@ class MaintainThisTrustViewSpec extends ViewBehaviours {
       "maintainThisTrust",
       "utr",
       utr,
-      "UTR.p1.a", "p1.b", "p3", "p4", "p4.a")
+      "utr.p1.a", "p1.b", "p3", "p4", "p4.a")
 
   }
 
@@ -47,7 +47,7 @@ class MaintainThisTrustViewSpec extends ViewBehaviours {
       "maintainThisTrust",
       "urn",
       urn,
-      "URN.p1.a", "p1.b", "p3", "p4", "p4.a")
+      "urn.p1.a", "p1.b", "p3", "p4", "p4.a")
 
   }
 }

@@ -49,7 +49,7 @@ class ViewLastDeclarationYesNoController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, request.userAnswers.identifier))
+      Ok(view(preparedForm, request.userAnswers.identifier, request.userAnswers.identifierType))
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
@@ -57,7 +57,7 @@ class ViewLastDeclarationYesNoController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.identifier))),
+          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.identifier, request.userAnswers.identifierType))),
 
         value => {
           for {
@@ -70,7 +70,7 @@ class ViewLastDeclarationYesNoController @Inject()(
             if (value) {
               Redirect(controllers.print.routes.PrintLastDeclaredAnswersController.onPageLoad())
             } else {
-              Redirect(routes.WhatIsNextController.onPageLoad())
+                Redirect(routes.WhatIsNextController.onPageLoad())
             }
           }
         }

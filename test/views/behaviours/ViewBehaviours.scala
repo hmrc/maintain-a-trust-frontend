@@ -93,7 +93,7 @@ trait ViewBehaviours extends ViewSpecBase {
           val doc = asDocument(view)
 
           assertPageTitleWithCaptionEqualsMessages(doc,
-            expectedCaptionMessageKey = s"$captionKey.subheading",
+            expectedCaptionMessageKey = s"$captionKey.caption",
             captionParam = captionParam,
             expectedMessageKey = s"$messageKeyPrefix.heading"
           )

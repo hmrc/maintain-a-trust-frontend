@@ -19,9 +19,9 @@ package models
 sealed trait IdentifierType
 
 case object UTR extends IdentifierType {
-  override def toString: String = "UTR"
+  override def toString: String = "utr"
 }
 
 case object URN extends IdentifierType {
-  override def toString: String = "URN"
+  override def toString: String = "urn"
 }

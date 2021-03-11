@@ -30,7 +30,7 @@
 
     @components.back_link()
 
-    @components.heading_with_caption(headingKey = "maintainThisTrust.heading", caption = s"maintainThisTrust.$identifierType.caption", captionParam = identifier)
+    @components.heading_with_caption(headingKey = "maintainThisTrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
     <p>@messages(s"maintainThisTrust.$identifierType.p1.a") <span class="weight-bold">@identifier</span> @messages("maintainThisTrust.p1.b")</p>
 
