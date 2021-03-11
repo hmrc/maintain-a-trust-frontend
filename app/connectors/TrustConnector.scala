@@ -44,12 +44,6 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
     } yield date
   }
 
-  def isTrust5mld(identifier: String)
-                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
-    val url: String = s"${config.trustsUrl}/trusts/$identifier/is-trust-5mld"
-    http.GET[Boolean](url)
-  }
-
   def playbackUrl(identifier: String) = s"${config.trustsUrl}/trusts/$identifier/transformed"
 
   def playbackFromEtmpUrl(identifier: String) = s"${config.trustsUrl}/trusts/$identifier/refresh"

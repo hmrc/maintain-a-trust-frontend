@@ -34,7 +34,7 @@ object WhatIsNext extends Enumerable.Implicits {
   )
 
   def options(is5mldEnabled: Boolean, isTrust5mldTaxable: Boolean): List[(RadioOption, String)] = {
-    val suffix: String = if (is5mldEnabled){"5mld"}else{""}
+    val suffix: String = if (is5mldEnabled) "5mld" else ""
     values
       .filterNot(_ == GeneratePdf && !is5mldEnabled)
       .filterNot(_ == NoLongerTaxable && !is5mldEnabled)
