@@ -37,8 +37,7 @@ object WhatIsNext extends Enumerable.Implicits {
     val suffix: String = if (is5mldEnabled) "5mld" else ""
     values
       .filterNot(_ == GeneratePdf && !is5mldEnabled)
-      .filterNot(_ == NoLongerTaxable && !is5mldEnabled)
-      .filterNot(_ == NoLongerTaxable && !isTrust5mldTaxable)
+      .filterNot(_ == NoLongerTaxable && (!is5mldEnabled || !isTrust5mldTaxable))
       .map(value => (RadioOption(s"declarationWhatNext$suffix", value.toString), s"declarationWhatNext$suffix.$value.hint"))
   }
 
