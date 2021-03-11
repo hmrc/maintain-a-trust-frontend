@@ -16,8 +16,6 @@
 
 package controllers.actions
 
-import java.time.LocalDate
-
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
 import controllers.routes
@@ -26,9 +24,9 @@ import models.http.{GetTrust, Processed}
 import models.pages.WhatIsNext
 import models.requests.DataRequest
 import models.{AgentDeclaration, UserAnswers}
+import pages.WhatIsNextPage
 import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
-import pages.WhatIsNextPage
 import play.api.Logging
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
@@ -36,13 +34,16 @@ import repositories.PlaybackRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(val parser: BodyParsers.Default,
-                                                                   playbackRepository: PlaybackRepository,
-                                                                   trustConnector: TrustConnector,
-                                                                   playbackExtractor: UserAnswersExtractor
-                                            )(override implicit val executionContext: ExecutionContext) extends RefreshedDataPreSubmitRetrievalAction with Logging {
+class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
+                                                           val parser: BodyParsers.Default,
+                                                           playbackRepository: PlaybackRepository,
+                                                           trustConnector: TrustConnector,
+                                                           playbackExtractor: UserAnswersExtractor
+                                                         )(override implicit val executionContext: ExecutionContext)
+  extends RefreshedDataPreSubmitRetrievalAction with Logging {
 
   case class SubmissionData(utr: String, whatIsNext: WhatIsNext, agent: Option[AgentDeclaration], endDate: Option[LocalDate])
 
@@ -61,21 +62,21 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(val parser: BodyParser
       val submissionData = SubmissionData(utr, whatIsNext, optionalAgentInformation, optionalEndDate)
 
       trustConnector.playback(utr).flatMap {
-        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, utr, playback)(request)
+        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, utr, playback)(request, hc)
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
-            logger.error(s"[RefreshedDraftDataRetrievalAction] unable to get data from user answers")
-            Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+      logger.error(s"[RefreshedDraftDataRetrievalAction] unable to get data from user answers")
+      Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
   }
 
   private def extractAndRefreshUserAnswers[A](data: SubmissionData, utr: String, playback: GetTrust)
-                        (implicit request: DataRequest[A]) : Future[Either[Result, DataRequest[A]]] = {
+                                             (implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] = {
 
     val newSession = UserAnswers.startNewSession(request.user.internalId, utr)
 
-    playbackExtractor.extract(newSession, playback) match {
+    playbackExtractor.extract(newSession, playback) flatMap {
       case Right(answers) =>
         for {
           updatedAnswers <- Future.fromTry {
