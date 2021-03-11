@@ -429,6 +429,8 @@ declarationWhatNext.make-changes = Make changes to the trust and declare
 declarationWhatNext.make-changes.hint = Add, remove and/or update details for trustees, settlors, beneficiaries and protectors.
 declarationWhatNext.close-trust = Close the trust
 declarationWhatNext.close-trust.hint = Tell HMRC the end date for the trust and apply any changes before a final declaration.
+declarationWhatNext.generate-pdf = Get evidence of the trust’s registration
+declarationWhatNext.generate-pdf.hint = Create a digitally signed PDF, showing the people and companies within the trust, that can be shared with Obliged Entities.
 declarationWhatNext.error.required = Select what you want to do next
 
 variationProgress.title = Trust overview

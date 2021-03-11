@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.testOnlyDoNotUseInAppConf
+package controllers
 
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
@@ -34,7 +34,7 @@ import java.net.URI
 import scala.concurrent.Future
 import scala.xml.Elem
 
-class TestTrustsObligedEntityOutputControllerSpec extends SpecBase {
+class ObligedEntityPdfControllerSpec extends SpecBase {
 
   private val mockConnector: TrustsObligedEntityOutputConnector = mock[TrustsObligedEntityOutputConnector]
 
@@ -62,7 +62,7 @@ class TestTrustsObligedEntityOutputControllerSpec extends SpecBase {
 
   private val identifier: String = "1234567890"
 
-  private lazy val getPdfRoute: String = routes.TestTrustsObligedEntityOutputController.getPdf(identifier).url
+  private lazy val getPdfRoute: String = routes.ObligedEntityPdfController.getPdf(identifier).url
 
   "TestTrustsObligedEntityOutputController" must {
 
@@ -73,7 +73,6 @@ class TestTrustsObligedEntityOutputControllerSpec extends SpecBase {
           when(mockConnector.getPdf(any())(any())).thenReturn(Future.successful(MockResponse(OK, headers)))
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
-            .configure("play.http.router" -> "testOnlyDoNotUseInAppConf.Routes")
             .overrides(bind[TrustsObligedEntityOutputConnector].toInstance(mockConnector))
             .build()
 
@@ -95,7 +94,6 @@ class TestTrustsObligedEntityOutputControllerSpec extends SpecBase {
         when(mockConnector.getPdf(any())(any())).thenReturn(Future.successful(MockResponse(INTERNAL_SERVER_ERROR, headers)))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
-          .configure("play.http.router" -> "testOnlyDoNotUseInAppConf.Routes")
           .overrides(bind[TrustsObligedEntityOutputConnector].toInstance(mockConnector))
           .build()
 
@@ -114,7 +112,6 @@ class TestTrustsObligedEntityOutputControllerSpec extends SpecBase {
           .thenReturn(Future.successful(MockResponse(INTERNAL_SERVER_ERROR, headers.filterNot(_._1 != CONTENT_DISPOSITION))))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
-          .configure("play.http.router" -> "testOnlyDoNotUseInAppConf.Routes")
           .overrides(bind[TrustsObligedEntityOutputConnector].toInstance(mockConnector))
           .build()
 
@@ -133,7 +130,6 @@ class TestTrustsObligedEntityOutputControllerSpec extends SpecBase {
           .thenReturn(Future.successful(MockResponse(INTERNAL_SERVER_ERROR, headers.filterNot(_._1 != CONTENT_TYPE))))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
-          .configure("play.http.router" -> "testOnlyDoNotUseInAppConf.Routes")
           .overrides(bind[TrustsObligedEntityOutputConnector].toInstance(mockConnector))
           .build()
 
@@ -152,7 +148,6 @@ class TestTrustsObligedEntityOutputControllerSpec extends SpecBase {
           .thenReturn(Future.successful(MockResponse(INTERNAL_SERVER_ERROR, headers.filterNot(_._1 != CONTENT_LENGTH))))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
-          .configure("play.http.router" -> "testOnlyDoNotUseInAppConf.Routes")
           .overrides(bind[TrustsObligedEntityOutputConnector].toInstance(mockConnector))
           .build()
 

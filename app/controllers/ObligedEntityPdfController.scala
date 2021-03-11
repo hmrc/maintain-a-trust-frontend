@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.testOnlyDoNotUseInAppConf
+package controllers
 
 import connectors.TrustsObligedEntityOutputConnector
 import controllers.actions.Actions
@@ -27,11 +27,11 @@ import utils.Session
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class TestTrustsObligedEntityOutputController @Inject()(
-                                                         actions: Actions,
-                                                         connector: TrustsObligedEntityOutputConnector,
-                                                         val controllerComponents: MessagesControllerComponents
-                                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
+class ObligedEntityPdfController @Inject()(
+                                            actions: Actions,
+                                            connector: TrustsObligedEntityOutputConnector,
+                                            val controllerComponents: MessagesControllerComponents
+                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
 
   def getPdf(identifier: String): Action[AnyContent] = actions.auth.async {
     implicit request =>

@@ -29,49 +29,94 @@ class WhatIsNextViewSpec extends ViewBehaviours {
 
   val form = new WhatIsNextFormProvider()()
 
-  val view = viewFor[WhatIsNextView](Some(emptyUserAnswersForUtr))
+  val view: WhatIsNextView = viewFor[WhatIsNextView](Some(emptyUserAnswersForUtr))
 
-  def applyView(form: Form[_]): HtmlFormat.Appendable =
-    view.apply(form)(fakeRequest, messages)
-
-  "WhatIsNextView" must {
-
-    behave like normalPage(applyView(form), messageKeyPrefix)
-
-    behave like pageWithBackLink(applyView(form))
-
-    behave like pageWithASubmitButton(applyView(form))
-  }
+  def applyView(form: Form[_], is5mldEnabled: Boolean): HtmlFormat.Appendable =
+    view.apply(form, is5mldEnabled)(fakeRequest, messages)
 
   "WhatIsNextView" when {
 
-    "rendered" must {
+    "4mld" must {
 
-      "contain radio buttons for the value" in {
+      val is5mldEnabled = false
 
-        val doc = asDocument(applyView(form))
+      behave like normalPage(applyView(form, is5mldEnabled), messageKeyPrefix)
 
-        for (option <- WhatIsNext.options) {
-          assertContainsRadioButton(doc, option._1.id, "value", option._1.value, false)
+      behave like pageWithBackLink(applyView(form, is5mldEnabled))
+
+      behave like pageWithASubmitButton(applyView(form, is5mldEnabled))
+
+      "render radio buttons with hint text" in {
+
+        val doc = asDocument(applyView(form, is5mldEnabled))
+
+        for (option <- WhatIsNext.options(is5mldEnabled)) {
+          assertContainsRadioButton(doc, option._1.id, "value", option._1.value, isChecked = false)
           assertRadioButtonContainsHint(doc, option._1.id + ".hint", messages(option._2))
+        }
+      }
+
+      "render selected radio button with hint text" when {
+
+        for (option <- WhatIsNext.options(is5mldEnabled)) {
+
+          s"value is '${option._1.value}'" must {
+
+            s"have the '${option._1.value}' radio button selected" in {
+
+              val doc = asDocument(applyView(form.bind(Map("value" -> s"${option._1.value}")), is5mldEnabled))
+
+              assertContainsRadioButton(doc, option._1.id, "value", option._1.value, isChecked = true)
+              assertRadioButtonContainsHint(doc, option._1.id + ".hint", messages(option._2))
+
+              for (unselectedOption <- WhatIsNext.options(is5mldEnabled).filterNot(_ == option)) {
+                assertContainsRadioButton(doc, unselectedOption._1.id, "value", unselectedOption._1.value, isChecked = false)
+                assertRadioButtonContainsHint(doc, unselectedOption._1.id + ".hint", messages(unselectedOption._2))
+              }
+            }
+          }
         }
       }
     }
 
-    for (option <- WhatIsNext.options) {
+    "5mld" must {
 
-      s"rendered with a value of '${option._1.value}'" must {
+      val is5mldEnabled = true
 
-        s"have the '${option._1.value}' radio button selected" in {
+      behave like normalPage(applyView(form, is5mldEnabled), messageKeyPrefix)
 
-          val doc = asDocument(applyView(form.bind(Map("value" -> s"${option._1.value}"))))
+      behave like pageWithBackLink(applyView(form, is5mldEnabled))
 
-          assertContainsRadioButton(doc, option._1.id, "value", option._1.value, true)
+      behave like pageWithASubmitButton(applyView(form, is5mldEnabled))
+
+      "render radio buttons with hint text" in {
+
+        val doc = asDocument(applyView(form, is5mldEnabled))
+
+        for (option <- WhatIsNext.options(is5mldEnabled)) {
+          assertContainsRadioButton(doc, option._1.id, "value", option._1.value, isChecked = false)
           assertRadioButtonContainsHint(doc, option._1.id + ".hint", messages(option._2))
+        }
+      }
 
-          for (unselectedOption <- WhatIsNext.options.filterNot(o => o == option)) {
-            assertContainsRadioButton(doc, unselectedOption._1.id, "value", unselectedOption._1.value, false)
-            assertRadioButtonContainsHint(doc, unselectedOption._1.id + ".hint", messages(unselectedOption._2))
+      "render selected radio button with hint text" when {
+
+        for (option <- WhatIsNext.options(is5mldEnabled)) {
+
+          s"value is '${option._1.value}'" must {
+
+            s"have the '${option._1.value}' radio button selected" in {
+
+              val doc = asDocument(applyView(form.bind(Map("value" -> s"${option._1.value}")), is5mldEnabled))
+
+              assertContainsRadioButton(doc, option._1.id, "value", option._1.value, isChecked = true)
+              assertRadioButtonContainsHint(doc, option._1.id + ".hint", messages(option._2))
+
+              for (unselectedOption <- WhatIsNext.options(is5mldEnabled).filterNot(_ == option)) {
+                assertContainsRadioButton(doc, unselectedOption._1.id, "value", unselectedOption._1.value, isChecked = false)
+                assertRadioButtonContainsHint(doc, unselectedOption._1.id + ".hint", messages(unselectedOption._2))
+              }
+            }
           }
         }
       }
