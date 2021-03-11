@@ -61,19 +61,29 @@ class WhatIsNextSpec extends WordSpec with MustMatchers with ScalaCheckPropertyC
 
     "determine options correctly" when {
 
-      "in 4mld mode" in {
-        WhatIsNext.options(is5mldEnabled = false, isTrust5mldTaxable = false).map(_._1.value) mustBe
-          List("declare", "make-changes", "close-trust")
+      "in 4mld mode" when {
+        "isTrust5mldTaxable = false" in {
+          WhatIsNext.options(is5mldEnabled = false, isTrust5mldTaxable = false).map(_._1.value) mustBe
+            List("declare", "make-changes", "close-trust")
+        }
+
+        //this scenario should never happen
+        "isTrust5mldTaxable = true" in {
+          WhatIsNext.options(is5mldEnabled = false, isTrust5mldTaxable = true).map(_._1.value) mustBe
+            List("declare", "make-changes", "close-trust")
+        }
       }
 
-      "in 5mld mode" in {
-        WhatIsNext.options(is5mldEnabled = true, isTrust5mldTaxable = false).map(_._1.value) mustBe
-          List("declare", "make-changes", "close-trust", "generate-pdf")
-      }
+      "in 5mld mode" when {
+        "isTrust5mldTaxable = false" in {
+          WhatIsNext.options(is5mldEnabled = true, isTrust5mldTaxable = false).map(_._1.value) mustBe
+            List("declare", "make-changes", "close-trust", "generate-pdf")
+        }
 
-      "in 5mld mode maintaining a 5mld taxable trust" in {
-        WhatIsNext.options(is5mldEnabled = true, isTrust5mldTaxable = true).map(_._1.value) mustBe
-          List("declare", "make-changes", "close-trust", "no-longer-taxable", "generate-pdf")
+        "isTrust5mldTaxable = true" in {
+          WhatIsNext.options(is5mldEnabled = true, isTrust5mldTaxable = true).map(_._1.value) mustBe
+            List("declare", "make-changes", "close-trust", "no-longer-taxable", "generate-pdf")
+        }
       }
     }
   }
