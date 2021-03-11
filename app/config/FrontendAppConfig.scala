@@ -125,6 +125,9 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val maintainOtherIndividualsFrontendUrl : String =
     configuration.get[String]("urls.maintainAnOtherIndividual")
 
+  lazy val sa900Link: String =
+    configuration.get[String]("urls.sa900")
+
   private lazy val accessibilityBaseLinkUrl: String = configuration.get[String]("urls.accessibility")
 
   def accessibilityLinkUrl(implicit request: Request[_]): String = {

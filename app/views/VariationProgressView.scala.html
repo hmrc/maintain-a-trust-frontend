@@ -76,7 +76,7 @@
         </div>
         <h2 id="summary-heading-2">@messages("variationProgress.subHeading.5")</h2>
         <div id="summary-paragraph-2" class="paragraph">
-            <p>@messages("variationProgress.p5") <a href="https://www.gov.uk/government/publications/self-assessment-trust-and-estate-tax-return-sa900" target="_blank">@messages("variationProgress.sa900.link")</a>.</p>
+            <p>@messages("variationProgress.p5") <a href="@{appConfig.sa900Link}" target="_blank">@messages("variationProgress.sa900.link")</a>.</p>
         </div>
         <div class="section">
             <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
