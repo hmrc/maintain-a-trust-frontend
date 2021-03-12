@@ -19,13 +19,17 @@ package controllers.makechanges
 import connectors.{TrustConnector, TrustsStoreConnector}
 import models.UserAnswers
 import models.requests.DataRequest
+import pages.makechanges.AddOrUpdateNonEeaCompanyYesNoPage
+import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import sections.assets.NonEeaBusinessAsset
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Success
 
 abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnector,
                                                    trustStoreConnector: TrustsStoreConnector)
@@ -71,9 +75,24 @@ abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnecto
       }
   }
 
+  protected def routeToAddOrUpdateNonEeaCompany(answers: UserAnswers, isClosingTrust: Boolean)(implicit request: DataRequest[AnyContent]): Future[Result] = {
+    val exist = answers.get(NonEeaBusinessAsset).isDefined
+
+    if (answers.is5mldEnabled && isTrust5mldTaxable) {
+      if (exist) {
+        Future.successful(Redirect(controllers.makechanges.routes.UpdateNonEeaCompanyYesNoController.onPageLoad()))
+      } else {
+        Future.successful(Redirect(controllers.makechanges.routes.AddNonEeaCompanyYesNoController.onPageLoad()))
+      }
+    } else {
+      Future.fromTry(answers.set(AddOrUpdateNonEeaCompanyYesNoPage, false)).flatMap { updatedAnswers =>
+        routeToDeclareOrTaskList(updatedAnswers, isClosingTrust)
+      }
+    }
+  }
+
   protected def routeToDeclareOrTaskList(updatedAnswers: UserAnswers, isClosingTrust: Boolean)
                                         (implicit request: DataRequest[AnyContent]) : Future[Result] = {
-
     MakeChangesRouter.decide(updatedAnswers) match {
       case MakeChangesRouter.Declaration if !isClosingTrust =>
         Future.successful(redirectToDeclaration())
@@ -84,5 +103,9 @@ abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnecto
       case MakeChangesRouter.UnableToDecide =>
         Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
     }
+  }
+
+  private def isTrust5mldTaxable(implicit request: DataRequest[_]) = {
+    request.userAnswers.get(ExpressTrustYesNoPage).isDefined && request.userAnswers.isTrustTaxable
   }
 }

@@ -23,7 +23,8 @@ case class CompletedMaintenanceTasks(trustees: Boolean,
                                      beneficiaries: Boolean,
                                      settlors: Boolean,
                                      protectors: Boolean,
-                                     other: Boolean)
+                                     other: Boolean,
+                                     nonEeaCompany: Boolean)
 
 object CompletedMaintenanceTasks {
 
@@ -34,7 +35,8 @@ object CompletedMaintenanceTasks {
     beneficiaries = false,
     settlors = false,
     protectors = false,
-    other = false
+    other = false,
+    nonEeaCompany = false
   )
 
   def from(userAnswers: UserAnswers) : Option[CompletedMaintenanceTasks] = for {
@@ -43,8 +45,9 @@ object CompletedMaintenanceTasks {
     s <- userAnswers.get(UpdateSettlorsYesNoPage)
     p <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
     n <- userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage)
+    e <- userAnswers.get(AddOrUpdateNonEeaCompanyYesNoPage)
   } yield {
-    CompletedMaintenanceTasks(!t, !b, !s, !p, !n)
+    CompletedMaintenanceTasks(!t, !b, !s, !p, !n, !e)
   }
 
 }

@@ -54,6 +54,7 @@ case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
       .flatMap(_.remove(UpdateSettlorsYesNoPage))
       .flatMap(_.remove(AddOrUpdateProtectorYesNoPage))
       .flatMap(_.remove(AddOrUpdateOtherIndividualsYesNoPage))
+      .flatMap(_.remove(AddOrUpdateNonEeaCompanyYesNoPage))
   }
 
   private def removeCloseTrustData(userAnswers: UserAnswers): Try[UserAnswers] = {

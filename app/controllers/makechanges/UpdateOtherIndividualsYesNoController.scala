@@ -69,13 +69,10 @@ class UpdateOtherIndividualsYesNoController @Inject()(
           Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
         value => {
           for {
-            updatedAnswers <- Future.fromTry(
-              request.userAnswers
-                .set(AddOrUpdateOtherIndividualsYesNoPage, value)
-            )
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- routeToDeclareOrTaskList(updatedAnswers, request.closingTrust)(request.request)
-          } yield nextRoute
+            route <- routeToAddOrUpdateNonEeaCompany(updatedAnswers, request.closingTrust)(request.request)
+          } yield route
         }
       )
   }

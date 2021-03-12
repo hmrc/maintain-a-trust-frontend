@@ -14,23 +14,12 @@
  * limitations under the License.
  */
 
-package controllers.makechanges
+package viewmodels.tasks
 
-import models.{UpdateFilterQuestions, UserAnswers}
+import pages.Page
 
-object MakeChangesRouter {
+case object NonEeaCompany extends Page with Task {
 
-  sealed trait ChangesRouter
-  case object Declaration extends ChangesRouter
-  case object TaskList extends ChangesRouter
-  case object UnableToDecide extends ChangesRouter
-
-  def decide(userAnswers: UserAnswers): ChangesRouter = {
-    UpdateFilterQuestions.from(userAnswers).map {
-        case UpdateFilterQuestions(false, false, false, false, false, false) =>
-          Declaration
-        case _ => TaskList
-    }.getOrElse(UnableToDecide)
-  }
+  override def toString: String = "nonEeaCompany"
 
 }

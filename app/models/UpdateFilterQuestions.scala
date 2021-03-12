@@ -22,19 +22,21 @@ case class UpdateFilterQuestions(trustees: Boolean,
                                  beneficiaries: Boolean,
                                  settlors: Boolean,
                                  protectors: Boolean,
-                                 natural: Boolean)
+                                 natural: Boolean,
+                                 nonEeaCompany: Boolean)
 
 object UpdateFilterQuestions {
 
-  def from(userAnswers : UserAnswers) = {
+  def from(userAnswers : UserAnswers): Option[UpdateFilterQuestions] = {
     for {
       t <- userAnswers.get(UpdateTrusteesYesNoPage)
       b <- userAnswers.get(UpdateBeneficiariesYesNoPage)
       s <- userAnswers.get(UpdateSettlorsYesNoPage)
       p <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
       n <- userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage)
+      e <- userAnswers.get(AddOrUpdateNonEeaCompanyYesNoPage)
     } yield {
-      UpdateFilterQuestions(t, b, s, p, n)
+      UpdateFilterQuestions(t, b, s, p, n, e)
     }
   }
 

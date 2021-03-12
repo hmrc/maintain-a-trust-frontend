@@ -21,6 +21,7 @@ import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions.Actions
 import models.Enumerable
+import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -43,11 +44,13 @@ class TaskListController @Inject()(
     implicit request =>
 
       val identifier = request.userAnswers.identifier
+      val is5mldEnabled = request.userAnswers.is5mldEnabled
+      val isTrust5mldTaxable = request.userAnswers.get(ExpressTrustYesNoPage).isDefined && request.userAnswers.isTrustTaxable
 
       storeConnector.getStatusOfTasks(identifier) map {
         tasks =>
 
-          val sections = generateTaskList(tasks, identifier)
+          val sections = generateTaskList(tasks, identifier, is5mldEnabled, isTrust5mldTaxable)
 
           val next = if (request.user.affinityGroup == Agent) {
             controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url

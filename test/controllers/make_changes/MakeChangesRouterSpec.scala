@@ -34,6 +34,7 @@ class MakeChangesRouterSpec extends SpecBase {
         .set(UpdateSettlorsYesNoPage, false).success.value
         .set(AddOrUpdateProtectorYesNoPage, false).success.value
         .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
+        .set(AddOrUpdateNonEeaCompanyYesNoPage, false).success.value
 
       filter.decide(userAnswers) mustBe Declaration
     }
@@ -42,12 +43,12 @@ class MakeChangesRouterSpec extends SpecBase {
       val filter = MakeChangesRouter
 
       val userAnswers = emptyUserAnswersForUtr
-          .set(UpdateTrusteesYesNoPage, true).success.value
-          .set(UpdateBeneficiariesYesNoPage, true).success.value
-          .set(UpdateSettlorsYesNoPage, false).success.value
-          .set(AddOrUpdateProtectorYesNoPage, false).success.value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
-
+        .set(UpdateTrusteesYesNoPage, true).success.value
+        .set(UpdateBeneficiariesYesNoPage, true).success.value
+        .set(UpdateSettlorsYesNoPage, false).success.value
+        .set(AddOrUpdateProtectorYesNoPage, false).success.value
+        .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
+        .set(AddOrUpdateNonEeaCompanyYesNoPage, false).success.value
       filter.decide(userAnswers) mustBe TaskList
     }
 

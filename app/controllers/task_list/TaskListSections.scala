@@ -21,7 +21,7 @@ import models.CompletedMaintenanceTasks
 import models.pages.Tag
 import models.pages.Tag.InProgress
 import sections.Protectors
-import viewmodels.tasks.{Beneficiaries, NaturalPeople, Settlors, Trustees}
+import viewmodels.tasks.{Beneficiaries, NaturalPeople, NonEeaCompany, Settlors, Trustees}
 import viewmodels.{Link, Task}
 
 trait TaskListSections {
@@ -35,39 +35,51 @@ trait TaskListSections {
 
   val config: FrontendAppConfig
 
-  private def beneficiariesRouteEnabled(utr: String): String = {
+  private def beneficiariesRouteEnabled(identifier: String): String = {
     if (config.maintainBeneficiariesEnabled) {
-      config.maintainBeneficiariesUrl(utr)
+      config.maintainBeneficiariesUrl(identifier)
     } else {
       notYetAvailable
     }
   }
 
-  private def settlorsRouteEnabled(utr: String): String = {
+  private def settlorsRouteEnabled(identifier: String): String = {
     if (config.maintainSettlorsEnabled) {
-      config.maintainSettlorsUrl(utr)
+      config.maintainSettlorsUrl(identifier)
     } else {
       notYetAvailable
     }
   }
 
-  private def protectorsRouteEnabled(utr: String): String = {
+  private def protectorsRouteEnabled(identifier: String): String = {
     if (config.maintainProtectorsEnabled) {
-      config.maintainProtectorsUrl(utr)
+      config.maintainProtectorsUrl(identifier)
     } else {
       notYetAvailable
     }
   }
 
-  private def otherIndividualsRouteEnabled(utr: String): String = {
+  private def otherIndividualsRouteEnabled(identifier: String): String = {
     if (config.maintainOtherIndividualsEnabled) {
-      config.maintainOtherIndividualsUrl(utr)
+      config.maintainOtherIndividualsUrl(identifier)
     } else {
       notYetAvailable
     }
   }
 
-  def generateTaskList(tasks : CompletedMaintenanceTasks, utr: String) : TaskList = {
+  private def nonEeaCompanyRouteEnabled(identifier: String): String = {
+    if (config.maintainNonEeaCompanyEnabled) {
+      config.maintainONonEeaCompanyUrl(identifier)
+    } else {
+      notYetAvailable
+    }
+  }
+
+  def generateTaskList(tasks : CompletedMaintenanceTasks,
+                       utr: String,
+                       is5mldEnabled: Boolean,
+                       isTrust5mldTaxable: Boolean) : TaskList = {
+
     val mandatorySections = List(
       Task(
         Link(Settlors, settlorsRouteEnabled(utr)),
@@ -85,6 +97,10 @@ trait TaskListSections {
 
     val optionalSections = List(
       Task(
+        Link(NonEeaCompany, nonEeaCompanyRouteEnabled(utr)),
+        Some(Tag.tagFor(tasks.nonEeaCompany, config.maintainNonEeaCompanyEnabled))
+      ),
+      Task(
         Link(Protectors, protectorsRouteEnabled(utr)),
         Some(Tag.tagFor(tasks.protectors, config.maintainProtectorsEnabled))
       ),
@@ -92,7 +108,7 @@ trait TaskListSections {
         Link(NaturalPeople, otherIndividualsRouteEnabled(utr)),
         Some(Tag.tagFor(tasks.other, config.maintainOtherIndividualsEnabled))
       )
-    )
+    ).filterNot(_.link.text == NonEeaCompany.toString && !(is5mldEnabled && isTrust5mldTaxable))
 
     TaskList(mandatorySections, optionalSections)
   }

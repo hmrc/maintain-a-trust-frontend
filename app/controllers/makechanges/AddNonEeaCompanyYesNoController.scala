@@ -17,7 +17,6 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions._
 import forms.YesNoFormProvider
@@ -26,26 +25,25 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 import repositories.PlaybackRepository
-import views.html.makechanges.AddOtherIndividualsYesNoView
+import views.html.makechanges.AddNonEeaCompanyYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddOtherIndividualsYesNoController @Inject()(
+class AddNonEeaCompanyYesNoController @Inject()(
                                                     override val messagesApi: MessagesApi,
                                                     playbackRepository: PlaybackRepository,
                                                     actions: Actions,
                                                     yesNoFormProvider: YesNoFormProvider,
                                                     val controllerComponents: MessagesControllerComponents,
-                                                    view: AddOtherIndividualsYesNoView,
-                                                    config: FrontendAppConfig,
+                                                    view: AddNonEeaCompanyYesNoView,
                                                     trustConnector: TrustConnector,
                                                     trustStoreConnector: TrustsStoreConnector
                                      )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector){
 
   private def prefix(closingTrust: Boolean): String = {
-    if (closingTrust) "addOtherIndividualsClosing" else "addOtherIndividuals"
+    if (closingTrust) "addNonEeaCompanyClosing" else "addNonEeaCompany"
   }
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
@@ -53,7 +51,7 @@ class AddOtherIndividualsYesNoController @Inject()(
 
       val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
 
-      val preparedForm = request.userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage) match {
+      val preparedForm = request.userAnswers.get(AddOrUpdateNonEeaCompanyYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -71,9 +69,9 @@ class AddOtherIndividualsYesNoController @Inject()(
           Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
         value => {
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateNonEeaCompanyYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            route <- routeToAddOrUpdateNonEeaCompany(updatedAnswers, request.closingTrust)(request.request)
+            route <- routeToDeclareOrTaskList(updatedAnswers, request.closingTrust)(request.request)
           } yield route
         }
     )

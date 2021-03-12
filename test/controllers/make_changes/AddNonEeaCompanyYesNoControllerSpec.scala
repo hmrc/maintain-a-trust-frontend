@@ -28,40 +28,39 @@ import pages.WhatIsNextPage
 import pages.makechanges._
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.inject.bind
-import play.api.libs.json.JsArray
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import sections.assets.NonEeaBusinessAsset
-import views.html.makechanges.AddOtherIndividualsYesNoView
+import views.html.makechanges.AddNonEeaCompanyYesNoView
 
 import scala.concurrent.Future
 
-class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
+class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val prefix: String = "addOtherIndividuals"
+  val prefix: String = "addNonEeaCompany"
   val form = formProvider.withPrefix(prefix)
 
   val mockConnector = mock[TrustsStoreConnector]
 
-  lazy val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad().url
+  lazy val addNonEeaCompanyYesNoRoute = routes.AddNonEeaCompanyYesNoController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isTrustTaxable = true)
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
     .set(WhatIsNextPage, MakeChanges).success.value
+    .set(ExpressTrustYesNoPage, false).success.value
 
-  "AddOtherIndividualsYesNo Controller" when {
+  "AddNonEeaCompanyYesNo Controller" when {
 
-    "in 4mld mode" must {
+    "in 5mld mode for a 5mld taxable trust" must {
 
       "return OK and the correct view for a GET" in {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(GET, addOtherIndividualsYesNoRoute)
+        val request = FakeRequest(GET, addNonEeaCompanyYesNoRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[AddOtherIndividualsYesNoView]
+        val view = application.injector.instanceOf[AddNonEeaCompanyYesNoView]
 
         status(result) mustEqual OK
 
@@ -73,13 +72,13 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       "populate the view correctly on a GET when the question has previously been answered" in {
 
-        val userAnswers = baseAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, true).success.value
+        val userAnswers = baseAnswers.set(AddOrUpdateNonEeaCompanyYesNoPage, true).success.value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val request = FakeRequest(GET, addOtherIndividualsYesNoRoute)
+        val request = FakeRequest(GET, addNonEeaCompanyYesNoRoute)
 
-        val view = application.injector.instanceOf[AddOtherIndividualsYesNoView]
+        val view = application.injector.instanceOf[AddNonEeaCompanyYesNoView]
 
         val result = route(application, request).value
 
@@ -98,12 +97,13 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
           .set(UpdateBeneficiariesYesNoPage, false).success.value
           .set(UpdateSettlorsYesNoPage, false).success.value
           .set(AddOrUpdateProtectorYesNoPage, false).success.value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
 
         val application =
           applicationBuilder(userAnswers = Some(userAnswers)).build()
 
         val request =
-          FakeRequest(POST, addOtherIndividualsYesNoRoute)
+          FakeRequest(POST, addNonEeaCompanyYesNoRoute)
             .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
@@ -122,6 +122,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
           .set(UpdateBeneficiariesYesNoPage, false).success.value
           .set(UpdateSettlorsYesNoPage, false).success.value
           .set(AddOrUpdateProtectorYesNoPage, false).success.value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
 
         val application =
           applicationBuilder(userAnswers = Some(userAnswers))
@@ -129,7 +130,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
             .build()
 
         val request =
-          FakeRequest(POST, addOtherIndividualsYesNoRoute)
+          FakeRequest(POST, addNonEeaCompanyYesNoRoute)
             .withFormUrlEncodedBody(("value", "false"))
 
         when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
@@ -147,7 +148,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       "redirect to overview when valid data is submitted, no has been selected for all questions and the user is closing the trust" in {
 
-        val addOtherIndividualsYesNoRoute = routes.AddOtherIndividualsYesNoController.onPageLoad().url
+        val addNonEeaCompanyYesNoRoute = routes.AddNonEeaCompanyYesNoController.onPageLoad().url
 
         val userAnswers = emptyUserAnswersForUtr
           .set(WhatIsNextPage, CloseTrust).success.value
@@ -155,6 +156,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
           .set(UpdateBeneficiariesYesNoPage, false).success.value
           .set(UpdateSettlorsYesNoPage, false).success.value
           .set(AddOrUpdateProtectorYesNoPage, false).success.value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
 
         val application =
           applicationBuilder(userAnswers = Some(userAnswers))
@@ -162,7 +164,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
             .build()
 
         val request =
-          FakeRequest(POST, addOtherIndividualsYesNoRoute)
+          FakeRequest(POST, addNonEeaCompanyYesNoRoute)
             .withFormUrlEncodedBody(("value", "false"))
 
         when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
@@ -183,128 +185,12 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
         val request =
-          FakeRequest(POST, addOtherIndividualsYesNoRoute)
+          FakeRequest(POST, addNonEeaCompanyYesNoRoute)
             .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[AddOtherIndividualsYesNoView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-
-        contentAsString(result) mustEqual
-          view(boundForm, prefix)(request, messages).toString
-
-        application.stop()
-      }
-
-    }
-
-    "in 5mld mode with a 5mld taxable trust" must {
-
-      val baseAnswers5mldTaxable = baseAnswers.copy(is5mldEnabled = true, isTrustTaxable = true)
-        .set(ExpressTrustYesNoPage, false).success.value
-
-      "return OK and the correct view for a GET" in {
-
-        val application = applicationBuilder(userAnswers = Some(baseAnswers5mldTaxable)).build()
-
-        val request = FakeRequest(GET, addOtherIndividualsYesNoRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[AddOtherIndividualsYesNoView]
-
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual
-          view(form, prefix)(request, messages).toString
-
-        application.stop()
-      }
-
-      "populate the view correctly on a GET when the question has previously been answered" in {
-
-        val userAnswers = baseAnswers5mldTaxable.set(AddOrUpdateOtherIndividualsYesNoPage, true).success.value
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        val request = FakeRequest(GET, addOtherIndividualsYesNoRoute)
-
-        val view = application.injector.instanceOf[AddOtherIndividualsYesNoView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual
-          view(form.fill(true), prefix)(request, messages).toString
-
-        application.stop()
-      }
-
-      "redirect to add a non eea company yes no page when valid data is submitted and no eea company exists" in {
-
-        val userAnswers = baseAnswers5mldTaxable
-          .set(UpdateTrusteesYesNoPage, false).success.value
-          .set(UpdateBeneficiariesYesNoPage, false).success.value
-          .set(UpdateSettlorsYesNoPage, false).success.value
-          .set(AddOrUpdateProtectorYesNoPage, false).success.value
-
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        val request =
-          FakeRequest(POST, addOtherIndividualsYesNoRoute)
-            .withFormUrlEncodedBody(("value", "false"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value mustEqual controllers.makechanges.routes.AddNonEeaCompanyYesNoController.onPageLoad().url
-
-        application.stop()
-      }
-
-      "redirect to update a non eea company yes no page when valid data is submitted and an eea company already exists" in {
-
-        val userAnswers = baseAnswers5mldTaxable.copy(is5mldEnabled = true, isTrustTaxable = true)
-          .set(NonEeaBusinessAsset, JsArray()).success.value
-          .set(UpdateTrusteesYesNoPage, false).success.value
-          .set(UpdateBeneficiariesYesNoPage, false).success.value
-          .set(UpdateSettlorsYesNoPage, false).success.value
-          .set(AddOrUpdateProtectorYesNoPage, false).success.value
-
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        val request =
-          FakeRequest(POST, addOtherIndividualsYesNoRoute)
-            .withFormUrlEncodedBody(("value", "false"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateNonEeaCompanyYesNoController.onPageLoad().url
-
-        application.stop()
-      }
-
-      "return a Bad Request and errors when invalid data is submitted" in {
-
-        val application = applicationBuilder(userAnswers = Some(baseAnswers5mldTaxable)).build()
-
-        val request =
-          FakeRequest(POST, addOtherIndividualsYesNoRoute)
-            .withFormUrlEncodedBody(("value", ""))
-
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[AddOtherIndividualsYesNoView]
+        val view = application.injector.instanceOf[AddNonEeaCompanyYesNoView]
 
         val result = route(application, request).value
 

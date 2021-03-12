@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-package controllers.makechanges
+package pages.makechanges
 
-import models.{UpdateFilterQuestions, UserAnswers}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
 
-object MakeChangesRouter {
+object AddOrUpdateNonEeaCompanyYesNoPage extends QuestionPage[Boolean] {
 
-  sealed trait ChangesRouter
-  case object Declaration extends ChangesRouter
-  case object TaskList extends ChangesRouter
-  case object UnableToDecide extends ChangesRouter
+  override def path: JsPath = JsPath \ toString
 
-  def decide(userAnswers: UserAnswers): ChangesRouter = {
-    UpdateFilterQuestions.from(userAnswers).map {
-        case UpdateFilterQuestions(false, false, false, false, false, false) =>
-          Declaration
-        case _ => TaskList
-    }.getOrElse(UnableToDecide)
-  }
-
+  override def toString: String = "addNonEeaCompanyYesNo"
 }

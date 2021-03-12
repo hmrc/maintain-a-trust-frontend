@@ -74,7 +74,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           |  "beneficiaries": false,
           |  "settlors": false,
           |  "protectors": false,
-          |  "other": false
+          |  "other": false,
+          |  "nonEeaCompany": false
           |}
           |""".stripMargin)
 
@@ -86,7 +87,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       val result = connector.getStatusOfTasks("123456789")
 
       result.futureValue mustBe
-        CompletedMaintenanceTasks(trustees = true, beneficiaries = false, settlors = false, protectors = false, other = false)
+        CompletedMaintenanceTasks(trustees = true, beneficiaries = false, settlors = false, protectors = false, other = false, nonEeaCompany = false)
 
       application.stop()
     }
@@ -108,6 +109,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         .set(UpdateSettlorsYesNoPage, false).success.value
         .set(AddOrUpdateProtectorYesNoPage, false).success.value
         .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
+        .set(AddOrUpdateNonEeaCompanyYesNoPage, false).success.value
 
       val json = Json.parse(
         """
@@ -116,7 +118,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           |  "beneficiaries": true,
           |  "settlors": true,
           |  "protectors": true,
-          |  "other": true
+          |  "other": true,
+          |  "nonEeaCompany": true
           |}
           |""".stripMargin)
 
@@ -130,7 +133,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       val result = connector.set("123456789", userAnswers)
 
       result.futureValue mustBe
-        CompletedMaintenanceTasks(trustees = false, beneficiaries = true, settlors = true, protectors = true, other = true)
+        CompletedMaintenanceTasks(trustees = false, beneficiaries = true, settlors = true, protectors = true, other = true, nonEeaCompany = true)
 
       application.stop()
     }
@@ -154,7 +157,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       val result = connector.getStatusOfTasks("123456789")
 
       result.futureValue mustBe
-        CompletedMaintenanceTasks(trustees = false, beneficiaries = false, settlors = false, protectors = false, other = false)
+        CompletedMaintenanceTasks(trustees = false, beneficiaries = false, settlors = false, protectors = false, other = false, nonEeaCompany = false)
 
       application.stop()
     }

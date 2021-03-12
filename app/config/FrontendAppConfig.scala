@@ -45,6 +45,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   def maintainOtherIndividualsUrl(utr: String) = s"$maintainOtherIndividualsFrontendUrl/$utr"
 
+  def maintainONonEeaCompanyUrl(utr: String) = "" //TODO: Add correct URL
+
   val analyticsToken: String = configuration.get[String](s"google-analytics.token")
 
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
@@ -107,6 +109,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val maintainSettlorsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-settlors.enabled")
   lazy val maintainProtectorsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-protectors.enabled")
   lazy val maintainOtherIndividualsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-other-individuals.enabled")
+  lazy val maintainNonEeaCompanyEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-non-eea-company.enabled")
 
   lazy val closeATrustEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.close-a-trust.enabled")
 

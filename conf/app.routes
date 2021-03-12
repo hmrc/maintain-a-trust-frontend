@@ -98,9 +98,14 @@ POST       /update-protector                            controllers.makechanges.
 GET        /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad()
 POST       /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit()
 
+GET        /update-other-individuals                    controllers.makechanges.UpdateOtherIndividualsYesNoController.onPageLoad()
+POST       /update-other-individuals                    controllers.makechanges.UpdateOtherIndividualsYesNoController.onSubmit()
 
-GET        /update-other-individuals                       controllers.makechanges.UpdateOtherIndividualsYesNoController.onPageLoad()
-POST       /update-other-individuals                       controllers.makechanges.UpdateOtherIndividualsYesNoController.onSubmit()
+GET        /add-non-eea-company                         controllers.makechanges.AddNonEeaCompanyYesNoController.onPageLoad()
+POST       /add-non-eea-company                         controllers.makechanges.AddNonEeaCompanyYesNoController.onSubmit()
+
+GET        /update-non-eea-company                      controllers.makechanges.UpdateNonEeaCompanyYesNoController.onPageLoad()
+POST       /update-non-eea-company                      controllers.makechanges.UpdateNonEeaCompanyYesNoController.onSubmit()
 
 GET        /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onPageLoad()
 POST       /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onSubmit()

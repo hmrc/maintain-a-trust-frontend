@@ -386,6 +386,28 @@ updateOtherIndividualsClosing.title = Do you need to update details for the othe
 updateOtherIndividualsClosing.heading = Do you need to update details for the other individuals before closing the trust?
 updateOtherIndividualsClosing.error.required = Select yes if you need to update details for the other individuals before closing the trust
 
+addNonEeaCompany.title = Do you need to add a controlling interest in a Non-EEA company?
+addNonEeaCompany.heading = Do you need to add a controlling interest in a Non-EEA company?
+addNonEeaCompany.paragraph1 = A non-EEA company is a company registered outside the following countries:
+addNonEeaCompany.bullet1 = The EU
+addNonEeaCompany.bullet2 = Iceland
+addNonEeaCompany.bullet3 = Lichtenstein
+addNonEeaCompany.bullet4 = Norway
+addNonEeaCompany.error.required = Select yes if you need to add a controlling interest in a Non-EEA company
+
+addNonEeaCompanyClosing.title = Do you need to add a controlling interest in a Non-EEA company before closing the trust?
+addNonEeaCompanyClosing.heading = Do you need to add a controlling interest in a Non-EEA company before closing the trust?
+addNonEeaCompanyClosing.error.required = Select yes if you need to add a controlling interest in a Non-EEA company before closing the trust
+
+updateNonEeaCompany.title = Do you need to update a controlling interest in a Non-EEA company?
+updateNonEeaCompany.heading = Do you need to update a controlling interest in a Non-EEA company?
+updateNonEeaCompany.error.required = Select yes if you need to update details for a controlling interest in a Non-EEA company
+
+updateNonEeaCompanyClosing.title = Do you need to update a controlling interest in a Non-EEA company before closing the trust?
+updateNonEeaCompanyClosing.heading = Do you need to update a controlling interest in a Non-EEA company before closing the trust?
+updateNonEeaCompanyClosing.error.required = Select yes if you need to update details for a controlling interest in a Non-EEA company before closing the trust
+
+
 unavailableSections.title = You can only update {0} online at the moment
 unavailableSections.heading = You can only update {0} online at the moment
 unavailableSections.p1 = You cannot update the details for {0} online. If you need to update these details, you can
@@ -467,6 +489,7 @@ taskList.protectors.label = Protectors
 taskList.trustees.label = Trustees
 taskList.beneficiaries.label = Beneficiaries
 taskList.natural.label = Other individuals
+taskList.nonEeaCompany.label = Ownership or controlling interest of a Non-EEA company
 taskList.summary.continue = Continue to declaration
 
 featureNotAvailable.title = This part of the online service is not available yet
