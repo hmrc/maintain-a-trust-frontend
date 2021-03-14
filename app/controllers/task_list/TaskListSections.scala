@@ -27,10 +27,10 @@ import viewmodels.{Link, Task}
 trait TaskListSections {
 
   case class TaskList(mandatory: List[Task], other: List[Task]) {
-    val isAbleToDeclare : Boolean = !(mandatory ::: other).exists(_.tag.contains(InProgress))
+    val isAbleToDeclare: Boolean = !(mandatory ::: other).exists(_.tag.contains(InProgress))
   }
 
-  private lazy val notYetAvailable : String =
+  private lazy val notYetAvailable: String =
     controllers.routes.FeatureNotAvailableController.onPageLoad().url
 
   val config: FrontendAppConfig
@@ -69,16 +69,16 @@ trait TaskListSections {
 
   private def nonEeaCompanyRouteEnabled(identifier: String): String = {
     if (config.maintainNonEeaCompanyEnabled) {
-      config.maintainONonEeaCompanyUrl(identifier)
+      config.maintainNonEeaCompanyUrl(identifier)
     } else {
       notYetAvailable
     }
   }
 
-  def generateTaskList(tasks : CompletedMaintenanceTasks,
+  def generateTaskList(tasks: CompletedMaintenanceTasks,
                        utr: String,
                        is5mldEnabled: Boolean,
-                       isTrust5mldTaxable: Boolean) : TaskList = {
+                       isTrust5mldTaxable: Boolean): TaskList = {
 
     val mandatorySections = List(
       Task(

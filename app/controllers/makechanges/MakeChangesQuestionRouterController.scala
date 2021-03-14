@@ -20,7 +20,6 @@ import connectors.{TrustConnector, TrustsStoreConnector}
 import models.UserAnswers
 import models.requests.DataRequest
 import pages.makechanges.AddOrUpdateNonEeaCompanyYesNoPage
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import sections.assets.NonEeaBusinessAsset
@@ -29,20 +28,20 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Success
 
-abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnector,
-                                                   trustStoreConnector: TrustsStoreConnector)
-                                                  (implicit ec : ExecutionContext)
+abstract class MakeChangesQuestionRouterController(
+                                                    trustConnector: TrustConnector,
+                                                    trustStoreConnector: TrustsStoreConnector
+                                                  )(implicit ec : ExecutionContext)
   extends FrontendBaseController with I18nSupport {
 
   private def redirectAndResetTaskList(updatedAnswers: UserAnswers)
-                                      (implicit request: DataRequest[AnyContent], hc: HeaderCarrier) =
-      for {
-        _ <- trustStoreConnector.set(request.userAnswers.identifier, updatedAnswers)
-      } yield {
-        Redirect(controllers.task_list.routes.TaskListController.onPageLoad())
-      }
+                                      (implicit request: DataRequest[AnyContent], hc: HeaderCarrier): Future[Result] =
+    for {
+      _ <- trustStoreConnector.set(request.userAnswers.identifier, updatedAnswers)
+    } yield {
+      Redirect(controllers.task_list.routes.TaskListController.onPageLoad())
+    }
 
   protected def redirectToDeclaration()(implicit request: DataRequest[AnyContent]): Result = {
     request.user.affinityGroup match {
@@ -53,26 +52,26 @@ abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnecto
     }
   }
 
-  protected def routeToAddOrUpdateProtectors()(implicit request: DataRequest[AnyContent]) = {
-      for {
-        existsF <- trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.identifier)
-        exist = existsF.value
-      } yield if (exist) {
-        Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
-      } else {
-        Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
-      }
+  protected def routeToAddOrUpdateProtectors()(implicit request: DataRequest[AnyContent]): Future[Result] = {
+    for {
+      existsF <- trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.identifier)
+      exist = existsF.value
+    } yield if (exist) {
+      Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
+    } else {
+      Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
+    }
   }
 
-  protected def routeToAddOrUpdateOtherIndividuals()(implicit request: DataRequest[AnyContent]) = {
-      for {
-        existsF <- trustConnector.getDoOtherIndividualsAlreadyExist(request.userAnswers.identifier)
-        exist = existsF.value
-      } yield if (exist) {
-        Redirect(controllers.makechanges.routes.UpdateOtherIndividualsYesNoController.onPageLoad())
-      } else {
-        Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
-      }
+  protected def routeToAddOrUpdateOtherIndividuals()(implicit request: DataRequest[AnyContent]): Future[Result] = {
+    for {
+      existsF <- trustConnector.getDoOtherIndividualsAlreadyExist(request.userAnswers.identifier)
+      exist = existsF.value
+    } yield if (exist) {
+      Redirect(controllers.makechanges.routes.UpdateOtherIndividualsYesNoController.onPageLoad())
+    } else {
+      Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
+    }
   }
 
   protected def routeToAddOrUpdateNonEeaCompany(answers: UserAnswers, isClosingTrust: Boolean)(implicit request: DataRequest[AnyContent]): Future[Result] = {
@@ -106,6 +105,6 @@ abstract class MakeChangesQuestionRouterController(trustConnector: TrustConnecto
   }
 
   private def isTrust5mldTaxable(implicit request: DataRequest[_]) = {
-    request.userAnswers.get(ExpressTrustYesNoPage).isDefined && request.userAnswers.isTrustTaxable
+    request.userAnswers.isTrust5mldTaxable
   }
 }

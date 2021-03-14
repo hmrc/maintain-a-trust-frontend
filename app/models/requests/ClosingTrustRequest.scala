@@ -20,8 +20,8 @@ import models.UserAnswers
 import play.api.mvc.WrappedRequest
 
 case class ClosingTrustRequest[T](request: DataRequest[T], closingTrust: Boolean)
-  extends WrappedRequest[T](request){
+  extends WrappedRequest[T](request) {
 
-  val userAnswers:UserAnswers = request.userAnswers
+  val userAnswers: UserAnswers = request.userAnswers
   val user: User = request.user
 }

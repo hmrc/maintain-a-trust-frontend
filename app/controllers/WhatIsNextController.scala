@@ -24,9 +24,8 @@ import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.WhatIsNextFormProvider
 import models.Enumerable
 import models.pages.WhatIsNext
-import models.requests.{DataRequest, IdentifierRequest}
+import models.requests.DataRequest
 import pages.WhatIsNextPage
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -98,6 +97,6 @@ class WhatIsNextController @Inject()(
   }
 
   private def isTrust5mldTaxable(implicit request: DataRequest[_]) = {
-    request.userAnswers.get(ExpressTrustYesNoPage).isDefined && request.userAnswers.isTrustTaxable
+    request.userAnswers.isTrust5mldTaxable
   }
 }

@@ -21,7 +21,6 @@ import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions.Actions
 import models.Enumerable
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
@@ -37,7 +36,7 @@ class TaskListController @Inject()(
                                     val controllerComponents: MessagesControllerComponents,
                                     val config: FrontendAppConfig,
                                     storeConnector: TrustsStoreConnector
-                                    )(implicit ec: ExecutionContext) extends FrontendBaseController
+                                  )(implicit ec: ExecutionContext) extends FrontendBaseController
   with I18nSupport with Enumerable.Implicits with TaskListSections {
 
   def onPageLoad(): Action[AnyContent] = actions.refreshAndRequireIsClosingAnswer.async {
@@ -45,7 +44,7 @@ class TaskListController @Inject()(
 
       val identifier = request.userAnswers.identifier
       val is5mldEnabled = request.userAnswers.is5mldEnabled
-      val isTrust5mldTaxable = request.userAnswers.get(ExpressTrustYesNoPage).isDefined && request.userAnswers.isTrustTaxable
+      val isTrust5mldTaxable = request.userAnswers.isTrust5mldTaxable
 
       storeConnector.getStatusOfTasks(identifier) map {
         tasks =>

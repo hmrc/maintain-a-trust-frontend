@@ -45,7 +45,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   def maintainOtherIndividualsUrl(utr: String) = s"$maintainOtherIndividualsFrontendUrl/$utr"
 
-  def maintainONonEeaCompanyUrl(utr: String) = "" //TODO: Add correct URL
+  def maintainNonEeaCompanyUrl(utr: String) = "" //TODO: Add correct URL
 
   val analyticsToken: String = configuration.get[String](s"google-analytics.token")
 
