@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.tasklist
 
 import base.SpecBase
 import config.FrontendAppConfig
@@ -43,9 +43,9 @@ import scala.concurrent.Future
 
 class TaskListControllerSpec extends SpecBase {
 
-  lazy val onPageLoad: String = routes.WhatIsNextController.onPageLoad().url
+  lazy val onPageLoad: String = controllers.routes.WhatIsNextController.onPageLoad().url
 
-  lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
+  lazy val onSubmit: Call = controllers.routes.WhatIsNextController.onSubmit()
 
   val utr: String = "1234567890"
 
@@ -96,7 +96,7 @@ class TaskListControllerSpec extends SpecBase {
 
           when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
-          val request = FakeRequest(GET, controllers.task_list.routes.TaskListController.onPageLoad().url)
+          val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
           val result = route(application, request).value
 
@@ -124,7 +124,7 @@ class TaskListControllerSpec extends SpecBase {
 
           when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
-          val request = FakeRequest(GET, controllers.task_list.routes.TaskListController.onPageLoad().url)
+          val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
           val result = route(application, request).value
 
@@ -145,7 +145,7 @@ class TaskListControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-        val request = FakeRequest(GET, controllers.task_list.routes.TaskListController.onPageLoad().url)
+        val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
         val result = route(application, request).value
 
@@ -179,7 +179,7 @@ class TaskListControllerSpec extends SpecBase {
 
             when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
-            val request = FakeRequest(GET, controllers.task_list.routes.TaskListController.onPageLoad().url)
+            val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
             val result = route(application, request).value
 
@@ -207,7 +207,7 @@ class TaskListControllerSpec extends SpecBase {
 
             when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
-            val request = FakeRequest(GET, controllers.task_list.routes.TaskListController.onPageLoad().url)
+            val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
             val result = route(application, request).value
 
@@ -228,7 +228,7 @@ class TaskListControllerSpec extends SpecBase {
 
           val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-          val request = FakeRequest(GET, controllers.task_list.routes.TaskListController.onPageLoad().url)
+          val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
           val result = route(application, request).value
 

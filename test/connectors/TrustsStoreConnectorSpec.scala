@@ -54,6 +54,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
     server.stop()
   }
 
+  private val utr: String = "1234567890"
+
   "trusts store connector" must {
 
     "return OK with the current task status" in {
@@ -70,6 +72,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       val json = Json.parse(
         """
           |{
+          |  "trustDetails": false,
           |  "trustees": true,
           |  "beneficiaries": false,
           |  "settlors": false,
@@ -80,14 +83,22 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           |""".stripMargin)
 
       server.stubFor(
-        get(urlEqualTo("/trusts-store/maintain/tasks/123456789"))
+        get(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
           .willReturn(okJson(json.toString))
       )
 
-      val result = connector.getStatusOfTasks("123456789")
+      val result = connector.getStatusOfTasks(utr)
 
       result.futureValue mustBe
-        CompletedMaintenanceTasks(trustees = true, beneficiaries = false, settlors = false, protectors = false, other = false, nonEeaCompany = false)
+        CompletedMaintenanceTasks(
+          trustDetails = false,
+          trustees = true,
+          beneficiaries = false,
+          settlors = false,
+          protectors = false,
+          other = false,
+          nonEeaCompany = false
+        )
 
       application.stop()
     }
@@ -104,6 +115,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       val connector = application.injector.instanceOf[TrustsStoreConnector]
 
       val userAnswers = emptyUserAnswersForUtr
+        .set(UpdateTrustDetailsYesNoPage, false).success.value
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
@@ -114,6 +126,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       val json = Json.parse(
         """
           |{
+          |  "trustDetails": true,
           |  "trustees": false,
           |  "beneficiaries": true,
           |  "settlors": true,
@@ -124,16 +137,24 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           |""".stripMargin)
 
       server.stubFor(
-        post(urlEqualTo("/trusts-store/maintain/tasks/123456789"))
+        post(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
           .withHeader(CONTENT_TYPE, containing(JSON))
           .withRequestBody(equalTo(json.toString))
           .willReturn(okJson(json.toString))
       )
 
-      val result = connector.set("123456789", userAnswers)
+      val result = connector.set(utr, userAnswers)
 
       result.futureValue mustBe
-        CompletedMaintenanceTasks(trustees = false, beneficiaries = true, settlors = true, protectors = true, other = true, nonEeaCompany = true)
+        CompletedMaintenanceTasks(
+          trustDetails = true,
+          trustees = false,
+          beneficiaries = true,
+          settlors = true,
+          protectors = true,
+          other = true,
+          nonEeaCompany = true
+        )
 
       application.stop()
     }
@@ -150,14 +171,22 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       val connector = application.injector.instanceOf[TrustsStoreConnector]
 
       server.stubFor(
-        get(urlEqualTo("/trusts-store/maintain/tasks/123456789"))
+        get(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
           .willReturn(serverError())
       )
 
-      val result = connector.getStatusOfTasks("123456789")
+      val result = connector.getStatusOfTasks(utr)
 
       result.futureValue mustBe
-        CompletedMaintenanceTasks(trustees = false, beneficiaries = false, settlors = false, protectors = false, other = false, nonEeaCompany = false)
+        CompletedMaintenanceTasks(
+          trustDetails = false,
+          trustees = false,
+          beneficiaries = false,
+          settlors = false,
+          protectors = false,
+          other = false,
+          nonEeaCompany = false
+        )
 
       application.stop()
     }

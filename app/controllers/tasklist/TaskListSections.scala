@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.task_list
+package controllers.tasklist
 
 import config.FrontendAppConfig
 import models.CompletedMaintenanceTasks

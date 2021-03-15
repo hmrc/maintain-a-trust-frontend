@@ -38,7 +38,7 @@ abstract class MakeChangesQuestionRouterController(
   private def redirectAndResetTaskList(updatedAnswers: UserAnswers)
                                       (implicit request: DataRequest[AnyContent], hc: HeaderCarrier): Future[Result] = {
     trustStoreConnector.set(request.userAnswers.identifier, updatedAnswers) map { _ =>
-      Redirect(controllers.task_list.routes.TaskListController.onPageLoad())
+      Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
     }
   }
 

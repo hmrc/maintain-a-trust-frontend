@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.task_list
+package controllers.tasklist
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
