@@ -33,9 +33,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import sections.assets.NonEeaBusinessAsset
 import sections.beneficiaries.Beneficiaries
-import sections.natural.Natural
 import sections.settlors.Settlors
-import sections.{Protectors, Trustees}
+import sections.{Natural, Protectors, Trustees}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView

@@ -22,9 +22,8 @@ import models.pages.Tag
 import models.pages.Tag.InProgress
 import sections.assets.NonEeaBusinessAsset
 import sections.beneficiaries.Beneficiaries
-import sections.natural.Natural
 import sections.settlors.Settlors
-import sections.{Protectors, Trustees}
+import sections.{Natural, Protectors, Trustees}
 import viewmodels.{Link, Task}
 
 trait TaskListSections {

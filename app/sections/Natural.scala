@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package sections.natural
+package sections
 
 import pages.QuestionPage
 import play.api.libs.json.{JsArray, JsPath}
 
-case object Individual extends QuestionPage[JsArray]{
+case object Natural extends QuestionPage[JsArray] {
 
-  override def path: JsPath = JsPath \ Natural \ toString
+  override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "otherIndividual"
+  override def toString: String = "natural"
 
 }
