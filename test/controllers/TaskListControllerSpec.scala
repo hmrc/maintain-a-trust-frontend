@@ -19,9 +19,9 @@ package controllers
 import base.SpecBase
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
-import models.{CompletedMaintenanceTasks, UTR}
 import models.pages.Tag.InProgress
 import models.pages.WhatIsNext
+import models.{CompletedMaintenanceTasks, UTR}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
 import pages.WhatIsNextPage
@@ -31,9 +31,12 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import sections.Protectors
+import sections.assets.NonEeaBusinessAsset
+import sections.beneficiaries.Beneficiaries
+import sections.natural.Natural
+import sections.settlors.Settlors
+import sections.{Protectors, Trustees}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
-import viewmodels.tasks.{Beneficiaries, NaturalPeople, NonEeaCompany, Settlors, Trustees}
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
 
@@ -56,13 +59,13 @@ class TaskListControllerSpec extends SpecBase {
   )
   val optionalSections = List(
     Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$utr"), Some(InProgress)),
-    Task(Link(NaturalPeople, s"http://localhost:9799/maintain-a-trust/other-individuals/$utr"), Some(InProgress))
+    Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$utr"), Some(InProgress))
   )
 
   val optionalSections5mld = List(
-    Task(Link(NonEeaCompany, "fakeUrl"), Some(InProgress)),
+    Task(Link(NonEeaBusinessAsset, "fakeUrl"), Some(InProgress)),
     Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$utr"), Some(InProgress)),
-    Task(Link(NaturalPeople, s"http://localhost:9799/maintain-a-trust/other-individuals/$utr"), Some(InProgress))
+    Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$utr"), Some(InProgress))
   )
 
   private lazy val config: Configuration = injector.instanceOf[FrontendAppConfig].configuration

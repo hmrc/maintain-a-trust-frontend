@@ -16,18 +16,20 @@
 
 package views
 
-import models.{URN, UTR}
 import models.pages.Tag.UpToDate
-import sections.Protectors
+import models.{URN, UTR}
+import sections.beneficiaries.Beneficiaries
+import sections.natural.Natural
+import sections.settlors.Settlors
+import sections.{Protectors, Trustees}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
-import viewmodels.tasks._
 import viewmodels.{Link, Task}
 import views.behaviours.{VariationsProgressViewBehaviours, ViewBehaviours}
 import views.html.VariationProgressView
 
 class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressViewBehaviours {
 
-  val expectedContinueUrl = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+  val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
   "VariationProgress view for utr" must {
 
@@ -38,8 +40,10 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
       Task(Link(Trustees, ""), None),
       Task(Link(Beneficiaries, ""), None)
     )
+
     val optionalSections = List(
-      Task(Link(NaturalPeople, ""),None))
+      Task(Link(Natural, ""),None)
+    )
 
     val group = Organisation
 
@@ -74,7 +78,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
       Task(Link(Beneficiaries, ""), None)
     )
     val optionalSections = List(
-      Task(Link(NaturalPeople, ""),None))
+      Task(Link(Natural, ""),None))
 
     val group = Organisation
 
@@ -112,7 +116,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
         )
         val optionalSections = List(
           Task(Link(Protectors, "http://localhost:9796/maintain-a-trust/protectors/utr"), Some(UpToDate)),
-          Task(Link(NaturalPeople, "http://localhost:9799/maintain-a-trust/other-individuals/utr"), Some(UpToDate))
+          Task(Link(Natural, "http://localhost:9799/maintain-a-trust/other-individuals/utr"), Some(UpToDate))
         )
 
         val group = Organisation

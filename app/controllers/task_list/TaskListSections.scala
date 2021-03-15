@@ -20,8 +20,11 @@ import config.FrontendAppConfig
 import models.CompletedMaintenanceTasks
 import models.pages.Tag
 import models.pages.Tag.InProgress
-import sections.Protectors
-import viewmodels.tasks.{Beneficiaries, NaturalPeople, NonEeaCompany, Settlors, Trustees}
+import sections.assets.NonEeaBusinessAsset
+import sections.beneficiaries.Beneficiaries
+import sections.natural.Natural
+import sections.settlors.Settlors
+import sections.{Protectors, Trustees}
 import viewmodels.{Link, Task}
 
 trait TaskListSections {
@@ -97,7 +100,7 @@ trait TaskListSections {
 
     val optionalSections = List(
       Task(
-        Link(NonEeaCompany, nonEeaCompanyRouteEnabled(utr)),
+        Link(NonEeaBusinessAsset, nonEeaCompanyRouteEnabled(utr)),
         Some(Tag.tagFor(tasks.nonEeaCompany, config.maintainNonEeaCompanyEnabled))
       ),
       Task(
@@ -105,10 +108,10 @@ trait TaskListSections {
         Some(Tag.tagFor(tasks.protectors, config.maintainProtectorsEnabled))
       ),
       Task(
-        Link(NaturalPeople, otherIndividualsRouteEnabled(utr)),
+        Link(Natural, otherIndividualsRouteEnabled(utr)),
         Some(Tag.tagFor(tasks.other, config.maintainOtherIndividualsEnabled))
       )
-    ).filterNot(_.link.text == NonEeaCompany.toString && !(is5mldEnabled && isTrust5mldTaxable))
+    ).filterNot(_.link.text == NonEeaBusinessAsset.toString && !(is5mldEnabled && isTrust5mldTaxable))
 
     TaskList(mandatorySections, optionalSections)
   }
