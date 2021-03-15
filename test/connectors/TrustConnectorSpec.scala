@@ -570,6 +570,61 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         application.stop()
       }
     }
-  }
 
+    "get whether non-EEA companies already exist must" - {
+
+      "return true or false when the request is successful" in {
+
+        val utr = "1000000008"
+        val json = JsBoolean(true)
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(s"/trusts/$utr/transformed/non-eea-companies-already-exist"))
+            .willReturn(okJson(json.toString))
+        )
+
+        val processed = Await.result(connector.getDoNonEeaCompaniesAlreadyExist(utr), Duration.Inf)
+
+        processed.value mustBe true
+
+        application.stop()
+      }
+
+      "throw UpstreamException when returned a 404 NotFound for the cached trust" in {
+
+        val utr = "1000000008"
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(s"/trusts/$utr/transformed/non-eea-companies-already-exist"))
+            .willReturn(notFound())
+        )
+
+        a[UpstreamErrorResponse] mustBe thrownBy {
+          Await.result(connector.getDoNonEeaCompaniesAlreadyExist(utr), Duration.Inf)
+        }
+
+        application.stop()
+      }
+    }
+  }
 }

@@ -31,15 +31,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AddNonEeaCompanyYesNoController @Inject()(
-                                                    override val messagesApi: MessagesApi,
-                                                    playbackRepository: PlaybackRepository,
-                                                    actions: Actions,
-                                                    yesNoFormProvider: YesNoFormProvider,
-                                                    val controllerComponents: MessagesControllerComponents,
-                                                    view: AddNonEeaCompanyYesNoView,
-                                                    trustConnector: TrustConnector,
-                                                    trustStoreConnector: TrustsStoreConnector
-                                     )(implicit ec: ExecutionContext)
+                                                 override val messagesApi: MessagesApi,
+                                                 playbackRepository: PlaybackRepository,
+                                                 actions: Actions,
+                                                 yesNoFormProvider: YesNoFormProvider,
+                                                 val controllerComponents: MessagesControllerComponents,
+                                                 view: AddNonEeaCompanyYesNoView,
+                                                 trustConnector: TrustConnector,
+                                                 trustStoreConnector: TrustsStoreConnector
+                                               )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector){
 
   private def prefix(closingTrust: Boolean): String = {
@@ -74,8 +74,7 @@ class AddNonEeaCompanyYesNoController @Inject()(
             route <- routeToDeclareOrTaskList(updatedAnswers, request.closingTrust)(request.request)
           } yield route
         }
-    )
+      )
   }
-
 
 }

@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package controllers.make_changes
+package controllers.makechanges
 
 import base.SpecBase
-import connectors.TrustsStoreConnector
-import controllers.makechanges.routes
+import connectors.{TrustConnector, TrustsStoreConnector}
 import forms.YesNoFormProvider
-import models.CompletedMaintenanceTasks
+import models.{CompletedMaintenanceTasks, UserAnswers}
 import models.pages.WhatIsNext
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import pages.WhatIsNextPage
 import pages.makechanges._
 import pages.trustdetails.ExpressTrustYesNoPage
+import play.api.data.Form
 import play.api.inject.bind
-import play.api.libs.json.JsArray
+import play.api.libs.json.{JsArray, JsBoolean}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import sections.assets.NonEeaBusinessAsset
@@ -38,17 +38,16 @@ import scala.concurrent.Future
 
 class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
-  val formProvider = new YesNoFormProvider()
-
   val prefix = "updateOtherIndividuals"
 
-  val form = formProvider.withPrefix(prefix)
+  val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
-  val mockConnector = mock[TrustsStoreConnector]
+  val mockTrustsStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
+  val mockTrustsConnector: TrustConnector = mock[TrustConnector]
 
-  lazy val updateOtherIndividualsYesNoRoute = routes.UpdateOtherIndividualsYesNoController.onPageLoad().url
+  lazy val updateOtherIndividualsYesNoRoute: String = routes.UpdateOtherIndividualsYesNoController.onPageLoad().url
 
-  val baseAnswers = emptyUserAnswersForUtr
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
   "UpdateOtherIndividualsYesNoController" when {
@@ -102,12 +101,10 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
           .set(UpdateSettlorsYesNoPage, false).success.value
           .set(AddOrUpdateProtectorYesNoPage, false).success.value
 
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val request =
-          FakeRequest(POST, updateOtherIndividualsYesNoRoute)
-            .withFormUrlEncodedBody(("value", "false"))
+        val request = FakeRequest(POST, updateOtherIndividualsYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 
@@ -125,16 +122,14 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
           .set(UpdateSettlorsYesNoPage, false).success.value
           .set(AddOrUpdateProtectorYesNoPage, false).success.value
 
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
-            .build()
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustsStoreConnector].toInstance(mockTrustsStoreConnector))
+          .build()
 
-        val request =
-          FakeRequest(POST, updateOtherIndividualsYesNoRoute)
-            .withFormUrlEncodedBody(("value", "false"))
+        val request = FakeRequest(POST, updateOtherIndividualsYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
 
-        when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+        when(mockTrustsStoreConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
         val result = route(application, request).value
 
@@ -151,9 +146,8 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request =
-          FakeRequest(POST, updateOtherIndividualsYesNoRoute)
-            .withFormUrlEncodedBody(("value", ""))
+        val request = FakeRequest(POST, updateOtherIndividualsYesNoRoute)
+          .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
@@ -222,12 +216,15 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
           .set(UpdateSettlorsYesNoPage, false).success.value
           .set(AddOrUpdateProtectorYesNoPage, false).success.value
 
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswers)).build()
+        when(mockTrustsConnector.getDoNonEeaCompaniesAlreadyExist(any())(any(), any()))
+          .thenReturn(Future.successful(JsBoolean(false)))
 
-        val request =
-          FakeRequest(POST, updateOtherIndividualsYesNoRoute)
-            .withFormUrlEncodedBody(("value", "false"))
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+          .build()
+
+        val request = FakeRequest(POST, updateOtherIndividualsYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 
@@ -247,12 +244,15 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
           .set(UpdateSettlorsYesNoPage, false).success.value
           .set(AddOrUpdateProtectorYesNoPage, false).success.value
 
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswers)).build()
+        when(mockTrustsConnector.getDoNonEeaCompaniesAlreadyExist(any())(any(), any()))
+          .thenReturn(Future.successful(JsBoolean(true)))
 
-        val request =
-          FakeRequest(POST, updateOtherIndividualsYesNoRoute)
-            .withFormUrlEncodedBody(("value", "false"))
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+          .build()
+
+        val request = FakeRequest(POST, updateOtherIndividualsYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 
@@ -267,9 +267,8 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers5mldTaxable)).build()
 
-        val request =
-          FakeRequest(POST, updateOtherIndividualsYesNoRoute)
-            .withFormUrlEncodedBody(("value", ""))
+        val request = FakeRequest(POST, updateOtherIndividualsYesNoRoute)
+          .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 

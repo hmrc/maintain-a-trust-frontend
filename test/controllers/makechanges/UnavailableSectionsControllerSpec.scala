@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package controllers.make_changes
+package controllers.makechanges
 
 import base.SpecBase
-import controllers.makechanges.routes
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.makechanges.UnavailableSectionsView

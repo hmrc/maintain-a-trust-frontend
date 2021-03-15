@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package controllers.make_changes
+package controllers.makechanges
 
 import base.SpecBase
 import connectors.TrustConnector
-import controllers.makechanges.routes
 import forms.YesNoFormProvider
 import models.UserAnswers
 import models.pages.WhatIsNext.MakeChanges

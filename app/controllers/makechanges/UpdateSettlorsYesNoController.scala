@@ -39,8 +39,7 @@ class UpdateSettlorsYesNoController @Inject()(
                                                val controllerComponents: MessagesControllerComponents,
                                                view: UpdateSettlorsYesNoView,
                                                trustStoreConnector: TrustsStoreConnector
-                                     )(implicit ec: ExecutionContext)
-
+                                             )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) {
 
   private def prefix(closingTrust: Boolean): String = {

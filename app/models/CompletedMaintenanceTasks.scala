@@ -28,9 +28,9 @@ case class CompletedMaintenanceTasks(trustees: Boolean,
 
 object CompletedMaintenanceTasks {
 
-  implicit val formats : Format[CompletedMaintenanceTasks] = Json.format[CompletedMaintenanceTasks]
+  implicit val formats: Format[CompletedMaintenanceTasks] = Json.format[CompletedMaintenanceTasks]
 
-  def apply() : CompletedMaintenanceTasks = CompletedMaintenanceTasks(
+  def apply(): CompletedMaintenanceTasks = CompletedMaintenanceTasks(
     trustees = false,
     beneficiaries = false,
     settlors = false,
@@ -39,7 +39,7 @@ object CompletedMaintenanceTasks {
     nonEeaCompany = false
   )
 
-  def from(userAnswers: UserAnswers) : Option[CompletedMaintenanceTasks] = for {
+  def from(userAnswers: UserAnswers): Option[CompletedMaintenanceTasks] = for {
     t <- userAnswers.get(UpdateTrusteesYesNoPage)
     b <- userAnswers.get(UpdateBeneficiariesYesNoPage)
     s <- userAnswers.get(UpdateSettlorsYesNoPage)

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package controllers.make_changes
+package controllers.makechanges
 
 import base.SpecBase
 import connectors.TrustConnector
-import controllers.makechanges.routes
 import forms.YesNoFormProvider
-import models.pages.WhatIsNext
+import models.UserAnswers
+import models.pages.WhatIsNext.MakeChanges
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import pages.WhatIsNextPage
@@ -29,32 +29,34 @@ import play.api.inject.bind
 import play.api.libs.json.JsBoolean
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.makechanges.UpdateProtectorYesNoView
+import views.html.makechanges.AddProtectorYesNoView
 
 import scala.concurrent.Future
 
-class UpdateProtectorsYesNoControllerSpec extends SpecBase {
+class AddProtectorYesNoControllerSpec extends SpecBase {
 
   val formProvider = new YesNoFormProvider()
-  val prefix = "updateProtector"
+  val prefix: String = "addProtector"
   val form = formProvider.withPrefix(prefix)
 
-  lazy val updateProtectorYesNoRoute = routes.UpdateProtectorYesNoController.onPageLoad().url
+  lazy val addProtectorYesNoRoute = routes.AddProtectorYesNoController.onPageLoad().url
 
-  val baseAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+  val utr = "utr"
 
-  "UpdateProtectorYesNo Controller" must {
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+    .set(WhatIsNextPage, MakeChanges).success.value
+
+  "AddProtectorYesNo Controller" must {
 
     "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-      val request = FakeRequest(GET, updateProtectorYesNoRoute)
+      val request = FakeRequest(GET, addProtectorYesNoRoute)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[UpdateProtectorYesNoView]
+      val view = application.injector.instanceOf[AddProtectorYesNoView]
 
       status(result) mustEqual OK
 
@@ -66,14 +68,13 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = baseAnswers
-        .set(AddOrUpdateProtectorYesNoPage, true).success.value
+      val userAnswers = baseAnswers.set(AddOrUpdateProtectorYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, updateProtectorYesNoRoute)
+      val request = FakeRequest(GET, addProtectorYesNoRoute)
 
-      val view = application.injector.instanceOf[UpdateProtectorYesNoView]
+      val view = application.injector.instanceOf[AddProtectorYesNoView]
 
       val result = route(application, request).value
 
@@ -86,15 +87,17 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
     }
 
     "redirect to the add an other individuals page when valid data is submitted and no individuals exist" in {
+
       val  mockTrustConnector = mock[TrustConnector]
 
-      val application =
-        applicationBuilder(userAnswers = Some(baseAnswers)).overrides(
-          bind[TrustConnector].toInstance(mockTrustConnector)
-        ).build()
+      val application = applicationBuilder(userAnswers = Some(baseAnswers))
+          .overrides(
+            bind[TrustConnector].toInstance(mockTrustConnector)
+          )
+          .build()
 
       val request =
-        FakeRequest(POST, updateProtectorYesNoRoute)
+        FakeRequest(POST, addProtectorYesNoRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
       when(mockTrustConnector.getDoOtherIndividualsAlreadyExist(any())(any(), any()))
@@ -110,15 +113,17 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
     }
 
     "redirect to the update individuals page when valid data is submitted and individuals exist" in {
+
       val  mockTrustConnector = mock[TrustConnector]
 
-      val application =
-        applicationBuilder(userAnswers = Some(baseAnswers)).overrides(
+      val application = applicationBuilder(userAnswers = Some(baseAnswers))
+        .overrides(
           bind[TrustConnector].toInstance(mockTrustConnector)
-        ).build()
+        )
+        .build()
 
       val request =
-        FakeRequest(POST, updateProtectorYesNoRoute)
+        FakeRequest(POST, addProtectorYesNoRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
       when(mockTrustConnector.getDoOtherIndividualsAlreadyExist(any())(any(), any()))
@@ -138,12 +143,12 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
       val request =
-        FakeRequest(POST, updateProtectorYesNoRoute)
+        FakeRequest(POST, addProtectorYesNoRoute)
           .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[UpdateProtectorYesNoView]
+      val view = application.injector.instanceOf[AddProtectorYesNoView]
 
       val result = route(application, request).value
 

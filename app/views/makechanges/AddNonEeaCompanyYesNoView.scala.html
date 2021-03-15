@@ -17,8 +17,8 @@
 @import controllers.makechanges.routes._
 
 @this(
-        main_template: MainTemplate,
-        formHelper: FormWithCSRF
+    main_template: MainTemplate,
+    formHelper: FormWithCSRF
 )
 
 @(form: Form[_], prefix: String)(implicit request: Request[_], messages: Messages)
@@ -37,12 +37,15 @@
 
         <p>@messages("addNonEeaCompany.paragraph1")</p>
 
-        @components.bullet_list("addNonEeaCompany", List(
-            "bullet1",
-            "bullet2",
-            "bullet3",
-            "bullet4"
-        ))
+        @components.bullet_list(
+            "addNonEeaCompany",
+            List(
+                "bullet1",
+                "bullet2",
+                "bullet3",
+                "bullet4"
+            )
+        )
 
         @components.input_yes_no(
             field = form("value"),

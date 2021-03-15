@@ -27,7 +27,7 @@ case class UpdateFilterQuestions(trustees: Boolean,
 
 object UpdateFilterQuestions {
 
-  def from(userAnswers : UserAnswers): Option[UpdateFilterQuestions] = {
+  def from(userAnswers: UserAnswers): Option[UpdateFilterQuestions] = {
     for {
       t <- userAnswers.get(UpdateTrusteesYesNoPage)
       b <- userAnswers.get(UpdateBeneficiariesYesNoPage)

@@ -31,10 +31,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
-  private def getTrustDetailsUrl(identifier: String) = s"${config.trustsUrl}/trusts/$identifier/trust-details"
-
   def getTrustDetails(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
-    http.GET[TrustDetails](getTrustDetailsUrl(identifier))
+    val url: String = s"${config.trustsUrl}/trusts/$identifier/trust-details"
+    http.GET[TrustDetails](url)
   }
 
   def getStartDate(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[LocalDate] = {
@@ -44,37 +43,34 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
     } yield date
   }
 
-  def playbackUrl(identifier: String) = s"${config.trustsUrl}/trusts/$identifier/transformed"
-
-  def playbackFromEtmpUrl(identifier: String) = s"${config.trustsUrl}/trusts/$identifier/refresh"
-
-  private def getDoProtectorsAlreadyExistUrl(identifier: String) =
-    s"${config.trustsUrl}/trusts/$identifier/transformed/protectors-already-exist"
-
-  private def getDoOtherIndividualsAlreadyExistUrl(identifier: String) =
-    s"${config.trustsUrl}/trusts/$identifier/transformed/other-individuals-already-exist"
-
-  def declareUrl(identifier: String) = s"${config.trustsUrl}/trusts/declare/$identifier"
-
   def playback(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
-    http.GET[TrustsResponse](playbackUrl(identifier))(TrustsStatusReads.httpReads, hc, ec)
+    val url: String = s"${config.trustsUrl}/trusts/$identifier/transformed"
+    http.GET[TrustsResponse](url)(TrustsStatusReads.httpReads, hc, ec)
   }
 
   def playbackFromEtmp(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
-    http.GET[TrustsResponse](playbackFromEtmpUrl(identifier))(TrustsStatusReads.httpReads, hc, ec)
+    val url: String = s"${config.trustsUrl}/trusts/$identifier/refresh"
+    http.GET[TrustsResponse](url)(TrustsStatusReads.httpReads, hc, ec)
   }
 
   def getDoProtectorsAlreadyExist(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
-    http.GET[JsBoolean](getDoProtectorsAlreadyExistUrl(identifier))
+    val url: String = s"${config.trustsUrl}/trusts/$identifier/transformed/protectors-already-exist"
+    http.GET[JsBoolean](url)
   }
 
   def getDoOtherIndividualsAlreadyExist(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
-    http.GET[JsBoolean](getDoOtherIndividualsAlreadyExistUrl(identifier))
+    val url: String = s"${config.trustsUrl}/trusts/$identifier/transformed/other-individuals-already-exist"
+    http.GET[JsBoolean](url)
+  }
+
+  def getDoNonEeaCompaniesAlreadyExist(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
+    val url: String = s"${config.trustsUrl}/trusts/$identifier/transformed/non-eea-companies-already-exist"
+    http.GET[JsBoolean](url)
   }
 
   def declare(identifier: String, payload: JsValue)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
-    http.POST[JsValue, DeclarationResponse](declareUrl(identifier), payload)(implicitly[Writes[JsValue]], DeclarationResponse.httpReads, hc, ec)
+    val url: String = s"${config.trustsUrl}/trusts/declare/$identifier"
+    http.POST[JsValue, DeclarationResponse](url, payload)(implicitly[Writes[JsValue]], DeclarationResponse.httpReads, hc, ec)
   }
+
 }
-
-

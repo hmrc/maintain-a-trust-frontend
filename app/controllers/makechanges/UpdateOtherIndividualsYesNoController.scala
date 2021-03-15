@@ -39,7 +39,7 @@ class UpdateOtherIndividualsYesNoController @Inject()(
                                                        view: UpdateOtherIndividualsYesNoView,
                                                        trustConnector: TrustConnector,
                                                        trustStoreConnector: TrustsStoreConnector
-                                     )(implicit ec: ExecutionContext)
+                                                     )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with I18nSupport {
 
   private def prefix(closingTrust: Boolean): String = {

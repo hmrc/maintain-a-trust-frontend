@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package controllers.make_changes
+package controllers.makechanges
 
 import base.SpecBase
-import controllers.makechanges.MakeChangesRouter
 import controllers.makechanges.MakeChangesRouter.{Declaration, TaskList, UnableToDecide}
 import pages.makechanges._
 

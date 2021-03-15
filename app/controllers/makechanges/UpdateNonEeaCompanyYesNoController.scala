@@ -31,15 +31,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UpdateNonEeaCompanyYesNoController @Inject()(
-                                                       override val messagesApi: MessagesApi,
-                                                       playbackRepository: PlaybackRepository,
-                                                       actions: Actions,
-                                                       yesNoFormProvider: YesNoFormProvider,
-                                                       val controllerComponents: MessagesControllerComponents,
-                                                       view: UpdateNonEeaCompanyYesNoView,
-                                                       trustConnector: TrustConnector,
-                                                       trustStoreConnector: TrustsStoreConnector
-                                     )(implicit ec: ExecutionContext)
+                                                    override val messagesApi: MessagesApi,
+                                                    playbackRepository: PlaybackRepository,
+                                                    actions: Actions,
+                                                    yesNoFormProvider: YesNoFormProvider,
+                                                    val controllerComponents: MessagesControllerComponents,
+                                                    view: UpdateNonEeaCompanyYesNoView,
+                                                    trustConnector: TrustConnector,
+                                                    trustStoreConnector: TrustsStoreConnector
+                                                  )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with I18nSupport {
 
   private def prefix(closingTrust: Boolean): String = {
