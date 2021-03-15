@@ -23,7 +23,7 @@ import models.pages.Tag.InProgress
 import sections.assets.NonEeaBusinessAsset
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Protectors, Trustees}
+import sections.{Natural, Protectors, TrustDetails, Trustees}
 import viewmodels.{Link, Task}
 
 trait TaskListSections {
@@ -37,78 +37,92 @@ trait TaskListSections {
 
   val config: FrontendAppConfig
 
-  private def beneficiariesRouteEnabled(identifier: String): String = {
-    if (config.maintainBeneficiariesEnabled) {
-      config.maintainBeneficiariesUrl(identifier)
-    } else {
-      notYetAvailable
+  private def trustDetailsRouteEnabled(identifier: String): String = {
+    redirectToServiceIfEnabled(config.maintainTrustDetailsEnabled) {
+      config.maintainTrustDetailsUrl(identifier)
     }
   }
 
   private def settlorsRouteEnabled(identifier: String): String = {
-    if (config.maintainSettlorsEnabled) {
+    redirectToServiceIfEnabled(config.maintainSettlorsEnabled) {
       config.maintainSettlorsUrl(identifier)
-    } else {
-      notYetAvailable
+    }
+  }
+
+  private def trusteesRouteEnabled(identifier: String): String = {
+    redirectToServiceIfEnabled(config.maintainTrusteesEnabled) {
+      config.maintainTrusteesUrl(identifier)
+    }
+  }
+
+  private def beneficiariesRouteEnabled(identifier: String): String = {
+    redirectToServiceIfEnabled(config.maintainBeneficiariesEnabled) {
+      config.maintainBeneficiariesUrl(identifier)
     }
   }
 
   private def protectorsRouteEnabled(identifier: String): String = {
-    if (config.maintainProtectorsEnabled) {
+    redirectToServiceIfEnabled(config.maintainProtectorsEnabled) {
       config.maintainProtectorsUrl(identifier)
-    } else {
-      notYetAvailable
     }
   }
 
   private def otherIndividualsRouteEnabled(identifier: String): String = {
-    if (config.maintainOtherIndividualsEnabled) {
+    redirectToServiceIfEnabled(config.maintainOtherIndividualsEnabled) {
       config.maintainOtherIndividualsUrl(identifier)
-    } else {
-      notYetAvailable
     }
   }
 
   private def nonEeaCompanyRouteEnabled(identifier: String): String = {
-    if (config.maintainNonEeaCompanyEnabled) {
+    redirectToServiceIfEnabled(config.maintainNonEeaCompaniesEnabled) {
       config.maintainNonEeaCompanyUrl(identifier)
+    }
+  }
+
+  private def redirectToServiceIfEnabled(enabled: Boolean)(redirectToService: String): String = {
+    if (enabled) {
+      redirectToService
     } else {
       notYetAvailable
     }
   }
 
   def generateTaskList(tasks: CompletedMaintenanceTasks,
-                       utr: String,
+                       identifier: String,
                        is5mldEnabled: Boolean,
                        isTrust5mldTaxable: Boolean): TaskList = {
 
     val mandatorySections = List(
       Task(
-        Link(Settlors, settlorsRouteEnabled(utr)),
-        Some(Tag.tagFor(tasks.settlors, config.maintainSettlorsEnabled))
+        Link(TrustDetails, trustDetailsRouteEnabled(identifier)),
+        Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
       ),
       Task(
-        Link(Trustees, config.maintainTrusteesUrl(utr)),
-        Some(Tag.tagFor(tasks.trustees, config.maintainTrusteesEnabled))
+        Link(Settlors, settlorsRouteEnabled(identifier)),
+        Some(Tag.tagFor(tasks.settlors))
       ),
       Task(
-        Link(Beneficiaries, beneficiariesRouteEnabled(utr)),
-        Some(Tag.tagFor(tasks.beneficiaries, config.maintainBeneficiariesEnabled))
+        Link(Trustees, trusteesRouteEnabled(identifier)),
+        Some(Tag.tagFor(tasks.trustees))
+      ),
+      Task(
+        Link(Beneficiaries, beneficiariesRouteEnabled(identifier)),
+        Some(Tag.tagFor(tasks.beneficiaries))
       )
-    )
+    ).filterNot(_.link.text == TrustDetails.toString && !(is5mldEnabled && isTrust5mldTaxable))
 
     val optionalSections = List(
       Task(
-        Link(NonEeaBusinessAsset, nonEeaCompanyRouteEnabled(utr)),
-        Some(Tag.tagFor(tasks.nonEeaCompany, config.maintainNonEeaCompanyEnabled))
+        Link(NonEeaBusinessAsset, nonEeaCompanyRouteEnabled(identifier)),
+        Some(Tag.tagFor(tasks.nonEeaCompany, config.maintainNonEeaCompaniesEnabled))
       ),
       Task(
-        Link(Protectors, protectorsRouteEnabled(utr)),
-        Some(Tag.tagFor(tasks.protectors, config.maintainProtectorsEnabled))
+        Link(Protectors, protectorsRouteEnabled(identifier)),
+        Some(Tag.tagFor(tasks.protectors))
       ),
       Task(
-        Link(Natural, otherIndividualsRouteEnabled(utr)),
-        Some(Tag.tagFor(tasks.other, config.maintainOtherIndividualsEnabled))
+        Link(Natural, otherIndividualsRouteEnabled(identifier)),
+        Some(Tag.tagFor(tasks.other))
       )
     ).filterNot(_.link.text == NonEeaBusinessAsset.toString && !(is5mldEnabled && isTrust5mldTaxable))
 

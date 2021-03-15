@@ -34,7 +34,7 @@ import play.api.test.Helpers._
 import sections.assets.NonEeaBusinessAsset
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Protectors, Trustees}
+import sections.{Natural, Protectors, TrustDetails, Trustees}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.{Link, Task}
 import views.html.VariationProgressView
@@ -49,30 +49,35 @@ class TaskListControllerSpec extends SpecBase {
 
   val utr: String = "1234567890"
 
+  val fakeUrl = "fakeUrl"
+
   val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
-  val mandatorySections = List(
+  val mandatorySections: List[Task] = List(
     Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$utr"), Some(InProgress)),
     Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$utr"), Some(InProgress)),
     Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$utr"), Some(InProgress))
   )
-  val optionalSections = List(
+
+  val mandatorySections5mld: List[Task] = Task(Link(TrustDetails, fakeUrl), Some(InProgress)) :: mandatorySections
+
+  val optionalSections: List[Task] = List(
     Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$utr"), Some(InProgress)),
     Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$utr"), Some(InProgress))
   )
 
-  val optionalSections5mld = List(
-    Task(Link(NonEeaBusinessAsset, "fakeUrl"), Some(InProgress)),
-    Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$utr"), Some(InProgress)),
-    Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$utr"), Some(InProgress))
-  )
+  val optionalSections5mld: List[Task] = Task(Link(NonEeaBusinessAsset, fakeUrl), Some(InProgress)) :: optionalSections
 
   private lazy val config: Configuration = injector.instanceOf[FrontendAppConfig].configuration
 
-  def frontendAppConfig(isMaintainNonEeaCompanyEnabled: Boolean): FrontendAppConfig = {
+  def frontendAppConfig(isMaintainTrustDetailsEnabled: Boolean,
+                        isMaintainNonEeaCompanyEnabled: Boolean): FrontendAppConfig = {
     new FrontendAppConfig(config) {
-      override lazy val maintainNonEeaCompanyEnabled: Boolean = isMaintainNonEeaCompanyEnabled
-      override def maintainNonEeaCompanyUrl(utr: String): String = "fakeUrl"
+      override lazy val maintainTrustDetailsEnabled: Boolean = isMaintainTrustDetailsEnabled
+      override def maintainTrustDetailsUrl(identifier: String): String = fakeUrl
+
+      override lazy val maintainNonEeaCompaniesEnabled: Boolean = isMaintainNonEeaCompanyEnabled
+      override def maintainNonEeaCompanyUrl(utr: String): String = fakeUrl
     }
   }
 
@@ -174,7 +179,7 @@ class TaskListControllerSpec extends SpecBase {
             val application = applicationBuilder(userAnswers = Some(answers))
               .overrides(
                 bind(classOf[TrustsStoreConnector]).toInstance(mockConnector),
-                bind[FrontendAppConfig].toInstance(frontendAppConfig(true))
+                bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true, isMaintainNonEeaCompanyEnabled = true))
               ).build()
 
             when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
@@ -188,7 +193,7 @@ class TaskListControllerSpec extends SpecBase {
             status(result) mustEqual OK
 
             contentAsString(result) mustEqual
-              view(utr, UTR, mandatorySections, optionalSections5mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
+              view(utr, UTR, mandatorySections5mld, optionalSections5mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
 
             application.stop()
           }
@@ -202,7 +207,7 @@ class TaskListControllerSpec extends SpecBase {
             val application = applicationBuilder(userAnswers = Some(answers))
               .overrides(
                 bind(classOf[TrustsStoreConnector]).toInstance(mockConnector),
-                bind[FrontendAppConfig].toInstance(frontendAppConfig(true))
+                bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true, isMaintainNonEeaCompanyEnabled = true))
               ).build()
 
             when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
@@ -216,7 +221,7 @@ class TaskListControllerSpec extends SpecBase {
             status(result) mustEqual OK
 
             contentAsString(result) mustEqual
-              view(utr, UTR, mandatorySections, optionalSections5mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
+              view(utr, UTR, mandatorySections5mld, optionalSections5mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
 
             application.stop()
           }
