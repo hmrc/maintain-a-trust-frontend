@@ -89,7 +89,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.UpdateBeneficiariesYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.UpdateTrusteesYesNoController.onPageLoad().url
 
       application.stop()
     }
