@@ -49,7 +49,8 @@ case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
   }
 
   private def removeMakeChangesData(userAnswers: UserAnswers): Try[UserAnswers] = {
-    userAnswers.remove(UpdateTrusteesYesNoPage)
+    userAnswers.remove(UpdateTrustDetailsYesNoPage)
+      .flatMap(_.remove(UpdateTrusteesYesNoPage))
       .flatMap(_.remove(UpdateBeneficiariesYesNoPage))
       .flatMap(_.remove(UpdateSettlorsYesNoPage))
       .flatMap(_.remove(AddOrUpdateProtectorYesNoPage))
