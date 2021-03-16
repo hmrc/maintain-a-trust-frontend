@@ -42,23 +42,31 @@ abstract class MakeChangesQuestionRouterController(
     }
   }
 
-  protected def redirectToDeclaration()(implicit request: DataRequest[AnyContent]): Result = {
+  protected def redirectToDeclaration(implicit request: DataRequest[AnyContent]): Call = {
     request.user.affinityGroup match {
       case Agent =>
-        Redirect(controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad())
+        controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad()
       case _ =>
-        Redirect(controllers.declaration.routes.IndividualDeclarationController.onPageLoad())
+        controllers.declaration.routes.IndividualDeclarationController.onPageLoad()
     }
   }
 
-  protected def routeToAddOrUpdateProtectors()(implicit request: DataRequest[AnyContent]): Future[Result] = {
+  protected def redirectToFirstUpdateQuestion(implicit request: DataRequest[AnyContent]): Call = {
+    if (isTrust5mldTaxable) {
+      controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad()
+    } else {
+      controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()
+    }
+  }
+
+  protected def routeToAddOrUpdateProtectors(implicit request: DataRequest[AnyContent]): Future[Result] = {
     trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.identifier) map {
       case JsTrue => Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
       case JsFalse => Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
     }
   }
 
-  protected def routeToAddOrUpdateOtherIndividuals()(implicit request: DataRequest[AnyContent]): Future[Result] = {
+  protected def routeToAddOrUpdateOtherIndividuals(implicit request: DataRequest[AnyContent]): Future[Result] = {
     trustConnector.getDoOtherIndividualsAlreadyExist(request.userAnswers.identifier) map {
       case JsTrue => Redirect(controllers.makechanges.routes.UpdateOtherIndividualsYesNoController.onPageLoad())
       case JsFalse => Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
@@ -67,7 +75,7 @@ abstract class MakeChangesQuestionRouterController(
 
   protected def routeToAddOrUpdateNonEeaCompany(updatedAnswers: UserAnswers, isClosingTrust: Boolean)
                                                (implicit request: DataRequest[AnyContent]): Future[Result] = {
-    if (is5mldEnabledAndTrust5mldTaxable) {
+    if (isTrust5mldTaxable) {
       trustConnector.getDoNonEeaCompaniesAlreadyExist(request.userAnswers.identifier) map {
         case JsTrue => Redirect(controllers.makechanges.routes.UpdateNonEeaCompanyYesNoController.onPageLoad())
         case JsFalse => Redirect(controllers.makechanges.routes.AddNonEeaCompanyYesNoController.onPageLoad())
@@ -83,7 +91,7 @@ abstract class MakeChangesQuestionRouterController(
                                         (implicit request: DataRequest[AnyContent]): Future[Result] = {
     MakeChangesRouter.decide(updatedAnswers) match {
       case MakeChangesRouter.Declaration if !isClosingTrust =>
-        Future.successful(redirectToDeclaration())
+        Future.successful(Redirect(redirectToDeclaration))
       case MakeChangesRouter.Declaration =>
         redirectAndResetTaskList(updatedAnswers)
       case MakeChangesRouter.TaskList =>
@@ -93,7 +101,7 @@ abstract class MakeChangesQuestionRouterController(
     }
   }
 
-  private def is5mldEnabledAndTrust5mldTaxable(implicit request: DataRequest[_]): Boolean = {
+  def isTrust5mldTaxable(implicit request: DataRequest[_]): Boolean = {
     request.userAnswers.is5mldEnabled && request.userAnswers.isTrust5mldTaxable
   }
 }

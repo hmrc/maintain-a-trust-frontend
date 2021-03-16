@@ -75,7 +75,7 @@ class AddProtectorYesNoController @Inject()(
                 .set(AddOrUpdateProtectorYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- routeToAddOrUpdateOtherIndividuals()(request.request)
+            nextRoute <- routeToAddOrUpdateOtherIndividuals(request.request)
           } yield {
             nextRoute
           }
