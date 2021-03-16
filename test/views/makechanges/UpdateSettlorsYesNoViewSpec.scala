@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.make_changes
+package views.makechanges
 
 import controllers.makechanges.routes
 import forms.YesNoFormProvider

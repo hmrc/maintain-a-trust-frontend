@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.make_changes
+package views.makechanges
 
 import views.behaviours.ViewBehaviours
 import views.html.makechanges.UnavailableSectionsView

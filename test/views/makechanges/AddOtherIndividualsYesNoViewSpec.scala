@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.make_changes
+package views.makechanges
 
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
@@ -22,17 +22,17 @@ import play.api.data.Form
 import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
-import views.html.makechanges.UpdateOtherIndividualsYesNoView
+import views.html.makechanges.AddOtherIndividualsYesNoView
 
-class UpdateOtherIndividualsYesNoViewSpec extends YesNoViewBehaviours {
+class AddOtherIndividualsYesNoViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "updateOtherIndividuals"
+  val messageKeyPrefix = "addOtherIndividuals"
   val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-  lazy val onSubmit: Call = routes.UpdateOtherIndividualsYesNoController.onSubmit()
+  lazy val onSubmit: Call = routes.AddOtherIndividualsYesNoController.onSubmit()
 
-  "UpdateOtherIndividualsYesNo view" must {
+  "AddOtherIndividualsYesNo view" must {
 
-    val view = viewFor[UpdateOtherIndividualsYesNoView](Some(emptyUserAnswersForUtr))
+    val view = viewFor[AddOtherIndividualsYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, messageKeyPrefix)(fakeRequest, messages)

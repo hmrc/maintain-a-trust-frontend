@@ -80,6 +80,9 @@ GET        /declared-updates                            controllers.print.PrintM
 GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=true)
 GET        /continue-maintaining-this-trust             controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=false)
 
+GET        /update-trust-details                        controllers.makechanges.UpdateTrustDetailsYesNoController.onPageLoad()
+POST       /update-trust-details                        controllers.makechanges.UpdateTrustDetailsYesNoController.onSubmit()
+
 GET        /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad()
 POST       /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onSubmit()
 

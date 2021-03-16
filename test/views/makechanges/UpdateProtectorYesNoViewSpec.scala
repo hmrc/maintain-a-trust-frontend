@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.make_changes
+package views.makechanges
 
 import controllers.makechanges.routes
 import forms.YesNoFormProvider
@@ -22,17 +22,17 @@ import play.api.data.Form
 import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
-import views.html.makechanges.UpdateBeneficiariesYesNoView
+import views.html.makechanges.UpdateProtectorYesNoView
 
-class UpdateBeneficiariesYesNoViewSpec extends YesNoViewBehaviours {
+class UpdateProtectorYesNoViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "updateBeneficiaries"
+  val messageKeyPrefix = "updateProtector"
   val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-  lazy val onSubmit: Call = routes.UpdateBeneficiariesYesNoController.onSubmit()
+  lazy val onSubmit: Call = routes.UpdateProtectorYesNoController.onSubmit()
 
-  "UpdateBeneficiariesYesNo view" must {
+  "UpdateProtectorYesNo view" must {
 
-    val view = viewFor[UpdateBeneficiariesYesNoView](Some(emptyUserAnswersForUtr))
+    val view = viewFor[UpdateProtectorYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, messageKeyPrefix)(fakeRequest, messages)
