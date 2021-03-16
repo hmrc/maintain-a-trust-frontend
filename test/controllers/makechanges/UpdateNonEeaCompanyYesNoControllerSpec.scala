@@ -92,6 +92,7 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
       "redirect to individual declaration when valid data is submitted and no has been selected for all the questions" in {
 
         val userAnswers = baseAnswers
+          .set(UpdateTrustDetailsYesNoPage, false).success.value
           .set(UpdateTrusteesYesNoPage, false).success.value
           .set(UpdateBeneficiariesYesNoPage, false).success.value
           .set(UpdateSettlorsYesNoPage, false).success.value
@@ -117,6 +118,7 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
       "redirect to overview when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
 
         val userAnswers = baseAnswers
+          .set(UpdateTrustDetailsYesNoPage, false).success.value
           .set(UpdateTrusteesYesNoPage, true).success.value
           .set(UpdateBeneficiariesYesNoPage, false).success.value
           .set(UpdateSettlorsYesNoPage, false).success.value
@@ -151,6 +153,7 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
         val userAnswers = emptyUserAnswersForUtr
           .set(WhatIsNextPage, CloseTrust).success.value
+          .set(UpdateTrustDetailsYesNoPage, false).success.value
           .set(UpdateTrusteesYesNoPage, false).success.value
           .set(UpdateBeneficiariesYesNoPage, false).success.value
           .set(UpdateSettlorsYesNoPage, false).success.value

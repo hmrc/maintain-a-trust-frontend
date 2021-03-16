@@ -103,175 +103,234 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       application.stop()
     }
 
-    "return OK response with current tasks when setting tasks" in {
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.trusts-store.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
+    "return OK response with current tasks when setting tasks" when {
 
-      val connector = application.injector.instanceOf[TrustsStoreConnector]
+      "trust details and non-EEA company questions unanswered (4mld, 5mld non-taxable)" in {
 
-      val userAnswers = emptyUserAnswersForUtr
-        .set(UpdateTrustDetailsYesNoPage, false).success.value
-        .set(UpdateTrusteesYesNoPage, true).success.value
-        .set(UpdateBeneficiariesYesNoPage, false).success.value
-        .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddOrUpdateProtectorYesNoPage, false).success.value
-        .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
-        .set(AddOrUpdateNonEeaCompanyYesNoPage, false).success.value
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts-store.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
 
-      val json = Json.parse(
-        """
-          |{
-          |  "trustDetails": true,
-          |  "trustees": false,
-          |  "beneficiaries": true,
-          |  "settlors": true,
-          |  "protectors": true,
-          |  "other": true,
-          |  "nonEeaCompany": true
-          |}
-          |""".stripMargin)
+        val connector = application.injector.instanceOf[TrustsStoreConnector]
 
-      server.stubFor(
-        post(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
-          .withHeader(CONTENT_TYPE, containing(JSON))
-          .withRequestBody(equalTo(json.toString))
-          .willReturn(okJson(json.toString))
-      )
+        val userAnswers = emptyUserAnswersForUtr
+          .set(UpdateTrusteesYesNoPage, true).success.value
+          .set(UpdateBeneficiariesYesNoPage, false).success.value
+          .set(UpdateSettlorsYesNoPage, false).success.value
+          .set(AddOrUpdateProtectorYesNoPage, false).success.value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
 
-      val result = connector.set(utr, userAnswers)
+        val json = Json.parse(
+          """
+            |{
+            |  "trustDetails": true,
+            |  "trustees": false,
+            |  "beneficiaries": true,
+            |  "settlors": true,
+            |  "protectors": true,
+            |  "other": true,
+            |  "nonEeaCompany": true
+            |}
+            |""".stripMargin)
 
-      result.futureValue mustBe
-        CompletedMaintenanceTasks(
-          trustDetails = true,
-          trustees = false,
-          beneficiaries = true,
-          settlors = true,
-          protectors = true,
-          other = true,
-          nonEeaCompany = true
+        server.stubFor(
+          post(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
+            .withHeader(CONTENT_TYPE, containing(JSON))
+            .withRequestBody(equalTo(json.toString))
+            .willReturn(okJson(json.toString))
         )
 
-      application.stop()
-    }
+        val result = connector.set(utr, userAnswers)
 
-    "return default tasks when a failure occurs" in {
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.trusts-store.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
+        result.futureValue mustBe
+          CompletedMaintenanceTasks(
+            trustDetails = true,
+            trustees = false,
+            beneficiaries = true,
+            settlors = true,
+            protectors = true,
+            other = true,
+            nonEeaCompany = true
+          )
 
-      val connector = application.injector.instanceOf[TrustsStoreConnector]
+        application.stop()
+      }
 
-      server.stubFor(
-        get(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
-          .willReturn(serverError())
-      )
+      "trust details and non-EEA company questions answered (5mld taxable)" in {
 
-      val result = connector.getStatusOfTasks(utr)
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts-store.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
 
-      result.futureValue mustBe
-        CompletedMaintenanceTasks(
-          trustDetails = false,
-          trustees = false,
-          beneficiaries = false,
-          settlors = false,
-          protectors = false,
-          other = false,
-          nonEeaCompany = false
+        val connector = application.injector.instanceOf[TrustsStoreConnector]
+
+        val userAnswers = emptyUserAnswersForUtr
+          .set(UpdateTrustDetailsYesNoPage, false).success.value
+          .set(UpdateTrusteesYesNoPage, true).success.value
+          .set(UpdateBeneficiariesYesNoPage, false).success.value
+          .set(UpdateSettlorsYesNoPage, false).success.value
+          .set(AddOrUpdateProtectorYesNoPage, false).success.value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
+          .set(AddOrUpdateNonEeaCompanyYesNoPage, false).success.value
+
+        val json = Json.parse(
+          """
+            |{
+            |  "trustDetails": true,
+            |  "trustees": false,
+            |  "beneficiaries": true,
+            |  "settlors": true,
+            |  "protectors": true,
+            |  "other": true,
+            |  "nonEeaCompany": true
+            |}
+            |""".stripMargin)
+
+        server.stubFor(
+          post(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
+            .withHeader(CONTENT_TYPE, containing(JSON))
+            .withRequestBody(equalTo(json.toString))
+            .willReturn(okJson(json.toString))
         )
 
-      application.stop()
-    }
+        val result = connector.set(utr, userAnswers)
 
-    "return OK response when setting feature" in {
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.trusts-store.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
-
-      val connector = application.injector.instanceOf[TrustsStoreConnector]
-
-      server.stubFor(
-        put(urlEqualTo("/trusts-store/features/TestFeature"))
-          .withHeader(CONTENT_TYPE, containing(JSON))
-          .withRequestBody(equalTo("true"))
-          .willReturn(aResponse()
-            .withStatus(Status.OK))
-      )
-
-      val result = Await.result(connector.setFeature("TestFeature", state = true), Duration.Inf)
-
-      result.status mustBe Status.OK
-
-      application.stop()
-    }
-
-    "return a feature flag of true if 5mld is enabled" in {
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.trusts-store.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
-
-      val connector = application.injector.instanceOf[TrustsStoreConnector]
-
-      server.stubFor(
-        get(urlEqualTo(s"/trusts-store/features/5mld"))
-          .willReturn(
-            aResponse()
-              .withStatus(Status.OK)
-              .withBody(
-                Json.stringify(
-                  Json.toJson(FeatureResponse("5mld", isEnabled = true))
-                )
-              )
+        result.futureValue mustBe
+          CompletedMaintenanceTasks(
+            trustDetails = true,
+            trustees = false,
+            beneficiaries = true,
+            settlors = true,
+            protectors = true,
+            other = true,
+            nonEeaCompany = true
           )
+
+        application.stop()
+      }
+    }
+  }
+
+  "return default tasks when a failure occurs" in {
+    val application = applicationBuilder()
+      .configure(
+        Seq(
+          "microservice.services.trusts-store.port" -> server.port(),
+          "auditing.enabled" -> false
+        ): _*
+      ).build()
+
+    val connector = application.injector.instanceOf[TrustsStoreConnector]
+
+    server.stubFor(
+      get(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
+        .willReturn(serverError())
+    )
+
+    val result = connector.getStatusOfTasks(utr)
+
+    result.futureValue mustBe
+      CompletedMaintenanceTasks(
+        trustDetails = false,
+        trustees = false,
+        beneficiaries = false,
+        settlors = false,
+        protectors = false,
+        other = false,
+        nonEeaCompany = false
       )
 
-      val result = Await.result(connector.getFeature("5mld"), Duration.Inf)
-      result mustBe FeatureResponse("5mld", isEnabled = true)
-    }
+    application.stop()
+  }
 
-    "return a feature flag of false if 5mld is not enabled" in {
-      val application = applicationBuilder()
-        .configure(
-          Seq(
-            "microservice.services.trusts-store.port" -> server.port(),
-            "auditing.enabled" -> false
-          ): _*
-        ).build()
+  "return OK response when setting feature" in {
+    val application = applicationBuilder()
+      .configure(
+        Seq(
+          "microservice.services.trusts-store.port" -> server.port(),
+          "auditing.enabled" -> false
+        ): _*
+      ).build()
 
-      val connector = application.injector.instanceOf[TrustsStoreConnector]
+    val connector = application.injector.instanceOf[TrustsStoreConnector]
 
-      server.stubFor(
-        get(urlEqualTo(s"/trusts-store/features/5mld"))
-          .willReturn(
-            aResponse()
-              .withStatus(Status.OK)
-              .withBody(
-                Json.stringify(
-                  Json.toJson(FeatureResponse("5mld", isEnabled = false))
-                )
+    server.stubFor(
+      put(urlEqualTo("/trusts-store/features/TestFeature"))
+        .withHeader(CONTENT_TYPE, containing(JSON))
+        .withRequestBody(equalTo("true"))
+        .willReturn(aResponse()
+          .withStatus(Status.OK))
+    )
+
+    val result = Await.result(connector.setFeature("TestFeature", state = true), Duration.Inf)
+
+    result.status mustBe Status.OK
+
+    application.stop()
+  }
+
+  "return a feature flag of true if 5mld is enabled" in {
+    val application = applicationBuilder()
+      .configure(
+        Seq(
+          "microservice.services.trusts-store.port" -> server.port(),
+          "auditing.enabled" -> false
+        ): _*
+      ).build()
+
+    val connector = application.injector.instanceOf[TrustsStoreConnector]
+
+    server.stubFor(
+      get(urlEqualTo(s"/trusts-store/features/5mld"))
+        .willReturn(
+          aResponse()
+            .withStatus(Status.OK)
+            .withBody(
+              Json.stringify(
+                Json.toJson(FeatureResponse("5mld", isEnabled = true))
               )
-          )
-      )
+            )
+        )
+    )
 
-      val result = Await.result(connector.getFeature("5mld"), Duration.Inf)
-      result mustBe FeatureResponse("5mld", isEnabled = false)
-    }
+    val result = Await.result(connector.getFeature("5mld"), Duration.Inf)
+    result mustBe FeatureResponse("5mld", isEnabled = true)
+  }
+
+  "return a feature flag of false if 5mld is not enabled" in {
+    val application = applicationBuilder()
+      .configure(
+        Seq(
+          "microservice.services.trusts-store.port" -> server.port(),
+          "auditing.enabled" -> false
+        ): _*
+      ).build()
+
+    val connector = application.injector.instanceOf[TrustsStoreConnector]
+
+    server.stubFor(
+      get(urlEqualTo(s"/trusts-store/features/5mld"))
+        .willReturn(
+          aResponse()
+            .withStatus(Status.OK)
+            .withBody(
+              Json.stringify(
+                Json.toJson(FeatureResponse("5mld", isEnabled = false))
+              )
+            )
+        )
+    )
+
+    val result = Await.result(connector.getFeature("5mld"), Duration.Inf)
+    result mustBe FeatureResponse("5mld", isEnabled = false)
   }
 
 }

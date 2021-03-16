@@ -42,13 +42,13 @@ object CompletedMaintenanceTasks {
   )
 
   def from(userAnswers: UserAnswers): Option[CompletedMaintenanceTasks] = for {
-    trustDetails <- userAnswers.get(UpdateTrustDetailsYesNoPage)
+    trustDetails <- userAnswers.getWithDefault(UpdateTrustDetailsYesNoPage, false)
     trustees <- userAnswers.get(UpdateTrusteesYesNoPage)
     beneficiaries <- userAnswers.get(UpdateBeneficiariesYesNoPage)
     settlors <- userAnswers.get(UpdateSettlorsYesNoPage)
     protectors <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
     otherIndividuals <- userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage)
-    nonEeaCompanies <- userAnswers.get(AddOrUpdateNonEeaCompanyYesNoPage)
+    nonEeaCompanies <- userAnswers.getWithDefault(AddOrUpdateNonEeaCompanyYesNoPage, false)
   } yield {
     CompletedMaintenanceTasks(!trustDetails, !trustees, !beneficiaries, !settlors, !protectors, !otherIndividuals, !nonEeaCompanies)
   }
