@@ -77,7 +77,7 @@ class UpdateTrustDetailsYesNoController @Inject()(
   }
 
   private def prefix(closingTrust: Boolean): String = {
-    "updateTrustDetails"
+    if (closingTrust) "updateTrustDetailsClosing" else "updateTrustDetails"
   }
 
 }

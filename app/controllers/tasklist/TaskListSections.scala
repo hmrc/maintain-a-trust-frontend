@@ -20,6 +20,7 @@ import config.FrontendAppConfig
 import models.CompletedMaintenanceTasks
 import models.pages.Tag
 import models.pages.Tag.InProgress
+import pages.Page
 import sections.assets.NonEeaBusinessAsset
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
@@ -31,9 +32,6 @@ trait TaskListSections {
   case class TaskList(mandatory: List[Task], other: List[Task]) {
     val isAbleToDeclare: Boolean = !(mandatory ::: other).exists(_.tag.contains(InProgress))
   }
-
-  private lazy val notYetAvailable: String =
-    controllers.routes.FeatureNotAvailableController.onPageLoad().url
 
   val config: FrontendAppConfig
 
@@ -83,7 +81,7 @@ trait TaskListSections {
     if (enabled) {
       redirectToService
     } else {
-      notYetAvailable
+      controllers.routes.FeatureNotAvailableController.onPageLoad().url
     }
   }
 
@@ -91,6 +89,10 @@ trait TaskListSections {
                        identifier: String,
                        is5mldEnabled: Boolean,
                        isTrust5mldTaxable: Boolean): TaskList = {
+
+    def filter5mldSections(task: Task, section: Page): Boolean = {
+      task.link.text == section.toString && !(is5mldEnabled && isTrust5mldTaxable)
+    }
 
     val mandatorySections = List(
       Task(
@@ -109,7 +111,7 @@ trait TaskListSections {
         Link(Beneficiaries, beneficiariesRouteEnabled(identifier)),
         Some(Tag.tagFor(tasks.beneficiaries))
       )
-    ).filterNot(_.link.text == TrustDetails.toString && !(is5mldEnabled && isTrust5mldTaxable))
+    ).filterNot(filter5mldSections(_, TrustDetails))
 
     val optionalSections = List(
       Task(
@@ -124,7 +126,7 @@ trait TaskListSections {
         Link(Natural, otherIndividualsRouteEnabled(identifier)),
         Some(Tag.tagFor(tasks.other))
       )
-    ).filterNot(_.link.text == NonEeaBusinessAsset.toString && !(is5mldEnabled && isTrust5mldTaxable))
+    ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
 
     TaskList(mandatorySections, optionalSections)
   }
