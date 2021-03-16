@@ -69,7 +69,7 @@ class UpdateTrustDetailsYesNoController @Inject()(
             )
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
-            Redirect(controllers.makechanges.routes.UpdateBeneficiariesYesNoController.onPageLoad())
+            Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
           }
         }
       )

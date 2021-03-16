@@ -77,6 +77,9 @@ class WhatIsNextController @Inject()(
             case WhatIsNext.DeclareTheTrustIsUpToDate =>
               redirectToDeclaration()
 
+            case WhatIsNext.MakeChanges if isTrust5mldTaxable =>
+              Redirect(controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad())
+
             case WhatIsNext.MakeChanges =>
               Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
 

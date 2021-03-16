@@ -208,7 +208,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "redirect to do you need to update details for the trustees when user selects 'Make changes'" in {
+    "redirect to do you need to update details for the trustees when user selects 'Make changes' and not maintaining a 5mld taxable trust" in {
 
       val userAnswers = emptyUserAnswersForUtr
 
@@ -222,6 +222,25 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to do you need to update details for the trust when user selects 'Make changes' and maintaining a 5mld taxable trust" in {
+
+      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+        .set(ExpressTrustYesNoPage, false).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+        .withFormUrlEncodedBody(("value", "make-changes"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
 
       application.stop()
     }
