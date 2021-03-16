@@ -28,6 +28,7 @@ class MakeChangesRouterSpec extends SpecBase {
       val filter = MakeChangesRouter
 
       val userAnswers = emptyUserAnswersForUtr
+        .set(UpdateTrustDetailsYesNoPage, false).success.value
         .set(UpdateTrusteesYesNoPage, false).success.value
         .set(UpdateBeneficiariesYesNoPage, false).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value
@@ -42,6 +43,7 @@ class MakeChangesRouterSpec extends SpecBase {
       val filter = MakeChangesRouter
 
       val userAnswers = emptyUserAnswersForUtr
+        .set(UpdateTrustDetailsYesNoPage, false).success.value
         .set(UpdateTrusteesYesNoPage, true).success.value
         .set(UpdateBeneficiariesYesNoPage, true).success.value
         .set(UpdateSettlorsYesNoPage, false).success.value

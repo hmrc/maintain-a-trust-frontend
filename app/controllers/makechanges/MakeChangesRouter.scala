@@ -27,9 +27,9 @@ object MakeChangesRouter {
 
   def decide(userAnswers: UserAnswers): ChangesRouter = {
     UpdateFilterQuestions.from(userAnswers).map {
-        case UpdateFilterQuestions(false, false, false, false, false, false) =>
-          Declaration
-        case _ => TaskList
+      case UpdateFilterQuestions(false, false, false, false, false, false, false) =>
+        Declaration
+      case _ => TaskList
     }.getOrElse(UnableToDecide)
   }
 

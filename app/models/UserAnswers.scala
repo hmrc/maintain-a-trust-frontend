@@ -46,6 +46,13 @@ final case class UserAnswers(
     }
   }
 
+  def getWithDefault[A](page: Gettable[A], default: A)(implicit rds: Reads[A]): Option[A] = {
+    get(page) match {
+      case None => Some(default)
+      case x => x
+    }
+  }
+
   def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A]): Try[UserAnswers] = {
     value match {
       case Some(v) => setValue(page, v)
@@ -57,7 +64,7 @@ final case class UserAnswers(
 
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = setValue(page, value)
 
-  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A]) = {
+  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
     val updatedData = data.setObject(page.path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
