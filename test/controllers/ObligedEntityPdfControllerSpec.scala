@@ -67,7 +67,9 @@ class ObligedEntityPdfControllerSpec extends SpecBase {
   "TestTrustsObligedEntityOutputController" must {
 
     "return Ok" when {
+
       "OK response status from connector" when {
+
         "all headers present" in {
 
           when(mockConnector.getPdf(any())(any())).thenReturn(Future.successful(MockResponse(OK, headers)))
@@ -159,6 +161,27 @@ class ObligedEntityPdfControllerSpec extends SpecBase {
 
         application.stop()
       }
+    }
+
+    "exception is thrown" must {
+
+      "render a technical difficulties page" in {
+        when(mockConnector.getPdf(any())(any()))
+          .thenReturn(Future.failed(new Exception("gateway timeout")))
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+          .overrides(bind[TrustsObligedEntityOutputConnector].toInstance(mockConnector))
+          .build()
+
+        val request = FakeRequest(GET, getPdfRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual INTERNAL_SERVER_ERROR
+
+        application.stop()
+      }
+
     }
   }
 }

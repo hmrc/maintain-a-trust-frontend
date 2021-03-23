@@ -18,19 +18,21 @@ package controllers
 
 import connectors.TrustsObligedEntityOutputConnector
 import controllers.actions.Actions
+import handlers.ErrorHandler
 import play.api.Logging
 import play.api.http.HttpEntity
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
-
 import javax.inject.Inject
+
 import scala.concurrent.ExecutionContext
 
 class ObligedEntityPdfController @Inject()(
                                             actions: Actions,
                                             connector: TrustsObligedEntityOutputConnector,
-                                            val controllerComponents: MessagesControllerComponents
+                                            val controllerComponents: MessagesControllerComponents,
+                                            errorHandler: ErrorHandler
                                           )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
 
   def getPdf(identifier: String): Action[AnyContent] = actions.auth.async {
@@ -59,12 +61,16 @@ class ObligedEntityPdfController @Inject()(
               )).withHeaders(CONTENT_DISPOSITION -> h.contentDisposition)
             case _ =>
               logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Response has insufficient headers: ${response.headers}.")
-              InternalServerError
+              InternalServerError(errorHandler.internalServerErrorTemplate)
           }
         } else {
           logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Error retrieving pdf: $response.")
-          InternalServerError
+          InternalServerError(errorHandler.internalServerErrorTemplate)
         }
+      } recover {
+        case e =>
+          logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Exception thrown when retrieving pdf ${e.getMessage}")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
       }
   }
 }
