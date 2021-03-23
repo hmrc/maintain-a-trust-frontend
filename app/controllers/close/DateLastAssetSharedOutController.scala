@@ -16,19 +16,18 @@
 
 package controllers.close
 
-import java.time.LocalDate
-
-import connectors.TrustConnector
+import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
+import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.DateFormProvider
-import javax.inject.Inject
 import pages.close.DateLastAssetSharedOutPage
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.i18n.MessagesApi
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.close.DateLastAssetSharedOutView
 
+import java.time.LocalDate
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 
@@ -40,10 +39,12 @@ class DateLastAssetSharedOutController @Inject()(
                                                   formProvider: DateFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
                                                   view: DateLastAssetSharedOutView,
-                                                  trustConnector : TrustConnector
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                  trustConnector: TrustConnector,
+                                                  trustsStoreConnector: TrustsStoreConnector
+                                                )(implicit ec: ExecutionContext)
+  extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) {
 
-  val prefix: String = "dateLastAssetSharedOut"
+  private val prefix: String = "dateLastAssetSharedOut"
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
@@ -65,7 +66,7 @@ class DateLastAssetSharedOutController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
-      def render(startDate: LocalDate) = {
+      def render(startDate: LocalDate): Future[Result] = {
         val form = formProvider.withPrefixAndTrustStartDate(prefix, startDate)
 
         form.bindFromRequest().fold(
@@ -76,7 +77,7 @@ class DateLastAssetSharedOutController @Inject()(
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(DateLastAssetSharedOutPage, value))
               _ <- playbackRepository.set(updatedAnswers)
-            } yield Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad())
+            } yield Redirect(redirectToFirstUpdateQuestion)
         )
       }
 

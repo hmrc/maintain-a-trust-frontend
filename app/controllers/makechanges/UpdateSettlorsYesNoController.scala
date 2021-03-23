@@ -39,8 +39,7 @@ class UpdateSettlorsYesNoController @Inject()(
                                                val controllerComponents: MessagesControllerComponents,
                                                view: UpdateSettlorsYesNoView,
                                                trustStoreConnector: TrustsStoreConnector
-                                     )(implicit ec: ExecutionContext)
-
+                                             )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) {
 
   private def prefix(closingTrust: Boolean): String = {
@@ -76,7 +75,7 @@ class UpdateSettlorsYesNoController @Inject()(
                 .set(UpdateSettlorsYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- routeToAddOrUpdateProtectors()(request.request)
+            nextRoute <- routeToAddOrUpdateProtectors(request.request)
           } yield nextRoute
         }
       )

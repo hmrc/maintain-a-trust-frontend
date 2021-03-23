@@ -17,15 +17,12 @@
 package controllers
 
 import base.SpecBase
-import config.FrontendAppConfig
 import forms.WhatIsNextFormProvider
 import models.pages.WhatIsNext
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.WhatIsNextPage
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
-import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -33,14 +30,11 @@ import views.html.WhatIsNextView
 
 class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new WhatIsNextFormProvider()
-  val form: Form[WhatIsNext] = formProvider()
+  val form: Form[WhatIsNext] = new WhatIsNextFormProvider()()
 
   lazy val onPageLoad: String = routes.WhatIsNextController.onPageLoad().url
 
   lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
-
-  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   "WhatIsNext Controller" must {
 
@@ -191,6 +185,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "redirect to declaration when user selects 'Declare no changes'" in {
+
       val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -208,7 +203,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "redirect to do you need to update details for the trustees when user selects 'Make changes'" in {
+    "redirect to do you need to update details for the trustees when user selects 'Make changes' and not maintaining a 5mld taxable trust" in {
 
       val userAnswers = emptyUserAnswersForUtr
 
@@ -226,15 +221,30 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "redirect to Do you know the date the last asset in the trust was shared out when user selects 'Close' and feature toggle set to true" in {
+    "redirect to do you need to update details for the trust when user selects 'Make changes' and maintaining a 5mld taxable trust" in {
 
-      when(mockAppConfig.closeATrustEnabled) thenReturn true
+      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+        .set(ExpressTrustYesNoPage, false).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+        .withFormUrlEncodedBody(("value", "make-changes"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to Do you know the date the last asset in the trust was shared out when user selects 'Close'" in {
 
       val userAnswers = emptyUserAnswersForUtr
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
-        .build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
         .withFormUrlEncodedBody(("value", "close-trust"))
@@ -248,35 +258,11 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "redirect to Feature unavailable when user selects 'Close' and feature toggle set to false" in {
-
-      when(mockAppConfig.closeATrustEnabled) thenReturn false
-
-      val userAnswers = emptyUserAnswersForUtr
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
-        .build()
-
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "close-trust"))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
-
-      application.stop()
-    }
-
     "redirect to Generated PDF when user selects 'generate-pdf'" in {
 
       val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
-        .build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
         .withFormUrlEncodedBody(("value", "generate-pdf"))
@@ -322,9 +308,8 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val request =
-          FakeRequest(POST, onSubmit.url)
-            .withFormUrlEncodedBody(("value", ""))
+        val request = FakeRequest(POST, onSubmit.url)
+          .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
@@ -347,9 +332,8 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val request =
-          FakeRequest(POST, onSubmit.url)
-            .withFormUrlEncodedBody(("value", ""))
+        val request = FakeRequest(POST, onSubmit.url)
+          .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 

@@ -22,6 +22,7 @@ import java.time.LocalDateTime
 import play.api.Logging
 import play.api.libs.json._
 import queries.{Gettable, Settable}
+import _root_.pages.trustdetails.ExpressTrustYesNoPage
 
 import scala.util.{Failure, Success, Try}
 
@@ -36,10 +37,19 @@ final case class UserAnswers(
 
   def identifierType: IdentifierType = if (identifier.matches(Validation.utrRegex)) UTR else URN
 
+  def isTrust5mldTaxable: Boolean = this.get(ExpressTrustYesNoPage).isDefined && isTrustTaxable
+
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     Reads.at(page.path).reads(data) match {
       case JsSuccess(value, _) => Some(value)
-      case JsError(errors) => None
+      case JsError(_) => None
+    }
+  }
+
+  def getWithDefault[A](page: Gettable[A], default: A)(implicit rds: Reads[A]): Option[A] = {
+    get(page) match {
+      case None => Some(default)
+      case x => x
     }
   }
 
@@ -54,7 +64,7 @@ final case class UserAnswers(
 
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = setValue(page, value)
 
-  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A]) = {
+  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
     val updatedData = data.setObject(page.path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)

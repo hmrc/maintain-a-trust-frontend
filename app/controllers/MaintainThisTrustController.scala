@@ -21,7 +21,7 @@ import config.FrontendAppConfig
 import controllers.actions.Actions
 import models.requests.DataRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.MaintainThisTrustView
 
@@ -34,7 +34,7 @@ class MaintainThisTrustController @Inject()(
                                              view: MaintainThisTrustView
                                            ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(needsIv: Boolean) = actions.authWithData {
+  def onPageLoad(needsIv: Boolean): Action[AnyContent] = actions.authWithData {
     implicit request =>
 
       val identifier = request.userAnswers.identifier
@@ -45,7 +45,7 @@ class MaintainThisTrustController @Inject()(
                        (implicit request: DataRequest[AnyContent]): String = {
         list.size match {
           case 0 => acc
-          case 1 if !acc.isEmpty => commaSeparate(connective, list.tail, acc + " " + connective + " " + list.head)
+          case 1 if acc.nonEmpty => commaSeparate(connective, list.tail, acc + " " + connective + " " + list.head)
           case 1 | 2 => commaSeparate(connective, list.tail, acc + list.head)
           case _ => commaSeparate(connective, list.tail, acc + list.head + ", ")
         }

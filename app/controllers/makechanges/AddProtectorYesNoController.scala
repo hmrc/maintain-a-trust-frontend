@@ -39,8 +39,7 @@ class AddProtectorYesNoController @Inject()(
                                              view: AddProtectorYesNoView,
                                              trustConnector: TrustConnector,
                                              trustStoreConnector: TrustsStoreConnector
-                                     )(implicit ec: ExecutionContext)
-
+                                           )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with I18nSupport {
 
   private def prefix(closingTrust: Boolean): String = {
@@ -76,7 +75,7 @@ class AddProtectorYesNoController @Inject()(
                 .set(AddOrUpdateProtectorYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- routeToAddOrUpdateOtherIndividuals()(request.request)
+            nextRoute <- routeToAddOrUpdateOtherIndividuals(request.request)
           } yield {
             nextRoute
           }

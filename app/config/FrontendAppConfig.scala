@@ -35,15 +35,13 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   private def loadConfig(key: String) = configuration.get[String](key)
 
-  def maintainTrusteesUrl(utr: String) = s"$maintainATrusteeFrontendUrl/$utr"
-
-  def maintainBeneficiariesUrl(utr: String) = s"$maintainBeneficiariesFrontendUrl/$utr"
-
-  def maintainSettlorsUrl(utr: String) = s"$maintainSettlorsFrontendUrl/$utr"
-
-  def maintainProtectorsUrl(utr: String) = s"$maintainProtectorsFrontendUrl/$utr"
-
-  def maintainOtherIndividualsUrl(utr: String) = s"$maintainOtherIndividualsFrontendUrl/$utr"
+  def maintainTrustDetailsUrl(identifier: String) = s"$maintainTrustDetailsFrontendUrl/$identifier"
+  def maintainTrusteesUrl(identifier: String) = s"$maintainTrusteesFrontendUrl/$identifier"
+  def maintainBeneficiariesUrl(identifier: String) = s"$maintainBeneficiariesFrontendUrl/$identifier"
+  def maintainSettlorsUrl(identifier: String) = s"$maintainSettlorsFrontendUrl/$identifier"
+  def maintainProtectorsUrl(identifier: String) = s"$maintainProtectorsFrontendUrl/$identifier"
+  def maintainOtherIndividualsUrl(identifier: String) = s"$maintainOtherIndividualsFrontendUrl/$identifier"
+  def maintainNonEeaCompanyUrl(identifier: String) = s"$maintainNonEeaCompaniesFrontendUrl/$identifier"
 
   val analyticsToken: String = configuration.get[String](s"google-analytics.token")
 
@@ -102,28 +100,36 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   lazy val playbackEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.playback.enabled")
 
+  lazy val maintainTrustDetailsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-trust-details.enabled")
   lazy val maintainTrusteesEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-trustees.enabled")
   lazy val maintainBeneficiariesEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-beneficiaries.enabled")
   lazy val maintainSettlorsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-settlors.enabled")
   lazy val maintainProtectorsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-protectors.enabled")
   lazy val maintainOtherIndividualsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-other-individuals.enabled")
+  lazy val maintainNonEeaCompaniesEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-non-eea-companies.enabled")
 
   lazy val closeATrustEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.close-a-trust.enabled")
 
-  lazy val maintainATrusteeFrontendUrl : String =
+  private lazy val maintainTrustDetailsFrontendUrl: String =
+    configuration.get[String]("urls.maintainTrustDetails")
+
+  private lazy val maintainTrusteesFrontendUrl: String =
     configuration.get[String]("urls.maintainATrustee")
 
-  lazy val maintainBeneficiariesFrontendUrl : String =
+  private lazy val maintainBeneficiariesFrontendUrl: String =
     configuration.get[String]("urls.maintainABeneficiary")
 
-  lazy val maintainSettlorsFrontendUrl : String =
+  private lazy val maintainSettlorsFrontendUrl: String =
     configuration.get[String]("urls.maintainASettlor")
 
-  lazy val maintainProtectorsFrontendUrl : String =
+  private lazy val maintainProtectorsFrontendUrl: String =
     configuration.get[String]("urls.maintainAProtector")
 
-  lazy val maintainOtherIndividualsFrontendUrl : String =
+  private lazy val maintainOtherIndividualsFrontendUrl: String =
     configuration.get[String]("urls.maintainAnOtherIndividual")
+
+  private lazy val maintainNonEeaCompaniesFrontendUrl: String =
+    configuration.get[String]("urls.maintainANonEeaCompany")
 
   lazy val sa900Link: String =
     configuration.get[String]("urls.sa900")

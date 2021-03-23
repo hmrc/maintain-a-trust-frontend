@@ -16,35 +16,41 @@
 
 package models
 
-import play.api.libs.json.{Format, Json}
 import _root_.pages.makechanges._
+import play.api.libs.json.{Format, Json}
 
-case class CompletedMaintenanceTasks(trustees: Boolean,
+case class CompletedMaintenanceTasks(trustDetails: Boolean,
+                                     trustees: Boolean,
                                      beneficiaries: Boolean,
                                      settlors: Boolean,
                                      protectors: Boolean,
-                                     other: Boolean)
+                                     other: Boolean,
+                                     nonEeaCompany: Boolean)
 
 object CompletedMaintenanceTasks {
 
-  implicit val formats : Format[CompletedMaintenanceTasks] = Json.format[CompletedMaintenanceTasks]
+  implicit val formats: Format[CompletedMaintenanceTasks] = Json.format[CompletedMaintenanceTasks]
 
-  def apply() : CompletedMaintenanceTasks = CompletedMaintenanceTasks(
+  def apply(): CompletedMaintenanceTasks = CompletedMaintenanceTasks(
+    trustDetails = false,
     trustees = false,
     beneficiaries = false,
     settlors = false,
     protectors = false,
-    other = false
+    other = false,
+    nonEeaCompany = false
   )
 
-  def from(userAnswers: UserAnswers) : Option[CompletedMaintenanceTasks] = for {
-    t <- userAnswers.get(UpdateTrusteesYesNoPage)
-    b <- userAnswers.get(UpdateBeneficiariesYesNoPage)
-    s <- userAnswers.get(UpdateSettlorsYesNoPage)
-    p <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
-    n <- userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage)
+  def from(userAnswers: UserAnswers): Option[CompletedMaintenanceTasks] = for {
+    trustDetails <- userAnswers.getWithDefault(UpdateTrustDetailsYesNoPage, false)
+    trustees <- userAnswers.get(UpdateTrusteesYesNoPage)
+    beneficiaries <- userAnswers.get(UpdateBeneficiariesYesNoPage)
+    settlors <- userAnswers.get(UpdateSettlorsYesNoPage)
+    protectors <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
+    otherIndividuals <- userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage)
+    nonEeaCompanies <- userAnswers.getWithDefault(AddOrUpdateNonEeaCompanyYesNoPage, false)
   } yield {
-    CompletedMaintenanceTasks(!t, !b, !s, !p, !n)
+    CompletedMaintenanceTasks(!trustDetails, !trustees, !beneficiaries, !settlors, !protectors, !otherIndividuals, !nonEeaCompanies)
   }
 
 }

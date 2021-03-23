@@ -26,7 +26,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfig) {
+class TrustsStoreConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
   private val trustLockedUrl: String = config.trustsStoreUrl + "/claim"
 
@@ -34,12 +34,12 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfi
 
   private def featuresUrl(feature: String) = s"${config.trustsStoreUrl}/features/$feature"
 
-  def get(utr : String)(implicit hc : HeaderCarrier, ec : ExecutionContext): Future[Option[TrustClaim]] = {
+  def get(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[TrustClaim]] = {
     http.GET[Option[TrustClaim]](trustLockedUrl)(TrustClaim.httpReads(utr), hc, ec)
   }
 
-  def set(utr: String, userAnswers : UserAnswers)
-         (implicit hc : HeaderCarrier, ec : ExecutionContext): Future[CompletedMaintenanceTasks] = {
+  def set(utr: String, userAnswers: UserAnswers)
+         (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CompletedMaintenanceTasks] = {
     CompletedMaintenanceTasks.from(userAnswers) match {
       case Some(x) =>
         http.POST[JsValue, CompletedMaintenanceTasks](maintainTasksUrl(utr), Json.toJson(x))
@@ -48,7 +48,7 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfi
     }
   }
 
-  def getStatusOfTasks(utr: String)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[CompletedMaintenanceTasks] = {
+  def getStatusOfTasks(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CompletedMaintenanceTasks] = {
     http.GET[CompletedMaintenanceTasks](maintainTasksUrl(utr))
       .recover {
         case _ => CompletedMaintenanceTasks()
@@ -58,7 +58,8 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config : FrontendAppConfi
   def getFeature(feature: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[FeatureResponse] = {
     http.GET[FeatureResponse](featuresUrl(feature))
   }
-  def setFeature(feature: String, state: Boolean)(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[HttpResponse] = {
+
+  def setFeature(feature: String, state: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     http.PUT[JsValue, HttpResponse](featuresUrl(feature), JsBoolean(state))
   }
 

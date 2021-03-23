@@ -17,14 +17,15 @@
 package controllers.close
 
 import java.time.LocalDate
-
 import base.SpecBase
 import connectors.TrustConnector
 import forms.DateFormProvider
+import models.UserAnswers
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.close.DateLastAssetSharedOutPage
+import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
@@ -49,9 +50,9 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val dateLastAssetSharedOutRoute: String = routes.DateLastAssetSharedOutController.onPageLoad().url
 
-  override val emptyUserAnswersForUtr = TestUserAnswers.emptyUserAnswersForUtr
+  override val emptyUserAnswersForUtr: UserAnswers = TestUserAnswers.emptyUserAnswersForUtr
 
-  def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
+  def getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, dateLastAssetSharedOutRoute)
 
   def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -74,7 +75,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
         )
         .build()
 
-      val result = route(application, getRequest()).value
+      val result = route(application, getRequest).value
 
       val view = application.injector.instanceOf[DateLastAssetSharedOutView]
 
@@ -100,33 +101,105 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
       val view = application.injector.instanceOf[DateLastAssetSharedOutView]
 
-      val result = route(application, getRequest()).value
+      val result = route(application, getRequest).value
 
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(validAnswer))(getRequest(), messages).toString
+        view(form.fill(validAnswer))(getRequest, messages).toString
 
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted" in {
+    "redirect to the next page when valid data is submitted" when {
 
-      when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+      "4mld" in {
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isTrustTaxable = true)
+
+        when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+
+        val application = applicationBuilder(userAnswers = Some(baseAnswers))
           .overrides(
             bind[TrustConnector].toInstance(fakeConnector)
           ).build()
 
-      val result = route(application, postRequest()).value
+        val result = route(application, postRequest()).value
 
-      status(result) mustEqual SEE_OTHER
+        status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
 
-      application.stop()
+        application.stop()
+      }
+
+      "5mld" when {
+
+        "underlying data is 4mld" in {
+
+          val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+
+          when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+
+          val application = applicationBuilder(userAnswers = Some(baseAnswers))
+            .overrides(
+              bind[TrustConnector].toInstance(fakeConnector)
+            ).build()
+
+          val result = route(application, postRequest()).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
+
+          application.stop()
+        }
+
+        "underlying data is 5mld" when {
+
+          "taxable" in {
+
+            val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+              .set(ExpressTrustYesNoPage, true).success.value
+
+            when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+
+            val application = applicationBuilder(userAnswers = Some(baseAnswers))
+              .overrides(
+                bind[TrustConnector].toInstance(fakeConnector)
+              ).build()
+
+            val result = route(application, postRequest()).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
+
+            application.stop()
+          }
+
+          "non-taxable" in {
+
+            val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = false)
+              .set(ExpressTrustYesNoPage, true).success.value
+
+            when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+
+            val application = applicationBuilder(userAnswers = Some(baseAnswers))
+              .overrides(
+                bind[TrustConnector].toInstance(fakeConnector)
+              ).build()
+
+            val result = route(application, postRequest()).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
+
+            application.stop()
+          }
+        }
+      }
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {

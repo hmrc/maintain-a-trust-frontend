@@ -39,14 +39,12 @@ class UpdateProtectorYesNoController @Inject()(
                                                 view: UpdateProtectorYesNoView,
                                                 trustConnector: TrustConnector,
                                                 trustStoreConnector: TrustsStoreConnector
-                                     )(implicit ec: ExecutionContext)
-
+                                              )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) {
 
   private def prefix(closingTrust: Boolean): String = {
     if (closingTrust) "updateProtectorClosing" else "updateProtector"
   }
-
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
@@ -77,7 +75,7 @@ class UpdateProtectorYesNoController @Inject()(
                 .set(AddOrUpdateProtectorYesNoPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- routeToAddOrUpdateOtherIndividuals()(request.request)
+            nextRoute <- routeToAddOrUpdateOtherIndividuals(request.request)
           } yield {
             nextRoute
           }

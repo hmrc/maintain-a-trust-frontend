@@ -39,7 +39,7 @@ class UpdateOtherIndividualsYesNoController @Inject()(
                                                        view: UpdateOtherIndividualsYesNoView,
                                                        trustConnector: TrustConnector,
                                                        trustStoreConnector: TrustsStoreConnector
-                                     )(implicit ec: ExecutionContext)
+                                                     )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with I18nSupport {
 
   private def prefix(closingTrust: Boolean): String = {
@@ -69,13 +69,10 @@ class UpdateOtherIndividualsYesNoController @Inject()(
           Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
         value => {
           for {
-            updatedAnswers <- Future.fromTry(
-              request.userAnswers
-                .set(AddOrUpdateOtherIndividualsYesNoPage, value)
-            )
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            nextRoute <- routeToDeclareOrTaskList(updatedAnswers, request.closingTrust)(request.request)
-          } yield nextRoute
+            route <- routeToAddOrUpdateNonEeaCompany(updatedAnswers, request.closingTrust)(request.request)
+          } yield route
         }
       )
   }

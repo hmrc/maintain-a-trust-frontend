@@ -17,7 +17,6 @@
 package controllers.makechanges
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions._
 import forms.YesNoFormProvider
@@ -38,10 +37,9 @@ class AddOtherIndividualsYesNoController @Inject()(
                                                     yesNoFormProvider: YesNoFormProvider,
                                                     val controllerComponents: MessagesControllerComponents,
                                                     view: AddOtherIndividualsYesNoView,
-                                                    config: FrontendAppConfig,
                                                     trustConnector: TrustConnector,
                                                     trustStoreConnector: TrustsStoreConnector
-                                     )(implicit ec: ExecutionContext)
+                                                  )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector){
 
   private def prefix(closingTrust: Boolean): String = {
@@ -73,11 +71,10 @@ class AddOtherIndividualsYesNoController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            route <- routeToDeclareOrTaskList(updatedAnswers, request.closingTrust)(request.request)
+            route <- routeToAddOrUpdateNonEeaCompany(updatedAnswers, request.closingTrust)(request.request)
           } yield route
         }
-    )
+      )
   }
-
 
 }

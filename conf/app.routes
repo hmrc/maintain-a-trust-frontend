@@ -80,6 +80,9 @@ GET        /declared-updates                            controllers.print.PrintM
 GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=true)
 GET        /continue-maintaining-this-trust             controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=false)
 
+GET        /update-trust-details                        controllers.makechanges.UpdateTrustDetailsYesNoController.onPageLoad()
+POST       /update-trust-details                        controllers.makechanges.UpdateTrustDetailsYesNoController.onSubmit()
+
 GET        /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onPageLoad()
 POST       /update-trustees                             controllers.makechanges.UpdateTrusteesYesNoController.onSubmit()
 
@@ -98,9 +101,14 @@ POST       /update-protector                            controllers.makechanges.
 GET        /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onPageLoad()
 POST       /add-other-individuals                       controllers.makechanges.AddOtherIndividualsYesNoController.onSubmit()
 
+GET        /update-other-individuals                    controllers.makechanges.UpdateOtherIndividualsYesNoController.onPageLoad()
+POST       /update-other-individuals                    controllers.makechanges.UpdateOtherIndividualsYesNoController.onSubmit()
 
-GET        /update-other-individuals                       controllers.makechanges.UpdateOtherIndividualsYesNoController.onPageLoad()
-POST       /update-other-individuals                       controllers.makechanges.UpdateOtherIndividualsYesNoController.onSubmit()
+GET        /add-non-eea-company                         controllers.makechanges.AddNonEeaCompanyYesNoController.onPageLoad()
+POST       /add-non-eea-company                         controllers.makechanges.AddNonEeaCompanyYesNoController.onSubmit()
+
+GET        /update-non-eea-company                      controllers.makechanges.UpdateNonEeaCompanyYesNoController.onPageLoad()
+POST       /update-non-eea-company                      controllers.makechanges.UpdateNonEeaCompanyYesNoController.onSubmit()
 
 GET        /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onPageLoad()
 POST       /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onSubmit()
@@ -112,6 +120,6 @@ GET        /how-to-close-trust                          controllers.close.HowToC
 
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
-GET        /overview                                    controllers.task_list.TaskListController.onPageLoad()
+GET        /overview                                    controllers.tasklist.TaskListController.onPageLoad()
 
 GET        /get-pdf/:identifier                         controllers.ObligedEntityPdfController.getPdf(identifier)

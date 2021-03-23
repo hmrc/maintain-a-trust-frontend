@@ -18,11 +18,11 @@ package pages.individual
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.natural.{Individual, Natural}
+import sections.Natural
 
 final case class OtherIndividualDateOfBirthYesNoPage(index : Int) extends QuestionPage[Boolean] {
 
-  override def path: JsPath = JsPath \  Natural \ Individual \ index \ toString
+  override def path: JsPath = JsPath \ Natural \ index \ toString
 
   override def toString: String = "dateOfBirthYesNo"
 

@@ -19,6 +19,7 @@ package utils.print.sections.otherindividuals
 import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
+import sections.Natural
 import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
@@ -28,7 +29,7 @@ class OtherIndividualsPrinter @Inject()(answerRowConverter: AnswerRowConverter)
 
   def allOtherIndividuals : Seq[AnswerSection] = {
     val size = userAnswers
-      .get(_root_.sections.natural.Individual)
+      .get(Natural)
       .map(_.value.size)
       .getOrElse(0)
 
