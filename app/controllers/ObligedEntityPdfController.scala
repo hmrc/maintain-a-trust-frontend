@@ -20,42 +20,25 @@ import connectors.TrustsObligedEntityOutputConnector
 import controllers.actions.Actions
 import handlers.ErrorHandler
 import javax.inject.Inject
+import models.headers.PdfHeaders
 import play.api.Logging
 import play.api.http.HttpEntity
-import play.api.i18n.Langs
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.language.LanguageUtils
 import utils.Session
 
 import scala.concurrent.ExecutionContext
-import scala.util.matching.Regex
 
 class ObligedEntityPdfController @Inject()(
                                             actions: Actions,
                                             connector: TrustsObligedEntityOutputConnector,
                                             val controllerComponents: MessagesControllerComponents,
-                                            errorHandler: ErrorHandler,
+                                            errorHandler: ErrorHandler
+                                          )(
+                                            implicit ec: ExecutionContext,
                                             lang: LanguageUtils
-                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
-
-  case class Headers(contentDisposition: String, contentType: String, contentLength: Long) {
-
-    val dispositionRegex: Regex = "((.+)=(.+).pdf)".r
-
-    /**
-     * Content-Disposition: inline; filename=1234567890-2020-10-10.pdf
-     * instruction will be "inline; filename="
-     * fileName will be "1234567890-2020-10-10"
-     */
-    def fileNameWithServiceName(implicit request: Request[AnyContent]): String = contentDisposition match {
-      case dispositionRegex(instruction, fileName) =>
-        s"$instruction=$fileName - ${messagesApi("site.service_name")(lang.getCurrentLang)} - GOV.UK.pdf"
-      case _ =>
-        contentDisposition
-    }
-
-  }
+                                          ) extends FrontendBaseController with Logging {
 
   def getPdf(identifier: String): Action[AnyContent] = actions.auth.async {
     implicit request =>
@@ -64,12 +47,12 @@ class ObligedEntityPdfController @Inject()(
 
         if (response.status == OK) {
 
-          val headers: Option[Headers] = for {
+          val headers: Option[PdfHeaders] = for {
             contentDisposition <- response.header(CONTENT_DISPOSITION)
             contentType <- response.header(CONTENT_TYPE)
             contentLength <- response.header(CONTENT_LENGTH)
           } yield {
-            Headers(contentDisposition, contentType, contentLength.toLong)
+            PdfHeaders(contentDisposition, contentType, contentLength.toLong)
           }
 
           headers match {

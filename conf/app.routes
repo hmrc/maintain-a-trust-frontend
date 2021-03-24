@@ -122,4 +122,4 @@ GET        /unavailable-sections                        controllers.makechanges.
 
 GET        /overview                                    controllers.tasklist.TaskListController.onPageLoad()
 
-GET        /get-pdf/:identifier                         controllers.ObligedEntityPdfController.getPdf(identifier)
+GET        /get-pdf/:identifier.pdf                     controllers.ObligedEntityPdfController.getPdf(identifier)
