@@ -17,7 +17,6 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import controllers.actions.Actions
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -30,7 +29,7 @@ class NoTaxLiabilityInfoController @Inject()(
                                               actions: Actions,
                                               val controllerComponents: MessagesControllerComponents,
                                               noTaxLiabilityInfoView: NoTaxLiabilityInfoView
-                                            )(implicit config: FrontendAppConfig)
+                                            )
   extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {

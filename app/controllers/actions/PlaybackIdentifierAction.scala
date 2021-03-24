@@ -21,7 +21,7 @@ import models.requests.DataRequest
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
 import services.AuthenticationService
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +31,7 @@ class PlaybackIdentifierActionImpl @Inject()(val parser: BodyParsers.Default,
 
   override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+   val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     playbackAuthenticationService.authenticateForIdentifier(request.userAnswers.identifier)(request, hc)
   }

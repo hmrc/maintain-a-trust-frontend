@@ -22,7 +22,7 @@ import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.Logging
 import play.api.mvc.ActionTransformer
 import repositories.{ActiveSessionRepository, PlaybackRepository}
-import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,7 +33,7 @@ class DataRetrievalActionImpl @Inject()(activeSessionRepository: ActiveSessionRe
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
 
-    val hc = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
+    val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     def createdOptionalDataRequest(request: IdentifierRequest[A], userAnswers: Option[UserAnswers]) = {
       OptionalDataRequest(
