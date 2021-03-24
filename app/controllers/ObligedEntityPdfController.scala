@@ -19,21 +19,43 @@ package controllers
 import connectors.TrustsObligedEntityOutputConnector
 import controllers.actions.Actions
 import handlers.ErrorHandler
+import javax.inject.Inject
 import play.api.Logging
 import play.api.http.HttpEntity
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.i18n.Langs
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.language.LanguageUtils
 import utils.Session
-import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
+import scala.util.matching.Regex
 
 class ObligedEntityPdfController @Inject()(
                                             actions: Actions,
                                             connector: TrustsObligedEntityOutputConnector,
                                             val controllerComponents: MessagesControllerComponents,
-                                            errorHandler: ErrorHandler
+                                            errorHandler: ErrorHandler,
+                                            lang: LanguageUtils
                                           )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
+
+  case class Headers(contentDisposition: String, contentType: String, contentLength: Long) {
+
+    val dispositionRegex: Regex = "((.+)=(.+).pdf)".r
+
+    /**
+     * Content-Disposition: inline; filename=1234567890-2020-10-10.pdf
+     * instruction will be "inline; filename="
+     * fileName will be "1234567890-2020-10-10"
+     */
+    def fileNameWithServiceName(implicit request: Request[AnyContent]): String = contentDisposition match {
+      case dispositionRegex(instruction, fileName) =>
+        s"$instruction=$fileName - ${messagesApi("site.service_name")(lang.getCurrentLang)} - GOV.UK.pdf"
+      case _ =>
+        contentDisposition
+    }
+
+  }
 
   def getPdf(identifier: String): Action[AnyContent] = actions.auth.async {
     implicit request =>
@@ -41,8 +63,6 @@ class ObligedEntityPdfController @Inject()(
       connector.getPdf(identifier).map { response =>
 
         if (response.status == OK) {
-
-          case class Headers(contentDisposition: String, contentType: String, contentLength: Long)
 
           val headers: Option[Headers] = for {
             contentDisposition <- response.header(CONTENT_DISPOSITION)
@@ -58,7 +78,7 @@ class ObligedEntityPdfController @Inject()(
                 data = response.bodyAsSource,
                 contentLength = Some(h.contentLength),
                 contentType = Some(h.contentType)
-              )).withHeaders(CONTENT_DISPOSITION -> h.contentDisposition)
+              )).withHeaders(CONTENT_DISPOSITION -> h.fileNameWithServiceName)
             case _ =>
               logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Response has insufficient headers: ${response.headers}.")
               InternalServerError(errorHandler.internalServerErrorTemplate)
