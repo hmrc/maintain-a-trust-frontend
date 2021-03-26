@@ -19,12 +19,14 @@ package controllers
 import connectors.TrustsObligedEntityOutputConnector
 import controllers.actions.Actions
 import handlers.ErrorHandler
+import javax.inject.Inject
+import models.headers.PdfHeaders
 import play.api.Logging
 import play.api.http.HttpEntity
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.language.LanguageUtils
 import utils.Session
-import javax.inject.Inject
 
 import scala.concurrent.ExecutionContext
 
@@ -33,7 +35,10 @@ class ObligedEntityPdfController @Inject()(
                                             connector: TrustsObligedEntityOutputConnector,
                                             val controllerComponents: MessagesControllerComponents,
                                             errorHandler: ErrorHandler
-                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
+                                          )(
+                                            implicit ec: ExecutionContext,
+                                            lang: LanguageUtils
+                                          ) extends FrontendBaseController with Logging {
 
   def getPdf(identifier: String): Action[AnyContent] = actions.auth.async {
     implicit request =>
@@ -42,14 +47,12 @@ class ObligedEntityPdfController @Inject()(
 
         if (response.status == OK) {
 
-          case class Headers(contentDisposition: String, contentType: String, contentLength: Long)
-
-          val headers: Option[Headers] = for {
+          val headers: Option[PdfHeaders] = for {
             contentDisposition <- response.header(CONTENT_DISPOSITION)
             contentType <- response.header(CONTENT_TYPE)
             contentLength <- response.header(CONTENT_LENGTH)
           } yield {
-            Headers(contentDisposition, contentType, contentLength.toLong)
+            PdfHeaders(contentDisposition, contentType, contentLength.toLong)
           }
 
           headers match {
@@ -58,7 +61,7 @@ class ObligedEntityPdfController @Inject()(
                 data = response.bodyAsSource,
                 contentLength = Some(h.contentLength),
                 contentType = Some(h.contentType)
-              )).withHeaders(CONTENT_DISPOSITION -> h.contentDisposition)
+              )).withHeaders(CONTENT_DISPOSITION -> h.fileNameWithServiceName)
             case _ =>
               logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Response has insufficient headers: ${response.headers}.")
               InternalServerError(errorHandler.internalServerErrorTemplate)
