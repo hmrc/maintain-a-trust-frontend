@@ -17,6 +17,8 @@
 package models.headers
 
 import base.SpecBase
+import play.api.test.FakeRequest
+import play.mvc.Http.HeaderNames
 import uk.gov.hmrc.play.language.LanguageUtils
 
 class PdfHeadersSpec extends SpecBase {
@@ -25,7 +27,7 @@ class PdfHeadersSpec extends SpecBase {
 
   "Pdf headers" must {
 
-    "parse header and modify filename" in {
+    "parse header and modify filename in english" in {
       val headers = PdfHeaders(
         contentDisposition = "inline; filename=1234567890-2020-10-10.pdf",
         contentType = "application/pdf",
@@ -35,6 +37,21 @@ class PdfHeadersSpec extends SpecBase {
       val fileName = headers.fileNameWithServiceName(fakeRequest, languageUtils, messagesApi)
 
       fileName mustBe "inline; filename=1234567890-2020-10-10 - Register and Maintain a Trust - GOV.UK.pdf"
+    }
+
+    "parse header and modify filename in welsh" in {
+      val headers = PdfHeaders(
+        contentDisposition = "inline; filename=1234567890-2020-10-10.pdf",
+        contentType = "application/pdf",
+        contentLength = 10L
+      )
+
+      val fakeRequestInWelsh = FakeRequest()
+        .withHeaders(HeaderNames.ACCEPT_LANGUAGE -> "cy")
+
+      val fileName = headers.fileNameWithServiceName(fakeRequestInWelsh, languageUtils, messagesApi)
+
+      fileName mustBe "inline; filename=1234567890-2020-10-10 - Cofrestru Ymddiriedolaeth a’i Chynnal - GOV.UK.pdf"
     }
 
   }
