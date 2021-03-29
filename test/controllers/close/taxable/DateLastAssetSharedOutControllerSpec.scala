@@ -30,7 +30,6 @@ import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.TestUserAnswers
 import views.html.close.taxable.DateLastAssetSharedOutView
 
 import java.time.LocalDate
@@ -44,13 +43,11 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
   private def form: Form[LocalDate] = formProvider.withPrefixAndTrustStartDate("dateLastAssetSharedOut", trustStartDate)
 
-  val fakeConnector : TrustConnector = mock[TrustConnector]
+  val fakeConnector: TrustConnector = mock[TrustConnector]
 
   val validAnswer: LocalDate = LocalDate.parse("2019-02-04")
 
   lazy val dateLastAssetSharedOutRoute: String = routes.DateLastAssetSharedOutController.onPageLoad().url
-
-  override val emptyUserAnswersForUtr: UserAnswers = TestUserAnswers.emptyUserAnswersForUtr
 
   def getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, dateLastAssetSharedOutRoute)
@@ -70,9 +67,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
       when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
-        .overrides(
-          bind[TrustConnector].toInstance(fakeConnector)
-        )
+        .overrides(bind[TrustConnector].toInstance(fakeConnector))
         .build()
 
       val result = route(application, getRequest).value
@@ -95,9 +90,8 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
         .set(DateLastAssetSharedOutPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(
-          bind[TrustConnector].toInstance(fakeConnector)
-        ).build()
+        .overrides(bind[TrustConnector].toInstance(fakeConnector))
+        .build()
 
       val view = application.injector.instanceOf[DateLastAssetSharedOutView]
 
@@ -120,9 +114,8 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
         when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers))
-          .overrides(
-            bind[TrustConnector].toInstance(fakeConnector)
-          ).build()
+          .overrides(bind[TrustConnector].toInstance(fakeConnector))
+          .build()
 
         val result = route(application, postRequest()).value
 
@@ -142,9 +135,8 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
           when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
           val application = applicationBuilder(userAnswers = Some(baseAnswers))
-            .overrides(
-              bind[TrustConnector].toInstance(fakeConnector)
-            ).build()
+            .overrides(bind[TrustConnector].toInstance(fakeConnector))
+            .build()
 
           val result = route(application, postRequest()).value
 
@@ -155,49 +147,24 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
           application.stop()
         }
 
-        "underlying data is 5mld" when {
+        "underlying data is 5mld" in {
 
-          "taxable" in {
+          val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
-            val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-              .set(ExpressTrustYesNoPage, true).success.value
+          when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
-            when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+          val application = applicationBuilder(userAnswers = Some(baseAnswers))
+            .overrides(bind[TrustConnector].toInstance(fakeConnector))
+            .build()
 
-            val application = applicationBuilder(userAnswers = Some(baseAnswers))
-              .overrides(
-                bind[TrustConnector].toInstance(fakeConnector)
-              ).build()
+          val result = route(application, postRequest()).value
 
-            val result = route(application, postRequest()).value
+          status(result) mustEqual SEE_OTHER
 
-            status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
 
-            redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
-
-            application.stop()
-          }
-
-          "non-taxable" in {
-
-            val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = false)
-              .set(ExpressTrustYesNoPage, true).success.value
-
-            when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
-
-            val application = applicationBuilder(userAnswers = Some(baseAnswers))
-              .overrides(
-                bind[TrustConnector].toInstance(fakeConnector)
-              ).build()
-
-            val result = route(application, postRequest()).value
-
-            status(result) mustEqual SEE_OTHER
-
-            redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
-
-            application.stop()
-          }
+          application.stop()
         }
       }
     }
@@ -207,13 +174,11 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
       when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
-        .overrides(
-          bind[TrustConnector].toInstance(fakeConnector)
-        ).build()
+        .overrides(bind[TrustConnector].toInstance(fakeConnector))
+        .build()
 
-      val request =
-        FakeRequest(POST, dateLastAssetSharedOutRoute)
-          .withFormUrlEncodedBody(("value", "invalid value"))
+      val request = FakeRequest(POST, dateLastAssetSharedOutRoute)
+        .withFormUrlEncodedBody(("value", "invalid value"))
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 

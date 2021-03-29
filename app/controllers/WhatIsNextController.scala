@@ -73,7 +73,8 @@ class WhatIsNextController @Inject()(
             val call = value match {
               case DeclareTheTrustIsUpToDate => redirectToDeclaration
               case MakeChanges => redirectToFirstUpdateQuestion
-              case CloseTrust => controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
+              case CloseTrust if request.userAnswers.isTrustTaxable => controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
+              case CloseTrust => controllers.close.nontaxable.routes.DateClosedController.onPageLoad()
               case NoLongerTaxable => controllers.routes.NoTaxLiabilityInfoController.onPageLoad()
               case NeedsToPayTax => controllers.routes.FeatureNotAvailableController.onPageLoad()
               case GeneratePdf => controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier)
