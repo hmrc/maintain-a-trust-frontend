@@ -18,17 +18,20 @@ package connectors
 
 import config.FrontendAppConfig
 import play.api.libs.ws.{WSClient, WSResponse}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
 import uk.gov.hmrc.http.HttpVerbs.GET
-
 import javax.inject.Inject
+
 import scala.concurrent.Future
 
 class TrustsObligedEntityOutputConnector @Inject()(ws: WSClient, config: FrontendAppConfig) {
 
   def getPdf(identifier: String)(implicit hc: HeaderCarrier): Future[WSResponse] = {
     val url: String = s"${config.trustsObligedEntityOutputUrl}/trusts-obliged-entity-output/get-pdf/$identifier"
-    ws.url(url).withMethod(GET).withHttpHeaders(hc.headers: _*).stream()
+
+    val headers = hc.headers(HeaderNames.explicitlyIncludedHeaders)
+
+    ws.url(url).withMethod(GET).withHttpHeaders(headers: _*).stream()
   }
 
 }
