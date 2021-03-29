@@ -211,4 +211,17 @@ trait ViewBehaviours extends ViewSpecBase {
       }
     }
   }
+
+  def pageWithWarning(view: HtmlFormat.Appendable): Unit = {
+
+    "behave like a page with warning text" in {
+
+      val doc = asDocument(view)
+
+      assertContainsClass(doc, "govuk-warning-text")
+      assertContainsClass(doc, "govuk-warning-text__icon")
+      assertContainsClass(doc, "govuk-warning-text__text")
+      assertContainsClass(doc, "govuk-warning-text__assistive")
+    }
+  }
 }

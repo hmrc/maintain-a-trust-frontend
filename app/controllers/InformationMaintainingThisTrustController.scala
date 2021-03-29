@@ -19,14 +19,13 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.Actions
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
-import views.html.{AgentCannotAccessTrustYetView, InformationMaintainingTaxableTrustView, InformationMaintainingThisTrustView}
+import views.html._
 
 @Singleton
 class InformationMaintainingThisTrustController @Inject()(
@@ -34,6 +33,7 @@ class InformationMaintainingThisTrustController @Inject()(
                                                            val controllerComponents: MessagesControllerComponents,
                                                            maintainingTrustView: InformationMaintainingThisTrustView,
                                                            maintainingTaxableTrustView: InformationMaintainingTaxableTrustView,
+                                                           maintainingNonTaxableTrustView: InformationMaintainingNonTaxableTrustView,
                                                            agentCannotAccessTrustYetView: AgentCannotAccessTrustYetView
                                                          )(implicit config: FrontendAppConfig)
   extends FrontendBaseController with I18nSupport with Logging {
@@ -49,9 +49,12 @@ class InformationMaintainingThisTrustController @Inject()(
         case Agent if !config.playbackEnabled =>
           Ok(agentCannotAccessTrustYetView(identifier, identifierType))
         case _ =>
-          val isTrust5mld = request.userAnswers.get(ExpressTrustYesNoPage).isDefined
-          if (request.userAnswers.is5mldEnabled && isTrust5mld) {
-            Ok(maintainingTaxableTrustView(identifier, identifierType))
+          if (request.userAnswers.is5mldEnabled && request.userAnswers.isUnderlyingTrust5mld) {
+            if (request.userAnswers.isTrustTaxable) {
+              Ok(maintainingTaxableTrustView(identifier, identifierType))
+            } else {
+              Ok(maintainingNonTaxableTrustView(identifier, identifierType))
+            }
           } else {
             Ok(maintainingTrustView(identifier, identifierType))
           }

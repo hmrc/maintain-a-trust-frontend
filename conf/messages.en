@@ -162,6 +162,17 @@ informationMaintainingTaxableTrust.paragraph4 = Any changes to the trust details
 informationMaintainingTaxableTrust.paragraph5 = You can return to the service and update the trust’s details at any time.
 informationMaintainingTaxableTrust.paragraph6 = You can print a copy of your draft answers as well as a copy of the declaration.
 
+informationMaintainingNonTaxableTrust.title = Maintaining this trust
+informationMaintainingNonTaxableTrust.heading = Maintaining this trust
+informationMaintainingNonTaxableTrust.subheading1 = Updating the trust’s details and making a declaration
+informationMaintainingNonTaxableTrust.paragraph1 = This service will allow you to make changes to the trust details.
+informationMaintainingNonTaxableTrust.paragraph2 = Once you have made changes, you need to:
+informationMaintainingNonTaxableTrust.bullet1 = submit any updates to us, so we can update the trust’s record
+informationMaintainingNonTaxableTrust.bullet2 = declare that the information we have about the trust is accurate and up to date
+informationMaintainingNonTaxableTrust.warning = If you do not submit the changes and declare that the information is up to date then the changes to the trust will not be saved.
+informationMaintainingNonTaxableTrust.paragraph3 = You can return to the service and update the trust’s details at any time.
+informationMaintainingNonTaxableTrust.paragraph4 = You can print a copy of your draft answers as well as a copy of the declaration.
+
 viewLastDeclarationYesNo.title = Do you want to view this trust’s last declaration?
 viewLastDeclarationYesNo.heading = Do you want to view this trust’s last declaration?
 viewLastDeclarationYesNo.hint = Details declared to HMRC about the settlors, trustees, beneficiaries and if added, protectors and other individuals.

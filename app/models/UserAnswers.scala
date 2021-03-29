@@ -37,7 +37,9 @@ final case class UserAnswers(
 
   def identifierType: IdentifierType = if (identifier.matches(Validation.utrRegex)) UTR else URN
 
-  def isTrust5mldTaxable: Boolean = this.get(ExpressTrustYesNoPage).isDefined && isTrustTaxable
+  def isUnderlyingTrust5mld: Boolean = this.get(ExpressTrustYesNoPage).isDefined
+
+  def isTrust5mldTaxable: Boolean = isUnderlyingTrust5mld && isTrustTaxable
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     Reads.at(page.path).reads(data) match {

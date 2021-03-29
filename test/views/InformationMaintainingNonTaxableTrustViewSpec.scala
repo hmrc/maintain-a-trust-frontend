@@ -16,38 +16,34 @@
 
 package views
 
-import models.UTR
+import models.URN
 import views.behaviours.ViewBehaviours
-import views.html.InformationMaintainingTaxableTrustView
+import views.html.InformationMaintainingNonTaxableTrustView
 
-class InformationMaintainingTaxableTrustViewSpec extends ViewBehaviours {
+class InformationMaintainingNonTaxableTrustViewSpec extends ViewBehaviours {
 
-  "InformationMaintainingTaxableTrustView" when {
+  "InformationMaintainingNonTaxableTrustView" when {
 
-    val utr = "1234545678"
+    val urn = "NTTRUST00000001"
 
-    val view = viewFor[InformationMaintainingTaxableTrustView](Some(emptyUserAnswersForUtr))
+    val view = viewFor[InformationMaintainingNonTaxableTrustView](Some(emptyUserAnswersForUrn))
 
-    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
+    val applyView = view.apply(urn, URN)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
-      "informationMaintainingTaxableTrust",
-      "utr",
-      utr,
+      "informationMaintainingNonTaxableTrust",
+      "urn",
+      urn,
       "subheading1",
       "paragraph1",
-      "subheading2",
       "paragraph2",
       "bullet1",
       "bullet2",
-      "bullet3",
       "paragraph3",
-      "bullet4",
-      "bullet5",
-      "paragraph4",
-      "paragraph5",
-      "paragraph6"
+      "paragraph4"
     )
+
+    behave like pageWithWarning(applyView)
 
     behave like pageWithBackLink(applyView)
 
