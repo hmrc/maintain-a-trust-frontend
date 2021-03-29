@@ -23,10 +23,9 @@ import play.api.i18n.Messages
 import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class TrusteeOrganisationPrinter @Inject()(converter: AnswerRowConverter)
-                                          (implicit messages: Messages) {
+class TrusteeOrganisationPrinter @Inject()(converter: AnswerRowConverter) {
 
-  def print(index: Int, userAnswers: UserAnswers): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
 
     userAnswers.get(TrusteeOrgNamePage(index)).flatMap { name =>
       Some(Seq(

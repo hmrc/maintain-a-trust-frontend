@@ -62,7 +62,7 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
 
       val closeDate = injector.instanceOf[PrintPlaybackHelper].closeDate(playbackAnswers)
 
-      val entities = injector.instanceOf[PrintPlaybackHelper].people(playbackAnswers)
+      val entities = injector.instanceOf[PrintPlaybackHelper].entities(playbackAnswers)
 
       val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(playbackAnswers)
 

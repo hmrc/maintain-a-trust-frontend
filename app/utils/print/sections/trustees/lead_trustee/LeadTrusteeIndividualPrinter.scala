@@ -23,10 +23,9 @@ import play.api.i18n.Messages
 import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class LeadTrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter)
-                                            (implicit messages: Messages) extends LeadTrustee(converter) {
+class LeadTrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter) extends LeadTrustee(converter) {
 
-  def print(index: Int, userAnswers: UserAnswers): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
 
     userAnswers.get(TrusteeNamePage(index)).map(_.toString).flatMap { name =>
       Some(

@@ -16,19 +16,18 @@
 
 package utils.print.sections.protectors
 
-import javax.inject.Inject
 import models.UserAnswers
 import models.pages.IndividualOrBusiness.{Business, Individual}
 import pages.protectors.ProtectorIndividualOrBusinessPage
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class AllProtectorsPrinter @Inject()(answerRowConverter: AnswerRowConverter)
-                                    (userAnswers: UserAnswers)
-                                    (implicit messages: Messages) {
+import javax.inject.Inject
 
-  def allProtectors : Seq[AnswerSection] = {
+class AllProtectorsPrinter @Inject()(individualProtectorPrinter: IndividualProtectorPrinter,
+                                     businessProtectorPrinter: BusinessProtectorPrinter) {
+
+  def allProtectors(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val size = userAnswers
       .get(_root_.sections.Protectors)
       .map(_.value.size)
@@ -41,9 +40,9 @@ class AllProtectorsPrinter @Inject()(answerRowConverter: AnswerRowConverter)
         (for (index <- 0 to size) yield {
           userAnswers.get(ProtectorIndividualOrBusinessPage(index)).map {
             case Individual =>
-              new IndividualProtectorPrinter(answerRowConverter).print(index, userAnswers)
+              individualProtectorPrinter.print(index, userAnswers)
             case Business =>
-              new BusinessProtectorPrinter(answerRowConverter).print(index, userAnswers)
+              businessProtectorPrinter.print(index, userAnswers)
           }.getOrElse(Nil)
         }).flatten
     }

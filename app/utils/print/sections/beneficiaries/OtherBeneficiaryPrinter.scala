@@ -23,10 +23,9 @@ import play.api.i18n.Messages
 import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class OtherBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
-                                       (implicit messages: Messages) {
+class OtherBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) {
 
-  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] = {
+  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
     userAnswers.get(OtherBeneficiaryDescriptionPage(index)).map { name =>
       Seq(AnswerSection(

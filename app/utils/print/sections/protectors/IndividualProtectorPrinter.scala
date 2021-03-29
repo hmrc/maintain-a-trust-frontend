@@ -23,10 +23,9 @@ import play.api.i18n.Messages
 import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter)
-                                          (implicit messages: Messages) {
+class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter) {
 
-  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] =
+  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] =
     userAnswers.get(IndividualProtectorNamePage(index)).map(_.toString).map { protectorName =>
       Seq(AnswerSection(
         headingKey = Some(messages("answerPage.section.protector.subheading", index + 1)),

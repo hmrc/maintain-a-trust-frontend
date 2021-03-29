@@ -25,10 +25,9 @@ import queries.Gettable
 import utils.print.sections.AnswerRowConverter
 import viewmodels.{AnswerRow, AnswerSection}
 
-class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
-                                       (implicit messages: Messages) {
+class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) {
 
-  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] =
+  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] =
 
     userAnswers.get(LargeBeneficiaryNamePage(index)).map { name =>
       Seq(AnswerSection(
@@ -47,7 +46,7 @@ class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
 
   private def descriptionQuestion(query: Gettable[Description],
                                   userAnswers: UserAnswers,
-                                  messageArg: String): Option[AnswerRow] = {
+                                  messageArg: String)(implicit messages: Messages): Option[AnswerRow] = {
 
     userAnswers.get(query) map {x =>
       AnswerRow(

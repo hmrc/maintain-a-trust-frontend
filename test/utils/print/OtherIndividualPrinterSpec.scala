@@ -16,21 +16,20 @@
 
 package utils.print
 
-import java.time.LocalDate
-
 import base.SpecBase
 import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
 import pages.individual._
 import play.twirl.api.Html
-import utils.print.sections.AnswerRowConverter
 import utils.print.sections.otherindividuals.OtherIndividualsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
+import java.time.LocalDate
+
 class OtherIndividualPrinterSpec extends SpecBase {
 
-  private val answerRowConverter: AnswerRowConverter = injector.instanceOf[AnswerRowConverter]
+  private val helper: OtherIndividualsPrinter = injector.instanceOf[OtherIndividualsPrinter]
 
-  ".print" must {
+  "OtherIndividualPrinter" must {
 
     "generate other individuals sections given individuals" in {
 
@@ -61,9 +60,7 @@ class OtherIndividualPrinterSpec extends SpecBase {
         .set(OtherIndividualPassportIDCardYesNoPage(3), true).success.value
         .set(OtherIndividualPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))).success.value
 
-      val helper = new OtherIndividualsPrinter(answerRowConverter)(answers)
-
-      val result = helper.allOtherIndividuals
+      val result = helper.allOtherIndividuals(answers)
 
       val name1 = "Joe Bloggs"
       val name2 = "John Doe"

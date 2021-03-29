@@ -26,10 +26,9 @@ import queries.Gettable
 import utils.print.sections.AnswerRowConverter
 import viewmodels.{AnswerRow, AnswerSection}
 
-class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter)
-                                     (implicit messages: Messages) {
+class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter) {
 
-  def print(index: Int, userAnswers: UserAnswers): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
 
     userAnswers.get(SettlorBusinessNamePage(index)).flatMap { name =>
       Some(Seq(
@@ -42,7 +41,7 @@ class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter)
             converter.yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorBusinessAddressYesNo", name),
             converter.yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorBusinessAddressUKYesNo", name),
             converter.addressQuestion(SettlorAddressPage(index), userAnswers, "settlorBusinessAddressUK", name),
-            kindOfBusinessQuestion(SettlorCompanyTypePage(index), userAnswers, name, messages),
+            kindOfBusinessQuestion(SettlorCompanyTypePage(index), userAnswers, name),
             converter.yesNoQuestion(SettlorCompanyTimePage(index), userAnswers, "settlorBusinessTime", name)
           ).flatten,
           sectionKey = None
@@ -53,8 +52,8 @@ class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter)
 
   private def kindOfBusinessQuestion(query: Gettable[KindOfBusiness],
                                      userAnswers: UserAnswers,
-                                     messageArg : String,
-                                     messages: Messages): Option[AnswerRow] = {
+                                     messageArg : String
+                                    )(implicit messages: Messages): Option[AnswerRow] = {
     userAnswers.get(query) map { x =>
       AnswerRow(
         messages("settlorBusinessType.checkYourAnswersLabel", messageArg),

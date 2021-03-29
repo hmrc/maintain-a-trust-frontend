@@ -23,10 +23,9 @@ import play.api.i18n.Messages
 import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class LeadTrusteeBusinessPrinter @Inject()(converter: AnswerRowConverter)
-                                          (implicit messages: Messages) extends LeadTrustee(converter) {
+class LeadTrusteeBusinessPrinter @Inject()(converter: AnswerRowConverter) extends LeadTrustee(converter) {
 
-  def print(index: Int, userAnswers: UserAnswers): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
 
     userAnswers.get(TrusteeOrgNamePage(index)).flatMap { name =>
       Some(
@@ -38,12 +37,12 @@ class LeadTrusteeBusinessPrinter @Inject()(converter: AnswerRowConverter)
               converter.stringQuestion(TrusteeOrgNamePage(index), userAnswers, "trusteeBusinessName"),
               converter.stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name)
             ).flatten ++
-            addressAnswers(index, userAnswers, name).flatten ++
-            Seq(
-              converter.yesNoQuestion(TrusteeEmailYesNoPage(index), userAnswers, "trusteeEmailAddressYesNo", name),
-              converter.stringQuestion(TrusteeEmailPage(index), userAnswers, "trusteeEmailAddress", name),
-              converter.stringQuestion(TrusteeTelephoneNumberPage(index), userAnswers, "trusteeTelephoneNumber", name)
-            ).flatten,
+              addressAnswers(index, userAnswers, name).flatten ++
+              Seq(
+                converter.yesNoQuestion(TrusteeEmailYesNoPage(index), userAnswers, "trusteeEmailAddressYesNo", name),
+                converter.stringQuestion(TrusteeEmailPage(index), userAnswers, "trusteeEmailAddress", name),
+                converter.stringQuestion(TrusteeTelephoneNumberPage(index), userAnswers, "trusteeTelephoneNumber", name)
+              ).flatten,
             sectionKey = Some(messages("answerPage.section.trustees.heading"))
           )
         )

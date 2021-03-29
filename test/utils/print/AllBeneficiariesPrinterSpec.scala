@@ -16,8 +16,6 @@
 
 package utils.print
 
-import java.time.LocalDate
-
 import base.SpecBase
 import models.HowManyBeneficiaries.Over1
 import models.pages.RoleInCompany
@@ -30,15 +28,16 @@ import pages.beneficiaries.large._
 import pages.beneficiaries.other._
 import pages.beneficiaries.trust._
 import play.twirl.api.Html
-import utils.print.sections.AnswerRowConverter
 import utils.print.sections.beneficiaries.AllBeneficiariesPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
-class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
+import java.time.LocalDate
 
-  private val answerRowConverter: AnswerRowConverter = injector.instanceOf[AnswerRowConverter]
+class AllBeneficiariesPrinterSpec extends SpecBase {
 
-  "Beneficiary print playback helper" must {
+  private val helper: AllBeneficiariesPrinter = injector.instanceOf[AllBeneficiariesPrinter]
+
+  "AllBeneficiariesPrinter" must {
 
     "generate charity beneficiaries sections" in {
 
@@ -66,9 +65,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(CharityBeneficiaryAddressYesNoPage(1), false).success.value
         .set(CharityBeneficiaryUtrPage(1), "1234567890").success.value
 
-      val helper = new AllBeneficiariesPrinter(answerRowConverter)(answers)
-
-      val result = helper.allBeneficiaries
+      val result = helper.allBeneficiaries(answers)
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
@@ -131,9 +128,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(IndividualBeneficiaryPassportIDCardPage(2), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
         .set(IndividualBeneficiaryVulnerableYesNoPage(2), false).success.value
 
-      val helper = new AllBeneficiariesPrinter(answerRowConverter)(answers)
-
-      val result = helper.allBeneficiaries
+      val result = helper.allBeneficiaries(answers)
 
       val name1 = "Michael Finnegan"
       val name2 = "Joe Bloggs"
@@ -223,9 +218,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(IndividualBeneficiaryPassportIDCardPage(2), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
         .set(IndividualBeneficiaryVulnerableYesNoPage(2), false).success.value
 
-      val helper = new AllBeneficiariesPrinter(answerRowConverter)(answers)
-
-      val result = helper.allBeneficiaries
+      val result = helper.allBeneficiaries(answers)
 
       val name1 = "Michael Finnegan"
       val name2 = "Joe Bloggs"
@@ -308,9 +301,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(CompanyBeneficiaryAddressYesNoPage(1), false).success.value
         .set(CompanyBeneficiaryUtrPage(1), "1234567890").success.value
 
-      val helper = new AllBeneficiariesPrinter(answerRowConverter)(answers)
-
-      val result = helper.allBeneficiaries
+      val result = helper.allBeneficiaries(answers)
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
@@ -366,9 +357,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(TrustBeneficiaryAddressYesNoPage(1), false).success.value
         .set(TrustBeneficiaryUtrPage(1), "1234567890").success.value
 
-      val helper = new AllBeneficiariesPrinter(answerRowConverter)(answers)
-
-      val result = helper.allBeneficiaries
+      val result = helper.allBeneficiaries(answers)
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
@@ -428,9 +417,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(LargeBeneficiaryDescriptionPage(1), Description("Description", None, None, None, None)).success.value
         .set(LargeBeneficiaryNumberOfBeneficiariesPage(1), Over1).success.value
 
-      val helper = new AllBeneficiariesPrinter(answerRowConverter)(answers)
-
-      val result = helper.allBeneficiaries
+      val result = helper.allBeneficiaries(answers)
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
@@ -486,9 +473,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(OtherBeneficiaryDiscretionYesNoPage(1), true).success.value
         .set(OtherBeneficiaryAddressYesNoPage(1), false).success.value
 
-      val helper = new AllBeneficiariesPrinter(answerRowConverter)(answers)
-
-      val result = helper.allBeneficiaries
+      val result = helper.allBeneficiaries(answers)
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
@@ -530,9 +515,7 @@ class BeneficiaryPrintPlaybackHelperSpec extends SpecBase {
         .set(ClassOfBeneficiaryDescriptionPage(1), classBenDescription2).success.value
         .set(ClassOfBeneficiaryDiscretionYesNoPage(1), true).success.value
 
-      val helper = new AllBeneficiariesPrinter(answerRowConverter)(answers)
-
-      val result = helper.allBeneficiaries
+      val result = helper.allBeneficiaries(answers)
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),

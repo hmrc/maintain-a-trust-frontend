@@ -16,8 +16,6 @@
 
 package utils.print
 
-import java.time.LocalDate
-
 import base.SpecBase
 import models.pages.IndividualOrBusiness
 import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
@@ -25,15 +23,16 @@ import pages.protectors._
 import pages.protectors.business._
 import pages.protectors.individual._
 import play.twirl.api.Html
-import utils.print.sections.AnswerRowConverter
 import utils.print.sections.protectors.AllProtectorsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
-class ProtectorPrintPlaybackHelperSpec extends SpecBase {
+import java.time.LocalDate
 
-  private val answerRowConverter: AnswerRowConverter = injector.instanceOf[AnswerRowConverter]
+class AllProtectorsPrinterSpec extends SpecBase {
 
-  "Playback print helper" must {
+  private val helper: AllProtectorsPrinter = injector.instanceOf[AllProtectorsPrinter]
+
+  "AllProtectorsPrinter" must {
 
     "generate protector sections given individuals" in {
 
@@ -66,9 +65,7 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
         .set(IndividualProtectorPassportIDCardYesNoPage(3), true).success.value
         .set(IndividualProtectorPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
 
-      val helper = new AllProtectorsPrinter(answerRowConverter)(answers)
-
-      val result = helper.allProtectors
+      val result = helper.allProtectors(answers)
 
       val name1 = "Joe Bloggs"
       val name2 = "John Doe"
@@ -144,9 +141,7 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
         .set(BusinessProtectorUtrYesNoPage(2), false).success.value
         .set(BusinessProtectorAddressYesNoPage(2), false).success.value
 
-      val helper = new AllProtectorsPrinter(answerRowConverter)(answers)
-
-      val result = helper.allProtectors
+      val result = helper.allProtectors(answers)
 
       val company1 = "Bernardos"
       val company2 = "Red Cross Ltd."
@@ -203,9 +198,7 @@ class ProtectorPrintPlaybackHelperSpec extends SpecBase {
         .set(BusinessProtectorUtrYesNoPage(1), true).success.value
         .set(BusinessProtectorUtrPage(1), "1234567890").success.value
 
-      val helper = new AllProtectorsPrinter(answerRowConverter)(answers)
-
-      val result = helper.allProtectors
+      val result = helper.allProtectors(answers)
 
       val name1 = "Paul Chuckle"
       val company1 = "Bernardos"

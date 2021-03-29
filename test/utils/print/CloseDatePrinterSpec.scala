@@ -20,20 +20,21 @@ import java.time.LocalDate
 import base.SpecBase
 import pages.close.taxable.DateLastAssetSharedOutPage
 import play.twirl.api.Html
+import utils.print.sections.CloseDatePrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
-class CloseDatePrintPlaybackHelperSpec extends SpecBase {
+class CloseDatePrinterSpec extends SpecBase {
 
-  "Playback print helper" must {
+  private val helper: CloseDatePrinter = injector.instanceOf[CloseDatePrinter]
+
+  "CloseDatePrinter" must {
 
     "generate close date section" in {
-
-      val helper = injector.instanceOf[PrintPlaybackHelper]
 
       val answers = emptyUserAnswersForUtr
         .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
 
-      val result = helper.closeDate(answers)
+      val result = helper.print(answers)
 
       result mustBe
         AnswerSection(

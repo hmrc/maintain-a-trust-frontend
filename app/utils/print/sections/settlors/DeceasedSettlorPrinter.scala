@@ -23,10 +23,9 @@ import play.api.i18n.Messages
 import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter)
-                                      (implicit messages: Messages) {
+class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) {
 
-  def print(userAnswers: UserAnswers): Seq[AnswerSection] = {
+  def print(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     userAnswers.get(SettlorNamePage).map(_.toString).map { name =>
       Seq(
         AnswerSection(

@@ -44,7 +44,7 @@ class PrintLastDeclaredAnswersControllerSpec extends SpecBase {
         .set(CharityBeneficiaryDiscretionYesNoPage(1), false).success.value
         .set(CharityBeneficiaryAddressYesNoPage(1), false).success.value
 
-      val entities = injector.instanceOf[PrintPlaybackHelper].people(playbackAnswers)
+      val entities = injector.instanceOf[PrintPlaybackHelper].entities(playbackAnswers)
 
       val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(playbackAnswers)
 

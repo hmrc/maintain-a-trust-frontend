@@ -23,10 +23,9 @@ import play.api.i18n.Messages
 import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class SettlorIndividualPrinter @Inject()(converter: AnswerRowConverter)
-                                        (implicit messages: Messages) {
+class SettlorIndividualPrinter @Inject()(converter: AnswerRowConverter) {
 
-  def print(index: Int, userAnswers: UserAnswers): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
     userAnswers.get(SettlorIndividualNamePage(index)).map(_.toString).flatMap { name =>
       Some(
         Seq(

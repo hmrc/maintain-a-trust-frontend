@@ -16,7 +16,6 @@
 
 package utils.print
 
-import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
 import utils.print.sections.beneficiaries.AllBeneficiariesPrinter
@@ -24,23 +23,31 @@ import utils.print.sections.otherindividuals.OtherIndividualsPrinter
 import utils.print.sections.protectors.AllProtectorsPrinter
 import utils.print.sections.settlors.AllSettlorsPrinter
 import utils.print.sections.trustees.AllTrusteesPrinter
-import utils.print.sections.{AnswerRowConverter, CloseDatePrinter, TrustDetailsPrinter}
+import utils.print.sections.{CloseDatePrinter, TrustDetailsPrinter}
 import viewmodels.AnswerSection
 
-class PrintPlaybackHelper @Inject()(answerRowConverter: AnswerRowConverter) {
+import javax.inject.Inject
+
+class PrintPlaybackHelper @Inject()(closeDatePrinter: CloseDatePrinter,
+                                    settlorsPrinter: AllSettlorsPrinter,
+                                    trusteesPrinter: AllTrusteesPrinter,
+                                    beneficiariesPrinter: AllBeneficiariesPrinter,
+                                    protectorsPrinter: AllProtectorsPrinter,
+                                    otherIndividualsPrinter: OtherIndividualsPrinter,
+                                    trustDetailsPrinter: TrustDetailsPrinter) {
 
   def closeDate(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection =
-    new CloseDatePrinter(answerRowConverter).print(userAnswers)
+    closeDatePrinter.print(userAnswers)
 
-  def people(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = List(
-    new AllSettlorsPrinter(answerRowConverter)(userAnswers).allSettlors,
-    new AllTrusteesPrinter(answerRowConverter)(userAnswers).allTrustees,
-    new AllBeneficiariesPrinter(answerRowConverter)(userAnswers).allBeneficiaries,
-    new AllProtectorsPrinter(answerRowConverter)(userAnswers).allProtectors,
-    new OtherIndividualsPrinter(answerRowConverter)(userAnswers).allOtherIndividuals
+  def entities(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = List(
+    settlorsPrinter.allSettlors(userAnswers),
+    trusteesPrinter.allTrustees(userAnswers),
+    beneficiariesPrinter.allBeneficiaries(userAnswers),
+    protectorsPrinter.allProtectors(userAnswers),
+    otherIndividualsPrinter.allOtherIndividuals(userAnswers)
   ).flatten
 
   def trustDetails(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] =
-    new TrustDetailsPrinter(answerRowConverter).print(userAnswers)
+    trustDetailsPrinter.print(userAnswers)
 
 }

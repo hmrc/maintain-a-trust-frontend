@@ -16,46 +16,42 @@
 
 package utils.print.sections.trustees
 
-import javax.inject.Inject
 import models.UserAnswers
-import models.pages.IndividualOrBusiness
+import models.pages.IndividualOrBusiness._
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeIndividualOrBusinessPage}
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
 import utils.print.sections.trustees.lead_trustee.{LeadTrusteeBusinessPrinter, LeadTrusteeIndividualPrinter}
 import viewmodels.AnswerSection
 
-class AllTrusteesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
-                                  (userAnswers: UserAnswers)
-                                  (implicit messages: Messages) {
+import javax.inject.Inject
 
-  def allTrustees : Seq[AnswerSection] = {
+class AllTrusteesPrinter @Inject()(leadTrusteeIndividualPrinter: LeadTrusteeIndividualPrinter,
+                                   leadTrusteeBusinessPrinter: LeadTrusteeBusinessPrinter,
+                                   trusteeIndividualPrinter: TrusteeIndividualPrinter,
+                                   trusteeOrganisationPrinter: TrusteeOrganisationPrinter) {
+
+  def allTrustees(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
+
+    def trustee(index: Int): Seq[AnswerSection] = {
+      (for {
+        isLeadTrustee <- userAnswers.get(IsThisLeadTrusteePage(index))
+        individualOrBusiness <- userAnswers.get(TrusteeIndividualOrBusinessPage(index))
+      } yield {
+        (isLeadTrustee, individualOrBusiness) match {
+          case (true, Individual) => leadTrusteeIndividualPrinter.print(index, userAnswers)
+          case (true, Business) => leadTrusteeBusinessPrinter.print(index, userAnswers)
+          case (false, Individual) => trusteeIndividualPrinter.print(index, userAnswers)
+          case (false, Business) => trusteeOrganisationPrinter.print(index, userAnswers)
+        }
+      }).flatten
+    }.getOrElse(Nil)
 
     val size = userAnswers.get(_root_.sections.Trustees).map(_.value.size).getOrElse(0)
 
     size match {
       case 0 => Nil
-      case _ =>
-        (for (index <- 0 to size) yield trustee(index)).flatten
+      case _ => (for (index <- 0 to size) yield trustee(index)).flatten
     }
   }
-
-  private def trustee(index: Int): Seq[AnswerSection] = {
-    userAnswers.get(IsThisLeadTrusteePage(index)) flatMap { isLeadTrustee =>
-      userAnswers.get(TrusteeIndividualOrBusinessPage(index)) flatMap { individualOrBusiness =>
-        if (isLeadTrustee) {
-          individualOrBusiness match {
-            case IndividualOrBusiness.Individual => new LeadTrusteeIndividualPrinter(answerRowConverter).print(index, userAnswers)
-            case IndividualOrBusiness.Business => new LeadTrusteeBusinessPrinter(answerRowConverter).print(index, userAnswers)
-          }
-        } else {
-          individualOrBusiness match {
-            case IndividualOrBusiness.Individual => new TrusteeIndividualPrinter(answerRowConverter).print(index, userAnswers)
-            case IndividualOrBusiness.Business => new TrusteeOrganisationPrinter(answerRowConverter).print(index, userAnswers)
-          }
-        }
-      }
-    }
-  }.getOrElse(Nil)
 
 }

@@ -22,19 +22,18 @@ import pages.trustdetails._
 import play.api.i18n.Messages
 import viewmodels.AnswerSection
 
-class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter)
-                                   (implicit messages: Messages) {
+class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) {
 
-  def print(userAnswers: UserAnswers): Seq[AnswerSection] = Seq(
-      AnswerSection(
-        headingKey = None,
-        Seq(
-          converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
-          converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
-          converter.utr(userAnswers, "trustUniqueTaxReference")
-        ).flatten,
-        sectionKey = Some(messages("answerPage.section.trustsDetails.heading"))
-      )
+  def print(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = Seq(
+    AnswerSection(
+      headingKey = None,
+      Seq(
+        converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
+        converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
+        converter.utr(userAnswers, "trustUniqueTaxReference")
+      ).flatten,
+      sectionKey = Some(messages("answerPage.section.trustsDetails.heading"))
     )
+  )
 
 }

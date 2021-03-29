@@ -23,10 +23,9 @@ import play.api.i18n.Messages
 import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class TrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter)
-                                        (implicit messages: Messages) {
+class TrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter) {
 
-  def print(index: Int, userAnswers: UserAnswers): Option[Seq[AnswerSection]] = {
+  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
 
     userAnswers
       .get(TrusteeNamePage(index))
@@ -34,22 +33,22 @@ class TrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter)
       .flatMap { name =>
         Some(
           Seq(
-          AnswerSection(
-            headingKey = Some(messages("answerPage.section.trustee.subheading", index + 1)),
-            Seq(
-              converter.fullNameQuestion(TrusteeNamePage(index), userAnswers, "trusteeName"),
-              converter.yesNoQuestion(TrusteeDateOfBirthYesNoPage(index), userAnswers, "trusteeDateOfBirthYesNo", name),
-              converter.dateQuestion(TrusteeDateOfBirthPage(index), userAnswers, "trusteeDateOfBirth", name),
-              converter.yesNoQuestion(TrusteeNinoYesNoPage(index), userAnswers, "trusteeNinoYesNo", name),
-              converter.ninoQuestion(TrusteeNinoPage(index), userAnswers, "trusteeNino", name),
-              converter.yesNoQuestion(TrusteeAddressYesNoPage(index), userAnswers, "trusteeUkAddressYesNo", name),
-              converter.yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
-              converter.addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name),
-              converter.yesNoQuestion(TrusteePassportIDCardYesNoPage(index), userAnswers, "trusteePassportOrIdCardYesNo", name),
-              converter.passportOrIdCardQuestion(TrusteePassportIDCardPage(index), userAnswers, "trusteePassportOrIdCard", name)
-            ).flatten,
-            sectionKey = None
-          ))
+            AnswerSection(
+              headingKey = Some(messages("answerPage.section.trustee.subheading", index + 1)),
+              Seq(
+                converter.fullNameQuestion(TrusteeNamePage(index), userAnswers, "trusteeName"),
+                converter.yesNoQuestion(TrusteeDateOfBirthYesNoPage(index), userAnswers, "trusteeDateOfBirthYesNo", name),
+                converter.dateQuestion(TrusteeDateOfBirthPage(index), userAnswers, "trusteeDateOfBirth", name),
+                converter.yesNoQuestion(TrusteeNinoYesNoPage(index), userAnswers, "trusteeNinoYesNo", name),
+                converter.ninoQuestion(TrusteeNinoPage(index), userAnswers, "trusteeNino", name),
+                converter.yesNoQuestion(TrusteeAddressYesNoPage(index), userAnswers, "trusteeUkAddressYesNo", name),
+                converter.yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
+                converter.addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name),
+                converter.yesNoQuestion(TrusteePassportIDCardYesNoPage(index), userAnswers, "trusteePassportOrIdCardYesNo", name),
+                converter.passportOrIdCardQuestion(TrusteePassportIDCardPage(index), userAnswers, "trusteePassportOrIdCard", name)
+              ).flatten,
+              sectionKey = None
+            ))
         )
       }
   }

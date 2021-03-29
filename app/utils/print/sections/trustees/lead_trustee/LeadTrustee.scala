@@ -16,7 +16,6 @@
 
 package utils.print.sections.trustees.lead_trustee
 
-import javax.inject.Inject
 import models.UserAnswers
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees._
@@ -24,7 +23,7 @@ import play.api.i18n.Messages
 import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerRow
 
-class LeadTrustee @Inject()(converter: AnswerRowConverter) {
+class LeadTrustee(converter: AnswerRowConverter) {
 
   def addressAnswers(index: Int, userAnswers: UserAnswers, name: String)
                     (implicit messages: Messages): Seq[Option[AnswerRow]] = {

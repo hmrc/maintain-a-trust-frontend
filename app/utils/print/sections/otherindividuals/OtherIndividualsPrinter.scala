@@ -16,18 +16,16 @@
 
 package utils.print.sections.otherindividuals
 
-import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
 import sections.Natural
-import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class OtherIndividualsPrinter @Inject()(answerRowConverter: AnswerRowConverter)
-                                       (userAnswers: UserAnswers)
-                                       (implicit messages: Messages) {
+import javax.inject.Inject
 
-  def allOtherIndividuals : Seq[AnswerSection] = {
+class OtherIndividualsPrinter @Inject()(otherIndividualPrinter: OtherIndividualPrinter) {
+
+  def allOtherIndividuals(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val size = userAnswers
       .get(Natural)
       .map(_.value.size)
@@ -37,7 +35,7 @@ class OtherIndividualsPrinter @Inject()(answerRowConverter: AnswerRowConverter)
       case 0 => Nil
       case _ =>
         val heading = Seq(AnswerSection(sectionKey = Some(messages("answerPage.section.otherIndividuals.heading"))))
-        val individuals = (for (index <- 0 to size) yield new OtherIndividualPrinter(answerRowConverter).print(index, userAnswers)).flatten
+        val individuals = (for (index <- 0 to size) yield otherIndividualPrinter.print(index, userAnswers)).flatten
 
         heading ++ individuals
     }

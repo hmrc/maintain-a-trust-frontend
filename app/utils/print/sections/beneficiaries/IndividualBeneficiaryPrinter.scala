@@ -24,10 +24,9 @@ import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
-                                            (implicit messages: Messages) {
+class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) {
 
-  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] = {
+  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
     userAnswers.get(IndividualBeneficiaryNamePage(index)).map(_.toString).map { name =>
       Seq(

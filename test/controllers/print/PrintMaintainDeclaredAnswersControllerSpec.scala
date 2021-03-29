@@ -61,7 +61,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
       val answers = playbackAnswers(MakeChanges)
 
-      val entities = injector.instanceOf[PrintPlaybackHelper].people(answers)
+      val entities = injector.instanceOf[PrintPlaybackHelper].entities(answers)
 
       val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(answers)
 
@@ -93,7 +93,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
       val answers = playbackAnswers(CloseTrust)
         .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
 
-      val entities = injector.instanceOf[PrintPlaybackHelper].people(answers)
+      val entities = injector.instanceOf[PrintPlaybackHelper].entities(answers)
 
       val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(answers)
 

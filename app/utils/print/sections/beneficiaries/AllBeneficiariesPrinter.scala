@@ -16,25 +16,29 @@
 
 package utils.print.sections.beneficiaries
 
-import javax.inject.Inject
 import models.UserAnswers
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
 import viewmodels.AnswerSection
 
-class AllBeneficiariesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
-                                       (userAnswers: UserAnswers)
-                                       (implicit messages: Messages) {
+import javax.inject.Inject
 
-  def allBeneficiaries : Seq[AnswerSection] = {
+class AllBeneficiariesPrinter @Inject()(classOfBeneficiaryPrinter: ClassOfBeneficiaryPrinter,
+                                        otherBeneficiaryPrinter: OtherBeneficiaryPrinter,
+                                        trustBeneficiaryPrinter: TrustBeneficiaryPrinter,
+                                        companyBeneficiaryPrinter: CompanyBeneficiaryPrinter,
+                                        charityBeneficiaryPrinter: CharityBeneficiaryPrinter,
+                                        individualBeneficiaryPrinter: IndividualBeneficiaryPrinter,
+                                        largeBeneficiaryPrinter: LargeBeneficiaryPrinter) {
+
+  def allBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val beneficiaries = Seq(
-      individualBeneficiaries,
-      classOfBeneficiaries,
-      charityBeneficiaries,
-      companyBeneficiaries,
-      largeBeneficiaries,
-      trustBeneficiaries,
-      otherBeneficiaries
+      individualBeneficiaries(userAnswers),
+      classOfBeneficiaries(userAnswers),
+      charityBeneficiaries(userAnswers),
+      companyBeneficiaries(userAnswers),
+      largeBeneficiaries(userAnswers),
+      trustBeneficiaries(userAnswers),
+      otherBeneficiaries(userAnswers)
     ).flatten
 
     if (beneficiaries.nonEmpty) {
@@ -47,7 +51,7 @@ class AllBeneficiariesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
     }
   }
 
-  private lazy val classOfBeneficiaries : Seq[AnswerSection] = {
+  private def classOfBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val size = userAnswers
       .get(_root_.sections.beneficiaries.ClassOfBeneficiaries)
       .map(_.value.size)
@@ -56,11 +60,11 @@ class AllBeneficiariesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield new ClassOfBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
+        (for (index <- 0 to size) yield classOfBeneficiaryPrinter.print(index, userAnswers)).flatten
     }
   }
 
-  private lazy val otherBeneficiaries : Seq[AnswerSection] = {
+  private def otherBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val size = userAnswers
       .get(_root_.sections.beneficiaries.OtherBeneficiaries)
       .map(_.value.size)
@@ -69,11 +73,11 @@ class AllBeneficiariesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield new OtherBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
+        (for (index <- 0 to size) yield otherBeneficiaryPrinter.print(index, userAnswers)).flatten
     }
   }
 
-  private lazy val trustBeneficiaries : Seq[AnswerSection] = {
+  private def trustBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val size = userAnswers
       .get(_root_.sections.beneficiaries.TrustBeneficiaries)
       .map(_.value.size)
@@ -82,11 +86,11 @@ class AllBeneficiariesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield new TrustBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
+        (for (index <- 0 to size) yield trustBeneficiaryPrinter.print(index, userAnswers)).flatten
     }
   }
 
-  private lazy val companyBeneficiaries : Seq[AnswerSection] = {
+  private def companyBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val size = userAnswers
       .get(_root_.sections.beneficiaries.CompanyBeneficiaries)
       .map(_.value.size)
@@ -95,11 +99,11 @@ class AllBeneficiariesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield new CompanyBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
+        (for (index <- 0 to size) yield companyBeneficiaryPrinter.print(index, userAnswers)).flatten
     }
   }
 
-  private lazy val charityBeneficiaries : Seq[AnswerSection] = {
+  private def charityBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val size = userAnswers
       .get(_root_.sections.beneficiaries.CharityBeneficiaries)
       .map(_.value.size)
@@ -108,11 +112,11 @@ class AllBeneficiariesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield new CharityBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
+        (for (index <- 0 to size) yield charityBeneficiaryPrinter.print(index, userAnswers)).flatten
     }
   }
 
-  private lazy val individualBeneficiaries : Seq[AnswerSection] = {
+  private def individualBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val size = userAnswers
       .get(_root_.sections.beneficiaries.IndividualBeneficiaries)
       .map(_.value.size)
@@ -121,17 +125,17 @@ class AllBeneficiariesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield new IndividualBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
+        (for (index <- 0 to size) yield individualBeneficiaryPrinter.print(index, userAnswers)).flatten
     }
   }
 
-  private lazy val largeBeneficiaries : Seq[AnswerSection] = {
+  private def largeBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val size = userAnswers.get(_root_.sections.beneficiaries.LargeBeneficiaries).map(_.value.size).getOrElse(0)
 
     size match {
       case 0 => Nil
       case _ =>
-        (for (index <- 0 to size) yield new LargeBeneficiaryPrinter(answerRowConverter).print(index, userAnswers)).flatten
+        (for (index <- 0 to size) yield largeBeneficiaryPrinter.print(index, userAnswers)).flatten
     }
   }
 

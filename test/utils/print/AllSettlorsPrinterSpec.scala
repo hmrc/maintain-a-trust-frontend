@@ -16,8 +16,6 @@
 
 package utils.print
 
-import java.time.LocalDate
-
 import base.SpecBase
 import models.pages.IndividualOrBusiness
 import models.pages.KindOfBusiness.Trading
@@ -27,15 +25,16 @@ import pages.settlors.living_settlor._
 import play.api.libs.json.Writes
 import play.twirl.api.Html
 import queries.Settable
-import utils.print.sections.AnswerRowConverter
 import utils.print.sections.settlors.AllSettlorsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
-class SettlorsPrintPlaybackHelperSpec extends SpecBase {
+import java.time.LocalDate
 
-  private val answerRowConverter: AnswerRowConverter = injector.instanceOf[AnswerRowConverter]
+class AllSettlorsPrinterSpec extends SpecBase {
 
-  "Settlors print playback helper" must {
+  private val helper: AllSettlorsPrinter = injector.instanceOf[AllSettlorsPrinter]
+
+  "AllSettlorsPrinter" must {
 
     "generate deceased settlor sections for maximum dataset" in {
 
@@ -50,9 +49,7 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         .set(SettlorNationalInsuranceYesNoPage, true).success.value
         .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
 
-      val helper = new AllSettlorsPrinter(answerRowConverter)(answers)
-
-      val result = helper.allSettlors
+      val result = helper.allSettlors(answers)
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.deceasedSettlor.heading")),
@@ -95,9 +92,7 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
           PassportOrIdCardDetails("DE", "123456789", LocalDate.of(2021,10,10))
         ).success.value
 
-      val helper = new AllSettlorsPrinter(answerRowConverter)(answers)
-
-      val result = helper.allSettlors
+      val result = helper.allSettlors(answers)
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.deceasedSettlor.heading")),
@@ -154,9 +149,7 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         businessSettlorWithNoIdentification(3) andThen
         businessSettlorInEmployeeRelatedTrust(4)
 
-      val helper = new AllSettlorsPrinter(answerRowConverter)(answers.apply(emptyUserAnswersForUtr))
-
-      val result = helper.allSettlors
+      val result = helper.allSettlors(answers.apply(emptyUserAnswersForUtr))
 
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.settlors.heading")),
@@ -235,9 +228,7 @@ class SettlorsPrintPlaybackHelperSpec extends SpecBase {
         individualSettlorWithInternationalAddressAndIdCard(2) andThen
         individualSettlorWithNoId(3)
 
-      val helper = new AllSettlorsPrinter(answerRowConverter)(answers.apply(emptyUserAnswersForUtr))
-
-      val result = helper.allSettlors
+      val result = helper.allSettlors(answers.apply(emptyUserAnswersForUtr))
       
       result mustBe Seq(
         AnswerSection(None, Nil, Some("answerPage.section.settlors.heading")),
