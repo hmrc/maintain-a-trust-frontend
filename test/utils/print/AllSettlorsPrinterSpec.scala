@@ -49,10 +49,10 @@ class AllSettlorsPrinterSpec extends SpecBase {
         .set(SettlorNationalInsuranceYesNoPage, true).success.value
         .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
 
-      val result = helper.allSettlors(answers)
+      val result = helper.entities(answers)
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.deceasedSettlor.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.deceasedSettlor.heading"))),
         AnswerSection(
           headingKey = None,
           rows = Seq(
@@ -92,10 +92,10 @@ class AllSettlorsPrinterSpec extends SpecBase {
           PassportOrIdCardDetails("DE", "123456789", LocalDate.of(2021,10,10))
         ).success.value
 
-      val result = helper.allSettlors(answers)
+      val result = helper.entities(answers)
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.deceasedSettlor.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.deceasedSettlor.heading"))),
         AnswerSection(
           headingKey = None,
           rows = Seq(
@@ -149,10 +149,10 @@ class AllSettlorsPrinterSpec extends SpecBase {
         businessSettlorWithNoIdentification(3) andThen
         businessSettlorInEmployeeRelatedTrust(4)
 
-      val result = helper.allSettlors(answers.apply(emptyUserAnswersForUtr))
+      val result = helper.entities(answers.apply(emptyUserAnswersForUtr))
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.settlors.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.settlors.heading"))),
         AnswerSection(Some("Settlor 1"),Seq(
           AnswerRow("What is the business’s name?", Html("International Exports"), None),
           AnswerRow("Do you know International Exports’s Unique Taxpayer Reference (UTR) number?", Html("Yes"), None),
@@ -228,10 +228,10 @@ class AllSettlorsPrinterSpec extends SpecBase {
         individualSettlorWithInternationalAddressAndIdCard(2) andThen
         individualSettlorWithNoId(3)
 
-      val result = helper.allSettlors(answers.apply(emptyUserAnswersForUtr))
+      val result = helper.entities(answers.apply(emptyUserAnswersForUtr))
       
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.settlors.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.settlors.heading"))),
         AnswerSection(Some("Settlor 1"),Seq(
           AnswerRow("What is the settlor’s name?", Html("Joe Bloggs"), None),
           AnswerRow("Do you know Joe Bloggs’s date of birth?", Html("Yes"), None),

@@ -22,12 +22,17 @@ import pages.settlors.deceased_settlor._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsPath, JsValue}
 import sections.settlors.DeceasedSettlor
-import utils.print.sections.{AnswerRowConverter, Printer}
-import viewmodels.AnswerRow
+import utils.print.sections.{AllPrinter, AnswerRowConverter, Printer}
+import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) extends Printer[FullName, JsValue] {
+class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) extends AllPrinter[JsValue] with Printer[FullName] {
+
+  override def printSection(index: Int, userAnswers: UserAnswers)
+                           (implicit messages: Messages): Option[AnswerSection] = {
+    printAnswerRows(index, userAnswers)
+  }
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
@@ -47,6 +52,8 @@ class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) extends Pr
   override def namePath(index: Int): JsPath = SettlorNamePage.path
 
   override val section: QuestionPage[JsValue] = DeceasedSettlor
+
+  override val headingKey: Option[String] = Some("deceasedSettlor")
 
   override val subHeadingKey: Option[String] = None
 

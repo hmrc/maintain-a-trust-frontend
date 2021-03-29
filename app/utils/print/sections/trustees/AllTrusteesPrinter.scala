@@ -18,9 +18,14 @@ package utils.print.sections.trustees
 
 import models.UserAnswers
 import models.pages.IndividualOrBusiness._
+import pages.QuestionPage
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeIndividualOrBusinessPage}
 import play.api.i18n.Messages
-import utils.print.sections.trustees.lead_trustee.{LeadTrusteeBusinessPrinter, LeadTrusteeIndividualPrinter}
+import play.api.libs.json.JsArray
+import sections.Trustees
+import utils.print.sections.AllPrinter
+import utils.print.sections.trustees.leadtrustee.{LeadTrusteeBusinessPrinter, LeadTrusteeIndividualPrinter}
+import utils.print.sections.trustees.trustee.{TrusteeIndividualPrinter, TrusteeOrganisationPrinter}
 import viewmodels.AnswerSection
 
 import javax.inject.Inject
@@ -28,30 +33,25 @@ import javax.inject.Inject
 class AllTrusteesPrinter @Inject()(leadTrusteeIndividualPrinter: LeadTrusteeIndividualPrinter,
                                    leadTrusteeBusinessPrinter: LeadTrusteeBusinessPrinter,
                                    trusteeIndividualPrinter: TrusteeIndividualPrinter,
-                                   trusteeOrganisationPrinter: TrusteeOrganisationPrinter) {
+                                   trusteeOrganisationPrinter: TrusteeOrganisationPrinter) extends AllPrinter[JsArray] {
 
-  def allTrustees(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-
-    def trustee(index: Int): Seq[AnswerSection] = {
-      (for {
-        isLeadTrustee <- userAnswers.get(IsThisLeadTrusteePage(index))
-        individualOrBusiness <- userAnswers.get(TrusteeIndividualOrBusinessPage(index))
-      } yield {
-        (isLeadTrustee, individualOrBusiness) match {
-          case (true, Individual) => leadTrusteeIndividualPrinter.print(index, userAnswers)
-          case (true, Business) => leadTrusteeBusinessPrinter.print(index, userAnswers)
-          case (false, Individual) => trusteeIndividualPrinter.print(index, userAnswers)
-          case (false, Business) => trusteeOrganisationPrinter.print(index, userAnswers)
-        }
-      }).flatten
-    }.getOrElse(Nil)
-
-    val size = userAnswers.get(_root_.sections.Trustees).map(_.value.size).getOrElse(0)
-
-    size match {
-      case 0 => Nil
-      case _ => (for (index <- 0 to size) yield trustee(index)).flatten
-    }
+  override def printSection(index: Int, userAnswers: UserAnswers)
+                           (implicit messages: Messages): Option[AnswerSection] = {
+    (for {
+      isLeadTrustee <- userAnswers.get(IsThisLeadTrusteePage(index))
+      individualOrBusiness <- userAnswers.get(TrusteeIndividualOrBusinessPage(index))
+    } yield {
+      (isLeadTrustee, individualOrBusiness) match {
+        case (true, Individual) => leadTrusteeIndividualPrinter.printAnswerRows(index, userAnswers)
+        case (true, Business) => leadTrusteeBusinessPrinter.printAnswerRows(index, userAnswers)
+        case (false, Individual) => trusteeIndividualPrinter.printAnswerRows(index, userAnswers)
+        case (false, Business) => trusteeOrganisationPrinter.printAnswerRows(index, userAnswers)
+      }
+    }).flatten
   }
+
+  override val section: QuestionPage[JsArray] = Trustees
+
+  override val headingKey: Option[String] = Some("trustees")
 
 }

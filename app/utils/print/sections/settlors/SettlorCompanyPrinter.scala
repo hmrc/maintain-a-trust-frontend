@@ -17,17 +17,15 @@
 package utils.print.sections.settlors
 
 import models.UserAnswers
-import pages.QuestionPage
 import pages.settlors.living_settlor._
 import play.api.i18n.Messages
-import play.api.libs.json.{JsArray, JsPath}
-import sections.settlors.LivingSettlors
+import play.api.libs.json.JsPath
 import utils.print.sections.{AnswerRowConverter, Printer}
 import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String, JsArray] {
+class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String] {
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
@@ -42,8 +40,6 @@ class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter) extends Pri
   )
 
   override def namePath(index: Int): JsPath = SettlorBusinessNamePage(index).path
-
-  override val section: QuestionPage[JsArray] = LivingSettlors
 
   override val subHeadingKey: Option[String] = Some("settlor")
 

@@ -22,12 +22,17 @@ import pages.beneficiaries.large._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsArray, JsPath}
 import sections.beneficiaries.LargeBeneficiaries
-import utils.print.sections.{AnswerRowConverter, Printer}
-import viewmodels.AnswerRow
+import utils.print.sections.{AllPrinter, AnswerRowConverter, Printer}
+import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String, JsArray] {
+class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends AllPrinter[JsArray] with Printer[String] {
+
+  override def printSection(index: Int, userAnswers: UserAnswers)
+                           (implicit messages: Messages): Option[AnswerSection] = {
+    printAnswerRows(index, userAnswers)
+  }
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
@@ -42,8 +47,9 @@ class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends P
 
   override def namePath(index: Int): JsPath = LargeBeneficiaryNamePage(index).path
 
-  override val section: QuestionPage[JsArray] = LargeBeneficiaries
+  override def section: QuestionPage[JsArray] = LargeBeneficiaries
+
+  override val headingKey: Option[String] = None
 
   override val subHeadingKey: Option[String] = Some("largeBeneficiary")
-
 }

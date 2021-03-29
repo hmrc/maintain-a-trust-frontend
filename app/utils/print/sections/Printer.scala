@@ -22,29 +22,16 @@ import play.api.i18n.Messages
 import play.api.libs.json.{JsArray, JsPath, JsValue, Reads}
 import viewmodels.{AnswerRow, AnswerSection}
 
-trait Printer[A, B <: JsValue] {
+trait Printer[A] {
 
-  def entities(userAnswers: UserAnswers)(implicit messages: Messages, nameReads: Reads[A], sectionReads: Reads[B]): Seq[AnswerSection] = {
-
-    val size = userAnswers.get(section) match {
-      case Some(JsArray(value)) => value.size
-      case Some(_) => 1
-      case None => 0
-    }
-
-    size match {
-      case 0 => Nil
-      case _ => (for (index <- 0 until size) yield print(index, userAnswers).getOrElse(Nil)).flatten
-    }
-  }
-
-  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages, rds: Reads[A]): Option[Seq[AnswerSection]] = {
+  def printAnswerRows(index: Int, userAnswers: UserAnswers)
+                     (implicit messages: Messages, rds: Reads[A]): Option[AnswerSection] = {
     userAnswers.getAtPath[A](namePath(index)).map(_.toString).map { name =>
-      Seq(
-        AnswerSection(
-          headingKey = subHeadingKey.fold[Option[String]](None)(x => Some(messages(s"answerPage.section.$x.subheading", index + 1))),
-          rows = answerRows(index, userAnswers, name).flatten
-        )
+      AnswerSection(
+        headingKey = subHeadingKey.fold[Option[String]](None)(x =>
+          Some(messages(s"answerPage.section.$x.subheading", index + 1))
+        ),
+        rows = answerRows(index, userAnswers, name).flatten
       )
     }
   }
@@ -54,8 +41,39 @@ trait Printer[A, B <: JsValue] {
 
   def namePath(index: Int): JsPath
 
-  def section: QuestionPage[B]
-
   val subHeadingKey: Option[String]
+
+}
+
+trait AllPrinter[T <: JsValue] {
+
+  def entities(userAnswers: UserAnswers)(implicit messages: Messages, rds: Reads[T]): Seq[AnswerSection] = {
+
+    val answerSections: Seq[AnswerSection] = (userAnswers.get(section) match {
+      case Some(array: JsArray) => array
+      case Some(value: JsValue) => JsArray(Seq(value))
+      case _ => JsArray()
+    }).value.zipWithIndex.foldLeft[Seq[AnswerSection]](Nil)((acc, entity) => {
+      printSection(entity._2, userAnswers) match {
+        case Some(value) => acc :+ value
+        case None => acc
+      }
+    })
+
+    if (answerSections.nonEmpty) {
+      headingKey match {
+        case Some(x) => AnswerSection(sectionKey = Some(messages(s"answerPage.section.$x.heading"))) +: answerSections
+        case None => answerSections
+      }
+    } else {
+      Nil
+    }
+  }
+
+  def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection]
+
+  def section: QuestionPage[T]
+
+  val headingKey: Option[String]
 
 }

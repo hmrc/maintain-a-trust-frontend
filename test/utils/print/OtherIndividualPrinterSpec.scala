@@ -60,7 +60,7 @@ class OtherIndividualPrinterSpec extends SpecBase {
         .set(OtherIndividualPassportIDCardYesNoPage(3), true).success.value
         .set(OtherIndividualPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))).success.value
 
-      val result = helper.allOtherIndividuals(answers)
+      val result = helper.entities(answers)
 
       val name1 = "Joe Bloggs"
       val name2 = "John Doe"

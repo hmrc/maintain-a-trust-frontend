@@ -40,11 +40,11 @@ class PrintPlaybackHelper @Inject()(closeDatePrinter: CloseDatePrinter,
     closeDatePrinter.print(userAnswers)
 
   def entities(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = List(
-    settlorsPrinter.allSettlors(userAnswers),
-    trusteesPrinter.allTrustees(userAnswers),
-    beneficiariesPrinter.allBeneficiaries(userAnswers),
-    protectorsPrinter.allProtectors(userAnswers),
-    otherIndividualsPrinter.allOtherIndividuals(userAnswers)
+    settlorsPrinter.entities(userAnswers),
+    trusteesPrinter.entities(userAnswers),
+    beneficiariesPrinter.entities(userAnswers),
+    protectorsPrinter.entities(userAnswers),
+    otherIndividualsPrinter.entities(userAnswers)
   ).flatten
 
   def trustDetails(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] =

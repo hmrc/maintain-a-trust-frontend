@@ -22,12 +22,17 @@ import pages.beneficiaries.classOfBeneficiary._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsArray, JsPath}
 import sections.beneficiaries.ClassOfBeneficiaries
-import utils.print.sections.{AnswerRowConverter, Printer}
-import viewmodels.AnswerRow
+import utils.print.sections.{AllPrinter, AnswerRowConverter, Printer}
+import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class ClassOfBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String, JsArray] {
+class ClassOfBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends AllPrinter[JsArray] with Printer[String] {
+
+  override def printSection(index: Int, userAnswers: UserAnswers)
+                           (implicit messages: Messages): Option[AnswerSection] = {
+    printAnswerRows(index, userAnswers)
+  }
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
@@ -36,7 +41,9 @@ class ClassOfBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends
 
   override def namePath(index: Int): JsPath = ClassOfBeneficiaryDescriptionPage(index).path
 
-  override val section: QuestionPage[JsArray] = ClassOfBeneficiaries
+  override def section: QuestionPage[JsArray] = ClassOfBeneficiaries
+
+  override val headingKey: Option[String] = None
 
   override val subHeadingKey: Option[String] = Some("classOfBeneficiary")
 

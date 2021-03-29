@@ -65,7 +65,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(IndividualProtectorPassportIDCardYesNoPage(3), true).success.value
         .set(IndividualProtectorPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
 
-      val result = helper.allProtectors(answers)
+      val result = helper.entities(answers)
 
       val name1 = "Joe Bloggs"
       val name2 = "John Doe"
@@ -141,7 +141,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(BusinessProtectorUtrYesNoPage(2), false).success.value
         .set(BusinessProtectorAddressYesNoPage(2), false).success.value
 
-      val result = helper.allProtectors(answers)
+      val result = helper.entities(answers)
 
       val company1 = "Bernardos"
       val company2 = "Red Cross Ltd."
@@ -198,7 +198,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(BusinessProtectorUtrYesNoPage(1), true).success.value
         .set(BusinessProtectorUtrPage(1), "1234567890").success.value
 
-      val result = helper.allProtectors(answers)
+      val result = helper.entities(answers)
 
       val name1 = "Paul Chuckle"
       val company1 = "Bernardos"

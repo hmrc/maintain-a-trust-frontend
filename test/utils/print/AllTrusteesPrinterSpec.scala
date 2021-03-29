@@ -48,7 +48,9 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- IsThisLeadTrusteePage(0) is true
         } yield Unit).run(emptyUserAnswersForUtr).value
 
-        val result = helper.allTrustees(answers)
+        val result = helper.entities(answers)
+
+        result.size mustEqual 2
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
         result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -83,7 +85,9 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- TrusteePassportIDCardYesNoPage(0) is true
         } yield Unit).run(emptyUserAnswersForUtr).value
 
-        val result = helper.allTrustees(answers)
+        val result = helper.entities(answers)
+
+        result.size mustEqual 2
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
         result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -119,7 +123,9 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- IsThisLeadTrusteePage(0) is true
         } yield Unit).run(emptyUserAnswersForUtr).value
 
-        val result = helper.allTrustees(answers)
+        val result = helper.entities(answers)
+
+        result.size mustEqual 2
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
         result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -151,7 +157,9 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- IsThisLeadTrusteePage(0) is true
         } yield Unit).run(emptyUserAnswersForUtr).value
 
-        val result = helper.allTrustees(answers)
+        val result = helper.entities(answers)
+
+        result.size mustEqual 2
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
         result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -184,7 +192,9 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- IsThisLeadTrusteePage(0) is true
         } yield Unit).run(emptyUserAnswersForUtr).value
 
-        val result = helper.allTrustees(answers)
+        val result = helper.entities(answers)
+
+        result.size mustEqual 2
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
         result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
@@ -196,6 +206,65 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           "What is Lead Trustee Company’s email address?" -> Html("aa@aabb.com"),
           "What is Lead Trustee Company’s telephone number?" -> Html("67676767676")
         )
+      }
+    }
+
+    "when the lead trustee is an individual and other trustees" must {
+      "generate a trustee section for each trustee" in {
+
+        val (answers, _) = (for {
+          _ <- individualUKTrustee(0)
+          _ <- TrusteeNamePage(0) is FullName("Wild", Some("Bill"), "Hickock")
+          _ <- TrusteeDateOfBirthPage(0) is LocalDate.parse("1975-01-23")
+          _ <- TrusteeNinoPage(0) is "AA111111A"
+          _ <- TrusteeAddressYesNoPage(0).isRemoved
+          _ <- TrusteeAddressInTheUKPage(0) is true
+          _ <- TrusteeUkAddressPage(0) is UKAddress("Address 1", "Address 2", None, None, "AA11 1AA")
+          _ <- TrusteeTelephoneNumberPage(0) is "67676767676"
+          _ <- TrusteeEmailYesNoPage(0) is false
+          _ <- IsThisLeadTrusteePage(0) is true
+          _ <- ukCompanyTrustee(1)
+          _ <- TrusteeOrgNamePage(1) is "Trustee Company"
+          _ <- TrusteeUtrYesNoPage(1) is true
+          _ <- TrusteeUtrPage(1) is "1234567890"
+          _ <- IsThisLeadTrusteePage(1) is false
+          _ <- individualUKTrustee(2)
+          _ <- TrusteeNamePage(2) is FullName("Individual", None, "trustee")
+          _ <- TrusteeDateOfBirthYesNoPage(2) is true
+          _ <- TrusteeDateOfBirthPage(2) is LocalDate.parse("1975-01-23")
+          _ <- TrusteeNinoYesNoPage(2) is true
+          _ <- TrusteeNinoPage(2) is "NH111111A"
+          _ <- IsThisLeadTrusteePage(2) is false
+        } yield Unit).run(emptyUserAnswersForUtr).value
+
+        val result = helper.entities(answers)
+
+        result.size mustEqual 4
+
+        result must containHeadingSection(messages("answerPage.section.trustees.heading"))
+        result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
+          "What is the lead trustee’s name?" -> Html("Wild Bill Hickock"),
+          "What is Wild Hickock’s date of birth?" -> Html("23 January 1975"),
+          "Is Wild Hickock a UK citizen?" -> Html("Yes"),
+          "What is Wild Hickock’s National Insurance number?" -> Html("AA 11 11 11 A"),
+          "Does Wild Hickock live in the UK?" -> Html("Yes"),
+          "What is Wild Hickock’s address?" -> Html("Address 1<br />Address 2<br />AA11 1AA"),
+          "Do you know Wild Hickock’s email address?" -> Html("No"),
+          "What is Wild Hickock’s telephone number?" -> Html("67676767676")
+        )
+        result must containSectionWithHeadingAndValues(messages("answerPage.section.trustee.subheading", 2),
+          "What is the business’s name?" -> Html("Trustee Company"),
+          "Do you know Trustee Company’s Unique Taxpayer Reference (UTR) number?" -> Html("Yes"),
+          "What is Trustee Company’s Unique Taxpayer Reference (UTR) number?" -> Html("1234567890")
+        )
+        result must containSectionWithHeadingAndValues(messages("answerPage.section.trustee.subheading", 3),
+          "What is the trustee’s name?" -> Html("Individual trustee"),
+          "Do you know Individual trustee’s date of birth?" -> Html("Yes"),
+          "What is Individual trustee’s date of birth?" -> Html("23 January 1975"),
+          "Do you know Individual trustee’s National Insurance number?" -> Html("Yes"),
+          "What is Individual trustee’s National Insurance number?" -> Html("NH 11 11 11 A")
+        )
+
       }
     }
 
@@ -222,7 +291,9 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- IsThisLeadTrusteePage(2) is false
         } yield Unit).run(emptyUserAnswersForUtr).value
 
-        val result = helper.allTrustees(answers)
+        val result = helper.entities(answers)
+
+        result.size mustEqual 4
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
         result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),

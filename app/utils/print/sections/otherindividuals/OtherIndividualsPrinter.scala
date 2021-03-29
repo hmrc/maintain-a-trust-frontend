@@ -17,20 +17,24 @@
 package utils.print.sections.otherindividuals
 
 import models.UserAnswers
+import pages.QuestionPage
 import play.api.i18n.Messages
+import play.api.libs.json.JsArray
+import sections.Natural
+import utils.print.sections.AllPrinter
 import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class OtherIndividualsPrinter @Inject()(otherIndividualPrinter: OtherIndividualPrinter) {
+class OtherIndividualsPrinter @Inject()(otherIndividualPrinter: OtherIndividualPrinter) extends AllPrinter[JsArray] {
 
-  def allOtherIndividuals(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val otherIndividuals: Seq[AnswerSection] = otherIndividualPrinter.entities(userAnswers)
-
-    if (otherIndividuals.nonEmpty) {
-      AnswerSection(sectionKey = Some(messages("answerPage.section.otherIndividuals.heading"))) +: otherIndividuals
-    } else {
-      Nil
-    }
+  override def printSection(index: Int, userAnswers: UserAnswers)
+                           (implicit messages: Messages): Option[AnswerSection] = {
+    otherIndividualPrinter.printAnswerRows(index, userAnswers)
   }
+
+  override def section: QuestionPage[JsArray] = Natural
+
+  override val headingKey: Option[String] = Some("otherIndividuals")
+
 }

@@ -23,21 +23,16 @@ import viewmodels.AnswerSection
 import javax.inject.Inject
 
 class AllSettlorsPrinter @Inject()(deceasedSettlorPrinter: DeceasedSettlorPrinter,
-                                   individualSettlorPrinter: SettlorIndividualPrinter,
-                                   companySettlorPrinter: SettlorCompanyPrinter) {
+                                   livingSettlorsPrinter: LivingSettlorsPrinter) {
 
-  def allSettlors(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
+  def entities(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
     val deceasedSettlor: Seq[AnswerSection] = deceasedSettlorPrinter.entities(userAnswers)
-
-    val livingSettlors: Seq[AnswerSection] = Seq(
-      individualSettlorPrinter.entities(userAnswers),
-      companySettlorPrinter.entities(userAnswers)
-    ).flatten
+    val livingSettlors: Seq[AnswerSection] = livingSettlorsPrinter.entities(userAnswers)
 
     (deceasedSettlor.nonEmpty, livingSettlors.nonEmpty) match {
-      case (true, false) => AnswerSection(sectionKey = Some("answerPage.section.deceasedSettlor.heading")) +: deceasedSettlor
-      case (false, true) => AnswerSection(sectionKey = Some("answerPage.section.settlors.heading")) +: livingSettlors
+      case (true, false) => deceasedSettlor
+      case (false, true) => livingSettlors
       case _ => Nil
     }
   }

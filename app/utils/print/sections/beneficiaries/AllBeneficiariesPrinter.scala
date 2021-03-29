@@ -30,7 +30,7 @@ class AllBeneficiariesPrinter @Inject()(individualBeneficiaryPrinter: Individual
                                         trustBeneficiaryPrinter: TrustBeneficiaryPrinter,
                                         otherBeneficiaryPrinter: OtherBeneficiaryPrinter) {
 
-  def allBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
+  def entities(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val beneficiaries: Seq[AnswerSection] = Seq(
       individualBeneficiaryPrinter.entities(userAnswers),
       classOfBeneficiaryPrinter.entities(userAnswers),

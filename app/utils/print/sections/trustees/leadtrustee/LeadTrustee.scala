@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package utils.print.sections.trustees.lead_trustee
+package utils.print.sections.trustees.leadtrustee
 
 import models.UserAnswers
 import pages.correspondence.CorrespondenceAddressPage

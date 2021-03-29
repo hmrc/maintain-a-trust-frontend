@@ -22,12 +22,17 @@ import pages.beneficiaries.individual._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsArray, JsPath}
 import sections.beneficiaries.IndividualBeneficiaries
-import utils.print.sections.{AnswerRowConverter, Printer}
-import viewmodels.AnswerRow
+import utils.print.sections.{AllPrinter, AnswerRowConverter, Printer}
+import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends Printer[FullName, JsArray] {
+class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends AllPrinter[JsArray] with Printer[FullName] {
+
+  override def printSection(index: Int, userAnswers: UserAnswers)
+                           (implicit messages: Messages): Option[AnswerSection] = {
+    printAnswerRows(index, userAnswers)
+  }
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
@@ -49,8 +54,9 @@ class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) exte
 
   override def namePath(index: Int): JsPath = IndividualBeneficiaryNamePage(index).path
 
-  override val section: QuestionPage[JsArray] = IndividualBeneficiaries
+  override def section: QuestionPage[JsArray] = IndividualBeneficiaries
+
+  override val headingKey: Option[String] = None
 
   override val subHeadingKey: Option[String] = Some("individualBeneficiary")
-
 }

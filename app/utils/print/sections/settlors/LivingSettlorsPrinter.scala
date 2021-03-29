@@ -14,33 +14,33 @@
  * limitations under the License.
  */
 
-package utils.print.sections.protectors
+package utils.print.sections.settlors
 
 import models.UserAnswers
 import models.pages.IndividualOrBusiness._
 import pages.QuestionPage
-import pages.protectors.ProtectorIndividualOrBusinessPage
+import pages.settlors.living_settlor.SettlorIndividualOrBusinessPage
 import play.api.i18n.Messages
 import play.api.libs.json.JsArray
-import sections.Protectors
+import sections.settlors.LivingSettlors
 import utils.print.sections.AllPrinter
 import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class AllProtectorsPrinter @Inject()(individualProtectorPrinter: IndividualProtectorPrinter,
-                                     businessProtectorPrinter: BusinessProtectorPrinter) extends AllPrinter[JsArray] {
+class LivingSettlorsPrinter @Inject()(individualSettlorPrinter: SettlorIndividualPrinter,
+                                      companySettlorPrinter: SettlorCompanyPrinter) extends AllPrinter[JsArray] {
 
   override def printSection(index: Int, userAnswers: UserAnswers)
                            (implicit messages: Messages): Option[AnswerSection] = {
-    userAnswers.get(ProtectorIndividualOrBusinessPage(index)).flatMap {
-      case Individual => individualProtectorPrinter.printAnswerRows(index, userAnswers)
-      case Business => businessProtectorPrinter.printAnswerRows(index, userAnswers)
+    userAnswers.get(SettlorIndividualOrBusinessPage(index)).flatMap {
+      case Individual => individualSettlorPrinter.printAnswerRows(index, userAnswers)
+      case Business => companySettlorPrinter.printAnswerRows(index, userAnswers)
     }
   }
 
-  override def section: QuestionPage[JsArray] = Protectors
+  override def section: QuestionPage[JsArray] = LivingSettlors
 
-  override val headingKey: Option[String] = Some("protectors")
+  override val headingKey: Option[String] = Some("settlors")
 
 }

@@ -17,17 +17,15 @@
 package utils.print.sections.protectors
 
 import models.UserAnswers
-import pages.QuestionPage
 import pages.protectors.business._
 import play.api.i18n.Messages
-import play.api.libs.json.{JsArray, JsPath}
-import sections.Protectors
+import play.api.libs.json.JsPath
 import utils.print.sections.{AnswerRowConverter, Printer}
 import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class BusinessProtectorPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String, JsArray] {
+class BusinessProtectorPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String] {
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
@@ -40,8 +38,6 @@ class BusinessProtectorPrinter @Inject()(converter: AnswerRowConverter) extends 
   )
 
   override def namePath(index: Int): JsPath = BusinessProtectorNamePage(index).path
-
-  override val section: QuestionPage[JsArray] = Protectors
 
   override val subHeadingKey: Option[String] = Some("protector")
 
