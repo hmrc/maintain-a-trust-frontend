@@ -43,9 +43,10 @@ final case class UserAnswers(
     case (true, true, false) => Underlying5mldNonTaxableTrustIn5mldMode
   }
 
-  def isUnderlyingTrust5mld: Boolean = this.get(ExpressTrustYesNoPage).isDefined // TODO - amend usages and make private
+  private def isUnderlyingTrust5mld: Boolean = this.get(ExpressTrustYesNoPage).isDefined
 
-  def isTrust5mldTaxable: Boolean = isUnderlyingTrust5mld && isTrustTaxable // TODO - amend usages and delete
+  def is5mldTrustIn5mldMode: Boolean =
+    trustMldStatus == Underlying5mldTaxableTrustIn5mldMode || trustMldStatus == Underlying5mldNonTaxableTrustIn5mldMode
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     Reads.at(page.path).reads(data) match {

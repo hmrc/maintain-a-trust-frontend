@@ -49,7 +49,7 @@ class InformationMaintainingThisTrustController @Inject()(
         case Agent if !config.playbackEnabled =>
           Ok(agentCannotAccessTrustYetView(identifier, identifierType))
         case _ =>
-          if (request.userAnswers.is5mldEnabled && request.userAnswers.isUnderlyingTrust5mld) {
+          if (request.userAnswers.is5mldTrustIn5mldMode) {
             if (request.userAnswers.isTrustTaxable) {
               Ok(maintainingTaxableTrustView(identifier, identifierType))
             } else {
