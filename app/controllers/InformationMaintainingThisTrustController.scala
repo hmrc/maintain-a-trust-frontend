@@ -26,14 +26,14 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
-import views.html.{AgentCannotAccessTrustYetView, InformationMaintaining5mldTrustView, InformationMaintainingThisTrustView}
+import views.html.{AgentCannotAccessTrustYetView, InformationMaintainingTaxableTrustView, InformationMaintainingThisTrustView}
 
 @Singleton
 class InformationMaintainingThisTrustController @Inject()(
                                                            actions: Actions,
                                                            val controllerComponents: MessagesControllerComponents,
                                                            maintainingTrustView: InformationMaintainingThisTrustView,
-                                                           maintaining5mldTrustView: InformationMaintaining5mldTrustView,
+                                                           maintainingTaxableTrustView: InformationMaintainingTaxableTrustView,
                                                            agentCannotAccessTrustYetView: AgentCannotAccessTrustYetView
                                                          )(implicit config: FrontendAppConfig)
   extends FrontendBaseController with I18nSupport with Logging {
@@ -51,7 +51,7 @@ class InformationMaintainingThisTrustController @Inject()(
         case _ =>
           val isTrust5mld = request.userAnswers.get(ExpressTrustYesNoPage).isDefined
           if (request.userAnswers.is5mldEnabled && isTrust5mld) {
-            Ok(maintaining5mldTrustView(identifier, identifierType))
+            Ok(maintainingTaxableTrustView(identifier, identifierType))
           } else {
             Ok(maintainingTrustView(identifier, identifierType))
           }

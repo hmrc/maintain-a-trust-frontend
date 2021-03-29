@@ -25,39 +25,39 @@
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("informationMaintaining5mldTrust.title")
+    title = messages("informationMaintainingTaxableTrust.title")
 ) {
 
    @components.back_link()
 
-    @components.heading_with_caption(headingKey = "informationMaintaining5mldTrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @components.heading_with_caption(headingKey = "informationMaintainingTaxableTrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
-    <h2>@messages("informationMaintaining5mldTrust.subheading1")</h2>
+    <h2>@messages("informationMaintainingTaxableTrust.subheading1")</h2>
 
-    <p>@messages("informationMaintaining5mldTrust.paragraph1")</p>
+    <p>@messages("informationMaintainingTaxableTrust.paragraph1")</p>
 
-    <h2>@messages("informationMaintaining5mldTrust.subheading2")</h2>
+    <h2>@messages("informationMaintainingTaxableTrust.subheading2")</h2>
 
-    <p>@messages("informationMaintaining5mldTrust.paragraph2")</p>
+    <p>@messages("informationMaintainingTaxableTrust.paragraph2")</p>
 
-    @components.bullet_list("informationMaintaining5mldTrust", List(
+    @components.bullet_list("informationMaintainingTaxableTrust", List(
         "bullet1",
         "bullet2",
         "bullet3"
     ))
 
-   <p>@messages("informationMaintaining5mldTrust.paragraph3")</p>
+   <p>@messages("informationMaintainingTaxableTrust.paragraph3")</p>
 
-    @components.bullet_list("informationMaintaining5mldTrust", List(
+    @components.bullet_list("informationMaintainingTaxableTrust", List(
         "bullet4",
         "bullet5"
     ))
 
-    <p>@messages("informationMaintaining5mldTrust.paragraph4")</p>
+    <p>@messages("informationMaintainingTaxableTrust.paragraph4")</p>
 
-    <p>@messages("informationMaintaining5mldTrust.paragraph5")</p>
+    <p>@messages("informationMaintainingTaxableTrust.paragraph5")</p>
 
-    <p>@messages("informationMaintaining5mldTrust.paragraph6")</p>
+    <p>@messages("informationMaintainingTaxableTrust.paragraph6")</p>
 
     @components.button_link(messages("site.startMaintaining"), controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url)
 
