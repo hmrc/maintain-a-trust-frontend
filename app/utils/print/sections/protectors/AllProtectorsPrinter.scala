@@ -17,8 +17,6 @@
 package utils.print.sections.protectors
 
 import models.UserAnswers
-import models.pages.IndividualOrBusiness.{Business, Individual}
-import pages.protectors.ProtectorIndividualOrBusinessPage
 import play.api.i18n.Messages
 import viewmodels.AnswerSection
 
@@ -28,30 +26,13 @@ class AllProtectorsPrinter @Inject()(individualProtectorPrinter: IndividualProte
                                      businessProtectorPrinter: BusinessProtectorPrinter) {
 
   def allProtectors(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val size = userAnswers
-      .get(_root_.sections.Protectors)
-      .map(_.value.size)
-      .getOrElse(0)
-
-    val protectors = size match {
-      case 0 => Nil
-      case _ =>
-
-        (for (index <- 0 to size) yield {
-          userAnswers.get(ProtectorIndividualOrBusinessPage(index)).map {
-            case Individual =>
-              individualProtectorPrinter.print(index, userAnswers)
-            case Business =>
-              businessProtectorPrinter.print(index, userAnswers)
-          }.getOrElse(Nil)
-        }).flatten
-    }
+    val protectors = Seq(
+      individualProtectorPrinter.entities(userAnswers),
+      businessProtectorPrinter.entities(userAnswers)
+    ).flatten
 
     if (protectors.nonEmpty) {
-      Seq(
-        Seq(AnswerSection(sectionKey = Some(messages("answerPage.section.protectors.heading")))),
-        protectors
-      ).flatten
+      AnswerSection(sectionKey = Some(messages("answerPage.section.protectors.heading"))) +: protectors
     } else {
       Nil
     }
