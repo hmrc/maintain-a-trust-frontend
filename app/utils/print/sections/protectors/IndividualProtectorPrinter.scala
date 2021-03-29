@@ -20,12 +20,12 @@ import models.{FullName, UserAnswers}
 import pages.protectors.individual._
 import play.api.i18n.Messages
 import play.api.libs.json.JsPath
-import utils.print.sections.{AnswerRowConverter, Printer}
+import utils.print.sections.{AnswerRowConverter, EntityPrinter}
 import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter) extends Printer[FullName] {
+class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter) extends EntityPrinter[FullName] {
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(

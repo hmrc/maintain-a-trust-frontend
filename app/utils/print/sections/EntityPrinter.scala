@@ -17,26 +17,29 @@
 package utils.print.sections
 
 import models.UserAnswers
-import pages.close.nontaxable.DateClosedPage
-import pages.close.taxable.DateLastAssetSharedOutPage
 import play.api.i18n.Messages
+import play.api.libs.json.{JsPath, Reads}
 import viewmodels.{AnswerRow, AnswerSection}
 
-import javax.inject.Inject
+trait EntityPrinter[A] {
 
-class CloseDatePrinter @Inject()(converter: AnswerRowConverter) extends PrinterHelper {
-
-  def print(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection = {
-
-    val row: Option[AnswerRow] = if (userAnswers.isTrustTaxable) {
-      converter.dateQuestion(DateLastAssetSharedOutPage, userAnswers, "dateLastAssetSharedOut")
-    } else {
-      converter.dateQuestion(DateClosedPage, userAnswers, "dateClosed")
+  def printAnswerRows(index: Int, userAnswers: UserAnswers)
+                     (implicit messages: Messages, rds: Reads[A]): Option[AnswerSection] = {
+    userAnswers.getAtPath[A](namePath(index)).map(_.toString).map { name =>
+      AnswerSection(
+        headingKey = subHeadingKey.fold[Option[String]](None)(x =>
+          Some(messages(s"answerPage.section.$x.subheading", index + 1))
+        ),
+        rows = answerRows(index, userAnswers, name).flatten
+      )
     }
-
-    answerSectionWithRows(Seq(row))
   }
 
-  override val headingKey: Option[String] = Some("closeDate")
+  def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                (implicit messages: Messages): Seq[Option[AnswerRow]]
+
+  def namePath(index: Int): JsPath
+
+  val subHeadingKey: Option[String]
 
 }

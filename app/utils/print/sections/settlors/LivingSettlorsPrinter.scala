@@ -23,13 +23,13 @@ import pages.settlors.living_settlor.SettlorIndividualOrBusinessPage
 import play.api.i18n.Messages
 import play.api.libs.json.JsArray
 import sections.settlors.LivingSettlors
-import utils.print.sections.AllPrinter
+import utils.print.sections.EntitiesPrinter
 import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
 class LivingSettlorsPrinter @Inject()(individualSettlorPrinter: SettlorIndividualPrinter,
-                                      companySettlorPrinter: SettlorCompanyPrinter) extends AllPrinter[JsArray] {
+                                      companySettlorPrinter: SettlorCompanyPrinter) extends EntitiesPrinter[JsArray] {
 
   override def printSection(index: Int, userAnswers: UserAnswers)
                            (implicit messages: Messages): Option[AnswerSection] = {

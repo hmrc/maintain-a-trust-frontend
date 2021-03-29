@@ -23,13 +23,13 @@ import pages.protectors.ProtectorIndividualOrBusinessPage
 import play.api.i18n.Messages
 import play.api.libs.json.JsArray
 import sections.Protectors
-import utils.print.sections.AllPrinter
+import utils.print.sections.EntitiesPrinter
 import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
 class AllProtectorsPrinter @Inject()(individualProtectorPrinter: IndividualProtectorPrinter,
-                                     businessProtectorPrinter: BusinessProtectorPrinter) extends AllPrinter[JsArray] {
+                                     businessProtectorPrinter: BusinessProtectorPrinter) extends EntitiesPrinter[JsArray] {
 
   override def printSection(index: Int, userAnswers: UserAnswers)
                            (implicit messages: Messages): Option[AnswerSection] = {

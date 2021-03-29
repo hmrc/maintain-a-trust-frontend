@@ -21,12 +21,12 @@ import pages.QuestionPage
 import play.api.i18n.Messages
 import play.api.libs.json.JsArray
 import sections.Natural
-import utils.print.sections.AllPrinter
+import utils.print.sections.EntitiesPrinter
 import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class OtherIndividualsPrinter @Inject()(otherIndividualPrinter: OtherIndividualPrinter) extends AllPrinter[JsArray] {
+class OtherIndividualsPrinter @Inject()(otherIndividualPrinter: OtherIndividualPrinter) extends EntitiesPrinter[JsArray] {
 
   override def printSection(index: Int, userAnswers: UserAnswers)
                            (implicit messages: Messages): Option[AnswerSection] = {

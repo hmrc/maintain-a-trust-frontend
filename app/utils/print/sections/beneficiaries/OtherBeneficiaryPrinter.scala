@@ -22,12 +22,12 @@ import pages.beneficiaries.other._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsArray, JsPath}
 import sections.beneficiaries.OtherBeneficiaries
-import utils.print.sections.{AllPrinter, AnswerRowConverter, Printer}
+import utils.print.sections.{EntitiesPrinter, AnswerRowConverter, EntityPrinter}
 import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class OtherBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends AllPrinter[JsArray] with Printer[String] {
+class OtherBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
 
   override def printSection(index: Int, userAnswers: UserAnswers)
                            (implicit messages: Messages): Option[AnswerSection] = {

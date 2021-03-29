@@ -20,12 +20,12 @@ import models.UserAnswers
 import pages.settlors.living_settlor._
 import play.api.i18n.Messages
 import play.api.libs.json.JsPath
-import utils.print.sections.{AnswerRowConverter, Printer}
+import utils.print.sections.{AnswerRowConverter, EntityPrinter}
 import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String] {
+class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter) extends EntityPrinter[String] {
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(

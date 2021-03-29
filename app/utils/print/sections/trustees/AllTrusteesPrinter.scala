@@ -23,7 +23,7 @@ import pages.trustees.{IsThisLeadTrusteePage, TrusteeIndividualOrBusinessPage}
 import play.api.i18n.Messages
 import play.api.libs.json.JsArray
 import sections.Trustees
-import utils.print.sections.AllPrinter
+import utils.print.sections.EntitiesPrinter
 import utils.print.sections.trustees.leadtrustee.{LeadTrusteeBusinessPrinter, LeadTrusteeIndividualPrinter}
 import utils.print.sections.trustees.trustee.{TrusteeIndividualPrinter, TrusteeOrganisationPrinter}
 import viewmodels.AnswerSection
@@ -33,7 +33,7 @@ import javax.inject.Inject
 class AllTrusteesPrinter @Inject()(leadTrusteeIndividualPrinter: LeadTrusteeIndividualPrinter,
                                    leadTrusteeBusinessPrinter: LeadTrusteeBusinessPrinter,
                                    trusteeIndividualPrinter: TrusteeIndividualPrinter,
-                                   trusteeOrganisationPrinter: TrusteeOrganisationPrinter) extends AllPrinter[JsArray] {
+                                   trusteeOrganisationPrinter: TrusteeOrganisationPrinter) extends EntitiesPrinter[JsArray] {
 
   override def printSection(index: Int, userAnswers: UserAnswers)
                            (implicit messages: Messages): Option[AnswerSection] = {

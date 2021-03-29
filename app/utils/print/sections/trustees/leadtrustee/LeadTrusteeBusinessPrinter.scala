@@ -20,12 +20,12 @@ import models.UserAnswers
 import pages.trustees._
 import play.api.i18n.Messages
 import play.api.libs.json.JsPath
-import utils.print.sections.{AnswerRowConverter, Printer}
+import utils.print.sections.{AnswerRowConverter, EntityPrinter}
 import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class LeadTrusteeBusinessPrinter @Inject()(converter: AnswerRowConverter) extends LeadTrustee(converter) with Printer[String] {
+class LeadTrusteeBusinessPrinter @Inject()(converter: AnswerRowConverter) extends LeadTrustee(converter) with EntityPrinter[String] {
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = {

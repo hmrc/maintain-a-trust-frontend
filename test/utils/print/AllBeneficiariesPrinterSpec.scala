@@ -68,7 +68,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
       val result = helper.entities(answers)
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.beneficiaries.heading"))),
         AnswerSection(
           headingKey = Some("Charity beneficiary 1"),
           rows = Seq(
@@ -135,7 +135,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
       val name3 = "Paul Chuckle"
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.beneficiaries.heading"))),
         AnswerSection(
           headingKey = Some("Individual beneficiary 1"),
           rows = Seq(
@@ -225,7 +225,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
       val name3 = "Paul Chuckle"
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.beneficiaries.heading"))),
         AnswerSection(
           headingKey = Some("Individual beneficiary 1"),
           rows = Seq(
@@ -304,7 +304,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
       val result = helper.entities(answers)
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.beneficiaries.heading"))),
         AnswerSection(
           headingKey = Some("Company beneficiary 1"),
           rows = Seq(
@@ -360,7 +360,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
       val result = helper.entities(answers)
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.beneficiaries.heading"))),
         AnswerSection(
           headingKey = Some("Trust beneficiary 1"),
           rows = Seq(
@@ -420,7 +420,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
       val result = helper.entities(answers)
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.beneficiaries.heading"))),
         AnswerSection(
           headingKey = Some("Employment related beneficiary 1"),
           rows = Seq(
@@ -476,7 +476,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
       val result = helper.entities(answers)
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.beneficiaries.heading"))),
         AnswerSection(
           headingKey = Some("Other beneficiary 1"),
           rows = Seq(
@@ -518,7 +518,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
       val result = helper.entities(answers)
 
       result mustBe Seq(
-        AnswerSection(None, Nil, Some("answerPage.section.beneficiaries.heading")),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.beneficiaries.heading"))),
         AnswerSection(
           headingKey = Some("Class of beneficiary 1"),
           rows = Seq(

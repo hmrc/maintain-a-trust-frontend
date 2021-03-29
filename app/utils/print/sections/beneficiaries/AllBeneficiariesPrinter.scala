@@ -18,6 +18,7 @@ package utils.print.sections.beneficiaries
 
 import models.UserAnswers
 import play.api.i18n.Messages
+import utils.print.sections.PrinterHelper
 import viewmodels.AnswerSection
 
 import javax.inject.Inject
@@ -28,10 +29,10 @@ class AllBeneficiariesPrinter @Inject()(individualBeneficiaryPrinter: Individual
                                         companyBeneficiaryPrinter: CompanyBeneficiaryPrinter,
                                         largeBeneficiaryPrinter: LargeBeneficiaryPrinter,
                                         trustBeneficiaryPrinter: TrustBeneficiaryPrinter,
-                                        otherBeneficiaryPrinter: OtherBeneficiaryPrinter) {
+                                        otherBeneficiaryPrinter: OtherBeneficiaryPrinter) extends PrinterHelper {
 
   def entities(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val beneficiaries: Seq[AnswerSection] = Seq(
+    val answerSections: Seq[AnswerSection] = Seq(
       individualBeneficiaryPrinter.entities(userAnswers),
       classOfBeneficiaryPrinter.entities(userAnswers),
       charityBeneficiaryPrinter.entities(userAnswers),
@@ -41,11 +42,8 @@ class AllBeneficiariesPrinter @Inject()(individualBeneficiaryPrinter: Individual
       otherBeneficiaryPrinter.entities(userAnswers)
     ).flatten
 
-    if (beneficiaries.nonEmpty) {
-      AnswerSection(sectionKey = Some("answerPage.section.beneficiaries.heading")) +: beneficiaries
-    } else {
-      Nil
-    }
+    prependHeadingToAnswerSections(answerSections)
   }
 
+  override val headingKey: Option[String] = Some("beneficiaries")
 }

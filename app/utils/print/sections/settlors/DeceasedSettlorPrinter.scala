@@ -22,12 +22,12 @@ import pages.settlors.deceased_settlor._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsPath, JsValue}
 import sections.settlors.DeceasedSettlor
-import utils.print.sections.{AllPrinter, AnswerRowConverter, Printer}
+import utils.print.sections.{EntitiesPrinter, AnswerRowConverter, EntityPrinter}
 import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) extends AllPrinter[JsValue] with Printer[FullName] {
+class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsValue] with EntityPrinter[FullName] {
 
   override def printSection(index: Int, userAnswers: UserAnswers)
                            (implicit messages: Messages): Option[AnswerSection] = {
