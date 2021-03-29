@@ -34,6 +34,7 @@ import repositories.PlaybackRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import utils.Session
+import utils.TrustClosureDate.getClosureDate
 
 import java.time.{LocalDate, LocalDateTime}
 import scala.concurrent.{ExecutionContext, Future}
@@ -61,12 +62,11 @@ class RefreshedDataRetrievalActionImpl @Inject()(
       tvn <- request.userAnswers.get(TVNPage)
       submissionDate <- request.userAnswers.get(SubmissionDatePage)
       optionalAgentInformation = request.userAnswers.get(AgentDeclarationPage)
-      optionalEndDate = request.userAnswers.get(DateLastAssetSharedOutPage)
     } yield {
 
       val identifier = request.userAnswers.identifier
 
-      val submissionData = SubmissionData(identifier, whatIsNext, tvn, submissionDate, optionalAgentInformation, optionalEndDate)
+      val submissionData = SubmissionData(identifier, whatIsNext, tvn, submissionDate, optionalAgentInformation, getClosureDate(request.userAnswers))
 
       trustConnector.playback(identifier).flatMap {
         case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, identifier, playback)(request)

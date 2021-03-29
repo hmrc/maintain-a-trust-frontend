@@ -16,13 +16,11 @@
 
 package controllers.declaration
 
-import java.time.LocalDateTime
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
 import models.IndividualDeclaration
 import models.http.TVNResponse
-import pages.close.taxable.DateLastAssetSharedOutPage
 import pages.declaration.IndividualDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
 import play.api.data.Form
@@ -31,8 +29,10 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.DeclarationService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.TrustClosureDate.getClosureDate
 import views.html.declaration.IndividualDeclarationView
 
+import java.time.LocalDateTime
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -70,7 +70,7 @@ class IndividualDeclarationController @Inject()(
           service.individualDeclaration(
             request.userAnswers.identifier,
             declaration,
-            request.userAnswers.get(DateLastAssetSharedOutPage)
+            getClosureDate(request.userAnswers)
           ) flatMap {
             case TVNResponse(tvn) =>
               for {

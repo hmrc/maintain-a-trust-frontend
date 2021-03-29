@@ -16,7 +16,6 @@
 
 package controllers.declaration
 
-import java.time.{LocalDate, LocalDateTime}
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
@@ -24,18 +23,19 @@ import models.http.TVNResponse
 import models.requests.{AgentUser, DataRequest}
 import models.{Address, AgentDeclaration, UserAnswers}
 import pages._
-import pages.close.taxable.DateLastAssetSharedOutPage
 import pages.declaration.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
 import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
 import services.DeclarationService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
+import utils.TrustClosureDate.getClosureDate
 import views.html.declaration.AgentDeclarationView
 
+import java.time.{LocalDate, LocalDateTime}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -80,7 +80,7 @@ class AgentDeclarationController @Inject()(
                   agentUser,
                   request.userAnswers.identifier,
                   agencyAddress,
-                  request.userAnswers.get(DateLastAssetSharedOutPage)
+                  getClosureDate(request.userAnswers)
                 )(request.request)
               }).getOrElse(handleError(s"[Session ID: ${Session.id(hc)}] Failed to get agency address"))
 
@@ -96,7 +96,7 @@ class AgentDeclarationController @Inject()(
                                 utr: String,
                                 agencyAddress: Address,
                                 endDate: Option[LocalDate]
-                               )(implicit request: DataRequest[AnyContent]) = {
+                               )(implicit request: DataRequest[AnyContent]): Future[Result] = {
 
     service.agentDeclaration(utr,
       declaration,
@@ -120,7 +120,7 @@ class AgentDeclarationController @Inject()(
     }
   }
 
-  private def handleError(message: String) = {
+  private def handleError(message: String): Future[Result] = {
     logger.error(message)
     Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
   }
