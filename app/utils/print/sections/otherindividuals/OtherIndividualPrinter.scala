@@ -16,39 +16,36 @@
 
 package utils.print.sections.otherindividuals
 
-import javax.inject.Inject
-import models.UserAnswers
+import models.{FullName, UserAnswers}
+import pages.QuestionPage
 import pages.individual._
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
-import viewmodels.AnswerSection
+import play.api.libs.json.{JsArray, JsPath}
+import sections.Natural
+import utils.print.sections.{AnswerRowConverter, Printer}
+import viewmodels.AnswerRow
 
-class OtherIndividualPrinter @Inject()(converter: AnswerRowConverter) {
+import javax.inject.Inject
 
-  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    userAnswers
-      .get(OtherIndividualNamePage(index))
-      .map(_.toString)
-      .map { name =>
-        Seq(
-          AnswerSection(
-            headingKey = Some(messages("answerPage.section.otherIndividual.subheading", index + 1)),
-            Seq(
-              converter.fullNameQuestion(OtherIndividualNamePage(index), userAnswers, "otherIndividualName"),
-              converter.yesNoQuestion(OtherIndividualDateOfBirthYesNoPage(index), userAnswers, "otherIndividualDateOfBirthYesNo", name),
-              converter.dateQuestion(OtherIndividualDateOfBirthPage(index), userAnswers, "otherIndividualDateOfBirth", name),
-              converter.yesNoQuestion(OtherIndividualNationalInsuranceYesNoPage(index), userAnswers, "otherIndividualNINOYesNo", name),
-              converter.ninoQuestion(OtherIndividualNationalInsuranceNumberPage(index), userAnswers, "otherIndividualNINO", name),
-              converter.yesNoQuestion(OtherIndividualAddressYesNoPage(index), userAnswers, "otherIndividualAddressYesNo", name),
-              converter.yesNoQuestion(OtherIndividualAddressUKYesNoPage(index), userAnswers, "otherIndividualAddressUKYesNo", name),
-              converter.addressQuestion(OtherIndividualAddressPage(index), userAnswers, "otherIndividualAddress", name),
-              converter.yesNoQuestion(OtherIndividualPassportIDCardYesNoPage(index), userAnswers, "otherIndividualPassportIDCardYesNo", name),
-              converter.passportOrIdCardQuestion(OtherIndividualPassportIDCardPage(index), userAnswers, "otherIndividualPassportIDCard", name)
-            ).flatten,
-            sectionKey = None
-          )
-        )
-      }.getOrElse(Nil)
-  }
+class OtherIndividualPrinter @Inject()(converter: AnswerRowConverter) extends Printer[FullName] {
+
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+    converter.fullNameQuestion(OtherIndividualNamePage(index), userAnswers, "otherIndividualName"),
+    converter.yesNoQuestion(OtherIndividualDateOfBirthYesNoPage(index), userAnswers, "otherIndividualDateOfBirthYesNo", name),
+    converter.dateQuestion(OtherIndividualDateOfBirthPage(index), userAnswers, "otherIndividualDateOfBirth", name),
+    converter.yesNoQuestion(OtherIndividualNationalInsuranceYesNoPage(index), userAnswers, "otherIndividualNINOYesNo", name),
+    converter.ninoQuestion(OtherIndividualNationalInsuranceNumberPage(index), userAnswers, "otherIndividualNINO", name),
+    converter.yesNoQuestion(OtherIndividualAddressYesNoPage(index), userAnswers, "otherIndividualAddressYesNo", name),
+    converter.yesNoQuestion(OtherIndividualAddressUKYesNoPage(index), userAnswers, "otherIndividualAddressUKYesNo", name),
+    converter.addressQuestion(OtherIndividualAddressPage(index), userAnswers, "otherIndividualAddress", name),
+    converter.yesNoQuestion(OtherIndividualPassportIDCardYesNoPage(index), userAnswers, "otherIndividualPassportIDCardYesNo", name),
+    converter.passportOrIdCardQuestion(OtherIndividualPassportIDCardPage(index), userAnswers, "otherIndividualPassportIDCard", name)
+  )
+
+  override def namePath(index: Int): JsPath = OtherIndividualNamePage(index).path
+
+  override val section: QuestionPage[JsArray] = Natural
+
+  override val sectionKey: String = "otherIndividual"
 
 }

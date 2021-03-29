@@ -18,7 +18,6 @@ package utils.print.sections.otherindividuals
 
 import models.UserAnswers
 import play.api.i18n.Messages
-import sections.Natural
 import viewmodels.AnswerSection
 
 import javax.inject.Inject
@@ -26,18 +25,12 @@ import javax.inject.Inject
 class OtherIndividualsPrinter @Inject()(otherIndividualPrinter: OtherIndividualPrinter) {
 
   def allOtherIndividuals(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val size = userAnswers
-      .get(Natural)
-      .map(_.value.size)
-      .getOrElse(0)
+    val otherIndividuals = otherIndividualPrinter.entities(userAnswers)
 
-    size match {
-      case 0 => Nil
-      case _ =>
-        val heading = Seq(AnswerSection(sectionKey = Some(messages("answerPage.section.otherIndividuals.heading"))))
-        val individuals = (for (index <- 0 to size) yield otherIndividualPrinter.print(index, userAnswers)).flatten
-
-        heading ++ individuals
+    if (otherIndividuals.nonEmpty) {
+      AnswerSection(sectionKey = Some(messages("answerPage.section.otherIndividuals.heading"))) +: otherIndividuals
+    } else {
+      Nil
     }
   }
 }
