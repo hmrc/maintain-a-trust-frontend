@@ -27,7 +27,7 @@ import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends Printer[FullName] {
+class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends Printer[FullName, JsArray] {
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
@@ -51,6 +51,6 @@ class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) exte
 
   override val section: QuestionPage[JsArray] = IndividualBeneficiaries
 
-  override val sectionKey: String = "individualBeneficiary"
+  override val subHeadingKey: Option[String] = Some("individualBeneficiary")
 
 }

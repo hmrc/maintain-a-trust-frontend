@@ -25,7 +25,7 @@ import javax.inject.Inject
 class OtherIndividualsPrinter @Inject()(otherIndividualPrinter: OtherIndividualPrinter) {
 
   def allOtherIndividuals(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val otherIndividuals = otherIndividualPrinter.entities(userAnswers)
+    val otherIndividuals: Seq[AnswerSection] = otherIndividualPrinter.entities(userAnswers)
 
     if (otherIndividuals.nonEmpty) {
       AnswerSection(sectionKey = Some(messages("answerPage.section.otherIndividuals.heading"))) +: otherIndividuals

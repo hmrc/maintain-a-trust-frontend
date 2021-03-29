@@ -27,7 +27,7 @@ import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter) extends Printer[FullName] {
+class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter) extends Printer[FullName, JsArray] {
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
@@ -47,6 +47,6 @@ class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter) extend
 
   override val section: QuestionPage[JsArray] = Protectors
 
-  override val sectionKey: String = "protector"
+  override val subHeadingKey: Option[String] = Some("protector")
 
 }

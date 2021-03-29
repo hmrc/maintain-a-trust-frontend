@@ -26,7 +26,7 @@ class AllProtectorsPrinter @Inject()(individualProtectorPrinter: IndividualProte
                                      businessProtectorPrinter: BusinessProtectorPrinter) {
 
   def allProtectors(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val protectors = Seq(
+    val protectors: Seq[AnswerSection] = Seq(
       individualProtectorPrinter.entities(userAnswers),
       businessProtectorPrinter.entities(userAnswers)
     ).flatten

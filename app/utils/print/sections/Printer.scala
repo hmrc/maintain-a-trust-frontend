@@ -19,39 +19,43 @@ package utils.print.sections
 import models.UserAnswers
 import pages.QuestionPage
 import play.api.i18n.Messages
-import play.api.libs.json.{JsArray, JsPath, Reads}
+import play.api.libs.json.{JsArray, JsPath, JsValue, Reads}
 import viewmodels.{AnswerRow, AnswerSection}
 
-trait Printer[T] {
+trait Printer[A, B <: JsValue] {
 
-  val section: QuestionPage[JsArray]
+  def entities(userAnswers: UserAnswers)(implicit messages: Messages, nameReads: Reads[A], sectionReads: Reads[B]): Seq[AnswerSection] = {
 
-  val sectionKey: String
+    val size = userAnswers.get(section) match {
+      case Some(JsArray(value)) => value.size
+      case Some(_) => 1
+      case None => 0
+    }
 
-  def namePath(index: Int): JsPath
+    size match {
+      case 0 => Nil
+      case _ => (for (index <- 0 until size) yield print(index, userAnswers).getOrElse(Nil)).flatten
+    }
+  }
 
-  def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                (implicit messages: Messages): Seq[Option[AnswerRow]]
-
-  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages, rds: Reads[T]): Option[Seq[AnswerSection]] = {
-    userAnswers.getAtPath[T](namePath(index)).map(_.toString).map { name =>
+  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages, rds: Reads[A]): Option[Seq[AnswerSection]] = {
+    userAnswers.getAtPath[A](namePath(index)).map(_.toString).map { name =>
       Seq(
         AnswerSection(
-          headingKey = Some(messages(s"answerPage.section.$sectionKey.subheading", index + 1)),
+          headingKey = subHeadingKey.fold[Option[String]](None)(x => Some(messages(s"answerPage.section.$x.subheading", index + 1))),
           rows = answerRows(index, userAnswers, name).flatten
         )
       )
     }
   }
 
-  def entities(userAnswers: UserAnswers)(implicit messages: Messages, rds: Reads[T]): Seq[AnswerSection] = {
+  def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                (implicit messages: Messages): Seq[Option[AnswerRow]]
 
-    val size = userAnswers.get(section).map(_.value.size).getOrElse(0)
+  def namePath(index: Int): JsPath
 
-    size match {
-      case 0 => Nil
-      case _ => (for (index <- 0 to size) yield print(index, userAnswers).getOrElse(Nil)).flatten
-    }
-  }
+  def section: QuestionPage[B]
+
+  val subHeadingKey: Option[String]
 
 }

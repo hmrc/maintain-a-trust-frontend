@@ -16,38 +16,37 @@
 
 package utils.print.sections.settlors
 
-import javax.inject.Inject
-import models.UserAnswers
+import models.{FullName, UserAnswers}
+import pages.QuestionPage
 import pages.settlors.living_settlor._
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
-import viewmodels.AnswerSection
+import play.api.libs.json.{JsArray, JsPath}
+import sections.settlors.LivingSettlors
+import utils.print.sections.{AnswerRowConverter, Printer}
+import viewmodels.AnswerRow
 
-class SettlorIndividualPrinter @Inject()(converter: AnswerRowConverter) {
+import javax.inject.Inject
 
-  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
-    userAnswers.get(SettlorIndividualNamePage(index)).map(_.toString).flatMap { name =>
-      Some(
-        Seq(
-          AnswerSection(
-            headingKey = Some(messages("answerPage.section.settlor.subheading", index + 1)),
-            Seq(
-              converter.fullNameQuestion(SettlorIndividualNamePage(index), userAnswers, "settlorIndividualName"),
-              converter.yesNoQuestion(SettlorIndividualDateOfBirthYesNoPage(index), userAnswers, "settlorIndividualDateOfBirthYesNo", name),
-              converter.dateQuestion(SettlorIndividualDateOfBirthPage(index), userAnswers, "settlorIndividualDateOfBirth", name),
-              converter.yesNoQuestion(SettlorIndividualNINOYesNoPage(index), userAnswers, "settlorIndividualNINOYesNo", name),
-              converter.ninoQuestion(SettlorIndividualNINOPage(index), userAnswers, "settlorIndividualNINO", name),
-              converter.yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorIndividualAddressYesNo", name),
-              converter.yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorIndividualAddressUKYesNo", name),
-              converter.addressQuestion(SettlorAddressPage(index), userAnswers, "settlorIndividualAddressUK", name),
-              converter.yesNoQuestion(SettlorIndividualPassportIDCardYesNoPage(index), userAnswers, "settlorPassportOrIdCardYesNo", name),
-              converter.passportOrIdCardQuestion(SettlorIndividualPassportIDCardPage(index), userAnswers, "settlorPassportOrIdCard", name)
-            ).flatten,
-            sectionKey = None
-          )
-        )
-      )
-    }
-  }
+class SettlorIndividualPrinter @Inject()(converter: AnswerRowConverter) extends Printer[FullName, JsArray] {
+
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+    converter.fullNameQuestion(SettlorIndividualNamePage(index), userAnswers, "settlorIndividualName"),
+    converter.yesNoQuestion(SettlorIndividualDateOfBirthYesNoPage(index), userAnswers, "settlorIndividualDateOfBirthYesNo", name),
+    converter.dateQuestion(SettlorIndividualDateOfBirthPage(index), userAnswers, "settlorIndividualDateOfBirth", name),
+    converter.yesNoQuestion(SettlorIndividualNINOYesNoPage(index), userAnswers, "settlorIndividualNINOYesNo", name),
+    converter.ninoQuestion(SettlorIndividualNINOPage(index), userAnswers, "settlorIndividualNINO", name),
+    converter.yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorIndividualAddressYesNo", name),
+    converter.yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorIndividualAddressUKYesNo", name),
+    converter.addressQuestion(SettlorAddressPage(index), userAnswers, "settlorIndividualAddressUK", name),
+    converter.yesNoQuestion(SettlorIndividualPassportIDCardYesNoPage(index), userAnswers, "settlorPassportOrIdCardYesNo", name),
+    converter.passportOrIdCardQuestion(SettlorIndividualPassportIDCardPage(index), userAnswers, "settlorPassportOrIdCard", name)
+  )
+
+  override def namePath(index: Int): JsPath = SettlorIndividualNamePage(index).path
+
+  override val section: QuestionPage[JsArray] = LivingSettlors
+
+  override val subHeadingKey: Option[String] = Some("settlor")
 
 }

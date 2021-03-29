@@ -17,8 +17,6 @@
 package utils.print.sections.settlors
 
 import models.UserAnswers
-import models.pages.IndividualOrBusiness
-import pages.settlors.living_settlor.SettlorIndividualOrBusinessPage
 import play.api.i18n.Messages
 import viewmodels.AnswerSection
 
@@ -30,32 +28,18 @@ class AllSettlorsPrinter @Inject()(deceasedSettlorPrinter: DeceasedSettlorPrinte
 
   def allSettlors(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
-    lazy val deceasedSettlors: Seq[AnswerSection] = deceasedSettlorPrinter.print(userAnswers) match {
-      case Nil => Nil
-      case x => AnswerSection(sectionKey = Some("answerPage.section.deceasedSettlor.heading")) +: x
+    val deceasedSettlor: Seq[AnswerSection] = deceasedSettlorPrinter.entities(userAnswers)
+
+    val livingSettlors: Seq[AnswerSection] = Seq(
+      individualSettlorPrinter.entities(userAnswers),
+      companySettlorPrinter.entities(userAnswers)
+    ).flatten
+
+    (deceasedSettlor.nonEmpty, livingSettlors.nonEmpty) match {
+      case (true, false) => AnswerSection(sectionKey = Some("answerPage.section.deceasedSettlor.heading")) +: deceasedSettlor
+      case (false, true) => AnswerSection(sectionKey = Some("answerPage.section.settlors.heading")) +: livingSettlors
+      case _ => Nil
     }
-
-    lazy val livingSettlors: Seq[AnswerSection] = {
-
-      def livingSettlor(index: Int): Seq[AnswerSection] = {
-        userAnswers.get(SettlorIndividualOrBusinessPage(index)).flatMap { individualOrBusiness =>
-          individualOrBusiness match {
-            case IndividualOrBusiness.Individual => individualSettlorPrinter.print(index, userAnswers)
-            case IndividualOrBusiness.Business => companySettlorPrinter.print(index, userAnswers)
-          }
-        }.getOrElse(Nil)
-      }
-
-      val size = userAnswers.get(_root_.sections.settlors.LivingSettlors).map(_.value.size).getOrElse(0)
-      size match {
-        case 0 => Nil
-        case _ =>
-          AnswerSection(sectionKey = Some("answerPage.section.settlors.heading")) +:
-            (for (index <- 0 to size) yield livingSettlor(index)).flatten
-      }
-    }
-
-    deceasedSettlors ++ livingSettlors
   }
 
 }

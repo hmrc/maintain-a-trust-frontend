@@ -31,7 +31,7 @@ class AllBeneficiariesPrinter @Inject()(individualBeneficiaryPrinter: Individual
                                         otherBeneficiaryPrinter: OtherBeneficiaryPrinter) {
 
   def allBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val beneficiaries = Seq(
+    val beneficiaries: Seq[AnswerSection] = Seq(
       individualBeneficiaryPrinter.entities(userAnswers),
       classOfBeneficiaryPrinter.entities(userAnswers),
       charityBeneficiaryPrinter.entities(userAnswers),

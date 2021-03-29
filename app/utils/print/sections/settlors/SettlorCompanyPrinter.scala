@@ -16,51 +16,35 @@
 
 package utils.print.sections.settlors
 
-import javax.inject.Inject
 import models.UserAnswers
-import models.pages.KindOfBusiness
+import pages.QuestionPage
 import pages.settlors.living_settlor._
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import queries.Gettable
-import utils.print.sections.AnswerRowConverter
-import viewmodels.{AnswerRow, AnswerSection}
+import play.api.libs.json.{JsArray, JsPath}
+import sections.settlors.LivingSettlors
+import utils.print.sections.{AnswerRowConverter, Printer}
+import viewmodels.AnswerRow
 
-class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter) {
+import javax.inject.Inject
 
-  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[Seq[AnswerSection]] = {
+class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String, JsArray] {
 
-    userAnswers.get(SettlorBusinessNamePage(index)).flatMap { name =>
-      Some(Seq(
-        AnswerSection(
-          headingKey = Some(messages("answerPage.section.settlor.subheading", index + 1)),
-          Seq(
-            converter.stringQuestion(SettlorBusinessNamePage(index), userAnswers, "settlorBusinessName"),
-            converter.yesNoQuestion(SettlorUtrYesNoPage(index), userAnswers, "settlorBusinessUtrYesNo", name),
-            converter.stringQuestion(SettlorUtrPage(index), userAnswers, "settlorBusinessUtr", name),
-            converter.yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorBusinessAddressYesNo", name),
-            converter.yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorBusinessAddressUKYesNo", name),
-            converter.addressQuestion(SettlorAddressPage(index), userAnswers, "settlorBusinessAddressUK", name),
-            kindOfBusinessQuestion(SettlorCompanyTypePage(index), userAnswers, name),
-            converter.yesNoQuestion(SettlorCompanyTimePage(index), userAnswers, "settlorBusinessTime", name)
-          ).flatten,
-          sectionKey = None
-        )
-      ))
-    }
-  }
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+    converter.stringQuestion(SettlorBusinessNamePage(index), userAnswers, "settlorBusinessName"),
+    converter.yesNoQuestion(SettlorUtrYesNoPage(index), userAnswers, "settlorBusinessUtrYesNo", name),
+    converter.stringQuestion(SettlorUtrPage(index), userAnswers, "settlorBusinessUtr", name),
+    converter.yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorBusinessAddressYesNo", name),
+    converter.yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorBusinessAddressUKYesNo", name),
+    converter.addressQuestion(SettlorAddressPage(index), userAnswers, "settlorBusinessAddressUK", name),
+    converter.kindOfBusinessQuestion(SettlorCompanyTypePage(index), userAnswers, "settlorBusinessType", name),
+    converter.yesNoQuestion(SettlorCompanyTimePage(index), userAnswers, "settlorBusinessTime", name)
+  )
 
-  private def kindOfBusinessQuestion(query: Gettable[KindOfBusiness],
-                                     userAnswers: UserAnswers,
-                                     messageArg : String
-                                    )(implicit messages: Messages): Option[AnswerRow] = {
-    userAnswers.get(query) map { x =>
-      AnswerRow(
-        messages("settlorBusinessType.checkYourAnswersLabel", messageArg),
-        HtmlFormat.escape(x.toString),
-        None
-      )
-    }
-  }
+  override def namePath(index: Int): JsPath = SettlorBusinessNamePage(index).path
+
+  override val section: QuestionPage[JsArray] = LivingSettlors
+
+  override val subHeadingKey: Option[String] = Some("settlor")
 
 }

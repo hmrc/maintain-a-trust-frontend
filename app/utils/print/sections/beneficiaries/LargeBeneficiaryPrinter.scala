@@ -27,7 +27,7 @@ import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String] {
+class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String, JsArray] {
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
@@ -44,6 +44,6 @@ class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends P
 
   override val section: QuestionPage[JsArray] = LargeBeneficiaries
 
-  override val sectionKey: String = "largeBeneficiary"
+  override val subHeadingKey: Option[String] = Some("largeBeneficiary")
 
 }

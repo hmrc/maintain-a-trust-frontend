@@ -27,7 +27,7 @@ import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class TrustBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String] {
+class TrustBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String, JsArray] {
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
@@ -44,6 +44,6 @@ class TrustBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends P
 
   override val section: QuestionPage[JsArray] = TrustBeneficiaries
 
-  override val sectionKey: String = "trustBeneficiary"
+  override val subHeadingKey: Option[String] = Some("trustBeneficiary")
 
 }

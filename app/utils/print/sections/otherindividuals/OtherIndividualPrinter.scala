@@ -27,9 +27,10 @@ import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class OtherIndividualPrinter @Inject()(converter: AnswerRowConverter) extends Printer[FullName] {
+class OtherIndividualPrinter @Inject()(converter: AnswerRowConverter) extends Printer[FullName, JsArray] {
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
     converter.fullNameQuestion(OtherIndividualNamePage(index), userAnswers, "otherIndividualName"),
     converter.yesNoQuestion(OtherIndividualDateOfBirthYesNoPage(index), userAnswers, "otherIndividualDateOfBirthYesNo", name),
     converter.dateQuestion(OtherIndividualDateOfBirthPage(index), userAnswers, "otherIndividualDateOfBirth", name),
@@ -46,6 +47,6 @@ class OtherIndividualPrinter @Inject()(converter: AnswerRowConverter) extends Pr
 
   override val section: QuestionPage[JsArray] = Natural
 
-  override val sectionKey: String = "otherIndividual"
+  override val subHeadingKey: Option[String] = Some("otherIndividual")
 
 }
