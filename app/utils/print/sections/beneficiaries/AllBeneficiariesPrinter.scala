@@ -22,120 +22,29 @@ import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class AllBeneficiariesPrinter @Inject()(classOfBeneficiaryPrinter: ClassOfBeneficiaryPrinter,
-                                        otherBeneficiaryPrinter: OtherBeneficiaryPrinter,
-                                        trustBeneficiaryPrinter: TrustBeneficiaryPrinter,
-                                        companyBeneficiaryPrinter: CompanyBeneficiaryPrinter,
+class AllBeneficiariesPrinter @Inject()(individualBeneficiaryPrinter: IndividualBeneficiaryPrinter,
+                                        classOfBeneficiaryPrinter: ClassOfBeneficiaryPrinter,
                                         charityBeneficiaryPrinter: CharityBeneficiaryPrinter,
-                                        individualBeneficiaryPrinter: IndividualBeneficiaryPrinter,
-                                        largeBeneficiaryPrinter: LargeBeneficiaryPrinter) {
+                                        companyBeneficiaryPrinter: CompanyBeneficiaryPrinter,
+                                        largeBeneficiaryPrinter: LargeBeneficiaryPrinter,
+                                        trustBeneficiaryPrinter: TrustBeneficiaryPrinter,
+                                        otherBeneficiaryPrinter: OtherBeneficiaryPrinter) {
 
   def allBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val beneficiaries = Seq(
-      individualBeneficiaries(userAnswers),
-      classOfBeneficiaries(userAnswers),
-      charityBeneficiaries(userAnswers),
-      companyBeneficiaries(userAnswers),
-      largeBeneficiaries(userAnswers),
-      trustBeneficiaries(userAnswers),
-      otherBeneficiaries(userAnswers)
+      individualBeneficiaryPrinter.entities(userAnswers),
+      classOfBeneficiaryPrinter.entities(userAnswers),
+      charityBeneficiaryPrinter.entities(userAnswers),
+      companyBeneficiaryPrinter.entities(userAnswers),
+      largeBeneficiaryPrinter.entities(userAnswers),
+      trustBeneficiaryPrinter.entities(userAnswers),
+      otherBeneficiaryPrinter.entities(userAnswers)
     ).flatten
 
     if (beneficiaries.nonEmpty) {
-      Seq(
-        Seq(AnswerSection(sectionKey = Some("answerPage.section.beneficiaries.heading"))),
-        beneficiaries
-      ).flatten
+      AnswerSection(sectionKey = Some("answerPage.section.beneficiaries.heading")) +: beneficiaries
     } else {
       Nil
-    }
-  }
-
-  private def classOfBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val size = userAnswers
-      .get(_root_.sections.beneficiaries.ClassOfBeneficiaries)
-      .map(_.value.size)
-      .getOrElse(0)
-
-    size match {
-      case 0 => Nil
-      case _ =>
-        (for (index <- 0 to size) yield classOfBeneficiaryPrinter.print(index, userAnswers)).flatten
-    }
-  }
-
-  private def otherBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val size = userAnswers
-      .get(_root_.sections.beneficiaries.OtherBeneficiaries)
-      .map(_.value.size)
-      .getOrElse(0)
-
-    size match {
-      case 0 => Nil
-      case _ =>
-        (for (index <- 0 to size) yield otherBeneficiaryPrinter.print(index, userAnswers)).flatten
-    }
-  }
-
-  private def trustBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val size = userAnswers
-      .get(_root_.sections.beneficiaries.TrustBeneficiaries)
-      .map(_.value.size)
-      .getOrElse(0)
-
-    size match {
-      case 0 => Nil
-      case _ =>
-        (for (index <- 0 to size) yield trustBeneficiaryPrinter.print(index, userAnswers)).flatten
-    }
-  }
-
-  private def companyBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val size = userAnswers
-      .get(_root_.sections.beneficiaries.CompanyBeneficiaries)
-      .map(_.value.size)
-      .getOrElse(0)
-
-    size match {
-      case 0 => Nil
-      case _ =>
-        (for (index <- 0 to size) yield companyBeneficiaryPrinter.print(index, userAnswers)).flatten
-    }
-  }
-
-  private def charityBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val size = userAnswers
-      .get(_root_.sections.beneficiaries.CharityBeneficiaries)
-      .map(_.value.size)
-      .getOrElse(0)
-
-    size match {
-      case 0 => Nil
-      case _ =>
-        (for (index <- 0 to size) yield charityBeneficiaryPrinter.print(index, userAnswers)).flatten
-    }
-  }
-
-  private def individualBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val size = userAnswers
-      .get(_root_.sections.beneficiaries.IndividualBeneficiaries)
-      .map(_.value.size)
-      .getOrElse(0)
-
-    size match {
-      case 0 => Nil
-      case _ =>
-        (for (index <- 0 to size) yield individualBeneficiaryPrinter.print(index, userAnswers)).flatten
-    }
-  }
-
-  private def largeBeneficiaries(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
-    val size = userAnswers.get(_root_.sections.beneficiaries.LargeBeneficiaries).map(_.value.size).getOrElse(0)
-
-    size match {
-      case 0 => Nil
-      case _ =>
-        (for (index <- 0 to size) yield largeBeneficiaryPrinter.print(index, userAnswers)).flatten
     }
   }
 

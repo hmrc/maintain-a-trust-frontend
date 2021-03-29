@@ -49,7 +49,11 @@ final case class UserAnswers(
     trustMldStatus == Underlying5mldTaxableTrustIn5mldMode || trustMldStatus == Underlying5mldNonTaxableTrustIn5mldMode
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
-    Reads.at(page.path).reads(data) match {
+    getAtPath(page.path)
+  }
+
+  def getAtPath[A](path: JsPath)(implicit rds: Reads[A]): Option[A] = {
+    Reads.at(path).reads(data) match {
       case JsSuccess(value, _) => Some(value)
       case JsError(_) => None
     }

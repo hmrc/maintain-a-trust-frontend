@@ -16,58 +16,34 @@
 
 package utils.print.sections.beneficiaries
 
-import javax.inject.Inject
-import models.{Description, UserAnswers}
+import models.UserAnswers
+import pages.QuestionPage
 import pages.beneficiaries.large._
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
-import queries.Gettable
-import utils.print.sections.AnswerRowConverter
-import viewmodels.{AnswerRow, AnswerSection}
+import play.api.libs.json.{JsArray, JsPath}
+import sections.beneficiaries.LargeBeneficiaries
+import utils.print.sections.{AnswerRowConverter, Printer}
+import viewmodels.AnswerRow
 
-class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) {
+import javax.inject.Inject
 
-  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] =
+class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String] {
 
-    userAnswers.get(LargeBeneficiaryNamePage(index)).map { name =>
-      Seq(AnswerSection(
-        headingKey = Some(messages("answerPage.section.largeBeneficiary.subheading", index + 1)),
-        Seq(
-          converter.stringQuestion(LargeBeneficiaryNamePage(index), userAnswers, "largeBeneficiaryName"),
-          converter.yesNoQuestion(LargeBeneficiaryAddressYesNoPage(index), userAnswers, "largeBeneficiaryAddressYesNo", name),
-          converter.yesNoQuestion(LargeBeneficiaryAddressUKYesNoPage(index), userAnswers, "largeBeneficiaryAddressUKYesNo", name),
-          converter.addressQuestion(LargeBeneficiaryAddressPage(index), userAnswers, "largeBeneficiaryAddress", name),
-          converter.stringQuestion(LargeBeneficiaryUtrPage(index), userAnswers, "largeBeneficiaryUtr", name),
-          descriptionQuestion(LargeBeneficiaryDescriptionPage(index), userAnswers, name),
-          converter.numberOfBeneficiariesQuestion(LargeBeneficiaryNumberOfBeneficiariesPage(index), userAnswers, "largeBeneficiaryNumberOfBeneficiaries")
-        ).flatten
-      ))
-    }.getOrElse(Nil)
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+    converter.stringQuestion(LargeBeneficiaryNamePage(index), userAnswers, "largeBeneficiaryName"),
+    converter.yesNoQuestion(LargeBeneficiaryAddressYesNoPage(index), userAnswers, "largeBeneficiaryAddressYesNo", name),
+    converter.yesNoQuestion(LargeBeneficiaryAddressUKYesNoPage(index), userAnswers, "largeBeneficiaryAddressUKYesNo", name),
+    converter.addressQuestion(LargeBeneficiaryAddressPage(index), userAnswers, "largeBeneficiaryAddress", name),
+    converter.stringQuestion(LargeBeneficiaryUtrPage(index), userAnswers, "largeBeneficiaryUtr", name),
+    converter.descriptionQuestion(LargeBeneficiaryDescriptionPage(index), userAnswers, "largeBeneficiaryDescription", name),
+    converter.numberOfBeneficiariesQuestion(LargeBeneficiaryNumberOfBeneficiariesPage(index), userAnswers, "largeBeneficiaryNumberOfBeneficiaries")
+  )
 
-  private def descriptionQuestion(query: Gettable[Description],
-                                  userAnswers: UserAnswers,
-                                  messageArg: String)(implicit messages: Messages): Option[AnswerRow] = {
+  override def namePath(index: Int): JsPath = LargeBeneficiaryNamePage(index).path
 
-    userAnswers.get(query) map {x =>
-      AnswerRow(
-        messages("largeBeneficiaryDescription.checkYourAnswersLabel", messageArg),
-        description(x),
-        None
-      )
-    }
-  }
+  override val section: QuestionPage[JsArray] = LargeBeneficiaries
 
-  private def description(description: Description): Html = {
-    val lines =
-      Seq(
-        Some(HtmlFormat.escape(description.description)),
-        description.description1.map(HtmlFormat.escape),
-        description.description2.map(HtmlFormat.escape),
-        description.description3.map(HtmlFormat.escape),
-        description.description4.map(HtmlFormat.escape)
-      ).flatten
-
-    Html(lines.mkString("<br />"))
-  }
+  override val sectionKey: String = "largeBeneficiary"
 
 }

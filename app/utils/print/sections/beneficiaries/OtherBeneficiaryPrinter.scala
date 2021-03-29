@@ -16,31 +16,33 @@
 
 package utils.print.sections.beneficiaries
 
-import javax.inject.Inject
 import models.UserAnswers
+import pages.QuestionPage
 import pages.beneficiaries.other._
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
-import viewmodels.AnswerSection
+import play.api.libs.json.{JsArray, JsPath}
+import sections.beneficiaries.OtherBeneficiaries
+import utils.print.sections.{AnswerRowConverter, Printer}
+import viewmodels.AnswerRow
 
-class OtherBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) {
+import javax.inject.Inject
 
-  def print(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
+class OtherBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends Printer[String] {
 
-    userAnswers.get(OtherBeneficiaryDescriptionPage(index)).map { name =>
-      Seq(AnswerSection(
-        headingKey = Some(messages("answerPage.section.otherBeneficiary.subheading", index + 1)),
-        Seq(
-          converter.stringQuestion(OtherBeneficiaryDescriptionPage(index), userAnswers, "otherBeneficiaryDescription"),
-          converter.yesNoQuestion(OtherBeneficiaryDiscretionYesNoPage(index), userAnswers, "otherBeneficiaryShareOfIncomeYesNo", name),
-          converter.percentageQuestion(OtherBeneficiaryShareOfIncomePage(index), userAnswers, "otherBeneficiaryShareOfIncome", name),
-          converter.yesNoQuestion(OtherBeneficiaryAddressYesNoPage(index), userAnswers, "otherBeneficiaryAddressYesNo", name),
-          converter.yesNoQuestion(OtherBeneficiaryAddressUKYesNoPage(index), userAnswers, "otherBeneficiaryAddressUKYesNo", name),
-          converter.addressQuestion(OtherBeneficiaryAddressPage(index), userAnswers, "otherBeneficiaryAddress", name)
-        ).flatten,
-        sectionKey = None
-      ))
-    }.getOrElse(Nil)
-  }
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+    converter.stringQuestion(OtherBeneficiaryDescriptionPage(index), userAnswers, "otherBeneficiaryDescription"),
+    converter.yesNoQuestion(OtherBeneficiaryDiscretionYesNoPage(index), userAnswers, "otherBeneficiaryShareOfIncomeYesNo", name),
+    converter.percentageQuestion(OtherBeneficiaryShareOfIncomePage(index), userAnswers, "otherBeneficiaryShareOfIncome", name),
+    converter.yesNoQuestion(OtherBeneficiaryAddressYesNoPage(index), userAnswers, "otherBeneficiaryAddressYesNo", name),
+    converter.yesNoQuestion(OtherBeneficiaryAddressUKYesNoPage(index), userAnswers, "otherBeneficiaryAddressUKYesNo", name),
+    converter.addressQuestion(OtherBeneficiaryAddressPage(index), userAnswers, "otherBeneficiaryAddress", name)
+  )
+
+  override def namePath(index: Int): JsPath = OtherBeneficiaryDescriptionPage(index).path
+
+  override val section: QuestionPage[JsArray] = OtherBeneficiaries
+
+  override val sectionKey: String = "otherBeneficiary"
 
 }
