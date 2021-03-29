@@ -14,37 +14,42 @@
  * limitations under the License.
  */
 
-package views.close
+package views.close.taxable
 
-import forms.YesNoFormProvider
+import forms.DateFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
-import views.behaviours.YesNoViewBehaviours
-import views.html.close.DateLastAssetSharedOutYesNoView
+import views.behaviours.QuestionViewBehaviours
+import views.html.close.taxable.DateLastAssetSharedOutView
 
-class DateLastAssetSharedOutYesNoViewSpec extends YesNoViewBehaviours {
+import java.time.LocalDate
 
-  val messageKeyPrefix = "dateLastAssetSharedOutYesNo"
-  val utr = "1234567890"
-  val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+class DateLastAssetSharedOutViewSpec extends QuestionViewBehaviours[LocalDate] {
 
-  "DateLastAssetSharedOutYesNo view" must {
+  private val messageKeyPrefix = "dateLastAssetSharedOut"
+  private val trustStartDate = LocalDate.parse("2019-02-03")
+  override val form: Form[LocalDate] = new DateFormProvider().withPrefixAndTrustStartDate(messageKeyPrefix, trustStartDate)
 
-    val view = viewFor[DateLastAssetSharedOutYesNoView](Some(emptyUserAnswersForUtr))
+  "DateLastAssetSharedOut view" must {
+
+    val view = viewFor[DateLastAssetSharedOutView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, utr)(fakeRequest, messages)
-
-    "Have a dynamic utr in the subheading" in {
-      val doc = asDocument(applyView(form))
-      assertContainsText(doc, s"This trust’s UTR: $utr")
-    }
+      view.apply(form)(fakeRequest, messages)
 
     behave like normalPage(applyView(form), messageKeyPrefix)
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix)
+    "fields" must {
+
+      behave like pageWithDateFields(
+        form,
+        applyView,
+        messageKeyPrefix,
+        "value"
+      )
+    }
 
     behave like pageWithASubmitButton(applyView(form))
   }

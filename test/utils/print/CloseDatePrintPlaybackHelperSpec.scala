@@ -17,9 +17,8 @@
 package utils.print
 
 import java.time.LocalDate
-
 import base.SpecBase
-import pages.close.DateLastAssetSharedOutPage
+import pages.close.taxable.DateLastAssetSharedOutPage
 import play.twirl.api.Html
 import viewmodels.{AnswerRow, AnswerSection}
 

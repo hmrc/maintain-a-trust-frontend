@@ -25,7 +25,7 @@ import models.pages.WhatIsNext
 import models.requests.DataRequest
 import models.{AgentDeclaration, UserAnswers}
 import pages.WhatIsNextPage
-import pages.close.DateLastAssetSharedOutPage
+import pages.close.taxable.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
 import play.api.Logging
 import play.api.mvc.Results.Redirect

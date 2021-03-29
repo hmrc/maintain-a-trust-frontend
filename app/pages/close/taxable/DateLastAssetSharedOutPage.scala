@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package pages.close
-
-import java.time.LocalDate
+package pages.close.taxable
 
 import pages.QuestionPage
+import pages.close.basePath
 import play.api.libs.json.JsPath
+
+import java.time.LocalDate
 
 case object DateLastAssetSharedOutPage extends QuestionPage[LocalDate] {
 

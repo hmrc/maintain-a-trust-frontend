@@ -18,7 +18,6 @@ package pages
 
 import models.UserAnswers
 import models.pages.WhatIsNext
-import pages.close.{DateLastAssetSharedOutPage, DateLastAssetSharedOutYesNoPage}
 import pages.declaration._
 import pages.makechanges._
 import play.api.libs.json.JsPath
@@ -59,7 +58,6 @@ case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
   }
 
   private def removeCloseTrustData(userAnswers: UserAnswers): Try[UserAnswers] = {
-    userAnswers.remove(DateLastAssetSharedOutYesNoPage)
-      .flatMap(_.remove(DateLastAssetSharedOutPage))
+    userAnswers.deleteAtPath(pages.close.basePath)
   }
 }

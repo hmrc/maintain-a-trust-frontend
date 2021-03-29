@@ -254,7 +254,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustBe controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
+      redirectLocation(result).value mustBe controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
 
       application.stop()
     }

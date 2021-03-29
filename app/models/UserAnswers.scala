@@ -105,6 +105,14 @@ final case class UserAnswers(
         query.cleanup(None, updatedAnswers)
     }
   }
+
+  def deleteAtPath(path: JsPath): Try[UserAnswers] = {
+    data.removeObject(path).map(obj => copy(data = obj)).fold(
+      _ => Success(this),
+      result => Success(result)
+    )
+  }
+
 }
 
 object UserAnswers {

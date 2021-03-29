@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package controllers.close
+package controllers.close.taxable
 
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
 import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.DateFormProvider
-import pages.close.DateLastAssetSharedOutPage
+import pages.close.taxable.DateLastAssetSharedOutPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
-import views.html.close.DateLastAssetSharedOutView
+import views.html.close.taxable.DateLastAssetSharedOutView
 
 import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-
-
 
 class DateLastAssetSharedOutController @Inject()(
                                                   override val messagesApi: MessagesApi,

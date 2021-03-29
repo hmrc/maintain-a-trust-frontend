@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package controllers.close
+package controllers.close.taxable
 
 import base.SpecBase
 import models.{UTR, UserAnswers}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.close.HowToCloseATrustView
+import views.html.close.taxable.HowToCloseATrustView
 
 class HowToCloseATrustControllerSpec extends SpecBase with MockitoSugar {
 

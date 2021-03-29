@@ -17,12 +17,11 @@
 package controllers.print
 
 import java.time.{LocalDate, LocalDateTime}
-
 import base.SpecBase
 import models.pages.WhatIsNext.CloseTrust
 import models.{AgentDeclaration, FullName, UKAddress}
 import pages.beneficiaries.charity._
-import pages.close.DateLastAssetSharedOutPage
+import pages.close.taxable.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage, WhatIsNextPage}
 import play.api.test.FakeRequest

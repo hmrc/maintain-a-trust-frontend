@@ -18,7 +18,7 @@ package utils.print.sections
 
 import javax.inject.Inject
 import models.UserAnswers
-import pages.close.DateLastAssetSharedOutPage
+import pages.close.taxable.DateLastAssetSharedOutPage
 import play.api.i18n.Messages
 import viewmodels.AnswerSection
 

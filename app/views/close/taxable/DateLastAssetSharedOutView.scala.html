@@ -14,33 +14,30 @@
  * limitations under the License.
  *@
 
-@import controllers.close.routes._
+@import controllers.close.taxable.routes._
 
 @this(
     main_template: MainTemplate,
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_], utr: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("dateLastAssetSharedOutYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("dateLastAssetSharedOut.title")}"
 ) {
 
-    @formHelper(action = DateLastAssetSharedOutYesNoController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = DateLastAssetSharedOutController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
-        <span class="govuk-caption-xl">@messages("dateLastAssetSharedOutYesNo.subHeading", utr)</span>
-
         @components.error_summary(form.errors)
 
-        @components.input_yes_no(
+        @components.input_date(
             field = form("value"),
-            label = messages("dateLastAssetSharedOutYesNo.heading"),
-            legendClass = Some("heading-xlarge"),
-            legendAsHeading = true,
-            hint = Some(messages("dateLastAssetSharedOutYesNo.hint"))
+            legend = messages("dateLastAssetSharedOut.heading"),
+            headingIsLegend = true,
+            hint = Some(messages("dateLastAssetSharedOut.hint"))
         )
 
         @components.submit_button(Some("site.onlyContinue"))

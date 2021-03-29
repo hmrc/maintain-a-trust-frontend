@@ -17,13 +17,12 @@
 package controllers.declaration
 
 import java.time.LocalDateTime
-
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
 import models.IndividualDeclaration
 import models.http.TVNResponse
-import pages.close.DateLastAssetSharedOutPage
+import pages.close.taxable.DateLastAssetSharedOutPage
 import pages.declaration.IndividualDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
 import play.api.data.Form

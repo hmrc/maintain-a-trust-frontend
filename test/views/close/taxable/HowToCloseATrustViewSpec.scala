@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package views.close
+package views.close.taxable
 
 import models.{URN, UTR}
 import views.behaviours.ViewBehaviours
-import views.html.close.HowToCloseATrustView
+import views.html.close.taxable.HowToCloseATrustView
 
 class HowToCloseATrustViewSpec extends ViewBehaviours {
 

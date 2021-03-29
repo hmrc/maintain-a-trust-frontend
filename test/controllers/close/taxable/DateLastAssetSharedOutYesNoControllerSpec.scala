@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.close
+package controllers.close.taxable
 
 import base.SpecBase
 import forms.YesNoFormProvider
@@ -22,12 +22,12 @@ import models.UserAnswers
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.close.DateLastAssetSharedOutYesNoPage
+import pages.close.taxable.DateLastAssetSharedOutYesNoPage
 import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.PlaybackRepository
-import views.html.close.DateLastAssetSharedOutYesNoView
+import views.html.close.taxable.DateLastAssetSharedOutYesNoView
 
 import scala.concurrent.Future
 

@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package controllers.close
+package controllers.close.taxable
 
-import java.time.LocalDate
 import base.SpecBase
 import connectors.TrustConnector
 import forms.DateFormProvider
@@ -24,7 +23,7 @@ import models.UserAnswers
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.close.DateLastAssetSharedOutPage
+import pages.close.taxable.DateLastAssetSharedOutPage
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
@@ -32,8 +31,9 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.TestUserAnswers
-import views.html.close.DateLastAssetSharedOutView
+import views.html.close.taxable.DateLastAssetSharedOutView
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {

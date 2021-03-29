@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package controllers.close
+package controllers.close.taxable
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
-import pages.close.DateLastAssetSharedOutYesNoPage
+import pages.close.taxable.DateLastAssetSharedOutYesNoPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.close.DateLastAssetSharedOutYesNoView
+import views.html.close.taxable.DateLastAssetSharedOutYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -68,9 +68,9 @@ class DateLastAssetSharedOutYesNoController @Inject()(
             _ <- playbackRepository.set(updatedAnswers)
           } yield {
             if (value) {
-              Redirect(controllers.close.routes.DateLastAssetSharedOutController.onPageLoad())
+              Redirect(routes.DateLastAssetSharedOutController.onPageLoad())
             } else {
-              Redirect(controllers.close.routes.HowToCloseATrustController.onPageLoad())
+              Redirect(routes.HowToCloseATrustController.onPageLoad())
             }
           }
         }

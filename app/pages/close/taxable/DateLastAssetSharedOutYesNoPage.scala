@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package pages.close
+package pages.close.taxable
 
 import models.UserAnswers
 import pages.QuestionPage
+import pages.close.basePath
 import pages.makechanges._
 import play.api.libs.json.JsPath
 

@@ -17,7 +17,6 @@
 package controllers.declaration
 
 import java.time.{LocalDate, LocalDateTime}
-
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
@@ -25,7 +24,7 @@ import models.http.TVNResponse
 import models.requests.{AgentUser, DataRequest}
 import models.{Address, AgentDeclaration, UserAnswers}
 import pages._
-import pages.close.DateLastAssetSharedOutPage
+import pages.close.taxable.DateLastAssetSharedOutPage
 import pages.declaration.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
 import play.api.Logging
 import play.api.data.Form
