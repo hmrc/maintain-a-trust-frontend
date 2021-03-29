@@ -17,8 +17,8 @@
 package controllers.makechanges
 
 import connectors.{TrustConnector, TrustsStoreConnector}
-import models.UserAnswers
 import models.requests.DataRequest
+import models.{Underlying5mldTaxableTrustIn5mldMode, UserAnswers}
 import pages.makechanges.AddOrUpdateNonEeaCompanyYesNoPage
 import play.api.i18n.I18nSupport
 import play.api.libs.json.{JsFalse, JsTrue}
@@ -102,6 +102,6 @@ abstract class MakeChangesQuestionRouterController(
   }
 
   def isTrust5mldTaxable(implicit request: DataRequest[_]): Boolean = {
-    request.userAnswers.is5mldEnabled && request.userAnswers.isTrust5mldTaxable
+    request.userAnswers.trustMldStatus == Underlying5mldTaxableTrustIn5mldMode
   }
 }

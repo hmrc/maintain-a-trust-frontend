@@ -19,6 +19,7 @@ package controllers
 import base.SpecBase
 import forms.WhatIsNextFormProvider
 import models.pages.WhatIsNext
+import models.{Underlying4mldTrustIn5mldMode, Underlying4mldTrustIn4mldMode, Underlying5mldTaxableTrustIn5mldMode}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.WhatIsNextPage
 import pages.trustdetails.ExpressTrustYesNoPage
@@ -55,7 +56,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form, is5mldEnabled = false, isTrust5mldTaxable = false)(request, messages).toString
+          view(form, Underlying4mldTrustIn4mldMode)(request, messages).toString
 
         application.stop()
       }
@@ -75,7 +76,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form, is5mldEnabled = true, isTrust5mldTaxable = false)(request, messages).toString
+          view(form, Underlying4mldTrustIn5mldMode)(request, messages).toString
 
         application.stop()
       }
@@ -96,7 +97,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form, is5mldEnabled = true, isTrust5mldTaxable = true)(request, messages).toString
+          view(form, Underlying5mldTaxableTrustIn5mldMode)(request, messages).toString
 
         application.stop()
       }
@@ -120,7 +121,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form.fill(WhatIsNext.MakeChanges), is5mldEnabled = false, isTrust5mldTaxable = false)(request, messages).toString
+          view(form.fill(WhatIsNext.MakeChanges), Underlying4mldTrustIn4mldMode)(request, messages).toString
 
         application.stop()
       }
@@ -141,7 +142,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form.fill(WhatIsNext.MakeChanges), is5mldEnabled = true, isTrust5mldTaxable = false)(request, messages).toString
+          view(form.fill(WhatIsNext.MakeChanges), Underlying4mldTrustIn5mldMode)(request, messages).toString
 
         application.stop()
       }
@@ -163,7 +164,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form.fill(WhatIsNext.NoLongerTaxable), is5mldEnabled = true, isTrust5mldTaxable = true)(request, messages).toString
+          view(form.fill(WhatIsNext.NoLongerTaxable), Underlying5mldTaxableTrustIn5mldMode)(request, messages).toString
 
         application.stop()
       }
@@ -258,6 +259,42 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
+    "redirect to no tax liability info page when user selects 'No longer taxable'" in {
+
+      val userAnswers = emptyUserAnswersForUtr
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+        .withFormUrlEncodedBody(("value", "no-longer-taxable"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.routes.NoTaxLiabilityInfoController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to feature unavilable page when user selects 'Needs to pay tax'" in {
+
+      val userAnswers = emptyUserAnswersForUtr
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+        .withFormUrlEncodedBody(("value", "needs-to-pay-tax"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
+
+      application.stop()
+    }
+
     "redirect to Generated PDF when user selects 'generate-pdf'" in {
 
       val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
@@ -297,7 +334,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual BAD_REQUEST
 
         contentAsString(result) mustEqual
-          view(boundForm, is5mldEnabled = false, isTrust5mldTaxable = false)(request, messages).toString
+          view(boundForm, Underlying4mldTrustIn4mldMode)(request, messages).toString
 
         application.stop()
       }
@@ -320,7 +357,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual BAD_REQUEST
 
         contentAsString(result) mustEqual
-          view(boundForm, is5mldEnabled = true, isTrust5mldTaxable = false)(request, messages).toString
+          view(boundForm, Underlying4mldTrustIn5mldMode)(request, messages).toString
 
         application.stop()
       }
@@ -344,7 +381,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual BAD_REQUEST
 
         contentAsString(result) mustEqual
-          view(boundForm, is5mldEnabled = true, isTrust5mldTaxable = true)(request, messages).toString
+          view(boundForm, Underlying5mldTaxableTrustIn5mldMode)(request, messages).toString
 
         application.stop()
       }

@@ -16,6 +16,7 @@
 
 package models.pages
 
+import models.{Underlying4mldTrustIn4mldMode, Underlying4mldTrustIn5mldMode, Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.{MustMatchers, OptionValues, WordSpec}
@@ -61,28 +62,28 @@ class WhatIsNextSpec extends WordSpec with MustMatchers with ScalaCheckPropertyC
 
     "determine options correctly" when {
 
-      "in 4mld mode" when {
-        "isTrust5mldTaxable = false" in {
-          WhatIsNext.options(is5mldEnabled = false, isTrust5mldTaxable = false).map(_._1.value) mustBe
-            List("declare", "make-changes", "close-trust")
-        }
-
-        //this scenario should never happen
-        "isTrust5mldTaxable = true" in {
-          WhatIsNext.options(is5mldEnabled = false, isTrust5mldTaxable = true).map(_._1.value) mustBe
-            List("declare", "make-changes", "close-trust")
-        }
+      "in 4mld mode" in {
+        WhatIsNext.options(Underlying4mldTrustIn4mldMode).map(_._1.value) mustBe
+          List("declare", "make-changes", "close-trust")
       }
 
       "in 5mld mode" when {
-        "isTrust5mldTaxable = false" in {
-          WhatIsNext.options(is5mldEnabled = true, isTrust5mldTaxable = false).map(_._1.value) mustBe
+
+        "underlying trust is 4mld" in {
+          WhatIsNext.options(Underlying4mldTrustIn5mldMode).map(_._1.value) mustBe
             List("declare", "make-changes", "close-trust", "generate-pdf")
         }
 
-        "isTrust5mldTaxable = true" in {
-          WhatIsNext.options(is5mldEnabled = true, isTrust5mldTaxable = true).map(_._1.value) mustBe
-            List("declare", "make-changes", "close-trust", "no-longer-taxable", "generate-pdf")
+        "underlying trust is 5mld" when {
+          "taxable" in {
+            WhatIsNext.options(Underlying5mldTaxableTrustIn5mldMode).map(_._1.value) mustBe
+              List("declare", "make-changes", "close-trust", "no-longer-taxable", "generate-pdf")
+          }
+
+          "non-taxable" in {
+            WhatIsNext.options(Underlying5mldNonTaxableTrustIn5mldMode).map(_._1.value) mustBe
+              List("make-changes", "close-trust", "needs-to-pay-tax", "generate-pdf")
+          }
         }
       }
     }
