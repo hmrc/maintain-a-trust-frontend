@@ -118,6 +118,9 @@ POST       /date-last-asset-shared-out                  controllers.close.taxabl
 
 GET        /how-to-close-trust                          controllers.close.taxable.HowToCloseATrustController.onPageLoad()
 
+GET        /date-closed                                 controllers.close.nontaxable.DateClosedController.onPageLoad()
+POST       /date-closed                                 controllers.close.nontaxable.DateClosedController.onSubmit()
+
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
 GET        /overview                                    controllers.tasklist.TaskListController.onPageLoad()

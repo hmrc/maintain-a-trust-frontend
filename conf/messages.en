@@ -543,6 +543,17 @@ howToCloseATrust.bullet1 = the date the last asset was shared out to the benefic
 howToCloseATrust.bullet2 = a final tax return, using Trust and Estate (SA900) tax return or Self Assessment Online for trusts
 howToCloseATrust.p2 = Please review any documentation regarding the trust.
 
+dateClosed.title = When did you close the trust?
+dateClosed.heading = When did you close the trust?
+dateClosed.checkYourAnswersLabel = When did you close the trust?
+dateClosed.hint = For example, 31 3 1980.
+dateClosed.error.required.all = Enter the date the last asset was distributed
+dateClosed.error.required.two = The date the trust closed must include a {0} and a {1}
+dateClosed.error.required = The date the trust closed must include a {0}
+dateClosed.error.invalid = Enter a real date
+dateClosed.error.future = The date the trust closed must be today or in the past
+dateClosed.error.past = The date the trust closed cannot be before the start date of the trust
+
 # SECTIONS
 
 section.settlors = settlors
