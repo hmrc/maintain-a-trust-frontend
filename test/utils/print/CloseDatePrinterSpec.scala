@@ -16,41 +16,66 @@
 
 package utils.print
 
-import java.time.LocalDate
 import base.SpecBase
+import pages.close.nontaxable.DateClosedPage
 import pages.close.taxable.DateLastAssetSharedOutPage
 import play.twirl.api.Html
 import utils.print.sections.CloseDatePrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
+import java.time.LocalDate
+
 class CloseDatePrinterSpec extends SpecBase {
 
   private val helper: CloseDatePrinter = injector.instanceOf[CloseDatePrinter]
 
+  private val date: LocalDate = LocalDate.parse("2019-02-03")
+
   "CloseDatePrinter" must {
 
-    "generate close date section" in {
+    "generate close date section" when {
 
-      val answers = emptyUserAnswersForUtr
-        .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
+      "taxable" in {
 
-      val result = helper.print(answers)
+        val answers = emptyUserAnswersForUtr
+          .set(DateLastAssetSharedOutPage, date).success.value
 
-      result mustBe
-        AnswerSection(
-          headingKey = None,
-          rows = Seq(
-            AnswerRow(
-              label = messages("dateLastAssetSharedOut.checkYourAnswersLabel"),
-              answer = Html("3 February 2019"),
-              changeUrl = None
-            )
-          ),
-          sectionKey = Some(messages("answerPage.section.closeDate.heading"))
-        )
+        val result = helper.print(answers)
 
+        result mustBe
+          AnswerSection(
+            headingKey = None,
+            rows = Seq(
+              AnswerRow(
+                label = messages("dateLastAssetSharedOut.checkYourAnswersLabel"),
+                answer = Html("3 February 2019"),
+                changeUrl = None
+              )
+            ),
+            sectionKey = Some(messages("answerPage.section.closeDate.heading"))
+          )
+      }
+
+      "non-taxable" in {
+
+        val answers = emptyUserAnswersForUrn
+          .set(DateClosedPage, date).success.value
+
+        val result = helper.print(answers)
+
+        result mustBe
+          AnswerSection(
+            headingKey = None,
+            rows = Seq(
+              AnswerRow(
+                label = messages("dateClosed.checkYourAnswersLabel"),
+                answer = Html("3 February 2019"),
+                changeUrl = None
+              )
+            ),
+            sectionKey = Some(messages("answerPage.section.closeDate.heading"))
+          )
+      }
     }
-
   }
-
 }

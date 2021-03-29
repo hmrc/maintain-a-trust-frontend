@@ -17,20 +17,28 @@
 package utils.print.sections
 
 import models.UserAnswers
+import pages.close.nontaxable.DateClosedPage
 import pages.close.taxable.DateLastAssetSharedOutPage
 import play.api.i18n.Messages
-import viewmodels.AnswerSection
+import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
 class CloseDatePrinter @Inject()(converter: AnswerRowConverter) {
 
-  def print(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection = AnswerSection(
-    headingKey = None,
-    Seq(
+  def print(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection = {
+
+    val row: Option[AnswerRow] = if (userAnswers.isTrustTaxable) {
       converter.dateQuestion(DateLastAssetSharedOutPage, userAnswers, "dateLastAssetSharedOut")
-    ).flatten,
-    sectionKey = Some(messages("answerPage.section.closeDate.heading"))
-  )
+    } else {
+      converter.dateQuestion(DateClosedPage, userAnswers, "dateClosed")
+    }
+
+    AnswerSection(
+      headingKey = None,
+      rows = Seq(row).flatten,
+      sectionKey = Some(messages("answerPage.section.closeDate.heading"))
+    )
+  }
 
 }
