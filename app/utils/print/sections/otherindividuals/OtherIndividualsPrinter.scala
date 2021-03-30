@@ -16,25 +16,43 @@
 
 package utils.print.sections.otherindividuals
 
-import models.UserAnswers
+import models.{FullName, UserAnswers}
 import pages.QuestionPage
+import pages.individual._
 import play.api.i18n.Messages
-import play.api.libs.json.JsArray
+import play.api.libs.json.{JsArray, JsPath}
 import sections.Natural
-import utils.print.sections.EntitiesPrinter
-import viewmodels.AnswerSection
+import utils.print.sections.{AnswerRowConverter, EntitiesPrinter, EntityPrinter}
+import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class OtherIndividualsPrinter @Inject()(otherIndividualPrinter: OtherIndividualPrinter) extends EntitiesPrinter[JsArray] {
+class OtherIndividualsPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[FullName] {
 
   override def printSection(index: Int, userAnswers: UserAnswers)
                            (implicit messages: Messages): Option[AnswerSection] = {
-    otherIndividualPrinter.printAnswerRows(index, userAnswers)
+    printAnswerRows(index, userAnswers)
   }
+
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+    converter.fullNameQuestion(OtherIndividualNamePage(index), userAnswers, "otherIndividualName"),
+    converter.yesNoQuestion(OtherIndividualDateOfBirthYesNoPage(index), userAnswers, "otherIndividualDateOfBirthYesNo", name),
+    converter.dateQuestion(OtherIndividualDateOfBirthPage(index), userAnswers, "otherIndividualDateOfBirth", name),
+    converter.yesNoQuestion(OtherIndividualNationalInsuranceYesNoPage(index), userAnswers, "otherIndividualNINOYesNo", name),
+    converter.ninoQuestion(OtherIndividualNationalInsuranceNumberPage(index), userAnswers, "otherIndividualNINO", name),
+    converter.yesNoQuestion(OtherIndividualAddressYesNoPage(index), userAnswers, "otherIndividualAddressYesNo", name),
+    converter.yesNoQuestion(OtherIndividualAddressUKYesNoPage(index), userAnswers, "otherIndividualAddressUKYesNo", name),
+    converter.addressQuestion(OtherIndividualAddressPage(index), userAnswers, "otherIndividualAddress", name),
+    converter.yesNoQuestion(OtherIndividualPassportIDCardYesNoPage(index), userAnswers, "otherIndividualPassportIDCardYesNo", name),
+    converter.passportOrIdCardQuestion(OtherIndividualPassportIDCardPage(index), userAnswers, "otherIndividualPassportIDCard", name)
+  )
+
+  override def namePath(index: Int): JsPath = OtherIndividualNamePage(index).path
 
   override def section: QuestionPage[JsArray] = Natural
 
   override val headingKey: Option[String] = Some("otherIndividuals")
 
+  override val subHeadingKey: Option[String] = Some("otherIndividual")
 }

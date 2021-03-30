@@ -23,26 +23,22 @@ trait PrinterHelper {
 
   def prependHeadingToAnswerSections(answerSections: Seq[AnswerSection])
                                     (implicit messages: Messages): Seq[AnswerSection] = {
-    if (answerSections.nonEmpty) {
-      headingKey match {
-        case Some(x) => answerSectionWithRows() +: answerSections
-        case None => answerSections
-      }
-    } else {
-      Nil
+    (answerSections.nonEmpty, headingKey) match {
+      case (true, Some(_)) => answerSectionWithRows() +: answerSections
+      case (true, _) => answerSections
+      case _ => Nil
     }
   }
 
-  def answerSectionWithRows(answerRows: Seq[Option[AnswerRow]] = Seq())
+  def answerSectionWithRows(rows: Seq[Option[AnswerRow]] = Seq())
                            (implicit messages: Messages): AnswerSection = AnswerSection(
     headingKey = None,
-    rows = answerRows.flatten,
+    rows = rows.flatten,
     sectionKey = heading
   )
 
-  def heading(implicit messages: Messages): Option[String] = headingKey match {
-    case Some(x) => Some(messages(s"answerPage.section.$x.heading"))
-    case _ => None
+  private def heading(implicit messages: Messages): Option[String] = headingKey map { x =>
+    messages(s"answerPage.section.$x.heading")
   }
 
   val headingKey: Option[String]

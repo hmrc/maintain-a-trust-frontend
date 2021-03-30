@@ -33,7 +33,7 @@ trait EntitiesPrinter[T <: JsValue] extends PrinterHelper {
     }).value.zipWithIndex.foldLeft[Seq[AnswerSection]](Nil)((acc, entity) => {
       printSection(entity._2, userAnswers) match {
         case Some(value) => acc :+ value
-        case None => acc
+        case _ => acc
       }
     })
 
