@@ -18,6 +18,7 @@ package connectors
 
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
+import controllers.Assets.OK
 import generators.Generators
 import models.http.DeclarationResponse.InternalServerError
 import models.http._
@@ -622,6 +623,64 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         a[UpstreamErrorResponse] mustBe thrownBy {
           Await.result(connector.getDoNonEeaCompaniesAlreadyExist(utr), Duration.Inf)
         }
+
+        application.stop()
+      }
+    }
+
+    ".setTaxableMigrationFlag" - {
+
+      "return OK when the request is successful" in {
+
+        val utr = "1000000008"
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          post(urlEqualTo(s"/trusts/$utr/transforms/migrate-to-taxable"))
+            .willReturn(ok)
+        )
+
+        val processed = Await.result(connector.setTaxableMigrationFlag(utr), Duration.Inf)
+
+        processed.status mustBe OK
+
+        application.stop()
+      }
+    }
+
+    ".removeTaxableMigration" - {
+
+      "return OK when the request is successful" in {
+
+        val utr = "1000000008"
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          delete(urlEqualTo(s"/trusts/$utr/transforms/migrate-to-taxable"))
+            .willReturn(ok)
+        )
+
+        val processed = Await.result(connector.removeTaxableMigration(utr), Duration.Inf)
+
+        processed.status mustBe OK
 
         application.stop()
       }

@@ -16,17 +16,15 @@
 
 package connectors
 
-import java.time.LocalDate
-
 import config.FrontendAppConfig
-import javax.inject.Inject
 import models.TrustDetails
 import models.http.{DeclarationResponse, TrustsResponse, TrustsStatusReads}
 import play.api.libs.json.{JsBoolean, JsValue, Writes}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import uk.gov.hmrc.http.HttpReads.Implicits.readFromJson
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
+import java.time.LocalDate
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
@@ -71,6 +69,16 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
   def declare(identifier: String, payload: JsValue)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     val url: String = s"${config.trustsUrl}/trusts/declare/$identifier"
     http.POST[JsValue, DeclarationResponse](url, payload)(implicitly[Writes[JsValue]], DeclarationResponse.httpReads, hc, ec)
+  }
+
+  def setTaxableMigrationFlag(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url: String = s"${config.trustsUrl}/trusts/$identifier/transforms/migrate-to-taxable"
+    http.POSTEmpty[HttpResponse](url)
+  }
+
+  def removeTaxableMigration(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url: String = s"${config.trustsUrl}/trusts/$identifier/transforms/migrate-to-taxable"
+    http.DELETE[HttpResponse](url)
   }
 
 }
