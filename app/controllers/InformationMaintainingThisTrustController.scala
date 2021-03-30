@@ -19,6 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.Actions
+import models.{Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -49,14 +50,15 @@ class InformationMaintainingThisTrustController @Inject()(
         case Agent if !config.playbackEnabled =>
           Ok(agentCannotAccessTrustYetView(identifier, identifierType))
         case _ =>
-          if (request.userAnswers.is5mldTrustIn5mldMode) {
-            if (request.userAnswers.isTrustTaxable) {
-              Ok(maintainingTaxableTrustView(identifier, identifierType))
-            } else {
-              Ok(maintainingNonTaxableTrustView(identifier, identifierType))
+          Ok {
+            request.userAnswers.trustMldStatus match {
+              case Underlying5mldTaxableTrustIn5mldMode =>
+                maintainingTaxableTrustView(identifier, identifierType)
+              case Underlying5mldNonTaxableTrustIn5mldMode =>
+                maintainingNonTaxableTrustView(identifier, identifierType)
+              case _ =>
+                maintainingTrustView(identifier, identifierType)
             }
-          } else {
-            Ok(maintainingTrustView(identifier, identifierType))
           }
       }
   }
