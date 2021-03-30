@@ -29,7 +29,8 @@ class NoTaxLiabilityInfoController @Inject()(
                                               actions: Actions,
                                               val controllerComponents: MessagesControllerComponents,
                                               noTaxLiabilityInfoView: NoTaxLiabilityInfoView
-                                            ) extends FrontendBaseController with I18nSupport with Logging {
+                                            )
+  extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>

@@ -32,7 +32,7 @@ import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.Session
 import utils.TrustClosureDate.getClosureDate
 
@@ -55,7 +55,7 @@ class RefreshedDataRetrievalActionImpl @Inject()(
 
   override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     (for {
       whatIsNext <- request.userAnswers.get(WhatIsNextPage)
@@ -81,7 +81,7 @@ class RefreshedDataRetrievalActionImpl @Inject()(
   private def extractAndRefreshUserAnswers[A](data: SubmissionData, identifier: String, playback: GetTrust)
                                              (implicit request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSessionAndRequest(request.headers, Some(request.session), Some(request))
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     val newSession = UserAnswers.startNewSession(request.user.internalId, identifier)
 
