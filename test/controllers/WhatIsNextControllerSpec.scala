@@ -17,19 +17,31 @@
 package controllers
 
 import base.SpecBase
+import connectors.TrustConnector
 import forms.WhatIsNextFormProvider
+import generators.ModelGenerators
+import models.Underlying4mldTrustIn4mldMode
 import models.pages.WhatIsNext
-import models.{Underlying4mldTrustIn4mldMode, Underlying4mldTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
+import models.pages.WhatIsNext._
+import org.mockito.Matchers.{any, eq => eqTo}
+import org.mockito.Mockito.{never, reset, verify, when}
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.WhatIsNextPage
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
+import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.http.HttpResponse
 import views.html.WhatIsNextView
 
-class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
+
+class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyChecks with ModelGenerators {
 
   val form: Form[WhatIsNext] = new WhatIsNextFormProvider()()
 
@@ -37,137 +49,59 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
 
+  val mockTrustConnector: TrustConnector = mock[TrustConnector]
+
+  def beforeTest(): Unit = {
+    reset(mockTrustConnector)
+
+    when(mockTrustConnector.removeTransforms(any())(any(), any()))
+      .thenReturn(Future.successful(HttpResponse(OK, "")))
+
+    when(mockTrustConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
+      .thenReturn(Future.successful(HttpResponse(OK, "")))
+  }
+
   "WhatIsNext Controller" must {
 
-    "return OK and the correct view for a GET" when {
+    "return OK and the correct view for a GET" in {
 
-      "in 4mld mode" in {
+      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
 
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val request = FakeRequest(GET, onPageLoad)
 
-        val request = FakeRequest(GET, onPageLoad)
+      val result = route(application, request).value
 
-        val result = route(application, request).value
+      val view = application.injector.instanceOf[WhatIsNextView]
 
-        val view = application.injector.instanceOf[WhatIsNextView]
+      status(result) mustEqual OK
 
-        status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(form, Underlying4mldTrustIn4mldMode)(request, messages).toString
 
-        contentAsString(result) mustEqual
-          view(form, Underlying4mldTrustIn4mldMode)(request, messages).toString
-
-        application.stop()
-      }
-
-      "in 5mld mode" in {
-
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        val request = FakeRequest(GET, onPageLoad)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[WhatIsNextView]
-
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual
-          view(form, Underlying4mldTrustIn5mldMode)(request, messages).toString
-
-        application.stop()
-      }
-
-      "in 5mld mode maintaining a 5mld taxable trust" in {
-
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-          .set(ExpressTrustYesNoPage, false).success.value
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        val request = FakeRequest(GET, onPageLoad)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[WhatIsNextView]
-
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual
-          view(form, Underlying5mldTaxableTrustIn5mldMode)(request, messages).toString
-
-        application.stop()
-      }
+      application.stop()
     }
 
-    "populate the view correctly on a GET when the question has previously been answered" when {
+    "populate the view correctly on a GET when the question has previously been answered" in {
 
-      "in 4mld mode" in {
+      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
-          .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val request = FakeRequest(GET, onPageLoad)
 
-        val request = FakeRequest(GET, onPageLoad)
+      val view = application.injector.instanceOf[WhatIsNextView]
 
-        val view = application.injector.instanceOf[WhatIsNextView]
+      val result = route(application, request).value
 
-        val result = route(application, request).value
+      status(result) mustEqual OK
 
-        status(result) mustEqual OK
+      contentAsString(result) mustEqual
+        view(form.fill(WhatIsNext.MakeChanges), Underlying4mldTrustIn4mldMode)(request, messages).toString
 
-        contentAsString(result) mustEqual
-          view(form.fill(WhatIsNext.MakeChanges), Underlying4mldTrustIn4mldMode)(request, messages).toString
-
-        application.stop()
-      }
-
-      "in 5mld mode" in {
-
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
-          .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        val request = FakeRequest(GET, onPageLoad)
-
-        val view = application.injector.instanceOf[WhatIsNextView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual
-          view(form.fill(WhatIsNext.MakeChanges), Underlying4mldTrustIn5mldMode)(request, messages).toString
-
-        application.stop()
-      }
-
-      "in 5mld mode maintaining a 5mld taxable trust" in {
-
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-          .set(WhatIsNextPage, WhatIsNext.NoLongerTaxable).success.value
-          .set(ExpressTrustYesNoPage, false).success.value
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        val request = FakeRequest(GET, onPageLoad)
-
-        val view = application.injector.instanceOf[WhatIsNextView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual
-          view(form.fill(WhatIsNext.NoLongerTaxable), Underlying5mldTaxableTrustIn5mldMode)(request, messages).toString
-
-        application.stop()
-      }
+      application.stop()
     }
 
     "redirect to Session Expired if no data" in {
@@ -185,224 +119,446 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "redirect to declaration when user selects 'Declare no changes'" in {
+    "redirect for a user selection" when {
 
-      val userAnswers = emptyUserAnswersForUtr
+      "Declare No Changes" when {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        "agent user" must {
+          "redirect to AgencyRegisteredAddressUkYesNoController" in {
 
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "declare"))
+            beforeTest()
 
-      val result = route(application, request).value
+            val userAnswers = emptyUserAnswersForUtr
 
-      status(result) mustEqual SEE_OTHER
+            val application = applicationBuilder(userAnswers = Some(userAnswers), AffinityGroup.Agent)
+              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+              .build()
 
-      redirectLocation(result).value mustBe
-        controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+              .withFormUrlEncodedBody(("value", DeclareTheTrustIsUpToDate.toString))
 
-      application.stop()
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustBe
+              controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+
+            application.stop()
+          }
+        }
+
+        "non-agent user" must {
+          "redirect to IndividualDeclarationController" in {
+
+            beforeTest()
+
+            val userAnswers = emptyUserAnswersForUtr
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+              .build()
+
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+              .withFormUrlEncodedBody(("value", DeclareTheTrustIsUpToDate.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustBe
+              controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+
+            application.stop()
+          }
+        }
+      }
+
+      "Make Changes" when {
+
+        "4mld" must {
+          "redirect to update trustee details" in {
+
+            beforeTest()
+
+            val userAnswers = emptyUserAnswersForUtr
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+              .build()
+
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+              .withFormUrlEncodedBody(("value", MakeChanges.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
+
+            application.stop()
+          }
+        }
+
+        "5mld" when {
+
+          "underlying data is 4mld" must {
+            "redirect to update trustee details" in {
+
+              beforeTest()
+
+              val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+
+              val application = applicationBuilder(userAnswers = Some(userAnswers))
+                .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+                .build()
+
+              implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+                .withFormUrlEncodedBody(("value", MakeChanges.toString))
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+
+              redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
+
+              application.stop()
+            }
+          }
+
+          "underlying data is 5mld" must {
+            "redirect to update trust details" when {
+
+              "taxable" in {
+
+                beforeTest()
+
+                val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+                  .set(ExpressTrustYesNoPage, false).success.value
+
+                val application = applicationBuilder(userAnswers = Some(userAnswers))
+                  .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+                  .build()
+
+                implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+                  .withFormUrlEncodedBody(("value", MakeChanges.toString))
+
+                val result = route(application, request).value
+
+                status(result) mustEqual SEE_OTHER
+
+                redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
+
+                application.stop()
+              }
+
+              "non-taxable" in {
+
+                beforeTest()
+
+                val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = false)
+                  .set(ExpressTrustYesNoPage, false).success.value
+
+                val application = applicationBuilder(userAnswers = Some(userAnswers))
+                  .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+                  .build()
+
+                implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+                  .withFormUrlEncodedBody(("value", MakeChanges.toString))
+
+                val result = route(application, request).value
+
+                status(result) mustEqual SEE_OTHER
+
+                redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
+
+                application.stop()
+              }
+            }
+          }
+        }
+      }
+
+      "Close Trust" when {
+
+        "taxable" must {
+          "redirect to date the last asset was shared out" in {
+
+            beforeTest()
+
+            val userAnswers = emptyUserAnswersForUtr
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+              .build()
+
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+              .withFormUrlEncodedBody(("value", CloseTrust.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustBe controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
+
+            application.stop()
+          }
+        }
+
+        "non-taxable" must {
+          "redirect to date the trust was closed" in {
+
+            beforeTest()
+
+            val userAnswers = emptyUserAnswersForUrn
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+              .build()
+
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+              .withFormUrlEncodedBody(("value", CloseTrust.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustBe controllers.close.nontaxable.routes.DateClosedController.onPageLoad().url
+
+            application.stop()
+          }
+        }
+      }
+
+      "No Longer Taxable" must {
+        "redirect to tax liability info page" in {
+
+          beforeTest()
+
+          val userAnswers = emptyUserAnswersForUtr
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .build()
+
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+            .withFormUrlEncodedBody(("value", NoLongerTaxable.toString))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustBe controllers.routes.NoTaxLiabilityInfoController.onPageLoad().url
+
+          application.stop()
+        }
+      }
+
+      "Needs to pay tax" must {
+        "redirect to feature unavailable" in {
+
+          beforeTest()
+
+          val userAnswers = emptyUserAnswersForUtr
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .build()
+
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+            .withFormUrlEncodedBody(("value", NeedsToPayTax.toString))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
+
+          application.stop()
+        }
+      }
+
+      "Generate PDF" must {
+        "redirect to generated PDF" in {
+
+          beforeTest()
+
+          val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .build()
+
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+            .withFormUrlEncodedBody(("value", GeneratePdf.toString))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustBe controllers.routes.ObligedEntityPdfController.getPdf(userAnswers.identifier).url
+
+          application.stop()
+        }
+      }
     }
 
-    "redirect to do you need to update details for the trustees when user selects 'Make changes' and not maintaining a 5mld taxable trust" in {
+    "remove transforms if answer has changed" when {
 
-      val userAnswers = emptyUserAnswersForUtr
+      "there is no previous answer" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val gen = arbitrary[WhatIsNext]
 
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "make-changes"))
+        forAll(gen) { answer =>
+          beforeTest()
 
-      val result = route(application, request).value
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .build()
 
-      status(result) mustEqual SEE_OTHER
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+            .withFormUrlEncodedBody(("value", answer.toString))
 
-      redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
+          val result = route(application, request).value
 
-      application.stop()
+          status(result) mustEqual SEE_OTHER
+
+          verify(mockTrustConnector).removeTransforms(any())(any(), any())
+
+          application.stop()
+        }
+      }
+
+      "there is a previous answer" in {
+
+        val gen = arbitrary[WhatIsNext]
+
+        forAll(gen) { previousAnswer =>
+          forAll(gen.suchThat(_ != previousAnswer)) { newAnswer =>
+
+            beforeTest()
+
+            val userAnswers = emptyUserAnswersForUtr
+              .set(WhatIsNextPage, previousAnswer).success.value
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+              .build()
+
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+              .withFormUrlEncodedBody(("value", newAnswer.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            verify(mockTrustConnector).removeTransforms(any())(any(), any())
+
+            application.stop()
+          }
+        }
+      }
     }
 
-    "redirect to do you need to update details for the trust when user selects 'Make changes' and maintaining a 5mld taxable trust" in {
+    "not remove transforms if answer hasn't changed" in {
 
-      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-        .set(ExpressTrustYesNoPage, false).success.value
+      val gen = arbitrary[WhatIsNext]
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      forAll(gen) { previousAnswer =>
+        beforeTest()
 
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "make-changes"))
+        val userAnswers = emptyUserAnswersForUtr
+          .set(WhatIsNextPage, previousAnswer).success.value
 
-      val result = route(application, request).value
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+          .build()
 
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
-
-      application.stop()
-    }
-
-    "redirect to Do you know the date the last asset in the trust was shared out when user selects 'Close' and trust is taxable" in {
-
-      val userAnswers = emptyUserAnswersForUtr
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "close-trust"))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustBe controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
-
-      application.stop()
-    }
-
-    "redirect to Do you know the date the last asset in the trust was shared out when user selects 'Close' and trust is non-taxable" in {
-
-      val userAnswers = emptyUserAnswersForUrn
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "close-trust"))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustBe controllers.close.nontaxable.routes.DateClosedController.onPageLoad().url
-
-      application.stop()
-    }
-
-    "redirect to no tax liability info page when user selects 'No longer taxable'" in {
-
-      val userAnswers = emptyUserAnswersForUtr
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "no-longer-taxable"))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustBe controllers.routes.NoTaxLiabilityInfoController.onPageLoad().url
-
-      application.stop()
-    }
-
-    "redirect to feature unavailable page when user selects 'Needs to pay tax'" in {
-
-      val userAnswers = emptyUserAnswersForUtr
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "needs-to-pay-tax"))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
-
-      application.stop()
-    }
-
-    "redirect to Generated PDF when user selects 'generate-pdf'" in {
-
-      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("value", "generate-pdf"))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustBe controllers.routes.ObligedEntityPdfController.getPdf(userAnswers.identifier).url
-
-      application.stop()
-    }
-
-    "return a Bad Request and errors when invalid data is submitted" when {
-
-      "in 4mld mode" in {
-
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        val request =
-          FakeRequest(POST, onSubmit.url)
-            .withFormUrlEncodedBody(("value", ""))
-
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[WhatIsNextView]
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+          .withFormUrlEncodedBody(("value", previousAnswer.toString))
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result) mustEqual SEE_OTHER
 
-        contentAsString(result) mustEqual
-          view(boundForm, Underlying4mldTrustIn4mldMode)(request, messages).toString
-
-        application.stop()
-      }
-
-      "in 5mld mode" in {
-
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        val request = FakeRequest(POST, onSubmit.url)
-          .withFormUrlEncodedBody(("value", ""))
-
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val view = application.injector.instanceOf[WhatIsNextView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-
-        contentAsString(result) mustEqual
-          view(boundForm, Underlying4mldTrustIn5mldMode)(request, messages).toString
+        verify(mockTrustConnector, never()).removeTransforms(any())(any(), any())
 
         application.stop()
       }
+    }
 
-      "in 5mld mode maintaining a 5mld taxable trust" in {
+    "set taxable migration flag" when {
 
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-          .set(ExpressTrustYesNoPage, false).success.value
+      "NeedsToPayTax selected" must {
+        "set flag to true" in {
 
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+          beforeTest()
 
-        val request = FakeRequest(POST, onSubmit.url)
-          .withFormUrlEncodedBody(("value", ""))
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .build()
 
-        val boundForm = form.bind(Map("value" -> ""))
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+            .withFormUrlEncodedBody(("value", NeedsToPayTax.toString))
 
-        val view = application.injector.instanceOf[WhatIsNextView]
+          val result = route(application, request).value
 
-        val result = route(application, request).value
+          status(result) mustEqual SEE_OTHER
 
-        status(result) mustEqual BAD_REQUEST
+          verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
 
-        contentAsString(result) mustEqual
-          view(boundForm, Underlying5mldTaxableTrustIn5mldMode)(request, messages).toString
-
-        application.stop()
+          application.stop()
+        }
       }
+
+      "something other than NeedsToPayTax selected" must {
+        "set flag to false" in {
+
+          val gen = arbitrary[WhatIsNext]
+
+          forAll(gen.suchThat(_ != NeedsToPayTax)) { answer =>
+            beforeTest()
+
+            val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+              .build()
+
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+              .withFormUrlEncodedBody(("value", answer.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(false))(any(), any())
+
+            application.stop()
+          }
+        }
+      }
+    }
+
+    "return a Bad Request and errors when invalid data is submitted" in {
+
+      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      val request = FakeRequest(POST, onSubmit.url)
+        .withFormUrlEncodedBody(("value", ""))
+
+      val boundForm = form.bind(Map("value" -> ""))
+
+      val view = application.injector.instanceOf[WhatIsNextView]
+
+      val result = route(application, request).value
+
+      status(result) mustEqual BAD_REQUEST
+
+      contentAsString(result) mustEqual
+        view(boundForm, Underlying4mldTrustIn4mldMode)(request, messages).toString
+
+      application.stop()
     }
   }
 }

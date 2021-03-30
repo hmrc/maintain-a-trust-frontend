@@ -649,7 +649,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             .willReturn(ok)
         )
 
-        val processed = Await.result(connector.setTaxableMigrationFlag(utr), Duration.Inf)
+        val processed = Await.result(connector.setTaxableMigrationFlag(utr, value = true), Duration.Inf)
 
         processed.status mustBe OK
 
@@ -657,7 +657,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
       }
     }
 
-    ".removeTaxableMigration" - {
+    ".removeTransforms" - {
 
       "return OK when the request is successful" in {
 
@@ -678,7 +678,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             .willReturn(ok)
         )
 
-        val processed = Await.result(connector.removeTaxableMigration(utr), Duration.Inf)
+        val processed = Await.result(connector.removeTransforms(utr), Duration.Inf)
 
         processed.status mustBe OK
 

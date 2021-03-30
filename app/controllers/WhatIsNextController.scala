@@ -23,14 +23,17 @@ import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.WhatIsNextFormProvider
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
+import models.requests.DataRequest
 import pages.WhatIsNextPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
+import uk.gov.hmrc.http.HttpResponse
 import views.html.WhatIsNextView
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Success
 
 @Singleton
 class WhatIsNextController @Inject()(
@@ -67,22 +70,50 @@ class WhatIsNextController @Inject()(
 
         value => {
           for {
+            hasAnswerChanged <- Future.fromTry(Success(!request.userAnswers.get(WhatIsNextPage).contains(value)))
             updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, value))
             _ <- playbackRepository.set(updatedAnswers)
+            result <- updateMigrationStatusAndRedirect(value, hasAnswerChanged)
           } yield {
-            val call = value match {
-              case DeclareTheTrustIsUpToDate => redirectToDeclaration
-              case MakeChanges => redirectToFirstUpdateQuestion
-              case CloseTrust if request.userAnswers.isTrustTaxable => controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
-              case CloseTrust => controllers.close.nontaxable.routes.DateClosedController.onPageLoad()
-              case NoLongerTaxable => controllers.routes.NoTaxLiabilityInfoController.onPageLoad()
-              case NeedsToPayTax => controllers.routes.FeatureNotAvailableController.onPageLoad()
-              case GeneratePdf => controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier)
-            }
-
-            Redirect(call)
+            result
           }
         }
       )
+  }
+
+  private def updateMigrationStatusAndRedirect(newAnswer: WhatIsNext, hasAnswerChanged: Boolean)
+                                              (implicit request: DataRequest[AnyContent]): Future[Result] = {
+
+    def redirect(implicit request: DataRequest[AnyContent]): Result = Redirect {
+      newAnswer match {
+        case DeclareTheTrustIsUpToDate =>
+          redirectToDeclaration
+        case MakeChanges =>
+          redirectToFirstUpdateQuestion
+        case CloseTrust if request.userAnswers.isTrustTaxable =>
+          controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
+        case CloseTrust =>
+          controllers.close.nontaxable.routes.DateClosedController.onPageLoad()
+        case NoLongerTaxable =>
+          controllers.routes.NoTaxLiabilityInfoController.onPageLoad()
+        case NeedsToPayTax =>
+          controllers.routes.FeatureNotAvailableController.onPageLoad()
+        case GeneratePdf =>
+          controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier)
+      }
+    }
+
+    for {
+      _ <- {
+        if (hasAnswerChanged) {
+          trustConnector.removeTransforms(request.userAnswers.identifier)
+        } else {
+          Future.successful(HttpResponse(OK, ""))
+        }
+      }
+      _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, newAnswer == NeedsToPayTax)
+    } yield {
+      redirect
+    }
   }
 }
