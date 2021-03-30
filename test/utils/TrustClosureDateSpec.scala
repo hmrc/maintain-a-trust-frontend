@@ -17,58 +17,106 @@
 package utils
 
 import base.SpecBase
+import models.UserAnswers
 import pages.close.nontaxable.DateClosedPage
 import pages.close.taxable.DateLastAssetSharedOutPage
-import utils.TrustClosureDate.getClosureDate
+import utils.TrustClosureDate.{getClosureDate, setClosureDate}
 
 import java.time.LocalDate
+import scala.util.Try
 
 class TrustClosureDateSpec extends SpecBase {
 
   private val date: LocalDate = LocalDate.parse("1996-02-03")
 
-  "TrustClosureDate" must {
+  "TrustClosureDate" when {
 
-    "return None" when {
-      "there is no closure date" when {
+    ".getClosureDate" must {
 
-        "taxable" in {
+      "return None" when {
+        "there is no closure date" when {
 
-          val result: Option[LocalDate] = getClosureDate(emptyUserAnswersForUtr)
+          "taxable" in {
 
-          result mustBe None
+            val result: Option[LocalDate] = getClosureDate(emptyUserAnswersForUtr)
+
+            result mustBe None
+          }
+
+          "non-taxable" in {
+
+            val result: Option[LocalDate] = getClosureDate(emptyUserAnswersForUrn)
+
+            result mustBe None
+          }
         }
+      }
 
-        "non-taxable" in {
+      "return Some" when {
+        "there is a closure date" when {
 
-          val result: Option[LocalDate] = getClosureDate(emptyUserAnswersForUrn)
+          "taxable" in {
 
-          result mustBe None
+            val userAnswers = emptyUserAnswersForUtr
+              .set(DateLastAssetSharedOutPage, date).success.value
+
+            val result: Option[LocalDate] = getClosureDate(userAnswers)
+
+            result mustBe Some(date)
+          }
+
+          "non-taxable" in {
+
+            val userAnswers = emptyUserAnswersForUrn
+              .set(DateClosedPage, date).success.value
+
+            val result: Option[LocalDate] = getClosureDate(userAnswers)
+
+            result mustBe Some(date)
+          }
         }
       }
     }
 
-    "return Some" when {
-      "there is a closure date" when {
+    ".setClosureDate" must {
 
-        "taxable" in {
+      "return unmodified user answers" when {
+        "there is no closure date" in {
 
           val userAnswers = emptyUserAnswersForUtr
-            .set(DateLastAssetSharedOutPage, date).success.value
 
-          val result: Option[LocalDate] = getClosureDate(userAnswers)
+          val result: Try[UserAnswers] = setClosureDate(userAnswers, None)
 
-          result mustBe Some(date)
+          result.get mustBe userAnswers
         }
+      }
 
-        "non-taxable" in {
+      "return modified user answers" when {
+        "there is a closure date" when {
 
-          val userAnswers = emptyUserAnswersForUrn
-            .set(DateClosedPage, date).success.value
+          val date = LocalDate.parse("1996-02-03")
 
-          val result: Option[LocalDate] = getClosureDate(userAnswers)
+          "taxable" in {
 
-          result mustBe Some(date)
+            val userAnswers = emptyUserAnswersForUtr
+
+            val result: Try[UserAnswers] = setClosureDate(userAnswers, Some(date))
+
+            result.get mustNot be(userAnswers)
+            result.get.get(DateLastAssetSharedOutPage).get mustBe date
+            result.get.get(DateClosedPage) mustBe None
+          }
+
+          "non-taxable" in {
+
+            val userAnswers = emptyUserAnswersForUrn
+
+            val result: Try[UserAnswers] = setClosureDate(userAnswers, Some(date))
+
+            result.get mustNot be(userAnswers)
+            result.get.get(DateLastAssetSharedOutPage) mustBe None
+            result.get.get(DateClosedPage).get mustBe date
+          }
         }
       }
     }

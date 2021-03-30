@@ -24,7 +24,6 @@ import models.http.{GetTrust, Processed}
 import models.pages.WhatIsNext
 import models.requests.DataRequest
 import models.{AgentDeclaration, UserAnswers}
-import pages.close.taxable.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage, WhatIsNextPage}
 import play.api.Logging
@@ -34,7 +33,7 @@ import repositories.PlaybackRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.Session
-import utils.TrustClosureDate.getClosureDate
+import utils.TrustClosureDate.{getClosureDate, setClosureDate}
 
 import java.time.{LocalDate, LocalDateTime}
 import scala.concurrent.{ExecutionContext, Future}
@@ -94,7 +93,7 @@ class RefreshedDataRetrievalActionImpl @Inject()(
               .flatMap(_.set(TVNPage, data.tvn))
               .flatMap(_.set(SubmissionDatePage, data.date))
               .flatMap(_.set(AgentDeclarationPage, data.agent))
-              .flatMap(_.set(DateLastAssetSharedOutPage, data.endDate))
+              .flatMap(answers => setClosureDate(answers, data.endDate))
           }
           _ <- playbackRepository.set(updatedAnswers)
         } yield {

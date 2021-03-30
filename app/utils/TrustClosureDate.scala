@@ -17,10 +17,12 @@
 package utils
 
 import models.UserAnswers
+import pages.QuestionPage
 import pages.close.nontaxable.DateClosedPage
 import pages.close.taxable.DateLastAssetSharedOutPage
 
 import java.time.LocalDate
+import scala.util.{Success, Try}
 
 object TrustClosureDate {
 
@@ -29,6 +31,16 @@ object TrustClosureDate {
       userAnswers.get(DateLastAssetSharedOutPage)
     } else {
       userAnswers.get(DateClosedPage)
+    }
+  }
+
+  def setClosureDate(answers: UserAnswers, date: Option[LocalDate]): Try[UserAnswers] = {
+    date match {
+      case Some(value) =>
+        val page: QuestionPage[LocalDate] = if (answers.isTrustTaxable) DateLastAssetSharedOutPage else DateClosedPage
+        answers.set(page, value)
+      case None =>
+        Success(answers)
     }
   }
 }
