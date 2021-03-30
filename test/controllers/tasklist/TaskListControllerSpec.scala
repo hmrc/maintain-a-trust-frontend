@@ -53,20 +53,20 @@ class TaskListControllerSpec extends SpecBase {
 
   val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
-  val mandatorySections: List[Task] = List(
+  val mandatorySections4mld: List[Task] = List(
     Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$utr"), Some(InProgress)),
     Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$utr"), Some(InProgress)),
     Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$utr"), Some(InProgress))
   )
 
-  val mandatorySections5mld: List[Task] = Task(Link(TrustDetails, fakeUrl), Some(InProgress)) :: mandatorySections
+  val mandatorySections5mld: List[Task] = Task(Link(TrustDetails, fakeUrl), Some(InProgress)) :: mandatorySections4mld
 
-  val optionalSections: List[Task] = List(
+  val optionalSections4mld: List[Task] = List(
     Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$utr"), Some(InProgress)),
     Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$utr"), Some(InProgress))
   )
 
-  val optionalSections5mld: List[Task] = Task(Link(NonEeaBusinessAsset, fakeUrl), Some(InProgress)) :: optionalSections
+  val optionalSections5mld: List[Task] = Task(Link(NonEeaBusinessAsset, fakeUrl), Some(InProgress)) :: optionalSections4mld
 
   private lazy val config: Configuration = injector.instanceOf[FrontendAppConfig].configuration
 
@@ -110,7 +110,7 @@ class TaskListControllerSpec extends SpecBase {
           status(result) mustEqual OK
 
           contentAsString(result) mustEqual
-            view(utr, UTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
+            view(utr, UTR, mandatorySections4mld, optionalSections4mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
 
           application.stop()
         }
@@ -138,7 +138,7 @@ class TaskListControllerSpec extends SpecBase {
           status(result) mustEqual OK
 
           contentAsString(result) mustEqual
-            view(utr, UTR, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
+            view(utr, UTR, mandatorySections4mld, optionalSections4mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
 
           application.stop()
         }
@@ -163,10 +163,9 @@ class TaskListControllerSpec extends SpecBase {
 
     "in 5mld mode" when {
 
-      "trust is taxable" must {
+      "underlying trust data is 4mld" must {
 
         val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-          .set(ExpressTrustYesNoPage, false).success.value
 
         "return OK and the correct view for a GET" when {
 
@@ -193,7 +192,7 @@ class TaskListControllerSpec extends SpecBase {
             status(result) mustEqual OK
 
             contentAsString(result) mustEqual
-              view(utr, UTR, mandatorySections5mld, optionalSections5mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
+              view(utr, UTR, mandatorySections4mld, optionalSections4mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
 
             application.stop()
           }
@@ -221,7 +220,7 @@ class TaskListControllerSpec extends SpecBase {
             status(result) mustEqual OK
 
             contentAsString(result) mustEqual
-              view(utr, UTR, mandatorySections5mld, optionalSections5mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
+              view(utr, UTR, mandatorySections4mld, optionalSections4mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
 
             application.stop()
           }
@@ -240,6 +239,169 @@ class TaskListControllerSpec extends SpecBase {
           status(result) mustEqual INTERNAL_SERVER_ERROR
 
           application.stop()
+        }
+      }
+
+      "underlying trust data is 5mld" when {
+
+        "trust is taxable" must {
+
+          val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+            .set(ExpressTrustYesNoPage, false).success.value
+
+          "return OK and the correct view for a GET" when {
+
+            "making changes" in {
+
+              val mockConnector = mock[TrustsStoreConnector]
+
+              val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers))
+                .overrides(
+                  bind(classOf[TrustsStoreConnector]).toInstance(mockConnector),
+                  bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true, isMaintainNonEeaCompanyEnabled = true))
+                ).build()
+
+              when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+              val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[VariationProgressView]
+
+              status(result) mustEqual OK
+
+              contentAsString(result) mustEqual
+                view(utr, UTR, mandatorySections5mld, optionalSections5mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
+
+              application.stop()
+            }
+
+            "closing the trust" in {
+
+              val mockConnector = mock[TrustsStoreConnector]
+
+              val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers))
+                .overrides(
+                  bind(classOf[TrustsStoreConnector]).toInstance(mockConnector),
+                  bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true, isMaintainNonEeaCompanyEnabled = true))
+                ).build()
+
+              when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+              val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[VariationProgressView]
+
+              status(result) mustEqual OK
+
+              contentAsString(result) mustEqual
+                view(utr, UTR, mandatorySections5mld, optionalSections5mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
+
+              application.stop()
+            }
+          }
+
+          "redirect to Technical difficulties page when no value found for What do you want to do next" in {
+
+            val answers = baseAnswers
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+            val result = route(application, request).value
+
+            status(result) mustEqual INTERNAL_SERVER_ERROR
+
+            application.stop()
+          }
+        }
+
+        "trust is non-taxable" must {
+
+          val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = false)
+            .set(ExpressTrustYesNoPage, false).success.value
+
+          "return OK and the correct view for a GET" when {
+
+            "making changes" in {
+
+              val mockConnector = mock[TrustsStoreConnector]
+
+              val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers))
+                .overrides(
+                  bind(classOf[TrustsStoreConnector]).toInstance(mockConnector),
+                  bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true, isMaintainNonEeaCompanyEnabled = true))
+                ).build()
+
+              when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+              val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[VariationProgressView]
+
+              status(result) mustEqual OK
+
+              contentAsString(result) mustEqual
+                view(utr, UTR, mandatorySections5mld, optionalSections5mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
+
+              application.stop()
+            }
+
+            "closing the trust" in {
+
+              val mockConnector = mock[TrustsStoreConnector]
+
+              val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers))
+                .overrides(
+                  bind(classOf[TrustsStoreConnector]).toInstance(mockConnector),
+                  bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true, isMaintainNonEeaCompanyEnabled = true))
+                ).build()
+
+              when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+              val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[VariationProgressView]
+
+              status(result) mustEqual OK
+
+              contentAsString(result) mustEqual
+                view(utr, UTR, mandatorySections5mld, optionalSections5mld, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
+
+              application.stop()
+            }
+          }
+
+          "redirect to Technical difficulties page when no value found for What do you want to do next" in {
+
+            val answers = baseAnswers
+
+            val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+            val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+            val result = route(application, request).value
+
+            status(result) mustEqual INTERNAL_SERVER_ERROR
+
+            application.stop()
+          }
         }
       }
     }
