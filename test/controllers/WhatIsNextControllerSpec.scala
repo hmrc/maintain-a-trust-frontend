@@ -403,13 +403,13 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
       }
     }
 
-    "remove transforms if answer has changed" when {
+    "remove transforms if answer has changed (and new answer is not GeneratePdf)" when {
 
       "there is no previous answer" in {
 
         val gen = arbitrary[WhatIsNext]
 
-        forAll(gen) { answer =>
+        forAll(gen.suchThat(_ != GeneratePdf)) { answer =>
           beforeTest()
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
@@ -434,7 +434,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         val gen = arbitrary[WhatIsNext]
 
         forAll(gen) { previousAnswer =>
-          forAll(gen.suchThat(_ != previousAnswer)) { newAnswer =>
+          forAll(gen.suchThat(x => x != previousAnswer && x != GeneratePdf)) { newAnswer =>
 
             beforeTest()
 
@@ -460,22 +460,44 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
       }
     }
 
-    "not remove transforms if answer hasn't changed" in {
+    "not remove transforms if answer hasn't changed" when {
 
-      val gen = arbitrary[WhatIsNext]
+      "answer hasn't changed" in {
+        val gen = arbitrary[WhatIsNext]
 
-      forAll(gen) { previousAnswer =>
+        forAll(gen) { previousAnswer =>
+          beforeTest()
+
+          val userAnswers = emptyUserAnswersForUtr
+            .set(WhatIsNextPage, previousAnswer).success.value
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .build()
+
+          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+            .withFormUrlEncodedBody(("value", previousAnswer.toString))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          verify(mockTrustConnector, never()).removeTransforms(any())(any(), any())
+
+          application.stop()
+        }
+      }
+
+      "answer is GeneratePdf" in {
+
         beforeTest()
 
-        val userAnswers = emptyUserAnswersForUtr
-          .set(WhatIsNextPage, previousAnswer).success.value
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers))
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
         implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-          .withFormUrlEncodedBody(("value", previousAnswer.toString))
+          .withFormUrlEncodedBody(("value", GeneratePdf.toString))
 
         val result = route(application, request).value
 
@@ -494,7 +516,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
           beforeTest()
 
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUrn))
             .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
             .build()
 
@@ -511,12 +533,12 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         }
       }
 
-      "something other than NeedsToPayTax selected" must {
+      "something other than NeedsToPayTax and GeneratePdf selected" must {
         "set flag to false" in {
 
           val gen = arbitrary[WhatIsNext]
 
-          forAll(gen.suchThat(_ != NeedsToPayTax)) { answer =>
+          forAll(gen.suchThat(x => x != NeedsToPayTax && x != GeneratePdf)) { answer =>
             beforeTest()
 
             val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
@@ -535,6 +557,28 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
             application.stop()
           }
         }
+      }
+    }
+
+    "not set taxable migration flag" when {
+      "GeneratePdf selected" in {
+
+        beforeTest()
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUrn))
+          .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+          .build()
+
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+          .withFormUrlEncodedBody(("value", GeneratePdf.toString))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        verify(mockTrustConnector, never()).setTaxableMigrationFlag(any(), any())(any(), any())
+
+        application.stop()
       }
     }
 

@@ -103,17 +103,21 @@ class WhatIsNextController @Inject()(
       }
     }
 
-    for {
-      _ <- {
-        if (hasAnswerChanged) {
-          trustConnector.removeTransforms(request.userAnswers.identifier)
-        } else {
-          Future.successful(HttpResponse(OK, ""))
+    if (newAnswer != GeneratePdf) {
+      for {
+        _ <- {
+          if (hasAnswerChanged) {
+            trustConnector.removeTransforms(request.userAnswers.identifier)
+          } else {
+            Future.successful(HttpResponse(OK, ""))
+          }
         }
+        _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, newAnswer == NeedsToPayTax)
+      } yield {
+        redirect
       }
-      _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, newAnswer == NeedsToPayTax)
-    } yield {
-      redirect
+    } else {
+      Future.successful(redirect)
     }
   }
 }
