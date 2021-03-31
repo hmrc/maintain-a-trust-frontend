@@ -29,7 +29,6 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.http.HttpResponse
 import views.html.WhatIsNextView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -107,9 +106,9 @@ class WhatIsNextController @Inject()(
       for {
         _ <- {
           if (hasAnswerChanged) {
-            trustConnector.removeTransforms(request.userAnswers.identifier)
+            trustConnector.removeTransforms(request.userAnswers.identifier).map(_ => ())
           } else {
-            Future.successful(HttpResponse(OK, ""))
+            Future.successful(())
           }
         }
         _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, newAnswer == NeedsToPayTax)
