@@ -16,8 +16,9 @@
 
 package generators
 
-import java.time.LocalDate
+import models.pages.WhatIsNext
 
+import java.time.LocalDate
 import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
@@ -64,6 +65,11 @@ trait ModelGenerators {
   implicit lazy val arbitraryDate : Arbitrary[LocalDate] =
     Arbitrary {
       Gen.const(LocalDate.of(2010, 10, 10))
+    }
+
+  implicit lazy val arbitraryWhatIsNext: Arbitrary[WhatIsNext] =
+    Arbitrary {
+      Gen.oneOf(WhatIsNext.values)
     }
 
 }
