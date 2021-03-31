@@ -636,7 +636,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(s"/trusts/$utr/transforms/migrate-to-taxable"))
+          post(urlEqualTo(s"/trusts/$utr/taxable-migration/migrating-to-taxable"))
             .withRequestBody(equalTo("true"))
             .willReturn(ok)
         )
@@ -661,7 +661,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(s"/trusts/$utr/transforms/migrate-to-taxable"))
+          post(urlEqualTo(s"/trusts/$utr/taxable-migration/migrating-to-taxable"))
             .willReturn(aResponse().withStatus(BAD_REQUEST))
         )
 
@@ -685,7 +685,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(s"/trusts/$utr/transforms/migrate-to-taxable"))
+          post(urlEqualTo(s"/trusts/$utr/taxable-migration/migrating-to-taxable"))
             .withRequestBody(equalTo("true"))
             .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
         )
@@ -713,7 +713,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          delete(urlEqualTo(s"/trusts/$utr/transforms/migrate-to-taxable"))
+          delete(urlEqualTo(s"/trusts/$utr/transforms"))
             .willReturn(ok)
         )
 
@@ -737,7 +737,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          delete(urlEqualTo(s"/trusts/$utr/transforms/migrate-to-taxable"))
+          delete(urlEqualTo(s"/trusts/$utr/transforms"))
             .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
         )
 

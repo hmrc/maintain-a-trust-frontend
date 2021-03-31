@@ -72,12 +72,12 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
   }
 
   def setTaxableMigrationFlag(identifier: String, value: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    val url: String = s"${config.trustsUrl}/trusts/$identifier/transforms/migrate-to-taxable"
+    val url: String = s"${config.trustsUrl}/trusts/$identifier/taxable-migration/migrating-to-taxable"
     http.POST[Boolean, HttpResponse](url, value)
   }
 
   def removeTransforms(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    val url: String = s"${config.trustsUrl}/trusts/$identifier/transforms/migrate-to-taxable"
+    val url: String = s"${config.trustsUrl}/trusts/$identifier/transforms"
     http.DELETE[HttpResponse](url)
   }
 
