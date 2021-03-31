@@ -460,7 +460,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
       }
     }
 
-    "not remove transforms if answer hasn't changed" when {
+    "not remove transforms" when {
 
       "answer hasn't changed" in {
         val gen = arbitrary[WhatIsNext]
