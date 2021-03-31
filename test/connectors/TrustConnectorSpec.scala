@@ -18,7 +18,7 @@ package connectors
 
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
-import controllers.Assets.OK
+import controllers.Assets._
 import generators.Generators
 import models.http.DeclarationResponse.InternalServerError
 import models.http._
@@ -42,6 +42,8 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
   private def playbackUrl(utr: String) : String = s"/trusts/$utr/transformed"
   private def declareUrl(utr: String) : String = s"/trusts/declare/$utr"
+
+  private val utr = "1000000008"
 
   "TrustConnector" - {
 
@@ -464,7 +466,6 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
       "Return true or false when the request is successful" in {
 
-        val utr = "1000000008"
         val json = JsBoolean(true)
 
         val application = applicationBuilder()
@@ -490,8 +491,6 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
       }
 
       "throw UpstreamException when returned a 404 NotFound for the cached trust" in {
-
-        val utr = "1000000008"
 
         val application = applicationBuilder()
           .configure(
@@ -520,7 +519,6 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
       "return true or false when the request is successful" in {
 
-        val utr = "1000000008"
         val json = JsBoolean(true)
 
         val application = applicationBuilder()
@@ -546,8 +544,6 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
       }
 
       "throw UpstreamException when returned a 404 NotFound for the cached trust" in {
-
-        val utr = "1000000008"
 
         val application = applicationBuilder()
           .configure(
@@ -576,7 +572,6 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
       "return true or false when the request is successful" in {
 
-        val utr = "1000000008"
         val json = JsBoolean(true)
 
         val application = applicationBuilder()
@@ -602,8 +597,6 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
       }
 
       "throw UpstreamException when returned a 404 NotFound for the cached trust" in {
-
-        val utr = "1000000008"
 
         val application = applicationBuilder()
           .configure(
@@ -632,7 +625,30 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
       "return OK when the request is successful" in {
 
-        val utr = "1000000008"
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          post(urlEqualTo(s"/trusts/$utr/transforms/migrate-to-taxable"))
+            .withRequestBody(equalTo("true"))
+            .willReturn(ok)
+        )
+
+        val processed = Await.result(connector.setTaxableMigrationFlag(utr, value = true), Duration.Inf)
+
+        processed.status mustBe OK
+
+        application.stop()
+      }
+
+      "return BAD_REQUEST for invalid payload" in {
 
         val application = applicationBuilder()
           .configure(
@@ -646,12 +662,37 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
         server.stubFor(
           post(urlEqualTo(s"/trusts/$utr/transforms/migrate-to-taxable"))
-            .willReturn(ok)
+            .willReturn(aResponse().withStatus(BAD_REQUEST))
         )
 
         val processed = Await.result(connector.setTaxableMigrationFlag(utr, value = true), Duration.Inf)
 
-        processed.status mustBe OK
+        processed.status mustBe BAD_REQUEST
+
+        application.stop()
+      }
+
+      "return INTERNAL_SERVER_ERROR when the request is unsuccessful" in {
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          post(urlEqualTo(s"/trusts/$utr/transforms/migrate-to-taxable"))
+            .withRequestBody(equalTo("true"))
+            .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
+        )
+
+        val processed = Await.result(connector.setTaxableMigrationFlag(utr, value = true), Duration.Inf)
+
+        processed.status mustBe INTERNAL_SERVER_ERROR
 
         application.stop()
       }
@@ -660,8 +701,6 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
     ".removeTransforms" - {
 
       "return OK when the request is successful" in {
-
-        val utr = "1000000008"
 
         val application = applicationBuilder()
           .configure(
@@ -681,6 +720,30 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val processed = Await.result(connector.removeTransforms(utr), Duration.Inf)
 
         processed.status mustBe OK
+
+        application.stop()
+      }
+
+      "return INTERNAL_SERVER_ERROR when the request is unsuccessful" in {
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          delete(urlEqualTo(s"/trusts/$utr/transforms/migrate-to-taxable"))
+            .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
+        )
+
+        val processed = Await.result(connector.removeTransforms(utr), Duration.Inf)
+
+        processed.status mustBe INTERNAL_SERVER_ERROR
 
         application.stop()
       }
