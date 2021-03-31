@@ -16,33 +16,40 @@
 
 package utils.print.sections.beneficiaries
 
-import javax.inject.Inject
 import models.UserAnswers
+import pages.QuestionPage
 import pages.beneficiaries.company._
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
-import viewmodels.AnswerSection
+import play.api.libs.json.{JsArray, JsPath}
+import sections.beneficiaries.CompanyBeneficiaries
+import utils.print.sections.{EntitiesPrinter, AnswerRowConverter, EntityPrinter}
+import viewmodels.{AnswerRow, AnswerSection}
 
-class CompanyBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
-                                         (implicit messages: Messages) {
+import javax.inject.Inject
 
-  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] =
+class CompanyBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
 
-    userAnswers.get(CompanyBeneficiaryNamePage(index)).map { name =>
-      Seq(
-        AnswerSection(
-          headingKey = Some(messages("answerPage.section.companyBeneficiary.subheading", index + 1)),
-          Seq(
-            converter.stringQuestion(CompanyBeneficiaryNamePage(index), userAnswers, "companyBeneficiaryName"),
-            converter.yesNoQuestion(CompanyBeneficiaryDiscretionYesNoPage(index), userAnswers, "companyBeneficiaryShareOfIncomeYesNo", name),
-            converter.percentageQuestion(CompanyBeneficiaryShareOfIncomePage(index), userAnswers, "companyBeneficiaryShareOfIncome", name),
-            converter.yesNoQuestion(CompanyBeneficiaryAddressYesNoPage(index), userAnswers, "companyBeneficiaryAddressYesNo", name),
-            converter.yesNoQuestion(CompanyBeneficiaryAddressUKYesNoPage(index), userAnswers, "companyBeneficiaryAddressUKYesNo", name),
-            converter.addressQuestion(CompanyBeneficiaryAddressPage(index), userAnswers, "companyBeneficiaryAddress", name),
-            converter.stringQuestion(CompanyBeneficiaryUtrPage(index), userAnswers, "companyBeneficiaryUtr", name)
-          ).flatten
-        )
-      )
-    }.getOrElse(Nil)
+  override def printSection(index: Int, userAnswers: UserAnswers)
+                           (implicit messages: Messages): Option[AnswerSection] = {
+    printAnswerRows(index, userAnswers)
+  }
 
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+    converter.stringQuestion(CompanyBeneficiaryNamePage(index), userAnswers, "companyBeneficiaryName"),
+    converter.yesNoQuestion(CompanyBeneficiaryDiscretionYesNoPage(index), userAnswers, "companyBeneficiaryShareOfIncomeYesNo", name),
+    converter.percentageQuestion(CompanyBeneficiaryShareOfIncomePage(index), userAnswers, "companyBeneficiaryShareOfIncome", name),
+    converter.yesNoQuestion(CompanyBeneficiaryAddressYesNoPage(index), userAnswers, "companyBeneficiaryAddressYesNo", name),
+    converter.yesNoQuestion(CompanyBeneficiaryAddressUKYesNoPage(index), userAnswers, "companyBeneficiaryAddressUKYesNo", name),
+    converter.addressQuestion(CompanyBeneficiaryAddressPage(index), userAnswers, "companyBeneficiaryAddress", name),
+    converter.stringQuestion(CompanyBeneficiaryUtrPage(index), userAnswers, "companyBeneficiaryUtr", name)
+  )
+
+  override def namePath(index: Int): JsPath = CompanyBeneficiaryNamePage(index).path
+
+  override def section: QuestionPage[JsArray] = CompanyBeneficiaries
+
+  override val headingKey: Option[String] = None
+
+  override val subHeadingKey: Option[String] = Some("companyBeneficiary")
 }

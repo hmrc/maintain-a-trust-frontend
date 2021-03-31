@@ -16,8 +16,8 @@
 
 package utils.print.sections
 
-import models.pages.RoleInCompany
-import models.{Address, FullName, HowManyBeneficiaries, PassportOrIdCardDetails, UserAnswers}
+import models.pages.{KindOfBusiness, RoleInCompany}
+import models.{Address, Description, FullName, HowManyBeneficiaries, PassportOrIdCardDetails, UserAnswers}
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
 import play.twirl.api.{Html, HtmlFormat}
@@ -128,6 +128,24 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                                messageArg: String = "")
                               (implicit messages: Messages): Option[AnswerRow] = {
     val format = (x: PassportOrIdCardDetails) => checkAnswersFormatters.passportOrIDCard(x)
+    question(query, userAnswers, labelKey, format, messageArg)
+  }
+
+  def descriptionQuestion(query: Gettable[Description],
+                          userAnswers: UserAnswers,
+                          labelKey: String,
+                          messageArg: String)
+                         (implicit messages: Messages): Option[AnswerRow] = {
+    val format = (x: Description) => checkAnswersFormatters.description(x)
+    question(query, userAnswers, labelKey, format, messageArg)
+  }
+
+  def kindOfBusinessQuestion(query: Gettable[KindOfBusiness],
+                             userAnswers: UserAnswers,
+                             labelKey: String,
+                             messageArg: String)
+                            (implicit messages: Messages): Option[AnswerRow] = {
+    val format = (x: KindOfBusiness) => HtmlFormat.escape(x.toString)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 

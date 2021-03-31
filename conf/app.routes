@@ -6,7 +6,7 @@ GET        /start/utr                                   controllers.IndexControl
 
 GET        /start/urn                                   controllers.IndexController.startUrn
 
-GET        /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
+GET        /assets/*file                                controllers.Assets.versioned(path = "/public", file: Asset)
 
 GET        /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
@@ -77,8 +77,8 @@ GET        /draft-declaration                           controllers.print.PrintM
 
 GET        /declared-updates                            controllers.print.PrintMaintainDeclaredAnswersController.onPageLoad()
 
-GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=true)
-GET        /continue-maintaining-this-trust             controllers.MaintainThisTrustController.onPageLoad(needsIv:Boolean=false)
+GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv: Boolean = true)
+GET        /continue-maintaining-this-trust             controllers.MaintainThisTrustController.onPageLoad(needsIv: Boolean = false)
 
 GET        /update-trust-details                        controllers.makechanges.UpdateTrustDetailsYesNoController.onPageLoad()
 POST       /update-trust-details                        controllers.makechanges.UpdateTrustDetailsYesNoController.onSubmit()
@@ -110,16 +110,19 @@ POST       /add-non-eea-company                         controllers.makechanges.
 GET        /update-non-eea-company                      controllers.makechanges.UpdateNonEeaCompanyYesNoController.onPageLoad()
 POST       /update-non-eea-company                      controllers.makechanges.UpdateNonEeaCompanyYesNoController.onSubmit()
 
-GET        /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onPageLoad()
-POST       /know-date-last-asset-shared-out             controllers.close.DateLastAssetSharedOutYesNoController.onSubmit()
+GET        /know-date-last-asset-shared-out             controllers.close.taxable.DateLastAssetSharedOutYesNoController.onPageLoad()
+POST       /know-date-last-asset-shared-out             controllers.close.taxable.DateLastAssetSharedOutYesNoController.onSubmit()
 
-GET        /date-last-asset-shared-out                  controllers.close.DateLastAssetSharedOutController.onPageLoad()
-POST       /date-last-asset-shared-out                  controllers.close.DateLastAssetSharedOutController.onSubmit()
+GET        /date-last-asset-shared-out                  controllers.close.taxable.DateLastAssetSharedOutController.onPageLoad()
+POST       /date-last-asset-shared-out                  controllers.close.taxable.DateLastAssetSharedOutController.onSubmit()
 
-GET        /how-to-close-trust                          controllers.close.HowToCloseATrustController.onPageLoad()
+GET        /how-to-close-trust                          controllers.close.taxable.HowToCloseATrustController.onPageLoad()
+
+GET        /date-closed                                 controllers.close.nontaxable.DateClosedController.onPageLoad()
+POST       /date-closed                                 controllers.close.nontaxable.DateClosedController.onSubmit()
 
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
 GET        /overview                                    controllers.tasklist.TaskListController.onPageLoad()
 
-GET        /get-pdf/:identifier                     controllers.ObligedEntityPdfController.getPdf(identifier)
+GET        /get-pdf/:identifier                         controllers.ObligedEntityPdfController.getPdf(identifier)

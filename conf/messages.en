@@ -146,21 +146,32 @@ informationMaintainingThisTrust.paragraph2 = You can make changes to the trust, 
 informationMaintainingThisTrust.paragraph3 = Any changes you make will not be saved until you make a declaration. You will not be able to save and continue later. You can print a copy of your draft answers as well as a copy of the declaration.
 informationMaintainingThisTrust.paragraph4 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
 
-informationMaintaining5mldTrust.title = Maintaining this trust
-informationMaintaining5mldTrust.heading = Maintaining this trust
-informationMaintaining5mldTrust.subheading1 = Before you continue
-informationMaintaining5mldTrust.paragraph1 = We need to ask you some questions about the trust before you can access the trust or make any changes.
-informationMaintaining5mldTrust.subheading2 = Updating the trust’s details and making a declaration
-informationMaintaining5mldTrust.paragraph2 = This service will allow you to either:
-informationMaintaining5mldTrust.bullet1 = Make changes to the trust
-informationMaintaining5mldTrust.bullet2 = Confirm the trust's details are still up to date
-informationMaintaining5mldTrust.bullet3 = Close the trust
-informationMaintaining5mldTrust.paragraph3 = Once you have done this, you need to:
-informationMaintaining5mldTrust.bullet4 = submit any updates to us, so we can update the trust’s record
-informationMaintaining5mldTrust.bullet5 = declare that the information we have about the trust is accurate and up to date
-informationMaintaining5mldTrust.paragraph4 = Any changes to the trust details will not be saved until you have submitted and declared them.
-informationMaintaining5mldTrust.paragraph5 = You can return to the service and update the trust’s details at any time.
-informationMaintaining5mldTrust.paragraph6 = You can print a copy of your draft answers as well as a copy of the declaration.
+informationMaintainingTaxableTrust.title = Maintaining this trust
+informationMaintainingTaxableTrust.heading = Maintaining this trust
+informationMaintainingTaxableTrust.subheading1 = Before you continue
+informationMaintainingTaxableTrust.paragraph1 = We need to ask you some questions about the trust before you can access the trust or make any changes.
+informationMaintainingTaxableTrust.subheading2 = Updating the trust’s details and making a declaration
+informationMaintainingTaxableTrust.paragraph2 = This service will allow you to either:
+informationMaintainingTaxableTrust.bullet1 = make changes to the trust
+informationMaintainingTaxableTrust.bullet2 = confirm the trust's details are still up to date
+informationMaintainingTaxableTrust.bullet3 = close the trust
+informationMaintainingTaxableTrust.paragraph3 = Once you have done this, you need to:
+informationMaintainingTaxableTrust.bullet4 = submit any updates to us, so we can update the trust’s record
+informationMaintainingTaxableTrust.bullet5 = declare that the information we have about the trust is accurate and up to date
+informationMaintainingTaxableTrust.paragraph4 = Any changes to the trust details will not be saved until you have submitted and declared them.
+informationMaintainingTaxableTrust.paragraph5 = You can return to the service and update the trust’s details at any time.
+informationMaintainingTaxableTrust.paragraph6 = You can print a copy of your draft answers as well as a copy of the declaration.
+
+informationMaintainingNonTaxableTrust.title = Maintaining this trust
+informationMaintainingNonTaxableTrust.heading = Maintaining this trust
+informationMaintainingNonTaxableTrust.subheading1 = Updating the trust’s details and making a declaration
+informationMaintainingNonTaxableTrust.paragraph1 = This service will allow you to make changes to the trust details.
+informationMaintainingNonTaxableTrust.paragraph2 = Once you have made changes, you need to:
+informationMaintainingNonTaxableTrust.bullet1 = submit any updates to us, so we can update the trust’s record
+informationMaintainingNonTaxableTrust.bullet2 = declare that the information we have about the trust is accurate and up to date
+informationMaintainingNonTaxableTrust.warning = If you do not submit the changes and declare that the information is up to date then the changes to the trust will not be saved.
+informationMaintainingNonTaxableTrust.paragraph3 = You can return to the service and update the trust’s details at any time.
+informationMaintainingNonTaxableTrust.paragraph4 = You can print a copy of your draft answers as well as a copy of the declaration.
 
 viewLastDeclarationYesNo.title = Do you want to view this trust’s last declaration?
 viewLastDeclarationYesNo.heading = Do you want to view this trust’s last declaration?
@@ -462,6 +473,8 @@ declarationWhatNext5mld.close-trust = Close the trust and declare
 declarationWhatNext5mld.close-trust.hint = Tell us the end date for the trust, and make any changes to the trust details before declaring the changes to HMRC.
 declarationWhatNext5mld.no-longer-taxable = Tell us if the trust no longer needs to pay tax
 declarationWhatNext5mld.no-longer-taxable.hint = Tell us if the trust no longer needs to pay tax or submit tax returns, and declare it to HMRC.
+declarationWhatNext5mld.needs-to-pay-tax = Tell HMRC if the trust needs to pay tax
+declarationWhatNext5mld.needs-to-pay-tax.hint = Tell HMRC if the trust needs to pay tax or submit tax returns.
 declarationWhatNext5mld.generate-pdf = Get evidence of the trust’s registration
 declarationWhatNext5mld.generate-pdf.hint = Create a digitally signed PDF, which shows the people and companies within the trust, that can be shared with Obliged Entities.
 
@@ -529,6 +542,17 @@ howToCloseATrust.p1 = To close a trust register with HMRC, you need to tell us:
 howToCloseATrust.bullet1 = the date the last asset was shared out to the beneficiaries
 howToCloseATrust.bullet2 = a final tax return, using Trust and Estate (SA900) tax return or Self Assessment Online for trusts
 howToCloseATrust.p2 = Please review any documentation regarding the trust.
+
+dateClosed.title = When did you close the trust?
+dateClosed.heading = When did you close the trust?
+dateClosed.checkYourAnswersLabel = When did you close the trust?
+dateClosed.hint = For example, 31 3 1980.
+dateClosed.error.required.all = Enter the date the last asset was distributed
+dateClosed.error.required.two = The date the trust closed must include a {0} and a {1}
+dateClosed.error.required = The date the trust closed must include a {0}
+dateClosed.error.invalid = Enter a real date
+dateClosed.error.future = The date the trust closed must be today or in the past
+dateClosed.error.past = The date the trust closed cannot be before the start date of the trust
 
 # SECTIONS
 

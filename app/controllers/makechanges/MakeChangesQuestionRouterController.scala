@@ -52,7 +52,7 @@ abstract class MakeChangesQuestionRouterController(
   }
 
   protected def redirectToFirstUpdateQuestion(implicit request: DataRequest[AnyContent]): Call = {
-    if (isTrust5mldTaxable) {
+    if (is5mldTrustIn5mldMode) {
       controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad()
     } else {
       controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()
@@ -75,7 +75,7 @@ abstract class MakeChangesQuestionRouterController(
 
   protected def routeToAddOrUpdateNonEeaCompany(updatedAnswers: UserAnswers, isClosingTrust: Boolean)
                                                (implicit request: DataRequest[AnyContent]): Future[Result] = {
-    if (isTrust5mldTaxable) {
+    if (is5mldTrustIn5mldMode) {
       trustConnector.getDoNonEeaCompaniesAlreadyExist(request.userAnswers.identifier) map {
         case JsTrue => Redirect(controllers.makechanges.routes.UpdateNonEeaCompanyYesNoController.onPageLoad())
         case JsFalse => Redirect(controllers.makechanges.routes.AddNonEeaCompanyYesNoController.onPageLoad())
@@ -101,7 +101,8 @@ abstract class MakeChangesQuestionRouterController(
     }
   }
 
-  def isTrust5mldTaxable(implicit request: DataRequest[_]): Boolean = {
-    request.userAnswers.is5mldEnabled && request.userAnswers.isTrust5mldTaxable
+  def is5mldTrustIn5mldMode(implicit request: DataRequest[_]): Boolean = {
+    request.userAnswers.is5mldTrustIn5mldMode
   }
+
 }

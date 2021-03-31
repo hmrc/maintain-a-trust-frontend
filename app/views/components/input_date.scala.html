@@ -18,44 +18,46 @@
 @import utils.DateErrorFormatter._
 
 @(
-field: Field,
-legend: String,
-legendClass: String = "",
-hint: Option[String] = None,
-link : Option[Link] = None,
-headingIsLegend: Boolean = false,
-extraText: Option[String] = None
+    field: Field,
+    legend: String,
+    legendClass: String = "",
+    hint: Option[String] = None,
+    link: Option[Link] = None,
+    headingIsLegend: Boolean = false,
+    extraText: Option[String] = None
 )(implicit messages: Messages)
 
 <div class="form-group @if(field("day").hasErrors || field("month").hasErrors || field("year").hasErrors || field.hasErrors){form-group-error}">
-<fieldset role="group"
-          @if(hint.nonEmpty || field.hasErrors) {
-          aria-describedby="@if(hint.nonEmpty){form-hint}@if(hint.nonEmpty && field.hasErrors){ }@if(field.hasErrors){error-message-@{field.id}-input}"
-          }
->
-    <legend>
-        @if(headingIsLegend){<h1  @if(legendClass.nonEmpty){class="@legendClass" }else{class="heading-large"}>}
-        <span class="@legendClass">
-                    @legend
-                </span>
-        @if(headingIsLegend){</h1>}
-    </legend>
-    @if(extraText.nonEmpty){
-    <p>@extraText</p>
-    }
-    @form_hint(hint = hint)
-    @field.errors.map { error =>
-    <span class="error-message" id="error-message-@{field.id}-input">
+    <fieldset role="group" @if(hint.nonEmpty || field.hasErrors) { aria-describedby="@if(hint.nonEmpty){form-hint}@if(hint.nonEmpty && field.hasErrors){ }@if(field.hasErrors){error-message-@{field.id}-input}" }>
+
+        <legend>
+            @if(headingIsLegend){<h1  @if(legendClass.nonEmpty){class="@legendClass" }else{class="heading-large"}>}
+            <span class="@legendClass">
+                @legend
+            </span>
+            @if(headingIsLegend){</h1>}
+        </legend>
+
+        @if(extraText.nonEmpty){
+            <p>@extraText</p>
+        }
+
+        @form_hint(hint = hint)
+
+        @field.errors.map { error =>
+            <span class="error-message" id="error-message-@{field.id}-input">
                 <span class="visually-hidden">@messages("site.error") </span>@messages(error.message, formatArgs(error.args): _*)
             </span>
-    }
-    <div class="form-date">
-        @List("day", "month", "year").map { part =>
-        <div class="form-control-wrapper form-group form-group-@part">
-            <label class="form-label" for="@field(part).id">@messages(s"date.$part")</label>
-            <input class="form-control @if(field(part).hasErrors || field.error.exists(_.args.contains(part))){field-error}" id="@field(part).id" name="@field(part).name" type="text" value="@field(part).value" inputmode="numeric" />
-        </div>
         }
-    </div>
-</fieldset>
+
+        <div class="form-date">
+            @List("day", "month", "year").map { part =>
+                <div class="form-control-wrapper form-group form-group-@part">
+                    <label class="form-label" for="@field(part).id">@messages(s"date.$part")</label>
+                    <input class="form-control @if(field(part).hasErrors || field.error.exists(_.args.contains(part))){field-error}" id="@field(part).id" name="@field(part).name" type="text" value="@field(part).value" inputmode="numeric" />
+                </div>
+            }
+        </div>
+
+    </fieldset>
 </div>

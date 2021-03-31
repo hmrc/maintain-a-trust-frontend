@@ -39,7 +39,7 @@ class PrintMaintainDraftAnswersController @Inject()(
 
       val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)
 
-      val entities = printPlaybackAnswersHelper.people(request.userAnswers)
+      val entities = printPlaybackAnswersHelper.entities(request.userAnswers)
 
       val trustDetails = printPlaybackAnswersHelper.trustDetails(request.userAnswers)
 

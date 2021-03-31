@@ -43,13 +43,11 @@ class TaskListController @Inject()(
     implicit request =>
 
       val identifier = request.userAnswers.identifier
-      val is5mldEnabled = request.userAnswers.is5mldEnabled
-      val isTrust5mldTaxable = request.userAnswers.isTrust5mldTaxable
 
       storeConnector.getStatusOfTasks(identifier) map {
         tasks =>
 
-          val sections = generateTaskList(tasks, identifier, is5mldEnabled, isTrust5mldTaxable)
+          val sections = generateTaskList(tasks, identifier, request.userAnswers.trustMldStatus)
 
           val next = if (request.user.affinityGroup == Agent) {
             controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url

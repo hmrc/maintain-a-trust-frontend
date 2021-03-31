@@ -55,7 +55,7 @@ class WhatIsNextController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, request.userAnswers.is5mldEnabled, isTrust5mldTaxable))
+      Ok(view(preparedForm, request.userAnswers.trustMldStatus))
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
@@ -63,7 +63,7 @@ class WhatIsNextController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.is5mldEnabled, isTrust5mldTaxable))),
+          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.trustMldStatus))),
 
         value => {
           for {
@@ -73,8 +73,10 @@ class WhatIsNextController @Inject()(
             val call = value match {
               case DeclareTheTrustIsUpToDate => redirectToDeclaration
               case MakeChanges => redirectToFirstUpdateQuestion
-              case CloseTrust => controllers.close.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
+              case CloseTrust if request.userAnswers.isTrustTaxable => controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
+              case CloseTrust => controllers.close.nontaxable.routes.DateClosedController.onPageLoad()
               case NoLongerTaxable => controllers.routes.NoTaxLiabilityInfoController.onPageLoad()
+              case NeedsToPayTax => controllers.routes.FeatureNotAvailableController.onPageLoad()
               case GeneratePdf => controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier)
             }
 

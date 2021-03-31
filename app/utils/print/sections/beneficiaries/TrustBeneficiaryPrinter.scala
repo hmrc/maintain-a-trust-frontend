@@ -16,33 +16,40 @@
 
 package utils.print.sections.beneficiaries
 
-import javax.inject.Inject
 import models.UserAnswers
+import pages.QuestionPage
 import pages.beneficiaries.trust._
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
-import viewmodels.AnswerSection
+import play.api.libs.json.{JsArray, JsPath}
+import sections.beneficiaries.TrustBeneficiaries
+import utils.print.sections.{EntitiesPrinter, AnswerRowConverter, EntityPrinter}
+import viewmodels.{AnswerRow, AnswerSection}
 
-class TrustBeneficiaryPrinter @Inject()(converter: AnswerRowConverter)
-                                       (implicit messages: Messages) {
+import javax.inject.Inject
 
-  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] = {
+class TrustBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
 
-    userAnswers.get(TrustBeneficiaryNamePage(index)).map { name =>
-      Seq(AnswerSection(
-        headingKey = Some(messages("answerPage.section.trustBeneficiary.subheading", index + 1)),
-        Seq(
-          converter.stringQuestion(TrustBeneficiaryNamePage(index), userAnswers, "trustBeneficiaryName"),
-          converter.yesNoQuestion(TrustBeneficiaryDiscretionYesNoPage(index), userAnswers, "trustBeneficiaryShareOfIncomeYesNo", name),
-          converter.percentageQuestion(TrustBeneficiaryShareOfIncomePage(index), userAnswers, "trustBeneficiaryShareOfIncome", name),
-          converter.yesNoQuestion(TrustBeneficiaryAddressYesNoPage(index), userAnswers, "trustBeneficiaryAddressYesNo", name),
-          converter.yesNoQuestion(TrustBeneficiaryAddressUKYesNoPage(index), userAnswers, "trustBeneficiaryAddressUKYesNo", name),
-          converter.addressQuestion(TrustBeneficiaryAddressPage(index), userAnswers, "trustBeneficiaryAddress", name),
-          converter.stringQuestion(TrustBeneficiaryUtrPage(index), userAnswers, "trustBeneficiaryUtr", name)
-        ).flatten,
-        sectionKey = None
-      ))
-    }.getOrElse(Nil)
+  override def printSection(index: Int, userAnswers: UserAnswers)
+                           (implicit messages: Messages): Option[AnswerSection] = {
+    printAnswerRows(index, userAnswers)
   }
 
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+    converter.stringQuestion(TrustBeneficiaryNamePage(index), userAnswers, "trustBeneficiaryName"),
+    converter.yesNoQuestion(TrustBeneficiaryDiscretionYesNoPage(index), userAnswers, "trustBeneficiaryShareOfIncomeYesNo", name),
+    converter.percentageQuestion(TrustBeneficiaryShareOfIncomePage(index), userAnswers, "trustBeneficiaryShareOfIncome", name),
+    converter.yesNoQuestion(TrustBeneficiaryAddressYesNoPage(index), userAnswers, "trustBeneficiaryAddressYesNo", name),
+    converter.yesNoQuestion(TrustBeneficiaryAddressUKYesNoPage(index), userAnswers, "trustBeneficiaryAddressUKYesNo", name),
+    converter.addressQuestion(TrustBeneficiaryAddressPage(index), userAnswers, "trustBeneficiaryAddress", name),
+    converter.stringQuestion(TrustBeneficiaryUtrPage(index), userAnswers, "trustBeneficiaryUtr", name)
+  )
+
+  override def namePath(index: Int): JsPath = TrustBeneficiaryNamePage(index).path
+
+  override def section: QuestionPage[JsArray] = TrustBeneficiaries
+
+  override val headingKey: Option[String] = None
+
+  override val subHeadingKey: Option[String] = Some("trustBeneficiary")
 }

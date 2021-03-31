@@ -17,6 +17,7 @@
 package views
 
 import forms.WhatIsNextFormProvider
+import models._
 import models.pages.WhatIsNext
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
@@ -29,24 +30,24 @@ class WhatIsNextViewSpec extends ViewBehaviours {
 
   val form = new WhatIsNextFormProvider()()
 
-  val view: WhatIsNextView = viewFor[WhatIsNextView](Some(emptyUserAnswersForUtr))
+  def applyTests(trustMldStatus: TrustMldStatus): Unit = {
 
-  def applyView(form: Form[_], is5mldEnabled: Boolean, isTrust5mldTaxable: Boolean): HtmlFormat.Appendable =
-    view.apply(form, is5mldEnabled, isTrust5mldTaxable)(fakeRequest, messages)
+    def applyView(form: Form[_]): HtmlFormat.Appendable = {
+      val view: WhatIsNextView = viewFor[WhatIsNextView](Some(emptyUserAnswersForUtr))
+      view.apply(form, trustMldStatus)(fakeRequest, messages)
+    }
 
-  def applytests(is5mldEnabled: Boolean, isTrust5mldTaxable: Boolean) = {
+    behave like normalPage(applyView(form), messageKeyPrefix)
 
-    behave like normalPage(applyView(form, is5mldEnabled, isTrust5mldTaxable), messageKeyPrefix)
+    behave like pageWithBackLink(applyView(form))
 
-    behave like pageWithBackLink(applyView(form, is5mldEnabled, isTrust5mldTaxable))
-
-    behave like pageWithASubmitButton(applyView(form, is5mldEnabled, isTrust5mldTaxable))
+    behave like pageWithASubmitButton(applyView(form))
 
     "render radio buttons with hint text" in {
 
-      val doc = asDocument(applyView(form, is5mldEnabled, isTrust5mldTaxable))
+      val doc = asDocument(applyView(form))
 
-      for (option <- WhatIsNext.options(is5mldEnabled, isTrust5mldTaxable)) {
+      for (option <- WhatIsNext.options(trustMldStatus)) {
         assertContainsRadioButton(doc, option._1.id, "value", option._1.value, isChecked = false)
         assertRadioButtonContainsHint(doc, option._1.id + ".hint", messages(option._2))
       }
@@ -54,18 +55,18 @@ class WhatIsNextViewSpec extends ViewBehaviours {
 
     "render selected radio button with hint text" when {
 
-      for (option <- WhatIsNext.options(is5mldEnabled, isTrust5mldTaxable)) {
+      for (option <- WhatIsNext.options(trustMldStatus)) {
 
         s"value is '${option._1.value}'" must {
 
           s"have the '${option._1.value}' radio button selected" in {
 
-            val doc = asDocument(applyView(form.bind(Map("value" -> s"${option._1.value}")), is5mldEnabled, isTrust5mldTaxable))
+            val doc = asDocument(applyView(form.bind(Map("value" -> s"${option._1.value}"))))
 
             assertContainsRadioButton(doc, option._1.id, "value", option._1.value, isChecked = true)
             assertRadioButtonContainsHint(doc, option._1.id + ".hint", messages(option._2))
 
-            for (unselectedOption <- WhatIsNext.options(is5mldEnabled, isTrust5mldTaxable).filterNot(_ == option)) {
+            for (unselectedOption <- WhatIsNext.options(trustMldStatus).filterNot(_ == option)) {
               assertContainsRadioButton(doc, unselectedOption._1.id, "value", unselectedOption._1.value, isChecked = false)
               assertRadioButtonContainsHint(doc, unselectedOption._1.id + ".hint", messages(unselectedOption._2))
             }
@@ -78,16 +79,25 @@ class WhatIsNextViewSpec extends ViewBehaviours {
   "WhatIsNextView" when {
 
     "4mld" must {
-      applytests(is5mldEnabled = false, isTrust5mldTaxable = false)
+      applyTests(Underlying4mldTrustIn4mldMode)
     }
 
-    "5mld" must {
-      applytests(is5mldEnabled = true, isTrust5mldTaxable = false)
+    "5mld" when {
 
-    }
+      "underlying trust is 4mld" must {
+        applyTests(Underlying4mldTrustIn5mldMode)
+      }
 
-    "5mld maintaining a 5mld taxable trust" must {
-      applytests(is5mldEnabled = true, isTrust5mldTaxable = true)
+      "underlying trust is 5mld" when {
+
+        "taxable" must {
+          applyTests(Underlying5mldTaxableTrustIn5mldMode)
+        }
+
+        "non-taxable" must {
+          applyTests(Underlying5mldNonTaxableTrustIn5mldMode)
+        }
+      }
     }
   }
 }

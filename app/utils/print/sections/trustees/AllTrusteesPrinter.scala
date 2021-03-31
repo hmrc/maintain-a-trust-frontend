@@ -16,46 +16,42 @@
 
 package utils.print.sections.trustees
 
-import javax.inject.Inject
 import models.UserAnswers
-import models.pages.IndividualOrBusiness
+import models.pages.IndividualOrBusiness._
+import pages.QuestionPage
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeIndividualOrBusinessPage}
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
-import utils.print.sections.trustees.lead_trustee.{LeadTrusteeBusinessPrinter, LeadTrusteeIndividualPrinter}
+import play.api.libs.json.JsArray
+import sections.Trustees
+import utils.print.sections.EntitiesPrinter
+import utils.print.sections.trustees.leadtrustee.{LeadTrusteeBusinessPrinter, LeadTrusteeIndividualPrinter}
+import utils.print.sections.trustees.trustee.{TrusteeIndividualPrinter, TrusteeOrganisationPrinter}
 import viewmodels.AnswerSection
 
-class AllTrusteesPrinter @Inject()(answerRowConverter: AnswerRowConverter)
-                                  (userAnswers: UserAnswers)
-                                  (implicit messages: Messages) {
+import javax.inject.Inject
 
-  def allTrustees : Seq[AnswerSection] = {
+class AllTrusteesPrinter @Inject()(leadTrusteeIndividualPrinter: LeadTrusteeIndividualPrinter,
+                                   leadTrusteeBusinessPrinter: LeadTrusteeBusinessPrinter,
+                                   trusteeIndividualPrinter: TrusteeIndividualPrinter,
+                                   trusteeOrganisationPrinter: TrusteeOrganisationPrinter) extends EntitiesPrinter[JsArray] {
 
-    val size = userAnswers.get(_root_.sections.Trustees).map(_.value.size).getOrElse(0)
-
-    size match {
-      case 0 => Nil
-      case _ =>
-        (for (index <- 0 to size) yield trustee(index)).flatten
-    }
+  override def printSection(index: Int, userAnswers: UserAnswers)
+                           (implicit messages: Messages): Option[AnswerSection] = {
+    (for {
+      isLeadTrustee <- userAnswers.get(IsThisLeadTrusteePage(index))
+      individualOrBusiness <- userAnswers.get(TrusteeIndividualOrBusinessPage(index))
+    } yield {
+      (isLeadTrustee, individualOrBusiness) match {
+        case (true, Individual) => leadTrusteeIndividualPrinter.printAnswerRows(index, userAnswers)
+        case (true, Business) => leadTrusteeBusinessPrinter.printAnswerRows(index, userAnswers)
+        case (false, Individual) => trusteeIndividualPrinter.printAnswerRows(index, userAnswers)
+        case (false, Business) => trusteeOrganisationPrinter.printAnswerRows(index, userAnswers)
+      }
+    }).flatten
   }
 
-  private def trustee(index: Int): Seq[AnswerSection] = {
-    userAnswers.get(IsThisLeadTrusteePage(index)) flatMap { isLeadTrustee =>
-      userAnswers.get(TrusteeIndividualOrBusinessPage(index)) flatMap { individualOrBusiness =>
-        if (isLeadTrustee) {
-          individualOrBusiness match {
-            case IndividualOrBusiness.Individual => new LeadTrusteeIndividualPrinter(answerRowConverter).print(index, userAnswers)
-            case IndividualOrBusiness.Business => new LeadTrusteeBusinessPrinter(answerRowConverter).print(index, userAnswers)
-          }
-        } else {
-          individualOrBusiness match {
-            case IndividualOrBusiness.Individual => new TrusteeIndividualPrinter(answerRowConverter).print(index, userAnswers)
-            case IndividualOrBusiness.Business => new TrusteeOrganisationPrinter(answerRowConverter).print(index, userAnswers)
-          }
-        }
-      }
-    }
-  }.getOrElse(Nil)
+  override val section: QuestionPage[JsArray] = Trustees
+
+  override val headingKey: Option[String] = Some("trustees")
 
 }

@@ -25,7 +25,6 @@ import models.pages.WhatIsNext
 import models.requests.DataRequest
 import models.{AgentDeclaration, UserAnswers}
 import pages.WhatIsNextPage
-import pages.close.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
 import play.api.Logging
 import play.api.mvc.Results.Redirect
@@ -33,6 +32,7 @@ import play.api.mvc.{ActionRefiner, BodyParsers, Result}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import utils.TrustClosureDate.{getClosureDate, setClosureDate}
 
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,17 +49,16 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
 
   override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
-   implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     (for {
       whatIsNext <- request.userAnswers.get(WhatIsNextPage)
       optionalAgentInformation = request.userAnswers.get(AgentDeclarationPage)
-      optionalEndDate = request.userAnswers.get(DateLastAssetSharedOutPage)
     } yield {
 
       val utr = request.userAnswers.identifier
 
-      val submissionData = SubmissionData(utr, whatIsNext, optionalAgentInformation, optionalEndDate)
+      val submissionData = SubmissionData(utr, whatIsNext, optionalAgentInformation, getClosureDate(request.userAnswers))
 
       trustConnector.playback(utr).flatMap {
         case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, utr, playback)(request, hc)
@@ -83,7 +82,7 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
             answers
               .set(WhatIsNextPage, data.whatIsNext)
               .flatMap(_.set(AgentDeclarationPage, data.agent))
-              .flatMap(_.set(DateLastAssetSharedOutPage, data.endDate))
+              .flatMap(answers => setClosureDate(answers, data.endDate))
           }
           _ <- playbackRepository.set(updatedAnswers)
         } yield {

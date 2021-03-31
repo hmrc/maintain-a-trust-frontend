@@ -17,13 +17,12 @@
 package controllers.print
 
 import java.time.{LocalDate, LocalDateTime}
-
 import base.SpecBase
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
 import models.{AgentDeclaration, FullName, UKAddress}
 import pages.beneficiaries.charity._
-import pages.close.DateLastAssetSharedOutPage
+import pages.close.taxable.DateLastAssetSharedOutPage
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage, WhatIsNextPage}
 import play.api.test.FakeRequest
@@ -62,7 +61,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
       val answers = playbackAnswers(MakeChanges)
 
-      val entities = injector.instanceOf[PrintPlaybackHelper].people(answers)
+      val entities = injector.instanceOf[PrintPlaybackHelper].entities(answers)
 
       val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(answers)
 
@@ -94,7 +93,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
       val answers = playbackAnswers(CloseTrust)
         .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
 
-      val entities = injector.instanceOf[PrintPlaybackHelper].people(answers)
+      val entities = injector.instanceOf[PrintPlaybackHelper].entities(answers)
 
       val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(answers)
 

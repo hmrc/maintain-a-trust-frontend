@@ -17,24 +17,25 @@
 package utils.print
 
 import java.time.LocalDate
-
 import base.SpecBase
 import pages.trustdetails._
 import play.twirl.api.Html
+import utils.print.sections.TrustDetailsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
 
 class TrustDetailsPrinterSpec extends SpecBase {
 
-  ".print" must {
+  private val helper: TrustDetailsPrinter = injector.instanceOf[TrustDetailsPrinter]
+
+  "TrustDetailsPrinter" must {
 
     "generate an answer section with trust name, created date and utr" in {
-      val helper = injector.instanceOf[PrintPlaybackHelper]
 
       val answers = emptyUserAnswersForUtr
         .set(TrustNamePage, "Trust Ltd.").success.value
         .set(WhenTrustSetupPage, LocalDate.of(2019,6,1)).success.value
 
-      val actualSection = helper.trustDetails(answers)
+      val actualSection = helper.print(answers)
 
       val utr = "1234567890"
 

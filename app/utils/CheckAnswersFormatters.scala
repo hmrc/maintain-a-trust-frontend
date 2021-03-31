@@ -18,10 +18,10 @@ package utils
 
 import models.pages.RoleInCompany
 import models.pages.RoleInCompany.NA
-import models.{Address, InternationalAddress, PassportOrIdCardDetails, UKAddress}
+import models.{Address, Description, InternationalAddress, PassportOrIdCardDetails, UKAddress}
 import org.joda.time.{LocalDate => JodaDate}
 import play.api.i18n.Messages
-import play.twirl.api.Html
+import play.twirl.api.{Html, HtmlFormat}
 import play.twirl.api.HtmlFormat.escape
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.language.LanguageUtils
@@ -111,6 +111,18 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
 
   def formatEnum[T](key: String, answer: T)(implicit messages: Messages): Html = {
     escape(messages(s"$key.$answer"))
+  }
+
+  def description(description: Description): Html = {
+    val lines = Seq(
+      Some(HtmlFormat.escape(description.description)),
+      description.description1.map(HtmlFormat.escape),
+      description.description2.map(HtmlFormat.escape),
+      description.description3.map(HtmlFormat.escape),
+      description.description4.map(HtmlFormat.escape)
+    ).flatten
+
+    breakLines(lines)
   }
 
   private def breakLines(lines: Seq[Html]): Html = {

@@ -16,7 +16,7 @@
 
 package models.pages
 
-import models.{Enumerable, WithName}
+import models._
 import viewmodels.RadioOption
 
 sealed trait WhatIsNext
@@ -27,17 +27,20 @@ object WhatIsNext extends Enumerable.Implicits {
   case object MakeChanges extends WithName("make-changes") with WhatIsNext
   case object CloseTrust extends WithName("close-trust") with WhatIsNext
   case object NoLongerTaxable extends WithName("no-longer-taxable") with WhatIsNext
+  case object NeedsToPayTax extends WithName("needs-to-pay-tax") with WhatIsNext
   case object GeneratePdf extends WithName("generate-pdf") with WhatIsNext
 
   val values: List[WhatIsNext] = List(
-    DeclareTheTrustIsUpToDate, MakeChanges, CloseTrust, NoLongerTaxable, GeneratePdf
+    DeclareTheTrustIsUpToDate, MakeChanges, CloseTrust, NoLongerTaxable, NeedsToPayTax, GeneratePdf
   )
 
-  def options(is5mldEnabled: Boolean, isTrust5mldTaxable: Boolean): List[(RadioOption, String)] = {
-    val suffix: String = if (is5mldEnabled) "5mld" else ""
+  def options(trustMldStatus: TrustMldStatus): List[(RadioOption, String)] = {
+    val suffix: String = if (trustMldStatus != Underlying4mldTrustIn4mldMode) "5mld" else ""
     values
-      .filterNot(_ == GeneratePdf && !is5mldEnabled)
-      .filterNot(_ == NoLongerTaxable && !(is5mldEnabled && isTrust5mldTaxable))
+      .filterNot(_ == DeclareTheTrustIsUpToDate && trustMldStatus == Underlying5mldNonTaxableTrustIn5mldMode)
+      .filterNot(_ == NoLongerTaxable && trustMldStatus != Underlying5mldTaxableTrustIn5mldMode)
+      .filterNot(_ == NeedsToPayTax && trustMldStatus != Underlying5mldNonTaxableTrustIn5mldMode)
+      .filterNot(_ == GeneratePdf && trustMldStatus == Underlying4mldTrustIn4mldMode)
       .map(value => (RadioOption(s"declarationWhatNext$suffix", value.toString), s"declarationWhatNext$suffix.$value.hint"))
   }
 

@@ -16,34 +16,33 @@
 
 package utils.print.sections.protectors
 
-import javax.inject.Inject
-import models.UserAnswers
+import models.{FullName, UserAnswers}
 import pages.protectors.individual._
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
-import viewmodels.AnswerSection
+import play.api.libs.json.JsPath
+import utils.print.sections.{AnswerRowConverter, EntityPrinter}
+import viewmodels.AnswerRow
 
-class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter)
-                                          (implicit messages: Messages) {
+import javax.inject.Inject
 
-  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] =
-    userAnswers.get(IndividualProtectorNamePage(index)).map(_.toString).map { protectorName =>
-      Seq(AnswerSection(
-        headingKey = Some(messages("answerPage.section.protector.subheading", index + 1)),
-        Seq(
-          converter.fullNameQuestion(IndividualProtectorNamePage(index), userAnswers, "individualProtectorName", protectorName),
-          converter.yesNoQuestion(IndividualProtectorDateOfBirthYesNoPage(index), userAnswers, "individualProtectorDateOfBirthYesNo", protectorName),
-          converter.dateQuestion(IndividualProtectorDateOfBirthPage(index),userAnswers, "individualProtectorDateOfBirth", protectorName),
-          converter.yesNoQuestion(IndividualProtectorNINOYesNoPage(index), userAnswers, "individualProtectorNINOYesNo", protectorName),
-          converter.ninoQuestion(IndividualProtectorNINOPage(index), userAnswers, "individualProtectorNINO", protectorName),
-          converter.yesNoQuestion(IndividualProtectorAddressYesNoPage(index), userAnswers, "individualProtectorAddressYesNo", protectorName),
-          converter.yesNoQuestion(IndividualProtectorAddressUKYesNoPage(index), userAnswers, "individualProtectorAddressUkYesNo", protectorName),
-          converter.addressQuestion(IndividualProtectorAddressPage(index), userAnswers, "individualProtectorAddress", protectorName),
-          converter.yesNoQuestion(IndividualProtectorPassportIDCardYesNoPage(index), userAnswers, "individualProtectorPassportIDCardYesNo", protectorName),
-          converter.passportOrIdCardQuestion(IndividualProtectorPassportIDCardPage(index), userAnswers, "individualProtectorPassportIDCard", protectorName)
-        ).flatten,
-        sectionKey = None
-      ))
-    }.getOrElse(Nil)
+class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter) extends EntityPrinter[FullName] {
+
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+    converter.fullNameQuestion(IndividualProtectorNamePage(index), userAnswers, "individualProtectorName", name),
+    converter.yesNoQuestion(IndividualProtectorDateOfBirthYesNoPage(index), userAnswers, "individualProtectorDateOfBirthYesNo", name),
+    converter.dateQuestion(IndividualProtectorDateOfBirthPage(index),userAnswers, "individualProtectorDateOfBirth", name),
+    converter.yesNoQuestion(IndividualProtectorNINOYesNoPage(index), userAnswers, "individualProtectorNINOYesNo", name),
+    converter.ninoQuestion(IndividualProtectorNINOPage(index), userAnswers, "individualProtectorNINO", name),
+    converter.yesNoQuestion(IndividualProtectorAddressYesNoPage(index), userAnswers, "individualProtectorAddressYesNo", name),
+    converter.yesNoQuestion(IndividualProtectorAddressUKYesNoPage(index), userAnswers, "individualProtectorAddressUkYesNo", name),
+    converter.addressQuestion(IndividualProtectorAddressPage(index), userAnswers, "individualProtectorAddress", name),
+    converter.yesNoQuestion(IndividualProtectorPassportIDCardYesNoPage(index), userAnswers, "individualProtectorPassportIDCardYesNo", name),
+    converter.passportOrIdCardQuestion(IndividualProtectorPassportIDCardPage(index), userAnswers, "individualProtectorPassportIDCard", name)
+  )
+
+  override def namePath(index: Int): JsPath = IndividualProtectorNamePage(index).path
+
+  override val subHeadingKey: Option[String] = Some("protector")
 
 }

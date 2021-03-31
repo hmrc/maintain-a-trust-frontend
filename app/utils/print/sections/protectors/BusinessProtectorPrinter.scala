@@ -16,32 +16,29 @@
 
 package utils.print.sections.protectors
 
-import javax.inject.Inject
 import models.UserAnswers
 import pages.protectors.business._
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
-import viewmodels.AnswerSection
+import play.api.libs.json.JsPath
+import utils.print.sections.{AnswerRowConverter, EntityPrinter}
+import viewmodels.AnswerRow
 
-class BusinessProtectorPrinter @Inject()(converter: AnswerRowConverter)
-                                        (implicit messages: Messages) {
+import javax.inject.Inject
 
-  def print(index: Int, userAnswers: UserAnswers): Seq[AnswerSection] =
-    userAnswers.get(BusinessProtectorNamePage(index)).map { protectorName =>
-      Seq(
-        AnswerSection(
-          headingKey = Some(messages("answerPage.section.protector.subheading", index + 1)),
-          Seq(
-            converter.stringQuestion(BusinessProtectorNamePage(index), userAnswers, "companyProtectorName", protectorName),
-            converter.yesNoQuestion(BusinessProtectorUtrYesNoPage(index), userAnswers, "companyProtectorUtrYesNo", protectorName),
-            converter.stringQuestion(BusinessProtectorUtrPage(index), userAnswers, "companyProtectorUtr", protectorName),
-            converter.yesNoQuestion(BusinessProtectorAddressYesNoPage(index), userAnswers, "companyProtectorAddressYesNo", protectorName),
-            converter.yesNoQuestion(BusinessProtectorAddressUKYesNoPage(index), userAnswers, "companyProtectorAddressUkYesNo", protectorName),
-            converter.addressQuestion(BusinessProtectorAddressPage(index), userAnswers, "companyProtectorAddress", protectorName)
-          ).flatten,
-          None
-        )
-      )
-    }.getOrElse(Nil)
+class BusinessProtectorPrinter @Inject()(converter: AnswerRowConverter) extends EntityPrinter[String] {
+
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
+                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+    converter.stringQuestion(BusinessProtectorNamePage(index), userAnswers, "companyProtectorName", name),
+    converter.yesNoQuestion(BusinessProtectorUtrYesNoPage(index), userAnswers, "companyProtectorUtrYesNo", name),
+    converter.stringQuestion(BusinessProtectorUtrPage(index), userAnswers, "companyProtectorUtr", name),
+    converter.yesNoQuestion(BusinessProtectorAddressYesNoPage(index), userAnswers, "companyProtectorAddressYesNo", name),
+    converter.yesNoQuestion(BusinessProtectorAddressUKYesNoPage(index), userAnswers, "companyProtectorAddressUkYesNo", name),
+    converter.addressQuestion(BusinessProtectorAddressPage(index), userAnswers, "companyProtectorAddress", name)
+  )
+
+  override def namePath(index: Int): JsPath = BusinessProtectorNamePage(index).path
+
+  override val subHeadingKey: Option[String] = Some("protector")
 
 }

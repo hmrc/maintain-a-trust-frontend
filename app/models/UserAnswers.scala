@@ -16,14 +16,13 @@
 
 package models
 
+import _root_.pages.trustdetails.ExpressTrustYesNoPage
 import forms.Validation
-
-import java.time.LocalDateTime
 import play.api.Logging
 import play.api.libs.json._
 import queries.{Gettable, Settable}
-import _root_.pages.trustdetails.ExpressTrustYesNoPage
 
+import java.time.LocalDateTime
 import scala.util.{Failure, Success, Try}
 
 final case class UserAnswers(
@@ -37,10 +36,24 @@ final case class UserAnswers(
 
   def identifierType: IdentifierType = if (identifier.matches(Validation.utrRegex)) UTR else URN
 
-  def isTrust5mldTaxable: Boolean = this.get(ExpressTrustYesNoPage).isDefined && isTrustTaxable
+  def trustMldStatus: TrustMldStatus = (is5mldEnabled, isUnderlyingTrust5mld, isTrustTaxable) match {
+    case (false, _, _) => Underlying4mldTrustIn4mldMode
+    case (true, false, _) => Underlying4mldTrustIn5mldMode
+    case (true, true, true) => Underlying5mldTaxableTrustIn5mldMode
+    case (true, true, false) => Underlying5mldNonTaxableTrustIn5mldMode
+  }
+
+  private def isUnderlyingTrust5mld: Boolean = this.get(ExpressTrustYesNoPage).isDefined
+
+  def is5mldTrustIn5mldMode: Boolean =
+    trustMldStatus == Underlying5mldTaxableTrustIn5mldMode || trustMldStatus == Underlying5mldNonTaxableTrustIn5mldMode
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
-    Reads.at(page.path).reads(data) match {
+    getAtPath(page.path)
+  }
+
+  def getAtPath[A](path: JsPath)(implicit rds: Reads[A]): Option[A] = {
+    Reads.at(path).reads(data) match {
       case JsSuccess(value, _) => Some(value)
       case JsError(_) => None
     }
@@ -96,6 +109,14 @@ final case class UserAnswers(
         query.cleanup(None, updatedAnswers)
     }
   }
+
+  def deleteAtPath(path: JsPath): Try[UserAnswers] = {
+    data.removeObject(path).map(obj => copy(data = obj)).fold(
+      _ => Success(this),
+      result => Success(result)
+    )
+  }
+
 }
 
 object UserAnswers {

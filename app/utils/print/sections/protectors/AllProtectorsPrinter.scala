@@ -16,46 +16,31 @@
 
 package utils.print.sections.protectors
 
-import javax.inject.Inject
 import models.UserAnswers
-import models.pages.IndividualOrBusiness.{Business, Individual}
+import models.pages.IndividualOrBusiness._
+import pages.QuestionPage
 import pages.protectors.ProtectorIndividualOrBusinessPage
 import play.api.i18n.Messages
-import utils.print.sections.AnswerRowConverter
+import play.api.libs.json.JsArray
+import sections.Protectors
+import utils.print.sections.EntitiesPrinter
 import viewmodels.AnswerSection
 
-class AllProtectorsPrinter @Inject()(answerRowConverter: AnswerRowConverter)
-                                    (userAnswers: UserAnswers)
-                                    (implicit messages: Messages) {
+import javax.inject.Inject
 
-  def allProtectors : Seq[AnswerSection] = {
-    val size = userAnswers
-      .get(_root_.sections.Protectors)
-      .map(_.value.size)
-      .getOrElse(0)
+class AllProtectorsPrinter @Inject()(individualProtectorPrinter: IndividualProtectorPrinter,
+                                     businessProtectorPrinter: BusinessProtectorPrinter) extends EntitiesPrinter[JsArray] {
 
-    val protectors = size match {
-      case 0 => Nil
-      case _ =>
-
-        (for (index <- 0 to size) yield {
-          userAnswers.get(ProtectorIndividualOrBusinessPage(index)).map {
-            case Individual =>
-              new IndividualProtectorPrinter(answerRowConverter).print(index, userAnswers)
-            case Business =>
-              new BusinessProtectorPrinter(answerRowConverter).print(index, userAnswers)
-          }.getOrElse(Nil)
-        }).flatten
-    }
-
-    if (protectors.nonEmpty) {
-      Seq(
-        Seq(AnswerSection(sectionKey = Some(messages("answerPage.section.protectors.heading")))),
-        protectors
-      ).flatten
-    } else {
-      Nil
+  override def printSection(index: Int, userAnswers: UserAnswers)
+                           (implicit messages: Messages): Option[AnswerSection] = {
+    userAnswers.get(ProtectorIndividualOrBusinessPage(index)).flatMap {
+      case Individual => individualProtectorPrinter.printAnswerRows(index, userAnswers)
+      case Business => businessProtectorPrinter.printAnswerRows(index, userAnswers)
     }
   }
+
+  override def section: QuestionPage[JsArray] = Protectors
+
+  override val headingKey: Option[String] = Some("protectors")
 
 }

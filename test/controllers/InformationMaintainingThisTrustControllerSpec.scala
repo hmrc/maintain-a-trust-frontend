@@ -17,35 +17,105 @@
 package controllers
 
 import base.SpecBase
-import models.UTR
+import models.{URN, UTR}
+import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.InformationMaintainingThisTrustView
+import views.html.{InformationMaintainingNonTaxableTrustView, InformationMaintainingTaxableTrustView, InformationMaintainingThisTrustView}
 
 class InformationMaintainingThisTrustControllerSpec extends SpecBase {
 
   "InformationMaintainingThisTrustPage Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "return OK and the correct view for a GET" when {
 
-      val userAnswers = emptyUserAnswersForUtr
+      "4mld" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isTrustTaxable = true)
 
-      val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val result = route(application, request).value
+        val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
 
-      val view = application.injector.instanceOf[InformationMaintainingThisTrustView]
+        val result = route(application, request).value
 
-      val utr = "1234567890"
+        val view = application.injector.instanceOf[InformationMaintainingThisTrustView]
 
-      status(result) mustEqual OK
+        status(result) mustEqual OK
 
-      contentAsString(result) mustEqual
-        view(utr, UTR)(request, messages).toString
+        contentAsString(result) mustEqual
+          view(userAnswers.identifier, UTR)(request, messages).toString
 
-      application.stop()
+        application.stop()
+      }
+
+      "5mld" when {
+
+        "underlying trust data is 4mld" in {
+
+          val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+          val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[InformationMaintainingThisTrustView]
+
+          status(result) mustEqual OK
+
+          contentAsString(result) mustEqual
+            view(userAnswers.identifier, UTR)(request, messages).toString
+
+          application.stop()
+        }
+
+        "underlying trust data is 5mld" when {
+
+          "taxable" in {
+
+            val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+              .set(ExpressTrustYesNoPage, true).success.value
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+            val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[InformationMaintainingTaxableTrustView]
+
+            status(result) mustEqual OK
+
+            contentAsString(result) mustEqual
+              view(userAnswers.identifier, UTR)(request, messages).toString
+
+            application.stop()
+          }
+
+          "non-taxable" in {
+
+            val userAnswers = emptyUserAnswersForUrn.copy(is5mldEnabled = true, isTrustTaxable = false)
+              .set(ExpressTrustYesNoPage, true).success.value
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+            val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[InformationMaintainingNonTaxableTrustView]
+
+            status(result) mustEqual OK
+
+            contentAsString(result) mustEqual
+              view(userAnswers.identifier, URN)(request, messages).toString
+
+            application.stop()
+          }
+        }
+      }
     }
   }
 }
