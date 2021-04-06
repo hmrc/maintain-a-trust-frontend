@@ -58,7 +58,8 @@ class TaskListControllerSpec extends SpecBase {
   )
 
   def mandatorySections5mld(identifier: String): List[Task] =
-    Task(Link(TrustDetails, fakeUrl), Some(InProgress)) :: mandatorySections4mld(identifier)
+    Task(Link(TrustDetails, fakeUrl), Some(InProgress)) ::
+      mandatorySections4mld(identifier)
 
   def optionalSections4mld(identifier: String): List[Task] = List(
     Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), Some(InProgress)),
@@ -66,18 +67,15 @@ class TaskListControllerSpec extends SpecBase {
   )
 
   def optionalSections5mld(identifier: String): List[Task] =
-    Task(Link(NonEeaBusinessAsset, fakeUrl), Some(InProgress)) :: optionalSections4mld(identifier)
+    Task(Link(NonEeaBusinessAsset, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), Some(InProgress)) ::
+      optionalSections4mld(identifier)
 
   private lazy val config: Configuration = injector.instanceOf[FrontendAppConfig].configuration
 
-  def frontendAppConfig(isMaintainTrustDetailsEnabled: Boolean,
-                        isMaintainNonEeaCompanyEnabled: Boolean): FrontendAppConfig = {
+  def frontendAppConfig(isMaintainTrustDetailsEnabled: Boolean): FrontendAppConfig = {
     new FrontendAppConfig(config) {
       override lazy val maintainTrustDetailsEnabled: Boolean = isMaintainTrustDetailsEnabled
       override def maintainTrustDetailsUrl(identifier: String): String = fakeUrl
-
-      override lazy val maintainNonEeaCompaniesEnabled: Boolean = isMaintainNonEeaCompanyEnabled
-      override def maintainNonEeaCompanyUrl(utr: String): String = fakeUrl
     }
   }
 
@@ -90,7 +88,6 @@ class TaskListControllerSpec extends SpecBase {
       val utr = baseAnswers.identifier
 
       behave like taskListController(baseAnswers, mandatorySections4mld(utr), optionalSections4mld(utr))
-
     }
 
     "in 5mld mode" when {
@@ -141,7 +138,7 @@ class TaskListControllerSpec extends SpecBase {
           val application = applicationBuilder(userAnswers = Some(answers))
             .overrides(
               bind(classOf[TrustsStoreConnector]).toInstance(mockConnector),
-              bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true, isMaintainNonEeaCompanyEnabled = true))
+              bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true))
             ).build()
 
           when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
@@ -169,7 +166,7 @@ class TaskListControllerSpec extends SpecBase {
           val application = applicationBuilder(userAnswers = Some(answers))
             .overrides(
               bind(classOf[TrustsStoreConnector]).toInstance(mockConnector),
-              bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true, isMaintainNonEeaCompanyEnabled = true))
+              bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true))
             ).build()
 
           when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
