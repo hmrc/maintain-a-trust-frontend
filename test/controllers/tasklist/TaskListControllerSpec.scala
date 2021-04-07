@@ -17,7 +17,6 @@
 package controllers.tasklist
 
 import base.SpecBase
-import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import models.pages.Tag.InProgress
 import models.pages.WhatIsNext
@@ -26,7 +25,6 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito._
 import pages.WhatIsNextPage
 import pages.trustdetails.ExpressTrustYesNoPage
-import play.api.Configuration
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -47,8 +45,6 @@ class TaskListControllerSpec extends SpecBase {
 
   lazy val onSubmit: Call = controllers.routes.WhatIsNextController.onSubmit()
 
-  val fakeUrl = "fakeUrl"
-
   val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
   def mandatorySections4mld(identifier: String): List[Task] = List(
@@ -58,7 +54,7 @@ class TaskListControllerSpec extends SpecBase {
   )
 
   def mandatorySections5mld(identifier: String): List[Task] =
-    Task(Link(TrustDetails, fakeUrl), Some(InProgress)) ::
+    Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Some(InProgress)) ::
       mandatorySections4mld(identifier)
 
   def optionalSections4mld(identifier: String): List[Task] = List(
@@ -69,15 +65,6 @@ class TaskListControllerSpec extends SpecBase {
   def optionalSections5mld(identifier: String): List[Task] =
     Task(Link(NonEeaBusinessAsset, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), Some(InProgress)) ::
       optionalSections4mld(identifier)
-
-  private lazy val config: Configuration = injector.instanceOf[FrontendAppConfig].configuration
-
-  def frontendAppConfig(isMaintainTrustDetailsEnabled: Boolean): FrontendAppConfig = {
-    new FrontendAppConfig(config) {
-      override lazy val maintainTrustDetailsEnabled: Boolean = isMaintainTrustDetailsEnabled
-      override def maintainTrustDetailsUrl(identifier: String): String = fakeUrl
-    }
-  }
 
   "TaskListController Controller" when {
 
@@ -137,8 +124,7 @@ class TaskListControllerSpec extends SpecBase {
 
           val application = applicationBuilder(userAnswers = Some(answers))
             .overrides(
-              bind(classOf[TrustsStoreConnector]).toInstance(mockConnector),
-              bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true))
+              bind(classOf[TrustsStoreConnector]).toInstance(mockConnector)
             ).build()
 
           when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
@@ -165,8 +151,7 @@ class TaskListControllerSpec extends SpecBase {
 
           val application = applicationBuilder(userAnswers = Some(answers))
             .overrides(
-              bind(classOf[TrustsStoreConnector]).toInstance(mockConnector),
-              bind[FrontendAppConfig].toInstance(frontendAppConfig(isMaintainTrustDetailsEnabled = true))
+              bind(classOf[TrustsStoreConnector]).toInstance(mockConnector)
             ).build()
 
           when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
