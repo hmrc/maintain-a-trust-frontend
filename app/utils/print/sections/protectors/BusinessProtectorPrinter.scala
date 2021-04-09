@@ -32,6 +32,9 @@ class BusinessProtectorPrinter @Inject()(converter: AnswerRowConverter) extends 
     converter.stringQuestion(BusinessProtectorNamePage(index), userAnswers, "companyProtectorName", name),
     converter.yesNoQuestion(BusinessProtectorUtrYesNoPage(index), userAnswers, "companyProtectorUtrYesNo", name),
     converter.stringQuestion(BusinessProtectorUtrPage(index), userAnswers, "companyProtectorUtr", name),
+    converter.yesNoQuestion(BusinessProtectorCountryOfResidenceYesNoPage(index), userAnswers, "companyProtectorCountryOfResidenceYesNo", name),
+    converter.yesNoQuestion(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "companyProtectorCountryOfResidenceUkYesNo", name),
+    converter.countryQuestion(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(index), BusinessProtectorCountryOfResidencePage(index), userAnswers, "companyProtectorCountryOfResidence", name),
     converter.yesNoQuestion(BusinessProtectorAddressYesNoPage(index), userAnswers, "companyProtectorAddressYesNo", name),
     converter.yesNoQuestion(BusinessProtectorAddressUKYesNoPage(index), userAnswers, "companyProtectorAddressUkYesNo", name),
     converter.addressQuestion(BusinessProtectorAddressPage(index), userAnswers, "companyProtectorAddress", name)

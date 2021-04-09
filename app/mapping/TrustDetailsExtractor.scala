@@ -25,7 +25,7 @@ import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class TrustDetailsExtractor extends TaxableExtractor with Logging {
+class TrustDetailsExtractor extends ConditionalExtractor with Logging {
 
   def extract(answers: UserAnswers, data: TrustDetailsType): Either[PlaybackExtractionError, UserAnswers] = {
     val updated = answers

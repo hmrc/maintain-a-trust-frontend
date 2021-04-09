@@ -23,6 +23,7 @@ import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrust
 import models.{Description, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.large._
+import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
@@ -95,7 +96,56 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
     "when there are large beneficiaries" - {
 
-      "for a taxable trust" - {
+      "for a 4mld taxable trust" - {
+
+        "with minimum data must return user answers updated" in {
+          val largeBeneficiary = List(
+            DisplayTrustLargeType(
+              lineNo = Some("1"),
+              bpMatchStatus = Some("01"),
+              organisationName = "Large 1",
+              countryOfResidence = Some("FR"),
+              description = s"Description",
+              description1 = Some("Description 1"),
+              description2 = None,
+              description3 = None,
+              description4 = None,
+              numberOfBeneficiary = "100",
+              identification = Some(
+                DisplayTrustIdentificationOrgType(
+                  safeId = Some("8947584-94759745-84758745"),
+                  utr = None,
+                  address = Some(AddressType(s"line 1", "line 2", None, None, Some("NE11NE"), GB))
+                )
+              ),
+              beneficiaryDiscretion = Some(false),
+              beneficiaryShareOfIncome = Some("10"),
+              entityStart = "2019-11-26"
+            )
+          )
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiary)
+
+          extraction.right.value.get(LargeBeneficiaryNamePage(0)).get mustBe "Large 1"
+          extraction.right.value.get(LargeBeneficiaryCountryOfResidenceYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryDescriptionPage(0)).get mustBe Description("Description", Some("Description 1"), None, None, None)
+          extraction.right.value.get(LargeBeneficiaryDiscretionYesNoPage(0)).get mustBe false
+          extraction.right.value.get(LargeBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+          extraction.right.value.get(LargeBeneficiaryAddressYesNoPage(0)).get mustBe true
+          extraction.right.value.get(LargeBeneficiaryAddressUKYesNoPage(0)).get mustBe true
+          extraction.right.value.get(LargeBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
+          extraction.right.value.get(LargeBeneficiaryUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(LargeBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(LargeBeneficiarySafeIdPage(0)) must be(defined)
+          extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe Over1
+        }
+      }
+
+      "for a 5mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
           val largeBeneficiary = List(
@@ -123,7 +173,8 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiary)
 
@@ -146,7 +197,8 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val largeBeneficiaries = (for (index <- 0 to 2) yield generateLargeBeneficiary(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiaries)
 
@@ -228,7 +280,8 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiary)
 
@@ -251,7 +304,8 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val largeBeneficiaries = (for (index <- 0 to 2) yield generateLargeBeneficiary(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiaries)
 

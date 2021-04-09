@@ -25,11 +25,13 @@ import mapping.trustees.TrusteeExtractor
 import models.UserAnswers
 import models.UserAnswersCombinator._
 import models.http.GetTrust
+import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.Logging
 import services.FeatureFlagService
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Success
 
 @ImplementedBy(classOf[UserAnswersExtractorImpl])
 trait UserAnswersExtractor {
@@ -56,7 +58,12 @@ class UserAnswersExtractorImpl @Inject()(
     featureFlagService.is5mldEnabled() map {
       is5mldEnabled =>
 
-        val updatedAnswers = answers.copy(isTrustTaxable = data.trust.details.isTaxable, is5mldEnabled = is5mldEnabled)
+          val userAnswers = answers.copy(isTrustTaxable = data.trust.details.isTaxable, is5mldEnabled = is5mldEnabled)
+
+          val updatedAnswers = userAnswers.set(ExpressTrustYesNoPage, data.trust.details.expressTrust) match {
+            case Success(answersAre5mld) => answersAre5mld
+            case _ => userAnswers
+          }
 
         def answersCombined: Either[PlaybackExtractionError, Option[UserAnswers]] = for {
           correspondence <- correspondenceExtractor.extract(updatedAnswers, data.correspondence).right

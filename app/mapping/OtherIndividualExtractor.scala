@@ -48,7 +48,9 @@ class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
   override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualCountryOfResidenceYesNoPage(index)
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualCountryOfResidenceInTheUkYesNoPage(index)
   override def countryOfResidencePage(index: Int): QuestionPage[String] = OtherIndividualCountryOfResidencePage(index)
-  
+
+  override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualMentalCapacityYesNoPage(index)
+
   override def metaDataPage(index: Int): QuestionPage[MetaData] = OtherIndividualMetaData(index)
 
   override def updateUserAnswers(answers: Try[UserAnswers],
@@ -61,6 +63,7 @@ class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(OtherIndividualSafeIdPage(index), entity.identification.flatMap(_.safeId)))
+      .flatMap(answers => extractMentalCapacity(entity.legallyIncapable, index, answers))
   }
 
 }

@@ -22,6 +22,7 @@ import models.http.{AddressType, DisplayTrustIdentificationType, NaturalPersonTy
 import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.individual._
+import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 import java.time.LocalDate
@@ -45,6 +46,11 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
     countryOfResidence = index match {
       case 0 => Some(GB)
       case 1 => Some("DE")
+      case _ => None
+    },
+    legallyIncapable = index match {
+      case 0 => Some(false)
+      case 1 => Some(true)
       case _ => None
     },
     identification = Some(
@@ -91,7 +97,48 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
 
     "when there are individuals" - {
 
-      "for a taxable trust" - {
+      "for a 4mld taxable trust" - {
+
+        "should not populate Country Of Residence pages" in {
+          val individual = List(NaturalPersonType(
+            lineNo = Some("1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = None,
+            countryOfNationality = Some("FR"),
+            countryOfResidence = Some("FR"),
+            legallyIncapable = None,
+            identification = None,
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = individualExtractor.extract(ua, individual)
+
+          extraction.right.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherIndividualDateOfBirthPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfNationalityYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfNationalityPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfResidenceYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualMentalCapacityYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherIndividualAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualPassportIDCardPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualSafeIdPage(0)) mustNot be(defined)
+        }
+      }
+
+      "for a 5mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
           val individual = List(NaturalPersonType(
@@ -101,11 +148,13 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = None,
             countryOfNationality = None,
             countryOfResidence = None,
+            legallyIncapable = None,
             identification = None,
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = individualExtractor.extract(ua, individual)
 
@@ -119,6 +168,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(OtherIndividualCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.right.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(OtherIndividualCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualMentalCapacityYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(0)).get mustBe false
           extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(0)) mustNot be(defined)
           extraction.right.value.get(OtherIndividualAddressYesNoPage(0)).get mustBe false
@@ -132,7 +182,8 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val individuals = (for (index <- 0 to 2) yield generateIndividual(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = individualExtractor.extract(ua, individuals)
 
@@ -177,6 +228,10 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(OtherIndividualCountryOfResidencePage(0)).get mustBe GB
           extraction.right.value.get(OtherIndividualCountryOfResidencePage(1)).get mustBe "DE"
           extraction.right.value.get(OtherIndividualCountryOfResidencePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualMentalCapacityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualMentalCapacityYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherIndividualMentalCapacityYesNoPage(2)) mustNot be(defined)
 
           extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(0)).get mustBe true
           extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(1)).get mustBe false
@@ -222,11 +277,13 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
             dateOfBirth = None,
             countryOfNationality = None,
             countryOfResidence = None,
+            legallyIncapable = None,
             identification = None,
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "urn", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "urn", isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = individualExtractor.extract(ua, individual)
 
@@ -240,6 +297,7 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(OtherIndividualCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.right.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(OtherIndividualCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherIndividualMentalCapacityYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(OtherIndividualNationalInsuranceNumberPage(0)) mustNot be(defined)
           extraction.right.value.get(OtherIndividualAddressYesNoPage(0)) mustNot be(defined)
@@ -253,7 +311,8 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val individuals = (for (index <- 0 to 2) yield generateIndividual(index)).toList
 
-          val ua = UserAnswers("fakeId", "urn", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "urn", isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = individualExtractor.extract(ua, individuals)
 
@@ -298,6 +357,10 @@ class OtherIndividualExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(OtherIndividualCountryOfResidencePage(0)).get mustBe GB
           extraction.right.value.get(OtherIndividualCountryOfResidencePage(1)).get mustBe "DE"
           extraction.right.value.get(OtherIndividualCountryOfResidencePage(2)) mustNot be(defined)
+
+          extraction.right.value.get(OtherIndividualMentalCapacityYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherIndividualMentalCapacityYesNoPage(1)).get mustBe false
+          extraction.right.value.get(OtherIndividualMentalCapacityYesNoPage(2)) mustNot be(defined)
 
           extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(0)) mustNot be(defined)
           extraction.right.value.get(OtherIndividualNationalInsuranceYesNoPage(1)) mustNot be(defined)

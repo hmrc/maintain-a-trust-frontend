@@ -37,6 +37,9 @@ class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends E
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
     converter.stringQuestion(LargeBeneficiaryNamePage(index), userAnswers, "largeBeneficiaryName"),
+    converter.yesNoQuestion(LargeBeneficiaryCountryOfResidenceYesNoPage(index), userAnswers, "largeBeneficiaryCountryOfResidenceYesNo", name),
+    converter.yesNoQuestion(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "largeBeneficiaryCountryOfResidenceUkYesNo", name),
+    converter.countryQuestion(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), LargeBeneficiaryCountryOfResidencePage(index), userAnswers, "largeBeneficiaryCountryOfResidence", name),
     converter.yesNoQuestion(LargeBeneficiaryAddressYesNoPage(index), userAnswers, "largeBeneficiaryAddressYesNo", name),
     converter.yesNoQuestion(LargeBeneficiaryAddressUKYesNoPage(index), userAnswers, "largeBeneficiaryAddressUKYesNo", name),
     converter.addressQuestion(LargeBeneficiaryAddressPage(index), userAnswers, "largeBeneficiaryAddress", name),

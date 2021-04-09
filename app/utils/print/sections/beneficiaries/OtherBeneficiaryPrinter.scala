@@ -39,6 +39,9 @@ class OtherBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends E
     converter.stringQuestion(OtherBeneficiaryDescriptionPage(index), userAnswers, "otherBeneficiaryDescription"),
     converter.yesNoQuestion(OtherBeneficiaryDiscretionYesNoPage(index), userAnswers, "otherBeneficiaryShareOfIncomeYesNo", name),
     converter.percentageQuestion(OtherBeneficiaryShareOfIncomePage(index), userAnswers, "otherBeneficiaryShareOfIncome", name),
+    converter.yesNoQuestion(OtherBeneficiaryCountryOfResidenceYesNoPage(index), userAnswers, "otherBeneficiaryCountryOfResidenceYesNo", name),
+    converter.yesNoQuestion(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "otherBeneficiaryCountryOfResidenceUkYesNo", name),
+    converter.countryQuestion(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), OtherBeneficiaryCountryOfResidencePage(index), userAnswers, "otherBeneficiaryCountryOfResidence", name),
     converter.yesNoQuestion(OtherBeneficiaryAddressYesNoPage(index), userAnswers, "otherBeneficiaryAddressYesNo", name),
     converter.yesNoQuestion(OtherBeneficiaryAddressUKYesNoPage(index), userAnswers, "otherBeneficiaryAddressUKYesNo", name),
     converter.addressQuestion(OtherBeneficiaryAddressPage(index), userAnswers, "otherBeneficiaryAddress", name)

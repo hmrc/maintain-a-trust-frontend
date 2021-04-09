@@ -28,7 +28,7 @@ import java.time.LocalDate
 import scala.reflect.{ClassTag, classTag}
 import scala.util.{Failure, Success, Try}
 
-abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with TaxableExtractor with Logging {
+abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with ConditionalExtractor with Logging {
 
   val optionalEntity: Boolean = false
 
@@ -93,17 +93,19 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
                                                      yesNoPage: QuestionPage[Boolean],
                                                      ukYesNoPage: QuestionPage[Boolean],
                                                      page: QuestionPage[String]): Try[UserAnswers] = {
-    country match {
-      case Some(GB) =>
-        answers.set(yesNoPage, true)
-          .flatMap(_.set(ukYesNoPage, true))
-          .flatMap(_.set(page, GB))
-      case Some(country) =>
-        answers.set(yesNoPage, true)
-          .flatMap(_.set(ukYesNoPage, false))
-          .flatMap(_.set(page, country))
-      case None =>
-        answers.set(yesNoPage, false)
+    extractIf5mldTrustIn5mldMode(answers) {
+      country match {
+        case Some(GB) =>
+          answers.set(yesNoPage, true)
+            .flatMap(_.set(ukYesNoPage, true))
+            .flatMap(_.set(page, GB))
+        case Some(country) =>
+          answers.set(yesNoPage, true)
+            .flatMap(_.set(ukYesNoPage, false))
+            .flatMap(_.set(page, country))
+        case None =>
+          answers.set(yesNoPage, false)
+      }
     }
   }
 
