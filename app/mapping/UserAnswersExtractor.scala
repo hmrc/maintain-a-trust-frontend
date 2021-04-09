@@ -25,11 +25,13 @@ import mapping.trustees.TrusteeExtractor
 import models.UserAnswers
 import models.UserAnswersCombinator._
 import models.http.GetTrust
+import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.Logging
 import services.FeatureFlagService
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Success
 
 @ImplementedBy(classOf[UserAnswersExtractorImpl])
 trait UserAnswersExtractor {
@@ -59,15 +61,15 @@ class UserAnswersExtractorImpl @Inject()(
         val updatedAnswers = answers.copy(isTrustTaxable = data.trust.details.isTaxable, is5mldEnabled = is5mldEnabled)
 
         def answersCombined: Either[PlaybackExtractionError, Option[UserAnswers]] = for {
-          correspondence <- correspondenceExtractor.extract(updatedAnswers, data.correspondence).right
-          beneficiaries <- beneficiariesExtractor.extract(updatedAnswers, data.trust.entities.beneficiary).right
-          settlors <- settlorsExtractor.extract(updatedAnswers, data.trust.entities).right
-          assets <- nonEeaBusinessAssetExtractor.extract(updatedAnswers, data.trust.assets.map(_.nonEEABusiness).getOrElse(Nil)).right
-          trustType <- trustTypeExtractor.extract(updatedAnswers, data.trust).right
-          protectors <- protectorsExtractor.extract(updatedAnswers, data.trust.entities.protectors).right
-          otherIndividuals <- otherIndividualsExtractor.extract(updatedAnswers, data.trust.entities.naturalPerson.getOrElse(Nil)).right
-          trustees <- trusteesExtractor.extract(updatedAnswers, data.trust.entities).right
           trustDetails <- trustDetailsExtractor.extract(updatedAnswers, data.trust.details).right
+          correspondence <- correspondenceExtractor.extract(trustDetails, data.correspondence).right
+          beneficiaries <- beneficiariesExtractor.extract(trustDetails, data.trust.entities.beneficiary).right
+          settlors <- settlorsExtractor.extract(trustDetails, data.trust.entities).right
+          assets <- nonEeaBusinessAssetExtractor.extract(trustDetails, data.trust.assets.map(_.nonEEABusiness).getOrElse(Nil)).right
+          trustType <- trustTypeExtractor.extract(trustDetails, data.trust).right
+          protectors <- protectorsExtractor.extract(trustDetails, data.trust.entities.protectors).right
+          otherIndividuals <- otherIndividualsExtractor.extract(trustDetails, data.trust.entities.naturalPerson.getOrElse(Nil)).right
+          trustees <- trusteesExtractor.extract(trustDetails, data.trust.entities).right
         } yield {
           List(correspondence, beneficiaries, settlors, assets, trustType, protectors, otherIndividuals, trustees, trustDetails).combine
         }

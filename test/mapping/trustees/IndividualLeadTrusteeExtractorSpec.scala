@@ -23,6 +23,7 @@ import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, MetaData, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import pages.trustdetails.ExpressTrustYesNoPage
 import pages.trustees._
 import utils.Constants.GB
 
@@ -53,7 +54,58 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
 
     "when there is a lead trustee individual" - {
 
-      "for a taxable trust" - {
+      "for a 4mld taxable trust" - {
+
+        "should not populate Country Of Nationality or Residence pages" in {
+          val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = LocalDate.parse("2018-02-01"),
+            countryOfNationality = Some("FR"),
+            countryOfResidence = Some("FR"),
+            legallyIncapable = None,
+            phoneNumber = "+441234567890",
+            email = Some("test@test.com"),
+            identification =
+              DisplayTrustIdentificationType(
+                safeId = Some("8947584-94759745-84758745"),
+                nino = Some("NA1111111A"),
+                passport = None,
+                address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
+              ),
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
+
+          extraction.right.value.get(IsThisLeadTrusteePage(0)).get mustBe true
+          extraction.right.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(TrusteeNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(TrusteeDateOfBirthPage(0)).get mustBe LocalDate.of(2018, 2, 1)
+          extraction.right.value.get(TrusteeCountryOfNationalityYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeCountryOfNationalityPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeCountryOfResidenceYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeMentalCapacityYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeAUKCitizenPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeNinoPage(0)).get mustBe "NA1111111A"
+          extraction.right.value.get(TrusteeAddressInTheUKPage(0)).get mustBe true
+          extraction.right.value.get(TrusteeUkAddressPage(0)) must be(defined)
+          extraction.right.value.get(TrusteeUkAddressPage(0)).get.postcode mustBe "NE11NE"
+          extraction.right.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "+441234567890"
+          extraction.right.value.get(TrusteeEmailPage(0)).get mustBe "test@test.com"
+          extraction.right.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrusteeSafeIdPage(0)) must be(defined)
+        }
+      }
+
+      "for a 5mld taxable trust" - {
 
         "with nino and UK address, return user answers updated" in {
           val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
@@ -76,7 +128,8 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
@@ -124,7 +177,8 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
@@ -172,7 +226,8 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
@@ -221,7 +276,8 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
@@ -251,7 +307,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
 
       }
 
-      "for a non taxable trust" - {
+      "for a 5mld non taxable trust" - {
 
         "with nino and UK address, return user answers updated" in {
           val leadTrustee = List(DisplayTrustLeadTrusteeIndType(
@@ -274,7 +330,8 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true, isTrustTaxable = false)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
@@ -322,7 +379,8 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true, isTrustTaxable = false)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
@@ -370,7 +428,8 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true, isTrustTaxable = false)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 
@@ -419,7 +478,8 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true, isTrustTaxable = false)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = leadTrusteeIndExtractor.extract(ua, leadTrustee)
 

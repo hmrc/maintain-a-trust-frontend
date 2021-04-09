@@ -46,8 +46,14 @@ class AllSettlorsPrinterSpec extends SpecBase {
         .set(SettlorDateOfDeathPage, LocalDate.of(2010, 10, 10)).success.value
         .set(SettlorDateOfBirthYesNoPage, true).success.value
         .set(SettlorDateOfBirthPage, LocalDate.of(1991, 8, 27)).success.value
+        .set(DeceasedSettlorCountryOfNationalityYesNoPage, true).success.value
+        .set(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, false).success.value
+        .set(DeceasedSettlorCountryOfNationalityPage, "FR").success.value
         .set(SettlorNationalInsuranceYesNoPage, true).success.value
         .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
+        .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).success.value
+        .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, false).success.value
+        .set(DeceasedSettlorCountryOfResidencePage, "FR").success.value
 
       val result = helper.entities(answers)
 
@@ -61,8 +67,14 @@ class AllSettlorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("settlorDateOfDeath.checkYourAnswersLabel", name), answer = Html("10 October 2010"), changeUrl = None),
             AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("settlorDateOfBirth.checkYourAnswersLabel", name), answer = Html("27 August 1991"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfNationalityUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfNationality.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None)
+            AnswerRow(label = messages("settlorNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfResidence.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None)
           ),
           sectionKey = None
         )
@@ -78,7 +90,12 @@ class AllSettlorsPrinterSpec extends SpecBase {
         .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
         .set(SettlorDateOfDeathYesNoPage, false).success.value
         .set(SettlorDateOfBirthYesNoPage, false).success.value
-        .set(SettlorNationalInsuranceYesNoPage, false).success.value
+        .set(DeceasedSettlorCountryOfNationalityYesNoPage, true).success.value
+        .set(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, false).success.value
+        .set(DeceasedSettlorCountryOfNationalityPage, "FR").success.value
+        .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).success.value
+        .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, false).success.value
+        .set(DeceasedSettlorCountryOfResidencePage, "FR").success.value.set(SettlorNationalInsuranceYesNoPage, false).success.value
         .set(SettlorLastKnownAddressYesNoPage, true).success.value
         .set(SettlorLastKnownAddressUKYesNoPage, true).success.value
         .set(SettlorLastKnownAddressPage, UKAddress(
@@ -102,7 +119,13 @@ class AllSettlorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("settlorName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
             AnswerRow(label = messages("settlorDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfNationalityUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfNationality.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfResidence.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("settlorLastKnownAddressYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("settlorLastKnownAddressUKYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("settlorUKAddress.checkYourAnswersLabel", name), answer = Html("line 1<br />line 2<br />line 3<br />line 4<br />NE981ZZ"), changeUrl = None),
@@ -117,7 +140,10 @@ class AllSettlorsPrinterSpec extends SpecBase {
 
     "generate Company Settlor Section" in {
       def businessSettlorBase(index: Int) = uaSet(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Business) andThen
-        uaSet(SettlorBusinessNamePage(index), "International Exports")
+        uaSet(SettlorBusinessNamePage(index), "International Exports") andThen
+        uaSet(SettlorCountryOfResidenceYesNoPage(index), true) andThen
+        uaSet(SettlorCountryOfResidenceInTheUkYesNoPage(index), false) andThen
+        uaSet(SettlorCountryOfResidencePage(index), "FR")
 
       def businessSettlorWithUTR(index: Int) = businessSettlorBase(index) andThen
         uaSet(SettlorUtrYesNoPage(index), true) andThen
@@ -156,11 +182,17 @@ class AllSettlorsPrinterSpec extends SpecBase {
         AnswerSection(Some("Settlor 1"),Seq(
           AnswerRow("What is the business’s name?", Html("International Exports"), None),
           AnswerRow("Do you know International Exports’s Unique Taxpayer Reference (UTR) number?", Html("Yes"), None),
-          AnswerRow("What is International Exports’s Unique Taxpayer Reference (UTR) number?", Html("UTRUTRUTRUTR"), None)
+          AnswerRow("What is International Exports’s Unique Taxpayer Reference (UTR) number?", Html("UTRUTRUTRUTR"), None),
+          AnswerRow("Do you know International Exports’s country of residence?", Html("Yes"), None),
+          AnswerRow("Does International Exports have UK residency?", Html("No"), None),
+          AnswerRow("What is International Exports’s country of residence?", Html("France"), None)
           ), None),
         AnswerSection(Some("Settlor 2"), Seq(
           AnswerRow("What is the business’s name?", Html("International Exports"), None),
           AnswerRow("Do you know International Exports’s Unique Taxpayer Reference (UTR) number?", Html("No"), None),
+          AnswerRow("Do you know International Exports’s country of residence?", Html("Yes"), None),
+          AnswerRow("Does International Exports have UK residency?", Html("No"), None),
+          AnswerRow("What is International Exports’s country of residence?", Html("France"), None),
           AnswerRow("Do you know International Exports’s address?", Html("Yes"), None),
           AnswerRow("Is International Exports’s address in the UK?", Html("Yes"), None),
           AnswerRow("What is International Exports’s address?", Html("Line1<br />Line2<br />Line3<br />POSTCODE"), None)
@@ -169,6 +201,9 @@ class AllSettlorsPrinterSpec extends SpecBase {
         AnswerSection(Some("Settlor 3"), Seq(
           AnswerRow("What is the business’s name?", Html("International Exports"), None),
           AnswerRow("Do you know International Exports’s Unique Taxpayer Reference (UTR) number?", Html("No"), None),
+          AnswerRow("Do you know International Exports’s country of residence?", Html("Yes"), None),
+          AnswerRow("Does International Exports have UK residency?", Html("No"), None),
+          AnswerRow("What is International Exports’s country of residence?", Html("France"), None),
           AnswerRow("Do you know International Exports’s address?", Html("Yes"), None),
           AnswerRow("Is International Exports’s address in the UK?", Html("No"), None),
           AnswerRow("What is International Exports’s address?", Html("Line1<br />Line2<br />Line3<br />Dutch Antilles"), None)
@@ -176,11 +211,17 @@ class AllSettlorsPrinterSpec extends SpecBase {
         AnswerSection(Some("Settlor 4"), Seq(
           AnswerRow("What is the business’s name?", Html("International Exports"), None),
           AnswerRow("Do you know International Exports’s Unique Taxpayer Reference (UTR) number?", Html("No"), None),
+          AnswerRow("Do you know International Exports’s country of residence?", Html("Yes"), None),
+          AnswerRow("Does International Exports have UK residency?", Html("No"), None),
+          AnswerRow("What is International Exports’s country of residence?", Html("France"), None),
           AnswerRow("Do you know International Exports’s address?", Html("No"), None)
         ), None),
         AnswerSection(Some("Settlor 5"), Seq(
           AnswerRow("What is the business’s name?", Html("International Exports"), None),
           AnswerRow("Do you know International Exports’s Unique Taxpayer Reference (UTR) number?", Html("No"), None),
+          AnswerRow("Do you know International Exports’s country of residence?", Html("Yes"), None),
+          AnswerRow("Does International Exports have UK residency?", Html("No"), None),
+          AnswerRow("What is International Exports’s country of residence?", Html("France"), None),
           AnswerRow("Do you know International Exports’s address?", Html("Yes"), None),
           AnswerRow("Is International Exports’s address in the UK?", Html("Yes"), None),
           AnswerRow("What is International Exports’s address?", Html("Line1<br />Line2<br />Line3<br />POSTCODE"), None),
@@ -197,8 +238,14 @@ class AllSettlorsPrinterSpec extends SpecBase {
         uaSet(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual) andThen
         uaSet(SettlorIndividualNamePage(index), FullName("Joe", None,  "Bloggs")) andThen
         uaSet(SettlorIndividualDateOfBirthYesNoPage(index), true) andThen
-        uaSet(SettlorIndividualDateOfBirthPage(index), LocalDate.parse("1934-12-12"))
-
+        uaSet(SettlorIndividualDateOfBirthPage(index), LocalDate.parse("1934-12-12")) andThen
+        uaSet(SettlorCountryOfNationalityYesNoPage(index), true) andThen
+        uaSet(SettlorCountryOfNationalityInTheUkYesNoPage(index), false) andThen
+        uaSet(SettlorCountryOfNationalityPage(index), "FR") andThen
+        uaSet(SettlorCountryOfResidenceYesNoPage(index), true) andThen
+        uaSet(SettlorCountryOfResidenceInTheUkYesNoPage(index), false) andThen
+        uaSet(SettlorCountryOfResidencePage(index), "FR") andThen
+        uaSet(SettlorIndividualMentalCapacityYesNoPage(index), true)
 
       def individualSettlorWithNino(index: Int) = baseIndividualSettlor(index) andThen
         uaSet(SettlorIndividualNINOYesNoPage(index), true) andThen
@@ -236,36 +283,64 @@ class AllSettlorsPrinterSpec extends SpecBase {
           AnswerRow("What is the settlor’s name?", Html("Joe Bloggs"), None),
           AnswerRow("Do you know Joe Bloggs’s date of birth?", Html("Yes"), None),
           AnswerRow("What is Joe Bloggs’s date of birth?", Html("12 December 1934"), None),
+          AnswerRow("Do you know Joe Bloggs’s country of nationality?", Html("Yes"), None),
+          AnswerRow("Does Joe Bloggs have UK nationality?", Html("No"), None),
+          AnswerRow("What is Joe Bloggs’s country of nationality?", Html("France"), None),
           AnswerRow("Do you know Joe Bloggs’s National Insurance number?", Html("Yes"), None),
-          AnswerRow("What is Joe Bloggs’s National Insurance number?", Html("AA 00 00 00 A"), None)
+          AnswerRow("What is Joe Bloggs’s National Insurance number?", Html("AA 00 00 00 A"), None),
+          AnswerRow("Do you know Joe Bloggs’s country of residence?", Html("Yes"), None),
+          AnswerRow("Does Joe Bloggs have UK residency?", Html("No"), None),
+          AnswerRow("What is Joe Bloggs’s country of residence?", Html("France"), None),
+          AnswerRow("Does Joe Bloggs have mental capacity at the time of registration?", Html("Yes"), None)
         ), None),
         AnswerSection(Some("Settlor 2"),Seq(
           AnswerRow("What is the settlor’s name?", Html("Joe Bloggs"), None),
           AnswerRow("Do you know Joe Bloggs’s date of birth?", Html("Yes"), None),
           AnswerRow("What is Joe Bloggs’s date of birth?", Html("12 December 1934"), None),
+          AnswerRow("Do you know Joe Bloggs’s country of nationality?", Html("Yes"), None),
+          AnswerRow("Does Joe Bloggs have UK nationality?", Html("No"), None),
+          AnswerRow("What is Joe Bloggs’s country of nationality?", Html("France"), None),
           AnswerRow("Do you know Joe Bloggs’s National Insurance number?", Html("No"), None),
+          AnswerRow("Do you know Joe Bloggs’s country of residence?", Html("Yes"), None),
+          AnswerRow("Does Joe Bloggs have UK residency?", Html("No"), None),
+          AnswerRow("What is Joe Bloggs’s country of residence?", Html("France"), None),
           AnswerRow("Do you know Joe Bloggs’s address?", Html("Yes"), None),
           AnswerRow("Does Joe Bloggs live in the UK?", Html("Yes"), None),
           AnswerRow("What is Joe Bloggs’s address?", Html("Line1<br />Line2<br />Line3<br />POSTCODE"), None),
-          AnswerRow("Do you know Joe Bloggs’s passport or ID card details?", Html("No"), None)
+          AnswerRow("Do you know Joe Bloggs’s passport or ID card details?", Html("No"), None),
+          AnswerRow("Does Joe Bloggs have mental capacity at the time of registration?", Html("Yes"), None)
         ), None),
         AnswerSection(Some("Settlor 3"),Seq(
           AnswerRow("What is the settlor’s name?", Html("Joe Bloggs"), None),
           AnswerRow("Do you know Joe Bloggs’s date of birth?", Html("Yes"), None),
           AnswerRow("What is Joe Bloggs’s date of birth?", Html("12 December 1934"), None),
+          AnswerRow("Do you know Joe Bloggs’s country of nationality?", Html("Yes"), None),
+          AnswerRow("Does Joe Bloggs have UK nationality?", Html("No"), None),
+          AnswerRow("What is Joe Bloggs’s country of nationality?", Html("France"), None),
           AnswerRow("Do you know Joe Bloggs’s National Insurance number?", Html("No"), None),
+          AnswerRow("Do you know Joe Bloggs’s country of residence?", Html("Yes"), None),
+          AnswerRow("Does Joe Bloggs have UK residency?", Html("No"), None),
+          AnswerRow("What is Joe Bloggs’s country of residence?", Html("France"), None),
           AnswerRow("Do you know Joe Bloggs’s address?", Html("Yes"), None),
           AnswerRow("Does Joe Bloggs live in the UK?", Html("No"), None),
           AnswerRow("What is Joe Bloggs’s address?", Html("Line1<br />Line2<br />Line3<br />Germany"), None),
           AnswerRow("Do you know Joe Bloggs’s passport or ID card details?", Html("Yes"), None),
-          AnswerRow("What are Joe Bloggs’s passport or ID card details?", Html("Germany<br />1234567890<br />1 January 2020"), None)
+          AnswerRow("What are Joe Bloggs’s passport or ID card details?", Html("Germany<br />1234567890<br />1 January 2020"), None),
+          AnswerRow("Does Joe Bloggs have mental capacity at the time of registration?", Html("Yes"), None)
         ), None),
         AnswerSection(Some("Settlor 4"),Seq(
           AnswerRow("What is the settlor’s name?", Html("Joe Bloggs"), None),
           AnswerRow("Do you know Joe Bloggs’s date of birth?", Html("Yes"), None),
           AnswerRow("What is Joe Bloggs’s date of birth?", Html("12 December 1934"), None),
+          AnswerRow("Do you know Joe Bloggs’s country of nationality?", Html("Yes"), None),
+          AnswerRow("Does Joe Bloggs have UK nationality?", Html("No"), None),
+          AnswerRow("What is Joe Bloggs’s country of nationality?", Html("France"), None),
           AnswerRow("Do you know Joe Bloggs’s National Insurance number?", Html("No"), None),
-          AnswerRow("Do you know Joe Bloggs’s address?", Html("No"), None)
+          AnswerRow("Do you know Joe Bloggs’s country of residence?", Html("Yes"), None),
+          AnswerRow("Does Joe Bloggs have UK residency?", Html("No"), None),
+          AnswerRow("What is Joe Bloggs’s country of residence?", Html("France"), None),
+          AnswerRow("Do you know Joe Bloggs’s address?", Html("No"), None),
+          AnswerRow("Does Joe Bloggs have mental capacity at the time of registration?", Html("Yes"), None)
         ), None)
       )
     }

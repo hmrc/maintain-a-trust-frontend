@@ -32,13 +32,20 @@ class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter) extend
     converter.fullNameQuestion(IndividualProtectorNamePage(index), userAnswers, "individualProtectorName", name),
     converter.yesNoQuestion(IndividualProtectorDateOfBirthYesNoPage(index), userAnswers, "individualProtectorDateOfBirthYesNo", name),
     converter.dateQuestion(IndividualProtectorDateOfBirthPage(index),userAnswers, "individualProtectorDateOfBirth", name),
+    converter.yesNoQuestion(IndividualProtectorCountryOfNationalityYesNoPage(index), userAnswers, "individualProtectorCountryOfNationalityYesNo", name),
+    converter.yesNoQuestion(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(index), userAnswers, "individualProtectorCountryOfNationalityUkYesNo", name),
+    converter.countryQuestion(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(index), IndividualProtectorCountryOfNationalityPage(index), userAnswers, "individualProtectorCountryOfNationality", name),
     converter.yesNoQuestion(IndividualProtectorNINOYesNoPage(index), userAnswers, "individualProtectorNINOYesNo", name),
     converter.ninoQuestion(IndividualProtectorNINOPage(index), userAnswers, "individualProtectorNINO", name),
+    converter.yesNoQuestion(IndividualProtectorCountryOfResidenceYesNoPage(index), userAnswers, "individualProtectorCountryOfResidenceYesNo", name),
+    converter.yesNoQuestion(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "individualProtectorCountryOfResidenceUkYesNo", name),
+    converter.countryQuestion(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(index), IndividualProtectorCountryOfResidencePage(index), userAnswers, "individualProtectorCountryOfResidence", name),
     converter.yesNoQuestion(IndividualProtectorAddressYesNoPage(index), userAnswers, "individualProtectorAddressYesNo", name),
     converter.yesNoQuestion(IndividualProtectorAddressUKYesNoPage(index), userAnswers, "individualProtectorAddressUkYesNo", name),
     converter.addressQuestion(IndividualProtectorAddressPage(index), userAnswers, "individualProtectorAddress", name),
     converter.yesNoQuestion(IndividualProtectorPassportIDCardYesNoPage(index), userAnswers, "individualProtectorPassportIDCardYesNo", name),
-    converter.passportOrIdCardQuestion(IndividualProtectorPassportIDCardPage(index), userAnswers, "individualProtectorPassportIDCard", name)
+    converter.passportOrIdCardQuestion(IndividualProtectorPassportIDCardPage(index), userAnswers, "individualProtectorPassportIDCard", name),
+    converter.yesNoQuestion(IndividualProtectorMentalCapacityYesNoPage(index), userAnswers, "individualProtectorMentalCapacityYesNo", name)
   )
 
   override def namePath(index: Int): JsPath = IndividualProtectorNamePage(index).path

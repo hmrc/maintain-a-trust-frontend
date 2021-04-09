@@ -608,6 +608,9 @@ charityBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s addre
 charityBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 charityBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
 charityBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+charityBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+charityBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+charityBeneficiaryCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 
 ### Class of beneficiary
 classBeneficiaryDescription.checkYourAnswersLabel = What is the description for the class of beneficiaries?
@@ -622,6 +625,9 @@ companyBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s addre
 companyBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 companyBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
 companyBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+companyBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+companyBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+companyBeneficiaryCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 
 ### Individual
 individualBeneficiaryName.checkYourAnswersLabel = What is the name of the individual?
@@ -636,14 +642,21 @@ individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’
 individualBeneficiaryDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
 individualBeneficiaryIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
 individualBeneficiaryIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+individualBeneficiaryCountryOfNationalityYesNo.checkYourAnswersLabel = Do you know {0}’s country of nationality?
+individualBeneficiaryCountryOfNationalityUkYesNo.checkYourAnswersLabel = Does {0} have UK nationality?
+individualBeneficiaryCountryOfNationality.checkYourAnswersLabel = What is {0}’s country of nationality?
 individualBeneficiaryNationalInsuranceYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 individualBeneficiaryNationalInsuranceNumber.checkYourAnswersLabel = What is {0}’s National Insurance number?
+individualBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+individualBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+individualBeneficiaryCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 individualBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 individualBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Does {0} live in the UK?
 individualBeneficiaryAddressUK.checkYourAnswersLabel = What is {0}’s address?
 individualBeneficiaryPassportIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
 individualBeneficiaryPassportIDCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
 individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel = Has a vulnerable person election form (VPE1) been submitted to HMRC for {0}?
+individualBeneficiaryMentalCapacityYesNo.checkYourAnswersLabel = Does {0} have mental capacity at the time of registration?
 
 ### Large
 largeBeneficiaryName.checkYourAnswersLabel = What is the business’s name?
@@ -655,6 +668,9 @@ largeBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
 largeBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
 largeBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
 largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel = How many people are in this employment related beneficiary?
+largeBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+largeBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+largeBeneficiaryCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 
 numberOfBeneficiaries.over1 = 1 to 100
 numberOfBeneficiaries.over101 = 101 to 200
@@ -669,6 +685,9 @@ otherBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the tru
 otherBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 otherBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 otherBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
+otherBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+otherBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+otherBeneficiaryCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 
 ### Trust
 trustBeneficiaryName.checkYourAnswersLabel = What is the name of the trust?
@@ -678,18 +697,28 @@ trustBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address
 trustBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 trustBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
 trustBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+trustBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+trustBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+trustBeneficiaryCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 
 # Other individual
 otherIndividualName.checkYourAnswersLabel = What is the name of the individual?
 otherIndividualDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
 otherIndividualDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+otherIndividualCountryOfNationalityYesNo.checkYourAnswersLabel = Do you know {0}’s country of nationality?
+otherIndividualCountryOfNationalityUkYesNo.checkYourAnswersLabel = Does {0} have UK nationality?
+otherIndividualCountryOfNationality.checkYourAnswersLabel = What is {0}’s country of nationality?
 otherIndividualNINOYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 otherIndividualNINO.checkYourAnswersLabel = What is {0}’s National Insurance number?
+otherIndividualCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+otherIndividualCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+otherIndividualCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 otherIndividualAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 otherIndividualAddressUKYesNo.checkYourAnswersLabel = Does {0} live in the UK?
 otherIndividualAddress.checkYourAnswersLabel = What is {0}’s address?
 otherIndividualPassportIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
 otherIndividualPassportIDCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+otherIndividualMentalCapacityYesNo.checkYourAnswersLabel = Does {0} have mental capacity at the time of registration?
 
 # Protectors
 protectorIndividualOrBusiness.checkYourAnswersLabel = Is the protector an individual or a business?
@@ -698,18 +727,28 @@ protectorIndividualOrBusiness.checkYourAnswersLabel = Is the protector an indivi
 individualProtectorName.checkYourAnswersLabel = What is the protector's name?
 individualProtectorDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
 individualProtectorDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+individualProtectorCountryOfNationalityYesNo.checkYourAnswersLabel = Do you know {0}’s country of nationality?
+individualProtectorCountryOfNationalityUkYesNo.checkYourAnswersLabel = Does {0} have UK nationality?
+individualProtectorCountryOfNationality.checkYourAnswersLabel = What is {0}’s country of nationality?
 individualProtectorNINOYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 individualProtectorNINO.checkYourAnswersLabel = What is {0}’s National Insurance number?
+individualProtectorCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+individualProtectorCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+individualProtectorCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 individualProtectorAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 individualProtectorAddressUkYesNo.checkYourAnswersLabel = Does {0} live in the UK?
 individualProtectorAddress.checkYourAnswersLabel = What is {0}’s address?
 individualProtectorPassportIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
 individualProtectorPassportIDCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
+individualProtectorMentalCapacityYesNo.checkYourAnswersLabel = Does {0} have mental capacity at the time of registration?
 
 ## Company
 companyProtectorName.checkYourAnswersLabel = What is the business’s name?
 companyProtectorUtrYesNo.checkYourAnswersLabel = Do you know {0}’s Unique Taxpayer Reference (UTR) number?
 companyProtectorUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+companyProtectorCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+companyProtectorCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+companyProtectorCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 companyProtectorAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 companyProtectorAddressUkYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 companyProtectorAddress.checkYourAnswersLabel = What is {0}’s address?
@@ -720,8 +759,14 @@ companyProtectorAddress.checkYourAnswersLabel = What is {0}’s address?
 settlorName.checkYourAnswersLabel = What is the settlor’s name?
 settlorDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
 settlorDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+settlorCountryOfNationalityYesNo.checkYourAnswersLabel = Do you know {0}’s country of nationality?
+settlorCountryOfNationalityUkYesNo.checkYourAnswersLabel = Does {0} have UK nationality?
+settlorCountryOfNationality.checkYourAnswersLabel = What is {0}’s country of nationality?
 settlorNationalInsuranceYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 settlorNationalInsuranceNumber.checkYourAnswersLabel = What is {0}’s National Insurance number?
+settlorCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+settlorCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+settlorCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 settlorPassportOrIdCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
 settlorPassportOrIdCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
 settlorDateOfDeathYesNo.checkYourAnswersLabel = Do you know {0}’s date of death?
@@ -738,6 +783,9 @@ settlorIndividualOrBusiness.checkYourAnswersLabel = Is the settlor an individual
 settlorBusinessName.checkYourAnswersLabel = What is the business’s name?
 settlorBusinessUtrYesNo.checkYourAnswersLabel = Do you know {0}’s Unique Taxpayer Reference (UTR) number?
 settlorBusinessUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
+settlorBusinessCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+settlorBusinessCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+settlorBusinessCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 settlorBusinessAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 settlorBusinessAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 settlorBusinessAddressUK.checkYourAnswersLabel = What is {0}’s address?
@@ -749,8 +797,14 @@ settlorBusinessTime.checkYourAnswersLabel = At the date of each contribution to 
 settlorIndividualName.checkYourAnswersLabel = What is the settlor’s name?
 settlorIndividualDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
 settlorIndividualDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+settlorIndividualCountryOfNationalityYesNo.checkYourAnswersLabel = Do you know {0}’s country of nationality?
+settlorIndividualCountryOfNationalityUkYesNo.checkYourAnswersLabel = Does {0} have UK nationality?
+settlorIndividualCountryOfNationality.checkYourAnswersLabel = What is {0}’s country of nationality?
 settlorIndividualNINOYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
 settlorIndividualNINO.checkYourAnswersLabel = What is {0}’s National Insurance number?
+settlorIndividualCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+settlorIndividualCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+settlorIndividualCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
 settlorIndividualAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 settlorIndividualAddressUKYesNo.checkYourAnswersLabel = Does {0} live in the UK?
 settlorIndividualAddressUK.checkYourAnswersLabel = What is {0}’s address?
@@ -759,6 +813,7 @@ settlorIndividualPassportYesNo.checkYourAnswersLabel = Do you know {0}’s passp
 settlorIndividualPassport.checkYourAnswersLabel = What are {0}’s passport details?
 settlorIndividualIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s ID card details?
 settlorIndividualIDCard.checkYourAnswersLabel = What are {0}’s ID card details?
+settlorIndividualMentalCapacityYesNo.checkYourAnswersLabel = Does {0} have mental capacity at the time of registration?
 
 # Trustees
 isThisLeadTrustee.checkYourAnswersLabel = Is this the lead trustee?
@@ -788,6 +843,13 @@ trusteePassportOrIdCard.checkYourAnswersLabel = What are {0}’s passport or ID 
 trusteeEmailAddressYesNo.checkYourAnswersLabel = Do you know {0}’s email address?
 trusteeEmailAddress.checkYourAnswersLabel = What is {0}’s email address?
 trusteeTelephoneNumber.checkYourAnswersLabel = What is {0}’s telephone number?
+trusteeCountryOfNationalityYesNo.checkYourAnswersLabel = Do you know {0}’s country of nationality?
+trusteeCountryOfNationalityUkYesNo.checkYourAnswersLabel = Does {0} have UK nationality?
+trusteeCountryOfNationality.checkYourAnswersLabel = What is {0}’s country of nationality?
+trusteeCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
+trusteeCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
+trusteeCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
+trusteeMentalCapacityYesNo.checkYourAnswersLabel = Does {0} have mental capacity at the time of registration?
 
 # Trust details
 trustName.checkYourAnswersLabel = What is the trust’s name?

@@ -32,6 +32,9 @@ class TrusteeOrganisationPrinter @Inject()(converter: AnswerRowConverter) extend
     converter.stringQuestion(TrusteeOrgNamePage(index), userAnswers, "trusteeBusinessName"),
     converter.yesNoQuestion(TrusteeUtrYesNoPage(index), userAnswers, "trusteeUtrYesNo", name),
     converter.stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name),
+    converter.yesNoQuestion(TrusteeCountryOfResidenceYesNoPage(index), userAnswers, "trusteeCountryOfResidenceYesNo", name),
+    converter.yesNoQuestion(TrusteeCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "trusteeCountryOfResidenceUkYesNo", name),
+    converter.countryQuestion(TrusteeCountryOfResidenceInTheUkYesNoPage(index), TrusteeCountryOfResidencePage(index), userAnswers, "trusteeCountryOfResidence", name),
     converter.yesNoQuestion(TrusteeAddressYesNoPage(index), userAnswers, "trusteeUkAddressYesNo", name),
     converter.yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
     converter.addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name)

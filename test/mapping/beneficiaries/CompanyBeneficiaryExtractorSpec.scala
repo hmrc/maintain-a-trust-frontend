@@ -22,6 +22,7 @@ import models.http.{AddressType, DisplayTrustCompanyType, DisplayTrustIdentifica
 import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.company._
+import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
@@ -87,7 +88,39 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
     "when there are companies" - {
 
-      "for a taxable trust" - {
+      "for a 4mld taxable trust" - {
+
+        "should not populate Country Of Residence pages" in {
+          val company = List(DisplayTrustCompanyType(
+            lineNo = Some("1"),
+            bpMatchStatus = Some("01"),
+            organisationName = s"Company 1",
+            beneficiaryDiscretion = None,
+            beneficiaryShareOfIncome = None,
+            countryOfResidence = Some("FR"),
+            identification = None,
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", utr)
+
+          val extraction = companyExtractor.extract(ua, company)
+
+          extraction.right.value.get(CompanyBeneficiaryNamePage(0)).get mustBe "Company 1"
+          extraction.right.value.get(CompanyBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(CompanyBeneficiaryDiscretionYesNoPage(0)).get mustBe true
+          extraction.right.value.get(CompanyBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
+          extraction.right.value.get(CompanyBeneficiaryCountryOfResidenceYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(CompanyBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(CompanyBeneficiaryUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(CompanyBeneficiaryAddressYesNoPage(0)).get mustBe false
+          extraction.right.value.get(CompanyBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(CompanyBeneficiaryAddressPage(0)) mustNot be(defined)
+        }
+      }
+
+      "for a 5mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
           val company = List(DisplayTrustCompanyType(
@@ -101,7 +134,8 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", utr)
+          val ua = UserAnswers("fakeId", utr, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = companyExtractor.extract(ua, company)
 
@@ -121,7 +155,8 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val companies = (for (index <- 0 to 2) yield generateCompany(index)).toList
 
-          val ua = UserAnswers("fakeId", utr)
+          val ua = UserAnswers("fakeId", utr, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = companyExtractor.extract(ua, companies)
 
@@ -183,7 +218,8 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = companyExtractor.extract(ua, company)
 
@@ -203,7 +239,8 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val companies = (for (index <- 0 to 2) yield generateCompany(index)).toList
 
-          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = companyExtractor.extract(ua, companies)
 

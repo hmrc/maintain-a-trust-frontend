@@ -22,6 +22,7 @@ import models.http.{AddressType, DisplayTrustCharityType, DisplayTrustIdentifica
 import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.charity._
+import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
@@ -87,7 +88,40 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
     "when there are charities" - {
 
-      "for a taxable trust" - {
+      "for a 4mld taxable trust" - {
+
+        "should not populate Country Of Residence pages" in {
+          val charity = List(DisplayTrustCharityType(
+            lineNo = Some("1"),
+            bpMatchStatus = Some("01"),
+            organisationName = s"Charity 1",
+            beneficiaryDiscretion = None,
+            countryOfResidence = Some("FR"),
+            beneficiaryShareOfIncome = None,
+            identification = None,
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", utr)
+
+          val extraction = charityExtractor.extract(ua, charity)
+
+          extraction.right.value.get(CharityBeneficiaryNamePage(0)).get mustBe "Charity 1"
+          extraction.right.value.get(CharityBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(CharityBeneficiaryDiscretionYesNoPage(0)).get mustBe true
+          extraction.right.value.get(CharityBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
+          extraction.right.value.get(CharityBeneficiaryCountryOfResidenceYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(CharityBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(CharityBeneficiaryUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(CharityBeneficiarySafeIdPage(0)) mustNot be(defined)
+          extraction.right.value.get(CharityBeneficiaryAddressYesNoPage(0)).get mustBe false
+          extraction.right.value.get(CharityBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(CharityBeneficiaryAddressPage(0)) mustNot be(defined)
+        }
+      }
+
+      "for a 5mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
           val charity = List(DisplayTrustCharityType(
@@ -101,7 +135,8 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", utr)
+          val ua = UserAnswers("fakeId", utr, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = charityExtractor.extract(ua, charity)
 
@@ -122,7 +157,8 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val charities = (for (index <- 0 to 2) yield generateCharity(index, isTaxable = true)).toList
 
-          val ua = UserAnswers("fakeId", utr)
+          val ua = UserAnswers("fakeId", utr, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = charityExtractor.extract(ua, charities)
 
@@ -183,7 +219,8 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = charityExtractor.extract(ua, charity)
 
@@ -204,7 +241,8 @@ class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val charities = (for (index <- 0 to 2) yield generateCharity(index, isTaxable = false)).toList
 
-          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", urn, isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = charityExtractor.extract(ua, charities)
 

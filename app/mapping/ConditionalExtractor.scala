@@ -20,10 +20,18 @@ import models.UserAnswers
 
 import scala.util.{Success, Try}
 
-trait TaxableExtractor {
+trait ConditionalExtractor {
 
   def extractIfTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {
+      block
+    } else {
+      Success(answers)
+    }
+  }
+
+  def extractIf5mldTrustIn5mldMode(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
+    if (answers.is5mldTrustIn5mldMode) {
       block
     } else {
       Success(answers)

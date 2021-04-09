@@ -32,7 +32,10 @@ class LeadTrusteeBusinessPrinter @Inject()(converter: AnswerRowConverter) extend
     Seq(
       converter.yesNoQuestion(TrusteeUtrYesNoPage(index), userAnswers, "leadTrusteeUtrYesNo", name),
       converter.stringQuestion(TrusteeOrgNamePage(index), userAnswers, "trusteeBusinessName"),
-      converter.stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name)
+      converter.stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name),
+      converter.yesNoQuestion(TrusteeCountryOfResidenceYesNoPage(index), userAnswers, "trusteeCountryOfResidenceYesNo", name),
+      converter.yesNoQuestion(TrusteeCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "trusteeCountryOfResidenceUkYesNo", name),
+      converter.countryQuestion(TrusteeCountryOfResidenceInTheUkYesNoPage(index), TrusteeCountryOfResidencePage(index), userAnswers, "trusteeCountryOfResidence", name)
     ) ++
       addressAnswers(index, userAnswers, name) ++
       Seq(

@@ -26,6 +26,7 @@ import models.{FullName, MetaData, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.deceased_settlor._
 import pages.settlors.living_settlor._
+import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 class SettlorExtractorSpec extends FreeSpec with MustMatchers
@@ -87,7 +88,8 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
           settlors = None
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+          .set(ExpressTrustYesNoPage, false).success.value
 
         val extraction = settlorExtractor.extract(ua, entities)
 
@@ -180,7 +182,8 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
           ))
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+          .set(ExpressTrustYesNoPage, false).success.value
 
         val extraction = settlorExtractor.extract(ua, entities)
 

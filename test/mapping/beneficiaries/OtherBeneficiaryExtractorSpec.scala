@@ -22,6 +22,7 @@ import models.http.{AddressType, DisplayTrustOtherType}
 import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.other._
+import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
@@ -78,7 +79,38 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
     "when there are others" - {
 
-      "for a taxable trust" - {
+      "for a 4mld taxable trust" - {
+
+        "with minimum data must return user answers updated" in {
+          val other = List(DisplayTrustOtherType(
+            lineNo = Some("1"),
+            bpMatchStatus = Some("01"),
+            description = s"Other 1",
+            beneficiaryDiscretion = None,
+            beneficiaryShareOfIncome = None,
+            countryOfResidence = Some("FR"),
+            address = None,
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = otherExtractor.extract(ua, other)
+
+          extraction.right.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
+          extraction.right.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get mustBe true
+          extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(0)).get mustBe false
+          extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(OtherBeneficiaryAddressPage(0)) mustNot be(defined)
+        }
+      }
+
+      "for a 5mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
           val other = List(DisplayTrustOtherType(
@@ -92,7 +124,8 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = otherExtractor.extract(ua, other)
 
@@ -111,7 +144,8 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val others = (for (index <- 0 to 2) yield generateOther(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = otherExtractor.extract(ua, others)
 
@@ -174,7 +208,8 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = otherExtractor.extract(ua, other)
 
@@ -193,7 +228,8 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val others = (for (index <- 0 to 2) yield generateOther(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = otherExtractor.extract(ua, others)
 

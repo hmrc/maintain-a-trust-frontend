@@ -24,6 +24,7 @@ import models.pages.KindOfBusiness._
 import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.living_settlor._
+import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 import java.time.LocalDate
@@ -95,7 +96,48 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
 
     "when there are individuals" - {
 
-      "for a taxable trust" - {
+      "for a 4mld taxable trust" - {
+
+        "should not populate Country Of Nationality or Residence pages" in {
+          val settlors = List(DisplayTrustSettlor(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = None,
+            countryOfNationality = Some("FR"),
+            countryOfResidence = Some("FR"),
+            legallyIncapable = None,
+            identification = None,
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = individualSettlorExtractor.extract(ua, settlors)
+
+          extraction.right.value.get(SettlorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.right.value.get(SettlorIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.right.value.get(SettlorIndividualDateOfBirthPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfNationalityYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfNationalityPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualMentalCapacityYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)).get mustBe false
+          extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressYesNoPage(0)).get mustBe false
+          extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorIndividualPassportIDCardPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorSafeIdPage(0)) mustNot be(defined)
+          extraction.right.value.get(SettlorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        }
+      }
+
+      "for a 5mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
           val settlors = List(DisplayTrustSettlor(
@@ -110,7 +152,8 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = individualSettlorExtractor.extract(ua, settlors)
 
@@ -138,7 +181,8 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val settlors = (for (index <- 0 to 2) yield generateSettlorIndividual(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = individualSettlorExtractor.extract(ua, settlors)
 
@@ -219,7 +263,8 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = individualSettlorExtractor.extract(ua, settlors)
 
@@ -247,7 +292,8 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val settlors = (for (index <- 0 to 2) yield generateSettlorIndividual(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = individualSettlorExtractor.extract(ua, settlors)
 

@@ -30,6 +30,7 @@ import pages.beneficiaries.individual._
 import pages.beneficiaries.large._
 import pages.beneficiaries.other._
 import pages.beneficiaries.trust._
+import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
@@ -181,7 +182,8 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           )
         )
 
-        val ua = UserAnswers("fakeId", utr)
+        val ua = UserAnswers("fakeId", utr, is5mldEnabled = true)
+          .set(ExpressTrustYesNoPage, false).success.value
 
         val extraction = beneficiaryExtractor.extract(ua, beneficiary)
 

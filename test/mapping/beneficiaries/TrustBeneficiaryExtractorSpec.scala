@@ -22,6 +22,7 @@ import models.http.{AddressType, DisplayTrustBeneficiaryTrustType, DisplayTrustI
 import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.trust._
+import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
@@ -84,7 +85,40 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
     "when there are trusts" - {
 
-      "for a taxable trust" - {
+      "for a 4mld taxable trust" - {
+
+        "should not populate Country Of Residence pages" in {
+          val trust = List(DisplayTrustBeneficiaryTrustType(
+            lineNo = Some(s"1"),
+            bpMatchStatus = Some("01"),
+            organisationName = s"Trust 1",
+            beneficiaryDiscretion = None,
+            beneficiaryShareOfIncome = None,
+            countryOfResidence = Some("FR"),
+            identification = None,
+            entityStart = "2019-11-26"
+          ))
+
+          val ua = UserAnswers("fakeId", "utr")
+
+          val extraction = trustExtractor.extract(ua, trust)
+
+          extraction.right.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 1"
+          extraction.right.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(0)).get mustBe true
+          extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryUtrPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiarySafeIdPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(0)).get mustBe false
+          extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.right.value.get(TrustBeneficiaryAddressPage(0)) mustNot be(defined)
+        }
+      }
+
+      "for a 5mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
           val trust = List(DisplayTrustBeneficiaryTrustType(
@@ -98,7 +132,8 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = trustExtractor.extract(ua, trust)
 
@@ -119,7 +154,8 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val trusts = (for (index <- 0 to 2) yield generateTrust(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, false).success.value
 
           val extraction = trustExtractor.extract(ua, trusts)
 
@@ -190,7 +226,8 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = trustExtractor.extract(ua, trust)
 
@@ -211,7 +248,8 @@ class TrustBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val trusts = (for (index <- 0 to 2) yield generateTrust(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false)
+          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
+            .set(ExpressTrustYesNoPage, true).success.value
 
           val extraction = trustExtractor.extract(ua, trusts)
 
