@@ -17,9 +17,9 @@
 package controllers.tasklist
 
 import config.FrontendAppConfig
-import models.{CompletedMaintenanceTasks, TrustMldStatus, Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
 import models.pages.Tag
 import models.pages.Tag.InProgress
+import models.{CompletedMaintenanceTasks, TrustMldStatus}
 import pages.Page
 import sections.assets.NonEeaBusinessAsset
 import sections.beneficiaries.Beneficiaries
@@ -90,8 +90,7 @@ trait TaskListSections {
                        trustMldStatus: TrustMldStatus): TaskList = {
 
     def filter5mldSections(task: Task, section: Page): Boolean = {
-      task.link.text == section.toString &&
-        !(trustMldStatus == Underlying5mldTaxableTrustIn5mldMode || trustMldStatus == Underlying5mldNonTaxableTrustIn5mldMode)
+      task.link.text == section.toString && !trustMldStatus.is5mldTrustIn5mldMode
     }
 
     val mandatorySections = List(

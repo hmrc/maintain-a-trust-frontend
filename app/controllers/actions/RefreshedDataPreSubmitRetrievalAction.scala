@@ -20,16 +20,17 @@ import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
 import controllers.routes
 import mapping.UserAnswersExtractor
+import models.AgentDeclaration
 import models.http.{GetTrust, Processed}
 import models.pages.WhatIsNext
 import models.requests.DataRequest
-import models.{AgentDeclaration, UserAnswers}
 import pages.WhatIsNextPage
 import pages.declaration.AgentDeclarationPage
 import play.api.Logging
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
 import repositories.PlaybackRepository
+import services.FeatureFlagService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.TrustClosureDate.{getClosureDate, setClosureDate}
@@ -41,7 +42,8 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
                                                            val parser: BodyParsers.Default,
                                                            playbackRepository: PlaybackRepository,
                                                            trustConnector: TrustConnector,
-                                                           playbackExtractor: UserAnswersExtractor
+                                                           playbackExtractor: UserAnswersExtractor,
+                                                           featureFlagService: FeatureFlagService
                                                          )(override implicit val executionContext: ExecutionContext)
   extends RefreshedDataPreSubmitRetrievalAction with Logging {
 
@@ -56,12 +58,12 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
       optionalAgentInformation = request.userAnswers.get(AgentDeclarationPage)
     } yield {
 
-      val utr = request.userAnswers.identifier
+      val identifier = request.userAnswers.identifier
 
-      val submissionData = SubmissionData(utr, whatIsNext, optionalAgentInformation, getClosureDate(request.userAnswers))
+      val submissionData = SubmissionData(identifier, whatIsNext, optionalAgentInformation, getClosureDate(request.userAnswers))
 
-      trustConnector.playback(utr).flatMap {
-        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, utr, playback)(request, hc)
+      trustConnector.playback(identifier).flatMap {
+        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, playback)(request, hc)
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
@@ -70,29 +72,33 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
     }
   }
 
-  private def extractAndRefreshUserAnswers[A](data: SubmissionData, utr: String, playback: GetTrust)
+  private def extractAndRefreshUserAnswers[A](data: SubmissionData, playback: GetTrust)
                                              (implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] = {
+    featureFlagService.is5mldEnabled() flatMap { is5mldEnabled =>
 
-    // TODO - need correct values of is5mldEnabled and isTaxable here
-    val newSession = UserAnswers.startNewSession(request.user.internalId, utr)
+      // TODO - if is5mlEnabled was previously false and is now true, redirect to 'Are you maintaining an express trust?'
+      val userAnswers = request.userAnswers
+        .clearData
+        .copy(is5mldEnabled = is5mldEnabled)
 
-    playbackExtractor.extract(newSession, playback) flatMap {
-      case Right(answers) =>
-        for {
-          updatedAnswers <- Future.fromTry {
-            answers
-              .set(WhatIsNextPage, data.whatIsNext)
-              .flatMap(_.set(AgentDeclarationPage, data.agent))
-              .flatMap(answers => setClosureDate(answers, data.endDate))
+      playbackExtractor.extract(userAnswers, playback) flatMap {
+        case Right(answers) =>
+          for {
+            updatedAnswers <- Future.fromTry {
+              answers
+                .set(WhatIsNextPage, data.whatIsNext)
+                .flatMap(_.set(AgentDeclarationPage, data.agent))
+                .flatMap(answers => setClosureDate(answers, data.endDate))
+            }
+            _ <- playbackRepository.set(updatedAnswers)
+          } yield {
+            logger.debug(s"[RefreshedDraftDataRetrievalAction] Set updated user answers in db")
+            Right(DataRequest(request.request, updatedAnswers, request.user))
           }
-          _ <- playbackRepository.set(updatedAnswers)
-        } yield {
-          logger.debug(s"[RefreshedDraftDataRetrievalAction] Set updated user answers in db")
-          Right(DataRequest(request.request, updatedAnswers, request.user))
-        }
-      case Left(reason) =>
-        logger.warn(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to $reason")
-        Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+        case Left(reason) =>
+          logger.warn(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to $reason")
+          Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+      }
     }
   }
 

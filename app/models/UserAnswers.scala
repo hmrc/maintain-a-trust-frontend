@@ -46,8 +46,7 @@ final case class UserAnswers(
 
   private def isUnderlyingTrust5mld: Boolean = this.get(ExpressTrustYesNoPage).isDefined
 
-  def is5mldTrustIn5mldMode: Boolean =
-    trustMldStatus == Underlying5mldTaxableTrustIn5mldMode || trustMldStatus == Underlying5mldNonTaxableTrustIn5mldMode
+  def is5mldTrustIn5mldMode: Boolean = trustMldStatus.is5mldTrustIn5mldMode
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     getAtPath(page.path)
@@ -118,11 +117,13 @@ final case class UserAnswers(
     )
   }
 
+  def clearData: UserAnswers = this.copy(data = Json.obj())
+
 }
 
 object UserAnswers {
 
-  def startNewSession(internalId: String, identifier: String, is5mldEnabled: Boolean = false, isTaxable: Boolean = true): UserAnswers =
+  def startNewSession(internalId: String, identifier: String, is5mldEnabled: Boolean, isTaxable: Boolean): UserAnswers =
     UserAnswers(internalId = internalId, identifier = identifier, is5mldEnabled = is5mldEnabled, isTrustTaxable = isTaxable)
 
   implicit lazy val reads: Reads[UserAnswers] = (
