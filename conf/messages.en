@@ -596,6 +596,10 @@ answerPage.section.otherIndividual.subheading = Other individual {0}
 ## Trust details
 answerPage.section.trustsDetails.heading = Trust details
 
+## Assets
+answerPage.section.nonEeaBusiness.heading = Ownership or controlling interest of a Non-EEA company
+answerPage.section.nonEeaBusiness.subheading = Non-EEA Company
+
 # CHECK YOUR ANSWERS LABELS
 
 ## Beneficiaries
@@ -855,6 +859,11 @@ trusteeMentalCapacityYesNo.checkYourAnswersLabel = Does {0} have mental capacity
 trustName.checkYourAnswersLabel = What is the trust’s name?
 whenTrustSetup.checkYourAnswersLabel = When was the trust created?
 trustUniqueTaxReference.checkYourAnswersLabel = What is the trust’s Unique Taxpayer Reference (UTR)?
+
+# Assets
+nonEeaBusiness.name.checkYourAnswersLabel = What is the company’s name?
+nonEeaBusiness.internationalAddress.checkYourAnswersLabel = What is {0}’s address?
+nonEeaBusiness.governingCountry.checkYourAnswersLabel = Which country’s laws govern {0}?
 
 # Task List
 taskList.up-to-date = Up to date
