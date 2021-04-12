@@ -25,13 +25,11 @@ import mapping.trustees.TrusteeExtractor
 import models.UserAnswers
 import models.UserAnswersCombinator._
 import models.http.GetTrust
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.Logging
 import services.FeatureFlagService
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Success
 
 @ImplementedBy(classOf[UserAnswersExtractorImpl])
 trait UserAnswersExtractor {

@@ -52,24 +52,22 @@ class IndexController @Inject()(
   }
 
   private def initialise(redirect: Result)(implicit request: IdentifierRequest[_]): Future[Result] = {
-    val utr = request.user.enrolments.enrolments
-      .find(_.key equals "HMRC-TERS-ORG")
-      .flatMap(_.identifiers.find(_.key equals "SAUTR"))
+    def identifier(enrolmentKey: String, identifierKey: String): Option[String] = request.user.enrolments.enrolments
+      .find(_.key equals enrolmentKey)
+      .flatMap(_.identifiers.find(_.key equals identifierKey))
       .map(_.value)
 
-    val urn = request.user.enrolments.enrolments
-      .find(_.key equals "HMRC-TERSNT-ORG")
-      .flatMap(_.identifiers.find(_.key equals "URN"))
-      .map(_.value)
+    val utr = identifier("HMRC-TERS-ORG", "SAUTR")
+    val urn = identifier("HMRC-TERSNT-ORG", "URN")
 
     featureFlagService.is5mldEnabled().flatMap {
       is5mldEnabled =>
         (utr, urn) match {
-          case (Some(utr), _) => uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled)
-          case (_, Some(urn)) => uaSetupService.setupAndRedirectToStatus(urn, request.user.internalId, is5mldEnabled)
+          case (Some(utr), _) => uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled, isTaxable = true)
+          case (_, Some(urn)) => uaSetupService.setupAndRedirectToStatus(urn, request.user.internalId, is5mldEnabled, isTaxable = false)
           case _ =>
             logger.info(s"[Session ID: ${Session.id(hc)}]" +
-              s" user is not enrolled, starting maintain journey, redirect to ask for UTR")
+              s" user is not enrolled, starting maintain journey, redirect to ask for identifier")
             Future.successful(redirect)
         }
     }

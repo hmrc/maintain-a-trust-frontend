@@ -128,7 +128,7 @@ class URNControllerSpec extends SpecBase {
 
       val mockService = mock[UserAnswersSetupService]
 
-      when(mockService.setupAndRedirectToStatus(any(), any(), any())(any(), any()))
+      when(mockService.setupAndRedirectToStatus(any(), any(), any(), any())(any(), any()))
         .thenReturn(Future.successful(Redirect("redirectUrl")))
 
       val urn = "abtrust12345678"
@@ -157,7 +157,8 @@ class URNControllerSpec extends SpecBase {
       verify(mockService).setupAndRedirectToStatus(
         eqTo("ABTRUST12345678"),
         eqTo("id"),
-        eqTo(true)
+        eqTo(true),
+        eqTo(false)
       )(any(), any())
 
       application.stop()

@@ -19,6 +19,7 @@ package models
 import _root_.pages.trustdetails.ExpressTrustYesNoPage
 import forms.Validation
 import play.api.Logging
+import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 
@@ -121,34 +122,24 @@ final case class UserAnswers(
 
 object UserAnswers {
 
-  def startNewSession(internalId: String, identifier: String, is5mldEnabled: Boolean = false) : UserAnswers =
-    UserAnswers(internalId = internalId, identifier = identifier, is5mldEnabled = is5mldEnabled)
+  def startNewSession(internalId: String, identifier: String, is5mldEnabled: Boolean = false, isTaxable: Boolean = true): UserAnswers =
+    UserAnswers(internalId = internalId, identifier = identifier, is5mldEnabled = is5mldEnabled, isTrustTaxable = isTaxable)
 
-  implicit lazy val reads: Reads[UserAnswers] = {
+  implicit lazy val reads: Reads[UserAnswers] = (
+    (__ \ "internalId").read[String] and
+      (__ \ "identifier").read[String] and
+      (__ \ "data").read[JsObject] and
+      (__ \ "is5mldEnabled").readWithDefault[Boolean](false) and
+      (__ \ "isTrustTaxable").readWithDefault[Boolean](true) and
+      (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
+    )(UserAnswers.apply _)
 
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "internalId").read[String] and
-        (__ \ "identifier").read[String] and
-        (__ \ "data").read[JsObject] and
-        (__ \ "is5mldEnabled").readWithDefault[Boolean](false) and
-        (__ \ "isTrustTaxable").readWithDefault[Boolean](true) and
-        (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
-      ) (UserAnswers.apply _)
-  }
-
-  implicit lazy val writes: OWrites[UserAnswers] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "internalId").write[String] and
-        (__ \ "identifier").write[String] and
-        (__ \ "data").write[JsObject] and
-        (__ \ "is5mldEnabled").write[Boolean] and
-        (__ \ "isTrustTaxable").write[Boolean] and
-        (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
-      ) (unlift(UserAnswers.unapply))
-  }
+  implicit lazy val writes: OWrites[UserAnswers] = (
+    (__ \ "internalId").write[String] and
+      (__ \ "identifier").write[String] and
+      (__ \ "data").write[JsObject] and
+      (__ \ "is5mldEnabled").write[Boolean] and
+      (__ \ "isTrustTaxable").write[Boolean] and
+      (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
+    )(unlift(UserAnswers.unapply))
 }

@@ -73,6 +73,7 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
   private def extractAndRefreshUserAnswers[A](data: SubmissionData, utr: String, playback: GetTrust)
                                              (implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] = {
 
+    // TODO - need correct values of is5mldEnabled and isTaxable here
     val newSession = UserAnswers.startNewSession(request.user.internalId, utr)
 
     playbackExtractor.extract(newSession, playback) flatMap {

@@ -39,7 +39,7 @@ class UTRController @Inject()(
                                view: UTRView
                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form = formProvider()
+  private val form: Form[String] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.auth {
     implicit request =>
@@ -54,7 +54,7 @@ class UTRController @Inject()(
         utr => {
           featureFlagService.is5mldEnabled().flatMap {
             is5mldEnabled =>
-              uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled)
+              uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled, isTaxable = true)
           }
         }
       )

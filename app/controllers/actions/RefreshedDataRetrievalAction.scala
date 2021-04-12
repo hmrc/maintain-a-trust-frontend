@@ -82,6 +82,7 @@ class RefreshedDataRetrievalActionImpl @Inject()(
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
+    // TODO - need correct values of is5mldEnabled and isTaxable here
     val newSession = UserAnswers.startNewSession(request.user.internalId, identifier)
 
     playbackExtractor.extract(newSession, playback) flatMap {
