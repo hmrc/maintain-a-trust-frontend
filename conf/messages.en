@@ -462,6 +462,14 @@ expressTrustYesNo.p2 = Express trusts can be created:
 expressTrustYesNo.bullet1 = by someone’s will after they have died
 expressTrustYesNo.bullet2 = during someone’s lifetime, which is known as inter-vivos
 
+confirmTrustTaxable.title = Before you continue
+confirmTrustTaxable.heading = Before you continue
+confirmTrustTaxable.p1 = The Fifth Money Laundering Directive came into effect on 6 October 2020.
+confirmTrustTaxable.p2 = As the trust was registered before 6 October 2020, you need to let HMRC know if the trust is a taxable trust.
+confirmTrustTaxable.subHeading = Confirm the trust is taxable
+confirmTrustTaxable.p3 = A taxable trust is a trust that has paid tax, or still has a tax liability.
+confirmTrustTaxable.p4 = By continuing, you are confirming that the trust has paid tax, or still needs to pay tax.
+
 declarationWhatNext.title = What do you want to do next?
 declarationWhatNext.heading = What do you want to do next?
 declarationWhatNext.declare = Declare the trust is up to date

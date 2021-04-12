@@ -28,6 +28,9 @@ POST       /unique-reference-number                     controllers.URNControlle
 GET        /express-trust                               controllers.transition.ExpressTrustYesNoController.onPageLoad()
 POST       /express-trust                               controllers.transition.ExpressTrustYesNoController.onSubmit()
 
+GET        /confirm-trust-is-taxable                    controllers.transition.ConfirmTrustTaxableController.onPageLoad()
+POST       /confirm-trust-is-taxable                    controllers.transition.ConfirmTrustTaxableController.onSubmit()
+
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
 
 GET        /view-last-declaration                       controllers.ViewLastDeclarationYesNoController.onPageLoad()
