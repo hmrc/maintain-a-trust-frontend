@@ -19,6 +19,7 @@ package controllers
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
 import mapping.UserAnswersExtractor
+import models.Underlying4mldTrustIn5mldMode
 import models.http._
 import models.requests.DataRequest
 import play.api.Logging
@@ -89,7 +90,7 @@ class TrustStatusController @Inject()(
 
   def status(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      checkIfLocked(request.userAnswers.identifier, fromVerify = false )
+      checkIfLocked(request.userAnswers.identifier, fromVerify = false)
   }
 
   def statusAfterVerify(): Action[AnyContent] = actions.authWithData.async {
@@ -136,7 +137,7 @@ class TrustStatusController @Inject()(
     }
   }
 
-  private def authenticateForIdentifierAndExtract(identifier: String, playback : GetTrust, fromVerify: Boolean)
+  private def authenticateForIdentifierAndExtract(identifier: String, playback: GetTrust, fromVerify: Boolean)
                                           (implicit request: DataRequest[AnyContent]): Future[Result] = {
     logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier trust is in a processed state")
     authenticationService.authenticateForIdentifier(identifier) flatMap {
@@ -153,7 +154,7 @@ class TrustStatusController @Inject()(
   }
 
   private def extract(identifier: String, playback: GetTrust, fromVerify: Boolean)
-                     (implicit request: DataRequest[AnyContent]) : Future[Result] = {
+                     (implicit request: DataRequest[AnyContent]): Future[Result] = {
 
     logger.info(s"[extract][Session ID: ${Session.id(hc)}] user authenticated for $identifier, attempting to extract to user answers")
 
@@ -161,9 +162,13 @@ class TrustStatusController @Inject()(
       case Right(answers) =>
         playbackRepository.set(answers) map { _ =>
           logger.info(s"[extract][Session ID: ${Session.id(hc)}] $identifier successfully extracted, showing information about maintaining")
-          (request.user.affinityGroup, fromVerify) match {
-            case (AffinityGroup.Organisation, false) => Redirect(routes.MaintainThisTrustController.onPageLoad(needsIv = false))
-            case (_,_) => Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
+          if (answers.trustMldStatus == Underlying4mldTrustIn5mldMode) {
+            Redirect(controllers.transition.routes.ExpressTrustYesNoController.onPageLoad())
+          } else {
+            (request.user.affinityGroup, fromVerify) match {
+              case (AffinityGroup.Organisation, false) => Redirect(routes.MaintainThisTrustController.onPageLoad(needsIv = false))
+              case _ => Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
+            }
           }
         }
       case Left(reason) =>

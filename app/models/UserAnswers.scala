@@ -26,14 +26,12 @@ import queries.{Gettable, Settable}
 import java.time.LocalDateTime
 import scala.util.{Failure, Success, Try}
 
-final case class UserAnswers(
-                              internalId: String,
-                              identifier: String,
-                              data: JsObject = Json.obj(),
-                              is5mldEnabled: Boolean = false,
-                              isTrustTaxable: Boolean = true,
-                              updatedAt: LocalDateTime = LocalDateTime.now
-                            ) extends Logging {
+final case class UserAnswers(internalId: String,
+                             identifier: String,
+                             data: JsObject = Json.obj(),
+                             is5mldEnabled: Boolean = false,
+                             isTrustTaxable: Boolean = true,
+                             updatedAt: LocalDateTime = LocalDateTime.now) extends Logging {
 
   def identifierType: IdentifierType = if (identifier.matches(Validation.utrRegex)) UTR else URN
 
