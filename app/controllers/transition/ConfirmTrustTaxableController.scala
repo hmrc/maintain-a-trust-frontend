@@ -17,6 +17,7 @@
 package controllers.transition
 
 import com.google.inject.{Inject, Singleton}
+import connectors.TrustConnector
 import controllers.actions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -24,13 +25,16 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.ConfirmTrustTaxableView
 
+import scala.concurrent.ExecutionContext
+
 @Singleton
 class ConfirmTrustTaxableController @Inject()(
                                                override val messagesApi: MessagesApi,
                                                actions: Actions,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: ConfirmTrustTaxableView,
-                                             ) extends FrontendBaseController with I18nSupport {
+                                               trustsConnector: TrustConnector
+                                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
@@ -38,14 +42,16 @@ class ConfirmTrustTaxableController @Inject()(
       Ok(view())
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
-      Redirect {
-        if (request.user.affinityGroup == Agent) {
-          controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
-        } else {
-          controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+      trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true) map { _ =>
+        Redirect {
+          if (request.user.affinityGroup == Agent) {
+            controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+          } else {
+            controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+          }
         }
       }
   }

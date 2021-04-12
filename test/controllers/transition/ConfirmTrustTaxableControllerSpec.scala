@@ -17,68 +17,93 @@
 package controllers.transition
 
 import base.SpecBase
+import connectors.TrustConnector
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
+import uk.gov.hmrc.http.HttpResponse
 import views.html.transition.ConfirmTrustTaxableView
+
+import scala.concurrent.Future
 
 class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val confirmTrustTaxableRoute: String = routes.ConfirmTrustTaxableController.onPageLoad().url
 
-  "ConfirmTrustTaxableController" must {
+  "ConfirmTrustTaxableController" when {
 
-    "return OK and the correct view for a GET" in {
+    ".onPageLoad" must {
+      "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
-      val request = FakeRequest(GET, confirmTrustTaxableRoute)
-
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[ConfirmTrustTaxableView]
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view()(request, messages).toString
-
-      application.stop()
-    }
-
-    "redirect to the next page" when {
-
-      "agent" in {
-
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), affinityGroup = Agent).build()
-
-        val request = FakeRequest(POST, confirmTrustTaxableRoute)
+        val request = FakeRequest(GET, confirmTrustTaxableRoute)
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+        val view = application.injector.instanceOf[ConfirmTrustTaxableView]
 
-        redirectLocation(result).value mustEqual
-          controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view()(request, messages).toString
 
         application.stop()
       }
+    }
 
-      "non-agent" in {
+    ".onSubmit" must {
+      "redirect to the next page" when {
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), affinityGroup = Organisation).build()
+        "agent" in {
 
-        val request = FakeRequest(POST, confirmTrustTaxableRoute)
+          val mockTrustsConnector = mock[TrustConnector]
 
-        val result = route(application, request).value
+          when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
+            .thenReturn(Future.successful(HttpResponse(OK, "")))
 
-        status(result) mustEqual SEE_OTHER
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), affinityGroup = Agent)
+            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+            .build()
 
-        redirectLocation(result).value mustEqual
-          controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+          val request = FakeRequest(POST, confirmTrustTaxableRoute)
 
-        application.stop()
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustEqual
+            controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+
+          application.stop()
+        }
+
+        "non-agent" in {
+
+          val mockTrustsConnector = mock[TrustConnector]
+
+          when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
+            .thenReturn(Future.successful(HttpResponse(OK, "")))
+
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), affinityGroup = Organisation)
+            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+            .build()
+
+          val request = FakeRequest(POST, confirmTrustTaxableRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustEqual
+            controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+
+          application.stop()
+        }
       }
     }
   }
