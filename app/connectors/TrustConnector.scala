@@ -81,4 +81,14 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
     http.DELETE[HttpResponse](url)
   }
 
+  def setExpressTrust(identifier: String, value: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url: String = s"${config.trustsUrl}/trusts/trust-details/$identifier/express"
+    http.PUT[Boolean, HttpResponse](url, value)
+  }
+
+  def setTaxableTrust(identifier: String, value: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url: String = s"${config.trustsUrl}/trusts/trust-details/$identifier/taxable"
+    http.PUT[Boolean, HttpResponse](url, value)
+  }
+
 }
