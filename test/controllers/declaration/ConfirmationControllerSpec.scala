@@ -47,7 +47,7 @@ class ConfirmationControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(fakeTvn, isAgent = false, "#")(request, messages).toString
+        view(fakeTvn, isAgent = false, isTrustTaxable = true, "#")(request, messages).toString
 
       application.stop()
     }

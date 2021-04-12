@@ -53,7 +53,7 @@ class ConfirmationController @Inject()(
             if (request.closingTrust) {
               closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
             } else {
-              confirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
+              confirmationView(tvn, isAgent, request.userAnswers.isTrustTaxable, agentOverviewUrl = config.agentOverviewUrl)
             }
           )
       }
