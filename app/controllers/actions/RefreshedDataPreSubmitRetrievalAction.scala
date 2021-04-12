@@ -75,30 +75,34 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
   private def extractAndRefreshUserAnswers[A](data: SubmissionData, playback: GetTrust)
                                              (implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] = {
     featureFlagService.is5mldEnabled() flatMap { is5mldEnabled =>
-
-      // TODO - if is5mlEnabled was previously false and is now true, redirect to 'Are you maintaining an express trust?'
-      val userAnswers = request.userAnswers
-        .clearData
-        .copy(is5mldEnabled = is5mldEnabled)
-
-      playbackExtractor.extract(userAnswers, playback) flatMap {
-        case Right(answers) =>
-          for {
-            updatedAnswers <- Future.fromTry {
-              answers
-                .set(WhatIsNextPage, data.whatIsNext)
-                .flatMap(_.set(AgentDeclarationPage, data.agent))
-                .flatMap(answers => setClosureDate(answers, data.endDate))
+      if (!request.userAnswers.is5mldEnabled && is5mldEnabled) {
+        logger.info(s"[RefreshedDraftDataRetrievalAction] 5MLD has been turned on mid-session." +
+          s" Redirecting to express page to start 4MLD -> 5MLD transition journey.")
+        Future.successful(Left(Redirect(controllers.transition.routes.ExpressTrustYesNoController.onPageLoad())))
+      } else {
+        playbackExtractor.extract(request.userAnswers.clearData, playback) flatMap {
+          case Right(answers) =>
+            for {
+              updatedAnswers <- Future.fromTry {
+                answers
+                  .set(WhatIsNextPage, data.whatIsNext)
+                  .flatMap(_.set(AgentDeclarationPage, data.agent))
+                  .flatMap(answers => setClosureDate(answers, data.endDate))
+              }
+              _ <- playbackRepository.set(updatedAnswers)
+            } yield {
+              logger.debug(s"[RefreshedDraftDataRetrievalAction] Set updated user answers in db")
+              Right(DataRequest(request.request, updatedAnswers, request.user))
             }
-            _ <- playbackRepository.set(updatedAnswers)
-          } yield {
-            logger.debug(s"[RefreshedDraftDataRetrievalAction] Set updated user answers in db")
-            Right(DataRequest(request.request, updatedAnswers, request.user))
-          }
-        case Left(reason) =>
-          logger.warn(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to $reason")
-          Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+          case Left(reason) =>
+            logger.warn(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to $reason")
+            Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+        }
       }
+    } recoverWith {
+      case e =>
+        logger.error(s"[RefreshedDraftDataRetrievalAction] Failed to retrieve is5mldEnabled feature flag: ${e.getMessage}")
+        Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
   }
 

@@ -16,10 +16,10 @@
 
 package models.http
 
-import java.time.LocalDate
-
 import models.FullName
 import play.api.libs.json._
+
+import java.time.LocalDate
 
 case class GetTrust(matchData: MatchData,
                     correspondence: Correspondence,
@@ -27,14 +27,13 @@ case class GetTrust(matchData: MatchData,
                     trust: DisplayTrust)
 
 object GetTrust {
-  implicit val writes: Writes[GetTrust] = Json.writes[GetTrust]
-  implicit val reads: Reads[GetTrust] = Json.reads[GetTrust]
+  implicit val format: Format[GetTrust] = Json.format[GetTrust]
 }
 
 case class MatchData(utr: Option[String], urn: Option[String])
 
 object MatchData {
-  implicit val matchDataFormat: Format[MatchData] = Json.format[MatchData]
+  implicit val format: Format[MatchData] = Json.format[MatchData]
 }
 
 case class Correspondence(abroadIndicator: Boolean,
@@ -44,13 +43,13 @@ case class Correspondence(abroadIndicator: Boolean,
                           phoneNumber: String)
 
 object Correspondence {
-  implicit val correspondenceFormat : Format[Correspondence] = Json.format[Correspondence]
+  implicit val format: Format[Correspondence] = Json.format[Correspondence]
 }
 
 case class Declaration(name: FullName)
 
 object Declaration {
-  implicit val declarationFormat: Format[Declaration] = Json.format[Declaration]
+  implicit val format: Format[Declaration] = Json.format[Declaration]
 }
 
 case class DeclarationForApi(declaration: Declaration,
@@ -58,23 +57,21 @@ case class DeclarationForApi(declaration: Declaration,
                              endDate: Option[LocalDate])
 
 object DeclarationForApi {
-  implicit val declarationForApiFormat: Format[DeclarationForApi] = Json.format[DeclarationForApi]
+  implicit val format: Format[DeclarationForApi] = Json.format[DeclarationForApi]
 }
 
 case class GetTrustDesResponse(getTrust: Option[GetTrust],
                                responseHeader: ResponseHeader)
 
 object GetTrustDesResponse {
-  implicit val writes: Writes[GetTrustDesResponse] = Json.writes[GetTrustDesResponse]
-  implicit val reads: Reads[GetTrustDesResponse] = Json.reads[GetTrustDesResponse]
+  implicit val format: Format[GetTrustDesResponse] = Json.format[GetTrustDesResponse]
 }
 
 case class ResponseHeader(status: String,
                           formBundleNo: String)
 
 object ResponseHeader {
-  implicit val writes: Writes[ResponseHeader] = Json.writes[ResponseHeader]
-  implicit val reads: Reads[ResponseHeader] = Json.reads[ResponseHeader]
+  implicit val format: Format[ResponseHeader] = Json.format[ResponseHeader]
 }
 
 case class DisplayTrust(details: TrustDetailsType,
@@ -82,7 +79,7 @@ case class DisplayTrust(details: TrustDetailsType,
                         assets: Option[DisplayTrustAssets])
 
 object DisplayTrust {
-  implicit val trustFormat: Format[DisplayTrust] = Json.format[DisplayTrust]
+  implicit val format: Format[DisplayTrust] = Json.format[DisplayTrust]
 }
 
 case class DisplayTrustEntitiesType(naturalPerson: Option[List[NaturalPersonType]],
@@ -94,6 +91,5 @@ case class DisplayTrustEntitiesType(naturalPerson: Option[List[NaturalPersonType
                                     settlors: Option[DisplayTrustSettlors])
 
 object DisplayTrustEntitiesType {
-  implicit val displayTrustEntitiesTypeReads : Reads[DisplayTrustEntitiesType] = Json.reads[DisplayTrustEntitiesType]
-  implicit val trustEntitiesTypeWrites: Writes[DisplayTrustEntitiesType] = Json.writes[DisplayTrustEntitiesType]
+  implicit val format: Format[DisplayTrustEntitiesType] = Json.format[DisplayTrustEntitiesType]
 }

@@ -17,6 +17,7 @@
 package controllers.transition
 
 import com.google.inject.{Inject, Singleton}
+import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import pages.trustdetails.ExpressTrustYesNoPage
@@ -36,7 +37,8 @@ class ExpressTrustYesNoController @Inject()(
                                              actions: Actions,
                                              yesNoFormProvider: YesNoFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
-                                             view: ExpressTrustYesNoView
+                                             view: ExpressTrustYesNoView,
+                                             trustsConnector: TrustConnector
                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("expressTrustYesNo")
@@ -62,15 +64,14 @@ class ExpressTrustYesNoController @Inject()(
         value => {
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ExpressTrustYesNoPage, value))
-            // refresh transforms
-            // set express transform
             _ <- playbackRepository.set(updatedAnswers)
+            _ <- trustsConnector.removeTransforms(request.userAnswers.identifier)
+            _ <- trustsConnector.setExpressTrust(request.userAnswers.identifier, value)
           } yield {
-            ???
+            Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
           }
         }
       )
-
   }
 
 }
