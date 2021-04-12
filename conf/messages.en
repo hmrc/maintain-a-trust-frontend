@@ -826,7 +826,7 @@ leadTrusteeName.checkYourAnswersLabel = What is the lead trustee’s name?
 ## Trustee
 trusteeIndividualOrBusiness.checkYourAnswersLabel = Is the trustee an individual or a business?
 trusteeBusinessName.checkYourAnswersLabel = What is the business’s name?
-trusteeAUKCitizen.checkYourAnswersLabel = Is {0} a UK citizen?
+trusteeAUKCitizen.checkYourAnswersLabel = Does {0} have a National Insurance number?
 trusteeName.checkYourAnswersLabel = What is the trustee’s name?
 trusteeUtrYesNo.checkYourAnswersLabel = Do you know {0}’s Unique Taxpayer Reference (UTR) number?
 trusteeUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
