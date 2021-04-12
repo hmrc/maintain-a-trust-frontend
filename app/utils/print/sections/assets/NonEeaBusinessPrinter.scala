@@ -37,7 +37,7 @@ class NonEeaBusinessPrinter @Inject()(converter: AnswerRowConverter) extends Ent
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
     converter.stringQuestion(NonEeaBusinessNamePage(index), userAnswers, "nonEeaBusiness.name"),
     converter.addressQuestion(NonEeaBusinessAddressPage(index), userAnswers, "nonEeaBusiness.internationalAddress", name),
-    converter.stringQuestion(NonEeaBusinessGoverningCountryPage(index), userAnswers, "nonEeaBusiness.governingCountry")
+    converter.stringQuestion(NonEeaBusinessGoverningCountryPage(index), userAnswers, "nonEeaBusiness.governingCountry", name)
   )
 
   override def namePath(index: Int): JsPath = NonEeaBusinessNamePage(index).path
