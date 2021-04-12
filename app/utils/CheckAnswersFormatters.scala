@@ -48,7 +48,7 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
   }
 
   def formatNino(nino: String): Html = {
-    val formatted = Try(Nino(nino).formatted).getOrElse(nino)
+    val formatted = Try(Nino(nino.toUpperCase).formatted).getOrElse(nino.toUpperCase)
     escape(formatted)
   }
 
