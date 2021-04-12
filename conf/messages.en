@@ -455,6 +455,13 @@ utr.error.invalidCharacters = Enter the trust’s Unique Taxpayer Reference in t
 utr.linkMessage = You can
 utr.linkText = find a lost UTR (opens in a new window or tab)
 
+expressTrustYesNo.title = Are you maintaining an express trust?
+expressTrustYesNo.heading = Are you maintaining an express trust?
+expressTrustYesNo.p1 = An express trust is a trust created deliberately by a settlor, usually in the form of a document such as a written deed of trust.
+expressTrustYesNo.p2 = Express trusts can be created:
+expressTrustYesNo.bullet1 = by someone’s will after they have died
+expressTrustYesNo.bullet2 = during someone’s lifetime, which is known as inter-vivos
+
 declarationWhatNext.title = What do you want to do next?
 declarationWhatNext.heading = What do you want to do next?
 declarationWhatNext.declare = Declare the trust is up to date

@@ -25,6 +25,9 @@ POST       /unique-taxpayer-reference                   controllers.UTRControlle
 GET        /unique-reference-number                     controllers.URNController.onPageLoad()
 POST       /unique-reference-number                     controllers.URNController.onSubmit()
 
+GET        /express-trust                               controllers.transition.ExpressTrustYesNoController.onPageLoad()
+POST       /express-trust                               controllers.transition.ExpressTrustYesNoController.onSubmit()
+
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
 
 GET        /view-last-declaration                       controllers.ViewLastDeclarationYesNoController.onPageLoad()
