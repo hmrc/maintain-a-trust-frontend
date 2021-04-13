@@ -20,12 +20,12 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
 import models.pages.WhatIsNext.MakeChanges
+import navigation.Navigator.declarationUrl
 import pages.WhatIsNextPage
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.ConfirmTrustTaxableView
 
@@ -57,15 +57,7 @@ class ConfirmTrustTaxableController @Inject()(
         updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, MakeChanges))
         _ <- playbackRepository.set(updatedAnswers)
         _ <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
-      } yield {
-        Redirect {
-          if (request.user.affinityGroup == Agent) {
-            controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
-          } else {
-            controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
-          }
-        }
-      }
+      } yield Redirect(declarationUrl(request.user.affinityGroup))
   }
 
 }

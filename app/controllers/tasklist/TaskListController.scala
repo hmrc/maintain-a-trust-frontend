@@ -21,9 +21,9 @@ import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions.Actions
 import models.Enumerable
+import navigation.Navigator.declarationUrl
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.VariationProgressView
 
@@ -49,20 +49,14 @@ class TaskListController @Inject()(
 
           val sections = generateTaskList(tasks, identifier, request.userAnswers.trustMldStatus)
 
-          val next = if (request.user.affinityGroup == Agent) {
-            controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
-          } else {
-            controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
-          }
-
           Ok(view(identifier,
-            request.userAnswers.identifierType,
-            sections.mandatory,
-            sections.other,
-            request.user.affinityGroup,
-            next,
+            identifierType = request.userAnswers.identifierType,
+            mandatory = sections.mandatory,
+            optional = sections.other,
+            affinityGroup = request.user.affinityGroup,
+            nextUrl = declarationUrl(request.user.affinityGroup),
             isAbleToDeclare = sections.isAbleToDeclare,
-            request.closingTrust
+            closingTrust = request.closingTrust
           ))
       }
   }
