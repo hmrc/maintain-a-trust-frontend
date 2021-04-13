@@ -39,11 +39,6 @@ p.font-xsmall {
   display: block;
 }
 
-.bullet-list {
-  padding-left: 20px;
-  list-style-type: disc;
-}
-
 @media (min-width: 40.0625em) {
   .govuk-list > li {
     margin-bottom: 15px;
@@ -61,6 +56,11 @@ p.font-xsmall {
   margin-bottom: 15px;
   padding-left: 0;
   list-style-type: none;
+}
+
+.govuk-list--bullet {
+  padding-left: 20px;
+  list-style-type: disc;
 }
 
 .govuk-list--number, .app-prose-scope ol {
