@@ -461,6 +461,7 @@ expressTrustYesNo.p1 = An express trust is a trust created deliberately by a set
 expressTrustYesNo.p2 = Express trusts can be created:
 expressTrustYesNo.bullet1 = by someone’s will after they have died
 expressTrustYesNo.bullet2 = during someone’s lifetime, which is known as inter-vivos
+expressTrustYesNo.error.required = Select yes if you are maintaining an express trust
 
 confirmTrustTaxable.title = Before you continue
 confirmTrustTaxable.heading = Before you continue

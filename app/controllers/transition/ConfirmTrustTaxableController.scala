@@ -19,22 +19,28 @@ package controllers.transition
 import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
+import models.pages.WhatIsNext.MakeChanges
+import pages.WhatIsNextPage
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import repositories.PlaybackRepository
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.ConfirmTrustTaxableView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ConfirmTrustTaxableController @Inject()(
                                                override val messagesApi: MessagesApi,
+                                               playbackRepository: PlaybackRepository,
                                                actions: Actions,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: ConfirmTrustTaxableView,
                                                trustsConnector: TrustConnector
-                                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                             )(implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
@@ -45,7 +51,13 @@ class ConfirmTrustTaxableController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
-      trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true) map { _ =>
+      logger.debug("Answer for WhatIsNextPage required by declaration controller action set. Setting it here.")
+
+      for {
+        updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, MakeChanges))
+        _ <- playbackRepository.set(updatedAnswers)
+        _ <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
+      } yield {
         Redirect {
           if (request.user.affinityGroup == Agent) {
             controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url

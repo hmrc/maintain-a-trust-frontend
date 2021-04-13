@@ -21,6 +21,7 @@ import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import pages.trustdetails.ExpressTrustYesNoPage
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -39,7 +40,8 @@ class ExpressTrustYesNoController @Inject()(
                                              val controllerComponents: MessagesControllerComponents,
                                              view: ExpressTrustYesNoView,
                                              trustsConnector: TrustConnector
-                                           )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                           )(implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Logging {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("expressTrustYesNo")
 
@@ -62,13 +64,16 @@ class ExpressTrustYesNoController @Inject()(
           Future.successful(BadRequest(view(formWithErrors))),
 
         value => {
+
+          logger.debug("Removing transforms in case user redirected here from RefreshedDataPreSubmitRetrievalAction.")
+
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ExpressTrustYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
             _ <- trustsConnector.removeTransforms(request.userAnswers.identifier)
             _ <- trustsConnector.setExpressTrust(request.userAnswers.identifier, value)
           } yield {
-            Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+            Redirect(routes.ConfirmTrustTaxableController.onPageLoad())
           }
         }
       )

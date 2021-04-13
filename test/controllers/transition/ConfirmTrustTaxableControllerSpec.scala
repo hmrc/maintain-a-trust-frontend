@@ -18,9 +18,13 @@ package controllers.transition
 
 import base.SpecBase
 import connectors.TrustConnector
+import models.UserAnswers
+import models.pages.WhatIsNext.MakeChanges
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{reset, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
+import pages.WhatIsNextPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -61,6 +65,9 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
         "agent" in {
 
+          reset(playbackRepository)
+          when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+
           val mockTrustsConnector = mock[TrustConnector]
 
           when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
@@ -79,10 +86,17 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
           redirectLocation(result).value mustEqual
             controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
 
+          val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+          verify(playbackRepository).set(uaCaptor.capture)
+          uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
+
           application.stop()
         }
 
         "non-agent" in {
+
+          reset(playbackRepository)
+          when(playbackRepository.set(any())).thenReturn(Future.successful(true))
 
           val mockTrustsConnector = mock[TrustConnector]
 
@@ -101,6 +115,10 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
           redirectLocation(result).value mustEqual
             controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+
+          val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+          verify(playbackRepository).set(uaCaptor.capture)
+          uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
 
           application.stop()
         }
