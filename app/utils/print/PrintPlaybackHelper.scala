@@ -25,8 +25,8 @@ import utils.print.sections.settlors.AllSettlorsPrinter
 import utils.print.sections.trustees.AllTrusteesPrinter
 import utils.print.sections.{CloseDatePrinter, TrustDetailsPrinter}
 import viewmodels.AnswerSection
-
 import javax.inject.Inject
+import utils.print.sections.assets.NonEeaBusinessPrinter
 
 class PrintPlaybackHelper @Inject()(closeDatePrinter: CloseDatePrinter,
                                     settlorsPrinter: AllSettlorsPrinter,
@@ -34,6 +34,7 @@ class PrintPlaybackHelper @Inject()(closeDatePrinter: CloseDatePrinter,
                                     beneficiariesPrinter: AllBeneficiariesPrinter,
                                     protectorsPrinter: AllProtectorsPrinter,
                                     otherIndividualsPrinter: OtherIndividualsPrinter,
+                                    nonEeaBusinessPrinter: NonEeaBusinessPrinter,
                                     trustDetailsPrinter: TrustDetailsPrinter) {
 
   def closeDate(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection =
@@ -44,7 +45,8 @@ class PrintPlaybackHelper @Inject()(closeDatePrinter: CloseDatePrinter,
     trusteesPrinter.entities(userAnswers),
     beneficiariesPrinter.entities(userAnswers),
     protectorsPrinter.entities(userAnswers),
-    otherIndividualsPrinter.entities(userAnswers)
+    otherIndividualsPrinter.entities(userAnswers),
+    nonEeaBusinessPrinter.entities(userAnswers)
   ).flatten
 
   def trustDetails(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] =
