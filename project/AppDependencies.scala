@@ -3,7 +3,7 @@ import sbt._
 object AppDependencies {
   import play.core.PlayVersion
 
-  val compile = Seq(
+  val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
     "org.reactivemongo" %% "play2-reactivemongo"            % "0.20.3-play27",
     "uk.gov.hmrc"       %% "govuk-template"                 % "5.63.0-play-27",
@@ -17,7 +17,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-language"                  % "4.10.0-play-27"
   )
 
-  val test = Seq(
+  val test: Seq[ModuleID] = Seq(
     "org.scalatest"               %% "scalatest"          % "3.0.7",
     "org.scalatestplus.play"      %% "scalatestplus-play" % "4.0.3",
     "org.pegdown"                 %  "pegdown"            % "1.6.0",
@@ -27,7 +27,7 @@ object AppDependencies {
     "org.scalacheck"              %% "scalacheck"         % "1.14.3",
     "wolfendale"                  %% "scalacheck-gen-regexp" % "0.1.2",
     "com.github.tomakehurst"      % "wiremock-standalone"      % "2.25.1"
-  )
+  ).map(_ % "it, test")
 
   def apply(): Seq[ModuleID] = compile ++ test
 
