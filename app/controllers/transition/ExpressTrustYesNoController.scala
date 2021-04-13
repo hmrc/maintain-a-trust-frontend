@@ -43,7 +43,7 @@ class ExpressTrustYesNoController @Inject()(
                                            )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
-  val form: Form[Boolean] = yesNoFormProvider.withPrefix("expressTrustYesNo")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("expressTrustYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>

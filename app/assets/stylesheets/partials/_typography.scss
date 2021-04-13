@@ -40,8 +40,8 @@ p.font-xsmall {
 }
 
 .bullet-list {
-    padding-left: 20px;
-    list-style-type: disc;
+  padding-left: 20px;
+  list-style-type: disc;
 }
 
 @media (min-width: 40.0625em) {
@@ -86,19 +86,4 @@ p.font-xsmall {
     font-size: 27px;
     line-height: 1.11111;
   }
-}
-
-.trust-list--bullet {
-  list-style-type: disc;
-
-  > li {
-    margin-bottom: 5px;
-  }
-}
-
-.trust-list--bullet .inside {
-  list-style-position: inside;
-  // ensures all lines have same indent
-  padding-left: 1.28571429em;
-  text-indent: -1.28571429em;
 }

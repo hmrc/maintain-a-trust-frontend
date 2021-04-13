@@ -82,8 +82,6 @@ class RefreshedDataRetrievalActionImpl @Inject()(
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    // this is only called by the confirmation controller
-    // no need to update value of is5mldEnabled here
     playbackExtractor.extract(request.userAnswers.clearData, playback) flatMap {
       case Right(answers) =>
         for {
