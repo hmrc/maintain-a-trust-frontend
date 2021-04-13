@@ -26,7 +26,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
   val fakeTvn = "XC TVN 000 000 4912"
   val accessibleRefNumber = fakeTvn
 
-  private def confirmationPage(view: HtmlFormat.Appendable) : Unit = {
+  private def confirmationPage(view: HtmlFormat.Appendable, isTrustTaxable: Boolean = true) : Unit = {
 
     "assert content" in {
       val doc = asDocument(view)
@@ -44,7 +44,11 @@ class ConfirmationViewSpec extends ViewBehaviours {
 
       assertContainsText(doc, "Declaring the trust is up to date")
 
-      assertContainsText(doc, "You need to declare every year the details we have are up to date. This needs to be done through the Trust Registration Service and Self Assessment online or the Trust and Estate Tax Return form (SA900).")
+      if (isTrustTaxable) {
+        assertContainsText(doc, "You need to declare every year the details we have are up to date. This needs to be done through the Trust Registration Service and Self Assessment online or the Trust and Estate Tax Return form (SA900).")
+      } else {
+        assertNotRenderedById(doc, "taxable-message")
+      }
     }
 
   }
@@ -66,6 +70,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
     val applyView = view.apply(
       fakeTvn = fakeTvn,
       isAgent = true,
+      isTrustTaxable = true,
       agentOverviewUrl = "#"
     )(fakeRequest, messages)
 
@@ -80,10 +85,24 @@ class ConfirmationViewSpec extends ViewBehaviours {
     val applyView = view.apply(
       fakeTvn = fakeTvn,
       isAgent = true,
+      isTrustTaxable = true,
       agentOverviewUrl = "#"
     )(fakeRequest, messages)
 
     behave like confirmationPage(applyView)
+  }
+
+  "Non Taxable confirmation view for an organisation" must {
+    val view = viewFor[ConfirmationView](Some(emptyUserAnswersForUtr))
+
+    val applyView = view.apply(
+      fakeTvn = fakeTvn,
+      isAgent = true,
+      isTrustTaxable = false,
+      agentOverviewUrl = "#"
+    )(fakeRequest, messages)
+
+    behave like confirmationPage(applyView, isTrustTaxable = false)
   }
 
 }
