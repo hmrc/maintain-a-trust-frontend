@@ -748,5 +748,57 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         application.stop()
       }
     }
+
+    ".setExpressTrust" - {
+      "return OK when the request is successful" in {
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          put(urlEqualTo(s"/trusts/trust-details/$utr/express"))
+            .willReturn(ok)
+        )
+
+        val result = Await.result(connector.setExpressTrust(utr, value = true), Duration.Inf)
+
+        result.status mustBe OK
+
+        application.stop()
+      }
+    }
+
+    ".setTaxableTrust" - {
+      "return OK when the request is successful" in {
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          put(urlEqualTo(s"/trusts/trust-details/$utr/taxable"))
+            .willReturn(ok)
+        )
+
+        val result = Await.result(connector.setTaxableTrust(utr, value = true), Duration.Inf)
+
+        result.status mustBe OK
+
+        application.stop()
+      }
+    }
   }
 }

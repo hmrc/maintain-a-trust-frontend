@@ -30,14 +30,14 @@ import scala.concurrent.{ExecutionContext, Future}
 class UserAnswersSetupService @Inject()(playbackRepository: PlaybackRepository,
                                         sessionRepository: ActiveSessionRepository) extends Logging {
 
-  def setupAndRedirectToStatus(identifier: String, internalId: String, is5mldEnabled: Boolean)
+  def setupAndRedirectToStatus(identifier: String, internalId: String, is5mldEnabled: Boolean, isTaxable: Boolean)
                               (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Result] = {
 
     val activeSession = IdentifierSession(internalId, identifier)
-    val newEmptyAnswers = UserAnswers.startNewSession(internalId, identifier, is5mldEnabled)
+    val newEmptyAnswers = UserAnswers.startNewSession(internalId, identifier, is5mldEnabled, isTaxable)
 
     for {
-      _ <- playbackRepository.resetCache(identifier, internalId)
+      _ <- playbackRepository.resetCache(internalId, identifier)
       _ <- playbackRepository.set(newEmptyAnswers)
       _ <- sessionRepository.set(activeSession)
     } yield {

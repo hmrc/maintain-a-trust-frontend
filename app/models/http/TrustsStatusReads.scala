@@ -27,7 +27,7 @@ sealed trait TrustStatus extends TrustsResponse
 
 case object Processing extends TrustStatus
 case object Closed extends TrustStatus
-case class Processed(playback: GetTrust, formBundleNumber : String) extends TrustStatus
+case class Processed(playback: GetTrust, formBundleNumber: String) extends TrustStatus
 case object SorryThereHasBeenAProblem extends TrustStatus
 case object IdentifierNotFound extends TrustsResponse
 case object TrustServiceUnavailable extends TrustsResponse
@@ -47,7 +47,7 @@ object TrustsStatusReads extends Logging {
       case JsString("Pending Closure") =>
         JsSuccess(Closed)
       case JsString("Processed") =>
-         validatedProcessedStatus(json)
+        validatedProcessedStatus(json)
       case JsString("Parked") =>
         JsSuccess(SorryThereHasBeenAProblem)
       case JsString("Obsoleted") =>
@@ -71,25 +71,22 @@ object TrustsStatusReads extends Logging {
     }
   }
 
-  implicit lazy val httpReads: HttpReads[TrustsResponse] =
-    new HttpReads[TrustsResponse] {
-      override def read(method: String, url: String, response: HttpResponse): TrustsResponse = {
-        logger.info(s"[TrustStatus] response status received from trusts status api: ${response.status}")
+  implicit lazy val httpReads: HttpReads[TrustsResponse] = (_: String, _: String, response: HttpResponse) => {
+    logger.info(s"[TrustStatus] response status received from trusts status api: ${response.status}")
 
-        response.status match {
-          case OK =>
-            response.json.as[TrustStatus]
-          case NO_CONTENT =>
-            SorryThereHasBeenAProblem
-          case NOT_FOUND =>
-            IdentifierNotFound
-          case SERVICE_UNAVAILABLE =>
-            TrustServiceUnavailable
-          case CLOSED_REQUEST =>
-            ClosedRequestResponse
-          case _ =>
-            ServerError
-        }
-      }
+    response.status match {
+      case OK =>
+        response.json.as[TrustStatus]
+      case NO_CONTENT =>
+        SorryThereHasBeenAProblem
+      case NOT_FOUND =>
+        IdentifierNotFound
+      case SERVICE_UNAVAILABLE =>
+        TrustServiceUnavailable
+      case CLOSED_REQUEST =>
+        ClosedRequestResponse
+      case _ =>
+        ServerError
     }
+  }
 }

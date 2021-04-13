@@ -19,20 +19,19 @@ package models
 import _root_.pages.trustdetails.ExpressTrustYesNoPage
 import forms.Validation
 import play.api.Logging
+import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 
 import java.time.LocalDateTime
 import scala.util.{Failure, Success, Try}
 
-final case class UserAnswers(
-                              internalId: String,
-                              identifier: String,
-                              data: JsObject = Json.obj(),
-                              is5mldEnabled: Boolean = false,
-                              isTrustTaxable: Boolean = true,
-                              updatedAt: LocalDateTime = LocalDateTime.now
-                            ) extends Logging {
+final case class UserAnswers(internalId: String,
+                             identifier: String,
+                             data: JsObject = Json.obj(),
+                             is5mldEnabled: Boolean = false,
+                             isTrustTaxable: Boolean = true,
+                             updatedAt: LocalDateTime = LocalDateTime.now) extends Logging {
 
   def identifierType: IdentifierType = if (identifier.matches(Validation.utrRegex)) UTR else URN
 
@@ -45,8 +44,7 @@ final case class UserAnswers(
 
   private def isUnderlyingTrust5mld: Boolean = this.get(ExpressTrustYesNoPage).isDefined
 
-  def is5mldTrustIn5mldMode: Boolean =
-    trustMldStatus == Underlying5mldTaxableTrustIn5mldMode || trustMldStatus == Underlying5mldNonTaxableTrustIn5mldMode
+  def is5mldTrustIn5mldMode: Boolean = trustMldStatus.is5mldTrustIn5mldMode
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     getAtPath(page.path)
@@ -117,38 +115,30 @@ final case class UserAnswers(
     )
   }
 
+  def clearData: UserAnswers = this.copy(data = Json.obj())
+
 }
 
 object UserAnswers {
 
-  def startNewSession(internalId: String, identifier: String, is5mldEnabled: Boolean = false) : UserAnswers =
-    UserAnswers(internalId = internalId, identifier = identifier, is5mldEnabled = is5mldEnabled)
+  def startNewSession(internalId: String, identifier: String, is5mldEnabled: Boolean, isTaxable: Boolean): UserAnswers =
+    UserAnswers(internalId = internalId, identifier = identifier, is5mldEnabled = is5mldEnabled, isTrustTaxable = isTaxable)
 
-  implicit lazy val reads: Reads[UserAnswers] = {
+  implicit lazy val reads: Reads[UserAnswers] = (
+    (__ \ "internalId").read[String] and
+      (__ \ "identifier").read[String] and
+      (__ \ "data").read[JsObject] and
+      (__ \ "is5mldEnabled").readWithDefault[Boolean](false) and
+      (__ \ "isTrustTaxable").readWithDefault[Boolean](true) and
+      (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
+    )(UserAnswers.apply _)
 
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "internalId").read[String] and
-        (__ \ "identifier").read[String] and
-        (__ \ "data").read[JsObject] and
-        (__ \ "is5mldEnabled").readWithDefault[Boolean](false) and
-        (__ \ "isTrustTaxable").readWithDefault[Boolean](true) and
-        (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
-      ) (UserAnswers.apply _)
-  }
-
-  implicit lazy val writes: OWrites[UserAnswers] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "internalId").write[String] and
-        (__ \ "identifier").write[String] and
-        (__ \ "data").write[JsObject] and
-        (__ \ "is5mldEnabled").write[Boolean] and
-        (__ \ "isTrustTaxable").write[Boolean] and
-        (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
-      ) (unlift(UserAnswers.unapply))
-  }
+  implicit lazy val writes: OWrites[UserAnswers] = (
+    (__ \ "internalId").write[String] and
+      (__ \ "identifier").write[String] and
+      (__ \ "data").write[JsObject] and
+      (__ \ "is5mldEnabled").write[Boolean] and
+      (__ \ "isTrustTaxable").write[Boolean] and
+      (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
+    )(unlift(UserAnswers.unapply))
 }

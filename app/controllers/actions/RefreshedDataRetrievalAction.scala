@@ -20,10 +20,10 @@ import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
 import controllers.routes
 import mapping.UserAnswersExtractor
+import models.AgentDeclaration
 import models.http.{GetTrust, Processed}
 import models.pages.WhatIsNext
 import models.requests.DataRequest
-import models.{AgentDeclaration, UserAnswers}
 import pages.declaration.AgentDeclarationPage
 import pages.{SubmissionDatePage, TVNPage, WhatIsNextPage}
 import play.api.Logging
@@ -68,7 +68,7 @@ class RefreshedDataRetrievalActionImpl @Inject()(
       val submissionData = SubmissionData(identifier, whatIsNext, tvn, submissionDate, optionalAgentInformation, getClosureDate(request.userAnswers))
 
       trustConnector.playback(identifier).flatMap {
-        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, identifier, playback)(request)
+        case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, playback)(request)
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
@@ -77,14 +77,14 @@ class RefreshedDataRetrievalActionImpl @Inject()(
     }
   }
 
-  private def extractAndRefreshUserAnswers[A](data: SubmissionData, identifier: String, playback: GetTrust)
+  private def extractAndRefreshUserAnswers[A](data: SubmissionData, playback: GetTrust)
                                              (implicit request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    val newSession = UserAnswers.startNewSession(request.user.internalId, identifier)
-
-    playbackExtractor.extract(newSession, playback) flatMap {
+    // this is only called by the confirmation controller
+    // no need to update value of is5mldEnabled here
+    playbackExtractor.extract(request.userAnswers.clearData, playback) flatMap {
       case Right(answers) =>
         for {
           updatedAnswers <- Future.fromTry {

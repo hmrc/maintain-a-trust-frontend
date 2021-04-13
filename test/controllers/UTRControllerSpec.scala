@@ -17,15 +17,16 @@
 package controllers
 
 import base.SpecBase
+import controllers.Assets.Redirect
 import forms.UTRFormProvider
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
+import org.mockito.Matchers.{any, eq => eqTo}
+import org.mockito.Mockito.{verify, when}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.FeatureFlagService
+import services.{FeatureFlagService, UserAnswersSetupService}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.UTRView
@@ -42,6 +43,12 @@ class UTRControllerSpec extends SpecBase {
   lazy val onSubmit: Call = routes.UTRController.onSubmit()
 
   val mockFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
+
+  val utr = "0987654321"
+
+  val enrolments: Enrolments = Enrolments(Set(Enrolment(
+    "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
+  )))
 
   "UTR Controller" must {
 
@@ -97,11 +104,8 @@ class UTRControllerSpec extends SpecBase {
         bind[FeatureFlagService].toInstance(mockFeatureFlagService)
       ).build()
 
-      val utr = "0987654321"
-
-      val request =
-        FakeRequest(POST, trustUTRRoute)
-          .withFormUrlEncodedBody(("value", utr))
+      val request = FakeRequest(POST, trustUTRRoute)
+        .withFormUrlEncodedBody(("value", utr))
 
       val result = route(application, request).value
 
@@ -114,12 +118,6 @@ class UTRControllerSpec extends SpecBase {
 
     "redirect to trust status on a POST" in {
 
-      val utr = "0987654321"
-
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
-      )))
-
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
 
       val application =
@@ -131,12 +129,50 @@ class UTRControllerSpec extends SpecBase {
           bind[FeatureFlagService].toInstance(mockFeatureFlagService)
         ).build()
 
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustUTRRoute).withFormUrlEncodedBody(("value", utr))
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustUTRRoute)
+        .withFormUrlEncodedBody(("value", utr))
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+      application.stop()
+    }
+
+    "make call to user answers setup service" in {
+
+      val mockUserAnswersSetupService = mock[UserAnswersSetupService]
+
+      when(mockUserAnswersSetupService.setupAndRedirectToStatus(any(), any(), any(), any())(any(), any()))
+        .thenReturn(Future.successful(Redirect("redirectUrl")))
+
+      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+      val application =
+        applicationBuilder(
+          userAnswers = Some(emptyUserAnswersForUtr),
+          affinityGroup = Organisation,
+          enrolments = enrolments
+        ).overrides(
+          bind[UserAnswersSetupService].toInstance(mockUserAnswersSetupService),
+          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+        ).build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+        FakeRequest(POST, trustUTRRoute).withFormUrlEncodedBody(("value", utr))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe "redirectUrl"
+
+      verify(mockUserAnswersSetupService).setupAndRedirectToStatus(
+        eqTo(utr),
+        eqTo("id"),
+        eqTo(true),
+        eqTo(true)
+      )(any(), any())
 
       application.stop()
     }
@@ -149,9 +185,8 @@ class UTRControllerSpec extends SpecBase {
         bind[FeatureFlagService].toInstance(mockFeatureFlagService)
       ).build()
 
-      val request =
-        FakeRequest(POST, trustUTRRoute)
-          .withFormUrlEncodedBody(("value", ""))
+      val request = FakeRequest(POST, trustUTRRoute)
+        .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
@@ -166,7 +201,5 @@ class UTRControllerSpec extends SpecBase {
 
       application.stop()
     }
-
-
   }
 }

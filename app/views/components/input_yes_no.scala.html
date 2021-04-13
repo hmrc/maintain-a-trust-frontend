@@ -26,8 +26,9 @@
     yesAssoc: Option[String] = None,
     noAssoc: Option[String] = None,
     legendClass: Option[String] = None,
-    link : Option[Link] = None,
-    legendAsHeading: Boolean = false
+    link: Option[Link] = None,
+    legendAsHeading: Boolean = false,
+    additionalContent: Option[Html] = None
 )(implicit messages: Messages)
 
 
@@ -46,12 +47,19 @@
             @label
             @if(legendAsHeading){</h1>}
         </legend>
-        @form_hint(hint = hint, link = link)
-        @field.errors.map { error =>
-        <span class="error-message" id="error-message-@{field.id}-input">
-            <span class="visually-hidden">@messages("site.error") </span>@messages(error.message, error.args: _*)
-        </span>
+
+        @if(additionalContent.isDefined){
+            @additionalContent
         }
+        
+        @form_hint(hint = hint, link = link)
+        
+        @field.errors.map { error =>
+            <span class="error-message" id="error-message-@{field.id}-input">
+                <span class="visually-hidden">@messages("site.error") </span>@messages(error.message, error.args: _*)
+            </span>
+        }
+        
         <div class="multiple-choice first">
             <input
                     id="@{field.id}-yes"

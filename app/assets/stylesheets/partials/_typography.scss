@@ -88,3 +88,17 @@ p.font-xsmall {
   }
 }
 
+.trust-list--bullet {
+  list-style-type: disc;
+
+  > li {
+    margin-bottom: 5px;
+  }
+}
+
+.trust-list--bullet .inside {
+  list-style-position: inside;
+  // ensures all lines have same indent
+  padding-left: 1.28571429em;
+  text-indent: -1.28571429em;
+}

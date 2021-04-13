@@ -16,6 +16,7 @@
 
 package generators
 
+import models.http._
 import models.pages.WhatIsNext
 
 import java.time.LocalDate
@@ -34,7 +35,7 @@ trait ModelGenerators {
       } yield PassportOrIdCardDetails(field1, field2, field3)
     }
 
-  implicit lazy val arbitraryFullName : Arbitrary[FullName] = {
+  implicit lazy val arbitraryFullName: Arbitrary[FullName] = {
     Arbitrary {
       for {
         str <- arbitrary[String]
@@ -48,7 +49,7 @@ trait ModelGenerators {
     Arbitrary {
       for {
         str <- arbitrary[String]
-      } yield InternationalAddress(str,str,Some(str),str)
+      } yield InternationalAddress(str, str, Some(str), str)
     }
 
   implicit lazy val arbitraryUkAddress: Arbitrary[UKAddress] =
@@ -62,7 +63,7 @@ trait ModelGenerators {
       } yield UKAddress(line1, line2, Some(line3), Some(line4), postcode)
     }
 
-  implicit lazy val arbitraryDate : Arbitrary[LocalDate] =
+  implicit lazy val arbitraryDate: Arbitrary[LocalDate] =
     Arbitrary {
       Gen.const(LocalDate.of(2010, 10, 10))
     }
@@ -70,6 +71,114 @@ trait ModelGenerators {
   implicit lazy val arbitraryWhatIsNext: Arbitrary[WhatIsNext] =
     Arbitrary {
       Gen.oneOf(WhatIsNext.values)
+    }
+
+  implicit lazy val arbitraryMatchData: Arbitrary[MatchData] =
+    Arbitrary {
+      for {
+        str <- arbitrary[String]
+      } yield MatchData(Some(str), None)
+    }
+
+  implicit lazy val arbitraryAddress: Arbitrary[AddressType] =
+    Arbitrary {
+      for {
+        line1 <- arbitrary[String]
+        line2 <- arbitrary[String]
+        line3 <- arbitrary[Option[String]]
+        line4 <- arbitrary[Option[String]]
+        postcode <- arbitrary[Option[String]]
+        country <- arbitrary[String]
+      } yield AddressType(line1, line2, line3, line4, postcode, country)
+    }
+
+  implicit lazy val arbitraryCorrespondence: Arbitrary[Correspondence] =
+    Arbitrary {
+      for {
+        abroadIndicator <- arbitrary[Boolean]
+        name <- arbitrary[String]
+        address <- arbitrary[AddressType]
+        bpMatchStatus <- arbitrary[Option[String]]
+        phoneNumber <- arbitrary[String]
+      } yield Correspondence(abroadIndicator, name, address, bpMatchStatus, phoneNumber)
+    }
+
+  implicit lazy val arbitraryDeclaration: Arbitrary[Declaration] =
+    Arbitrary {
+      for {
+        name <- arbitrary[FullName]
+      } yield Declaration(name)
+    }
+
+  implicit lazy val arbitraryTrustDetails: Arbitrary[TrustDetailsType] =
+    Arbitrary {
+      for {
+        startDate <- arbitrary[LocalDate]
+      } yield TrustDetailsType(startDate, None, None, None, None, None, None, None, None, None, None, None)
+    }
+
+  implicit lazy val arbitraryBeneficiaries: Arbitrary[DisplayTrustBeneficiaryType] =
+    Arbitrary {
+      DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil)
+    }
+
+  implicit lazy val arbitraryLeadTrustee: Arbitrary[DisplayTrustLeadTrusteeType] =
+    Arbitrary {
+      DisplayTrustLeadTrusteeType(None, None)
+    }
+
+  implicit lazy val arbitraryEntities: Arbitrary[DisplayTrustEntitiesType] =
+    Arbitrary {
+      for {
+        beneficiaries <- arbitrary[DisplayTrustBeneficiaryType]
+        leadTrustee <- arbitrary[DisplayTrustLeadTrusteeType]
+      } yield DisplayTrustEntitiesType(None, beneficiaries, None, leadTrustee, None, None, None)
+    }
+
+  implicit lazy val arbitraryDisplayTrust: Arbitrary[DisplayTrust] =
+    Arbitrary {
+      for {
+        details <- arbitrary[TrustDetailsType]
+        entities <- arbitrary[DisplayTrustEntitiesType]
+      } yield DisplayTrust(details, entities, None)
+    }
+
+  implicit lazy val arbitraryGetTrust: Arbitrary[GetTrust] =
+    Arbitrary {
+      for {
+        matchData <- arbitrary[MatchData]
+        correspondence <- arbitrary[Correspondence]
+        declaration <- arbitrary[Declaration]
+        trust <- arbitrary[DisplayTrust]
+      } yield GetTrust(matchData, correspondence, declaration, trust)
+    }
+
+  implicit lazy val arbitraryProcessedTrustResponse: Arbitrary[Processed] =
+    Arbitrary {
+      for {
+        playback <- arbitrary[GetTrust]
+        formBundleNumber <- arbitrary[String]
+      } yield Processed(playback, formBundleNumber)
+    }
+
+  implicit lazy val arbitraryTrustsResponse: Arbitrary[TrustsResponse] =
+    Arbitrary {
+      for {
+        processed <- arbitrary[Processed]
+        response <- Gen.oneOf(
+          Seq(
+            Processing,
+            Closed,
+            processed,
+            SorryThereHasBeenAProblem,
+            IdentifierNotFound,
+            TrustServiceUnavailable,
+            ClosedRequestResponse,
+            ServerError
+          )
+        )
+      } yield
+        response
     }
 
 }

@@ -27,8 +27,7 @@ case class DisplayTrustLeadTrusteeType(leadTrusteeInd: Option[DisplayTrustLeadTr
                                        leadTrusteeOrg: Option[DisplayTrustLeadTrusteeOrgType] = None)
 
 object DisplayTrustLeadTrusteeType {
-  implicit val writes: Writes[DisplayTrustLeadTrusteeType] = Json.writes[DisplayTrustLeadTrusteeType]
-  implicit val reads : Reads[DisplayTrustLeadTrusteeType] = Json.reads[DisplayTrustLeadTrusteeType]
+  implicit val format: Format[DisplayTrustLeadTrusteeType] = Json.format[DisplayTrustLeadTrusteeType]
 }
 
 case class DisplayTrustLeadTrusteeIndType(lineNo: Option[String],

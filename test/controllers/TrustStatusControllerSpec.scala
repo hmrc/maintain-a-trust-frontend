@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import connectors.{TrustClaim, TrustConnector, TrustsStoreConnector}
 import mapping.{FakeFailingUserAnswerExtractor, FakeUserAnswerExtractor, UserAnswersExtractor}
-import models.UTR
+import models.{UTR, UserAnswers}
 import models.http._
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -47,7 +47,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     def utr = "1234567890"
 
-    def userAnswers = emptyUserAnswersForUtr
+    def userAnswers: UserAnswers = emptyUserAnswersForUtr
 
     val fakeTrustConnector: TrustConnector = mock[TrustConnector]
     val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
@@ -61,7 +61,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       bind[TrustConnector].to(fakeTrustConnector),
       bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
       bind[AuthenticationService].to(new FakeAuthenticationService()),
-      bind[UserAnswersExtractor].to[FakeUserAnswerExtractor]
+      bind[UserAnswersExtractor].to(new FakeUserAnswerExtractor(userAnswers))
     ).build()
   }
 
@@ -294,14 +294,42 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
           "user answers is extracted" must {
 
+            "redirect to express trust for underlying 4mld trust data in 5mld mode" in new LocalSetup {
+
+              override def userAnswers: UserAnswers = super.userAnswers.copy(is5mldEnabled = true)
+
+              override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+
+              val payload: String =
+                Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+
+              val json: JsValue = Json.parse(payload)
+
+              val getTrust: GetTrust = json.as[GetTrustDesResponse].getTrust.value
+
+              when(fakeTrustStoreConnector.get(any[String])(any(), any()))
+                .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+
+              when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
+                .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
+
+              when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
+
+              status(result) mustEqual SEE_OTHER
+
+              redirectLocation(result).value mustEqual controllers.transition.routes.ExpressTrustYesNoController.onPageLoad().url
+
+              application.stop()
+            }
+
             "redirect to maintain this trust for organisation" in new LocalSetup {
 
               override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
-              val payload : String =
+              val payload: String =
                 Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
 
-              val json : JsValue = Json.parse(payload)
+              val json: JsValue = Json.parse(payload)
 
               val getTrust = json.as[GetTrustDesResponse].getTrust.value
 
@@ -324,10 +352,10 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
               override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
-              val payload : String =
+              val payload: String =
                 Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
 
-              val json : JsValue = Json.parse(payload)
+              val json: JsValue = Json.parse(payload)
 
               val getTrust = json.as[GetTrustDesResponse].getTrust.value
 
@@ -365,10 +393,10 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 bind[AuthenticationService].to(new FakeAuthenticationService())
               ).build()
 
-              val payload : String =
+              val payload: String =
                 Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
 
-              val json : JsValue = Json.parse(payload)
+              val json: JsValue = Json.parse(payload)
 
               val getTrust = json.as[GetTrustDesResponse].getTrust.value
 
@@ -410,10 +438,10 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               bind[AuthenticationService].to(new FakeFailingAuthenticationService())
             ).build()
 
-            val payload : String =
+            val payload: String =
               Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
 
-            val json : JsValue = Json.parse(payload)
+            val json: JsValue = Json.parse(payload)
 
             val getTrust = json.as[GetTrustDesResponse].getTrust.value
 
