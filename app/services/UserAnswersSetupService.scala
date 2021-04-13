@@ -37,7 +37,7 @@ class UserAnswersSetupService @Inject()(playbackRepository: PlaybackRepository,
     val newEmptyAnswers = UserAnswers.startNewSession(internalId, identifier, is5mldEnabled, isTaxable)
 
     for {
-      _ <- playbackRepository.resetCache(identifier, internalId)
+      _ <- playbackRepository.resetCache(internalId, identifier)
       _ <- playbackRepository.set(newEmptyAnswers)
       _ <- sessionRepository.set(activeSession)
     } yield {

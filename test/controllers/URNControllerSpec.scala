@@ -42,11 +42,17 @@ class URNControllerSpec extends SpecBase {
 
   lazy val onSubmit: Call = routes.URNController.onSubmit()
 
+  val urn = "abtrust12345678"
+
+  val enrolments: Enrolments = Enrolments(Set(Enrolment(
+    "HMRC-TERSNT-ORG", Seq(EnrolmentIdentifier("URN", urn)), "Activated"
+  )))
+
   "URN Controller" must {
 
     "return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUrn)).build()
 
       val request = FakeRequest(GET, trustURNRoute)
 
@@ -84,11 +90,8 @@ class URNControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val urn = "ABTRUST12345678"
-
-      val request =
-        FakeRequest(POST, trustURNRoute)
-          .withFormUrlEncodedBody(("value", urn))
+      val request = FakeRequest(POST, trustURNRoute)
+        .withFormUrlEncodedBody(("value", urn))
 
       val result = route(application, request).value
 
@@ -101,20 +104,15 @@ class URNControllerSpec extends SpecBase {
 
     "redirect to trust status on a POST" in {
 
-      val urn = "ABTRUST12345678"
-
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-TERSNT-ORG", Seq(EnrolmentIdentifier("URN", urn)), "Activated"
-      )))
-
       val application =
         applicationBuilder(
-          userAnswers = Some(emptyUserAnswersForUtr),
+          userAnswers = Some(emptyUserAnswersForUrn),
           affinityGroup = Organisation,
           enrolments = enrolments
         ).build()
 
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustURNRoute).withFormUrlEncodedBody(("value", urn))
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustURNRoute)
+        .withFormUrlEncodedBody(("value", urn))
 
       val result = route(application, request).value
 
@@ -126,24 +124,18 @@ class URNControllerSpec extends SpecBase {
 
     "make call to user answers setup service with uppercase form of input" in {
 
-      val mockService = mock[UserAnswersSetupService]
+      val mockUserAnswersSetupService = mock[UserAnswersSetupService]
 
-      when(mockService.setupAndRedirectToStatus(any(), any(), any(), any())(any(), any()))
+      when(mockUserAnswersSetupService.setupAndRedirectToStatus(any(), any(), any(), any())(any(), any()))
         .thenReturn(Future.successful(Redirect("redirectUrl")))
-
-      val urn = "abtrust12345678"
-
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-TERSNT-ORG", Seq(EnrolmentIdentifier("URN", urn)), "Activated"
-      )))
 
       val application =
         applicationBuilder(
-          userAnswers = Some(emptyUserAnswersForUtr),
+          userAnswers = Some(emptyUserAnswersForUrn),
           affinityGroup = Organisation,
           enrolments = enrolments
         ).overrides(
-          bind[UserAnswersSetupService].toInstance(mockService)
+          bind[UserAnswersSetupService].toInstance(mockUserAnswersSetupService)
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
@@ -154,8 +146,8 @@ class URNControllerSpec extends SpecBase {
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe "redirectUrl"
 
-      verify(mockService).setupAndRedirectToStatus(
-        eqTo("ABTRUST12345678"),
+      verify(mockUserAnswersSetupService).setupAndRedirectToStatus(
+        eqTo(urn.toUpperCase),
         eqTo("id"),
         eqTo(true),
         eqTo(false)
@@ -166,11 +158,10 @@ class URNControllerSpec extends SpecBase {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUrn)).build()
 
-      val request =
-        FakeRequest(POST, trustURNRoute)
-          .withFormUrlEncodedBody(("value", ""))
+      val request = FakeRequest(POST, trustURNRoute)
+        .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
