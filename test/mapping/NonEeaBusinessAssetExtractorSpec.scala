@@ -18,8 +18,8 @@ package mapping
 
 import base.SpecBaseHelpers
 import generators.Generators
+import models.InternationalAddress
 import models.http._
-import models.{InternationalAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.assets.nonEeaBusiness._
 
@@ -156,7 +156,7 @@ class NonEeaBusinessAssetExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val nonEeaBusinessAssets = (for (index <- 0 to 2) yield generateNonEeaBusiness(index)).toList
 
-          val ua = UserAnswers("fakeId", "urn")
+          val ua = emptyUserAnswersForUrn
 
           val extraction = assetExtractor.extract(ua, nonEeaBusinessAssets)
 

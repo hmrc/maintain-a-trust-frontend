@@ -16,6 +16,7 @@
 
 package base
 
+import controllers.Assets.OK
 import controllers.actions._
 import models.UserAnswers
 import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
@@ -26,6 +27,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.BodyParsers
 import repositories.PlaybackRepository
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, Enrolments}
+import uk.gov.hmrc.http.HttpResponse
 import utils.TestUserAnswers
 
 trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked with BeforeAndAfter with FakeTrustsApp {
@@ -54,6 +56,9 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
         bind[PlaybackRepository].toInstance(playbackRepository)
       )
   }
+
+  val okResponse: HttpResponse = HttpResponse(OK, "")
+
 }
 
 trait SpecBase extends PlaySpec with SpecBaseHelpers

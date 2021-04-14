@@ -35,7 +35,6 @@ import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.HttpResponse
 import views.html.WhatIsNextView
 
 import scala.concurrent.Future
@@ -54,10 +53,13 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
     reset(mockTrustConnector)
 
     when(mockTrustConnector.removeTransforms(any())(any(), any()))
-      .thenReturn(Future.successful(HttpResponse(OK, "")))
+      .thenReturn(Future.successful(okResponse))
+
+    when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
+      .thenReturn(Future.successful(okResponse))
 
     when(mockTrustConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
-      .thenReturn(Future.successful(HttpResponse(OK, "")))
+      .thenReturn(Future.successful(okResponse))
   }
 
   "WhatIsNext Controller" must {
@@ -352,7 +354,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
       }
 
       "Needs to pay tax" must {
-        "redirect to feature unavailable" in {
+        "call setTaxableTrust and redirect to feature unavailable" in {
 
           beforeTest()
 
@@ -370,6 +372,8 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           status(result) mustEqual SEE_OTHER
 
           redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
+
+          verify(mockTrustConnector).setTaxableTrust(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
 
           application.stop()
         }
@@ -460,6 +464,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
     "not remove transforms" when {
 
       "answer hasn't changed" in {
+
         val gen = arbitrary[WhatIsNext]
 
         forAll(gen) { previousAnswer =>
@@ -513,7 +518,9 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
           beforeTest()
 
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUrn))
+          val userAnswers = emptyUserAnswersForUrn
+
+          val application = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
             .build()
 
@@ -524,6 +531,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
           status(result) mustEqual SEE_OTHER
 
+          verify(mockTrustConnector).setTaxableTrust(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
           verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
 
           application.stop()
@@ -538,7 +546,9 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           forAll(gen.suchThat(x => x != NeedsToPayTax && x != GeneratePdf)) { answer =>
             beforeTest()
 
-            val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+            val userAnswers = emptyUserAnswersForUtr
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
               .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
               .build()
 
@@ -549,6 +559,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
             status(result) mustEqual SEE_OTHER
 
+            verify(mockTrustConnector, never()).setTaxableTrust(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
             verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(false))(any(), any())
 
             application.stop()

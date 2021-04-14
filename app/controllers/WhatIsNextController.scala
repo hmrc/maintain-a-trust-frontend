@@ -96,7 +96,6 @@ class WhatIsNextController @Inject()(
         case NoLongerTaxable =>
           controllers.routes.NoTaxLiabilityInfoController.onPageLoad()
         case NeedsToPayTax =>
-          // TODO - set taxable trust transform
           controllers.routes.FeatureNotAvailableController.onPageLoad()
         case GeneratePdf =>
           controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier)
@@ -104,20 +103,33 @@ class WhatIsNextController @Inject()(
     }
 
     if (newAnswer != GeneratePdf) {
+      val needsToPayTaxSelected = newAnswer == NeedsToPayTax
+
       for {
-        _ <- {
-          if (hasAnswerChanged) {
-            trustConnector.removeTransforms(request.userAnswers.identifier).map(_ => ())
-          } else {
-            Future.successful(())
-          }
-        }
-        _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, newAnswer == NeedsToPayTax)
-      } yield {
-        redirect
-      }
+        _ <- removeTransformsIfAnswerHasChanged(hasAnswerChanged)
+        _ <- setTaxableTrustIfNeedsToPayTaxSelected(needsToPayTaxSelected)
+        _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, needsToPayTaxSelected)
+      } yield redirect
     } else {
       Future.successful(redirect)
+    }
+  }
+
+  private def removeTransformsIfAnswerHasChanged(hasAnswerChanged: Boolean)
+                                                (implicit request: DataRequest[AnyContent]): Future[Unit] = {
+    if (hasAnswerChanged) {
+      trustConnector.removeTransforms(request.userAnswers.identifier).map(_ => ())
+    } else {
+      Future.successful(())
+    }
+  }
+
+  private def setTaxableTrustIfNeedsToPayTaxSelected(needsToPayTaxSelected: Boolean)
+                                                    (implicit request: DataRequest[AnyContent]): Future[Unit] = {
+    if (needsToPayTaxSelected) {
+      trustConnector.setTaxableTrust(request.userAnswers.identifier, value = true).map(_ => ())
+    } else {
+      Future.successful(())
     }
   }
 }
