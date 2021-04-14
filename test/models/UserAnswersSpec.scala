@@ -19,7 +19,7 @@ package models
 import _root_.pages.WhatIsNextPage
 import base.SpecBase
 import forms.Validation
-import models.pages.WhatIsNext.NeedsToPayTax
+import models.pages.WhatIsNext.{NeedsToPayTax, NoLongerTaxable}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import wolfendale.scalacheck.regexp.RegexpGen
 
@@ -42,6 +42,33 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
           urn =>
             val userAnswers = emptyUserAnswersForUrn.copy(identifier = urn)
             userAnswers.identifierType mustBe URN
+        }
+      }
+    }
+
+    ".trustTaxability" must {
+      "return taxability of trust" when {
+
+        "taxable" in {
+          val userAnswers = emptyUserAnswersForUtr
+          userAnswers.trustTaxability mustBe Taxable
+        }
+
+        "non-taxable" in {
+          val userAnswers = emptyUserAnswersForUrn
+          userAnswers.trustTaxability mustBe NonTaxable
+        }
+
+        "migrating from non-taxable to taxable" in {
+          val userAnswers = emptyUserAnswersForUrn
+            .set(WhatIsNextPage, NeedsToPayTax).success.value
+          userAnswers.trustTaxability mustBe MigratingFromNonTaxableToTaxable
+        }
+
+        "migrating from taxable to non-taxable" in {
+          val userAnswers = emptyUserAnswersForUtr
+            .set(WhatIsNextPage, NoLongerTaxable).success.value
+          userAnswers.trustTaxability mustBe MigratingFromTaxableToNonTaxable
         }
       }
     }

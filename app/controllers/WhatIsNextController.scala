@@ -21,6 +21,7 @@ import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
 import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.WhatIsNextFormProvider
+import models.UserAnswers
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
 import models.requests.DataRequest
@@ -73,7 +74,7 @@ class WhatIsNextController @Inject()(
             hasAnswerChanged <- Future.fromTry(Success(!request.userAnswers.get(WhatIsNextPage).contains(value)))
             updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            result <- updateMigrationStatusAndRedirect(value, hasAnswerChanged)
+            result <- updateMigrationStatusAndRedirect(updatedAnswers, value, hasAnswerChanged)
           } yield {
             result
           }
@@ -81,16 +82,16 @@ class WhatIsNextController @Inject()(
       )
   }
 
-  private def updateMigrationStatusAndRedirect(newAnswer: WhatIsNext, hasAnswerChanged: Boolean)
+  private def updateMigrationStatusAndRedirect(userAnswers: UserAnswers, newAnswer: WhatIsNext, hasAnswerChanged: Boolean)
                                               (implicit request: DataRequest[AnyContent]): Future[Result] = {
 
-    def redirect(implicit request: DataRequest[AnyContent]): Result = Redirect {
+    def redirect: Result = Redirect {
       newAnswer match {
         case DeclareTheTrustIsUpToDate =>
           redirectToDeclaration
         case MakeChanges =>
           redirectToFirstUpdateQuestion
-        case CloseTrust if request.userAnswers.isTrustTaxable =>
+        case CloseTrust if userAnswers.isTrustTaxable =>
           controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
         case CloseTrust =>
           controllers.close.nontaxable.routes.DateClosedController.onPageLoad()
@@ -99,13 +100,12 @@ class WhatIsNextController @Inject()(
         case NeedsToPayTax =>
           controllers.routes.FeatureNotAvailableController.onPageLoad()
         case GeneratePdf =>
-          controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier)
+          controllers.routes.ObligedEntityPdfController.getPdf(userAnswers.identifier)
       }
     }
 
     if (newAnswer != GeneratePdf) {
       val needsToPayTaxSelected = newAnswer == NeedsToPayTax
-
       for {
         _ <- removeTransformsIfAnswerHasChanged(hasAnswerChanged)
         _ <- setTaxableTrustIfNeedsToPayTaxSelected(needsToPayTaxSelected)
@@ -137,4 +137,5 @@ class WhatIsNextController @Inject()(
       Future.successful(())
     }
   }
+
 }

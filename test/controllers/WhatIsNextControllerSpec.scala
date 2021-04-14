@@ -283,48 +283,58 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         "taxable" must {
           "redirect to date the last asset was shared out" in {
 
-            beforeTest()
+            val gen = arbitrary[WhatIsNext]
 
-            val userAnswers = emptyUserAnswersForUtr
+            forAll(gen) { previousAnswer =>
+              beforeTest()
 
-            val application = applicationBuilder(userAnswers = Some(userAnswers))
-              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
-              .build()
+              val userAnswers = emptyUserAnswersForUtr
+                .set(WhatIsNextPage, previousAnswer).success.value
 
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-              .withFormUrlEncodedBody(("value", CloseTrust.toString))
+              val application = applicationBuilder(userAnswers = Some(userAnswers))
+                .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+                .build()
 
-            val result = route(application, request).value
+              implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+                .withFormUrlEncodedBody(("value", CloseTrust.toString))
 
-            status(result) mustEqual SEE_OTHER
+              val result = route(application, request).value
 
-            redirectLocation(result).value mustBe controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
+              status(result) mustEqual SEE_OTHER
 
-            application.stop()
+              redirectLocation(result).value mustBe controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
+
+              application.stop()
+            }
           }
         }
 
         "non-taxable" must {
           "redirect to date the trust was closed" in {
 
-            beforeTest()
+            val gen = arbitrary[WhatIsNext]
 
-            val userAnswers = emptyUserAnswersForUrn
+            forAll(gen) { previousAnswer =>
+              beforeTest()
 
-            val application = applicationBuilder(userAnswers = Some(userAnswers))
-              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
-              .build()
+              val userAnswers = emptyUserAnswersForUrn
+                .set(WhatIsNextPage, previousAnswer).success.value
 
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-              .withFormUrlEncodedBody(("value", CloseTrust.toString))
+              val application = applicationBuilder(userAnswers = Some(userAnswers))
+                .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+                .build()
 
-            val result = route(application, request).value
+              implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+                .withFormUrlEncodedBody(("value", CloseTrust.toString))
 
-            status(result) mustEqual SEE_OTHER
+              val result = route(application, request).value
 
-            redirectLocation(result).value mustBe controllers.close.nontaxable.routes.DateClosedController.onPageLoad().url
+              status(result) mustEqual SEE_OTHER
 
-            application.stop()
+              redirectLocation(result).value mustBe controllers.close.nontaxable.routes.DateClosedController.onPageLoad().url
+
+              application.stop()
+            }
           }
         }
       }
