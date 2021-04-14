@@ -31,71 +31,82 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
   private lazy val baseUrl: String = s"${config.trustsUrl}/trusts"
 
-  def getTrustDetails(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
+  def getTrustDetails(identifier: String)
+                     (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
     val url: String = s"$baseUrl/$identifier/trust-details"
     http.GET[TrustDetails](url)
   }
 
-  def getStartDate(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[LocalDate] = {
-    for {
-      details <- getTrustDetails(identifier)
-      date = LocalDate.parse(details.startDate)
-    } yield date
+  def getStartDate(identifier: String)
+                  (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[LocalDate] = {
+    getTrustDetails(identifier) map { trustDetails =>
+      trustDetails.startDate
+    }
   }
 
-  def playback(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
+  def playback(identifier: String)
+              (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
     val url: String = s"$baseUrl/$identifier/transformed"
     http.GET[TrustsResponse](url)(TrustsStatusReads.httpReads, hc, ec)
   }
 
-  def playbackFromEtmp(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
+  def playbackFromEtmp(identifier: String)
+                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
     val url: String = s"$baseUrl/$identifier/refresh"
     http.GET[TrustsResponse](url)(TrustsStatusReads.httpReads, hc, ec)
   }
 
-  def getDoProtectorsAlreadyExist(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
+  def getDoProtectorsAlreadyExist(identifier: String)
+                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
     val url: String = s"$baseUrl/$identifier/transformed/protectors-already-exist"
     http.GET[JsBoolean](url)
   }
 
-  def getDoOtherIndividualsAlreadyExist(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
+  def getDoOtherIndividualsAlreadyExist(identifier: String)
+                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
     val url: String = s"$baseUrl/$identifier/transformed/other-individuals-already-exist"
     http.GET[JsBoolean](url)
   }
 
-  def getDoNonEeaCompaniesAlreadyExist(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
+  def getDoNonEeaCompaniesAlreadyExist(identifier: String)
+                                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
     val url: String = s"$baseUrl/$identifier/transformed/non-eea-companies-already-exist"
     http.GET[JsBoolean](url)
   }
 
-  def declare(identifier: String, payload: JsValue)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+  def declare(identifier: String, payload: JsValue)
+             (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     val url: String = s"$baseUrl/declare/$identifier"
     http.POST[JsValue, DeclarationResponse](url, payload)(implicitly[Writes[JsValue]], DeclarationResponse.httpReads, hc, ec)
   }
 
-  def setTaxableMigrationFlag(identifier: String, value: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+  def setTaxableMigrationFlag(identifier: String, value: Boolean)
+                             (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val url: String = s"$baseUrl/$identifier/taxable-migration/migrating-to-taxable"
     http.POST[Boolean, HttpResponse](url, value)
   }
 
-  def removeTransforms(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+  def removeTransforms(identifier: String)
+                      (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val url: String = s"$baseUrl/$identifier/transforms"
     http.DELETE[HttpResponse](url)
   }
 
-  def setExpressTrust(identifier: String, value: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+  def setExpressTrust(identifier: String, value: Boolean)
+                     (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val url: String = s"$baseUrl/trust-details/$identifier/express"
     http.PUT[Boolean, HttpResponse](url, value)
   }
 
-  def setTaxableTrust(identifier: String, value: Boolean)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+  def setTaxableTrust(identifier: String, value: Boolean)
+                     (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val url: String = s"$baseUrl/trust-details/$identifier/taxable"
     http.PUT[Boolean, HttpResponse](url, value)
   }
 
   def isTrust5mld(identifier: String)
                  (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
-    val url: String = s"${config.trustsUrl}/trusts/$identifier/is-trust-5mld"
+    val url: String = s"$baseUrl/$identifier/is-trust-5mld"
     http.GET[Boolean](url)
   }
 

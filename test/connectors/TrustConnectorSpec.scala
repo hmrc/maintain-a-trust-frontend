@@ -36,12 +36,13 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.io.Source
 
-class TrustConnectorSpec extends FreeSpec with MustMatchers
-  with OptionValues with Generators with SpecBaseHelpers with WireMockHelper with ScalaFutures with Inside {
+class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues with Generators
+  with SpecBaseHelpers with WireMockHelper with ScalaFutures with Inside {
+
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  private def playbackUrl(utr: String) : String = s"/trusts/$utr/transformed"
-  private def declareUrl(utr: String) : String = s"/trusts/declare/$utr"
+  private def playbackUrl(identifier: String) : String = s"/trusts/$identifier/transformed"
+  private def declareUrl(identifier: String) : String = s"/trusts/declare/$identifier"
 
   private val identifier = "1000000008"
 
@@ -49,12 +50,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
     "get trusts details" in {
 
-      val utr = "2134514321"
+      val startDate = "1920-03-28"
 
       val json = Json.parse(
-        """
+        s"""
           |{
-          | "startDate": "1920-03-28",
+          | "startDate": "$startDate",
           | "lawCountry": "AD",
           | "administrationCountry": "GB",
           | "residentialStatus": {
@@ -80,18 +81,28 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
       val connector = application.injector.instanceOf[TrustConnector]
 
       server.stubFor(
-        get(urlEqualTo(s"/trusts/$utr/trust-details"))
+        get(urlEqualTo(s"/trusts/$identifier/trust-details"))
           .willReturn(okJson(json.toString))
       )
 
 
-      val result  = Await.result(connector.getTrustDetails(utr), Duration.Inf)
-      result mustBe TrustDetails(startDate = "1920-03-28")
+      val result  = Await.result(connector.getTrustDetails(identifier), Duration.Inf)
+      result mustBe TrustDetails(startDate = LocalDate.parse(startDate))
     }
 
     "playback data must" - {
 
       "return TrustFound response" in {
+
+        val json = Json.parse(
+          """
+            |{
+            |  "responseHeader": {
+            |    "status": "In Processing",
+            |    "formBundleNo": "1"
+            |  }
+            |}
+            |""".stripMargin)
 
         val application = applicationBuilder()
           .configure(
@@ -103,24 +114,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
         val connector = application.injector.instanceOf[TrustConnector]
 
-        val utr = "10000000008"
-
         server.stubFor(
-          get(urlEqualTo(playbackUrl(utr)))
-            .willReturn(
-              aResponse()
-                .withStatus(Status.OK)
-                .withBody("""{
-                            |
-                            |  "responseHeader": {
-                            |    "status": "In Processing",
-                            |    "formBundleNo": "1"
-                            |  }
-                            |}""".stripMargin)
-            )
+          get(urlEqualTo(playbackUrl(identifier)))
+            .willReturn(okJson(json.toString))
         )
 
-        val result  = Await.result(connector.playback(utr),Duration.Inf)
+        val result  = Await.result(connector.playback(identifier),Duration.Inf)
         result mustBe Processing
 
         application.stop()
@@ -128,8 +127,6 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
       "return NoContent response" in {
 
-        val utr = "6666666666"
-
         val application = applicationBuilder()
           .configure(
             Seq(
@@ -141,12 +138,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          get(urlEqualTo(playbackUrl(utr)))
+          get(urlEqualTo(playbackUrl(identifier)))
             .willReturn(
               aResponse()
                 .withStatus(Status.NO_CONTENT)))
 
-        val result  = Await.result(connector.playback(utr),Duration.Inf)
+        val result  = Await.result(connector.playback(identifier),Duration.Inf)
         result mustBe SorryThereHasBeenAProblem
 
         application.stop()
@@ -154,8 +151,6 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
       "return NotFound response" in {
 
-        val utr = "10000000008"
-
         val application = applicationBuilder()
           .configure(
             Seq(
@@ -167,12 +162,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          get(urlEqualTo(playbackUrl(utr)))
+          get(urlEqualTo(playbackUrl(identifier)))
             .willReturn(
               aResponse()
                 .withStatus(Status.NOT_FOUND)))
 
-        val result  = Await.result(connector.playback(utr),Duration.Inf)
+        val result  = Await.result(connector.playback(identifier),Duration.Inf)
         result mustBe IdentifierNotFound
 
         application.stop()
@@ -180,8 +175,6 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
       "return ServiceUnavailable response" in {
 
-        val utr = "10000000008"
-
         val application = applicationBuilder()
           .configure(
             Seq(
@@ -193,20 +186,23 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          get(urlEqualTo(playbackUrl(utr)))
+          get(urlEqualTo(playbackUrl(identifier)))
             .willReturn(
               aResponse()
                 .withStatus(Status.SERVICE_UNAVAILABLE)))
 
-        val result  = Await.result(connector.playback(utr), Duration.Inf)
+        val result  = Await.result(connector.playback(identifier), Duration.Inf)
         result mustBe TrustServiceUnavailable
 
         application.stop()
       }
 
       "must return playback data inside a Processed trust" in {
+
         val utr = "1000000007"
-        val payload = Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+
+        val source = Source.fromFile(getClass.getResource("/display-trust.json").getPath)
+        val payload = source.mkString
 
         val application = applicationBuilder()
           .configure(
@@ -230,7 +226,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
             bundleNumber mustBe "000012345678"
 
-            data.matchData.utr.get mustBe "1000000007"
+            data.matchData.utr.get mustBe utr
 
             data.correspondence.name mustBe "Trust of Brian Cloud"
 
@@ -238,7 +234,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
             data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe FullName("Lead", None, "Trustee")
 
-            data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
+            data.trust.details.startDate mustBe LocalDate.parse("2016-04-06")
 
             data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe Some("1")
             data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
@@ -253,12 +249,16 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             data.trust.assets.get.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
         }
 
+        source.close()
         application.stop()
       }
 
       "must return playback data inside a Processed trust with shares asset" in {
+
         val utr = "2134514321"
-        val payload = Source.fromFile(getClass.getResource("/display-trust-shares-asset.json").getPath).mkString
+
+        val source = Source.fromFile(getClass.getResource("/display-trust-shares-asset.json").getPath)
+        val payload = source.mkString
 
         val application = applicationBuilder()
           .configure(
@@ -278,17 +278,21 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val processed = Await.result(connector.playback(utr), Duration.Inf)
 
         inside(processed) {
-          case Processed(data, bundleNumber) =>
+          case Processed(data, _) =>
 
             data.trust.assets.get.shares.head.shareClass.get mustBe Ordinary
         }
 
+        source.close()
         application.stop()
       }
 
       "must playback data for a trust with property or land, no previous value" in {
+
         val utr = "1000000007"
-        val payload = Source.fromFile(getClass.getResource("/display-trust-property-or-land-no-previous.json").getPath).mkString
+
+        val source = Source.fromFile(getClass.getResource("/display-trust-property-or-land-no-previous.json").getPath)
+        val payload = source.mkString
 
         val application = applicationBuilder()
           .configure(
@@ -312,7 +316,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
             bundleNumber mustBe "000012345678"
 
-            data.matchData.utr.get mustBe "1000000007"
+            data.matchData.utr.get mustBe utr
 
             data.correspondence.name mustBe "Trust of Brian Cloud"
 
@@ -320,7 +324,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
 
             data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe FullName("Lead", None, "Trustee")
 
-            data.trust.details.startDate mustBe LocalDate.of(2016, 4, 6)
+            data.trust.details.startDate mustBe LocalDate.parse("2016-04-06")
 
             data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe Some("1")
             data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
@@ -337,13 +341,16 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             data.trust.assets.get.propertyOrLand.head.valuePrevious mustBe None
         }
 
+        source.close()
         application.stop()
       }
 
       "must playback data for a non-taxable trust" in {
 
         val urn = "NTTRUST00000001"
-        val payload = Source.fromFile(getClass.getResource("/display-trust-non-taxable.json").getPath).mkString
+
+        val source = Source.fromFile(getClass.getResource("/display-trust-non-taxable.json").getPath)
+        val payload = source.mkString
 
         val application = applicationBuilder()
           .configure(
@@ -370,6 +377,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
             data.matchData.urn.get mustBe urn
         }
 
+        source.close()
         application.stop()
       }
     }
@@ -377,11 +385,13 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
     "declare no change must" - {
 
       "return TVN on success" in {
-        val utr = "1000000007"
+
+        val tvn = "2345678"
+
         val response = Json.parse(
-          """
+          s"""
             |{
-            | "tvn": "2345678"
+            | "tvn": "$tvn"
             |}
             |""".stripMargin)
 
@@ -412,18 +422,18 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(declareUrl(utr)))
+          post(urlEqualTo(declareUrl(identifier)))
             .willReturn(okJson(Json.stringify(response)).withStatus(Status.OK))
         )
 
-        val result = Await.result(connector.declare(utr, payload), Duration.Inf)
+        val result = Await.result(connector.declare(identifier, payload), Duration.Inf)
 
-        result mustEqual TVNResponse("2345678")
+        result mustEqual TVNResponse(tvn)
 
       }
 
       "return an error for non-success response" in {
-        val utr = "1000000007"
+
         val payload = Json.parse(
           s"""
              |{
@@ -451,12 +461,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(declareUrl(utr)))
+          post(urlEqualTo(declareUrl(identifier)))
             .willReturn(
               aResponse()
                 .withStatus(Status.SERVICE_UNAVAILABLE)))
 
-        val result = Await.result(connector.declare(utr, payload), Duration.Inf)
+        val result = Await.result(connector.declare(identifier, payload), Duration.Inf)
 
         result mustEqual InternalServerError
       }

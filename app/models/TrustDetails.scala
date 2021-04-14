@@ -18,7 +18,9 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-case class TrustDetails(startDate: String)
+import java.time.LocalDate
+
+case class TrustDetails(startDate: LocalDate)
 
 object TrustDetails {
 
