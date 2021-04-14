@@ -29,6 +29,7 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
+import uk.gov.hmrc.http.HttpResponse
 import views.html.WhatIsNextView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -117,17 +118,21 @@ class WhatIsNextController @Inject()(
 
   private def removeTransformsIfAnswerHasChanged(hasAnswerChanged: Boolean)
                                                 (implicit request: DataRequest[AnyContent]): Future[Unit] = {
-    if (hasAnswerChanged) {
-      trustConnector.removeTransforms(request.userAnswers.identifier).map(_ => ())
-    } else {
-      Future.successful(())
+    makeRequestIfConditionMet(hasAnswerChanged) {
+      trustConnector.removeTransforms(request.userAnswers.identifier)
     }
   }
 
   private def setTaxableTrustIfNeedsToPayTaxSelected(needsToPayTaxSelected: Boolean)
                                                     (implicit request: DataRequest[AnyContent]): Future[Unit] = {
-    if (needsToPayTaxSelected) {
-      trustConnector.setTaxableTrust(request.userAnswers.identifier, value = true).map(_ => ())
+    makeRequestIfConditionMet(needsToPayTaxSelected) {
+      trustConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
+    }
+  }
+
+  private def makeRequestIfConditionMet(condition: Boolean)(request: => Future[HttpResponse]): Future[Unit] = {
+    if (condition) {
+      request.map(_ => ())
     } else {
       Future.successful(())
     }
