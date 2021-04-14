@@ -16,31 +16,31 @@
 
 package services
 
-import java.time.LocalDate
-
-import models.http.DeclarationResponse.InternalServerError
-import models.http.{DeclarationResponse, TVNResponse}
+import models.http.{DeclarationResponse, DeclarationErrorResponse, TVNResponse}
 import models.{Address, AgentDeclaration, IndividualDeclaration}
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDeclarationService extends DeclarationService {
 
-  override def agentDeclaration(utr: String,
-                                    declaration: AgentDeclaration,
-                                    arn: String,
-                                    agencyAddress: Address,
-                                    agentFriendlyName: String,
-                                    endDate: Option[LocalDate]
-                                   )(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+  override def agentDeclaration(
+                                 utr: String,
+                                 declaration: AgentDeclaration,
+                                 arn: String,
+                                 agencyAddress: Address,
+                                 agentFriendlyName: String,
+                                 endDate: Option[LocalDate]
+                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(TVNResponse("123456"))
   }
 
-  override def individualDeclaration(utr: String,
-                                     declaration: IndividualDeclaration,
-                                     endDate: Option[LocalDate]
-                                    )(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+  override def individualDeclaration(
+                                      utr: String,
+                                      declaration: IndividualDeclaration,
+                                      endDate: Option[LocalDate]
+                                    )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(TVNResponse("123456"))
   }
 
@@ -48,21 +48,23 @@ class FakeDeclarationService extends DeclarationService {
 
 class FakeFailingDeclarationService extends DeclarationService {
 
-  override def agentDeclaration(utr: String,
-                                    declaration: AgentDeclaration,
-                                    arn: String,
-                                    agencyAddress: Address,
-                                    agentFriendlyName: String,
-                                    endDate: Option[LocalDate]
-                                   )(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
-    Future.successful(InternalServerError)
+  override def agentDeclaration(
+                                 utr: String,
+                                 declaration: AgentDeclaration,
+                                 arn: String,
+                                 agencyAddress: Address,
+                                 agentFriendlyName: String,
+                                 endDate: Option[LocalDate]
+                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+    Future.successful(DeclarationErrorResponse)
   }
 
-  override def individualDeclaration(utr: String,
-                                     declaration: IndividualDeclaration,
-                                     endDate: Option[LocalDate]
-                                    )(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
-    Future.successful(InternalServerError)
+  override def individualDeclaration(
+                                      utr: String,
+                                      declaration: IndividualDeclaration,
+                                      endDate: Option[LocalDate]
+                                    )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+    Future.successful(DeclarationErrorResponse)
   }
 
 }

@@ -20,7 +20,6 @@ import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
 import controllers.Assets._
 import generators.Generators
-import models.http.DeclarationResponse.InternalServerError
 import models.http._
 import models.pages.ShareClass.Ordinary
 import models.{FullName, TrustDetails}
@@ -55,18 +54,18 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
       val json = Json.parse(
         s"""
           |{
-          | "startDate": "$startDate",
-          | "lawCountry": "AD",
-          | "administrationCountry": "GB",
-          | "residentialStatus": {
-          |   "uk": {
-          |     "scottishLaw": false,
-          |     "preOffShore": "AD"
-          |   }
-          | },
-          | "typeOfTrust": "Will Trust or Intestacy Trust",
-          | "deedOfVariation": "Previously there was only an absolute interest under the will",
-          | "interVivos": false
+          |  "startDate": "$startDate",
+          |  "lawCountry": "AD",
+          |  "administrationCountry": "GB",
+          |  "residentialStatus": {
+          |    "uk": {
+          |      "scottishLaw": false,
+          |      "preOffShore": "AD"
+          |    }
+          |  },
+          |  "typeOfTrust": "Will Trust or Intestacy Trust",
+          |  "deedOfVariation": "Previously there was only an absolute interest under the will",
+          |  "interVivos": false
           |}
           |""".stripMargin)
 
@@ -85,9 +84,10 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
           .willReturn(okJson(json.toString))
       )
 
-
-      val result  = Await.result(connector.getTrustDetails(identifier), Duration.Inf)
+      val result = Await.result(connector.getTrustDetails(identifier), Duration.Inf)
       result mustBe TrustDetails(startDate = LocalDate.parse(startDate))
+
+      application.stop()
     }
 
     "playback data must" - {
@@ -119,7 +119,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
             .willReturn(okJson(json.toString))
         )
 
-        val result  = Await.result(connector.playback(identifier),Duration.Inf)
+        val result = Await.result(connector.playback(identifier), Duration.Inf)
         result mustBe Processing
 
         application.stop()
@@ -143,7 +143,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
               aResponse()
                 .withStatus(Status.NO_CONTENT)))
 
-        val result  = Await.result(connector.playback(identifier),Duration.Inf)
+        val result = Await.result(connector.playback(identifier), Duration.Inf)
         result mustBe SorryThereHasBeenAProblem
 
         application.stop()
@@ -167,7 +167,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
               aResponse()
                 .withStatus(Status.NOT_FOUND)))
 
-        val result  = Await.result(connector.playback(identifier),Duration.Inf)
+        val result = Await.result(connector.playback(identifier), Duration.Inf)
         result mustBe IdentifierNotFound
 
         application.stop()
@@ -191,7 +191,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
               aResponse()
                 .withStatus(Status.SERVICE_UNAVAILABLE)))
 
-        val result  = Await.result(connector.playback(identifier), Duration.Inf)
+        val result = Await.result(connector.playback(identifier), Duration.Inf)
         result mustBe TrustServiceUnavailable
 
         application.stop()
@@ -384,6 +384,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
 
     "declare no change must" - {
 
+      val payload = DeclarationForApi(
+        declaration = Declaration(FullName("John", None, "Smith")),
+        agentDetails = None,
+        endDate = None
+      )
+
       "return TVN on success" in {
 
         val tvn = "2345678"
@@ -391,25 +397,9 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
         val response = Json.parse(
           s"""
             |{
-            | "tvn": "$tvn"
+            |  "tvn": "$tvn"
             |}
             |""".stripMargin)
-
-        val payload = Json.parse(
-          s"""
-             |{
-             | "name": {
-             |   "firstName": "John",
-             |   "lastName": "Smith"
-             | },
-             | "address": {
-             |   "line1": "Line 1",
-             |   "line2": "Line 2",
-             |   "postCode": "NE981ZZ",
-             |   "country": "GB"
-             | }
-             |}
-             |""".stripMargin)
 
         val application = applicationBuilder()
           .configure(
@@ -423,32 +413,17 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
 
         server.stubFor(
           post(urlEqualTo(declareUrl(identifier)))
-            .willReturn(okJson(Json.stringify(response)).withStatus(Status.OK))
+            .willReturn(okJson(Json.stringify(response)))
         )
 
         val result = Await.result(connector.declare(identifier, payload), Duration.Inf)
 
         result mustEqual TVNResponse(tvn)
 
+        application.stop()
       }
 
       "return an error for non-success response" in {
-
-        val payload = Json.parse(
-          s"""
-             |{
-             | "name": {
-             |   "firstName": "John",
-             |   "lastName": "Smith"
-             | },
-             | "address": {
-             |   "line1": "Line 1",
-             |   "line2": "Line 2",
-             |   "postCode": "NE981ZZ",
-             |   "country": "GB"
-             | }
-             |}
-             |""".stripMargin)
 
         val application = applicationBuilder()
           .configure(
@@ -462,13 +437,13 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
 
         server.stubFor(
           post(urlEqualTo(declareUrl(identifier)))
-            .willReturn(
-              aResponse()
-                .withStatus(Status.SERVICE_UNAVAILABLE)))
+            .willReturn(serviceUnavailable()))
 
         val result = Await.result(connector.declare(identifier, payload), Duration.Inf)
 
-        result mustEqual InternalServerError
+        result mustEqual DeclarationErrorResponse
+
+        application.stop()
       }
     }
 
@@ -832,12 +807,11 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
               .willReturn(okJson(json.toString))
           )
 
-          val processed = connector.isTrust5mld(identifier)
+          val result = Await.result(connector.isTrust5mld(identifier), Duration.Inf)
 
-          whenReady(processed) {
-            r =>
-              r mustBe true
-          }
+          result mustBe true
+
+          application.stop()
         }
       }
 
@@ -860,12 +834,11 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
               .willReturn(okJson(json.toString))
           )
 
-          val processed = connector.isTrust5mld(identifier)
+          val result = Await.result(connector.isTrust5mld(identifier), Duration.Inf)
 
-          whenReady(processed) {
-            r =>
-              r mustBe false
-          }
+          result mustBe false
+
+          application.stop()
         }
       }
     }

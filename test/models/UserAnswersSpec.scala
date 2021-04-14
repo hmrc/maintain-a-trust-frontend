@@ -73,27 +73,6 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
     }
 
-    ".isTrustTaxable" must {
-      "return whether trust is taxable" when {
-
-        "taxable" in {
-          val userAnswers = emptyUserAnswersForUtr
-          userAnswers.isTrustTaxable mustBe true
-        }
-
-        "non-taxable" in {
-          val userAnswers = emptyUserAnswersForUrn
-          userAnswers.isTrustTaxable mustBe false
-        }
-
-        "migrating from non-taxable to taxable" in {
-          val userAnswers = emptyUserAnswersForUrn
-            .set(WhatIsNextPage, NeedsToPayTax).success.value
-          userAnswers.isTrustTaxable mustBe true
-        }
-      }
-    }
-
     ".trustMldStatus" must {
       "return correct MLD status of the trust" when {
 

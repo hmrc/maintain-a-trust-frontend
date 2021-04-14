@@ -23,37 +23,25 @@ import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 sealed trait DeclarationResponse
 
-final case class TVNResponse(tvn : String) extends DeclarationResponse
+final case class TVNResponse(tvn: String) extends DeclarationResponse
 
 object TVNResponse {
-
-  implicit val formats : OFormat[TVNResponse] = Json.format[TVNResponse]
-
+  implicit val format: Format[TVNResponse] = Json.format[TVNResponse]
 }
+
+case object DeclarationErrorResponse extends DeclarationResponse
 
 object DeclarationResponse extends Logging {
 
-  implicit object RegistrationResponseFormats extends Reads[DeclarationResponse] {
+  implicit lazy val httpReads: HttpReads[DeclarationResponse] = (_: String, _: String, response: HttpResponse) => {
+    logger.info(s"[DeclarationResponse] response status received from trusts api: ${response.status}")
 
-    override def reads(json: JsValue): JsResult[DeclarationResponse] = json.validate[TVNResponse]
-
-  }
-
-  case object InternalServerError extends DeclarationResponse
-
-  implicit lazy val httpReads: HttpReads[DeclarationResponse] =
-    new HttpReads[DeclarationResponse] {
-      override def read(method: String, url: String, response: HttpResponse): DeclarationResponse = {
-        logger.info(s"[TrustResponse] response status received from trusts api: ${response.status}")
-
-        response.status match {
-          case OK =>
-            response.json.as[TVNResponse]
-          case _ =>
-            InternalServerError
-        }
-      }
+    response.status match {
+      case OK =>
+        response.json.as[TVNResponse]
+      case _ =>
+        DeclarationErrorResponse
     }
-
+  }
 
 }

@@ -18,8 +18,8 @@ package connectors
 
 import config.FrontendAppConfig
 import models.TrustDetails
-import models.http.{DeclarationResponse, TrustsResponse, TrustsStatusReads}
-import play.api.libs.json.{JsBoolean, JsValue, Writes}
+import models.http.{DeclarationForApi, DeclarationResponse, TrustsResponse}
+import play.api.libs.json.JsBoolean
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
@@ -47,13 +47,13 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
   def playback(identifier: String)
               (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
     val url: String = s"$baseUrl/$identifier/transformed"
-    http.GET[TrustsResponse](url)(TrustsStatusReads.httpReads, hc, ec)
+    http.GET[TrustsResponse](url)
   }
 
   def playbackFromEtmp(identifier: String)
                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
     val url: String = s"$baseUrl/$identifier/refresh"
-    http.GET[TrustsResponse](url)(TrustsStatusReads.httpReads, hc, ec)
+    http.GET[TrustsResponse](url)
   }
 
   def getDoProtectorsAlreadyExist(identifier: String)
@@ -74,10 +74,10 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
     http.GET[JsBoolean](url)
   }
 
-  def declare(identifier: String, payload: JsValue)
+  def declare(identifier: String, payload: DeclarationForApi)
              (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     val url: String = s"$baseUrl/declare/$identifier"
-    http.POST[JsValue, DeclarationResponse](url, payload)(implicitly[Writes[JsValue]], DeclarationResponse.httpReads, hc, ec)
+    http.POST[DeclarationForApi, DeclarationResponse](url, payload)
   }
 
   def setTaxableMigrationFlag(identifier: String, value: Boolean)
