@@ -16,15 +16,15 @@
 
 package models
 
+import _root_.pages.WhatIsNextPage
 import base.SpecBase
-import _root_.pages.trustdetails.ExpressTrustYesNoPage
+import models.pages.WhatIsNext.NeedsToPayTax
 
 class UserAnswersSpec extends SpecBase {
 
   "UserAnswers" when {
 
     ".trustMldStatus" must {
-
       "return correct MLD status of the trust" when {
 
         "4mld" in {
@@ -35,24 +35,43 @@ class UserAnswersSpec extends SpecBase {
         "5mld" when {
 
           "underlying data is 4mld" in {
-            val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+            val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
             userAnswers.trustMldStatus mustBe Underlying4mldTrustIn5mldMode
           }
 
           "underlying data is 5mld" when {
 
             "taxable" in {
-              val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-                .set(ExpressTrustYesNoPage, false).success.value
+              val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
               userAnswers.trustMldStatus mustBe Underlying5mldTaxableTrustIn5mldMode
             }
 
             "non-taxable" in {
-              val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = false)
-                .set(ExpressTrustYesNoPage, false).success.value
+              val userAnswers = emptyUserAnswersForUrn
               userAnswers.trustMldStatus mustBe Underlying5mldNonTaxableTrustIn5mldMode
             }
           }
+        }
+      }
+    }
+
+    ".isTrustTaxable" must {
+      "return whether trust is taxable" when {
+
+        "taxable" in {
+          val userAnswers = emptyUserAnswersForUtr
+          userAnswers.isTrustTaxable mustBe true
+        }
+
+        "non-taxable" in {
+          val userAnswers = emptyUserAnswersForUrn
+          userAnswers.isTrustTaxable mustBe false
+        }
+
+        "migrating from non-taxable to taxable" in {
+          val userAnswers = emptyUserAnswersForUrn
+            .set(WhatIsNextPage, NeedsToPayTax).success.value
+          userAnswers.isTrustTaxable mustBe true
         }
       }
     }

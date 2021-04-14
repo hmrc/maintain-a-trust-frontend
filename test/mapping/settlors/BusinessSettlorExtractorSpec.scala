@@ -21,10 +21,9 @@ import generators.Generators
 import models.http._
 import models.pages.KindOfBusiness._
 import models.pages.{IndividualOrBusiness, KindOfBusiness}
-import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
+import models.{InternationalAddress, MetaData, UKAddress}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.living_settlor._
-import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 class BusinessSettlorExtractorSpec extends FreeSpec with MustMatchers
@@ -77,7 +76,7 @@ class BusinessSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val settlors = Nil
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = businessSettlorExtractor.extract(ua, settlors)
 
@@ -103,7 +102,7 @@ class BusinessSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = businessSettlorExtractor.extract(ua, settlors)
 
@@ -138,8 +137,7 @@ class BusinessSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = businessSettlorExtractor.extract(ua, settlors)
 
@@ -162,8 +160,7 @@ class BusinessSettlorExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val settlors = (for (index <- 0 to 2) yield generateSettlorCompany(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = businessSettlorExtractor.extract(ua, settlors)
 
@@ -228,8 +225,7 @@ class BusinessSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = businessSettlorExtractor.extract(ua, settlors)
 
@@ -252,8 +248,7 @@ class BusinessSettlorExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val settlors = (for (index <- 0 to 2) yield generateSettlorCompany(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = businessSettlorExtractor.extract(ua, settlors)
 

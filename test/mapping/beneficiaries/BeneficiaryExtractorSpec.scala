@@ -21,7 +21,7 @@ import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
 import models.HowManyBeneficiaries.Over1
 import models.http._
-import models.{Description, FullName, MetaData, UKAddress, UserAnswers}
+import models.{Description, FullName, MetaData, UKAddress}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.charity._
 import pages.beneficiaries.classOfBeneficiary._
@@ -30,7 +30,6 @@ import pages.beneficiaries.individual._
 import pages.beneficiaries.large._
 import pages.beneficiaries.other._
 import pages.beneficiaries.trust._
-import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
@@ -49,7 +48,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val beneficiary = DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil)
 
-        val ua = UserAnswers("fakeId", utr)
+        val ua = emptyUserAnswersForUtr
 
         val extraction = beneficiaryExtractor.extract(ua, beneficiary)
 
@@ -182,8 +181,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           )
         )
 
-        val ua = UserAnswers("fakeId", utr, is5mldEnabled = true)
-          .set(ExpressTrustYesNoPage, false).success.value
+        val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
         val extraction = beneficiaryExtractor.extract(ua, beneficiary)
 

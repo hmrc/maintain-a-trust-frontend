@@ -42,7 +42,7 @@ class UserAnswersSetupServiceSpec extends SpecBase with ScalaCheckPropertyChecks
       "setup user answers and redirect to TrustStatusController" in {
 
         forAll(arbitrary[Boolean], arbitrary[Boolean]) {
-          (is5mldEnabled, isTaxable) =>
+          (is5mldEnabled, isUnderlyingData5mld) =>
 
             val mockPlaybackRepository = mock[PlaybackRepository]
             when(mockPlaybackRepository.set(any())).thenReturn(Future.successful(true))
@@ -53,7 +53,7 @@ class UserAnswersSetupServiceSpec extends SpecBase with ScalaCheckPropertyChecks
 
             val userAnswersSetupService = new UserAnswersSetupService(mockPlaybackRepository, mockSessionRepository)
 
-            val result = userAnswersSetupService.setupAndRedirectToStatus(identifier, internalId, is5mldEnabled, isTaxable)
+            val result = userAnswersSetupService.setupAndRedirectToStatus(identifier, internalId, is5mldEnabled, isUnderlyingData5mld)
 
             redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
 
@@ -65,7 +65,7 @@ class UserAnswersSetupServiceSpec extends SpecBase with ScalaCheckPropertyChecks
             uaCaptor.getValue.internalId mustBe internalId
             uaCaptor.getValue.identifier mustBe identifier
             uaCaptor.getValue.is5mldEnabled mustBe is5mldEnabled
-            uaCaptor.getValue.isTrustTaxable mustBe isTaxable
+            uaCaptor.getValue.isUnderlyingData5mld mustBe isUnderlyingData5mld
 
             val identifierSessionCaptor = ArgumentCaptor.forClass(classOf[IdentifierSession])
             verify(mockSessionRepository).set(identifierSessionCaptor.capture())

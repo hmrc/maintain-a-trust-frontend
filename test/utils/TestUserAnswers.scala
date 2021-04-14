@@ -16,6 +16,7 @@
 
 package utils
 
+import models.UserAnswers
 import org.scalatest.TryValues
 
 object TestUserAnswers extends TryValues {
@@ -25,6 +26,6 @@ object TestUserAnswers extends TryValues {
   lazy val utr = "1234567890"
   lazy val urn = "XATRUST12345678"
 
-  def emptyUserAnswersForUtr = models.UserAnswers(userInternalId, utr)
-  def emptyUserAnswersForUrn = models.UserAnswers(userInternalId, urn, isTrustTaxable = false)
+  def emptyUserAnswersForUtr: UserAnswers = models.UserAnswers(userInternalId, utr)
+  def emptyUserAnswersForUrn: UserAnswers = models.UserAnswers(userInternalId, urn, is5mldEnabled = true, isUnderlyingData5mld = true)
 }

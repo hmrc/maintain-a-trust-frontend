@@ -17,6 +17,7 @@
 package base
 
 import controllers.actions._
+import models.UserAnswers
 import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
@@ -33,10 +34,10 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
   final val ENGLISH = "en"
   final val WELSH = "cy"
 
-  def emptyUserAnswersForUtr = TestUserAnswers.emptyUserAnswersForUtr
-  def emptyUserAnswersForUrn = TestUserAnswers.emptyUserAnswersForUrn
+  def emptyUserAnswersForUtr: UserAnswers = TestUserAnswers.emptyUserAnswersForUtr
+  def emptyUserAnswersForUrn: UserAnswers = TestUserAnswers.emptyUserAnswersForUrn
 
-  val bodyParsers = injector.instanceOf[BodyParsers.Default]
+  val bodyParsers: BodyParsers.Default = injector.instanceOf[BodyParsers.Default]
 
   protected def applicationBuilder(userAnswers: Option[models.UserAnswers] = None,
                                    affinityGroup: AffinityGroup = AffinityGroup.Organisation,

@@ -93,4 +93,10 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
     http.PUT[Boolean, HttpResponse](url, value)
   }
 
+  def isTrust5mld(identifier: String)
+                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
+    val url: String = s"${config.trustsUrl}/trusts/$identifier/is-trust-5mld"
+    http.GET[Boolean](url)
+  }
+
 }

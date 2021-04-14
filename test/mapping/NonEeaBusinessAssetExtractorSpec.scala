@@ -60,7 +60,7 @@ class NonEeaBusinessAssetExtractorSpec extends FreeSpec with MustMatchers
 
         val assets = Nil
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = assetExtractor.extract(ua, assets)
 
@@ -85,7 +85,7 @@ class NonEeaBusinessAssetExtractorSpec extends FreeSpec with MustMatchers
             endDate = None
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, nonEeaBusinessAssets)
 
@@ -100,7 +100,7 @@ class NonEeaBusinessAssetExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val nonEeaBusinessAssets = (for (index <- 0 to 2) yield generateNonEeaBusiness(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, nonEeaBusinessAssets)
 
@@ -141,7 +141,7 @@ class NonEeaBusinessAssetExtractorSpec extends FreeSpec with MustMatchers
             endDate = None
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, nonEeaBusinessAssets)
 

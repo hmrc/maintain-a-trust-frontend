@@ -150,7 +150,7 @@ class URNControllerSpec extends SpecBase {
         eqTo(urn.toUpperCase),
         eqTo("id"),
         eqTo(true),
-        eqTo(false)
+        eqTo(true)
       )(any(), any())
 
       application.stop()

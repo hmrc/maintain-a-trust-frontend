@@ -29,7 +29,6 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.WhatIsNextPage
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
@@ -207,7 +206,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
               beforeTest()
 
-              val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+              val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -233,8 +232,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
                 beforeTest()
 
-                val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-                  .set(ExpressTrustYesNoPage, false).success.value
+                val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
                 val application = applicationBuilder(userAnswers = Some(userAnswers))
                   .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -256,8 +254,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
                 beforeTest()
 
-                val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = false)
-                  .set(ExpressTrustYesNoPage, false).success.value
+                val userAnswers = emptyUserAnswersForUrn
 
                 val application = applicationBuilder(userAnswers = Some(userAnswers))
                   .overrides(bind[TrustConnector].toInstance(mockTrustConnector))

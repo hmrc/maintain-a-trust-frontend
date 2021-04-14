@@ -43,7 +43,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
   private def playbackUrl(utr: String) : String = s"/trusts/$utr/transformed"
   private def declareUrl(utr: String) : String = s"/trusts/declare/$utr"
 
-  private val utr = "1000000008"
+  private val identifier = "1000000008"
 
   "TrustConnector" - {
 
@@ -479,11 +479,11 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          get(urlEqualTo(s"/trusts/$utr/transformed/protectors-already-exist"))
+          get(urlEqualTo(s"/trusts/$identifier/transformed/protectors-already-exist"))
             .willReturn(okJson(json.toString))
         )
 
-        val processed = Await.result(connector.getDoProtectorsAlreadyExist(utr), Duration.Inf)
+        val processed = Await.result(connector.getDoProtectorsAlreadyExist(identifier), Duration.Inf)
 
         processed.value mustBe true
 
@@ -503,12 +503,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          get(urlEqualTo(s"/trusts/$utr/transformed/protectors-already-exist"))
+          get(urlEqualTo(s"/trusts/$identifier/transformed/protectors-already-exist"))
             .willReturn(notFound())
         )
 
         a[UpstreamErrorResponse] mustBe thrownBy {
-          Await.result(connector.getDoProtectorsAlreadyExist(utr), Duration.Inf)
+          Await.result(connector.getDoProtectorsAlreadyExist(identifier), Duration.Inf)
         }
 
         application.stop()
@@ -532,11 +532,11 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          get(urlEqualTo(s"/trusts/$utr/transformed/other-individuals-already-exist"))
+          get(urlEqualTo(s"/trusts/$identifier/transformed/other-individuals-already-exist"))
             .willReturn(okJson(json.toString))
         )
 
-        val processed = Await.result(connector.getDoOtherIndividualsAlreadyExist(utr), Duration.Inf)
+        val processed = Await.result(connector.getDoOtherIndividualsAlreadyExist(identifier), Duration.Inf)
 
         processed.value mustBe true
 
@@ -556,12 +556,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          get(urlEqualTo(s"/trusts/$utr/transformed/other-individuals-already-exist"))
+          get(urlEqualTo(s"/trusts/$identifier/transformed/other-individuals-already-exist"))
             .willReturn(notFound())
         )
 
         a[UpstreamErrorResponse] mustBe thrownBy {
-          Await.result(connector.getDoOtherIndividualsAlreadyExist(utr), Duration.Inf)
+          Await.result(connector.getDoOtherIndividualsAlreadyExist(identifier), Duration.Inf)
         }
 
         application.stop()
@@ -585,11 +585,11 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          get(urlEqualTo(s"/trusts/$utr/transformed/non-eea-companies-already-exist"))
+          get(urlEqualTo(s"/trusts/$identifier/transformed/non-eea-companies-already-exist"))
             .willReturn(okJson(json.toString))
         )
 
-        val processed = Await.result(connector.getDoNonEeaCompaniesAlreadyExist(utr), Duration.Inf)
+        val processed = Await.result(connector.getDoNonEeaCompaniesAlreadyExist(identifier), Duration.Inf)
 
         processed.value mustBe true
 
@@ -609,12 +609,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          get(urlEqualTo(s"/trusts/$utr/transformed/non-eea-companies-already-exist"))
+          get(urlEqualTo(s"/trusts/$identifier/transformed/non-eea-companies-already-exist"))
             .willReturn(notFound())
         )
 
         a[UpstreamErrorResponse] mustBe thrownBy {
-          Await.result(connector.getDoNonEeaCompaniesAlreadyExist(utr), Duration.Inf)
+          Await.result(connector.getDoNonEeaCompaniesAlreadyExist(identifier), Duration.Inf)
         }
 
         application.stop()
@@ -636,12 +636,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(s"/trusts/$utr/taxable-migration/migrating-to-taxable"))
+          post(urlEqualTo(s"/trusts/$identifier/taxable-migration/migrating-to-taxable"))
             .withRequestBody(equalTo("true"))
             .willReturn(ok)
         )
 
-        val processed = Await.result(connector.setTaxableMigrationFlag(utr, value = true), Duration.Inf)
+        val processed = Await.result(connector.setTaxableMigrationFlag(identifier, value = true), Duration.Inf)
 
         processed.status mustBe OK
 
@@ -661,11 +661,11 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(s"/trusts/$utr/taxable-migration/migrating-to-taxable"))
+          post(urlEqualTo(s"/trusts/$identifier/taxable-migration/migrating-to-taxable"))
             .willReturn(aResponse().withStatus(BAD_REQUEST))
         )
 
-        val processed = Await.result(connector.setTaxableMigrationFlag(utr, value = true), Duration.Inf)
+        val processed = Await.result(connector.setTaxableMigrationFlag(identifier, value = true), Duration.Inf)
 
         processed.status mustBe BAD_REQUEST
 
@@ -685,12 +685,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          post(urlEqualTo(s"/trusts/$utr/taxable-migration/migrating-to-taxable"))
+          post(urlEqualTo(s"/trusts/$identifier/taxable-migration/migrating-to-taxable"))
             .withRequestBody(equalTo("true"))
             .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
         )
 
-        val processed = Await.result(connector.setTaxableMigrationFlag(utr, value = true), Duration.Inf)
+        val processed = Await.result(connector.setTaxableMigrationFlag(identifier, value = true), Duration.Inf)
 
         processed.status mustBe INTERNAL_SERVER_ERROR
 
@@ -713,11 +713,11 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          delete(urlEqualTo(s"/trusts/$utr/transforms"))
+          delete(urlEqualTo(s"/trusts/$identifier/transforms"))
             .willReturn(ok)
         )
 
-        val processed = Await.result(connector.removeTransforms(utr), Duration.Inf)
+        val processed = Await.result(connector.removeTransforms(identifier), Duration.Inf)
 
         processed.status mustBe OK
 
@@ -737,11 +737,11 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          delete(urlEqualTo(s"/trusts/$utr/transforms"))
+          delete(urlEqualTo(s"/trusts/$identifier/transforms"))
             .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
         )
 
-        val processed = Await.result(connector.removeTransforms(utr), Duration.Inf)
+        val processed = Await.result(connector.removeTransforms(identifier), Duration.Inf)
 
         processed.status mustBe INTERNAL_SERVER_ERROR
 
@@ -763,11 +763,11 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          put(urlEqualTo(s"/trusts/trust-details/$utr/express"))
+          put(urlEqualTo(s"/trusts/trust-details/$identifier/express"))
             .willReturn(ok)
         )
 
-        val result = Await.result(connector.setExpressTrust(utr, value = true), Duration.Inf)
+        val result = Await.result(connector.setExpressTrust(identifier, value = true), Duration.Inf)
 
         result.status mustBe OK
 
@@ -789,15 +789,74 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
-          put(urlEqualTo(s"/trusts/trust-details/$utr/taxable"))
+          put(urlEqualTo(s"/trusts/trust-details/$identifier/taxable"))
             .willReturn(ok)
         )
 
-        val result = Await.result(connector.setTaxableTrust(utr, value = true), Duration.Inf)
+        val result = Await.result(connector.setTaxableTrust(identifier, value = true), Duration.Inf)
 
         result.status mustBe OK
 
         application.stop()
+      }
+    }
+
+    ".isTrust5mld" - {
+
+      "return true" - {
+        "untransformed data is 5mld" in {
+          val json = JsBoolean(true)
+
+          val application = applicationBuilder()
+            .configure(
+              Seq(
+                "microservice.services.trusts.port" -> server.port(),
+                "auditing.enabled" -> false
+              ): _*
+            ).build()
+
+          val connector = application.injector.instanceOf[TrustConnector]
+
+          server.stubFor(
+            get(urlEqualTo(s"/trusts/$identifier/is-trust-5mld"))
+              .willReturn(okJson(json.toString))
+          )
+
+          val processed = connector.isTrust5mld(identifier)
+
+          whenReady(processed) {
+            r =>
+              r mustBe true
+          }
+        }
+      }
+
+      "return false" - {
+        "untransformed data is 4mld" in {
+          val json = JsBoolean(false)
+
+          val application = applicationBuilder()
+            .configure(
+              Seq(
+                "microservice.services.trusts.port" -> server.port(),
+                "auditing.enabled" -> false
+              ): _*
+            ).build()
+
+          val connector = application.injector.instanceOf[TrustConnector]
+
+          server.stubFor(
+            get(urlEqualTo(s"/trusts/$identifier/is-trust-5mld"))
+              .willReturn(okJson(json.toString))
+          )
+
+          val processed = connector.isTrust5mld(identifier)
+
+          whenReady(processed) {
+            r =>
+              r mustBe false
+          }
+        }
       }
     }
   }

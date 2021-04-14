@@ -25,7 +25,6 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import pages.WhatIsNextPage
 import pages.makechanges._
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -43,9 +42,8 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
   lazy val addNonEeaCompanyYesNoRoute = routes.AddNonEeaCompanyYesNoController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
     .set(WhatIsNextPage, MakeChanges).success.value
-    .set(ExpressTrustYesNoPage, false).success.value
 
   "AddNonEeaCompanyYesNo Controller" when {
 

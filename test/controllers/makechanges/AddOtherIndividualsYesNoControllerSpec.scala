@@ -25,7 +25,6 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import pages.WhatIsNextPage
 import pages.makechanges._
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.libs.json.JsBoolean
@@ -45,7 +44,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   lazy val addOtherIndividualsYesNoRoute: String = routes.AddOtherIndividualsYesNoController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isTrustTaxable = true)
+  val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isUnderlyingData5mld = false)
     .set(WhatIsNextPage, MakeChanges).success.value
 
   "AddOtherIndividualsYesNo Controller" when {
@@ -197,8 +196,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "in 5mld mode with a 5mld taxable trust" must {
 
-      val baseAnswers5mldTaxable = baseAnswers.copy(is5mldEnabled = true, isTrustTaxable = true)
-        .set(ExpressTrustYesNoPage, false).success.value
+      val baseAnswers5mldTaxable = baseAnswers.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
       "return OK and the correct view for a GET" in {
 
