@@ -75,9 +75,7 @@ class IndexController @Inject()(
           is5mldEnabled <- featureFlagService.is5mldEnabled()
           isUnderlyingData5mld <- trustsConnector.isTrust5mld(value)
           result <- uaSetupService.setupAndRedirectToStatus(value, request.user.internalId, is5mldEnabled, isUnderlyingData5mld)
-        } yield {
-          result
-        }
+        } yield result
       case None =>
         logger.info(s"[Session ID: ${Session.id(hc)}]" +
           s" user is not enrolled, starting maintain journey, redirect to ask for identifier")
