@@ -120,6 +120,20 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       application.stop()
     }
 
+    "must return OK and the correct view for GET ../status/not-found/:identifier" in new LocalSetup {
+
+      override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.notFoundWithIdentifier(utr).url)
+
+      val view: IdentifierDoesNotMatchView = application.injector.instanceOf[IdentifierDoesNotMatchView]
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(AffinityGroup.Individual, utr, UTR)(request, messages).toString
+
+      application.stop()
+    }
+
     "must return OK and the correct view for GET ../status/locked" in new LocalSetup {
 
       override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.locked().url)
@@ -165,6 +179,20 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
     "must return SERVICE_UNAVAILABLE and the correct view for GET ../status/down" in new LocalSetup {
 
       override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.down().url)
+
+      val view: IVDownView = application.injector.instanceOf[IVDownView]
+
+      status(result) mustEqual SERVICE_UNAVAILABLE
+
+      contentAsString(result) mustEqual
+        view(utr, UTR)(request, messages).toString
+
+      application.stop()
+    }
+
+    "must return SERVICE_UNAVAILABLE and the correct view for GET ../status/down/:identifier" in new LocalSetup {
+
+      override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.downWithIdentifier(utr).url)
 
       val view: IVDownView = application.injector.instanceOf[IVDownView]
 

@@ -68,7 +68,7 @@ class UTRController @Inject()(
               )
             } recover {
               case x: UpstreamErrorResponse if x.statusCode == NOT_FOUND =>
-                logger.error(s"Trust not found.")
+                logger.error("Trust not found.")
                 Redirect(routes.TrustStatusController.notFoundWithIdentifier(utr))
               case e =>
                 logger.error(s"Error retrieving trust details: ${e.getMessage}")
