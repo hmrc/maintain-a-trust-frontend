@@ -27,6 +27,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{FeatureFlagService, UserAnswersSetupService}
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.Session
 import views.html.UTRView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -68,10 +69,10 @@ class UTRController @Inject()(
               )
             } recover {
               case x: UpstreamErrorResponse if x.statusCode == NOT_FOUND =>
-                logger.error("Trust not found.")
+                logger.error(s"[Session ID: ${Session.id(hc)}] Trust not found for UTR $utr.")
                 Redirect(routes.TrustStatusController.notFoundWithIdentifier(utr))
               case e =>
-                logger.error(s"Error retrieving trust details: ${e.getMessage}")
+                logger.error(s"[Session ID: ${Session.id(hc)}] Error retrieving trust details for UTR $utr: ${e.getMessage}")
                 Redirect(routes.TrustStatusController.downWithIdentifier(utr))
             }
           }
