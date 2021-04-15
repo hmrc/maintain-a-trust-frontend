@@ -37,7 +37,7 @@ trait EntitiesPrinter[T <: JsValue] extends PrinterHelper {
       }
     })
 
-    prependHeadingToAnswerSections(answerSections)
+    prependHeadingToAnswerSections(answerSections, userAnswers.isTrustTaxable)
   }
 
   def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection]

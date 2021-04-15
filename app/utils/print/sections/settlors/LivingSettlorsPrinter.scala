@@ -41,6 +41,6 @@ class LivingSettlorsPrinter @Inject()(individualSettlorPrinter: SettlorIndividua
 
   override def section: QuestionPage[JsArray] = LivingSettlors
 
-  override val headingKey: Option[String] = Some("settlors")
+  override def headingKey(isTaxable: Boolean): Option[String] = Some("settlors")
 
 }
