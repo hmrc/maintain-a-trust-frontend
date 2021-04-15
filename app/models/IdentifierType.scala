@@ -16,7 +16,15 @@
 
 package models
 
+import forms.Validation
+
 sealed trait IdentifierType
+
+object IdentifierType {
+  def apply(identifier: String): IdentifierType = {
+    if (identifier.matches(Validation.utrRegex)) UTR else URN
+  }
+}
 
 case object UTR extends IdentifierType {
   override def toString: String = "utr"

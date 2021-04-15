@@ -170,6 +170,30 @@ class UTRControllerSpec extends SpecBase {
       application.stop()
     }
 
+    "redirect to trust status for a POST if trust details call fails" in {
+
+      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.failed(new Throwable("")))
+
+      val application = applicationBuilder(userAnswers = None).overrides(
+        bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+        bind[TrustConnector].toInstance(mockTrustsConnector)
+      ).build()
+
+      val request = FakeRequest(POST, trustUTRRoute)
+        .withFormUrlEncodedBody(("value", utr))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.TrustStatusController.status().url
+
+      application.stop()
+    }
+
     "make call to user answers setup service" in {
 
       val mockUserAnswersSetupService = mock[UserAnswersSetupService]
