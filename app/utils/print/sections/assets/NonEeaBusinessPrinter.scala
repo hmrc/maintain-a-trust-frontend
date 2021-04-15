@@ -37,15 +37,15 @@ class NonEeaBusinessPrinter @Inject()(converter: AnswerRowConverter) extends Ent
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
     converter.stringQuestion(NonEeaBusinessNamePage(index), userAnswers, "nonEeaBusiness.name"),
     converter.addressQuestion(NonEeaBusinessAddressPage(index), userAnswers, "nonEeaBusiness.internationalAddress", name),
-    converter.stringQuestion(NonEeaBusinessGoverningCountryPage(index), userAnswers, "nonEeaBusiness.governingCountry", name)
+    converter.countryQuestion(NonEeaBusinessGoverningCountryPage(index), userAnswers, "nonEeaBusiness.governingCountry", name)
   )
 
   override def namePath(index: Int): JsPath = NonEeaBusinessNamePage(index).path
 
   override def section: QuestionPage[JsArray] = NonEeaBusinessAsset
 
-  override val headingKey: Option[String] = Some("nonEeaBusiness")
+  override def headingKey(isTaxable: Boolean): Option[String] = None
 
-  override val subHeadingKey: Option[String] = None
+  override val subHeadingKey: Option[String] = Some("nonEeaBusiness")
 
 }

@@ -21,26 +21,26 @@ import viewmodels.{AnswerRow, AnswerSection}
 
 trait PrinterHelper {
 
-  def prependHeadingToAnswerSections(answerSections: Seq[AnswerSection])
+  def prependHeadingToAnswerSections(answerSections: Seq[AnswerSection], isTaxable: Boolean)
                                     (implicit messages: Messages): Seq[AnswerSection] = {
-    (answerSections.nonEmpty, headingKey) match {
-      case (true, Some(_)) => answerSectionWithRows() +: answerSections
+    (answerSections.nonEmpty, headingKey(isTaxable)) match {
+      case (true, Some(_)) => answerSectionWithRows(Seq(), isTaxable) +: answerSections
       case (true, _) => answerSections
       case _ => Nil
     }
   }
 
-  def answerSectionWithRows(rows: Seq[Option[AnswerRow]] = Seq())
+  def answerSectionWithRows(rows: Seq[Option[AnswerRow]], isTaxable: Boolean)
                            (implicit messages: Messages): AnswerSection = AnswerSection(
     headingKey = None,
     rows = rows.flatten,
-    sectionKey = heading
+    sectionKey = heading(isTaxable)
   )
 
-  private def heading(implicit messages: Messages): Option[String] = headingKey map { x =>
+  private def heading(isTaxable: Boolean)(implicit messages: Messages): Option[String] = headingKey(isTaxable) map { x =>
     messages(s"answerPage.section.$x.heading")
   }
 
-  val headingKey: Option[String]
+  def headingKey(isTaxable: Boolean): Option[String]
 
 }

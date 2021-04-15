@@ -613,8 +613,9 @@ answerPage.section.otherIndividual.subheading = Other individual {0}
 answerPage.section.trustsDetails.heading = Trust details
 
 ## Assets
-answerPage.section.nonEeaBusiness.heading = Ownership or controlling interest of a Non-EEA company
-answerPage.section.nonEeaBusiness.subheading = Non-EEA Company
+answerPage.section.assets.heading = Assets
+answerPage.section.nonEeaBusinesses.heading = Ownership or controlling interest of a Non-EEA company
+answerPage.section.nonEeaBusiness.subheading = Non-EEA Company {0}
 
 # CHECK YOUR ANSWERS LABELS
 

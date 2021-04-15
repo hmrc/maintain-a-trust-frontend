@@ -33,9 +33,9 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
       converter.utr(userAnswers, "trustUniqueTaxReference")
     )
 
-    Seq(answerSectionWithRows(rows))
+    Seq(answerSectionWithRows(rows, userAnswers.isTrustTaxable))
   }
 
-  override val headingKey: Option[String] = Some("trustsDetails")
+  override def headingKey(isTaxable: Boolean): Option[String] = Some("trustsDetails")
 
 }

@@ -59,7 +59,7 @@ class OtherIndividualsPrinter @Inject()(converter: AnswerRowConverter) extends E
 
   override def section: QuestionPage[JsArray] = Natural
 
-  override val headingKey: Option[String] = Some("otherIndividuals")
+  override def headingKey(isTaxable: Boolean): Option[String] = Some("otherIndividuals")
 
   override val subHeadingKey: Option[String] = Some("otherIndividual")
 }

@@ -59,7 +59,7 @@ class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) extends En
 
   override val section: QuestionPage[JsValue] = DeceasedSettlor
 
-  override val headingKey: Option[String] = Some("deceasedSettlor")
+  override def headingKey(isTaxable: Boolean): Option[String] = Some("deceasedSettlor")
 
   override val subHeadingKey: Option[String] = None
 
