@@ -59,7 +59,12 @@ class UserAnswersExtractorImpl @Inject()(
       is5mldEnabled <- featureFlagService.is5mldEnabled()
       trustDetails <- trustsConnector.getUntransformedTrustDetails(answers.identifier)
     } yield {
-      val updatedAnswers = answers.copy(is5mldEnabled = is5mldEnabled, isUnderlyingData5mld = trustDetails.is5mld)
+
+      val updatedAnswers = answers.copy(
+        is5mldEnabled = is5mldEnabled,
+        isUnderlyingData5mld = trustDetails.is5mld,
+        isUnderlyingDataTaxable = trustDetails.isTaxable
+      )
 
       def answersCombined: Either[PlaybackExtractionError, Option[UserAnswers]] = for {
         correspondence <- correspondenceExtractor.extract(updatedAnswers, data.correspondence).right
