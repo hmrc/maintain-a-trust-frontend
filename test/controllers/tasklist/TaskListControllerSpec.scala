@@ -24,7 +24,6 @@ import models.{CompletedMaintenanceTasks, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
 import pages.WhatIsNextPage
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -70,7 +69,7 @@ class TaskListControllerSpec extends SpecBase {
 
     "in 4mld mode" must {
 
-      val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isTrustTaxable = true)
+      val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isUnderlyingData5mld = false)
 
       val utr = baseAnswers.identifier
 
@@ -81,7 +80,7 @@ class TaskListControllerSpec extends SpecBase {
 
       "underlying trust data is 4mld" must {
 
-        val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+        val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
 
         val utr = baseAnswers.identifier
 
@@ -92,8 +91,7 @@ class TaskListControllerSpec extends SpecBase {
 
         "trust is taxable" must {
 
-          val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val utr = baseAnswers.identifier
 
@@ -102,8 +100,7 @@ class TaskListControllerSpec extends SpecBase {
 
         "trust is non-taxable" must {
 
-          val baseAnswers = emptyUserAnswersForUrn.copy(is5mldEnabled = true, isTrustTaxable = false)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val baseAnswers = emptyUserAnswersForUrn
 
           val urn = baseAnswers.identifier
 

@@ -18,92 +18,99 @@ package models.http
 
 import org.scalatest.{MustMatchers, WordSpec}
 import play.api.libs.json.{JsError, Json}
-import TrustsStatusReads._
 
 class TrustsResponseSpec extends WordSpec with MustMatchers {
 
   "trust status" must {
+
     "read from Json" when {
+
       "processing" in {
 
-        val json = """{
-                     |
-                     |  "responseHeader": {
-                     |    "status": "In Processing",
-                     |    "formBundleNo": "1"
-                     |  }
-                     |}
-      """.stripMargin
+        val json =
+          """
+            |{
+            |  "responseHeader": {
+            |    "status": "In Processing",
+            |    "formBundleNo": "1"
+            |  }
+            |}
+            |""".stripMargin
 
         Json.parse(json).as[TrustStatus] mustBe Processing
       }
 
       "closed" in {
 
-        val json = """{
-                     |
-                     |  "responseHeader": {
-                     |    "status": "Closed",
-                     |    "formBundleNo": "1"
-                     |  }
-                     |}
-                 """.stripMargin
+        val json =
+          """
+            |{
+            |  "responseHeader": {
+            |    "status": "Closed",
+            |    "formBundleNo": "1"
+            |  }
+            |}
+            |""".stripMargin
 
         Json.parse(json).as[TrustStatus] mustBe Closed
       }
 
       "pending closure" in {
 
-        val json = """{
-                     |
-                     |  "responseHeader": {
-                     |    "status": "Pending Closure",
-                     |    "formBundleNo": "1"
-                     |  }
-                     |}
-                 """.stripMargin
+        val json =
+          """
+            |{
+            |  "responseHeader": {
+            |    "status": "Pending Closure",
+            |    "formBundleNo": "1"
+            |  }
+            |}
+            |""".stripMargin
 
         Json.parse(json).as[TrustStatus] mustBe Closed
       }
 
       "parked" in {
 
-        val json = """{
-                     |
-                     |  "responseHeader": {
-                     |    "status": "Parked",
-                     |    "formBundleNo": "1"
-                     |  }
-                     |}
-                 """.stripMargin
+        val json =
+          """
+            |{
+            |  "responseHeader": {
+            |    "status": "Parked",
+            |    "formBundleNo": "1"
+            |  }
+            |}
+            |""".stripMargin
 
         Json.parse(json).as[TrustStatus] mustBe SorryThereHasBeenAProblem
       }
 
       "obsoleted" in {
 
-        val json = """{
-                     |
-                     |  "responseHeader": {
-                     |    "status": "Obsoleted",
-                     |    "formBundleNo": "1"
-                     |  }
-                     |}
-                 """.stripMargin
+        val json =
+          """
+            |{
+            |  "responseHeader": {
+            |    "status": "Obsoleted",
+            |    "formBundleNo": "1"
+            |  }
+            |}
+            |""".stripMargin
 
         Json.parse(json).as[TrustStatus] mustBe SorryThereHasBeenAProblem
       }
 
       "suspended" in {
 
-        val json = """{
-                     |
-                     |  "responseHeader": {
-                     |    "status": "Suspended",
-                     |    "formBundleNo": "1"
-                     |  }
-                     |}
-                 """.stripMargin
+        val json =
+          """
+            |{
+            |  "responseHeader": {
+            |    "status": "Suspended",
+            |    "formBundleNo": "1"
+            |  }
+            |}
+            |""".stripMargin
 
         Json.parse(json).as[TrustStatus] mustBe SorryThereHasBeenAProblem
       }
@@ -111,17 +118,17 @@ class TrustsResponseSpec extends WordSpec with MustMatchers {
 
     "return failure when not given expected response" in {
 
-      val json = """{
-                   |
-                   |  "responseHeader": {
-                   |    "status": "SomethingElse",
-                   |    "formBundleNo": "1"
-                   |  }
-                   |}
-                 """.stripMargin
+      val json =
+        """
+          |{
+          |  "responseHeader": {
+          |    "status": "SomethingElse",
+          |    "formBundleNo": "1"
+          |  }
+          |}
+          |""".stripMargin
 
       Json.parse(json).validate[TrustStatus] mustBe JsError("Unexpected Status")
     }
   }
-
 }

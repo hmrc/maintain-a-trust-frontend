@@ -16,8 +16,9 @@
 
 package models
 
-import _root_.pages.trustdetails.ExpressTrustYesNoPage
+import _root_.pages.WhatIsNextPage
 import forms.Validation
+import models.pages.WhatIsNext.{NeedsToPayTax, NoLongerTaxable}
 import play.api.Logging
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -30,19 +31,27 @@ final case class UserAnswers(internalId: String,
                              identifier: String,
                              data: JsObject = Json.obj(),
                              is5mldEnabled: Boolean = false,
-                             isTrustTaxable: Boolean = true,
+                             isUnderlyingData5mld: Boolean = false,
+                             isUnderlyingDataTaxable: Boolean = true,
                              updatedAt: LocalDateTime = LocalDateTime.now) extends Logging {
 
   def identifierType: IdentifierType = if (identifier.matches(Validation.utrRegex)) UTR else URN
 
-  def trustMldStatus: TrustMldStatus = (is5mldEnabled, isUnderlyingTrust5mld, isTrustTaxable) match {
+  def trustTaxability: TrustTaxability = (this.get(WhatIsNextPage), isUnderlyingDataTaxable) match {
+    case (Some(NeedsToPayTax), _) => MigratingFromNonTaxableToTaxable
+    case (Some(NoLongerTaxable), _) => MigratingFromTaxableToNonTaxable
+    case (_, true) => Taxable
+    case (_, false) => NonTaxable
+  }
+
+  def isTrustTaxable: Boolean = trustTaxability == Taxable || trustTaxability == MigratingFromNonTaxableToTaxable
+
+  def trustMldStatus: TrustMldStatus = (is5mldEnabled, isUnderlyingData5mld, isUnderlyingDataTaxable) match {
     case (false, _, _) => Underlying4mldTrustIn4mldMode
     case (true, false, _) => Underlying4mldTrustIn5mldMode
     case (true, true, true) => Underlying5mldTaxableTrustIn5mldMode
     case (true, true, false) => Underlying5mldNonTaxableTrustIn5mldMode
   }
-
-  private def isUnderlyingTrust5mld: Boolean = this.get(ExpressTrustYesNoPage).isDefined
 
   def is5mldTrustIn5mldMode: Boolean = trustMldStatus.is5mldTrustIn5mldMode
 
@@ -121,24 +130,36 @@ final case class UserAnswers(internalId: String,
 
 object UserAnswers {
 
-  def startNewSession(internalId: String, identifier: String, is5mldEnabled: Boolean, isTaxable: Boolean): UserAnswers =
-    UserAnswers(internalId = internalId, identifier = identifier, is5mldEnabled = is5mldEnabled, isTrustTaxable = isTaxable)
+  def startNewSession(internalId: String,
+                      identifier: String,
+                      is5mldEnabled: Boolean,
+                      isUnderlyingData5mld: Boolean,
+                      isUnderlyingDataTaxable: Boolean): UserAnswers =
+    UserAnswers(
+      internalId = internalId,
+      identifier = identifier,
+      is5mldEnabled = is5mldEnabled,
+      isUnderlyingData5mld = isUnderlyingData5mld,
+      isUnderlyingDataTaxable = isUnderlyingDataTaxable
+    )
 
   implicit lazy val reads: Reads[UserAnswers] = (
     (__ \ "internalId").read[String] and
       (__ \ "identifier").read[String] and
       (__ \ "data").read[JsObject] and
       (__ \ "is5mldEnabled").readWithDefault[Boolean](false) and
-      (__ \ "isTrustTaxable").readWithDefault[Boolean](true) and
+      (__ \ "isUnderlyingData5mld").readWithDefault[Boolean](false) and
+      (__ \ "isUnderlyingDataTaxable").readWithDefault[Boolean](true) and
       (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
     )(UserAnswers.apply _)
 
-  implicit lazy val writes: OWrites[UserAnswers] = (
+  implicit lazy val writes: Writes[UserAnswers] = (
     (__ \ "internalId").write[String] and
       (__ \ "identifier").write[String] and
       (__ \ "data").write[JsObject] and
       (__ \ "is5mldEnabled").write[Boolean] and
-      (__ \ "isTrustTaxable").write[Boolean] and
+      (__ \ "isUnderlyingData5mld").write[Boolean] and
+      (__ \ "isUnderlyingDataTaxable").write[Boolean] and
       (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
     )(unlift(UserAnswers.unapply))
 }

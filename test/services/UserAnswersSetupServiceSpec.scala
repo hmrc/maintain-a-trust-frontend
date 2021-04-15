@@ -41,8 +41,8 @@ class UserAnswersSetupServiceSpec extends SpecBase with ScalaCheckPropertyChecks
     "setupAndRedirectToStatus" must {
       "setup user answers and redirect to TrustStatusController" in {
 
-        forAll(arbitrary[Boolean], arbitrary[Boolean]) {
-          (is5mldEnabled, isTaxable) =>
+        forAll(arbitrary[Boolean], arbitrary[Boolean], arbitrary[Boolean]) {
+          (is5mldEnabled, isUnderlyingData5mld, isUnderlyingDataTaxable) =>
 
             val mockPlaybackRepository = mock[PlaybackRepository]
             when(mockPlaybackRepository.set(any())).thenReturn(Future.successful(true))
@@ -53,7 +53,13 @@ class UserAnswersSetupServiceSpec extends SpecBase with ScalaCheckPropertyChecks
 
             val userAnswersSetupService = new UserAnswersSetupService(mockPlaybackRepository, mockSessionRepository)
 
-            val result = userAnswersSetupService.setupAndRedirectToStatus(identifier, internalId, is5mldEnabled, isTaxable)
+            val result = userAnswersSetupService.setupAndRedirectToStatus(
+              identifier = identifier,
+              internalId = internalId,
+              is5mldEnabled = is5mldEnabled,
+              isUnderlyingData5mld = isUnderlyingData5mld,
+              isUnderlyingDataTaxable = isUnderlyingDataTaxable
+            )
 
             redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
 
@@ -65,7 +71,8 @@ class UserAnswersSetupServiceSpec extends SpecBase with ScalaCheckPropertyChecks
             uaCaptor.getValue.internalId mustBe internalId
             uaCaptor.getValue.identifier mustBe identifier
             uaCaptor.getValue.is5mldEnabled mustBe is5mldEnabled
-            uaCaptor.getValue.isTrustTaxable mustBe isTaxable
+            uaCaptor.getValue.isUnderlyingData5mld mustBe isUnderlyingData5mld
+            uaCaptor.getValue.isUnderlyingDataTaxable mustBe isUnderlyingDataTaxable
 
             val identifierSessionCaptor = ArgumentCaptor.forClass(classOf[IdentifierSession])
             verify(mockSessionRepository).set(identifierSessionCaptor.capture())

@@ -18,7 +18,6 @@ package mapping
 
 import base.SpecBaseHelpers
 import generators.Generators
-import models.UserAnswers
 import models.http.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
 import models.pages.DeedOfVariation.ReplacedWill
 import models.pages.NonResidentType
@@ -59,7 +58,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20))
           )
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = trusteeDetailsExtractor.extract(ua, trust)
 
@@ -94,7 +93,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20))
           )
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = trusteeDetailsExtractor.extract(ua, trust)
 
@@ -134,7 +133,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20))
           )
 
-          val ua = UserAnswers("fakeId", "urn", isTrustTaxable = false)
+          val ua = emptyUserAnswersForUrn
 
           val extraction = trusteeDetailsExtractor.extract(ua, trust)
 
@@ -169,7 +168,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20))
           )
 
-          val ua = UserAnswers("fakeId", "urn", isTrustTaxable = false)
+          val ua = emptyUserAnswersForUrn
 
           val extraction = trusteeDetailsExtractor.extract(ua, trust)
 
@@ -211,7 +210,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           efrbsStartDate = Some(LocalDate.of(2018, 4, 20))
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = trusteeDetailsExtractor.extract(ua, trust)
 

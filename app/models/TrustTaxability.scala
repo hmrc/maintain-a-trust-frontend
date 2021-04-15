@@ -16,19 +16,9 @@
 
 package models
 
-import play.api.libs.json.{Format, Json}
+sealed trait TrustTaxability
 
-import java.time.LocalDate
-
-case class TrustDetails(startDate: LocalDate, trustTaxable: Option[Boolean], expressTrust: Option[Boolean]) {
-
-  def is5mld: Boolean = expressTrust.isDefined
-
-  def isTaxable: Boolean = !trustTaxable.contains(false)
-}
-
-object TrustDetails {
-
-  implicit val formats: Format[TrustDetails] = Json.format[TrustDetails]
-
-}
+case object Taxable extends TrustTaxability
+case object NonTaxable extends TrustTaxability
+case object MigratingFromNonTaxableToTaxable extends TrustTaxability
+case object MigratingFromTaxableToNonTaxable extends TrustTaxability

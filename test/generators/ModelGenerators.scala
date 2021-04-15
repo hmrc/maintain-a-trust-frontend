@@ -174,7 +174,7 @@ trait ModelGenerators {
             IdentifierNotFound,
             TrustServiceUnavailable,
             ClosedRequestResponse,
-            ServerError
+            TrustsErrorResponse
           )
         )
       } yield

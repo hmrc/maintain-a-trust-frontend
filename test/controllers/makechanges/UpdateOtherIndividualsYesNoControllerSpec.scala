@@ -19,13 +19,12 @@ package controllers.makechanges
 import base.SpecBase
 import connectors.{TrustConnector, TrustsStoreConnector}
 import forms.YesNoFormProvider
-import models.{CompletedMaintenanceTasks, UserAnswers}
 import models.pages.WhatIsNext
+import models.{CompletedMaintenanceTasks, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import pages.WhatIsNextPage
 import pages.makechanges._
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.libs.json.{JsArray, JsBoolean}
@@ -166,8 +165,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "in 5mld mode for a 5mld taxable trust" must {
 
-      val baseAnswers5mldTaxable = baseAnswers.copy(is5mldEnabled = true, isTrustTaxable = true)
-        .set(ExpressTrustYesNoPage, false).success.value
+      val baseAnswers5mldTaxable = baseAnswers.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
       
       "return OK and the correct view for a GET" in {
 
@@ -237,7 +235,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       "redirect to update a non eea company yes no page when valid data is submitted and an eea company already exists" in {
 
-        val userAnswers = baseAnswers5mldTaxable.copy(is5mldEnabled = true, isTrustTaxable = true)
+        val userAnswers = baseAnswers5mldTaxable
           .set(NonEeaBusinessAsset, JsArray()).success.value
           .set(UpdateTrusteesYesNoPage, false).success.value
           .set(UpdateBeneficiariesYesNoPage, false).success.value

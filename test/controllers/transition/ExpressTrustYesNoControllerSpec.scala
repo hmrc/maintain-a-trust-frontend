@@ -28,7 +28,6 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.PlaybackRepository
-import uk.gov.hmrc.http.HttpResponse
 import views.html.transition.ExpressTrustYesNoView
 
 import scala.concurrent.Future
@@ -90,10 +89,10 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
         .thenReturn(Future.successful(true))
 
       when(mockTrustsConnector.removeTransforms(any())(any(), any()))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
+        .thenReturn(Future.successful(okResponse))
 
       when(mockTrustsConnector.setExpressTrust(any(), any())(any(), any()))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
+        .thenReturn(Future.successful(okResponse))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))

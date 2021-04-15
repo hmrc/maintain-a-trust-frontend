@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import connectors.TrustConnector
 import controllers.actions.Actions
 import models.requests.IdentifierRequest
 import play.api.Logging
@@ -33,7 +34,8 @@ class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  actions: Actions,
                                  uaSetupService: UserAnswersSetupService,
-                                 featureFlagService: FeatureFlagService
+                                 featureFlagService: FeatureFlagService,
+                                 trustsConnector: TrustConnector
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.auth.async {
@@ -52,24 +54,34 @@ class IndexController @Inject()(
   }
 
   private def initialise(redirect: Result)(implicit request: IdentifierRequest[_]): Future[Result] = {
-    def identifier(enrolmentKey: String, identifierKey: String): Option[String] = request.user.enrolments.enrolments
+
+    def getIdentifierFromEnrolment(enrolmentKey: String, identifierKey: String): Option[String] = request.user.enrolments.enrolments
       .find(_.key equals enrolmentKey)
       .flatMap(_.identifiers.find(_.key equals identifierKey))
       .map(_.value)
 
-    val utr = identifier("HMRC-TERS-ORG", "SAUTR")
-    val urn = identifier("HMRC-TERSNT-ORG", "URN")
+    val utr = getIdentifierFromEnrolment("HMRC-TERS-ORG", "SAUTR")
+    val urn = getIdentifierFromEnrolment("HMRC-TERSNT-ORG", "URN")
 
-    featureFlagService.is5mldEnabled().flatMap {
-      is5mldEnabled =>
-        (utr, urn) match {
-          case (Some(utr), _) => uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled, isTaxable = true)
-          case (_, Some(urn)) => uaSetupService.setupAndRedirectToStatus(urn, request.user.internalId, is5mldEnabled, isTaxable = false)
-          case _ =>
-            logger.info(s"[Session ID: ${Session.id(hc)}]" +
-              s" user is not enrolled, starting maintain journey, redirect to ask for identifier")
-            Future.successful(redirect)
-        }
+    val identifier: Option[String] = utr.orElse(urn).orElse(None)
+
+    identifier match {
+      case Some(value) =>
+        for {
+          is5mldEnabled <- featureFlagService.is5mldEnabled()
+          trustDetails <- trustsConnector.getUntransformedTrustDetails(value)
+          result <- uaSetupService.setupAndRedirectToStatus(
+            identifier = value,
+            internalId = request.user.internalId,
+            is5mldEnabled = is5mldEnabled,
+            isUnderlyingData5mld = trustDetails.is5mld,
+            isUnderlyingDataTaxable = trustDetails.isTaxable
+          )
+        } yield result
+      case None =>
+        logger.info(s"[Session ID: ${Session.id(hc)}]" +
+          s" user is not enrolled, starting maintain journey, redirect to ask for identifier")
+        Future.successful(redirect)
     }
   }
 }

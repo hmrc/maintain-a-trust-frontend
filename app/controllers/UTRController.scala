@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import connectors.TrustConnector
 import controllers.actions.Actions
 import forms.UTRFormProvider
 import play.api.data.Form
@@ -35,6 +36,7 @@ class UTRController @Inject()(
                                uaSetupService: UserAnswersSetupService,
                                formProvider: UTRFormProvider,
                                featureFlagService: FeatureFlagService,
+                               trustsConnector: TrustConnector,
                                val controllerComponents: MessagesControllerComponents,
                                view: UTRView
                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
@@ -52,10 +54,17 @@ class UTRController @Inject()(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, routes.UTRController.onSubmit()))),
         utr => {
-          featureFlagService.is5mldEnabled().flatMap {
-            is5mldEnabled =>
-              uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled, isTaxable = true)
-          }
+          for {
+            is5mldEnabled <- featureFlagService.is5mldEnabled()
+            trustDetails <- trustsConnector.getUntransformedTrustDetails(utr)
+            result <- uaSetupService.setupAndRedirectToStatus(
+              identifier = utr,
+              internalId = request.user.internalId,
+              is5mldEnabled = is5mldEnabled,
+              isUnderlyingData5mld = trustDetails.is5mld,
+              isUnderlyingDataTaxable = trustDetails.isTaxable
+            )
+          } yield result
         }
       )
   }

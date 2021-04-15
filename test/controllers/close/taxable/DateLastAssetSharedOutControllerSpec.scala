@@ -24,7 +24,6 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.close.taxable.DateLastAssetSharedOutPage
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
@@ -109,7 +108,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
       "4mld" in {
 
-        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isTrustTaxable = true)
+        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isUnderlyingData5mld = false)
 
         when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
@@ -130,7 +129,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
         "underlying data is 4mld" in {
 
-          val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+          val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
 
           when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
@@ -149,8 +148,7 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
         "underlying data is 5mld" in {
 
-          val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 

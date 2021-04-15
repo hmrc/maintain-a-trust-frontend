@@ -21,6 +21,7 @@ import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
 import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.WhatIsNextFormProvider
+import models.UserAnswers
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
 import models.requests.DataRequest
@@ -29,6 +30,7 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
+import uk.gov.hmrc.http.HttpResponse
 import views.html.WhatIsNextView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -72,7 +74,7 @@ class WhatIsNextController @Inject()(
             hasAnswerChanged <- Future.fromTry(Success(!request.userAnswers.get(WhatIsNextPage).contains(value)))
             updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            result <- updateMigrationStatusAndRedirect(value, hasAnswerChanged)
+            result <- updateMigrationStatusAndRedirect(updatedAnswers, value, hasAnswerChanged)
           } yield {
             result
           }
@@ -80,16 +82,16 @@ class WhatIsNextController @Inject()(
       )
   }
 
-  private def updateMigrationStatusAndRedirect(newAnswer: WhatIsNext, hasAnswerChanged: Boolean)
+  private def updateMigrationStatusAndRedirect(userAnswers: UserAnswers, newAnswer: WhatIsNext, hasAnswerChanged: Boolean)
                                               (implicit request: DataRequest[AnyContent]): Future[Result] = {
 
-    def redirect(implicit request: DataRequest[AnyContent]): Result = Redirect {
+    def redirect: Result = Redirect {
       newAnswer match {
         case DeclareTheTrustIsUpToDate =>
           redirectToDeclaration
         case MakeChanges =>
           redirectToFirstUpdateQuestion
-        case CloseTrust if request.userAnswers.isTrustTaxable =>
+        case CloseTrust if userAnswers.isTrustTaxable =>
           controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
         case CloseTrust =>
           controllers.close.nontaxable.routes.DateClosedController.onPageLoad()
@@ -98,25 +100,42 @@ class WhatIsNextController @Inject()(
         case NeedsToPayTax =>
           controllers.routes.FeatureNotAvailableController.onPageLoad()
         case GeneratePdf =>
-          controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier)
+          controllers.routes.ObligedEntityPdfController.getPdf(userAnswers.identifier)
       }
     }
 
     if (newAnswer != GeneratePdf) {
+      val needsToPayTaxSelected = newAnswer == NeedsToPayTax
       for {
-        _ <- {
-          if (hasAnswerChanged) {
-            trustConnector.removeTransforms(request.userAnswers.identifier).map(_ => ())
-          } else {
-            Future.successful(())
-          }
-        }
-        _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, newAnswer == NeedsToPayTax)
-      } yield {
-        redirect
-      }
+        _ <- removeTransformsIfAnswerHasChanged(hasAnswerChanged)
+        _ <- setTaxableTrustIfNeedsToPayTaxSelected(needsToPayTaxSelected)
+        _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, needsToPayTaxSelected)
+      } yield redirect
     } else {
       Future.successful(redirect)
     }
   }
+
+  private def removeTransformsIfAnswerHasChanged(hasAnswerChanged: Boolean)
+                                                (implicit request: DataRequest[AnyContent]): Future[Unit] = {
+    makeRequestIfConditionMet(hasAnswerChanged) {
+      trustConnector.removeTransforms(request.userAnswers.identifier)
+    }
+  }
+
+  private def setTaxableTrustIfNeedsToPayTaxSelected(needsToPayTaxSelected: Boolean)
+                                                    (implicit request: DataRequest[AnyContent]): Future[Unit] = {
+    makeRequestIfConditionMet(needsToPayTaxSelected) {
+      trustConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
+    }
+  }
+
+  private def makeRequestIfConditionMet(condition: Boolean)(request: => Future[HttpResponse]): Future[Unit] = {
+    if (condition) {
+      request.map(_ => ())
+    } else {
+      Future.successful(())
+    }
+  }
+
 }
