@@ -31,6 +31,7 @@ import play.api.test.Helpers._
 import services.{FeatureFlagService, UserAnswersSetupService}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import views.html.UTRView
 
 import java.time.LocalDate
@@ -166,6 +167,54 @@ class UTRControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+
+      application.stop()
+    }
+
+    "redirect to notFoundWithIdentifier for a POST when trust not found" in {
+
+      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.failed(UpstreamErrorResponse("", NOT_FOUND)))
+
+      val application = applicationBuilder(userAnswers = None).overrides(
+        bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+        bind[TrustConnector].toInstance(mockTrustsConnector)
+      ).build()
+
+      val request = FakeRequest(POST, trustUTRRoute)
+        .withFormUrlEncodedBody(("value", utr))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.TrustStatusController.notFoundWithIdentifier(utr).url
+
+      application.stop()
+    }
+
+    "redirect to downWithIdentifier for a POST when error retrieving trust details" in {
+
+      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.failed(UpstreamErrorResponse("", INTERNAL_SERVER_ERROR)))
+
+      val application = applicationBuilder(userAnswers = None).overrides(
+        bind[FeatureFlagService].toInstance(mockFeatureFlagService),
+        bind[TrustConnector].toInstance(mockTrustsConnector)
+      ).build()
+
+      val request = FakeRequest(POST, trustUTRRoute)
+        .withFormUrlEncodedBody(("value", utr))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.TrustStatusController.downWithIdentifier(utr).url
 
       application.stop()
     }

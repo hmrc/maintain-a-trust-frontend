@@ -20,10 +20,12 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions.Actions
 import forms.UTRFormProvider
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{FeatureFlagService, UserAnswersSetupService}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.UTRView
 
@@ -39,7 +41,7 @@ class UTRController @Inject()(
                                trustsConnector: TrustConnector,
                                val controllerComponents: MessagesControllerComponents,
                                view: UTRView
-                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   private val form: Form[String] = formProvider()
 
@@ -50,21 +52,29 @@ class UTRController @Inject()(
 
   def onSubmit(): Action[AnyContent] = actions.auth.async {
     implicit request =>
+
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, routes.UTRController.onSubmit()))),
         utr => {
-          for {
-            is5mldEnabled <- featureFlagService.is5mldEnabled()
-            trustDetails <- trustsConnector.getUntransformedTrustDetails(utr)
-            result <- uaSetupService.setupAndRedirectToStatus(
-              identifier = utr,
-              internalId = request.user.internalId,
-              is5mldEnabled = is5mldEnabled,
-              isUnderlyingData5mld = trustDetails.is5mld,
-              isUnderlyingDataTaxable = trustDetails.isTaxable
-            )
-          } yield result
+          featureFlagService.is5mldEnabled() flatMap { is5mldEnabled =>
+            trustsConnector.getUntransformedTrustDetails(utr) flatMap { trustDetails =>
+              uaSetupService.setupAndRedirectToStatus(
+                identifier = utr,
+                internalId = request.user.internalId,
+                is5mldEnabled = is5mldEnabled,
+                isUnderlyingData5mld = trustDetails.is5mld,
+                isUnderlyingDataTaxable = trustDetails.isTaxable
+              )
+            } recover {
+              case x: UpstreamErrorResponse if x.statusCode == NOT_FOUND =>
+                logger.error(s"Trust not found.")
+                Redirect(routes.TrustStatusController.notFoundWithIdentifier(utr))
+              case e =>
+                logger.error(s"Error retrieving trust details: ${e.getMessage}")
+                Redirect(routes.TrustStatusController.downWithIdentifier(utr))
+            }
+          }
         }
       )
   }

@@ -17,7 +17,6 @@
 package models
 
 import _root_.pages.WhatIsNextPage
-import forms.Validation
 import models.pages.WhatIsNext.{NeedsToPayTax, NoLongerTaxable}
 import play.api.Logging
 import play.api.libs.functional.syntax._
@@ -35,7 +34,7 @@ final case class UserAnswers(internalId: String,
                              isUnderlyingDataTaxable: Boolean = true,
                              updatedAt: LocalDateTime = LocalDateTime.now) extends Logging {
 
-  def identifierType: IdentifierType = if (identifier.matches(Validation.utrRegex)) UTR else URN
+  def identifierType: IdentifierType = IdentifierType(identifier)
 
   def trustTaxability: TrustTaxability = (this.get(WhatIsNextPage), isUnderlyingDataTaxable) match {
     case (Some(NeedsToPayTax), _) => MigratingFromNonTaxableToTaxable

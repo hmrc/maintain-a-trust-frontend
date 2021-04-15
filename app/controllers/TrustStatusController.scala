@@ -19,9 +19,9 @@ package controllers
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
 import mapping.UserAnswersExtractor
-import models.Underlying4mldTrustIn5mldMode
 import models.http._
 import models.requests.DataRequest
+import models.{IdentifierType, Underlying4mldTrustIn5mldMode}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -70,7 +70,12 @@ class TrustStatusController @Inject()(
 
   def notFound(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(Ok(identifierDoesNotMatchView(request.user.affinityGroup, request.userAnswers.identifier, request.userAnswers.identifierType)))
+      notFoundWithIdentifier(request.userAnswers.identifier).apply(request)
+  }
+
+  def notFoundWithIdentifier(identifier: String): Action[AnyContent] = actions.auth.async {
+    implicit request =>
+      Future.successful(Ok(identifierDoesNotMatchView(request.user.affinityGroup, identifier, IdentifierType(identifier))))
   }
 
   def locked(): Action[AnyContent] = actions.authWithData.async {
@@ -80,7 +85,12 @@ class TrustStatusController @Inject()(
 
   def down(): Action[AnyContent] = actions.authWithData.async {
     implicit request =>
-      Future.successful(ServiceUnavailable(ivDownView(request.userAnswers.identifier, request.userAnswers.identifierType)))
+      downWithIdentifier(request.userAnswers.identifier).apply(request)
+  }
+
+  def downWithIdentifier(identifier: String): Action[AnyContent] = actions.auth.async {
+    implicit request =>
+      Future.successful(ServiceUnavailable(ivDownView(identifier, IdentifierType(identifier))))
   }
 
   def alreadyClaimed(): Action[AnyContent] = actions.authWithData.async {
