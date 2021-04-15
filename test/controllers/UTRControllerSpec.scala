@@ -20,6 +20,7 @@ import base.SpecBase
 import connectors.TrustConnector
 import controllers.Assets.Redirect
 import forms.UTRFormProvider
+import models.TrustDetails
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
 import play.api.data.Form
@@ -32,6 +33,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.UTRView
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class UTRControllerSpec extends SpecBase {
@@ -52,12 +54,18 @@ class UTRControllerSpec extends SpecBase {
     "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
   )))
 
+  val startDate: LocalDate = LocalDate.parse("2000-01-01")
+
   "UTR Controller" must {
 
     "return OK and the correct view for a GET" in {
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-      when(mockTrustsConnector.isTrust5mld(any())(any(), any())).thenReturn(Future.successful(false))
+
+      val trustDetails = TrustDetails(startDate, None, None)
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.successful(trustDetails))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
         bind[FeatureFlagService].toInstance(mockFeatureFlagService),
@@ -81,7 +89,11 @@ class UTRControllerSpec extends SpecBase {
     "return OK and the correct view for a GET if no existing data is found (creating a new session)" in {
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-      when(mockTrustsConnector.isTrust5mld(any())(any(), any())).thenReturn(Future.successful(false))
+
+      val trustDetails = TrustDetails(startDate, None, None)
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.successful(trustDetails))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
         bind[FeatureFlagService].toInstance(mockFeatureFlagService),
@@ -105,7 +117,11 @@ class UTRControllerSpec extends SpecBase {
     "redirect to trust status for a POST if no existing data is found (creating a new session)" in {
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-      when(mockTrustsConnector.isTrust5mld(any())(any(), any())).thenReturn(Future.successful(false))
+
+      val trustDetails = TrustDetails(startDate, None, None)
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.successful(trustDetails))
 
       val application = applicationBuilder(userAnswers = None).overrides(
         bind[FeatureFlagService].toInstance(mockFeatureFlagService),
@@ -127,7 +143,11 @@ class UTRControllerSpec extends SpecBase {
     "redirect to trust status on a POST" in {
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-      when(mockTrustsConnector.isTrust5mld(any())(any(), any())).thenReturn(Future.successful(false))
+
+      val trustDetails = TrustDetails(startDate, None, None)
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.successful(trustDetails))
 
       val application =
         applicationBuilder(
@@ -154,11 +174,15 @@ class UTRControllerSpec extends SpecBase {
 
       val mockUserAnswersSetupService = mock[UserAnswersSetupService]
 
-      when(mockUserAnswersSetupService.setupAndRedirectToStatus(any(), any(), any(), any())(any(), any()))
+      when(mockUserAnswersSetupService.setupAndRedirectToStatus(any(), any(), any(), any(), any())(any(), any()))
         .thenReturn(Future.successful(Redirect("redirectUrl")))
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
-      when(mockTrustsConnector.isTrust5mld(any())(any(), any())).thenReturn(Future.successful(true))
+
+      val trustDetails = TrustDetails(startDate, Some(true), Some(true))
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.successful(trustDetails))
 
       val application =
         applicationBuilder(
@@ -183,7 +207,8 @@ class UTRControllerSpec extends SpecBase {
         eqTo(utr),
         eqTo("id"),
         eqTo(true),
-        eqTo(true)
+        eqTo(trustDetails.is5mld),
+        eqTo(trustDetails.isTaxable)
       )(any(), any())
 
       application.stop()
@@ -192,7 +217,11 @@ class UTRControllerSpec extends SpecBase {
     "return a Bad Request and errors when invalid data is submitted" in {
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-      when(mockTrustsConnector.isTrust5mld(any())(any(), any())).thenReturn(Future.successful(false))
+
+      val trustDetails = TrustDetails(startDate, None, None)
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.successful(trustDetails))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
         bind[FeatureFlagService].toInstance(mockFeatureFlagService),

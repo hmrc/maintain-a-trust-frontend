@@ -69,8 +69,14 @@ class IndexController @Inject()(
       case Some(value) =>
         for {
           is5mldEnabled <- featureFlagService.is5mldEnabled()
-          isUnderlyingData5mld <- trustsConnector.isTrust5mld(value)
-          result <- uaSetupService.setupAndRedirectToStatus(value, request.user.internalId, is5mldEnabled, isUnderlyingData5mld)
+          trustDetails <- trustsConnector.getUntransformedTrustDetails(value)
+          result <- uaSetupService.setupAndRedirectToStatus(
+            identifier = value,
+            internalId = request.user.internalId,
+            is5mldEnabled = is5mldEnabled,
+            isUnderlyingData5mld = trustDetails.is5mld,
+            isUnderlyingDataTaxable = trustDetails.isTaxable
+          )
         } yield result
       case None =>
         logger.info(s"[Session ID: ${Session.id(hc)}]" +

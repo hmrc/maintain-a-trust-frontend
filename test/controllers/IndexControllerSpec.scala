@@ -19,6 +19,7 @@ package controllers
 import base.SpecBase
 import connectors.TrustConnector
 import controllers.Assets.Redirect
+import models.TrustDetails
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
@@ -28,6 +29,7 @@ import play.api.test.Helpers.{GET, route, status, _}
 import services.{FeatureFlagService, UserAnswersSetupService}
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, EnrolmentIdentifier, Enrolments}
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach {
@@ -38,6 +40,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
 
   val utr: String = "1234567892"
   val urn: String = "ABTRUST12345678"
+
+  val startDate: LocalDate = LocalDate.parse("2000-01-01")
 
   val taxableEnrolment: Enrolments = Enrolments(Set(Enrolment(
     key = "HMRC-TERS-ORG",
@@ -63,7 +67,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
     reset(mockFeatureFlagService)
     reset(mockUserAnswersSetupService)
 
-    when(mockUserAnswersSetupService.setupAndRedirectToStatus(any(), any(), any(), any())(any(), any()))
+    when(mockUserAnswersSetupService.setupAndRedirectToStatus(any(), any(), any(), any(), any())(any(), any()))
       .thenReturn(Future.successful(Redirect(redirectUrl)))
   }
 
@@ -72,7 +76,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
     "onPageLoad in 4mld mode" must {
       behave like indexController(
         is5mldEnabled = false,
-        isUnderlyingData5mld = false,
+        isExpress = None,
+        isTaxable = None,
         onPageLoadRoute = onPageLoad,
         redirectRoute = controllers.routes.UTRController.onPageLoad().url
       )
@@ -81,7 +86,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
     "onPageLoad in 5mld mode" must {
       behave like indexController(
         is5mldEnabled = true,
-        isUnderlyingData5mld = true,
+        isExpress = Some(true),
+        isTaxable = Some(true),
         onPageLoadRoute = onPageLoad,
         redirectRoute = controllers.routes.UTRController.onPageLoad().url
       )
@@ -90,7 +96,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
     "startUtr in 5mld mode" must {
       behave like indexController(
         is5mldEnabled = true,
-        isUnderlyingData5mld = true,
+        isExpress = Some(true),
+        isTaxable = Some(true),
         onPageLoadRoute = startUtr,
         redirectRoute = controllers.routes.UTRController.onPageLoad().url
       )
@@ -99,19 +106,28 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
     "startUrn in 5mld mode" must {
       behave like indexController(
         is5mldEnabled = true,
-        isUnderlyingData5mld = true,
+        isExpress = Some(true),
+        isTaxable = Some(false),
         onPageLoadRoute = startUrn,
         redirectRoute = controllers.routes.URNController.onPageLoad().url
       )
     }
   }
 
-  def indexController(is5mldEnabled: Boolean, isUnderlyingData5mld: Boolean, onPageLoadRoute: String, redirectRoute: String): Unit = {
+  def indexController(is5mldEnabled: Boolean,
+                      isExpress: Option[Boolean],
+                      isTaxable: Option[Boolean],
+                      onPageLoadRoute: String,
+                      redirectRoute: String): Unit = {
+
+    val trustDetails = TrustDetails(startDate, isExpress, isTaxable)
 
     s"redirect to $redirectRoute when user is not enrolled (agent)" in {
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(is5mldEnabled))
-      when(mockTrustsConnector.isTrust5mld(any())(any(), any())).thenReturn(Future.successful(isUnderlyingData5mld))
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.successful(trustDetails))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
         bind[FeatureFlagService].toInstance(mockFeatureFlagService),
@@ -132,7 +148,9 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
     "redirect to status controller when user is a returning taxable user who is enrolled" in {
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(is5mldEnabled))
-      when(mockTrustsConnector.isTrust5mld(any())(any(), any())).thenReturn(Future.successful(isUnderlyingData5mld))
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.successful(trustDetails))
 
       val application = applicationBuilder(
         userAnswers = Some(emptyUserAnswersForUtr),
@@ -156,7 +174,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
         eqTo(utr),
         eqTo("id"),
         eqTo(is5mldEnabled),
-        eqTo(isUnderlyingData5mld)
+        eqTo(trustDetails.is5mld),
+        eqTo(trustDetails.isTaxable)
       )(any(), any())
 
       application.stop()
@@ -165,7 +184,9 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
     "redirect to status controller when user is a returning non-taxable user who is enrolled" in {
 
       when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(is5mldEnabled))
-      when(mockTrustsConnector.isTrust5mld(any())(any(), any())).thenReturn(Future.successful(isUnderlyingData5mld))
+
+      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(Future.successful(trustDetails))
 
       val application = applicationBuilder(
         userAnswers = Some(emptyUserAnswersForUtr),
@@ -189,7 +210,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
         eqTo(urn),
         eqTo("id"),
         eqTo(is5mldEnabled),
-        eqTo(isUnderlyingData5mld)
+        eqTo(trustDetails.is5mld),
+        eqTo(trustDetails.isTaxable)
       )(any(), any())
 
       application.stop()

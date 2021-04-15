@@ -31,15 +31,15 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
   private lazy val baseUrl: String = s"${config.trustsUrl}/trusts"
 
-  def getTrustDetails(identifier: String)
-                     (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
-    val url: String = s"$baseUrl/$identifier/trust-details"
+  def getUntransformedTrustDetails(identifier: String)
+                                  (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
+    val url: String = s"$baseUrl/trust-details/$identifier/untransformed"
     http.GET[TrustDetails](url)
   }
 
   def getStartDate(identifier: String)
                   (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[LocalDate] = {
-    getTrustDetails(identifier) map { trustDetails =>
+    getUntransformedTrustDetails(identifier) map { trustDetails =>
       trustDetails.startDate
     }
   }
@@ -102,12 +102,6 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
                      (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val url: String = s"$baseUrl/trust-details/$identifier/taxable"
     http.PUT[Boolean, HttpResponse](url, value)
-  }
-
-  def isTrust5mld(identifier: String)
-                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
-    val url: String = s"$baseUrl/$identifier/is-trust-5mld"
-    http.GET[Boolean](url)
   }
 
 }

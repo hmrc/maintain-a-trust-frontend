@@ -32,20 +32,21 @@ final case class UserAnswers(internalId: String,
                              data: JsObject = Json.obj(),
                              is5mldEnabled: Boolean = false,
                              isUnderlyingData5mld: Boolean = false,
+                             isUnderlyingDataTaxable: Boolean = true,
                              updatedAt: LocalDateTime = LocalDateTime.now) extends Logging {
 
   def identifierType: IdentifierType = if (identifier.matches(Validation.utrRegex)) UTR else URN
 
-  def trustTaxability: TrustTaxability = (this.get(WhatIsNextPage), identifierType) match {
+  def trustTaxability: TrustTaxability = (this.get(WhatIsNextPage), isUnderlyingDataTaxable) match {
     case (Some(NeedsToPayTax), _) => MigratingFromNonTaxableToTaxable
     case (Some(NoLongerTaxable), _) => MigratingFromTaxableToNonTaxable
-    case (_, UTR) => Taxable
-    case (_, URN) => NonTaxable
+    case (_, true) => Taxable
+    case (_, false) => NonTaxable
   }
 
-  def isTrustTaxable: Boolean = trustTaxability == Taxable
+  def isTrustTaxable: Boolean = trustTaxability == Taxable || trustTaxability == MigratingFromNonTaxableToTaxable
 
-  def trustMldStatus: TrustMldStatus = (is5mldEnabled, isUnderlyingData5mld, isTrustTaxable) match {
+  def trustMldStatus: TrustMldStatus = (is5mldEnabled, isUnderlyingData5mld, isUnderlyingDataTaxable) match {
     case (false, _, _) => Underlying4mldTrustIn4mldMode
     case (true, false, _) => Underlying4mldTrustIn5mldMode
     case (true, true, true) => Underlying5mldTaxableTrustIn5mldMode
@@ -129,12 +130,17 @@ final case class UserAnswers(internalId: String,
 
 object UserAnswers {
 
-  def startNewSession(internalId: String, identifier: String, is5mldEnabled: Boolean, isUnderlyingData5mld: Boolean): UserAnswers =
+  def startNewSession(internalId: String,
+                      identifier: String,
+                      is5mldEnabled: Boolean,
+                      isUnderlyingData5mld: Boolean,
+                      isUnderlyingDataTaxable: Boolean): UserAnswers =
     UserAnswers(
       internalId = internalId,
       identifier = identifier,
       is5mldEnabled = is5mldEnabled,
-      isUnderlyingData5mld = isUnderlyingData5mld
+      isUnderlyingData5mld = isUnderlyingData5mld,
+      isUnderlyingDataTaxable = isUnderlyingDataTaxable
     )
 
   implicit lazy val reads: Reads[UserAnswers] = (
@@ -143,15 +149,17 @@ object UserAnswers {
       (__ \ "data").read[JsObject] and
       (__ \ "is5mldEnabled").readWithDefault[Boolean](false) and
       (__ \ "isUnderlyingData5mld").readWithDefault[Boolean](false) and
+      (__ \ "isUnderlyingDataTaxable").readWithDefault[Boolean](true) and
       (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
     )(UserAnswers.apply _)
 
-  implicit lazy val writes: OWrites[UserAnswers] = (
+  implicit lazy val writes: Writes[UserAnswers] = (
     (__ \ "internalId").write[String] and
       (__ \ "identifier").write[String] and
       (__ \ "data").write[JsObject] and
       (__ \ "is5mldEnabled").write[Boolean] and
       (__ \ "isUnderlyingData5mld").write[Boolean] and
+      (__ \ "isUnderlyingDataTaxable").write[Boolean] and
       (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
     )(unlift(UserAnswers.unapply))
 }

@@ -50,6 +50,8 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
     "get trusts details" in {
 
       val startDate = "1920-03-28"
+      val express: Boolean = false
+      val taxable: Boolean = true
 
       val json = Json.parse(
         s"""
@@ -65,7 +67,9 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
           |  },
           |  "typeOfTrust": "Will Trust or Intestacy Trust",
           |  "deedOfVariation": "Previously there was only an absolute interest under the will",
-          |  "interVivos": false
+          |  "interVivos": false,
+          |  "expressTrust": $express,
+          |  "trustTaxable": $taxable
           |}
           |""".stripMargin)
 
@@ -80,12 +84,12 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
       val connector = application.injector.instanceOf[TrustConnector]
 
       server.stubFor(
-        get(urlEqualTo(s"/trusts/$identifier/trust-details"))
+        get(urlEqualTo(s"/trusts/trust-details/$identifier/untransformed"))
           .willReturn(okJson(json.toString))
       )
 
-      val result = Await.result(connector.getTrustDetails(identifier), Duration.Inf)
-      result mustBe TrustDetails(startDate = LocalDate.parse(startDate))
+      val result = Await.result(connector.getUntransformedTrustDetails(identifier), Duration.Inf)
+      result mustBe TrustDetails(startDate = LocalDate.parse(startDate), trustTaxable = Some(taxable), expressTrust = Some(express))
 
       application.stop()
     }
@@ -783,63 +787,6 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
         result.status mustBe OK
 
         application.stop()
-      }
-    }
-
-    ".isTrust5mld" - {
-
-      "return true" - {
-        "untransformed data is 5mld" in {
-          val json = JsBoolean(true)
-
-          val application = applicationBuilder()
-            .configure(
-              Seq(
-                "microservice.services.trusts.port" -> server.port(),
-                "auditing.enabled" -> false
-              ): _*
-            ).build()
-
-          val connector = application.injector.instanceOf[TrustConnector]
-
-          server.stubFor(
-            get(urlEqualTo(s"/trusts/$identifier/is-trust-5mld"))
-              .willReturn(okJson(json.toString))
-          )
-
-          val result = Await.result(connector.isTrust5mld(identifier), Duration.Inf)
-
-          result mustBe true
-
-          application.stop()
-        }
-      }
-
-      "return false" - {
-        "untransformed data is 4mld" in {
-          val json = JsBoolean(false)
-
-          val application = applicationBuilder()
-            .configure(
-              Seq(
-                "microservice.services.trusts.port" -> server.port(),
-                "auditing.enabled" -> false
-              ): _*
-            ).build()
-
-          val connector = application.injector.instanceOf[TrustConnector]
-
-          server.stubFor(
-            get(urlEqualTo(s"/trusts/$identifier/is-trust-5mld"))
-              .willReturn(okJson(json.toString))
-          )
-
-          val result = Await.result(connector.isTrust5mld(identifier), Duration.Inf)
-
-          result mustBe false
-
-          application.stop()
-        }
       }
     }
   }

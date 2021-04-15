@@ -56,8 +56,14 @@ class UTRController @Inject()(
         utr => {
           for {
             is5mldEnabled <- featureFlagService.is5mldEnabled()
-            isUnderlyingData5mld <- trustsConnector.isTrust5mld(utr)
-            result <- uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled, isUnderlyingData5mld)
+            trustDetails <- trustsConnector.getUntransformedTrustDetails(utr)
+            result <- uaSetupService.setupAndRedirectToStatus(
+              identifier = utr,
+              internalId = request.user.internalId,
+              is5mldEnabled = is5mldEnabled,
+              isUnderlyingData5mld = trustDetails.is5mld,
+              isUnderlyingDataTaxable = trustDetails.isTaxable
+            )
           } yield result
         }
       )
