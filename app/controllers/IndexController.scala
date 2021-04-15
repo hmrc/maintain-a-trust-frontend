@@ -63,11 +63,7 @@ class IndexController @Inject()(
     val utr = getIdentifierFromEnrolment("HMRC-TERS-ORG", "SAUTR")
     val urn = getIdentifierFromEnrolment("HMRC-TERSNT-ORG", "URN")
 
-    val identifier = (utr, urn) match {
-      case (Some(_), None) => utr
-      case (None, Some(_)) => urn
-      case _ => None
-    }
+    val identifier: Option[String] = utr.orElse(urn).orElse(None)
 
     identifier match {
       case Some(value) =>

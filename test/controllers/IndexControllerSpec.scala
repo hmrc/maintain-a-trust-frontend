@@ -70,7 +70,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
   "Index Controller" when {
 
     "onPageLoad in 4mld mode" must {
-      behave like taskListController(
+      behave like indexController(
         is5mldEnabled = false,
         isUnderlyingData5mld = false,
         onPageLoadRoute = onPageLoad,
@@ -79,7 +79,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
     }
 
     "onPageLoad in 5mld mode" must {
-      behave like taskListController(
+      behave like indexController(
         is5mldEnabled = true,
         isUnderlyingData5mld = true,
         onPageLoadRoute = onPageLoad,
@@ -88,7 +88,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
     }
 
     "startUtr in 5mld mode" must {
-      behave like taskListController(
+      behave like indexController(
         is5mldEnabled = true,
         isUnderlyingData5mld = true,
         onPageLoadRoute = startUtr,
@@ -97,7 +97,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
     }
 
     "startUrn in 5mld mode" must {
-      behave like taskListController(
+      behave like indexController(
         is5mldEnabled = true,
         isUnderlyingData5mld = true,
         onPageLoadRoute = startUrn,
@@ -106,7 +106,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
     }
   }
 
-  def taskListController(is5mldEnabled: Boolean, isUnderlyingData5mld: Boolean, onPageLoadRoute: String, redirectRoute: String): Unit = {
+  def indexController(is5mldEnabled: Boolean, isUnderlyingData5mld: Boolean, onPageLoadRoute: String, redirectRoute: String): Unit = {
 
     s"redirect to $redirectRoute when user is not enrolled (agent)" in {
 
