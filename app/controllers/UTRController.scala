@@ -20,11 +20,13 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions.Actions
 import forms.UTRFormProvider
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{FeatureFlagService, UserAnswersSetupService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.Session
 import views.html.UTRView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,7 +41,7 @@ class UTRController @Inject()(
                                trustsConnector: TrustConnector,
                                val controllerComponents: MessagesControllerComponents,
                                view: UTRView
-                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   private val form: Form[String] = formProvider()
 
@@ -54,17 +56,30 @@ class UTRController @Inject()(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, routes.UTRController.onSubmit()))),
         utr => {
-          for {
-            is5mldEnabled <- featureFlagService.is5mldEnabled()
-            trustDetails <- trustsConnector.getUntransformedTrustDetails(utr)
-            result <- uaSetupService.setupAndRedirectToStatus(
-              identifier = utr,
-              internalId = request.user.internalId,
-              is5mldEnabled = is5mldEnabled,
-              isUnderlyingData5mld = trustDetails.is5mld,
-              isUnderlyingDataTaxable = trustDetails.isTaxable
-            )
-          } yield result
+          featureFlagService.is5mldEnabled() flatMap { is5mldEnabled =>
+
+            def setupAndRedirect(isUnderlyingData5mld: Boolean = false,
+                                 isUnderlyingDataTaxable: Boolean = true): Future[Result] = {
+              uaSetupService.setupAndRedirectToStatus(
+                identifier = utr,
+                internalId = request.user.internalId,
+                is5mldEnabled = is5mldEnabled,
+                isUnderlyingData5mld = isUnderlyingData5mld,
+                isUnderlyingDataTaxable = isUnderlyingDataTaxable
+              )
+            }
+
+            trustsConnector.getUntransformedTrustDetails(utr) flatMap { trustDetails =>
+              setupAndRedirect(trustDetails.is5mld, trustDetails.isTaxable)
+            } recoverWith {
+              case e =>
+                logger.warn(s"[Session ID: ${Session.id(hc)}] Error retrieving trust details: ${e.getMessage}." +
+                  s" Setting up default user answers and redirecting to trust status.")
+                logger.debug("Don't need to worry about setting up default user answers here. If playback is " +
+                  "successful the correct values will be set in the UserAnswersExtractor.")
+                setupAndRedirect()
+            }
+          }
         }
       )
   }
