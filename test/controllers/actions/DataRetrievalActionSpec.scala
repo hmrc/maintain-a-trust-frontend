@@ -92,7 +92,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         val futureResult = action.callTransform(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
         whenReady(futureResult) { result =>
-          result.userAnswers mustBe None
+          result.userAnswers.isDefined mustBe true
         }
       }
     }

@@ -19,10 +19,12 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions.Actions
+import models.IdentifierSession
 import models.requests.IdentifierRequest
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import repositories.ActiveSessionRepository
 import services.{FeatureFlagService, UserAnswersSetupService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
@@ -33,9 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  actions: Actions,
-                                 uaSetupService: UserAnswersSetupService,
-                                 featureFlagService: FeatureFlagService,
-                                 trustsConnector: TrustConnector
+                                 sessionRepository: ActiveSessionRepository
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.auth.async {
@@ -53,12 +53,14 @@ class IndexController @Inject()(
       initialise(Redirect(controllers.routes.URNController.onPageLoad()))
   }
 
-  private def initialise(redirect: Result)(implicit request: IdentifierRequest[_]): Future[Result] = {
-
-    def getIdentifierFromEnrolment(enrolmentKey: String, identifierKey: String): Option[String] = request.user.enrolments.enrolments
+  private def getIdentifierFromEnrolment(enrolmentKey: String, identifierKey: String)
+                                        (implicit request: IdentifierRequest[_]): Option[String] =
+    request.user.enrolments.enrolments
       .find(_.key equals enrolmentKey)
       .flatMap(_.identifiers.find(_.key equals identifierKey))
       .map(_.value)
+
+  private def initialise(redirectForIdentifier: Result)(implicit request: IdentifierRequest[_]): Future[Result] = {
 
     val utr = getIdentifierFromEnrolment("HMRC-TERS-ORG", "SAUTR")
     val urn = getIdentifierFromEnrolment("HMRC-TERSNT-ORG", "URN")
@@ -67,21 +69,16 @@ class IndexController @Inject()(
 
     identifier match {
       case Some(value) =>
+        val session = IdentifierSession(request.user.internalId, value)
         for {
-          is5mldEnabled <- featureFlagService.is5mldEnabled()
-          trustDetails <- trustsConnector.getUntransformedTrustDetails(value)
-          result <- uaSetupService.setupAndRedirectToStatus(
-            identifier = value,
-            internalId = request.user.internalId,
-            is5mldEnabled = is5mldEnabled,
-            isUnderlyingData5mld = trustDetails.is5mld,
-            isUnderlyingDataTaxable = trustDetails.isTaxable
-          )
-        } yield result
+          _ <- sessionRepository.set(session)
+        } yield {
+          Redirect(controllers.routes.TrustStatusController.status())
+        }
       case None =>
         logger.info(s"[Session ID: ${Session.id(hc)}]" +
           s" user is not enrolled, starting maintain journey, redirect to ask for identifier")
-        Future.successful(redirect)
+        Future.successful(redirectForIdentifier)
     }
   }
 }
