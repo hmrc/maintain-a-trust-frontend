@@ -18,23 +18,17 @@ package controllers
 
 import base.SpecBase
 import connectors.TrustConnector
-import controllers.Assets.Redirect
 import forms.UTRFormProvider
-import models.TrustDetails
-import org.mockito.Matchers.{any, eq => eqTo}
-import org.mockito.Mockito.{verify, when}
 import play.api.data.Form
-import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{FeatureFlagService, UserAnswersSetupService}
+import services.FeatureFlagService
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.UTRView
 
 import java.time.LocalDate
-import scala.concurrent.Future
 
 class UTRControllerSpec extends SpecBase {
 
@@ -58,47 +52,9 @@ class UTRControllerSpec extends SpecBase {
 
   "UTR Controller" must {
 
-    "return OK and the correct view for a GET" in {
-
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-
-      val trustDetails = TrustDetails(startDate, None, None)
-
-      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-        .thenReturn(Future.successful(trustDetails))
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
-        bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-        bind[TrustConnector].toInstance(mockTrustsConnector)
-      ).build()
-
-      val request = FakeRequest(GET, trustUTRRoute)
-
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[UTRView]
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(form, onSubmit)(request, messages).toString
-
-      application.stop()
-    }
-
     "return OK and the correct view for a GET if no existing data is found (creating a new session)" in {
 
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-
-      val trustDetails = TrustDetails(startDate, None, None)
-
-      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-        .thenReturn(Future.successful(trustDetails))
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
-        bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-        bind[TrustConnector].toInstance(mockTrustsConnector)
-      ).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       val request = FakeRequest(GET, trustUTRRoute)
 
@@ -114,49 +70,46 @@ class UTRControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to trust status for a POST if no existing data is found (creating a new session)" in {
+    "return OK and the correct view for a GET" in {
 
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
-      val trustDetails = TrustDetails(startDate, None, None)
+      val request = FakeRequest(GET, trustUTRRoute)
 
-      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-        .thenReturn(Future.successful(trustDetails))
+      val result = route(application, request).value
 
-      val application = applicationBuilder(userAnswers = None).overrides(
-        bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-        bind[TrustConnector].toInstance(mockTrustsConnector)
-      ).build()
+      val view = application.injector.instanceOf[UTRView]
 
-      val request = FakeRequest(POST, trustUTRRoute)
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(form, onSubmit)(request, messages).toString
+
+      application.stop()
+    }
+
+    "redirect to trust status on a POST when there is no session" in {
+      val application =
+        applicationBuilder(userAnswers = None, affinityGroup = Organisation, enrolments = enrolments)
+          .build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustUTRRoute)
         .withFormUrlEncodedBody(("value", utr))
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual controllers.routes.TrustStatusController.status().url
+      redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
 
       application.stop()
     }
 
     "redirect to trust status on a POST" in {
-
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-
-      val trustDetails = TrustDetails(startDate, None, None)
-
-      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-        .thenReturn(Future.successful(trustDetails))
-
       val application =
         applicationBuilder(
           userAnswers = Some(emptyUserAnswersForUtr),
           affinityGroup = Organisation,
           enrolments = enrolments
-        ).overrides(
-          bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-          bind[TrustConnector].toInstance(mockTrustsConnector)
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustUTRRoute)
@@ -170,87 +123,10 @@ class UTRControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to trust status for a POST if trust details call fails" in {
-
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-
-      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-        .thenReturn(Future.failed(new Throwable("")))
-
-      val application = applicationBuilder(userAnswers = None).overrides(
-        bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-        bind[TrustConnector].toInstance(mockTrustsConnector)
-      ).build()
-
-      val request = FakeRequest(POST, trustUTRRoute)
-        .withFormUrlEncodedBody(("value", utr))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual controllers.routes.TrustStatusController.status().url
-
-      application.stop()
-    }
-
-    "make call to user answers setup service" in {
-
-      val mockUserAnswersSetupService = mock[UserAnswersSetupService]
-
-      when(mockUserAnswersSetupService.setupAndRedirectToStatus(any(), any(), any(), any(), any())(any(), any()))
-        .thenReturn(Future.successful(Redirect("redirectUrl")))
-
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
-
-      val trustDetails = TrustDetails(startDate, Some(true), Some(true))
-
-      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-        .thenReturn(Future.successful(trustDetails))
-
-      val application =
-        applicationBuilder(
-          userAnswers = Some(emptyUserAnswersForUtr),
-          affinityGroup = Organisation,
-          enrolments = enrolments
-        ).overrides(
-          bind[UserAnswersSetupService].toInstance(mockUserAnswersSetupService),
-          bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-          bind[TrustConnector].toInstance(mockTrustsConnector)
-        ).build()
-
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
-        FakeRequest(POST, trustUTRRoute).withFormUrlEncodedBody(("value", utr))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe "redirectUrl"
-
-      verify(mockUserAnswersSetupService).setupAndRedirectToStatus(
-        eqTo(utr),
-        eqTo("id"),
-        eqTo(true),
-        eqTo(trustDetails.is5mld),
-        eqTo(trustDetails.isTaxable)
-      )(any(), any())
-
-      application.stop()
-    }
-
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-
-      val trustDetails = TrustDetails(startDate, None, None)
-
-      when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-        .thenReturn(Future.successful(trustDetails))
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
-        bind[FeatureFlagService].toInstance(mockFeatureFlagService),
-        bind[TrustConnector].toInstance(mockTrustsConnector)
-      ).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+        .build()
 
       val request = FakeRequest(POST, trustUTRRoute)
         .withFormUrlEncodedBody(("value", ""))

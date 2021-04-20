@@ -17,15 +17,12 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import connectors.TrustConnector
 import controllers.actions.Actions
-import models.IdentifierSession
 import models.requests.IdentifierRequest
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import repositories.ActiveSessionRepository
-import services.{FeatureFlagService, UserAnswersSetupService}
+import services.SessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 
@@ -35,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  actions: Actions,
-                                 sessionRepository: ActiveSessionRepository
+                                 sessionService: SessionService
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.auth.async {
@@ -69,12 +66,7 @@ class IndexController @Inject()(
 
     identifier match {
       case Some(value) =>
-        val session = IdentifierSession(request.user.internalId, value)
-        for {
-          _ <- sessionRepository.set(session)
-        } yield {
-          Redirect(controllers.routes.TrustStatusController.status())
-        }
+        sessionService.initialiseSession(value)
       case None =>
         logger.info(s"[Session ID: ${Session.id(hc)}]" +
           s" user is not enrolled, starting maintain journey, redirect to ask for identifier")

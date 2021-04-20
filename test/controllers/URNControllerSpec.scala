@@ -17,21 +17,14 @@
 package controllers
 
 import base.SpecBase
-import controllers.Assets.Redirect
 import forms.URNFormProvider
-import org.mockito.Matchers.{any, eq => eqTo}
-import org.mockito.Mockito.{verify, when}
 import play.api.data.Form
-import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.UserAnswersSetupService
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.URNView
-
-import scala.concurrent.Future
 
 class URNControllerSpec extends SpecBase {
 
@@ -118,41 +111,6 @@ class URNControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
-
-      application.stop()
-    }
-
-    "make call to user answers setup service with uppercase form of input" in {
-
-      val mockUserAnswersSetupService = mock[UserAnswersSetupService]
-
-      when(mockUserAnswersSetupService.setupAndRedirectToStatus(any(), any(), any(), any(), any())(any(), any()))
-        .thenReturn(Future.successful(Redirect("redirectUrl")))
-
-      val application =
-        applicationBuilder(
-          userAnswers = Some(emptyUserAnswersForUrn),
-          affinityGroup = Organisation,
-          enrolments = enrolments
-        ).overrides(
-          bind[UserAnswersSetupService].toInstance(mockUserAnswersSetupService)
-        ).build()
-
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
-        FakeRequest(POST, trustURNRoute).withFormUrlEncodedBody(("value", urn))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe "redirectUrl"
-
-      verify(mockUserAnswersSetupService).setupAndRedirectToStatus(
-        eqTo(urn.toUpperCase),
-        eqTo("id"),
-        eqTo(true),
-        eqTo(true),
-        eqTo(false)
-      )(any(), any())
 
       application.stop()
     }

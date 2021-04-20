@@ -19,14 +19,14 @@ package controllers
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
 import mapping.UserAnswersExtractor
-import models.Underlying4mldTrustIn5mldMode
+import models.{Underlying4mldTrustIn5mldMode, UserAnswers}
 import models.http._
-import models.requests.DataRequest
+import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
-import services.AuthenticationService
+import services.{AuthenticationService, FeatureFlagService, SessionService}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
@@ -50,32 +50,59 @@ class TrustStatusController @Inject()(
                                        playbackProblemContactHMRCView: PlaybackProblemContactHMRCView,
                                        playbackExtractor: UserAnswersExtractor,
                                        authenticationService: AuthenticationService,
-                                       val controllerComponents: MessagesControllerComponents
+                                       val controllerComponents: MessagesControllerComponents,
+                                       featureFlagService: FeatureFlagService,
+                                       sessionService: SessionService
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
-  def closed(): Action[AnyContent] = actions.authWithData.async {
+  def closed(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      Future.successful(Ok(closedView(request.user.affinityGroup, request.userAnswers.identifier, request.userAnswers.identifierType)))
+      request.identifier match {
+        case Some(value) =>
+          Future.successful(Ok(closedView(request.user.affinityGroup, value, request.identifierType)))
+        case None =>
+          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+      }
   }
 
-  def processing(): Action[AnyContent] = actions.authWithData.async {
+  def processing(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      Future.successful(Ok(stillProcessingView(request.user.affinityGroup, request.userAnswers.identifier, request.userAnswers.identifierType)))
+      request.identifier match {
+        case Some(value) =>
+          Future.successful(Ok(stillProcessingView(request.user.affinityGroup, value, request.identifierType)))
+        case None =>
+          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+      }
   }
 
-  def sorryThereHasBeenAProblem(): Action[AnyContent] = actions.authWithData.async {
+  def sorryThereHasBeenAProblem(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      Future.successful(Ok(playbackProblemContactHMRCView(request.userAnswers.identifier, request.userAnswers.identifierType)))
+      request.identifier match {
+        case Some(value) =>
+          Future.successful(Ok(playbackProblemContactHMRCView(value, request.identifierType)))
+        case None =>
+          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+      }
   }
 
-  def notFound(): Action[AnyContent] = actions.authWithData.async {
+  def notFound(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      Future.successful(Ok(identifierDoesNotMatchView(request.user.affinityGroup, request.userAnswers.identifier, request.userAnswers.identifierType)))
+      request.identifier match {
+        case Some(value) =>
+          Future.successful(Ok(identifierDoesNotMatchView(request.user.affinityGroup, value, request.identifierType)))
+        case None =>
+          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+      }
   }
 
-  def locked(): Action[AnyContent] = actions.authWithData.async {
+  def locked(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      Future.successful(Ok(lockedView(request.userAnswers.identifier, request.userAnswers.identifierType)))
+      request.identifier match {
+        case Some(value) =>
+          Future.successful(Ok(lockedView(value, request.identifierType)))
+        case None =>
+          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+      }
   }
 
   def down(): Action[AnyContent] = actions.authWithData.async {
@@ -83,22 +110,36 @@ class TrustStatusController @Inject()(
       Future.successful(ServiceUnavailable(ivDownView(request.userAnswers.identifier, request.userAnswers.identifierType)))
   }
 
-  def alreadyClaimed(): Action[AnyContent] = actions.authWithData.async {
+  def alreadyClaimed(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      Future.successful(Ok(alreadyClaimedView(request.userAnswers.identifier, request.userAnswers.identifierType)))
+      request.identifier match {
+        case Some(value) =>
+          Future.successful(Ok(alreadyClaimedView(value, request.identifierType)))
+        case None =>
+          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+      }
   }
 
-  def status(): Action[AnyContent] = actions.authWithData.async {
+  def status(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      checkIfLocked(request.userAnswers.identifier, fromVerify = false)
+      request.identifier match {
+        case Some(value) => checkIfLocked(value, fromVerify = false)
+        case None =>
+          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+      }
+
   }
 
-  def statusAfterVerify(): Action[AnyContent] = actions.authWithData.async {
+  def statusAfterVerify(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      checkIfLocked(request.userAnswers.identifier, fromVerify = true)
+      request.identifier match {
+        case Some(value) => checkIfLocked(value, fromVerify = true)
+        case None =>
+          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+      }
   }
 
-  private def checkIfLocked(identifier: String, fromVerify: Boolean)(implicit request: DataRequest[AnyContent]): Future[Result] = {
+  private def checkIfLocked(identifier: String, fromVerify: Boolean)(implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
     trustStoreConnector.get(identifier).flatMap {
       case Some(claim) if claim.trustLocked =>
         logger.info(s"[Session ID: ${Session.id(hc)}] $identifier user has failed IV 3 times, locked out for 30 minutes")
@@ -109,7 +150,7 @@ class TrustStatusController @Inject()(
     }
   }
 
-  private def tryToPlayback(identifier: String, fromVerify: Boolean)(implicit request: DataRequest[AnyContent]): Future[Result] = {
+  private def tryToPlayback(identifier: String, fromVerify: Boolean)(implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
     trustConnector.playbackFromEtmp(identifier) flatMap {
       case Closed =>
         logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due it being closed")
@@ -138,42 +179,74 @@ class TrustStatusController @Inject()(
   }
 
   private def authenticateForIdentifierAndExtract(identifier: String, playback: GetTrust, fromVerify: Boolean)
-                                          (implicit request: DataRequest[AnyContent]): Future[Result] = {
+                                          (implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
     logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier trust is in a processed state")
-    authenticationService.authenticateForIdentifier(identifier) flatMap {
-      case Left(failure) =>
-        val location = failure.header.headers.getOrElse(LOCATION, "no location header")
-        val failureStatus = failure.header.status
-        logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] unable to authenticate user for $identifier, " +
-          s"due to $failureStatus status, sending user to $location")
 
-        Future.successful(failure)
-      case Right(_) =>
-        extract(identifier, playback, fromVerify)
+    val userAnswersF = for {
+      is5mldEnabled <- featureFlagService.is5mldEnabled()
+      trustDetails <- trustConnector.getUntransformedTrustDetails(identifier)
+      userAnswers <- sessionService.initialiseUserAnswers(
+        identifier = identifier,
+        internalId = request.user.internalId,
+        is5mldEnabled = is5mldEnabled,
+        isUnderlyingData5mld = trustDetails.is5mld,
+        isUnderlyingDataTaxable = trustDetails.isTaxable
+      )
+    } yield userAnswers
+
+    userAnswersF.flatMap { userAnswers =>
+
+      val dataRequest = DataRequest(request.request, userAnswers, request.user)
+      authenticationService.authenticateForIdentifier(identifier)(dataRequest, hc).flatMap {
+        case Left(failure) =>
+          val location = failure.header.headers.getOrElse(LOCATION, "no location header")
+          val failureStatus = failure.header.status
+
+          logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}]" +
+            s" unable to authenticate user for $identifier, " +
+            s"due to $failureStatus status, sending user to $location")
+
+          Future.successful(failure)
+        case Right(_) =>
+          extract(userAnswers, identifier, playback, fromVerify)
+      }
+    } recoverWith {
+      case _ =>
+        Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
     }
   }
 
-  private def extract(identifier: String, playback: GetTrust, fromVerify: Boolean)
-                     (implicit request: DataRequest[AnyContent]): Future[Result] = {
+  private def extract(userAnswers: UserAnswers,
+                      identifier: String,
+                      playback: GetTrust,
+                      fromVerify: Boolean
+                     )
+                     (implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
 
     logger.info(s"[extract][Session ID: ${Session.id(hc)}] user authenticated for $identifier, attempting to extract to user answers")
 
-    playbackExtractor.extract(request.userAnswers, playback) flatMap {
+    playbackExtractor.extract(userAnswers, playback) flatMap {
       case Right(answers) =>
         playbackRepository.set(answers) map { _ =>
           logger.info(s"[extract][Session ID: ${Session.id(hc)}] $identifier successfully extracted, showing information about maintaining")
-          if (answers.trustMldStatus == Underlying4mldTrustIn5mldMode) {
-            Redirect(controllers.transition.routes.ExpressTrustYesNoController.onPageLoad())
-          } else {
-            (request.user.affinityGroup, fromVerify) match {
-              case (AffinityGroup.Organisation, false) => Redirect(routes.MaintainThisTrustController.onPageLoad(needsIv = false))
-              case _ => Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
-            }
-          }
+          routeAfterExtraction(userAnswers, fromVerify)
         }
       case Left(reason) =>
         logger.warn(s"[extract][Session ID: ${Session.id(hc)}] $identifier unable to extract user answers due to $reason")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+    }
+  }
+
+  private def routeAfterExtraction[A](answers: UserAnswers, fromVerify: Boolean)(implicit request: OptionalDataRequest[A]): Result = {
+    if (answers.trustMldStatus == Underlying4mldTrustIn5mldMode) {
+      Redirect(controllers.transition.routes.ExpressTrustYesNoController.onPageLoad())
+    } else {
+      (request.user.affinityGroup, fromVerify) match {
+        case (AffinityGroup.Organisation, false) =>
+          Redirect(routes.MaintainThisTrustController.onPageLoad(needsIv = false))
+        case _ =>
+          Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
+      }
     }
   }
 

@@ -23,12 +23,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
 
+  private val utr: String = "1234567890"
+
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] =
     dataToReturn match {
       case None =>
-        Future(OptionalDataRequest(request.request, None, request.user, Some("utr")))
+        Future(OptionalDataRequest(request.request, None, request.user, Some(utr)))
       case Some(userAnswers) =>
-        Future(OptionalDataRequest(request.request, Some(userAnswers), request.user, Some("utr")))
+        Future(OptionalDataRequest(request.request, Some(userAnswers), request.user, Some(utr)))
     }
 
   override protected implicit val executionContext: ExecutionContext =
