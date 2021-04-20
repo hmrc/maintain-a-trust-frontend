@@ -16,7 +16,7 @@
 
 package models.requests
 
-import models.UserAnswers
+import models.{IdentifierType, UserAnswers}
 import play.api.mvc.{Request, WrappedRequest}
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolments}
 
@@ -36,7 +36,10 @@ case class OrganisationUser(internalId: String, enrolments: Enrolments) extends 
 
 case class OptionalDataRequest[A](request: Request[A],
                                   userAnswers: Option[UserAnswers],
-                                  user: User) extends WrappedRequest[A](request)
+                                  user: User,
+                                  identifier: String) extends WrappedRequest[A](request) {
+  def identifierType: IdentifierType = IdentifierType(identifier)
+}
 
 case class DataRequest[A](request: Request[A],
                           userAnswers: UserAnswers,

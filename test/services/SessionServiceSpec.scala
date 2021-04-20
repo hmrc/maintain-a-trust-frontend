@@ -17,29 +17,31 @@
 package services
 
 import base.SpecBase
-import models.{IdentifierSession, UserAnswers}
+import models.IdentifierSession
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.libs.json.Json
-import play.api.test.Helpers.{defaultAwaitTimeout, redirectLocation}
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.Future
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.{Await, Future}
 
-class UserAnswersSetupServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
+class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
   private val identifier = "identifier"
   private val internalId = "internalId"
 
-  "UserAnswersSetupService" when {
-    "setupAndRedirectToStatus" must {
-      "setup user answers and redirect to TrustStatusController" in {
+  "SessionService" when {
+
+    "initialiseUserAnswers" must {
+
+      "setup user answers" in {
 
         forAll(arbitrary[Boolean], arbitrary[Boolean], arbitrary[Boolean]) {
           (is5mldEnabled, isUnderlyingData5mld, isUnderlyingDataTaxable) =>
@@ -51,9 +53,9 @@ class UserAnswersSetupServiceSpec extends SpecBase with ScalaCheckPropertyChecks
             val mockSessionRepository = mock[ActiveSessionRepository]
             when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
-            val userAnswersSetupService = new UserAnswersSetupService(mockPlaybackRepository, mockSessionRepository)
+            val userAnswersSetupService = new SessionService(mockPlaybackRepository, mockSessionRepository)
 
-            val result = userAnswersSetupService.setupAndRedirectToStatus(
+            val resultF = userAnswersSetupService.initialiseUserAnswers(
               identifier = identifier,
               internalId = internalId,
               is5mldEnabled = is5mldEnabled,
@@ -61,18 +63,15 @@ class UserAnswersSetupServiceSpec extends SpecBase with ScalaCheckPropertyChecks
               isUnderlyingDataTaxable = isUnderlyingDataTaxable
             )
 
-            redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
+            val ua = Await.result(resultF, 5.seconds)
+
+            ua.internalId mustBe internalId
+            ua.identifier mustBe identifier
+            ua.is5mldEnabled mustBe is5mldEnabled
+            ua.isUnderlyingData5mld mustBe isUnderlyingData5mld
+            ua.isUnderlyingDataTaxable mustBe isUnderlyingDataTaxable
 
             verify(mockPlaybackRepository).resetCache(internalId, identifier)
-
-            val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-            verify(mockPlaybackRepository).set(uaCaptor.capture)
-
-            uaCaptor.getValue.internalId mustBe internalId
-            uaCaptor.getValue.identifier mustBe identifier
-            uaCaptor.getValue.is5mldEnabled mustBe is5mldEnabled
-            uaCaptor.getValue.isUnderlyingData5mld mustBe isUnderlyingData5mld
-            uaCaptor.getValue.isUnderlyingDataTaxable mustBe isUnderlyingDataTaxable
 
             val identifierSessionCaptor = ArgumentCaptor.forClass(classOf[IdentifierSession])
             verify(mockSessionRepository).set(identifierSessionCaptor.capture())

@@ -31,31 +31,28 @@ class DataRetrievalActionImpl @Inject()(activeSessionRepository: ActiveSessionRe
                                          val playbackRepository: PlaybackRepository
                                        )(implicit val executionContext: ExecutionContext) extends DataRetrievalAction with Logging {
 
+  private def createdOptionalDataRequest[A](request: IdentifierRequest[A],
+                                            userAnswers: Option[UserAnswers],
+                                            identifier: String): OptionalDataRequest[A] =
+    OptionalDataRequest(request.request, userAnswers, request.user, identifier)
+
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
 
     val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
-    def createdOptionalDataRequest(request: IdentifierRequest[A], userAnswers: Option[UserAnswers]) = {
-      OptionalDataRequest(
-        request.request,
-        userAnswers,
-        request.user
-      )
-    }
 
     activeSessionRepository.get(request.user.internalId) flatMap {
       case Some(session) =>
         playbackRepository.get(request.user.internalId, session.identifier) map {
           case None =>
             logger.info(s"[Session ID: ${Session.id(hc)}] no user answers in mongo for UTR/URN ${session.identifier}")
-            createdOptionalDataRequest(request, None)
+            createdOptionalDataRequest(request, None, session.identifier)
           case Some(userAnswers) =>
             logger.info(s"[Session ID: ${Session.id(hc)}] user answers found in mongo for UTR/URN ${session.identifier}")
-            createdOptionalDataRequest(request, Some(userAnswers))
+            createdOptionalDataRequest(request, Some(userAnswers), session.identifier)
         }
       case None =>
-        logger.info(s"[Session ID: ${Session.id(hc)}] no active UTR/URN found in mongo for session")
-        Future.successful(createdOptionalDataRequest(request, None))
+        logger.error(s"[Session ID: ${Session.id(hc)}] no active UTR/URN found in mongo for session")
+        throw new RuntimeException("No session identifier stored in session repository")
     }
 
   }
