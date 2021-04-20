@@ -38,6 +38,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
     "making changes" must {
 
       val prefix: String = "updateTrustDetails"
+      val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
@@ -57,7 +58,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form, prefix)(request, messages).toString
+          view(form, determinePrefix, closingTrust = false)(request, messages).toString
 
         application.stop()
       }
@@ -77,7 +78,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form.fill(validAnswer), prefix)(request, messages).toString
+          view(form.fill(validAnswer), determinePrefix, closingTrust = false)(request, messages).toString
 
         application.stop()
       }
@@ -114,7 +115,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual BAD_REQUEST
 
         contentAsString(result) mustEqual
-          view(boundForm, prefix)(request, messages).toString
+          view(boundForm, determinePrefix, closingTrust = false)(request, messages).toString
 
         application.stop()
       }
@@ -123,6 +124,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
     "closing" must {
 
       val prefix: String = "updateTrustDetailsClosing"
+      val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
@@ -142,7 +144,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form, prefix)(request, messages).toString
+          view(form, determinePrefix, closingTrust = true)(request, messages).toString
 
         application.stop()
       }
@@ -162,7 +164,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form.fill(validAnswer), prefix)(request, messages).toString
+          view(form.fill(validAnswer), determinePrefix, closingTrust = true)(request, messages).toString
 
         application.stop()
       }
@@ -199,7 +201,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual BAD_REQUEST
 
         contentAsString(result) mustEqual
-          view(boundForm, prefix)(request, messages).toString
+          view(boundForm, determinePrefix, closingTrust = true)(request, messages).toString
 
         application.stop()
       }

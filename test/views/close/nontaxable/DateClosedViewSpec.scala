@@ -28,7 +28,7 @@ class DateClosedViewSpec extends QuestionViewBehaviours[LocalDate] {
 
   private val messageKeyPrefix = "dateClosed"
   private val trustStartDate = LocalDate.parse("2019-02-03")
-  override val form: Form[LocalDate] = new DateFormProvider().withPrefixAndTrustStartDate(messageKeyPrefix, trustStartDate)
+  private val form: Form[LocalDate] = new DateFormProvider().withPrefixAndTrustStartDate(messageKeyPrefix, trustStartDate)
 
   "DateClosedView" must {
 
