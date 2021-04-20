@@ -80,9 +80,9 @@ class TrustStatusController @Inject()(
       Future.successful(Ok(lockedView(request.identifier, request.identifierType)))
   }
 
-  def down(): Action[AnyContent] = actions.authWithData.async {
+  def down(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      Future.successful(ServiceUnavailable(ivDownView(request.userAnswers.identifier, request.userAnswers.identifierType)))
+      Future.successful(ServiceUnavailable(ivDownView(request.identifier, request.identifierType)))
   }
 
   def alreadyClaimed(): Action[AnyContent] = actions.authWithOptionalData.async {
