@@ -17,33 +17,83 @@
 package controllers.close
 
 import base.SpecBase
+import models.UserAnswers
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.close.BeforeClosingView
 
-class BeforeClosingControllerSpec extends SpecBase {
+class BeforeClosingControllerSpec extends SpecBase with ScalaCheckPropertyChecks {
 
-  lazy val onPageLoad: String = routes.BeforeClosingController.onPageLoad().url
+  private lazy val beforeClosingRoute: String = routes.BeforeClosingController.onPageLoad().url
 
-  "BeforeClosingController" must {
+  "BeforeClosingController" when {
 
-    "return OK and the correct view for a GET" in {
+    ".onPageLoad" must {
+      "return OK and the correct view" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
-      val request = FakeRequest(GET, onPageLoad)
+        val request = FakeRequest(GET, beforeClosingRoute)
 
-      val result = route(application, request).value
+        val result = route(application, request).value
 
-      val view = application.injector.instanceOf[BeforeClosingView]
+        val view = application.injector.instanceOf[BeforeClosingView]
 
-      status(result) mustEqual OK
+        status(result) mustEqual OK
 
-      contentAsString(result) mustEqual
-        view()(request, messages).toString
+        contentAsString(result) mustEqual
+          view()(request, messages).toString
 
-      application.stop()
+        application.stop()
+      }
     }
 
+    ".onSubmit" when {
+
+      "a 5mld trust in 5mld mode" must {
+        "redirect to update trust details yes/no" in {
+
+          forAll(arbitrary[Boolean]) { boolean =>
+
+            val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true, isUnderlyingDataTaxable = boolean)
+
+            val application = applicationBuilder(userAnswers = Some(baseAnswers))
+              .build()
+
+            val request = FakeRequest(POST, beforeClosingRoute)
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
+
+            application.stop()
+          }
+        }
+      }
+
+      "not a 5mld trust in 5mld mode" must {
+        "redirect to update trustees yes/no" in {
+
+          val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
+
+          val application = applicationBuilder(userAnswers = Some(baseAnswers))
+            .build()
+
+          val request = FakeRequest(POST, beforeClosingRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
+
+          application.stop()
+        }
+      }
+    }
   }
 }

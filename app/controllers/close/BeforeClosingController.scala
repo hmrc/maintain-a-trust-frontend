@@ -21,7 +21,6 @@ import controllers.actions.Actions
 import controllers.makechanges.MakeChangesQuestionRouterController
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.PlaybackRepository
 import views.html.close.BeforeClosingView
 
 import javax.inject.Inject
@@ -29,7 +28,6 @@ import scala.concurrent.ExecutionContext
 
 class BeforeClosingController @Inject()(
                                          override val messagesApi: MessagesApi,
-                                         playbackRepository: PlaybackRepository,
                                          actions: Actions,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: BeforeClosingView,
@@ -43,8 +41,8 @@ class BeforeClosingController @Inject()(
       Ok(view())
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
-      ???
+      Redirect(redirectToFirstUpdateQuestion)
   }
 }
