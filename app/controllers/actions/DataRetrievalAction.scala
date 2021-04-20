@@ -33,7 +33,7 @@ class DataRetrievalActionImpl @Inject()(activeSessionRepository: ActiveSessionRe
 
   private def createdOptionalDataRequest[A](request: IdentifierRequest[A],
                                             userAnswers: Option[UserAnswers],
-                                            identifier: Option[String]): OptionalDataRequest[A] =
+                                            identifier: String): OptionalDataRequest[A] =
     OptionalDataRequest(request.request, userAnswers, request.user, identifier)
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
@@ -45,14 +45,14 @@ class DataRetrievalActionImpl @Inject()(activeSessionRepository: ActiveSessionRe
         playbackRepository.get(request.user.internalId, session.identifier) map {
           case None =>
             logger.info(s"[Session ID: ${Session.id(hc)}] no user answers in mongo for UTR/URN ${session.identifier}")
-            createdOptionalDataRequest(request, None, Some(session.identifier))
+            createdOptionalDataRequest(request, None, session.identifier)
           case Some(userAnswers) =>
             logger.info(s"[Session ID: ${Session.id(hc)}] user answers found in mongo for UTR/URN ${session.identifier}")
-            createdOptionalDataRequest(request, Some(userAnswers), Some(session.identifier))
+            createdOptionalDataRequest(request, Some(userAnswers), session.identifier)
         }
       case None =>
-        logger.info(s"[Session ID: ${Session.id(hc)}] no active UTR/URN found in mongo for session")
-        Future.successful(createdOptionalDataRequest(request, None, None))
+        logger.error(s"[Session ID: ${Session.id(hc)}] no active UTR/URN found in mongo for session")
+        throw new RuntimeException("No session identifier stored in session repository")
     }
 
   }

@@ -41,7 +41,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
 
     "there is no active session" must {
 
-      "set userAnswers and identifier to 'None' in the request" in {
+      "not continue" in {
 
         val playbackRepository = mock[PlaybackRepository]
 
@@ -50,10 +50,9 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         val action = new Harness(playbackRepository)
 
         val futureResult = action.callTransform(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
-
-        whenReady(futureResult) { result =>
-          result.userAnswers mustBe None
-          result.identifier mustBe None
+        
+        intercept[RuntimeException] {
+          futureResult.futureValue
         }
       }
 

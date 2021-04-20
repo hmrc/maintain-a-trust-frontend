@@ -37,8 +37,8 @@ case class OrganisationUser(internalId: String, enrolments: Enrolments) extends 
 case class OptionalDataRequest[A](request: Request[A],
                                   userAnswers: Option[UserAnswers],
                                   user: User,
-                                  identifier: Option[String]) extends WrappedRequest[A](request) {
-  def identifierType: IdentifierType = IdentifierType(identifier.getOrElse("")) // Todo don't like this
+                                  identifier: String) extends WrappedRequest[A](request) {
+  def identifierType: IdentifierType = IdentifierType(identifier)
 }
 
 case class DataRequest[A](request: Request[A],

@@ -57,52 +57,27 @@ class TrustStatusController @Inject()(
 
   def closed(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      request.identifier match {
-        case Some(value) =>
-          Future.successful(Ok(closedView(request.user.affinityGroup, value, request.identifierType)))
-        case None =>
-          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-      }
+      Future.successful(Ok(closedView(request.user.affinityGroup, request.identifier, request.identifierType)))
   }
 
   def processing(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      request.identifier match {
-        case Some(value) =>
-          Future.successful(Ok(stillProcessingView(request.user.affinityGroup, value, request.identifierType)))
-        case None =>
-          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-      }
+      Future.successful(Ok(stillProcessingView(request.user.affinityGroup, request.identifier, request.identifierType)))
   }
 
   def sorryThereHasBeenAProblem(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      request.identifier match {
-        case Some(value) =>
-          Future.successful(Ok(playbackProblemContactHMRCView(value, request.identifierType)))
-        case None =>
-          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-      }
+      Future.successful(Ok(playbackProblemContactHMRCView(request.identifier, request.identifierType)))
   }
 
   def notFound(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      request.identifier match {
-        case Some(value) =>
-          Future.successful(Ok(identifierDoesNotMatchView(request.user.affinityGroup, value, request.identifierType)))
-        case None =>
-          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-      }
+      Future.successful(Ok(identifierDoesNotMatchView(request.user.affinityGroup, request.identifier, request.identifierType)))
   }
 
   def locked(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      request.identifier match {
-        case Some(value) =>
-          Future.successful(Ok(lockedView(value, request.identifierType)))
-        case None =>
-          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-      }
+      Future.successful(Ok(lockedView(request.identifier, request.identifierType)))
   }
 
   def down(): Action[AnyContent] = actions.authWithData.async {
@@ -112,31 +87,17 @@ class TrustStatusController @Inject()(
 
   def alreadyClaimed(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      request.identifier match {
-        case Some(value) =>
-          Future.successful(Ok(alreadyClaimedView(value, request.identifierType)))
-        case None =>
-          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-      }
+      Future.successful(Ok(alreadyClaimedView(request.identifier, request.identifierType)))
   }
 
   def status(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      request.identifier match {
-        case Some(value) => checkIfLocked(value, fromVerify = false)
-        case None =>
-          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-      }
-
+      checkIfLocked(request.identifier, fromVerify = false)
   }
 
   def statusAfterVerify(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
-      request.identifier match {
-        case Some(value) => checkIfLocked(value, fromVerify = true)
-        case None =>
-          Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-      }
+      checkIfLocked(request.identifier, fromVerify = true)
   }
 
   private def checkIfLocked(identifier: String, fromVerify: Boolean)(implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
