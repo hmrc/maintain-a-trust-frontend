@@ -50,7 +50,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         val action = new Harness(playbackRepository)
 
         val futureResult = action.callTransform(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
-        
+
         intercept[RuntimeException] {
           futureResult.futureValue
         }
