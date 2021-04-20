@@ -345,6 +345,18 @@ timeout.title=Your application will time out soon
 timeout.message=We will sign you out if you do not respond in
 timeout.keep-alive-button=Continue application
 
+beforeClosing.title = Before you continue
+beforeClosing.heading = Before you continue
+beforeClosing.subheading = Before you close the trust, you need to provide the most up to date information about the trust to HMRC.
+beforeClosing.paragraph1 = You need to tell us if you need to add, remove, or change the details of any of the following:
+beforeClosing.bullet1 = beneficiaries
+beforeClosing.bullet2 = protectors
+beforeClosing.bullet3 = settlors
+beforeClosing.bullet4 = trustees
+beforeClosing.bullet5 = other individuals
+beforeClosing.paragraph2 = At this point HMRC will only ask you which details you need to update.
+beforeClosing.paragraph3 = Once you have told HMRC which details you need to update, you will then be asked to provide those details.
+
 updateTrustDetails.title = Do you need to update details about the trust?
 updateTrustDetails.heading = Do you need to update details about the trust?
 updateTrustDetails.error.required = Select yes if you need to update details for the trust
