@@ -48,7 +48,8 @@
             field = form("value"),
             label = messages(s"$prefix.heading"),
             legendClass = Some("heading-large"),
-            legendAsHeading = true
+            legendAsHeading = true,
+            additionalContent = Some(content)
         )
 
         @components.submit_button(Some("site.onlyContinue"))

@@ -402,32 +402,43 @@ addProtector.title = Do you need to add a protector?
 addProtector.heading = Do you need to add a protector?
 addProtector.hint = A protector is an individual or business named in the trust who can influence the way the trustees manage the trust.
 addProtector.error.required = Select yes if you need to add a protector
+addProtector.additionalContent1 = Tell us if you need to add the details of any protectors.
 addProtectorClosing.title = Do you need to add a protector before closing the trust?
 addProtectorClosing.heading = Do you need to add a protector before closing the trust?
 addProtectorClosing.error.required = Select yes if you need to add a protector before closing the trust
+addProtectorClosing.additionalContent1 = You need to tell HMRC if you need to add the details of any protectors.
+addProtectorClosing.additionalContent2 = Right now HMRC will only ask if you need to add the details of any protectors. You will not need to provide the details immediately after this question.
 
 updateProtector.title = Do you need to update details for the protectors?
 updateProtector.heading = Do you need to update details for the protectors?
 updateProtector.error.required = Select yes if you need to update details for the protectors
+updateProtector.additionalContent1 = Tell us if you need to add, remove, or change the details of any protectors.
 updateProtectorClosing.title = Do you need to update details for the protectors before closing the trust?
 updateProtectorClosing.heading = Do you need to update details for the protectors before closing the trust?
 updateProtectorClosing.error.required = Select yes if you need to update details for the protectors before closing the trust
+updateProtectorClosing.additionalContent1 = You need to tell HMRC if you need to add, remove, or change the details of any protectors.
+updateProtectorClosing.additionalContent2 = Right now HMRC will only ask if you need to update the details for the protectors. You will not need to provide the updated details immediately after this question.
 
 addOtherIndividuals.title = Do you need to add any other individuals associated with the trust?
 addOtherIndividuals.heading = Do you need to add any other individuals associated with the trust?
-addOtherIndividuals.hint = They might not be named in the trust deed. For example, friends, family members or third parties.
+addOtherIndividuals.hint = This means anyone who potentially has indirect control of or influence on the trust, and is not listed on the trust deed.
 addOtherIndividuals.error.required = Select yes if you need to add any other individuals associated with the trust
+addOtherIndividuals.additionalContent1 = Tell us if you need to add the details of any other individuals.
 addOtherIndividualsClosing.title = Do you need to add any other individuals associated with the trust before closing the trust?
 addOtherIndividualsClosing.heading = Do you need to add any other individuals associated with the trust before closing the trust?
 addOtherIndividualsClosing.error.required = Select yes if you need to add any other individuals associated with the trust before closing the trust
+addOtherIndividualsClosing.additionalContent1 = You need to tell HMRC if you need to add the details of any other individuals.
+addOtherIndividualsClosing.additionalContent2 = Right now HMRC will only ask if you need to add the details of any other individuals. You will not need to provide the details immediately after this question.
 
 updateOtherIndividuals.title = Do you need to update details for the other individuals?
 updateOtherIndividuals.heading = Do you need to update details for the other individuals?
 updateOtherIndividuals.error.required = Select yes if you need to update details for the other individuals
-
+updateOtherIndividuals.additionalContent1 = Tell us if you need to add, remove, or change the details of any other individuals.
 updateOtherIndividualsClosing.title = Do you need to update details for the other individuals before closing the trust?
 updateOtherIndividualsClosing.heading = Do you need to update details for the other individuals before closing the trust?
 updateOtherIndividualsClosing.error.required = Select yes if you need to update details for the other individuals before closing the trust
+updateOtherIndividualsClosing.additionalContent1 = You need to tell HMRC if you need to add, remove, or change the details of any other individuals.
+updateOtherIndividualsClosing.additionalContent2 = Right now HMRC will only ask if you need to update the details for the other individuals. You will not need to provide the updated details immediately after this question.
 
 addNonEeaCompany.title = Do you need to add a controlling interest in a Non-EEA company?
 addNonEeaCompany.heading = Do you need to add a controlling interest in a Non-EEA company?
