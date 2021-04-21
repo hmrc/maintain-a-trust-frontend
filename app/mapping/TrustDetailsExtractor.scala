@@ -34,9 +34,11 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
       .flatMap(_.set(ExpressTrustYesNoPage, data.expressTrust))
       .flatMap(_.set(TrustUkResidentYesNoPage, data.trustUKResident))
       .flatMap(_.set(TrustUkPropertyYesNoPage, data.trustUKProperty))
+      .flatMap(_.set(TrustRecordedOnAnotherRegisterYesNoPage, data.trustRecorded))
       .flatMap(answers => extractGovernedBy(data.lawCountry, answers))
       .flatMap(answers => extractAdminBy(data.administrationCountry, answers))
       .flatMap(answers => extractResidentialType(data.residentialStatus, answers))
+      .flatMap(_.set(TrustHasBusinessRelationshipInUkYesNoPage, data.trustUKRelation))
 
     updated match {
       case Success(a) =>
@@ -102,16 +104,6 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
 
   private def nonUKTrust(nonUK: NonUKType, answers: UserAnswers): Try[UserAnswers] = {
 
-    def inheritanceTaxAct(answers: UserAnswers): Try[UserAnswers] = nonUK.s218ihta84 match {
-      case Some(value) => answers.set(InheritanceTaxActPage, value)
-      case _ => Success(answers)
-    }
-
-    def agentOtherThanBarrister(answers: UserAnswers): Try[UserAnswers] = nonUK.agentS218IHTA84 match {
-      case Some(value) => answers.set(AgentOtherThanBarristerPage, value)
-      case _ => Success(answers)
-    }
-
     def nonResidentType(answers: UserAnswers): Try[UserAnswers] = nonUK.trusteeStatus.map(NonResidentType.fromDES) match {
       case Some(value) => answers.set(NonResidentTypePage, value)
       case _ => Success(answers)
@@ -120,8 +112,8 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
     extractIfTaxable(answers) {
       answers
         .set(RegisteringTrustFor5APage, nonUK.sch5atcgga92)
-        .flatMap(answers => inheritanceTaxAct(answers))
-        .flatMap(answers => agentOtherThanBarrister(answers))
+        .flatMap(_.set(InheritanceTaxActPage, nonUK.s218ihta84))
+        .flatMap(_.set(AgentOtherThanBarristerPage, nonUK.agentS218IHTA84))
         .flatMap(answers => nonResidentType(answers))
     }
   }

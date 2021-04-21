@@ -926,6 +926,9 @@ trusteeMentalCapacityYesNo.checkYourAnswersLabel = Does {0} have mental capacity
 trustName.checkYourAnswersLabel = What is the trust’s name?
 whenTrustSetup.checkYourAnswersLabel = When was the trust created?
 trustUniqueTaxReference.checkYourAnswersLabel = What is the trust’s Unique Taxpayer Reference (UTR)?
+trustUkPropertyYesNo.checkYourAnswersLabel = Does the trust own UK land or property?
+trustRecordedOnAnotherRegisterYesNo.checkYourAnswersLabel = Is the trust also listed on another countries’ trust register within the European Economic Area (EEA)?
+trustHasBusinessRelationshipInUkYesNo.checkYourAnswersLabel = Does the trust have an ongoing business relationship in the UK?
 
 # Assets
 nonEeaBusiness.name.checkYourAnswersLabel = What is the company’s name?
