@@ -29,7 +29,7 @@ import views.html.makechanges.UpdateTrustDetailsYesNoView
 
 class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
-  private val onPageLoadRoute: String = routes.UpdateTrustDetailsYesNoController.onPageLoad().url
+  private val updateTrustDetailsRoute: String = routes.UpdateTrustDetailsYesNoController.onPageLoad().url
 
   private val validAnswer: Boolean = true
 
@@ -49,7 +49,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(GET, onPageLoadRoute)
+        val request = FakeRequest(GET, updateTrustDetailsRoute)
 
         val result = route(application, request).value
 
@@ -69,7 +69,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val request = FakeRequest(GET, onPageLoadRoute)
+        val request = FakeRequest(GET, updateTrustDetailsRoute)
 
         val view = application.injector.instanceOf[UpdateTrustDetailsYesNoView]
 
@@ -87,7 +87,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(POST, onPageLoadRoute)
+        val request = FakeRequest(POST, updateTrustDetailsRoute)
           .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
@@ -103,7 +103,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(POST, onPageLoadRoute)
+        val request = FakeRequest(POST, updateTrustDetailsRoute)
           .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -135,7 +135,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(GET, onPageLoadRoute)
+        val request = FakeRequest(GET, updateTrustDetailsRoute)
 
         val result = route(application, request).value
 
@@ -155,7 +155,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val request = FakeRequest(GET, onPageLoadRoute)
+        val request = FakeRequest(GET, updateTrustDetailsRoute)
 
         val view = application.injector.instanceOf[UpdateTrustDetailsYesNoView]
 
@@ -173,7 +173,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(POST, onPageLoadRoute)
+        val request = FakeRequest(POST, updateTrustDetailsRoute)
           .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
@@ -189,7 +189,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(POST, onPageLoadRoute)
+        val request = FakeRequest(POST, updateTrustDetailsRoute)
           .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))

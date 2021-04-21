@@ -371,23 +371,32 @@ updateTrustDetailsClosing.additionalContent1 = Tell us if you need to update the
 updateTrustees.title = Do you need to update details for the trustees?
 updateTrustees.heading = Do you need to update details for the trustees?
 updateTrustees.error.required = Select yes if you need to update details for the trustees
+updateTrustees.additionalContent1 = Tell us if you need to add, remove, or change the details of any trustees.
 updateTrusteesClosing.title = Do you need to update details for the trustees before closing the trust?
 updateTrusteesClosing.heading = Do you need to update details for the trustees before closing the trust?
 updateTrusteesClosing.error.required = Select yes if you need to update details for the trustees before closing the trust
+updateTrusteesClosing.additionalContent1 = You need to tell HMRC if you need to add, remove, or change the details of any trustees.
+updateTrusteesClosing.additionalContent2 = Right now HMRC will only ask if you need to update the details for the trustees. You will not need to provide the updated details immediately after this question.
 
 updateBeneficiaries.title = Do you need to update details for the beneficiaries?
 updateBeneficiaries.heading = Do you need to update details for the beneficiaries?
 updateBeneficiaries.error.required = Select yes if you need to update details for the beneficiaries
+updateBeneficiaries.additionalContent1 = Tell us if you need to add, remove, or change the details of any beneficiaries.
 updateBeneficiariesClosing.title = Do you need to update details for the beneficiaries before closing the trust?
 updateBeneficiariesClosing.heading = Do you need to update details for the beneficiaries before closing the trust?
 updateBeneficiariesClosing.error.required = Select yes if you need to update details for the beneficiaries before closing the trust
+updateBeneficiariesClosing.additionalContent1 = You need to tell HMRC if you need to add, remove, or change the details of any beneficiaries.
+updateBeneficiariesClosing.additionalContent2 = Right now HMRC will only ask if you need to update the details for the beneficiaries. You will not need to provide the updated details immediately after this question.
 
 updateSettlors.title = Do you need to update details for the settlors?
 updateSettlors.heading = Do you need to update details for the settlors?
 updateSettlors.error.required = Select yes if you need to update details for the settlors
+updateSettlors.additionalContent1 = Tell us if you need to add, remove, or change the details of any settlors.
 updateSettlorsClosing.title = Do you need to update details for the settlors before closing the trust?
 updateSettlorsClosing.heading = Do you need to update details for the settlors before closing the trust?
 updateSettlorsClosing.error.required = Select yes if you need to update details for the settlors before closing the trust
+updateSettlorsClosing.additionalContent1 = You need to tell HMRC if you need to add, remove, or change the details of any settlors.
+updateSettlorsClosing.additionalContent2 = Right now HMRC will only ask if you need to update the details for the settlors. You will not need to provide the updated details immediately after this question.
 
 addProtector.title = Do you need to add a protector?
 addProtector.heading = Do you need to add a protector?
@@ -553,7 +562,7 @@ featureNotAvailable.p2 = You will be able to update these details online in the 
 
 dateLastAssetSharedOutYesNo.title = Do you know the date the last asset in the trust was shared out?
 dateLastAssetSharedOutYesNo.heading = Do you know the date the last asset in the trust was shared out?
-dateLastAssetSharedOutYesNo.subHeading = This trust’s UTR: {0}
+dateLastAssetSharedOutYesNo.caption = This trust’s UTR: {0}
 dateLastAssetSharedOutYesNo.hint = It is also called the trust closed date or date of termination. This will be the date given on the final Trust and Estate (SA900) tax return or Self Assessment Online for trusts.
 dateLastAssetSharedOutYesNo.error.required = Select yes if you know the date the last asset in the trust was shared out
 

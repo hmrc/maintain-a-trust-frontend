@@ -21,7 +21,18 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_], prefix: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], determinePrefix: Boolean => String, closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
+
+@prefix = {@determinePrefix(closingTrust)}
+
+@content = {
+    @if(closingTrust){
+        <p>@messages(s"$prefix.additionalContent1")</p>
+        <p>@messages(s"$prefix.additionalContent2")</p>
+    } else {
+        <p>@messages(s"$prefix.additionalContent1")</p>
+    }
+}
 
 @main_template(
     title = s"${errorPrefix(form)}${messages(s"$prefix.title")}"
