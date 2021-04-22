@@ -20,24 +20,23 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
-import views.html.makechanges.UpdateTrusteesYesNoView
+import views.html.makechanges.AddNonEeaCompanyYesNoView
 
-class UpdateTrusteesYesNoViewSpec extends YesNoViewBehaviours {
+class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
-  "UpdateTrusteesYesNoView" when {
+  "UpdateNonEeaCompanyYesNoView" when {
 
     "making changes" must {
 
-      val messageKeyPrefix = "updateTrustees"
-      val determinePrefix = (_: Boolean) => messageKeyPrefix
+      val messageKeyPrefix = "updateNonEeaCompany"
       val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
-      val view = viewFor[UpdateTrusteesYesNoView](Some(emptyUserAnswersForUtr))
+      val view = viewFor[AddNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
 
       def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, determinePrefix, closingTrust = false)(fakeRequest, messages)
+        view.apply(form, messageKeyPrefix)(fakeRequest, messages)
 
-      behave like normalPage(applyView(form), messageKeyPrefix, "additionalContent1")
+      behave like normalPage(applyView(form), messageKeyPrefix)
 
       behave like pageWithBackLink(applyView(form))
 
@@ -48,16 +47,15 @@ class UpdateTrusteesYesNoViewSpec extends YesNoViewBehaviours {
 
     "closing" must {
 
-      val messageKeyPrefix = "updateTrusteesClosing"
-      val determinePrefix = (_: Boolean) => messageKeyPrefix
+      val messageKeyPrefix = "updateNonEeaCompanyClosing"
       val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
-      val view = viewFor[UpdateTrusteesYesNoView](Some(emptyUserAnswersForUtr))
+      val view = viewFor[AddNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
 
       def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, determinePrefix, closingTrust = true)(fakeRequest, messages)
+        view.apply(form, messageKeyPrefix)(fakeRequest, messages)
 
-      behave like normalPage(applyView(form), messageKeyPrefix, "additionalContent1", "additionalContent2")
+      behave like normalPage(applyView(form), messageKeyPrefix)
 
       behave like pageWithBackLink(applyView(form))
 

@@ -16,14 +16,14 @@
 
 package controllers.close.nontaxable
 
-import connectors.{TrustConnector, TrustsStoreConnector}
+import connectors.TrustConnector
 import controllers.actions.Actions
-import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.DateFormProvider
 import pages.close.nontaxable.DateClosedPage
-import play.api.i18n.MessagesApi
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.close.nontaxable.DateClosedView
 
 import java.time.LocalDate
@@ -37,10 +37,8 @@ class DateClosedController @Inject()(
                                       formProvider: DateFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: DateClosedView,
-                                      trustConnector: TrustConnector,
-                                      trustsStoreConnector: TrustsStoreConnector
-                                    )(implicit ec: ExecutionContext)
-  extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) {
+                                      trustConnector: TrustConnector
+                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   private val prefix: String = "dateClosed"
 
@@ -75,7 +73,7 @@ class DateClosedController @Inject()(
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(DateClosedPage, value))
               _ <- playbackRepository.set(updatedAnswers)
-            } yield Redirect(redirectToFirstUpdateQuestion)
+            } yield Redirect(controllers.close.routes.BeforeClosingController.onPageLoad())
         )
       }
 

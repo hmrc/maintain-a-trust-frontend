@@ -114,7 +114,7 @@ trait ModelGenerators {
     Arbitrary {
       for {
         startDate <- arbitrary[LocalDate]
-      } yield TrustDetailsType(startDate, None, None, None, None, None, None, None, None, None, None, None)
+      } yield TrustDetailsType(startDate, None, None, None, None, None, None, None, None, None, None, None, None, None)
     }
 
   implicit lazy val arbitraryBeneficiaries: Arbitrary[DisplayTrustBeneficiaryType] =

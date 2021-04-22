@@ -35,12 +35,7 @@ class DateLastAssetSharedOutYesNoViewSpec extends YesNoViewBehaviours {
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, utr)(fakeRequest, messages)
 
-    "Have a dynamic utr in the subheading" in {
-      val doc = asDocument(applyView(form))
-      assertContainsText(doc, s"This trust’s UTR: $utr")
-    }
-
-    behave like normalPage(applyView(form), messageKeyPrefix)
+    behave like normalPageTitleWithCaption(applyView(form), messageKeyPrefix, messageKeyPrefix, utr)
 
     behave like pageWithBackLink(applyView(form))
 

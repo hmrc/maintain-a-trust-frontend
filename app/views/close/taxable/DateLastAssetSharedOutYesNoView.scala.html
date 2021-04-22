@@ -31,8 +31,6 @@
 
         @components.back_link()
 
-        <span class="govuk-caption-xl">@messages("dateLastAssetSharedOutYesNo.subHeading", utr)</span>
-
         @components.error_summary(form.errors)
 
         @components.input_yes_no(
@@ -40,7 +38,8 @@
             label = messages("dateLastAssetSharedOutYesNo.heading"),
             legendClass = Some("heading-xlarge"),
             legendAsHeading = true,
-            hint = Some(messages("dateLastAssetSharedOutYesNo.hint"))
+            hint = Some(messages("dateLastAssetSharedOutYesNo.hint")),
+            caption = Some(messages("dateLastAssetSharedOutYesNo.caption", utr))
         )
 
         @components.submit_button(Some("site.onlyContinue"))

@@ -23,6 +23,33 @@
 
 @(form: Form[_], prefix: String)(implicit request: Request[_], messages: Messages)
 
+@content = {
+    <p>@messages("addNonEeaCompany.paragraph1")</p>
+
+    @components.bullet_list(
+        "addNonEeaCompany",
+        List(
+            "bullet1",
+            "bullet2",
+            "bullet3",
+            "bullet4",
+            "bullet5"
+        )
+    )
+
+    <p>@messages("addNonEeaCompany.paragraph2")</p>
+
+    @components.bullet_list(
+        "addNonEeaCompany",
+        List(
+            "bullet6",
+            "bullet7",
+            "bullet8",
+            "bullet9"
+        )
+    )
+}
+
 @main_template(
     title = s"${errorPrefix(form)}${messages(s"$prefix.title")}"
 ) {
@@ -33,24 +60,12 @@
 
         @components.error_summary(form.errors)
 
-        <h1 class="heading-large">@messages(s"$prefix.heading")</h1>
-
-        <p>@messages("addNonEeaCompany.paragraph1")</p>
-
-        @components.bullet_list(
-            "addNonEeaCompany",
-            List(
-                "bullet1",
-                "bullet2",
-                "bullet3",
-                "bullet4"
-            )
-        )
-
         @components.input_yes_no(
             field = form("value"),
             label = messages(s"$prefix.heading"),
-            legendClass = Some("visually-hidden")
+            legendClass = Some("heading-large"),
+            legendAsHeading = true,
+            additionalContent = Some(content)
         )
 
         @components.submit_button(Some("site.onlyContinue"))

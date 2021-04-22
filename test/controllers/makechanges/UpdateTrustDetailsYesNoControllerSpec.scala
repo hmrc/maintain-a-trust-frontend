@@ -29,7 +29,7 @@ import views.html.makechanges.UpdateTrustDetailsYesNoView
 
 class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
-  private val onPageLoadRoute: String = routes.UpdateTrustDetailsYesNoController.onPageLoad().url
+  private val updateTrustDetailsRoute: String = routes.UpdateTrustDetailsYesNoController.onPageLoad().url
 
   private val validAnswer: Boolean = true
 
@@ -38,6 +38,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
     "making changes" must {
 
       val prefix: String = "updateTrustDetails"
+      val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
@@ -48,7 +49,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(GET, onPageLoadRoute)
+        val request = FakeRequest(GET, updateTrustDetailsRoute)
 
         val result = route(application, request).value
 
@@ -57,7 +58,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form, prefix)(request, messages).toString
+          view(form, determinePrefix, closingTrust = false)(request, messages).toString
 
         application.stop()
       }
@@ -68,7 +69,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val request = FakeRequest(GET, onPageLoadRoute)
+        val request = FakeRequest(GET, updateTrustDetailsRoute)
 
         val view = application.injector.instanceOf[UpdateTrustDetailsYesNoView]
 
@@ -77,7 +78,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form.fill(validAnswer), prefix)(request, messages).toString
+          view(form.fill(validAnswer), determinePrefix, closingTrust = false)(request, messages).toString
 
         application.stop()
       }
@@ -86,7 +87,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(POST, onPageLoadRoute)
+        val request = FakeRequest(POST, updateTrustDetailsRoute)
           .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
@@ -102,7 +103,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(POST, onPageLoadRoute)
+        val request = FakeRequest(POST, updateTrustDetailsRoute)
           .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -114,7 +115,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual BAD_REQUEST
 
         contentAsString(result) mustEqual
-          view(boundForm, prefix)(request, messages).toString
+          view(boundForm, determinePrefix, closingTrust = false)(request, messages).toString
 
         application.stop()
       }
@@ -123,6 +124,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
     "closing" must {
 
       val prefix: String = "updateTrustDetailsClosing"
+      val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
@@ -133,7 +135,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(GET, onPageLoadRoute)
+        val request = FakeRequest(GET, updateTrustDetailsRoute)
 
         val result = route(application, request).value
 
@@ -142,7 +144,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form, prefix)(request, messages).toString
+          view(form, determinePrefix, closingTrust = true)(request, messages).toString
 
         application.stop()
       }
@@ -153,7 +155,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val request = FakeRequest(GET, onPageLoadRoute)
+        val request = FakeRequest(GET, updateTrustDetailsRoute)
 
         val view = application.injector.instanceOf[UpdateTrustDetailsYesNoView]
 
@@ -162,7 +164,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(form.fill(validAnswer), prefix)(request, messages).toString
+          view(form.fill(validAnswer), determinePrefix, closingTrust = true)(request, messages).toString
 
         application.stop()
       }
@@ -171,7 +173,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(POST, onPageLoadRoute)
+        val request = FakeRequest(POST, updateTrustDetailsRoute)
           .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
@@ -187,7 +189,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request = FakeRequest(POST, onPageLoadRoute)
+        val request = FakeRequest(POST, updateTrustDetailsRoute)
           .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -199,7 +201,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
         status(result) mustEqual BAD_REQUEST
 
         contentAsString(result) mustEqual
-          view(boundForm, prefix)(request, messages).toString
+          view(boundForm, determinePrefix, closingTrust = true)(request, messages).toString
 
         application.stop()
       }
