@@ -50,7 +50,7 @@ class TrustDetailsPrinterSpec extends SpecBase {
             AnswerRow("When was the trust created?", Html("1 June 2019"), None),
             AnswerRow("What is the trust’s Unique Taxpayer Reference (UTR)?", Html(utr), None),
             AnswerRow("Does the trust own UK land or property?", Html("Yes"), None),
-            AnswerRow("Is the trust also listed on another countries’ trust register within the European Economic Area (EEA)?", Html("No"), None),
+            AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
             AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None)
           ),
           sectionKey = Some("Trust details")
