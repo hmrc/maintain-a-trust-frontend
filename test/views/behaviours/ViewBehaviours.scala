@@ -224,4 +224,14 @@ trait ViewBehaviours extends ViewSpecBase {
       assertContainsClass(doc, "govuk-warning-text__assistive")
     }
   }
+
+  def pageWithReturnToTopLink(view: HtmlFormat.Appendable): Unit = {
+
+    "behave like a page with a return to top link" in {
+      val doc = asDocument(view)
+
+      assertRenderedById(doc, "return-to-top")
+    }
+
+  }
 }

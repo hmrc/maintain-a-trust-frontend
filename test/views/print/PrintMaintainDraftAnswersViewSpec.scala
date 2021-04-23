@@ -36,6 +36,8 @@ class PrintMaintainDraftAnswersViewSpec extends ViewBehaviours {
 
     behave like pageWithBackLink(applyView)
 
+    behave like pageWithReturnToTopLink(applyView)
+
     "render correct content" in {
       val doc = asDocument(applyView)
 
