@@ -30,8 +30,9 @@ class AllAssetsPrinter @Inject()(nonEeaBusiness: NonEeaBusinessPrinter) extends 
       nonEeaBusiness.entities(userAnswers)
     ).flatten
 
-    prependHeadingToAnswerSections(answerSections, userAnswers.isTrustTaxable)
+    prependHeadingToAnswerSections(answerSections, userAnswers.isTrustMigratingFromNonTaxableToTaxable)
   }
 
-  override def headingKey(isTaxable: Boolean): Option[String] = if (isTaxable) Some("assets") else Some("nonEeaBusinesses")
+  override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] =
+    if (migratingFromNonTaxableToTaxable) Some("assets") else Some("nonEeaBusinesses")
 }

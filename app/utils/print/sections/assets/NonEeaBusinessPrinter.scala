@@ -44,7 +44,7 @@ class NonEeaBusinessPrinter @Inject()(converter: AnswerRowConverter) extends Ent
 
   override def section: QuestionPage[JsArray] = NonEeaBusinessAsset
 
-  override def headingKey(isTaxable: Boolean): Option[String] = None
+  override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = None
 
   override val subHeadingKey: Option[String] = Some("nonEeaBusiness")
 
