@@ -234,4 +234,14 @@ trait ViewBehaviours extends ViewSpecBase {
     }
 
   }
+
+  def pageWithHint(view: HtmlFormat.Appendable): Unit = {
+    "behave like a page with a hint" must {
+      "have a hint" in {
+        val doc = asDocument(view)
+        assertRenderedById(doc, "form-hint")
+      }
+    }
+  }
+
 }

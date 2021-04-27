@@ -115,7 +115,7 @@ class DateClosedControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.close.routes.BeforeClosingController.onPageLoad().url
 
       application.stop()
     }

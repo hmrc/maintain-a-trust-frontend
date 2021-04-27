@@ -21,7 +21,18 @@
         formHelper: FormWithCSRF
 )
 
-@(form: Form[_], prefix: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], determinePrefix: Boolean => String, closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
+
+@prefix = {@determinePrefix(closingTrust)}
+
+@content = {
+    @if(closingTrust){
+        <p>@messages(s"$prefix.additionalContent1")</p>
+        <p>@messages(s"$prefix.additionalContent2")</p>
+    } else {
+        <p>@messages(s"$prefix.additionalContent1")</p>
+    }
+}
 
 @main_template(
     title = s"${errorPrefix(form)}${messages(s"$prefix.title")}"
@@ -37,7 +48,8 @@
             field = form("value"),
             label = messages(s"$prefix.heading"),
             legendClass = Some("heading-large"),
-            legendAsHeading = true
+            legendAsHeading = true,
+            additionalContent = Some(content)
         )
 
         @components.submit_button(Some("site.onlyContinue"))

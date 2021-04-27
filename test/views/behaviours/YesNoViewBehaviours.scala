@@ -61,12 +61,12 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
 
       "rendered with a value of true" must {
 
-        behave like answeredYesNoPage(createView, true)
+        behave like answeredYesNoPage(form, createView, answer = true)
       }
 
       "rendered with a value of false" must {
 
-        behave like answeredYesNoPage(createView, false)
+        behave like answeredYesNoPage(form, createView, answer = false)
       }
 
       "rendered with an error" must {
@@ -94,7 +94,9 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
   }
 
 
-  def answeredYesNoPage(createView: Form[Boolean] => HtmlFormat.Appendable, answer: Boolean): Unit = {
+  def answeredYesNoPage(form: Form[Boolean],
+                        createView: Form[Boolean] => HtmlFormat.Appendable,
+                        answer: Boolean): Unit = {
 
     "have only the correct value checked" in {
 

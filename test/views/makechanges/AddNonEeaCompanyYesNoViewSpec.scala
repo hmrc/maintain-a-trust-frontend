@@ -20,24 +20,28 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
-import views.html.makechanges.UpdateTrusteesYesNoView
+import views.html.makechanges.AddNonEeaCompanyYesNoView
 
-class UpdateTrusteesYesNoViewSpec extends YesNoViewBehaviours {
+class AddNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
-  "UpdateTrusteesYesNoView" when {
+  "AddNonEeaCompanyYesNoView" when {
 
     "making changes" must {
 
-      val messageKeyPrefix = "updateTrustees"
-      val determinePrefix = (_: Boolean) => messageKeyPrefix
+      val messageKeyPrefix = "addNonEeaCompany"
       val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
-      val view = viewFor[UpdateTrusteesYesNoView](Some(emptyUserAnswersForUtr))
+      val view = viewFor[AddNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
 
       def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, determinePrefix, closingTrust = false)(fakeRequest, messages)
+        view.apply(form, messageKeyPrefix)(fakeRequest, messages)
 
-      behave like normalPage(applyView(form), messageKeyPrefix, "additionalContent1")
+      behave like normalPage(
+        view = applyView(form),
+        messageKeyPrefix = messageKeyPrefix,
+        expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
+        "paragraph2", "bullet6", "bullet7", "bullet8", "bullet9"
+      )
 
       behave like pageWithBackLink(applyView(form))
 
@@ -48,16 +52,20 @@ class UpdateTrusteesYesNoViewSpec extends YesNoViewBehaviours {
 
     "closing" must {
 
-      val messageKeyPrefix = "updateTrusteesClosing"
-      val determinePrefix = (_: Boolean) => messageKeyPrefix
+      val messageKeyPrefix = "addNonEeaCompanyClosing"
       val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
-      val view = viewFor[UpdateTrusteesYesNoView](Some(emptyUserAnswersForUtr))
+      val view = viewFor[AddNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
 
       def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, determinePrefix, closingTrust = true)(fakeRequest, messages)
+        view.apply(form, messageKeyPrefix)(fakeRequest, messages)
 
-      behave like normalPage(applyView(form), messageKeyPrefix, "additionalContent1", "additionalContent2")
+      behave like normalPage(
+        view = applyView(form),
+        messageKeyPrefix = messageKeyPrefix,
+        expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
+        "paragraph2", "bullet6", "bullet7", "bullet8", "bullet9"
+      )
 
       behave like pageWithBackLink(applyView(form))
 

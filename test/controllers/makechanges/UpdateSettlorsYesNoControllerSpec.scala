@@ -20,11 +20,12 @@ import base.SpecBase
 import connectors.TrustConnector
 import forms.YesNoFormProvider
 import models.UserAnswers
-import models.pages.WhatIsNext.MakeChanges
+import models.pages.WhatIsNext
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import pages.WhatIsNextPage
 import pages.makechanges.UpdateSettlorsYesNoPage
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.libs.json.JsBoolean
 import play.api.test.FakeRequest
@@ -35,129 +36,242 @@ import scala.concurrent.Future
 
 class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
-  val formProvider = new YesNoFormProvider()
-  val prefix: String = "updateSettlors"
-  val form = formProvider.withPrefix(prefix)
+  private lazy val updateSettlorsYesNoRoute: String = routes.UpdateSettlorsYesNoController.onPageLoad().url
 
-  lazy val updateSettlorsYesNoRoute = routes.UpdateSettlorsYesNoController.onPageLoad().url
+  "UpdateSettlorsYesNoController" when {
 
-  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, MakeChanges).success.value
+    "making changes" must {
 
-  "UpdateSettlorsYesNo Controller" must {
+      val prefix: String = "updateSettlors"
+      val determinePrefix = (_: Boolean) => prefix
 
-    "return OK and the correct view for a GET" in {
+      val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
-      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+      val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
-      val request = FakeRequest(GET, updateSettlorsYesNoRoute)
+      "return OK and the correct view for a GET" in {
 
-      val result = route(application, request).value
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-      val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
+        val request = FakeRequest(GET, updateSettlorsYesNoRoute)
 
-      status(result) mustEqual OK
+        val result = route(application, request).value
 
-      contentAsString(result) mustEqual
-        view(form, prefix)(request, messages).toString
+        val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
 
-      application.stop()
-    }
+        status(result) mustEqual OK
 
-    "populate the view correctly on a GET when the question has previously been answered" in {
+        contentAsString(result) mustEqual
+          view(form, determinePrefix, closingTrust = false)(request, messages).toString
 
-      val userAnswers = baseAnswers.set(UpdateSettlorsYesNoPage, true).success.value
+        application.stop()
+      }
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val request = FakeRequest(GET, updateSettlorsYesNoRoute)
+        val userAnswers = baseAnswers.set(UpdateSettlorsYesNoPage, true).success.value
 
-      val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val result = route(application, request).value
+        val request = FakeRequest(GET, updateSettlorsYesNoRoute)
 
-      status(result) mustEqual OK
+        val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
 
-      contentAsString(result) mustEqual
-        view(form.fill(true), prefix)(request, messages).toString
+        val result = route(application, request).value
 
-      application.stop()
-    }
+        status(result) mustEqual OK
 
-    "redirect to the add a protector page when valid data is submitted and no protectors exist" in {
+        contentAsString(result) mustEqual
+          view(form.fill(true), determinePrefix, closingTrust = false)(request, messages).toString
+
+        application.stop()
+      }
+
+      "redirect to the add a protector page when valid data is submitted and no protectors exist" in {
 
 
+        val mockTrustConnector = mock[TrustConnector]
 
-      val  mockTrustConnector = mock[TrustConnector]
+        val application = applicationBuilder(userAnswers = Some(baseAnswers))
+          .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+          .build()
 
-      val application =
-        applicationBuilder(userAnswers = Some(baseAnswers))
-          .overrides(
-            bind[TrustConnector].toInstance(mockTrustConnector)
-          ).build()
-
-      val request =
-        FakeRequest(POST, updateSettlorsYesNoRoute)
+        val request = FakeRequest(POST, updateSettlorsYesNoRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
-      when(mockTrustConnector.getDoProtectorsAlreadyExist(any())(any(), any()))
-        .thenReturn(Future.successful(JsBoolean(false)))
+        when(mockTrustConnector.getDoProtectorsAlreadyExist(any())(any(), any()))
+          .thenReturn(Future.successful(JsBoolean(false)))
 
-      val result = route(application, request).value
+        val result = route(application, request).value
 
-      status(result) mustEqual SEE_OTHER
+        status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.AddProtectorYesNoController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.AddProtectorYesNoController.onPageLoad().url
 
-      application.stop()
-    }
+        application.stop()
+      }
 
-    "redirect to the update protectors page when valid data is submitted and no protectors exist" in {
+      "redirect to the update protectors page when valid data is submitted and no protectors exist" in {
 
-      val  mockTrustConnector = mock[TrustConnector]
+        val mockTrustConnector = mock[TrustConnector]
 
-      val application =
-        applicationBuilder(userAnswers = Some(baseAnswers)).overrides(
-          bind[TrustConnector].toInstance(mockTrustConnector)
-        ).build()
+        val application = applicationBuilder(userAnswers = Some(baseAnswers))
+          .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+          .build()
 
-      val request =
-        FakeRequest(POST, updateSettlorsYesNoRoute)
+        val request = FakeRequest(POST, updateSettlorsYesNoRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
-      when(mockTrustConnector.getDoProtectorsAlreadyExist(any())(any(), any()))
-        .thenReturn(Future.successful(JsBoolean(true)))
+        when(mockTrustConnector.getDoProtectorsAlreadyExist(any())(any(), any()))
+          .thenReturn(Future.successful(JsBoolean(true)))
 
-      val result = route(application, request).value
+        val result = route(application, request).value
 
-      status(result) mustEqual SEE_OTHER
+        status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.UpdateProtectorYesNoController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.UpdateProtectorYesNoController.onPageLoad().url
 
-      application.stop()
-    }
+        application.stop()
+      }
 
-    "return a Bad Request and errors when invalid data is submitted" in {
+      "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-      val request =
-        FakeRequest(POST, updateSettlorsYesNoRoute)
+        val request = FakeRequest(POST, updateSettlorsYesNoRoute)
           .withFormUrlEncodedBody(("value", ""))
 
-      val boundForm = form.bind(Map("value" -> ""))
+        val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
+        val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
 
-      val result = route(application, request).value
+        val result = route(application, request).value
 
-      status(result) mustEqual BAD_REQUEST
+        status(result) mustEqual BAD_REQUEST
 
-      contentAsString(result) mustEqual
-        view(boundForm, prefix)(request, messages).toString
+        contentAsString(result) mustEqual
+          view(boundForm, determinePrefix, closingTrust = false)(request, messages).toString
 
-      application.stop()
+        application.stop()
+      }
     }
 
+    "closing" must {
+
+      val prefix: String = "updateSettlorsClosing"
+      val determinePrefix = (_: Boolean) => prefix
+
+      val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
+
+      val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
+
+      "return OK and the correct view for a GET" in {
+
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+
+        val request = FakeRequest(GET, updateSettlorsYesNoRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form, determinePrefix, closingTrust = true)(request, messages).toString
+
+        application.stop()
+      }
+
+      "populate the view correctly on a GET when the question has previously been answered" in {
+
+        val userAnswers = baseAnswers.set(UpdateSettlorsYesNoPage, true).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request = FakeRequest(GET, updateSettlorsYesNoRoute)
+
+        val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form.fill(true), determinePrefix, closingTrust = true)(request, messages).toString
+
+        application.stop()
+      }
+
+      "redirect to the add a protector page when valid data is submitted and no protectors exist" in {
+
+
+        val mockTrustConnector = mock[TrustConnector]
+
+        val application = applicationBuilder(userAnswers = Some(baseAnswers))
+          .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+          .build()
+
+        val request = FakeRequest(POST, updateSettlorsYesNoRoute)
+          .withFormUrlEncodedBody(("value", "true"))
+
+        when(mockTrustConnector.getDoProtectorsAlreadyExist(any())(any(), any()))
+          .thenReturn(Future.successful(JsBoolean(false)))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.AddProtectorYesNoController.onPageLoad().url
+
+        application.stop()
+      }
+
+      "redirect to the update protectors page when valid data is submitted and no protectors exist" in {
+
+        val mockTrustConnector = mock[TrustConnector]
+
+        val application = applicationBuilder(userAnswers = Some(baseAnswers))
+          .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+          .build()
+
+        val request = FakeRequest(POST, updateSettlorsYesNoRoute)
+          .withFormUrlEncodedBody(("value", "true"))
+
+        when(mockTrustConnector.getDoProtectorsAlreadyExist(any())(any(), any()))
+          .thenReturn(Future.successful(JsBoolean(true)))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.UpdateProtectorYesNoController.onPageLoad().url
+
+        application.stop()
+      }
+
+      "return a Bad Request and errors when invalid data is submitted" in {
+
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+
+        val request = FakeRequest(POST, updateSettlorsYesNoRoute)
+          .withFormUrlEncodedBody(("value", ""))
+
+        val boundForm = form.bind(Map("value" -> ""))
+
+        val view = application.injector.instanceOf[UpdateSettlorsYesNoView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        contentAsString(result) mustEqual
+          view(boundForm, determinePrefix, closingTrust = true)(request, messages).toString
+
+        application.stop()
+      }
+    }
   }
 }
