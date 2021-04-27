@@ -73,7 +73,7 @@ class ExpressTrustYesNoController @Inject()(
             _ <- trustsConnector.removeTransforms(request.userAnswers.identifier)
             _ <- trustsConnector.setExpressTrust(request.userAnswers.identifier, value)
           } yield {
-            Redirect(routes.ConfirmTrustTaxableController.onPageLoad())
+            Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
           }
         }
       )

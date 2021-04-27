@@ -105,7 +105,7 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.ConfirmTrustTaxableController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.tasklist.routes.TaskListController.onPageLoad().url
 
       verify(mockTrustsConnector).removeTransforms(any())(any(), any())
       verify(mockTrustsConnector).setExpressTrust(any(), eqTo(validAnswer))(any(), any())
