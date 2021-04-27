@@ -244,6 +244,7 @@ site.startMaintaining = Start maintaining this trust
 site.error = Error:
 site.print-or-save = Print or save this page
 site.button.continue.maintaining = Continue maintaining this trust
+site.return-to-top = Back to top
 
 site.address.uk.title = What is the address?
 site.address.uk.heading = What is {0}’s address?
