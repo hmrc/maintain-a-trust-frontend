@@ -24,7 +24,7 @@ import models.Underlying4mldTrustIn4mldMode
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
 import org.mockito.Matchers.{any, eq => eqTo}
-import org.mockito.Mockito.{never, reset, verify, when}
+import org.mockito.Mockito.{never, reset, times, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -372,7 +372,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
+          redirectLocation(result).value mustBe controllers.transition.routes.TaxLiabilityYesNoController.onPageLoad().url
 
           application.stop()
         }
@@ -512,7 +512,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
     "set taxable migration flag" when {
 
       "NeedsToPayTax selected" must {
-        "set flag to true" in {
+        "don't set flag to true" in {
 
           beforeTest()
 
@@ -527,7 +527,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
           status(result) mustEqual SEE_OTHER
 
-          verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
+          verify(mockTrustConnector, times(0)).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
 
           application.stop()
         }

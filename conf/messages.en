@@ -471,6 +471,16 @@ confirmTrustTaxable.subHeading = Confirm the trust is taxable
 confirmTrustTaxable.p3 = A taxable trust is a trust that has paid tax, or still has a tax liability.
 confirmTrustTaxable.p4 = By continuing, you are confirming that the trust has paid tax, or still needs to pay tax.
 
+taxLiabilityYesNo.title = Does the trust still have a tax liability
+taxLiabilityYesNo.heading = Does the trust still have a tax liability
+taxLiabilityYesNo.p1 = Trusts can be liable for any of the following
+taxLiabilityYesNo.bullet1 = Capital Gains tax
+taxLiabilityYesNo.bullet2 = Income Tax
+taxLiabilityYesNo.bullet3 = Inheritance Tax
+taxLiabilityYesNo.bullet4 = Stamp Duty Reserve Tax
+taxLiabilityYesNo.bullet5 = Stamp Duty Land Tax or Land and Buildings Transaction Tax in Scotland
+taxLiabilityYesNo.error.required = Select yes if the trust still has a tax liability
+
 declarationWhatNext.title = What do you want to do next?
 declarationWhatNext.heading = What do you want to do next?
 declarationWhatNext.declare = Declare the trust is up to date

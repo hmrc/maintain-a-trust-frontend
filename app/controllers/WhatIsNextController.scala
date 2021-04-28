@@ -96,7 +96,7 @@ class WhatIsNextController @Inject()(
         case NoLongerTaxable =>
           controllers.routes.NoTaxLiabilityInfoController.onPageLoad()
         case NeedsToPayTax =>
-          controllers.routes.FeatureNotAvailableController.onPageLoad()
+          controllers.transition.routes.TaxLiabilityYesNoController.onPageLoad()
         case GeneratePdf =>
           controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier)
       }
@@ -111,7 +111,11 @@ class WhatIsNextController @Inject()(
             Future.successful(())
           }
         }
-        _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, newAnswer == NeedsToPayTax)
+        _ <- if (newAnswer != NeedsToPayTax) {
+          trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, false)
+        } else {
+          Future.successful(())
+        }
       } yield {
         redirect
       }
