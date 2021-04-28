@@ -18,6 +18,8 @@ package utils.print
 
 import base.SpecBase
 import models.InternationalAddress
+import models.pages.WhatIsNext.NeedsToPayTax
+import pages.WhatIsNextPage
 import pages.assets.nonEeaBusiness.{NonEeaBusinessAddressPage, NonEeaBusinessGoverningCountryPage, NonEeaBusinessNamePage}
 import play.twirl.api.Html
 import utils.print.sections.assets.AllAssetsPrinter
@@ -33,9 +35,10 @@ class AllAssetsPrinterSpec extends SpecBase {
 
     "generate Non-Eea Company section" when {
 
-      "taxable" in {
+      "migrating from non-taxable to taxable" in {
 
         val answers = emptyUserAnswersForUtr
+          .set(WhatIsNextPage, NeedsToPayTax).success.value
           .set(NonEeaBusinessNamePage(0), name).success.value
           .set(NonEeaBusinessAddressPage(0), address).success.value
           .set(NonEeaBusinessGoverningCountryPage(0), "FR").success.value
@@ -68,9 +71,9 @@ class AllAssetsPrinterSpec extends SpecBase {
         )
       }
 
-      "non-taxable" in {
+      "not migrating from non-taxable to taxable" in {
 
-        val answers = emptyUserAnswersForUrn
+        val answers = emptyUserAnswersForUtr
           .set(NonEeaBusinessNamePage(0), name).success.value
           .set(NonEeaBusinessAddressPage(0), address).success.value
           .set(NonEeaBusinessGoverningCountryPage(0), "FR").success.value

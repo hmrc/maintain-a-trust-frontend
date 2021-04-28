@@ -42,8 +42,8 @@ class AllBeneficiariesPrinter @Inject()(individualBeneficiaryPrinter: Individual
       otherBeneficiaryPrinter.entities(userAnswers)
     ).flatten
 
-    prependHeadingToAnswerSections(answerSections, userAnswers.isTrustTaxable)
+    prependHeadingToAnswerSections(answerSections, userAnswers.isTrustMigratingFromNonTaxableToTaxable)
   }
 
-  override def headingKey(isTaxable: Boolean): Option[String] = Some("beneficiaries")
+  override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("beneficiaries")
 }

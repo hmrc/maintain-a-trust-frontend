@@ -52,7 +52,7 @@ class TrustBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends E
 
   override def section: QuestionPage[JsArray] = TrustBeneficiaries
 
-  override def headingKey(isTaxable: Boolean): Option[String] = None
+  override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = None
 
   override val subHeadingKey: Option[String] = Some("trustBeneficiary")
 }

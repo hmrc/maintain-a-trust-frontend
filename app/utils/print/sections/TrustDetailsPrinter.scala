@@ -39,6 +39,6 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
     Seq(answerSectionWithRows(rows, userAnswers.isTrustTaxable))
   }
 
-  override def headingKey(isTaxable: Boolean): Option[String] = Some("trustsDetails")
+  override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("trustsDetails")
 
 }

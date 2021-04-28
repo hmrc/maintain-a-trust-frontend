@@ -37,6 +37,6 @@ class CloseDatePrinter @Inject()(converter: AnswerRowConverter) extends PrinterH
     answerSectionWithRows(Seq(row), userAnswers.isTrustTaxable)
   }
 
-  override def headingKey(isTaxable: Boolean): Option[String] = Some("closeDate")
+  override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("closeDate")
 
 }

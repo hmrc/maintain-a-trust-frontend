@@ -25,6 +25,9 @@ PUT       /maintain-a-trust/test-only/set-4mld                  controllers.test
 PUT       /maintain-a-trust/test-only/set-5mld                  controllers.testOnlyDoNotUseInAppConf.TestTrustsStoreController.set5Mld
 
 + nocsrf
+PUT       /maintain-a-trust/test-only/set-feature/:feature      controllers.testOnlyDoNotUseInAppConf.TestTrustsStoreController.setFeature(feature: String)
+
++ nocsrf
 GET       /maintain-a-trust/test-only/match-lead-trustee        controllers.testOnlyDoNotUseInAppConf.TestLeadTrusteeMatchingController.matchLeadTrustee(nino: String, forename: String, surname: String, dob: String)
 
 GET       /maintain-a-trust/test-only/wizard                    controllers.testOnlyDoNotUseInAppConf.TestWizardController.onPageLoad
