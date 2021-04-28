@@ -16,80 +16,194 @@
 
 package views
 
-import models.pages.Tag.UpToDate
-import models.{URN, UTR}
+import models.URN
 import sections.assets.Assets
-import sections.{TrustDetails, TaxLiability}
-import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
+import sections.{TaxLiability, TrustDetails}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 import viewmodels.{Link, Task}
 import views.behaviours.{TransitionsProgressViewBehaviours, ViewBehaviours}
 import views.html.NonTaxToTaxProgressView
 
 class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgressViewBehaviours {
 
-  val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+  private val urn = "urn"
 
-  "TransitionProgress view" must {
+  private val mandatorySections = List(
+    Task(Link(TrustDetails, ""), None),
+    Task(Link(Assets, ""), None),
+    Task(Link(TaxLiability, ""), None)
+  )
 
-    val urn = "urn"
+  private val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
-    val mandatorySections = List(
-      Task(Link(TrustDetails, ""), None),
-      Task(Link(Assets, ""), None),
-      Task(Link(TaxLiability, ""), None)
-    )
+  "TransitionProgressView" when {
 
-    val group = Organisation
+    "not all sections completed" when {
 
-    val userAnswers = emptyUserAnswersForUtr
+      "agent user" must {
 
-    val view = viewFor[NonTaxToTaxProgressView](Some(userAnswers))
+        val group = Agent
 
-    val applyView = view.apply(urn, URN, mandatorySections, group, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "transitionProgress",
-      "urn",
-      urn,
-      "p1", "p2")
-
-    behave like pageWithBackLink(applyView)
-
-    behave like taskListHeading(applyView)
-
-    behave like taskList(applyView, mandatorySections)
-
-  }
-
-  "render summary" when {
-
-    "all sections are completed" in {
-
-        val urn = "urn"
-
-        val mandatorySections = List(
-          Task(Link(TrustDetails, "http://localhost:9838/maintain-a-trust/trust-details/urn"), Some(UpToDate)),
-          Task(Link(Assets, "http://localhost:9800/maintain-a-trust/trust-assets/urn"), Some(UpToDate)),
-          Task(Link(TaxLiability, "http://localhost:9838/maintain-a-trust/tax-liability/urn"), Some(UpToDate))
-        )
-
-        val group = Organisation
-
-        val userAnswers = emptyUserAnswersForUrn
+        val userAnswers = emptyUserAnswersForUtr
 
         val view = viewFor[NonTaxToTaxProgressView](Some(userAnswers))
 
-        val applyView = view.apply(urn, UTR, mandatorySections, group, expectedContinueUrl, isAbleToDeclare = true, closingTrust = false)(fakeRequest, messages)
+        val applyView = view.apply(
+          identifier = urn,
+          identifierType = URN,
+          mandatory = mandatorySections,
+          affinityGroup = group,
+          nextUrl = expectedContinueUrl,
+          isAbleToDeclare = false
+        )(fakeRequest, messages)
+
+        behave like normalPageTitleWithCaption(
+          view = applyView,
+          messageKeyPrefix = "transitionProgress",
+          captionKey = "urn",
+          captionParam = urn,
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4"
+        )
+
+        behave like pageWithBackLink(applyView)
+
+        behave like taskListHeading(applyView)
+
+        behave like taskList(applyView, mandatorySections)
+
+        behave like pageWithWarning(applyView)
 
         val doc = asDocument(applyView)
 
-        assertRenderedById(doc, "summary-heading")
-        assertContainsText(doc, messages("transitionProgress.p5"))
-        assertRenderedById(doc, "summary-heading-2")
-        assertContainsText(doc, messages("transitionProgress.p6"))
-        assertContainsText(doc, messages("transitionProgress.p7"))
+        "render agent overview link" in {
+          assertContainsText(doc, messages("transitionsProgress.return.link"))
+        }
+      }
 
+      "non-agent user" must {
+
+        val group = Organisation
+
+        val userAnswers = emptyUserAnswersForUtr
+
+        val view = viewFor[NonTaxToTaxProgressView](Some(userAnswers))
+
+        val applyView = view.apply(
+          identifier = urn,
+          identifierType = URN,
+          mandatory = mandatorySections,
+          affinityGroup = group,
+          nextUrl = expectedContinueUrl,
+          isAbleToDeclare = false
+        )(fakeRequest, messages)
+
+        behave like normalPageTitleWithCaption(
+          view = applyView,
+          messageKeyPrefix = "transitionProgress",
+          captionKey = "urn",
+          captionParam = urn,
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4"
+        )
+
+        behave like pageWithBackLink(applyView)
+
+        behave like taskListHeading(applyView)
+
+        behave like taskList(applyView, mandatorySections)
+
+        behave like pageWithWarning(applyView)
       }
     }
 
+    "all sections completed" when {
+
+      "agent user" must {
+
+        val group = Agent
+
+        val userAnswers = emptyUserAnswersForUtr
+
+        val view = viewFor[NonTaxToTaxProgressView](Some(userAnswers))
+
+        val applyView = view.apply(
+          identifier = urn,
+          identifierType = URN,
+          mandatory = mandatorySections,
+          affinityGroup = group,
+          nextUrl = expectedContinueUrl,
+          isAbleToDeclare = true
+        )(fakeRequest, messages)
+
+        behave like normalPageTitleWithCaption(
+          view = applyView,
+          messageKeyPrefix = "transitionProgress",
+          captionKey = "urn",
+          captionParam = urn,
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4", "subHeading.3", "p5", "p6", "subHeading.4", "p7", "sa900.link"
+        )
+
+        behave like pageWithBackLink(applyView)
+
+        behave like taskListHeading(applyView)
+
+        behave like taskList(applyView, mandatorySections)
+
+        behave like pageWithWarning(applyView)
+
+        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+
+        val doc = asDocument(applyView)
+
+        "render agent overview link" in {
+          assertContainsText(doc, messages("transitionsProgress.return.link"))
+        }
+
+        "render print link" in {
+          assertRenderedById(doc, "print-and-save")
+        }
+      }
+
+      "non-agent user" must {
+
+        val group = Organisation
+
+        val userAnswers = emptyUserAnswersForUtr
+
+        val view = viewFor[NonTaxToTaxProgressView](Some(userAnswers))
+
+        val applyView = view.apply(
+          identifier = urn,
+          identifierType = URN,
+          mandatory = mandatorySections,
+          affinityGroup = group,
+          nextUrl = expectedContinueUrl,
+          isAbleToDeclare = true
+        )(fakeRequest, messages)
+
+        behave like normalPageTitleWithCaption(
+          view = applyView,
+          messageKeyPrefix = "transitionProgress",
+          captionKey = "urn",
+          captionParam = urn,
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4", "subHeading.3", "p5", "p6", "subHeading.4", "p7", "sa900.link"
+        )
+
+        behave like pageWithBackLink(applyView)
+
+        behave like taskListHeading(applyView)
+
+        behave like taskList(applyView, mandatorySections)
+
+        behave like pageWithWarning(applyView)
+
+        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+
+        val doc = asDocument(applyView)
+
+        "render print link" in {
+          assertRenderedById(doc, "print-and-save")
+        }
+      }
+    }
+  }
 }

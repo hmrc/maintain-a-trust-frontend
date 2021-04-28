@@ -25,20 +25,22 @@
     main_template: MainTemplate
 )
 
-@(identifier: String,
+@(
+    identifier: String,
     identifierType: IdentifierType,
-    mandatory : List[Task],
+    mandatory: List[Task],
     optional: List[Task],
-    affinityGroup : AffinityGroup,
-    nextUrl : String,
+    affinityGroup: AffinityGroup,
+    nextUrl: String,
     isAbleToDeclare: Boolean,
-    closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
+    closingTrust: Boolean
+)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("variationProgress.title")
 ) {
 
-   @components.back_link()
+    @components.back_link()
 
     @components.heading_with_caption(headingKey = "variationProgress.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
@@ -47,9 +49,7 @@
     <p>@messages("variationProgress.p2")</p>
 
     @if(affinityGroup == AffinityGroup.Agent) {
-        <p>
-            <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>
-        </p>
+        <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>
     }
 
     @{
@@ -67,20 +67,17 @@
     @components.task_list("additional", optional, messages("variationProgress.subHeading.3"))
 
     @if(isAbleToDeclare) {
-        <h2 id="summary-heading" class="app-task-list__section">@messages("variationProgress.subHeading.4")</h2>
-        <div id="summary-paragraph" class="paragraph">
-            <p>@messages("variationProgress.p3")</p>
-            <p>@messages("variationProgress.p4")
-                @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "variationProgress.printsave.link", openInNewWindow = false)
-            </p>
-        </div>
-        <h2 id="summary-heading-2">@messages("variationProgress.subHeading.5")</h2>
-        <div id="summary-paragraph-2" class="paragraph">
-            <p>@messages("variationProgress.p5") <a href="@{appConfig.sa900Link}" target="_blank">@messages("variationProgress.sa900.link")</a>.</p>
-        </div>
+        <h2>@messages("variationProgress.subHeading.4")</h2>
+
+        <p>@messages("variationProgress.p3")</p>
+        <p>@messages("variationProgress.p4") @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "variationProgress.printsave.link", openInNewWindow = false)</p>
+
+        <h2>@messages("variationProgress.subHeading.5")</h2>
+
+        <p>@messages("variationProgress.p5") <a href="@{appConfig.sa900Link}" target="_blank">@messages("variationProgress.sa900.link")</a>.</p>
+
         <div class="section">
             <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
         </div>
     }
 }
-

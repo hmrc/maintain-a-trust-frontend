@@ -20,7 +20,6 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import models.MigratingFromNonTaxableToTaxable
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.Logging
 import play.api.data.Form

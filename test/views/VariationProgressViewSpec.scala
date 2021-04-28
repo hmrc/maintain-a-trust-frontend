@@ -16,107 +16,79 @@
 
 package views
 
-import models.pages.Tag.UpToDate
-import models.{URN, UTR}
+import models.UTR
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Protectors, Trustees}
-import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
+import sections.{Natural, Trustees}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 import viewmodels.{Link, Task}
 import views.behaviours.{VariationsProgressViewBehaviours, ViewBehaviours}
 import views.html.VariationProgressView
 
 class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressViewBehaviours {
 
-  val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+  private val utr = "utr"
 
-  "VariationProgress view for utr" must {
+  private val mandatorySections = List(
+    Task(Link(Settlors, ""), None),
+    Task(Link(Trustees, ""), None),
+    Task(Link(Beneficiaries, ""), None)
+  )
 
-    val utr = "utr"
+  private val optionalSections = List(
+    Task(Link(Natural, ""),None)
+  )
 
-    val mandatorySections = List(
-      Task(Link(Settlors, ""), None),
-      Task(Link(Trustees, ""), None),
-      Task(Link(Beneficiaries, ""), None)
-    )
+  private val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
-    val optionalSections = List(
-      Task(Link(Natural, ""),None)
-    )
+  "VariationProgressView" when {
 
-    val group = Organisation
+    "not all sections completed" when {
 
-    val userAnswers = emptyUserAnswersForUtr
+      "agent user" must {
 
-    val view = viewFor[VariationProgressView](Some(userAnswers))
+        val group = Agent
 
-    val applyView = view.apply(utr, UTR, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(fakeRequest, messages)
+        val userAnswers = emptyUserAnswersForUtr
 
-    behave like normalPageTitleWithCaption(applyView,
-      "variationProgress",
-      "utr",
-      utr,
-    "p1", "p2")
+        val view = viewFor[VariationProgressView](Some(userAnswers))
 
-    behave like pageWithBackLink(applyView)
+        val applyView = view.apply(
+          identifier = utr,
+          identifierType = UTR,
+          mandatory = mandatorySections,
+          optional = optionalSections,
+          affinityGroup = group,
+          nextUrl = expectedContinueUrl,
+          isAbleToDeclare = false,
+          closingTrust = false
+        )(fakeRequest, messages)
 
-    behave like taskListHeading(applyView)
-
-    behave like taskList(applyView, mandatorySections)
-    behave like taskList(applyView, optionalSections)
-
-  }
-
-  "VariationProgress view for urn" must {
-
-    val urn = "urn"
-
-    val mandatorySections = List(
-      Task(Link(Settlors, ""), None),
-      Task(Link(Trustees, ""), None),
-      Task(Link(Beneficiaries, ""), None)
-    )
-    val optionalSections = List(
-      Task(Link(Natural, ""),None))
-
-    val group = Organisation
-
-    val userAnswers = emptyUserAnswersForUtr
-
-    val view = viewFor[VariationProgressView](Some(userAnswers))
-
-    val applyView = view.apply(urn, URN, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(fakeRequest, messages)
-
-    behave like normalPageTitleWithCaption(applyView,
-      "variationProgress",
-      "urn",
-      urn,
-      "p1", "p2")
-
-    behave like pageWithBackLink(applyView)
-
-    behave like taskListHeading(applyView)
-
-    behave like taskList(applyView, mandatorySections)
-    behave like taskList(applyView, optionalSections)
-
-  }
-
-  "render summary" when {
-
-    "all sections are completed for utr" in {
-
-        val utr = "utr"
-
-        val mandatorySections = List(
-          Task(Link(Settlors, "http://localhost:9795/maintain-a-trust/settlors/utr"), Some(UpToDate)),
-          Task(Link(Trustees, "http://localhost:9792/maintain-a-trust/trustees/utr"), Some(UpToDate)),
-          Task(Link(Beneficiaries, "http://localhost:9793/maintain-a-trust/beneficiaries/utr"), Some(UpToDate))
+        behave like normalPageTitleWithCaption(
+          view = applyView,
+          messageKeyPrefix = "variationProgress",
+          captionKey = "utr",
+          captionParam = utr,
+          expectedGuidanceKeys = "p1", "p2", "subHeading.2", "subHeading.3"
         )
-        val optionalSections = List(
-          Task(Link(Protectors, "http://localhost:9796/maintain-a-trust/protectors/utr"), Some(UpToDate)),
-          Task(Link(Natural, "http://localhost:9799/maintain-a-trust/other-individuals/utr"), Some(UpToDate))
-        )
+
+        behave like pageWithBackLink(applyView)
+
+        behave like taskListHeading(applyView)
+
+        behave like taskList(applyView, mandatorySections)
+        behave like taskList(applyView, optionalSections)
+
+        behave like pageWithWarning(applyView)
+
+        val doc = asDocument(applyView)
+
+        "render agent overview link" in {
+          assertContainsText(doc, messages("variationsProgress.return.link"))
+        }
+      }
+
+      "non-agent user" must {
 
         val group = Organisation
 
@@ -124,17 +96,131 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
         val view = viewFor[VariationProgressView](Some(userAnswers))
 
-        val applyView = view.apply(utr, UTR, mandatorySections, optionalSections, group, expectedContinueUrl, isAbleToDeclare = true, closingTrust = false)(fakeRequest, messages)
+        val applyView = view.apply(
+          identifier = utr,
+          identifierType = UTR,
+          mandatory = mandatorySections,
+          optional = optionalSections,
+          affinityGroup = group,
+          nextUrl = expectedContinueUrl,
+          isAbleToDeclare = false,
+          closingTrust = false
+        )(fakeRequest, messages)
 
-        val doc = asDocument(applyView)
+        behave like normalPageTitleWithCaption(
+          view = applyView,
+          messageKeyPrefix = "variationProgress",
+          captionKey = "utr",
+          captionParam = utr,
+          expectedGuidanceKeys = "p1", "p2", "subHeading.2", "subHeading.3"
+        )
 
-        assertRenderedById(doc, "summary-heading")
-        assertRenderedById(doc, "summary-paragraph")
-        assertRenderedById(doc, "summary-heading-2")
-        assertRenderedById(doc, "summary-paragraph-2")
-        assertRenderedById(doc, "print-and-save")
+        behave like pageWithBackLink(applyView)
 
+        behave like taskListHeading(applyView)
+
+        behave like taskList(applyView, mandatorySections)
+        behave like taskList(applyView, optionalSections)
+
+        behave like pageWithWarning(applyView)
       }
     }
 
+    "all sections completed" when {
+
+      "agent user" must {
+
+        val group = Agent
+
+        val userAnswers = emptyUserAnswersForUtr
+
+        val view = viewFor[VariationProgressView](Some(userAnswers))
+
+        val applyView = view.apply(
+          identifier = utr,
+          identifierType = UTR,
+          mandatory = mandatorySections,
+          optional = optionalSections,
+          affinityGroup = group,
+          nextUrl = expectedContinueUrl,
+          isAbleToDeclare = true,
+          closingTrust = false
+        )(fakeRequest, messages)
+
+        behave like normalPageTitleWithCaption(
+          view = applyView,
+          messageKeyPrefix = "variationProgress",
+          captionKey = "utr",
+          captionParam = utr,
+          expectedGuidanceKeys = "p1", "p2", "subHeading.2", "subHeading.3", "subHeading.4", "p3", "p4", "subHeading.5", "p5", "sa900.link"
+        )
+
+        behave like pageWithBackLink(applyView)
+
+        behave like taskListHeading(applyView)
+
+        behave like taskList(applyView, mandatorySections)
+        behave like taskList(applyView, optionalSections)
+
+        behave like pageWithWarning(applyView)
+
+        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+
+        val doc = asDocument(applyView)
+
+        "render agent overview link" in {
+          assertContainsText(doc, messages("variationsProgress.return.link"))
+        }
+
+        "render print link" in {
+          assertRenderedById(doc, "print-and-save")
+        }
+      }
+
+      "non-agent user" must {
+
+        val group = Organisation
+
+        val userAnswers = emptyUserAnswersForUtr
+
+        val view = viewFor[VariationProgressView](Some(userAnswers))
+
+        val applyView = view.apply(
+          identifier = utr,
+          identifierType = UTR,
+          mandatory = mandatorySections,
+          optional = optionalSections,
+          affinityGroup = group,
+          nextUrl = expectedContinueUrl,
+          isAbleToDeclare = true,
+          closingTrust = false
+        )(fakeRequest, messages)
+
+        behave like normalPageTitleWithCaption(
+          view = applyView,
+          messageKeyPrefix = "variationProgress",
+          captionKey = "utr",
+          captionParam = utr,
+          expectedGuidanceKeys = "p1", "p2", "subHeading.2", "subHeading.3", "subHeading.4", "p3", "p4", "subHeading.5", "p5", "sa900.link"
+        )
+
+        behave like pageWithBackLink(applyView)
+
+        behave like taskListHeading(applyView)
+
+        behave like taskList(applyView, mandatorySections)
+        behave like taskList(applyView, optionalSections)
+
+        behave like pageWithWarning(applyView)
+
+        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+
+        val doc = asDocument(applyView)
+
+        "render print link" in {
+          assertRenderedById(doc, "print-and-save")
+        }
+      }
+    }
+  }
 }
