@@ -28,13 +28,13 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import sections.assets.NonEeaBusinessAsset
+import sections.assets.{Assets, NonEeaBusinessAsset}
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Protectors, TrustDetails, Trustees}
+import sections.{Natural, Protectors, TrustDetails, Trustees, TaxLiability}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.{Link, Task}
-import views.html.VariationProgressView
+import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
 import scala.concurrent.Future
 
@@ -55,6 +55,13 @@ class TaskListControllerSpec extends SpecBase {
   def mandatorySections5mld(identifier: String): List[Task] =
     Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Some(InProgress)) ::
       mandatorySections4mld(identifier)
+
+  def mandatorySectionsTransitionToTaxable(identifier: String): List[Task] = List(
+    Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Some(InProgress)),
+    Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), Some(InProgress)),
+    Task(Link(TaxLiability, s"http://localhost:9838/maintain-a-trust/tax-liability/$identifier"), Some(InProgress))
+  )
+
 
   def optionalSections4mld(identifier: String): List[Task] = List(
     Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), Some(InProgress)),
@@ -105,6 +112,15 @@ class TaskListControllerSpec extends SpecBase {
           val urn = baseAnswers.identifier
 
           behave like taskListController(baseAnswers, mandatorySections5mld(urn), optionalSections5mld(urn))
+        }
+
+        "trust is non-taxable changing to taxable" must {
+
+          val baseAnswers = emptyUserAnswersForUrn
+
+          val urn = baseAnswers.identifier
+
+          behave like transitionTaskListController(baseAnswers, mandatorySectionsTransitionToTaxable(urn))
         }
       }
     }
@@ -163,6 +179,54 @@ class TaskListControllerSpec extends SpecBase {
 
           contentAsString(result) mustEqual
             view(baseAnswers.identifier, baseAnswers.identifierType, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
+
+          application.stop()
+        }
+      }
+
+      "redirect to Technical difficulties page when no value found for What do you want to do next" in {
+
+        val answers = baseAnswers
+
+        val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+        val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual INTERNAL_SERVER_ERROR
+
+        application.stop()
+      }
+    }
+
+    def transitionTaskListController(baseAnswers: UserAnswers, mandatorySections: List[Task]): Unit = {
+
+      "return OK and the correct view for a GET" when {
+
+        "changing from non taxable to txable trust" in {
+
+          val mockConnector = mock[TrustsStoreConnector]
+
+          val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+
+          val application = applicationBuilder(userAnswers = Some(answers))
+            .overrides(
+              bind(classOf[TrustsStoreConnector]).toInstance(mockConnector)
+            ).build()
+
+          when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+          val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[NonTaxToTaxProgressView]
+
+          status(result) mustEqual OK
+
+          contentAsString(result) mustEqual
+            view(baseAnswers.identifier, baseAnswers.identifierType, mandatorySections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
 
           application.stop()
         }

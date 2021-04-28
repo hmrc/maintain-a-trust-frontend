@@ -571,7 +571,32 @@ variationProgress.subHeading.5 = Update asset details
 variationProgress.p5 = To update any asset details after making the declaration for this trust, use Self Assessment online or the
 variationProgress.sa900.link = Trust and Estate Tax Return form (SA900) (opens in a new window or tab)
 
+transitionProgress.title = Trust overview
+transitionProgress.heading = Trust overview
+transitionProgress.p1 = You can make changes to the trust’s record, and make a declaration once you have confirmed that each section is up to date.
+transitionProgress.subHeading = Declare and save your changes
+transitionProgress.p2 = To save any changes you make to the trust’s record, you need to:
+transitionProgress.bullet1 = submit the changes to HMRC, which will update the trust’s records
+transitionProgress.bullet2 = declare that the information HMRC has about the trust is accurate and up to date
+transitionsProgress.return.link = Return to register and maintain a trust for a client
+transitionProgress.warning = If you do not declare that the information is up to date, your changes will not be submitted to HMRC and will not be saved
+transitionProgress.p3 = You can
+transitionProgress.p3.link = return to the service and update the trust’s record at any time.
+transitionProgress.p4 = You can print a copy of your draft answers as well as a copy of the declaration.
+transitionProgress.subHeading.2 = All sections to be completed
+
+transitionProgress.p5 = You can save or print a draft copy of your saved answers once all sections are up to date, as well as a declared copy after you have made a declaration.
+transitionProgress.subHeading.4 = Summary
+transitionProgress.p6 = You can
+transitionProgress.printsave.link = print or save a draft copy of your saved answers
+
+transitionProgress.subHeading.5 = Update asset details
+transitionProgress.p7 = To update any asset details after making the declaration for this trust, use Self Assessment online or the
+transitionProgress.sa900.link = Trust and Estate Tax Return form (SA900) (opens in a new window or tab)
+
 taskList.trustDetails.label = Trust details
+taskList.assets.label = Assets
+taskList.taxLiability.label = Years of Tax Liability
 taskList.settlors.label = Settlors
 taskList.protectors.label = Protectors
 taskList.trustees.label = Trustees

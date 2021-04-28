@@ -20,6 +20,8 @@ import _root_.pages.makechanges._
 import play.api.libs.json.{Format, Json}
 
 case class CompletedMaintenanceTasks(trustDetails: Boolean,
+                                     assets: Boolean,
+                                     taxLiability: Boolean,
                                      trustees: Boolean,
                                      beneficiaries: Boolean,
                                      settlors: Boolean,
@@ -33,6 +35,8 @@ object CompletedMaintenanceTasks {
 
   def apply(): CompletedMaintenanceTasks = CompletedMaintenanceTasks(
     trustDetails = false,
+    assets = false,
+    taxLiability = false,
     trustees = false,
     beneficiaries = false,
     settlors = false,
@@ -43,6 +47,8 @@ object CompletedMaintenanceTasks {
 
   def from(userAnswers: UserAnswers): Option[CompletedMaintenanceTasks] = for {
     trustDetails <- userAnswers.getWithDefault(UpdateTrustDetailsYesNoPage, false)
+    assets <- userAnswers.getWithDefault(UpdateAssetsYesNoPage, false)
+    taxLiability <- userAnswers.getWithDefault(UpdateTaxLiabilityYesNoPage, false)
     trustees <- userAnswers.get(UpdateTrusteesYesNoPage)
     beneficiaries <- userAnswers.get(UpdateBeneficiariesYesNoPage)
     settlors <- userAnswers.get(UpdateSettlorsYesNoPage)
@@ -50,7 +56,7 @@ object CompletedMaintenanceTasks {
     otherIndividuals <- userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage)
     nonEeaCompanies <- userAnswers.getWithDefault(AddOrUpdateNonEeaCompanyYesNoPage, false)
   } yield {
-    CompletedMaintenanceTasks(!trustDetails, !trustees, !beneficiaries, !settlors, !protectors, !otherIndividuals, !nonEeaCompanies)
+    CompletedMaintenanceTasks(!trustDetails, !assets, !taxLiability, !trustees, !beneficiaries, !settlors, !protectors, !otherIndividuals, !nonEeaCompanies)
   }
 
 }

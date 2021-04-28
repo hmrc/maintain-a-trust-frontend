@@ -20,12 +20,12 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions.Actions
-import models.Enumerable
+import models.{Enumerable, MigratingFromNonTaxableToTaxable}
 import navigation.Navigator.declarationUrl
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.VariationProgressView
+import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
 import scala.concurrent.ExecutionContext
 
@@ -33,6 +33,7 @@ class TaskListController @Inject()(
                                     override val messagesApi: MessagesApi,
                                     actions: Actions,
                                     view: VariationProgressView,
+                                    nonTaxToTaxView: NonTaxToTaxProgressView,
                                     val controllerComponents: MessagesControllerComponents,
                                     val config: FrontendAppConfig,
                                     storeConnector: TrustsStoreConnector
@@ -47,17 +48,30 @@ class TaskListController @Inject()(
       storeConnector.getStatusOfTasks(identifier) map {
         tasks =>
 
-          val sections = generateTaskList(tasks, identifier, request.userAnswers.trustMldStatus)
+          val sections = generateTaskList(tasks, identifier, request.userAnswers.trustMldStatus, request.userAnswers.trustTaxability)
 
-          Ok(view(identifier,
-            identifierType = request.userAnswers.identifierType,
-            mandatory = sections.mandatory,
-            optional = sections.other,
-            affinityGroup = request.user.affinityGroup,
-            nextUrl = declarationUrl(request.user.affinityGroup),
-            isAbleToDeclare = sections.isAbleToDeclare,
-            closingTrust = request.closingTrust
-          ))
+          if (request.userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
+            Ok(nonTaxToTaxView(identifier,
+              identifierType = request.userAnswers.identifierType,
+              mandatory = sections.mandatory,
+              affinityGroup = request.user.affinityGroup,
+              nextUrl = declarationUrl(request.user.affinityGroup),
+              isAbleToDeclare = sections.isAbleToDeclare,
+              closingTrust = request.closingTrust
+            ))
+          } else {
+            Ok(view(identifier,
+              identifierType = request.userAnswers.identifierType,
+              mandatory = sections.mandatory,
+              optional = sections.other,
+              affinityGroup = request.user.affinityGroup,
+              nextUrl = declarationUrl(request.user.affinityGroup),
+              isAbleToDeclare = sections.isAbleToDeclare,
+              closingTrust = request.closingTrust
+            ))
+          }
+
+
       }
   }
 }

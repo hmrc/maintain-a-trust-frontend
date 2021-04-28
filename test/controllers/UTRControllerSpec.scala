@@ -19,16 +19,21 @@ package controllers
 import base.SpecBase
 import connectors.TrustConnector
 import forms.UTRFormProvider
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import play.api.data.Form
+import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import repositories.ActiveSessionRepository
 import services.FeatureFlagService
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.UTRView
 
 import java.time.LocalDate
+import scala.concurrent.Future
 
 class UTRControllerSpec extends SpecBase {
 
@@ -89,9 +94,16 @@ class UTRControllerSpec extends SpecBase {
     }
 
     "redirect to trust status on a POST when there is no session" in {
+
+      val mockRepository = mock[ActiveSessionRepository]
+
+      when(mockRepository.set(any())).thenReturn(Future.successful(true))
+
       val application =
         applicationBuilder(userAnswers = None, affinityGroup = Organisation, enrolments = enrolments)
-          .build()
+          .overrides(
+            bind[ActiveSessionRepository].toInstance(mockRepository)
+          ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustUTRRoute)
         .withFormUrlEncodedBody(("value", utr))
@@ -105,11 +117,18 @@ class UTRControllerSpec extends SpecBase {
     }
 
     "redirect to trust status on a POST" in {
+
+      val mockRepository = mock[ActiveSessionRepository]
+
+      when(mockRepository.set(any())).thenReturn(Future.successful(true))
+
       val application =
         applicationBuilder(
           userAnswers = Some(emptyUserAnswersForUtr),
           affinityGroup = Organisation,
           enrolments = enrolments
+        ).overrides(
+          bind[ActiveSessionRepository].toInstance(mockRepository)
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustUTRRoute)

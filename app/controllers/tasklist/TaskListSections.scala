@@ -19,12 +19,12 @@ package controllers.tasklist
 import config.FrontendAppConfig
 import models.pages.Tag
 import models.pages.Tag.InProgress
-import models.{CompletedMaintenanceTasks, TrustMldStatus}
+import models.{CompletedMaintenanceTasks, MigratingFromNonTaxableToTaxable, TrustMldStatus, TrustTaxability}
 import pages.Page
-import sections.assets.NonEeaBusinessAsset
+import sections.assets.{Assets, NonEeaBusinessAsset}
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Protectors, TrustDetails, Trustees}
+import sections.{Natural, Protectors, TaxLiability, TrustDetails, Trustees}
 import viewmodels.{Link, Task}
 
 trait TaskListSections {
@@ -38,6 +38,18 @@ trait TaskListSections {
   private def trustDetailsRouteEnabled(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTrustDetailsEnabled) {
       config.maintainTrustDetailsUrl(identifier)
+    }
+  }
+
+  private def trustAssetsRouteEnabled(identifier: String): String = {
+    redirectToServiceIfEnabled(config.maintainTrustAssetsEnabled) {
+      config.maintainTrustAssetsUrl(identifier)
+    }
+  }
+
+  private def taxLiabilityRouteEnabled(identifier: String): String = {
+    redirectToServiceIfEnabled(config.maintainTaxLiabilityEnabled) {
+      config.maintainTaxLiabilityUrl(identifier)
     }
   }
 
@@ -87,7 +99,8 @@ trait TaskListSections {
 
   def generateTaskList(tasks: CompletedMaintenanceTasks,
                        identifier: String,
-                       trustMldStatus: TrustMldStatus): TaskList = {
+                       trustMldStatus: TrustMldStatus,
+                       trustTaxability: TrustTaxability): TaskList = {
 
     def filter5mldSections(task: Task, section: Page): Boolean = {
       task.link.text == section.toString && !trustMldStatus.is5mldTrustIn5mldMode
@@ -127,7 +140,26 @@ trait TaskListSections {
       )
     ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
 
-    TaskList(mandatorySections, optionalSections)
+    val transitionSections = List(
+      Task(
+        Link(TrustDetails, trustDetailsRouteEnabled(identifier)),
+        Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
+      ),
+      Task(
+        Link(Assets, trustAssetsRouteEnabled(identifier)),
+        Some(Tag.tagFor(tasks.assets))
+      ),
+      Task(
+        Link(TaxLiability, taxLiabilityRouteEnabled(identifier)),
+        Some(Tag.tagFor(tasks.taxLiability))
+      )
+    )
+
+    if (trustTaxability != MigratingFromNonTaxableToTaxable) {
+      TaskList(mandatorySections, optionalSections)
+    } else {
+      TaskList(transitionSections, List.empty[Task])
+    }
   }
 
 }
