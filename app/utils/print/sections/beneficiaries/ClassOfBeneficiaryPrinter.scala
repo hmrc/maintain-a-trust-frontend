@@ -43,7 +43,7 @@ class ClassOfBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends
 
   override def section: QuestionPage[JsArray] = ClassOfBeneficiaries
 
-  override val headingKey: Option[String] = None
+  override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = None
 
   override val subHeadingKey: Option[String] = Some("classOfBeneficiary")
 

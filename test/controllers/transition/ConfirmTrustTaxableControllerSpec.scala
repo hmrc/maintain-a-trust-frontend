@@ -29,7 +29,6 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
-import uk.gov.hmrc.http.HttpResponse
 import views.html.transition.ConfirmTrustTaxableView
 
 import scala.concurrent.Future
@@ -71,7 +70,7 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
           val mockTrustsConnector = mock[TrustConnector]
 
           when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
-            .thenReturn(Future.successful(HttpResponse(OK, "")))
+            .thenReturn(Future.successful(okResponse))
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), affinityGroup = Agent)
             .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -101,7 +100,7 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
           val mockTrustsConnector = mock[TrustConnector]
 
           when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
-            .thenReturn(Future.successful(HttpResponse(OK, "")))
+            .thenReturn(Future.successful(okResponse))
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), affinityGroup = Organisation)
             .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))

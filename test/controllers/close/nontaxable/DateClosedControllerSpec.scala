@@ -24,7 +24,6 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.close.nontaxable.DateClosedPage
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
@@ -104,8 +103,7 @@ class DateClosedControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when valid data is submitted" in {
 
-      val baseAnswers: UserAnswers = emptyUserAnswersForUrn.copy(is5mldEnabled = true, isTrustTaxable = false)
-        .set(ExpressTrustYesNoPage, true).success.value
+      val baseAnswers: UserAnswers = emptyUserAnswersForUrn
 
       when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
@@ -117,7 +115,7 @@ class DateClosedControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.close.routes.BeforeClosingController.onPageLoad().url
 
       application.stop()
     }

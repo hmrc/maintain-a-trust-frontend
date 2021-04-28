@@ -22,7 +22,7 @@ import forms.URNFormProvider
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.UserAnswersSetupService
+import services.SessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.URNView
 
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class URNController @Inject()(
                                override val messagesApi: MessagesApi,
                                actions: Actions,
-                               uaSetupService: UserAnswersSetupService,
+                               sessionService: SessionService,
                                formProvider: URNFormProvider,
                                val controllerComponents: MessagesControllerComponents,
                                view: URNView
@@ -50,9 +50,8 @@ class URNController @Inject()(
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, routes.URNController.onSubmit()))),
-        urn => {
-          uaSetupService.setupAndRedirectToStatus(urn, request.user.internalId, is5mldEnabled = true, isTaxable = false)
-        }
+        urn =>
+          sessionService.initialiseSession(urn)
       )
   }
 }

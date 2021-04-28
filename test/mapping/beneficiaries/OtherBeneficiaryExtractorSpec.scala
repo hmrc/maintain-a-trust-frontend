@@ -19,10 +19,9 @@ package mapping.beneficiaries
 import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{AddressType, DisplayTrustOtherType}
-import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
+import models.{InternationalAddress, MetaData, UKAddress}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.other._
-import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
@@ -67,7 +66,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val others = Nil
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = otherExtractor.extract(ua, others)
 
@@ -93,7 +92,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = otherExtractor.extract(ua, other)
 
@@ -124,8 +123,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = otherExtractor.extract(ua, other)
 
@@ -144,8 +142,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val others = (for (index <- 0 to 2) yield generateOther(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = otherExtractor.extract(ua, others)
 
@@ -208,8 +205,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = otherExtractor.extract(ua, other)
 
@@ -228,8 +224,7 @@ class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val others = (for (index <- 0 to 2) yield generateOther(index)).toList
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = otherExtractor.extract(ua, others)
 

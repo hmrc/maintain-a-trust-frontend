@@ -52,6 +52,6 @@ class AllTrusteesPrinter @Inject()(leadTrusteeIndividualPrinter: LeadTrusteeIndi
 
   override val section: QuestionPage[JsArray] = Trustees
 
-  override val headingKey: Option[String] = Some("trustees")
+  override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("trustees")
 
 }

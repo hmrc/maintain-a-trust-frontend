@@ -41,6 +41,6 @@ class AllProtectorsPrinter @Inject()(individualProtectorPrinter: IndividualProte
 
   override def section: QuestionPage[JsArray] = Protectors
 
-  override val headingKey: Option[String] = Some("protectors")
+  override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("protectors")
 
 }

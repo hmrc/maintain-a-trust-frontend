@@ -34,6 +34,9 @@ class TrustDetailsPrinterSpec extends SpecBase {
       val answers = emptyUserAnswersForUtr
         .set(TrustNamePage, "Trust Ltd.").success.value
         .set(WhenTrustSetupPage, LocalDate.of(2019,6,1)).success.value
+        .set(TrustUkPropertyYesNoPage, true).success.value
+        .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
+        .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value
 
       val actualSection = helper.print(answers)
 
@@ -45,7 +48,10 @@ class TrustDetailsPrinterSpec extends SpecBase {
           rows = Seq(
             AnswerRow("What is the trust’s name?", Html("Trust Ltd."), None),
             AnswerRow("When was the trust created?", Html("1 June 2019"), None),
-            AnswerRow("What is the trust’s Unique Taxpayer Reference (UTR)?", Html(utr), None)
+            AnswerRow("What is the trust’s Unique Taxpayer Reference (UTR)?", Html(utr), None),
+            AnswerRow("Does the trust own UK land or property?", Html("Yes"), None),
+            AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
+            AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None)
           ),
           sectionKey = Some("Trust details")
         )

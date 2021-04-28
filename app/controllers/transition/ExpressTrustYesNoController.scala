@@ -20,6 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
+import models.MigratingFromNonTaxableToTaxable
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.Logging
 import play.api.data.Form
@@ -73,7 +74,11 @@ class ExpressTrustYesNoController @Inject()(
             _ <- trustsConnector.removeTransforms(request.userAnswers.identifier)
             _ <- trustsConnector.setExpressTrust(request.userAnswers.identifier, value)
           } yield {
-            Redirect(routes.ConfirmTrustTaxableController.onPageLoad())
+            if (request.userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
+              Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
+            } else {
+              Redirect(routes.ConfirmTrustTaxableController.onPageLoad())
+            }
           }
         }
       )

@@ -17,20 +17,22 @@
 package controllers
 
 import base.SpecBase
-import controllers.Assets.Redirect
+import connectors.TrustConnector
 import forms.UTRFormProvider
-import org.mockito.Matchers.{any, eq => eqTo}
-import org.mockito.Mockito.{verify, when}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{FeatureFlagService, UserAnswersSetupService}
+import repositories.ActiveSessionRepository
+import services.FeatureFlagService
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.UTRView
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class UTRControllerSpec extends SpecBase {
@@ -43,6 +45,7 @@ class UTRControllerSpec extends SpecBase {
   lazy val onSubmit: Call = routes.UTRController.onSubmit()
 
   val mockFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
+  val mockTrustsConnector: TrustConnector = mock[TrustConnector]
 
   val utr = "0987654321"
 
@@ -50,37 +53,13 @@ class UTRControllerSpec extends SpecBase {
     "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
   )))
 
+  val startDate: LocalDate = LocalDate.parse("2000-01-01")
+
   "UTR Controller" must {
-
-    "return OK and the correct view for a GET" in {
-
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
-        bind[FeatureFlagService].toInstance(mockFeatureFlagService)
-      ).build()
-
-      val request = FakeRequest(GET, trustUTRRoute)
-
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[UTRView]
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(form, onSubmit)(request, messages).toString
-
-      application.stop()
-    }
 
     "return OK and the correct view for a GET if no existing data is found (creating a new session)" in {
 
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
-        bind[FeatureFlagService].toInstance(mockFeatureFlagService)
-      ).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       val request = FakeRequest(GET, trustUTRRoute)
 
@@ -96,29 +75,52 @@ class UTRControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to trust status for a POST if no existing data is found (creating a new session)" in {
+    "return OK and the correct view for a GET" in {
 
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
-      val application = applicationBuilder(userAnswers = None).overrides(
-        bind[FeatureFlagService].toInstance(mockFeatureFlagService)
-      ).build()
+      val request = FakeRequest(GET, trustUTRRoute)
 
-      val request = FakeRequest(POST, trustUTRRoute)
+      val result = route(application, request).value
+
+      val view = application.injector.instanceOf[UTRView]
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(form, onSubmit)(request, messages).toString
+
+      application.stop()
+    }
+
+    "redirect to trust status on a POST when there is no session" in {
+
+      val mockRepository = mock[ActiveSessionRepository]
+
+      when(mockRepository.set(any())).thenReturn(Future.successful(true))
+
+      val application =
+        applicationBuilder(userAnswers = None, affinityGroup = Organisation, enrolments = enrolments)
+          .overrides(
+            bind[ActiveSessionRepository].toInstance(mockRepository)
+          ).build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustUTRRoute)
         .withFormUrlEncodedBody(("value", utr))
 
       val result = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual controllers.routes.TrustStatusController.status().url
+      redirectLocation(result).value mustBe controllers.routes.TrustStatusController.status().url
 
       application.stop()
     }
 
     "redirect to trust status on a POST" in {
 
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
+      val mockRepository = mock[ActiveSessionRepository]
+
+      when(mockRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(
@@ -126,7 +128,7 @@ class UTRControllerSpec extends SpecBase {
           affinityGroup = Organisation,
           enrolments = enrolments
         ).overrides(
-          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
+          bind[ActiveSessionRepository].toInstance(mockRepository)
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustUTRRoute)
@@ -140,50 +142,10 @@ class UTRControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "make call to user answers setup service" in {
-
-      val mockUserAnswersSetupService = mock[UserAnswersSetupService]
-
-      when(mockUserAnswersSetupService.setupAndRedirectToStatus(any(), any(), any(), any())(any(), any()))
-        .thenReturn(Future.successful(Redirect("redirectUrl")))
-
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
-
-      val application =
-        applicationBuilder(
-          userAnswers = Some(emptyUserAnswersForUtr),
-          affinityGroup = Organisation,
-          enrolments = enrolments
-        ).overrides(
-          bind[UserAnswersSetupService].toInstance(mockUserAnswersSetupService),
-          bind[FeatureFlagService].toInstance(mockFeatureFlagService)
-        ).build()
-
-      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] =
-        FakeRequest(POST, trustUTRRoute).withFormUrlEncodedBody(("value", utr))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe "redirectUrl"
-
-      verify(mockUserAnswersSetupService).setupAndRedirectToStatus(
-        eqTo(utr),
-        eqTo("id"),
-        eqTo(true),
-        eqTo(true)
-      )(any(), any())
-
-      application.stop()
-    }
-
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      when(mockFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(false))
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).overrides(
-        bind[FeatureFlagService].toInstance(mockFeatureFlagService)
-      ).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+        .build()
 
       val request = FakeRequest(POST, trustUTRRoute)
         .withFormUrlEncodedBody(("value", ""))

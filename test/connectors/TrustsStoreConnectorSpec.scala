@@ -73,6 +73,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         """
           |{
           |  "trustDetails": false,
+          |  "assets": false,
+          |  "taxLiability": false,
           |  "trustees": true,
           |  "beneficiaries": false,
           |  "settlors": false,
@@ -92,6 +94,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       result.futureValue mustBe
         CompletedMaintenanceTasks(
           trustDetails = false,
+          assets = false,
+          taxLiability = false,
           trustees = true,
           beneficiaries = false,
           settlors = false,
@@ -128,6 +132,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           """
             |{
             |  "trustDetails": true,
+            |  "assets": true,
+            |  "taxLiability": true,
             |  "trustees": false,
             |  "beneficiaries": true,
             |  "settlors": true,
@@ -149,6 +155,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         result.futureValue mustBe
           CompletedMaintenanceTasks(
             trustDetails = true,
+            assets = true,
+            taxLiability = true,
             trustees = false,
             beneficiaries = true,
             settlors = true,
@@ -185,6 +193,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           """
             |{
             |  "trustDetails": true,
+            |  "assets": true,
+            |  "taxLiability": true,
             |  "trustees": false,
             |  "beneficiaries": true,
             |  "settlors": true,
@@ -206,6 +216,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         result.futureValue mustBe
           CompletedMaintenanceTasks(
             trustDetails = true,
+            assets = true,
+            taxLiability = true,
             trustees = false,
             beneficiaries = true,
             settlors = true,
@@ -240,6 +252,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
     result.futureValue mustBe
       CompletedMaintenanceTasks(
         trustDetails = false,
+        assets = false,
+        taxLiability = false,
         trustees = false,
         beneficiaries = false,
         settlors = false,

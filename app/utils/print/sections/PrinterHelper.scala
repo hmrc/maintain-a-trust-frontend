@@ -21,26 +21,27 @@ import viewmodels.{AnswerRow, AnswerSection}
 
 trait PrinterHelper {
 
-  def prependHeadingToAnswerSections(answerSections: Seq[AnswerSection])
+  def prependHeadingToAnswerSections(answerSections: Seq[AnswerSection], migratingFromNonTaxableToTaxable: Boolean)
                                     (implicit messages: Messages): Seq[AnswerSection] = {
-    (answerSections.nonEmpty, headingKey) match {
-      case (true, Some(_)) => answerSectionWithRows() +: answerSections
+    (answerSections.nonEmpty, headingKey(migratingFromNonTaxableToTaxable)) match {
+      case (true, Some(_)) => answerSectionWithRows(Seq(), migratingFromNonTaxableToTaxable) +: answerSections
       case (true, _) => answerSections
       case _ => Nil
     }
   }
 
-  def answerSectionWithRows(rows: Seq[Option[AnswerRow]] = Seq())
+  def answerSectionWithRows(rows: Seq[Option[AnswerRow]], migratingFromNonTaxableToTaxable: Boolean)
                            (implicit messages: Messages): AnswerSection = AnswerSection(
     headingKey = None,
     rows = rows.flatten,
-    sectionKey = heading
+    sectionKey = heading(migratingFromNonTaxableToTaxable)
   )
 
-  private def heading(implicit messages: Messages): Option[String] = headingKey map { x =>
-    messages(s"answerPage.section.$x.heading")
-  }
+  private def heading(migratingFromNonTaxableToTaxable: Boolean)(implicit messages: Messages): Option[String] =
+    headingKey(migratingFromNonTaxableToTaxable) map { x =>
+      messages(s"answerPage.section.$x.heading")
+    }
 
-  val headingKey: Option[String]
+  def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String]
 
 }

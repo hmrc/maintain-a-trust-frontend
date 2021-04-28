@@ -17,16 +17,19 @@
 package controllers.testOnlyDoNotUseInAppConf
 
 import connectors.TrustsStoreConnector
+
 import javax.inject.Inject
 import play.api.Logging
+import play.api.libs.json.JsBoolean
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
-class TestTrustsStoreController @Inject()(connector: TrustsStoreConnector,
-                                          val controllerComponents: MessagesControllerComponents
+class TestTrustsStoreController @Inject()(
+                                           connector: TrustsStoreConnector,
+                                           val controllerComponents: MessagesControllerComponents
                                          )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
 
   def set4Mld: Action[AnyContent] = Action.async {
@@ -39,5 +42,26 @@ class TestTrustsStoreController @Inject()(connector: TrustsStoreConnector,
     implicit request =>
       logger.info(s"[Session ID: ${Session.id(hc)}] set 5MLD mode")
       connector.setFeature("5mld", state = true).map(_ => Ok)
+  }
+
+  /**
+   *
+   * @param feature can be either "5mld" or "non-taxable.access-code"
+   * @return Ok if successful or BadRequest for invalid request body
+   */
+  def setFeature(feature: String): Action[AnyContent] = Action.async {
+    implicit request =>
+      request.body.asJson match {
+        case Some(JsBoolean(value)) =>
+          logger.info(s"[Session ID: ${Session.id(hc)}] setting $feature to $value")
+          connector.setFeature(feature, value).map(_ => Ok).recover {
+            case e =>
+              logger.error(s"[Session ID: ${Session.id(hc)}] error setting feature: ${e.getMessage}")
+              InternalServerError
+          }
+        case None =>
+          logger.error(s"[Session ID: ${Session.id(hc)}] invalid request body")
+          Future.successful(BadRequest)
+      }
   }
 }

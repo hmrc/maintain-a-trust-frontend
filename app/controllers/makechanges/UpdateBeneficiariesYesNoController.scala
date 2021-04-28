@@ -49,7 +49,7 @@ class UpdateBeneficiariesYesNoController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, prefix(request.closingTrust)))
+      Ok(view(preparedForm, prefix, request.closingTrust))
   }
 
   def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
@@ -59,7 +59,7 @@ class UpdateBeneficiariesYesNoController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, prefix(request.closingTrust)))),
+          Future.successful(BadRequest(view(formWithErrors, prefix, request.closingTrust))),
 
         value => {
           for {

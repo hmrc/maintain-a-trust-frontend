@@ -19,10 +19,11 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.Actions
 import forms.UTRFormProvider
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{FeatureFlagService, UserAnswersSetupService}
+import services.SessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.UTRView
 
@@ -32,12 +33,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class UTRController @Inject()(
                                override val messagesApi: MessagesApi,
                                actions: Actions,
-                               uaSetupService: UserAnswersSetupService,
                                formProvider: UTRFormProvider,
-                               featureFlagService: FeatureFlagService,
+                               sessionService: SessionService,
                                val controllerComponents: MessagesControllerComponents,
                                view: UTRView
-                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   private val form: Form[String] = formProvider()
 
@@ -51,12 +51,8 @@ class UTRController @Inject()(
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
           Future.successful(BadRequest(view(formWithErrors, routes.UTRController.onSubmit()))),
-        utr => {
-          featureFlagService.is5mldEnabled().flatMap {
-            is5mldEnabled =>
-              uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled, isTaxable = true)
-          }
-        }
+        utr =>
+          sessionService.initialiseSession(utr)
       )
   }
 

@@ -24,18 +24,17 @@ import models.{CompletedMaintenanceTasks, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
 import pages.WhatIsNextPage
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import sections.assets.NonEeaBusinessAsset
+import sections.assets.{Assets, NonEeaBusinessAsset}
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Protectors, TrustDetails, Trustees}
+import sections.{Natural, Protectors, TrustDetails, Trustees, TaxLiability}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.{Link, Task}
-import views.html.VariationProgressView
+import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
 import scala.concurrent.Future
 
@@ -57,6 +56,13 @@ class TaskListControllerSpec extends SpecBase {
     Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Some(InProgress)) ::
       mandatorySections4mld(identifier)
 
+  def mandatorySectionsTransitionToTaxable(identifier: String): List[Task] = List(
+    Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Some(InProgress)),
+    Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), Some(InProgress)),
+    Task(Link(TaxLiability, s"http://localhost:9838/maintain-a-trust/tax-liability/$identifier"), Some(InProgress))
+  )
+
+
   def optionalSections4mld(identifier: String): List[Task] = List(
     Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), Some(InProgress)),
     Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), Some(InProgress))
@@ -70,7 +76,7 @@ class TaskListControllerSpec extends SpecBase {
 
     "in 4mld mode" must {
 
-      val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isTrustTaxable = true)
+      val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isUnderlyingData5mld = false)
 
       val utr = baseAnswers.identifier
 
@@ -81,7 +87,7 @@ class TaskListControllerSpec extends SpecBase {
 
       "underlying trust data is 4mld" must {
 
-        val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+        val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
 
         val utr = baseAnswers.identifier
 
@@ -92,8 +98,7 @@ class TaskListControllerSpec extends SpecBase {
 
         "trust is taxable" must {
 
-          val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val utr = baseAnswers.identifier
 
@@ -102,12 +107,20 @@ class TaskListControllerSpec extends SpecBase {
 
         "trust is non-taxable" must {
 
-          val baseAnswers = emptyUserAnswersForUrn.copy(is5mldEnabled = true, isTrustTaxable = false)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val baseAnswers = emptyUserAnswersForUrn
 
           val urn = baseAnswers.identifier
 
           behave like taskListController(baseAnswers, mandatorySections5mld(urn), optionalSections5mld(urn))
+        }
+
+        "trust is non-taxable changing to taxable" must {
+
+          val baseAnswers = emptyUserAnswersForUrn
+
+          val urn = baseAnswers.identifier
+
+          behave like transitionTaskListController(baseAnswers, mandatorySectionsTransitionToTaxable(urn))
         }
       }
     }
@@ -166,6 +179,54 @@ class TaskListControllerSpec extends SpecBase {
 
           contentAsString(result) mustEqual
             view(baseAnswers.identifier, baseAnswers.identifierType, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
+
+          application.stop()
+        }
+      }
+
+      "redirect to Technical difficulties page when no value found for What do you want to do next" in {
+
+        val answers = baseAnswers
+
+        val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+        val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual INTERNAL_SERVER_ERROR
+
+        application.stop()
+      }
+    }
+
+    def transitionTaskListController(baseAnswers: UserAnswers, mandatorySections: List[Task]): Unit = {
+
+      "return OK and the correct view for a GET" when {
+
+        "changing from non taxable to txable trust" in {
+
+          val mockConnector = mock[TrustsStoreConnector]
+
+          val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+
+          val application = applicationBuilder(userAnswers = Some(answers))
+            .overrides(
+              bind(classOf[TrustsStoreConnector]).toInstance(mockConnector)
+            ).build()
+
+          when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+          val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[NonTaxToTaxProgressView]
+
+          status(result) mustEqual OK
+
+          contentAsString(result) mustEqual
+            view(baseAnswers.identifier, baseAnswers.identifierType, mandatorySections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
 
           application.stop()
         }

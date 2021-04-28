@@ -20,12 +20,11 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.http._
 import models.pages.IndividualOrBusiness
-import models.{FullName, MetaData, UserAnswers}
+import models.{FullName, MetaData}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.protectors._
 import pages.protectors.business._
 import pages.protectors.individual._
-import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 import java.time.LocalDate
@@ -44,7 +43,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
 
         val protector = DisplayTrustProtectorsType(Nil, Nil)
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = protectorExtractor.extract(ua, Some(protector))
 
@@ -54,7 +53,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
 
       "must return right given no protector" in {
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = protectorExtractor.extract(ua, None)
 
@@ -110,7 +109,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             protectorCompany = Nil
           )
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -193,7 +192,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -267,7 +266,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -352,8 +351,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             protectorCompany = Nil
           )
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -436,8 +434,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -511,8 +508,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -597,8 +593,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             protectorCompany = Nil
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -681,8 +676,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -756,8 +750,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 

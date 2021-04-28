@@ -16,7 +16,9 @@
 
 package base
 
+import controllers.Assets.OK
 import controllers.actions._
+import models.UserAnswers
 import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
@@ -25,6 +27,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.BodyParsers
 import repositories.PlaybackRepository
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, Enrolments}
+import uk.gov.hmrc.http.HttpResponse
 import utils.TestUserAnswers
 
 trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked with BeforeAndAfter with FakeTrustsApp {
@@ -33,10 +36,10 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
   final val ENGLISH = "en"
   final val WELSH = "cy"
 
-  def emptyUserAnswersForUtr = TestUserAnswers.emptyUserAnswersForUtr
-  def emptyUserAnswersForUrn = TestUserAnswers.emptyUserAnswersForUrn
+  def emptyUserAnswersForUtr: UserAnswers = TestUserAnswers.emptyUserAnswersForUtr
+  def emptyUserAnswersForUrn: UserAnswers = TestUserAnswers.emptyUserAnswersForUrn
 
-  val bodyParsers = injector.instanceOf[BodyParsers.Default]
+  val bodyParsers: BodyParsers.Default = injector.instanceOf[BodyParsers.Default]
 
   protected def applicationBuilder(userAnswers: Option[models.UserAnswers] = None,
                                    affinityGroup: AffinityGroup = AffinityGroup.Organisation,
@@ -53,6 +56,9 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
         bind[PlaybackRepository].toInstance(playbackRepository)
       )
   }
+
+  val okResponse: HttpResponse = HttpResponse(OK, "")
+
 }
 
 trait SpecBase extends PlaySpec with SpecBaseHelpers

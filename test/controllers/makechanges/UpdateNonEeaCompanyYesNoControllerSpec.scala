@@ -25,7 +25,7 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import pages.WhatIsNextPage
 import pages.makechanges._
-import pages.trustdetails.ExpressTrustYesNoPage
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -35,21 +35,19 @@ import scala.concurrent.Future
 
 class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
-  val formProvider = new YesNoFormProvider()
-  val prefix: String = "updateNonEeaCompany"
-  val form = formProvider.withPrefix(prefix)
+  private val mockConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
 
-  val mockConnector = mock[TrustsStoreConnector]
+  private lazy val updateNonEeaCompanyYesNoRoute: String = routes.UpdateNonEeaCompanyYesNoController.onPageLoad().url
 
-  lazy val updateNonEeaCompanyYesNoRoute = routes.UpdateNonEeaCompanyYesNoController.onPageLoad().url
+  "UpdateNonEeaCompanyYesNoController" when {
 
-  val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-    .set(WhatIsNextPage, MakeChanges).success.value
-    .set(ExpressTrustYesNoPage, false).success.value
+    "making changes" must {
 
-  "UpdateNonEeaCompanyYesNo Controller" when {
+      val prefix: String = "updateNonEeaCompany"
+      val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
-    "in 5mld mode for a 5mld taxable trust" must {
+      val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        .set(WhatIsNextPage, MakeChanges).success.value
 
       "return OK and the correct view for a GET" in {
 
@@ -99,12 +97,10 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
           .set(AddOrUpdateProtectorYesNoPage, false).success.value
           .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
 
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-        val request =
-          FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
-            .withFormUrlEncodedBody(("value", "false"))
+        val request = FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 
@@ -125,49 +121,12 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
           .set(AddOrUpdateProtectorYesNoPage, false).success.value
           .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
 
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
-            .build()
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
+          .build()
 
-        val request =
-          FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
-            .withFormUrlEncodedBody(("value", "false"))
-
-        when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value must include(
-          s"/maintain-a-trust/overview"
-        )
-
-        application.stop()
-      }
-
-      "redirect to overview when valid data is submitted, no has been selected for all questions and the user is closing the trust" in {
-
-        val updateNonEeaCompanyYesNoRoute = routes.UpdateNonEeaCompanyYesNoController.onPageLoad().url
-
-        val userAnswers = emptyUserAnswersForUtr
-          .set(WhatIsNextPage, CloseTrust).success.value
-          .set(UpdateTrustDetailsYesNoPage, false).success.value
-          .set(UpdateTrusteesYesNoPage, false).success.value
-          .set(UpdateBeneficiariesYesNoPage, false).success.value
-          .set(UpdateSettlorsYesNoPage, false).success.value
-          .set(AddOrUpdateProtectorYesNoPage, false).success.value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
-
-        val application =
-          applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
-            .build()
-
-        val request =
-          FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
-            .withFormUrlEncodedBody(("value", "false"))
+        val request = FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
 
         when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
@@ -186,9 +145,8 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-        val request =
-          FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
-            .withFormUrlEncodedBody(("value", ""))
+        val request = FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
+          .withFormUrlEncodedBody(("value", ""))
 
         val boundForm = form.bind(Map("value" -> ""))
 
@@ -203,7 +161,106 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
         application.stop()
       }
+    }
 
+    "closing" must {
+
+      val prefix: String = "updateNonEeaCompanyClosing"
+      val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
+
+      val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        .set(WhatIsNextPage, CloseTrust).success.value
+
+      "return OK and the correct view for a GET" in {
+
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+
+        val request = FakeRequest(GET, updateNonEeaCompanyYesNoRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[UpdateNonEeaCompanyYesNoView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form, prefix)(request, messages).toString
+
+        application.stop()
+      }
+
+      "populate the view correctly on a GET when the question has previously been answered" in {
+
+        val userAnswers = baseAnswers.set(AddOrUpdateNonEeaCompanyYesNoPage, true).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request = FakeRequest(GET, updateNonEeaCompanyYesNoRoute)
+
+        val view = application.injector.instanceOf[UpdateNonEeaCompanyYesNoView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form.fill(true), prefix)(request, messages).toString
+
+        application.stop()
+      }
+
+      "redirect to overview when valid data is submitted and no has been selected for all questions" in {
+
+        val updateNonEeaCompanyYesNoRoute = routes.UpdateNonEeaCompanyYesNoController.onPageLoad().url
+
+        val userAnswers = baseAnswers
+          .set(UpdateTrustDetailsYesNoPage, false).success.value
+          .set(UpdateTrusteesYesNoPage, false).success.value
+          .set(UpdateBeneficiariesYesNoPage, false).success.value
+          .set(UpdateSettlorsYesNoPage, false).success.value
+          .set(AddOrUpdateProtectorYesNoPage, false).success.value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
+          .build()
+
+        val request = FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
+
+        when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value must include(
+          s"/maintain-a-trust/overview"
+        )
+
+        application.stop()
+      }
+
+      "return a Bad Request and errors when invalid data is submitted" in {
+
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+
+        val request = FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
+          .withFormUrlEncodedBody(("value", ""))
+
+        val boundForm = form.bind(Map("value" -> ""))
+
+        val view = application.injector.instanceOf[UpdateNonEeaCompanyYesNoView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        contentAsString(result) mustEqual
+          view(boundForm, prefix)(request, messages).toString
+
+        application.stop()
+      }
     }
   }
 }

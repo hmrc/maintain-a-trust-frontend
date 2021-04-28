@@ -34,9 +34,9 @@ class CloseDatePrinter @Inject()(converter: AnswerRowConverter) extends PrinterH
       converter.dateQuestion(DateClosedPage, userAnswers, "dateClosed")
     }
 
-    answerSectionWithRows(Seq(row))
+    answerSectionWithRows(Seq(row), userAnswers.isTrustTaxable)
   }
 
-  override val headingKey: Option[String] = Some("closeDate")
+  override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("closeDate")
 
 }

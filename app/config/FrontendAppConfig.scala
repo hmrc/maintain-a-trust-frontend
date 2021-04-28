@@ -36,6 +36,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   private def loadConfig(key: String) = configuration.get[String](key)
 
   def maintainTrustDetailsUrl(identifier: String) = s"$maintainTrustDetailsFrontendUrl/$identifier"
+  def maintainTrustAssetsUrl(identifier: String) = s"$maintainTrustAssetsFrontendUrl/$identifier"
+  def maintainTaxLiabilityUrl(identifier: String) = s"$maintainTaxLiabilityFrontendUrl/$identifier"
   def maintainTrusteesUrl(identifier: String) = s"$maintainTrusteesFrontendUrl/$identifier"
   def maintainBeneficiariesUrl(identifier: String) = s"$maintainBeneficiariesFrontendUrl/$identifier"
   def maintainSettlorsUrl(identifier: String) = s"$maintainSettlorsFrontendUrl/$identifier"
@@ -101,6 +103,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val playbackEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.playback.enabled")
 
   lazy val maintainTrustDetailsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-trust-details.enabled")
+  lazy val maintainTrustAssetsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-trust-assets.enabled")
+  lazy val maintainTaxLiabilityEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-tax-liability.enabled")
   lazy val maintainTrusteesEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-trustees.enabled")
   lazy val maintainBeneficiariesEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-beneficiaries.enabled")
   lazy val maintainSettlorsEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-settlors.enabled")
@@ -112,6 +116,12 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   private lazy val maintainTrustDetailsFrontendUrl: String =
     configuration.get[String]("urls.maintainTrustDetails")
+
+  private lazy val maintainTrustAssetsFrontendUrl: String =
+    configuration.get[String]("urls.maintainTrustAssets")
+
+  private lazy val maintainTaxLiabilityFrontendUrl: String =
+    configuration.get[String]("urls.maintainTaxLiability")
 
   private lazy val maintainTrusteesFrontendUrl: String =
     configuration.get[String]("urls.maintainATrustee")

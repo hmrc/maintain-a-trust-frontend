@@ -18,8 +18,8 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
+import models.MetaData
 import models.http.DisplayTrustUnidentifiedType
-import models.{MetaData, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.beneficiaries.classOfBeneficiary._
 
@@ -55,7 +55,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val classesOfBeneficiaries = Nil
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = classOfBeneficiaryExtractor.extract(ua, classesOfBeneficiaries)
 
@@ -77,7 +77,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
           entityStart = "2019-11-26"
         ))
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = classOfBeneficiaryExtractor.extract(ua, classOfBeneficiary)
 
@@ -90,7 +90,7 @@ class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
       "with full data must return user answers updated" in {
         val charities = (for(index <- 0 to 2) yield generateClassOfBeneficiary(index)).toList
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = classOfBeneficiaryExtractor.extract(ua, charities)
 

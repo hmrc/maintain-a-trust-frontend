@@ -149,6 +149,29 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
+  def countryQuestion(isUkQuery: Gettable[Boolean],
+                      query: Gettable[String],
+                      userAnswers: UserAnswers,
+                      labelKey: String,
+                      messageArg: String)
+                     (implicit messages: Messages): Option[AnswerRow] = {
+    userAnswers.get(isUkQuery) flatMap {
+      case false =>
+        countryQuestion(query, userAnswers, labelKey, messageArg)
+      case _ =>
+        None
+    }
+  }
+
+  def countryQuestion(query: Gettable[String],
+                      userAnswers: UserAnswers,
+                      labelKey: String,
+                      messageArg: String)
+                     (implicit messages: Messages): Option[AnswerRow] = {
+    val format = (x: String) => checkAnswersFormatters.country(x)
+    question(query, userAnswers, labelKey, format, messageArg)
+  }
+
   private def question[T](query: Gettable[T],
                           userAnswers: UserAnswers,
                           labelKey: String,
@@ -161,20 +184,6 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
         answer = format(x),
         changeUrl = None
       )
-    }
-  }
-  def countryQuestion(isUkQuery: Gettable[Boolean],
-                      query: Gettable[String],
-                      userAnswers: UserAnswers,
-                      labelKey: String,
-                      messageArg: String)
-                     (implicit messages: Messages): Option[AnswerRow] = {
-    userAnswers.get(isUkQuery) flatMap {
-      case false =>
-        val format = (x: String) => checkAnswersFormatters.country(x)
-        question(query, userAnswers, labelKey, format, messageArg)
-      case _ =>
-        None
     }
   }
 

@@ -21,9 +21,8 @@ import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
 import models.http._
 import models.pages.IndividualOrBusiness
-import models.{FullName, MetaData, UserAnswers}
+import models.{FullName, MetaData}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
-import pages.trustdetails.ExpressTrustYesNoPage
 import pages.trustees._
 import utils.Constants.GB
 
@@ -46,7 +45,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
           None, None, None
         )
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 
@@ -84,8 +83,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
           None, None
         )
 
-        val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-          .set(ExpressTrustYesNoPage, false).success.value
+        val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 
@@ -137,8 +135,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
           None, None
         )
 
-        val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-          .set(ExpressTrustYesNoPage, false).success.value
+        val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 
@@ -220,8 +217,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
           settlors = None
         )
 
-        val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-          .set(ExpressTrustYesNoPage, false).success.value
+        val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 

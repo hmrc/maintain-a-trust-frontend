@@ -18,8 +18,8 @@ package mapping
 
 import base.SpecBaseHelpers
 import generators.Generators
+import models.UKAddress
 import models.http.{AddressType, Correspondence}
-import models.{UKAddress, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.correspondence._
 import pages.trustdetails.TrustNamePage
@@ -44,7 +44,7 @@ class CorrespondenceExtractorSpec extends FreeSpec with MustMatchers with Either
         phoneNumber = "1225645"
       )
 
-      val ua = UserAnswers("fakeId", "utr")
+      val ua = emptyUserAnswersForUtr
 
       val extraction = correspondenceExtractor.extract(ua, correspondence)
 

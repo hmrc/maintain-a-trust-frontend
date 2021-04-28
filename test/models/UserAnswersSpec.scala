@@ -16,15 +16,68 @@
 
 package models
 
+import _root_.pages.WhatIsNextPage
 import base.SpecBase
-import _root_.pages.trustdetails.ExpressTrustYesNoPage
+import forms.Validation
+import models.pages.WhatIsNext.{NeedsToPayTax, NoLongerTaxable}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import wolfendale.scalacheck.regexp.RegexpGen
 
-class UserAnswersSpec extends SpecBase {
+class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   "UserAnswers" when {
 
-    ".trustMldStatus" must {
+    ".identifierType" must {
 
+      "return UTR when identifier matches UTR regex" in {
+        forAll(RegexpGen.from(Validation.utrRegex)) {
+          utr =>
+            val userAnswers = emptyUserAnswersForUtr.copy(identifier = utr)
+            userAnswers.identifierType mustBe UTR
+        }
+      }
+
+      "return URN when identifier matches URN regex" in {
+        forAll(RegexpGen.from(Validation.urnRegex)) {
+          urn =>
+            val userAnswers = emptyUserAnswersForUrn.copy(identifier = urn)
+            userAnswers.identifierType mustBe URN
+        }
+      }
+    }
+
+    ".trustTaxability and .isTrustTaxable" must {
+      "return taxability of trust" when {
+
+        "taxable" in {
+          val userAnswers = emptyUserAnswersForUtr
+          userAnswers.trustTaxability mustBe Taxable
+          userAnswers.isTrustTaxable mustBe true
+        }
+
+        "non-taxable" in {
+          val userAnswers = emptyUserAnswersForUrn
+          userAnswers.trustTaxability mustBe NonTaxable
+          userAnswers.isTrustTaxable mustBe false
+        }
+
+        "migrating from non-taxable to taxable" in {
+          val userAnswers = emptyUserAnswersForUrn
+            .set(WhatIsNextPage, NeedsToPayTax).success.value
+          userAnswers.trustTaxability mustBe MigratingFromNonTaxableToTaxable
+          userAnswers.isTrustTaxable mustBe true
+        }
+
+        "migrating from taxable to non-taxable" in {
+          val userAnswers = emptyUserAnswersForUtr
+            .set(WhatIsNextPage, NoLongerTaxable).success.value
+          userAnswers.trustTaxability mustBe MigratingFromTaxableToNonTaxable
+          userAnswers.isTrustTaxable mustBe false
+        }
+      }
+    }
+
+    ".trustMldStatus" must {
       "return correct MLD status of the trust" when {
 
         "4mld" in {
@@ -35,21 +88,19 @@ class UserAnswersSpec extends SpecBase {
         "5mld" when {
 
           "underlying data is 4mld" in {
-            val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
+            val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
             userAnswers.trustMldStatus mustBe Underlying4mldTrustIn5mldMode
           }
 
           "underlying data is 5mld" when {
 
             "taxable" in {
-              val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-                .set(ExpressTrustYesNoPage, false).success.value
+              val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
               userAnswers.trustMldStatus mustBe Underlying5mldTaxableTrustIn5mldMode
             }
 
             "non-taxable" in {
-              val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = false)
-                .set(ExpressTrustYesNoPage, false).success.value
+              val userAnswers = emptyUserAnswersForUrn
               userAnswers.trustMldStatus mustBe Underlying5mldNonTaxableTrustIn5mldMode
             }
           }

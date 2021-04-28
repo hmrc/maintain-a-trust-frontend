@@ -19,102 +19,192 @@ package controllers.makechanges
 import base.SpecBase
 import forms.YesNoFormProvider
 import models.UserAnswers
-import models.pages.WhatIsNext.MakeChanges
+import models.pages.WhatIsNext
 import pages.WhatIsNextPage
 import pages.makechanges.UpdateBeneficiariesYesNoPage
+import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.makechanges.UpdateBeneficiariesYesNoView
 
 class UpdateBeneficiariesYesNoControllerSpec extends SpecBase {
 
-  val formProvider = new YesNoFormProvider()
-  val prefix: String = "updateBeneficiaries"
-  val form = formProvider.withPrefix(prefix)
-  lazy val updateBeneficiariesYesNoRoute = routes.UpdateBeneficiariesYesNoController.onPageLoad().url
+  private lazy val updateBeneficiariesYesNoRoute: String = routes.UpdateBeneficiariesYesNoController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, MakeChanges).success.value
+  "UpdateBeneficiariesYesNoController" when {
 
-  "UpdateBeneficiariesYesNo Controller" must {
+    "making changes" must {
 
-    "return OK and the correct view for a GET" in {
+      val prefix: String = "updateBeneficiaries"
+      val determinePrefix = (_: Boolean) => prefix
 
-      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+      val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
-      val request = FakeRequest(GET, updateBeneficiariesYesNoRoute)
+      val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
-      val result = route(application, request).value
+      "return OK and the correct view for a GET" in {
 
-      val view = application.injector.instanceOf[UpdateBeneficiariesYesNoView]
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-      status(result) mustEqual OK
+        val request = FakeRequest(GET, updateBeneficiariesYesNoRoute)
 
-      contentAsString(result) mustEqual
-        view(form, prefix)(request, messages).toString
+        val result = route(application, request).value
 
-      application.stop()
-    }
+        val view = application.injector.instanceOf[UpdateBeneficiariesYesNoView]
 
-    "populate the view correctly on a GET when the question has previously been answered" in {
+        status(result) mustEqual OK
 
-      val userAnswers = baseAnswers.set(UpdateBeneficiariesYesNoPage, true).success.value
+        contentAsString(result) mustEqual
+          view(form, determinePrefix, closingTrust = false)(request, messages).toString
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        application.stop()
+      }
 
-      val request = FakeRequest(GET, updateBeneficiariesYesNoRoute)
+      "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val view = application.injector.instanceOf[UpdateBeneficiariesYesNoView]
+        val userAnswers = baseAnswers.set(UpdateBeneficiariesYesNoPage, true).success.value
 
-      val result = route(application, request).value
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      status(result) mustEqual OK
+        val request = FakeRequest(GET, updateBeneficiariesYesNoRoute)
 
-      contentAsString(result) mustEqual
-        view(form.fill(true), prefix)(request, messages).toString
+        val view = application.injector.instanceOf[UpdateBeneficiariesYesNoView]
 
-      application.stop()
-    }
+        val result = route(application, request).value
 
-    "redirect to the next page when valid data is submitted" in {
+        status(result) mustEqual OK
 
-      val application =
-        applicationBuilder(userAnswers = Some(baseAnswers)).build()
+        contentAsString(result) mustEqual
+          view(form.fill(true), determinePrefix, closingTrust = false)(request, messages).toString
 
-      val request =
-        FakeRequest(POST, updateBeneficiariesYesNoRoute)
+        application.stop()
+      }
+
+      "redirect to the next page when valid data is submitted" in {
+
+        val application =
+          applicationBuilder(userAnswers = Some(baseAnswers)).build()
+
+        val request = FakeRequest(POST, updateBeneficiariesYesNoRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
-      val result = route(application, request).value
+        val result = route(application, request).value
 
-      status(result) mustEqual SEE_OTHER
+        status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.UpdateSettlorsYesNoController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.UpdateSettlorsYesNoController.onPageLoad().url
 
-      application.stop()
-    }
+        application.stop()
+      }
 
-    "return a Bad Request and errors when invalid data is submitted" in {
+      "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
 
-      val request =
-        FakeRequest(POST, updateBeneficiariesYesNoRoute)
+        val request = FakeRequest(POST, updateBeneficiariesYesNoRoute)
           .withFormUrlEncodedBody(("value", ""))
 
-      val boundForm = form.bind(Map("value" -> ""))
+        val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[UpdateBeneficiariesYesNoView]
+        val view = application.injector.instanceOf[UpdateBeneficiariesYesNoView]
 
-      val result = route(application, request).value
+        val result = route(application, request).value
 
-      status(result) mustEqual BAD_REQUEST
+        status(result) mustEqual BAD_REQUEST
 
-      contentAsString(result) mustEqual
-        view(boundForm, prefix)(request, messages).toString
+        contentAsString(result) mustEqual
+          view(boundForm, determinePrefix, closingTrust = false)(request, messages).toString
 
-      application.stop()
+        application.stop()
+      }
     }
 
+    "closing" must {
+
+      val prefix: String = "updateBeneficiariesClosing"
+      val determinePrefix = (_: Boolean) => prefix
+
+      val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
+
+      val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
+
+      "return OK and the correct view for a GET" in {
+
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+
+        val request = FakeRequest(GET, updateBeneficiariesYesNoRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[UpdateBeneficiariesYesNoView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form, determinePrefix, closingTrust = true)(request, messages).toString
+
+        application.stop()
+      }
+
+      "populate the view correctly on a GET when the question has previously been answered" in {
+
+        val userAnswers = baseAnswers.set(UpdateBeneficiariesYesNoPage, true).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request = FakeRequest(GET, updateBeneficiariesYesNoRoute)
+
+        val view = application.injector.instanceOf[UpdateBeneficiariesYesNoView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form.fill(true), determinePrefix, closingTrust = true)(request, messages).toString
+
+        application.stop()
+      }
+
+      "redirect to the next page when valid data is submitted" in {
+
+        val application =
+          applicationBuilder(userAnswers = Some(baseAnswers)).build()
+
+        val request = FakeRequest(POST, updateBeneficiariesYesNoRoute)
+          .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.UpdateSettlorsYesNoController.onPageLoad().url
+
+        application.stop()
+      }
+
+      "return a Bad Request and errors when invalid data is submitted" in {
+
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+
+        val request = FakeRequest(POST, updateBeneficiariesYesNoRoute)
+          .withFormUrlEncodedBody(("value", ""))
+
+        val boundForm = form.bind(Map("value" -> ""))
+
+        val view = application.injector.instanceOf[UpdateBeneficiariesYesNoView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+
+        contentAsString(result) mustEqual
+          view(boundForm, determinePrefix, closingTrust = true)(request, messages).toString
+
+        application.stop()
+      }
+    }
   }
 }

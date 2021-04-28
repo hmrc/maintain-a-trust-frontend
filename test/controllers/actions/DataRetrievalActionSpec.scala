@@ -41,7 +41,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
 
     "there is no active session" must {
 
-      "set userAnswers to 'None' in the request" in {
+      "not continue" in {
 
         val playbackRepository = mock[PlaybackRepository]
 
@@ -51,8 +51,8 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
 
         val futureResult = action.callTransform(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
-        whenReady(futureResult) { result =>
-          result.userAnswers.isEmpty mustBe true
+        intercept[RuntimeException] {
+          futureResult.futureValue
         }
       }
 
@@ -72,7 +72,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutur
         val futureResult = action.callTransform(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
         whenReady(futureResult) { result =>
-          result.userAnswers.isEmpty mustBe true
+          result.userAnswers mustBe None
         }
       }
     }

@@ -30,12 +30,15 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
     val rows: Seq[Option[AnswerRow]] = Seq(
       converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
       converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
-      converter.utr(userAnswers, "trustUniqueTaxReference")
+      converter.utr(userAnswers, "trustUniqueTaxReference"),
+      converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
+      converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
+      converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")
     )
 
-    Seq(answerSectionWithRows(rows))
+    Seq(answerSectionWithRows(rows, userAnswers.isTrustTaxable))
   }
 
-  override val headingKey: Option[String] = Some("trustsDetails")
+  override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("trustsDetails")
 
 }

@@ -19,10 +19,9 @@ package mapping.settlors
 import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustWillType, PassportType}
-import models.{FullName, InternationalAddress, MetaData, UKAddress, UserAnswers}
+import models.{FullName, InternationalAddress, MetaData, UKAddress}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.settlors.deceased_settlor._
-import pages.trustdetails.ExpressTrustYesNoPage
 import utils.Constants.GB
 
 import java.time.LocalDate
@@ -41,7 +40,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val deceasedSettlor = Nil
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = deceasedSettlorExtractor.extract(ua, deceasedSettlor)
 
@@ -69,7 +68,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -108,8 +107,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -153,8 +151,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -198,8 +195,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -242,8 +238,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -287,8 +282,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -332,8 +326,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -378,8 +371,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -422,8 +414,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -468,8 +459,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -513,8 +503,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -558,8 +547,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -602,8 +590,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -647,8 +634,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -692,8 +678,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -737,8 +722,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
@@ -781,8 +765,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           )
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 

@@ -244,6 +244,7 @@ site.startMaintaining = Start maintaining this trust
 site.error = Error:
 site.print-or-save = Print or save this page
 site.button.continue.maintaining = Continue maintaining this trust
+site.return-to-top = Back to top
 
 site.address.uk.title = What is the address?
 site.address.uk.heading = What is {0}’s address?
@@ -345,64 +346,100 @@ timeout.title=Your application will time out soon
 timeout.message=We will sign you out if you do not respond in
 timeout.keep-alive-button=Continue application
 
+beforeClosing.title = Before you continue
+beforeClosing.heading = Before you continue
+beforeClosing.subheading = Before you close the trust, you need to provide the most up to date information about the trust to HMRC.
+beforeClosing.paragraph1 = You need to tell us if you need to add, remove, or change the details of any of the following:
+beforeClosing.bullet1 = beneficiaries
+beforeClosing.bullet2 = protectors
+beforeClosing.bullet3 = settlors
+beforeClosing.bullet4 = trustees
+beforeClosing.bullet5 = other individuals
+beforeClosing.paragraph2 = At this point HMRC will only ask you which details you need to update.
+beforeClosing.paragraph3 = Once you have told HMRC which details you need to update, you will then be asked to provide those details.
+
 updateTrustDetails.title = Do you need to update details about the trust?
 updateTrustDetails.heading = Do you need to update details about the trust?
 updateTrustDetails.error.required = Select yes if you need to update details for the trust
+updateTrustDetails.additionalContent1 = You need to tell HMRC if you need to update any details about the trust.
+updateTrustDetails.additionalContent2 = At this point HMRC will only ask you which details you need to update.
+updateTrustDetails.additionalContent3 = Once you have told HMRC which details you need to update, you will then be asked to provide those details.
 updateTrustDetailsClosing.title = Do you need to update details about the trust before closing the trust?
 updateTrustDetailsClosing.heading = Do you need to update details about the trust before closing the trust?
 updateTrustDetailsClosing.error.required = Select yes if you need to update details about the trust before closing the trust
+updateTrustDetailsClosing.additionalContent1 = Tell us if you need to update the details of the trust.
 
 updateTrustees.title = Do you need to update details for the trustees?
 updateTrustees.heading = Do you need to update details for the trustees?
 updateTrustees.error.required = Select yes if you need to update details for the trustees
+updateTrustees.additionalContent1 = Tell us if you need to add, remove, or change the details of any trustees.
 updateTrusteesClosing.title = Do you need to update details for the trustees before closing the trust?
 updateTrusteesClosing.heading = Do you need to update details for the trustees before closing the trust?
 updateTrusteesClosing.error.required = Select yes if you need to update details for the trustees before closing the trust
+updateTrusteesClosing.additionalContent1 = You need to tell HMRC if you need to add, remove, or change the details of any trustees.
+updateTrusteesClosing.additionalContent2 = Right now HMRC will only ask if you need to update the details for the trustees. You will not need to provide the updated details immediately after this question.
 
 updateBeneficiaries.title = Do you need to update details for the beneficiaries?
 updateBeneficiaries.heading = Do you need to update details for the beneficiaries?
 updateBeneficiaries.error.required = Select yes if you need to update details for the beneficiaries
+updateBeneficiaries.additionalContent1 = Tell us if you need to add, remove, or change the details of any beneficiaries.
 updateBeneficiariesClosing.title = Do you need to update details for the beneficiaries before closing the trust?
 updateBeneficiariesClosing.heading = Do you need to update details for the beneficiaries before closing the trust?
 updateBeneficiariesClosing.error.required = Select yes if you need to update details for the beneficiaries before closing the trust
+updateBeneficiariesClosing.additionalContent1 = You need to tell HMRC if you need to add, remove, or change the details of any beneficiaries.
+updateBeneficiariesClosing.additionalContent2 = Right now HMRC will only ask if you need to update the details for the beneficiaries. You will not need to provide the updated details immediately after this question.
 
 updateSettlors.title = Do you need to update details for the settlors?
 updateSettlors.heading = Do you need to update details for the settlors?
 updateSettlors.error.required = Select yes if you need to update details for the settlors
+updateSettlors.additionalContent1 = Tell us if you need to add, remove, or change the details of any settlors.
 updateSettlorsClosing.title = Do you need to update details for the settlors before closing the trust?
 updateSettlorsClosing.heading = Do you need to update details for the settlors before closing the trust?
 updateSettlorsClosing.error.required = Select yes if you need to update details for the settlors before closing the trust
+updateSettlorsClosing.additionalContent1 = You need to tell HMRC if you need to add, remove, or change the details of any settlors.
+updateSettlorsClosing.additionalContent2 = Right now HMRC will only ask if you need to update the details for the settlors. You will not need to provide the updated details immediately after this question.
 
 addProtector.title = Do you need to add a protector?
 addProtector.heading = Do you need to add a protector?
 addProtector.hint = A protector is an individual or business named in the trust who can influence the way the trustees manage the trust.
 addProtector.error.required = Select yes if you need to add a protector
+addProtector.additionalContent1 = Tell us if you need to add the details of any protectors.
 addProtectorClosing.title = Do you need to add a protector before closing the trust?
 addProtectorClosing.heading = Do you need to add a protector before closing the trust?
 addProtectorClosing.error.required = Select yes if you need to add a protector before closing the trust
+addProtectorClosing.additionalContent1 = You need to tell HMRC if you need to add the details of any protectors.
+addProtectorClosing.additionalContent2 = Right now HMRC will only ask if you need to add the details of any protectors. You will not need to provide the details immediately after this question.
 
 updateProtector.title = Do you need to update details for the protectors?
 updateProtector.heading = Do you need to update details for the protectors?
 updateProtector.error.required = Select yes if you need to update details for the protectors
+updateProtector.additionalContent1 = Tell us if you need to add, remove, or change the details of any protectors.
 updateProtectorClosing.title = Do you need to update details for the protectors before closing the trust?
 updateProtectorClosing.heading = Do you need to update details for the protectors before closing the trust?
 updateProtectorClosing.error.required = Select yes if you need to update details for the protectors before closing the trust
+updateProtectorClosing.additionalContent1 = You need to tell HMRC if you need to add, remove, or change the details of any protectors.
+updateProtectorClosing.additionalContent2 = Right now HMRC will only ask if you need to update the details for the protectors. You will not need to provide the updated details immediately after this question.
 
 addOtherIndividuals.title = Do you need to add any other individuals associated with the trust?
 addOtherIndividuals.heading = Do you need to add any other individuals associated with the trust?
-addOtherIndividuals.hint = They might not be named in the trust deed. For example, friends, family members or third parties.
+addOtherIndividuals.hint = This means anyone who potentially has indirect control of or influence on the trust, and is not listed on the trust deed.
 addOtherIndividuals.error.required = Select yes if you need to add any other individuals associated with the trust
+addOtherIndividuals.additionalContent1 = Tell us if you need to add the details of any other individuals.
 addOtherIndividualsClosing.title = Do you need to add any other individuals associated with the trust before closing the trust?
 addOtherIndividualsClosing.heading = Do you need to add any other individuals associated with the trust before closing the trust?
 addOtherIndividualsClosing.error.required = Select yes if you need to add any other individuals associated with the trust before closing the trust
+addOtherIndividualsClosing.additionalContent1 = You need to tell HMRC if you need to add the details of any other individuals.
+addOtherIndividualsClosing.additionalContent2 = Right now HMRC will only ask if you need to add the details of any other individuals. You will not need to provide the details immediately after this question.
 
 updateOtherIndividuals.title = Do you need to update details for the other individuals?
 updateOtherIndividuals.heading = Do you need to update details for the other individuals?
 updateOtherIndividuals.error.required = Select yes if you need to update details for the other individuals
-
+updateOtherIndividuals.additionalContent1 = Tell us if you need to add, remove, or change the details of any other individuals.
 updateOtherIndividualsClosing.title = Do you need to update details for the other individuals before closing the trust?
 updateOtherIndividualsClosing.heading = Do you need to update details for the other individuals before closing the trust?
 updateOtherIndividualsClosing.error.required = Select yes if you need to update details for the other individuals before closing the trust
+updateOtherIndividualsClosing.additionalContent1 = You need to tell HMRC if you need to add, remove, or change the details of any other individuals.
+updateOtherIndividualsClosing.additionalContent2 = Right now HMRC will only ask if you need to update the details for the other individuals. You will not need to provide the updated details immediately after this question.
 
 addNonEeaCompany.title = Do you need to add a controlling interest in a Non-EEA company?
 addNonEeaCompany.heading = Do you need to add a controlling interest in a Non-EEA company?
@@ -411,20 +448,34 @@ addNonEeaCompany.bullet1 = The EU
 addNonEeaCompany.bullet2 = Iceland
 addNonEeaCompany.bullet3 = Lichtenstein
 addNonEeaCompany.bullet4 = Norway
+addNonEeaCompany.bullet5 = The United Kingdom
+addNonEeaCompany.paragraph2 = The trust will have a controlling interest in a non-EEA company if any of the following apply:
+addNonEeaCompany.bullet6 = the trustees hold more than 50 percent of the shares in the company
+addNonEeaCompany.bullet7 = the trustees hold more than 50 percent of the voting rights in the company
+addNonEeaCompany.bullet8 = the trustees hold the right to appoint or remove a majority of the board of directors of the company
+addNonEeaCompany.bullet9 = the trustees can exercise significant influence or control over the company
 addNonEeaCompany.error.required = Select yes if you need to add a controlling interest in a Non-EEA company
-
 addNonEeaCompanyClosing.title = Do you need to add a controlling interest in a Non-EEA company before closing the trust?
 addNonEeaCompanyClosing.heading = Do you need to add a controlling interest in a Non-EEA company before closing the trust?
+addNonEeaCompanyClosing.paragraph1 = A non-EEA company is a company registered outside the following countries:
+addNonEeaCompanyClosing.bullet1 = The EU
+addNonEeaCompanyClosing.bullet2 = Iceland
+addNonEeaCompanyClosing.bullet3 = Lichtenstein
+addNonEeaCompanyClosing.bullet4 = Norway
+addNonEeaCompanyClosing.bullet5 = The United Kingdom
+addNonEeaCompanyClosing.paragraph2 = The trust will have a controlling interest in a non-EEA company if any of the following apply:
+addNonEeaCompanyClosing.bullet6 = the trustees hold more than 50 percent of the shares in the company
+addNonEeaCompanyClosing.bullet7 = the trustees hold more than 50 percent of the voting rights in the company
+addNonEeaCompanyClosing.bullet8 = the trustees hold the right to appoint or remove a majority of the board of directors of the company
+addNonEeaCompanyClosing.bullet9 = the trustees can exercise significant influence or control over the company
 addNonEeaCompanyClosing.error.required = Select yes if you need to add a controlling interest in a Non-EEA company before closing the trust
 
 updateNonEeaCompany.title = Do you need to update a controlling interest in a Non-EEA company?
 updateNonEeaCompany.heading = Do you need to update a controlling interest in a Non-EEA company?
 updateNonEeaCompany.error.required = Select yes if you need to update details for a controlling interest in a Non-EEA company
-
 updateNonEeaCompanyClosing.title = Do you need to update a controlling interest in a Non-EEA company before closing the trust?
 updateNonEeaCompanyClosing.heading = Do you need to update a controlling interest in a Non-EEA company before closing the trust?
 updateNonEeaCompanyClosing.error.required = Select yes if you need to update details for a controlling interest in a Non-EEA company before closing the trust
-
 
 unavailableSections.title = You can only update {0} online at the moment
 unavailableSections.heading = You can only update {0} online at the moment
@@ -517,12 +568,12 @@ declarationWhatNext5mld.no-longer-taxable.hint = Tell us if the trust no longer 
 declarationWhatNext5mld.needs-to-pay-tax = Tell HMRC if the trust needs to pay tax
 declarationWhatNext5mld.needs-to-pay-tax.hint = Tell HMRC if the trust needs to pay tax or submit tax returns.
 declarationWhatNext5mld.generate-pdf = Get evidence of the trust’s registration
-declarationWhatNext5mld.generate-pdf.hint = Create a digitally signed PDF, which shows the people and companies within the trust, that can be shared with Obliged Entities.
+declarationWhatNext5mld.generate-pdf.hint = Create a digitally signed PDF, which shows the people and companies within the trust, that can be shared with any relevant persons.
 
 noTaxLiabilityInfo.title = You must contact HMRC
 noTaxLiabilityInfo.heading = You must contact HMRC
 noTaxLiabilityInfo.paragraph1 = If the trust you are maintaining no longer has a tax liability, you need to either:
-noTaxLiabilityInfo.bullet1 = Contact HMRC to let them know that you longer need to declare tax.
+noTaxLiabilityInfo.bullet1 = Contact HMRC to let them know that you no longer need to declare tax.
 noTaxLiabilityInfo.bullet2 = Submit a Self Assessment: Trust and Estate Tax Return (SA900)
 noTaxLiabilityInfo.paragraph2 = You no longer need to make an annual declaration for this trust. You will need to notify us of any changes to the trust details.
 
@@ -545,7 +596,32 @@ variationProgress.subHeading.5 = Update asset details
 variationProgress.p5 = To update any asset details after making the declaration for this trust, use Self Assessment online or the
 variationProgress.sa900.link = Trust and Estate Tax Return form (SA900) (opens in a new window or tab)
 
+transitionProgress.title = Trust overview
+transitionProgress.heading = Trust overview
+transitionProgress.p1 = You can make changes to the trust’s record, and make a declaration once you have confirmed that each section is up to date.
+transitionProgress.subHeading = Declare and save your changes
+transitionProgress.p2 = To save any changes you make to the trust’s record, you need to:
+transitionProgress.bullet1 = submit the changes to HMRC, which will update the trust’s records
+transitionProgress.bullet2 = declare that the information HMRC has about the trust is accurate and up to date
+transitionsProgress.return.link = Return to register and maintain a trust for a client
+transitionProgress.warning = If you do not declare that the information is up to date, your changes will not be submitted to HMRC and will not be saved
+transitionProgress.p3 = You can
+transitionProgress.p3.link = return to the service and update the trust’s record at any time.
+transitionProgress.p4 = You can print a copy of your draft answers as well as a copy of the declaration.
+transitionProgress.subHeading.2 = All sections to be completed
+
+transitionProgress.p5 = You can save or print a draft copy of your saved answers once all sections are up to date, as well as a declared copy after you have made a declaration.
+transitionProgress.subHeading.4 = Summary
+transitionProgress.p6 = You can
+transitionProgress.printsave.link = print or save a draft copy of your saved answers
+
+transitionProgress.subHeading.5 = Update asset details
+transitionProgress.p7 = To update any asset details after making the declaration for this trust, use Self Assessment online or the
+transitionProgress.sa900.link = Trust and Estate Tax Return form (SA900) (opens in a new window or tab)
+
 taskList.trustDetails.label = Trust details
+taskList.assets.label = Assets
+taskList.taxLiability.label = Years of Tax Liability
 taskList.settlors.label = Settlors
 taskList.protectors.label = Protectors
 taskList.trustees.label = Trustees
@@ -562,7 +638,7 @@ featureNotAvailable.p2 = You will be able to update these details online in the 
 
 dateLastAssetSharedOutYesNo.title = Do you know the date the last asset in the trust was shared out?
 dateLastAssetSharedOutYesNo.heading = Do you know the date the last asset in the trust was shared out?
-dateLastAssetSharedOutYesNo.subHeading = This trust’s UTR: {0}
+dateLastAssetSharedOutYesNo.caption = This trust’s UTR: {0}
 dateLastAssetSharedOutYesNo.hint = It is also called the trust closed date or date of termination. This will be the date given on the final Trust and Estate (SA900) tax return or Self Assessment Online for trusts.
 dateLastAssetSharedOutYesNo.error.required = Select yes if you know the date the last asset in the trust was shared out
 
@@ -638,8 +714,9 @@ answerPage.section.otherIndividual.subheading = Other individual {0}
 answerPage.section.trustsDetails.heading = Trust details
 
 ## Assets
-answerPage.section.nonEeaBusiness.heading = Ownership or controlling interest of a Non-EEA company
-answerPage.section.nonEeaBusiness.subheading = Non-EEA Company
+answerPage.section.assets.heading = Assets
+answerPage.section.nonEeaBusinesses.heading = Ownership or controlling interest of a Non-EEA company
+answerPage.section.nonEeaBusiness.subheading = Non-EEA Company {0}
 
 # CHECK YOUR ANSWERS LABELS
 
@@ -900,6 +977,9 @@ trusteeMentalCapacityYesNo.checkYourAnswersLabel = Does {0} have mental capacity
 trustName.checkYourAnswersLabel = What is the trust’s name?
 whenTrustSetup.checkYourAnswersLabel = When was the trust created?
 trustUniqueTaxReference.checkYourAnswersLabel = What is the trust’s Unique Taxpayer Reference (UTR)?
+trustUkPropertyYesNo.checkYourAnswersLabel = Does the trust own UK land or property?
+trustRecordedOnAnotherRegisterYesNo.checkYourAnswersLabel = Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?
+trustHasBusinessRelationshipInUkYesNo.checkYourAnswersLabel = Does the trust have an ongoing business relationship in the UK?
 
 # Assets
 nonEeaBusiness.name.checkYourAnswersLabel = What is the company’s name?

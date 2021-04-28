@@ -133,6 +133,9 @@ GET        /how-to-close-trust                          controllers.close.taxabl
 GET        /date-closed                                 controllers.close.nontaxable.DateClosedController.onPageLoad()
 POST       /date-closed                                 controllers.close.nontaxable.DateClosedController.onSubmit()
 
+GET        /before-closing                              controllers.close.BeforeClosingController.onPageLoad()
+POST       /before-closing                              controllers.close.BeforeClosingController.onSubmit()
+
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
 GET        /overview                                    controllers.tasklist.TaskListController.onPageLoad()

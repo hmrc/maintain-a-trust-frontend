@@ -26,8 +26,6 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
   val errorMessage = "error.number"
   val error = FormError(errorKey, errorMessage)
 
-  val form: Form[A]
-
   def pageWithTextFields(form: Form[A],
                          createView: Form[A] => HtmlFormat.Appendable,
                          messageKeyPrefix: String,

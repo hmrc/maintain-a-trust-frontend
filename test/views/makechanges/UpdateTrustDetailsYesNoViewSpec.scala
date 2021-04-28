@@ -24,23 +24,52 @@ import views.html.makechanges.UpdateTrustDetailsYesNoView
 
 class UpdateTrustDetailsYesNoViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix: String = "updateTrustDetails"
-  val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+  "UpdateTrustDetailsYesNoView" when {
 
-  "UpdateTrustDetailsYesNo view" must {
+    "making changes" must {
 
-    val view = viewFor[UpdateTrustDetailsYesNoView](Some(emptyUserAnswersForUtr))
+      val messageKeyPrefix: String = "updateTrustDetails"
+      val determinePrefix = (_: Boolean) => messageKeyPrefix
+      val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
-    def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, messageKeyPrefix)(fakeRequest, messages)
+      val view = viewFor[UpdateTrustDetailsYesNoView](Some(emptyUserAnswersForUtr))
 
-    behave like normalPage(applyView(form), messageKeyPrefix)
+      def applyView(form: Form[_]): HtmlFormat.Appendable =
+        view.apply(form, determinePrefix, closingTrust = false)(fakeRequest, messages)
 
-    behave like pageWithBackLink(applyView(form))
+      behave like normalPage(
+        view = applyView(form),
+        messageKeyPrefix = messageKeyPrefix,
+        expectedGuidanceKeys = "additionalContent1", "additionalContent2", "additionalContent3"
+      )
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix)
+      behave like pageWithBackLink(applyView(form))
 
-    behave like pageWithASubmitButton(applyView(form))
+      behave like yesNoPage(form, applyView, messageKeyPrefix)
 
+      behave like pageWithASubmitButton(applyView(form))
+    }
+
+    "closing" must {
+
+      val messageKeyPrefix: String = "updateTrustDetailsClosing"
+      val determinePrefix = (_: Boolean) => messageKeyPrefix
+      val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+
+      val view = viewFor[UpdateTrustDetailsYesNoView](Some(emptyUserAnswersForUtr))
+
+      def applyView(form: Form[_]): HtmlFormat.Appendable =
+        view.apply(form, determinePrefix, closingTrust = true)(fakeRequest, messages)
+
+      behave like normalPage(applyView(form), messageKeyPrefix, "additionalContent1")
+
+      behave like pageWithBackLink(applyView(form))
+
+      behave like yesNoPage(form, applyView, messageKeyPrefix)
+
+      behave like pageWithHint(applyView(form))
+
+      behave like pageWithASubmitButton(applyView(form))
+    }
   }
 }

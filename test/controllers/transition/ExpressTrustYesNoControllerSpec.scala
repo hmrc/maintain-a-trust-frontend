@@ -19,16 +19,17 @@ package controllers.transition
 import base.SpecBase
 import connectors.TrustConnector
 import forms.YesNoFormProvider
+import models.pages.WhatIsNext.NeedsToPayTax
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
 import org.scalatestplus.mockito.MockitoSugar
+import pages.WhatIsNextPage
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.PlaybackRepository
-import uk.gov.hmrc.http.HttpResponse
 import views.html.transition.ExpressTrustYesNoView
 
 import scala.concurrent.Future
@@ -90,10 +91,10 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
         .thenReturn(Future.successful(true))
 
       when(mockTrustsConnector.removeTransforms(any())(any(), any()))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
+        .thenReturn(Future.successful(okResponse))
 
       when(mockTrustsConnector.setExpressTrust(any(), any())(any(), any()))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
+        .thenReturn(Future.successful(okResponse))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -107,6 +108,40 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual routes.ConfirmTrustTaxableController.onPageLoad().url
+
+      verify(mockTrustsConnector).removeTransforms(any())(any(), any())
+      verify(mockTrustsConnector).setExpressTrust(any(), eqTo(validAnswer))(any(), any())
+
+      application.stop()
+    }
+
+    "redirect to the next page when valid data is submitted for the Non tax to Tax transition journey" in {
+
+      val mockPlaybackRepository = mock[PlaybackRepository]
+      val mockTrustsConnector = mock[TrustConnector]
+
+      when(mockPlaybackRepository.set(any()))
+        .thenReturn(Future.successful(true))
+
+      when(mockTrustsConnector.removeTransforms(any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
+      when(mockTrustsConnector.setExpressTrust(any(), any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
+      val application = applicationBuilder(userAnswers = Some(
+        emptyUserAnswersForUtr.set(WhatIsNextPage, NeedsToPayTax).success.value
+      )).overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+        .build()
+
+      val request = FakeRequest(POST, expressTrustYesNoRoute)
+        .withFormUrlEncodedBody(("value", validAnswer.toString))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.tasklist.routes.TaskListController.onPageLoad().url
 
       verify(mockTrustsConnector).removeTransforms(any())(any(), any())
       verify(mockTrustsConnector).setExpressTrust(any(), eqTo(validAnswer))(any(), any())

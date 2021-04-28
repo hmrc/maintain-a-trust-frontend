@@ -19,11 +19,10 @@ package mapping.trustees
 import base.SpecBaseHelpers
 import generators.Generators
 import mapping.PlaybackExtractionErrors.FailedToExtractData
+import models.MetaData
 import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType}
 import models.pages.IndividualOrBusiness
-import models.{MetaData, UserAnswers}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
-import pages.trustdetails.ExpressTrustYesNoPage
 import pages.trustees._
 import utils.Constants.GB
 
@@ -41,7 +40,7 @@ class OrganisationLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
 
         val leadTrustee = Nil
 
-        val ua = UserAnswers("fakeId", "utr")
+        val ua = emptyUserAnswersForUtr
 
         val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
 
@@ -72,7 +71,7 @@ class OrganisationLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr")
+          val ua = emptyUserAnswersForUtr
 
           val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
 
@@ -114,8 +113,7 @@ class OrganisationLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
 
@@ -154,8 +152,7 @@ class OrganisationLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, false).success.value
+          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
           val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
 
@@ -197,8 +194,7 @@ class OrganisationLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
 
@@ -237,8 +233,7 @@ class OrganisationLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = UserAnswers("fakeId", "utr", isTrustTaxable = false, is5mldEnabled = true)
-            .set(ExpressTrustYesNoPage, true).success.value
+          val ua = emptyUserAnswersForUrn
 
           val extraction = leadTrusteeOrgExtractor.extract(ua, leadTrustee)
 

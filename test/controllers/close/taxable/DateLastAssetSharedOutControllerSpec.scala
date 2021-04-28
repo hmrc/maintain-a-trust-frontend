@@ -24,7 +24,6 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.close.taxable.DateLastAssetSharedOutPage
-import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
@@ -105,68 +104,23 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted" when {
+    "redirect to the next page when valid data is submitted" in {
 
-      "4mld" in {
+      val baseAnswers: UserAnswers = emptyUserAnswersForUtr
 
-        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isTrustTaxable = true)
+      when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
 
-        when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+      val application = applicationBuilder(userAnswers = Some(baseAnswers))
+        .overrides(bind[TrustConnector].toInstance(fakeConnector))
+        .build()
 
-        val application = applicationBuilder(userAnswers = Some(baseAnswers))
-          .overrides(bind[TrustConnector].toInstance(fakeConnector))
-          .build()
+      val result = route(application, postRequest()).value
 
-        val result = route(application, postRequest()).value
+      status(result) mustEqual SEE_OTHER
 
-        status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.close.routes.BeforeClosingController.onPageLoad().url
 
-        redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
-
-        application.stop()
-      }
-
-      "5mld" when {
-
-        "underlying data is 4mld" in {
-
-          val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-
-          when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
-
-          val application = applicationBuilder(userAnswers = Some(baseAnswers))
-            .overrides(bind[TrustConnector].toInstance(fakeConnector))
-            .build()
-
-          val result = route(application, postRequest()).value
-
-          status(result) mustEqual SEE_OTHER
-
-          redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
-
-          application.stop()
-        }
-
-        "underlying data is 5mld" in {
-
-          val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isTrustTaxable = true)
-            .set(ExpressTrustYesNoPage, true).success.value
-
-          when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
-
-          val application = applicationBuilder(userAnswers = Some(baseAnswers))
-            .overrides(bind[TrustConnector].toInstance(fakeConnector))
-            .build()
-
-          val result = route(application, postRequest()).value
-
-          status(result) mustEqual SEE_OTHER
-
-          redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
-
-          application.stop()
-        }
-      }
+      application.stop()
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {

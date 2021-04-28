@@ -18,6 +18,7 @@ package services
 
 import com.google.inject.Inject
 import controllers.Assets.Redirect
+import models.requests.IdentifierRequest
 import models.{IdentifierSession, UserAnswers}
 import play.api.Logging
 import play.api.mvc.Result
@@ -27,14 +28,18 @@ import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class UserAnswersSetupService @Inject()(playbackRepository: PlaybackRepository,
-                                        sessionRepository: ActiveSessionRepository) extends Logging {
+class SessionService @Inject()(playbackRepository: PlaybackRepository,
+                               sessionRepository: ActiveSessionRepository) extends Logging {
 
-  def setupAndRedirectToStatus(identifier: String, internalId: String, is5mldEnabled: Boolean, isTaxable: Boolean)
-                              (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Result] = {
+  def initialiseUserAnswers(identifier: String,
+                            internalId: String,
+                            is5mldEnabled: Boolean,
+                            isUnderlyingData5mld: Boolean,
+                            isUnderlyingDataTaxable: Boolean)
+                           (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[UserAnswers] = {
 
     val activeSession = IdentifierSession(internalId, identifier)
-    val newEmptyAnswers = UserAnswers.startNewSession(internalId, identifier, is5mldEnabled, isTaxable)
+    val newEmptyAnswers = UserAnswers.startNewSession(internalId, identifier, is5mldEnabled, isUnderlyingData5mld, isUnderlyingDataTaxable)
 
     for {
       _ <- playbackRepository.resetCache(internalId, identifier)
@@ -43,7 +48,18 @@ class UserAnswersSetupService @Inject()(playbackRepository: PlaybackRepository,
     } yield {
       logger.info(s"[Session ID: ${Session.id(hc)}]" +
         s" $identifier user is enrolled, storing identifier in user answers, checking status of trust")
+      newEmptyAnswers
+    }
+  }
+
+  def initialiseSession[A](identifier: String)
+                          (implicit request: IdentifierRequest[A], ec: ExecutionContext): Future[Result] = {
+    val session = IdentifierSession(request.user.internalId, identifier)
+    for {
+      _ <- sessionRepository.set(session)
+    } yield {
       Redirect(controllers.routes.TrustStatusController.status())
     }
   }
+
 }

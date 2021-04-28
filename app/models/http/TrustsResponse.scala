@@ -32,9 +32,9 @@ case object SorryThereHasBeenAProblem extends TrustStatus
 case object IdentifierNotFound extends TrustsResponse
 case object TrustServiceUnavailable extends TrustsResponse
 case object ClosedRequestResponse extends TrustsResponse
-case object ServerError extends TrustsResponse
+case object TrustsErrorResponse extends TrustsResponse
 
-object TrustsStatusReads extends Logging {
+object TrustsResponse extends Logging {
 
   final val CLOSED_REQUEST = 499
 
@@ -60,7 +60,7 @@ object TrustsStatusReads extends Logging {
     }
   }
 
-  private def validatedProcessedStatus(json: JsValue) : JsResult[Processed] = {
+  private def validatedProcessedStatus(json: JsValue): JsResult[Processed] = {
     json("getTrust").validate[GetTrust] match {
       case JsSuccess(trust, _) =>
         val formBundle = json("responseHeader")("formBundleNo").as[String]
@@ -72,7 +72,7 @@ object TrustsStatusReads extends Logging {
   }
 
   implicit lazy val httpReads: HttpReads[TrustsResponse] = (_: String, _: String, response: HttpResponse) => {
-    logger.info(s"[TrustStatus] response status received from trusts status api: ${response.status}")
+    logger.info(s"[TrustsResponse] response status received from trusts status api: ${response.status}")
 
     response.status match {
       case OK =>
@@ -86,7 +86,7 @@ object TrustsStatusReads extends Logging {
       case CLOSED_REQUEST =>
         ClosedRequestResponse
       case _ =>
-        ServerError
+        TrustsErrorResponse
     }
   }
 }

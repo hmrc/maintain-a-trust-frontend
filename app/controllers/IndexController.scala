@@ -22,7 +22,7 @@ import models.requests.IdentifierRequest
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import services.{FeatureFlagService, UserAnswersSetupService}
+import services.SessionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 
@@ -32,8 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class IndexController @Inject()(
                                  val controllerComponents: MessagesControllerComponents,
                                  actions: Actions,
-                                 uaSetupService: UserAnswersSetupService,
-                                 featureFlagService: FeatureFlagService
+                                 sessionService: SessionService
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = actions.auth.async {
@@ -51,25 +50,27 @@ class IndexController @Inject()(
       initialise(Redirect(controllers.routes.URNController.onPageLoad()))
   }
 
-  private def initialise(redirect: Result)(implicit request: IdentifierRequest[_]): Future[Result] = {
-    def identifier(enrolmentKey: String, identifierKey: String): Option[String] = request.user.enrolments.enrolments
+  private def getIdentifierFromEnrolment(enrolmentKey: String, identifierKey: String)
+                                        (implicit request: IdentifierRequest[_]): Option[String] =
+    request.user.enrolments.enrolments
       .find(_.key equals enrolmentKey)
       .flatMap(_.identifiers.find(_.key equals identifierKey))
       .map(_.value)
 
-    val utr = identifier("HMRC-TERS-ORG", "SAUTR")
-    val urn = identifier("HMRC-TERSNT-ORG", "URN")
+  private def initialise(redirectForIdentifier: Result)(implicit request: IdentifierRequest[_]): Future[Result] = {
 
-    featureFlagService.is5mldEnabled().flatMap {
-      is5mldEnabled =>
-        (utr, urn) match {
-          case (Some(utr), _) => uaSetupService.setupAndRedirectToStatus(utr, request.user.internalId, is5mldEnabled, isTaxable = true)
-          case (_, Some(urn)) => uaSetupService.setupAndRedirectToStatus(urn, request.user.internalId, is5mldEnabled, isTaxable = false)
-          case _ =>
-            logger.info(s"[Session ID: ${Session.id(hc)}]" +
-              s" user is not enrolled, starting maintain journey, redirect to ask for identifier")
-            Future.successful(redirect)
-        }
+    val utr = getIdentifierFromEnrolment("HMRC-TERS-ORG", "SAUTR")
+    val urn = getIdentifierFromEnrolment("HMRC-TERSNT-ORG", "URN")
+
+    val identifier: Option[String] = utr.orElse(urn).orElse(None)
+
+    identifier match {
+      case Some(value) =>
+        sessionService.initialiseSession(value)
+      case None =>
+        logger.info(s"[Session ID: ${Session.id(hc)}]" +
+          s" user is not enrolled, starting maintain journey, redirect to ask for identifier")
+        Future.successful(redirectForIdentifier)
     }
   }
 }

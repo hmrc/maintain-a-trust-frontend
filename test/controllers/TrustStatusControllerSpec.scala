@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import connectors.{TrustClaim, TrustConnector, TrustsStoreConnector}
 import mapping.{FakeFailingUserAnswerExtractor, FakeUserAnswerExtractor, UserAnswersExtractor}
-import models.{UTR, UserAnswers}
+import models.{TrustDetails, UTR, UserAnswers}
 import models.http._
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
@@ -32,10 +32,11 @@ import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.PlaybackRepository
-import services.{AuthenticationService, FakeAuthenticationService, FakeFailingAuthenticationService}
+import services.{AuthenticationService, FakeAuthenticationService, FakeFailingAuthenticationService, FeatureFlagService}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.status._
 
+import java.time.LocalDate
 import scala.concurrent.Future
 import scala.io.Source
 
@@ -52,6 +53,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
     val fakeTrustConnector: TrustConnector = mock[TrustConnector]
     val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
     val fakePlaybackRepository: PlaybackRepository = mock[PlaybackRepository]
+    val fakeFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
 
     def request: FakeRequest[AnyContentAsEmpty.type]
 
@@ -61,7 +63,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       bind[TrustConnector].to(fakeTrustConnector),
       bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
       bind[AuthenticationService].to(new FakeAuthenticationService()),
-      bind[UserAnswersExtractor].to(new FakeUserAnswerExtractor(userAnswers))
+      bind[UserAnswersExtractor].to(new FakeUserAnswerExtractor(userAnswers)),
+      bind[FeatureFlagService].to(fakeFeatureFlagService)
     ).build()
   }
 
@@ -187,6 +190,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(Closed))
 
+        when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value mustEqual "/maintain-a-trust/status/closed"
@@ -203,6 +208,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(Processing))
 
+        when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value mustEqual "/maintain-a-trust/status/processing"
@@ -218,6 +225,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
           .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
         when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(IdentifierNotFound))
+
+        when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
         status(result) mustEqual SEE_OTHER
 
@@ -249,6 +258,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(TrustServiceUnavailable))
 
+        when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value mustEqual "/maintain-a-trust/status/down"
@@ -265,6 +276,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
         when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(ClosedRequestResponse))
 
+        when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value mustEqual "/maintain-a-trust/status/down"
@@ -279,7 +292,9 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
           .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
-        when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(ServerError))
+        when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(TrustsErrorResponse))
+
+        when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
         status(result) mustEqual SEE_OTHER
 
@@ -313,6 +328,11 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
+              when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None)))
+
+              when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
               when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
 
               status(result) mustEqual SEE_OTHER
@@ -335,6 +355,11 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
                 .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+
+              when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+              when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -362,6 +387,11 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
                 .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
+              when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+              when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
+
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
@@ -383,6 +413,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
               val fakeTrustConnector: TrustConnector = mock[TrustConnector]
               val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
+              val fakeFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
 
               val userAnswers = emptyUserAnswersForUtr
 
@@ -390,7 +421,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 bind[TrustConnector].to(fakeTrustConnector),
                 bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
                 bind[UserAnswersExtractor].to[FakeFailingUserAnswerExtractor],
-                bind[AuthenticationService].to(new FakeAuthenticationService())
+                bind[AuthenticationService].to(new FakeAuthenticationService()),
+                bind[FeatureFlagService].to(fakeFeatureFlagService)
               ).build()
 
               val payload: String =
@@ -402,6 +434,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
                 .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+
+              when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -431,11 +465,13 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
             val fakeTrustConnector: TrustConnector = mock[TrustConnector]
             val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
+            val fakeFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
 
             def application: Application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(
               bind[TrustConnector].to(fakeTrustConnector),
               bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
-              bind[AuthenticationService].to(new FakeFailingAuthenticationService())
+              bind[AuthenticationService].to(new FakeFailingAuthenticationService()),
+              bind[FeatureFlagService].to(fakeFeatureFlagService)
             ).build()
 
             val payload: String =
@@ -449,6 +485,11 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
             when(fakeTrustStoreConnector.get(any[String])(any(), any()))
               .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+
+            when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
+            when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
+              .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
 
             when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
               .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -464,7 +505,9 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       }
     }
+
     "must redirect to the correct route for GET ../status" when {
+
       "a Processed status is received from the trust connector" when {
 
         "user is authenticated for playback" when {
@@ -485,8 +528,13 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
                 .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
+              when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
+
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
+
+              when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
 
               when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
 

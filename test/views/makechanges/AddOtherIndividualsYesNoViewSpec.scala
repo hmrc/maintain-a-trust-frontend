@@ -16,34 +16,58 @@
 
 package views.makechanges
 
-import controllers.makechanges.routes
 import forms.YesNoFormProvider
 import play.api.data.Form
-import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
 import views.html.makechanges.AddOtherIndividualsYesNoView
 
 class AddOtherIndividualsYesNoViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "addOtherIndividuals"
-  val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-  lazy val onSubmit: Call = routes.AddOtherIndividualsYesNoController.onSubmit()
+  "AddOtherIndividualsYesNoView" when {
 
-  "AddOtherIndividualsYesNo view" must {
+    "making changes" must {
 
-    val view = viewFor[AddOtherIndividualsYesNoView](Some(emptyUserAnswersForUtr))
+      val messageKeyPrefix = "addOtherIndividuals"
+      val determinePrefix = (_: Boolean) => messageKeyPrefix
+      val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
-    def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, messageKeyPrefix)(fakeRequest, messages)
+      val view = viewFor[AddOtherIndividualsYesNoView](Some(emptyUserAnswersForUtr))
 
-    behave like normalPage(applyView(form), messageKeyPrefix)
+      def applyView(form: Form[_]): HtmlFormat.Appendable =
+        view.apply(form, determinePrefix, closingTrust = false)(fakeRequest, messages)
 
-    behave like pageWithBackLink(applyView(form))
+      behave like normalPage(applyView(form), messageKeyPrefix, "additionalContent1")
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix)
+      behave like pageWithBackLink(applyView(form))
 
-    behave like pageWithASubmitButton(applyView(form))
+      behave like yesNoPage(form, applyView, messageKeyPrefix)
 
+      behave like pageWithHint(applyView(form))
+
+      behave like pageWithASubmitButton(applyView(form))
+    }
+
+    "closing" must {
+
+      val messageKeyPrefix = "addOtherIndividualsClosing"
+      val determinePrefix = (_: Boolean) => messageKeyPrefix
+      val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+
+      val view = viewFor[AddOtherIndividualsYesNoView](Some(emptyUserAnswersForUtr))
+
+      def applyView(form: Form[_]): HtmlFormat.Appendable =
+        view.apply(form, determinePrefix, closingTrust = true)(fakeRequest, messages)
+
+      behave like normalPage(applyView(form), messageKeyPrefix, "additionalContent1", "additionalContent2")
+
+      behave like pageWithBackLink(applyView(form))
+
+      behave like yesNoPage(form, applyView, messageKeyPrefix)
+
+      behave like pageWithHint(applyView(form))
+
+      behave like pageWithASubmitButton(applyView(form))
+    }
   }
 }

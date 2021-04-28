@@ -16,27 +16,26 @@
 
 package services
 
-import java.time.LocalDate
-
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
 import mapping.PlaybackImplicits._
-import models.http.{AgentDetails, DeclarationResponse}
+import models.http.{AgentDetails, Declaration, DeclarationForApi, DeclarationResponse}
 import models.{Address, AgentDeclaration, FullName, IndividualDeclaration}
-import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends DeclarationService {
 
-  override def agentDeclaration(utr: String,
-                                declaration: AgentDeclaration,
-                                arn: String,
-                                agencyAddress: Address,
-                                agentFriendlyName: String,
-                                endDate: Option[LocalDate]
-                               )(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+  override def agentDeclaration(
+                                 utr: String,
+                                 declaration: AgentDeclaration,
+                                 arn: String,
+                                 agencyAddress: Address,
+                                 agentFriendlyName: String,
+                                 endDate: Option[LocalDate]
+                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
 
     val agentDetails = AgentDetails(
       arn,
@@ -49,48 +48,38 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
     declare(declaration.name, utr, Some(agentDetails), endDate)
   }
 
-  override def individualDeclaration(utr: String,
-                                     declaration: IndividualDeclaration,
-                                     endDate: Option[LocalDate]
-                                    )(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+  override def individualDeclaration(utr: String, declaration: IndividualDeclaration, endDate: Option[LocalDate])
+                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
 
     declare(declaration.name, utr, None, endDate)
   }
 
-  private def declare(name: FullName, utr: String,
-                      agentDetails: Option[AgentDetails],
-                      endDate: Option[LocalDate]
-                     )(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse] = {
+  private def declare(name: FullName, utr: String, agentDetails: Option[AgentDetails], endDate: Option[LocalDate])
+                     (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
 
-    val payload = getPayload(name, agentDetails, endDate)
-    connector.declare(utr, payload)
-  }
-
-  private def getPayload(name: FullName,
-                         agentDetails: Option[AgentDetails],
-                         endDate: Option[LocalDate]): JsValue = {
-    Json.toJson(
-      models.http.DeclarationForApi(
-        models.http.Declaration(name),
-        agentDetails,
-        endDate
-      )
+    val payload = DeclarationForApi(
+      declaration = Declaration(name),
+      agentDetails = agentDetails,
+      endDate = endDate
     )
+
+    connector.declare(utr, payload)
   }
 }
 
 @ImplementedBy(classOf[DeclarationServiceImpl])
 trait DeclarationService {
-  def agentDeclaration(utr: String,
-                       declaration: AgentDeclaration,
-                       arn: String,
-                       agencyAddress: Address,
-                       agentFriendlyName: String,
-                       endDate: Option[LocalDate]
-                      )(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
 
-  def individualDeclaration(utr: String,
-                            declaration: IndividualDeclaration,
-                            endDate: Option[LocalDate]
-                           )(implicit hc: HeaderCarrier, ec : ExecutionContext): Future[DeclarationResponse]
+  def agentDeclaration(
+                        utr: String,
+                        declaration: AgentDeclaration,
+                        arn: String,
+                        agencyAddress: Address,
+                        agentFriendlyName: String,
+                        endDate: Option[LocalDate]
+                      )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse]
+
+  def individualDeclaration(utr: String, declaration: IndividualDeclaration, endDate: Option[LocalDate])
+                           (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse]
+
 }
