@@ -67,7 +67,7 @@
     @components.task_list("additional", optional, messages("variationProgress.subHeading.3"))
 
     @if(isAbleToDeclare) {
-        <h2 class="app-task-list__section">@messages("variationProgress.subHeading.4")</h2>
+        <h2>@messages("variationProgress.subHeading.4")</h2>
 
         <p>@messages("variationProgress.p3")</p>
         <p>@messages("variationProgress.p4") @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "variationProgress.printsave.link", openInNewWindow = false)</p>
@@ -76,6 +76,8 @@
 
         <p>@messages("variationProgress.p5") <a href="@{appConfig.sa900Link}" target="_blank">@messages("variationProgress.sa900.link")</a>.</p>
 
-        <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
+        <div class="section">
+            <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
+        </div>
     }
 }
