@@ -152,7 +152,7 @@ trait TaskListSections {
       Task(
         Link(TaxLiability, taxLiabilityRouteEnabled(identifier)),
         Some(Tag.tagFor(tasks.taxLiability))
-      ),
+      )
     )
 
     if (trustTaxability != MigratingFromNonTaxableToTaxable) {
