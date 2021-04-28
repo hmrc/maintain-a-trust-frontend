@@ -25,20 +25,22 @@
     main_template: MainTemplate
 )
 
-@(identifier: String,
+@(
+    identifier: String,
     identifierType: IdentifierType,
-    mandatory : List[Task],
+    mandatory: List[Task],
     optional: List[Task],
-    affinityGroup : AffinityGroup,
-    nextUrl : String,
+    affinityGroup: AffinityGroup,
+    nextUrl: String,
     isAbleToDeclare: Boolean,
-    closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
+    closingTrust: Boolean
+)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("variationProgress.title")
 ) {
 
-   @components.back_link()
+    @components.back_link()
 
     @components.heading_with_caption(headingKey = "variationProgress.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
@@ -47,9 +49,7 @@
     <p>@messages("variationProgress.p2")</p>
 
     @if(affinityGroup == AffinityGroup.Agent) {
-        <p>
-            <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>
-        </p>
+        <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>
     }
 
     @{
@@ -83,4 +83,3 @@
         </div>
     }
 }
-

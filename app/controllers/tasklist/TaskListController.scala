@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.TrustsStoreConnector
 import controllers.actions.Actions
-import models.{Enumerable, MigratingFromNonTaxableToTaxable}
+import models.Enumerable
 import navigation.Navigator.declarationUrl
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -56,8 +56,7 @@ class TaskListController @Inject()(
               mandatory = sections.mandatory,
               affinityGroup = request.user.affinityGroup,
               nextUrl = declarationUrl(request.user.affinityGroup),
-              isAbleToDeclare = sections.isAbleToDeclare,
-              closingTrust = request.closingTrust
+              isAbleToDeclare = sections.isAbleToDeclare
             ))
           } else {
             Ok(view(identifier,
@@ -70,8 +69,6 @@ class TaskListController @Inject()(
               closingTrust = request.closingTrust
             ))
           }
-
-
       }
   }
 }

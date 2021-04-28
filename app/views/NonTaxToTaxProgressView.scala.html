@@ -25,13 +25,14 @@
     main_template: MainTemplate
 )
 
-@(identifier: String,
+@(
+    identifier: String,
     identifierType: IdentifierType,
-    mandatory : List[Task],
-    affinityGroup : AffinityGroup,
-    nextUrl : String,
-    isAbleToDeclare: Boolean,
-    closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
+    mandatory: List[Task],
+    affinityGroup: AffinityGroup,
+    nextUrl: String,
+    isAbleToDeclare: Boolean
+)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("transitionProgress.title")
@@ -43,16 +44,14 @@
 
     <p>@messages("transitionProgress.p1")</p>
 
-    <h2>@messages("transitionProgress.subHeading")</h2>
+    <h2>@messages("transitionProgress.subHeading.1")</h2>
 
     <p>@messages("transitionProgress.p2")</p>
 
     @components.bullet_list("transitionProgress", Seq("bullet1", "bullet2"))
 
     @if(affinityGroup == AffinityGroup.Agent) {
-        <p>
-            <a href="@{appConfig.agentOverviewUrl}">@messages("transitionsProgress.return.link")</a>
-        </p>
+        <a href="@{appConfig.agentOverviewUrl}">@messages("transitionsProgress.return.link")</a>
     }
 
     @components.warning("transitionProgress")
@@ -64,12 +63,12 @@
     @components.task_list("mandatory", mandatory, messages("transitionProgress.subHeading.2"))
 
     @if(isAbleToDeclare) {
-        <h2 id="summary-heading" class="app-task-list__section">@messages("transitionProgress.subHeading.4")</h2>
+        <h2 class="app-task-list__section">@messages("transitionProgress.subHeading.3")</h2>
 
         <p>@messages("transitionProgress.p5")</p>
         <p>@messages("transitionProgress.p6") @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", openInNewWindow = false)</p>
 
-        <h2 id="summary-heading-2">@messages("transitionProgress.subHeading.5")</h2>
+        <h2>@messages("transitionProgress.subHeading.4")</h2>
 
         <p>@messages("transitionProgress.p7") <a href="@{appConfig.sa900Link}" target="_blank">@messages("transitionProgress.sa900.link")</a>.</p>
         <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>

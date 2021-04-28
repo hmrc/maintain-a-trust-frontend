@@ -62,7 +62,6 @@ class TaskListControllerSpec extends SpecBase {
     Task(Link(TaxLiability, s"http://localhost:9838/maintain-a-trust/tax-liability/$identifier"), Some(InProgress))
   )
 
-
   def optionalSections4mld(identifier: String): List[Task] = List(
     Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), Some(InProgress)),
     Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), Some(InProgress))
@@ -204,7 +203,7 @@ class TaskListControllerSpec extends SpecBase {
 
       "return OK and the correct view for a GET" when {
 
-        "changing from non taxable to txable trust" in {
+        "changing from non taxable to taxable trust" in {
 
           val mockConnector = mock[TrustsStoreConnector]
 
@@ -226,7 +225,7 @@ class TaskListControllerSpec extends SpecBase {
           status(result) mustEqual OK
 
           contentAsString(result) mustEqual
-            view(baseAnswers.identifier, baseAnswers.identifierType, mandatorySections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
+            view(baseAnswers.identifier, baseAnswers.identifierType, mandatorySections, Organisation, expectedContinueUrl, isAbleToDeclare = false)(request, messages).toString
 
           application.stop()
         }
