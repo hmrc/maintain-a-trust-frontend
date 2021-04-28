@@ -25,7 +25,7 @@ import navigation.Navigator.declarationUrl
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.{TransitionProgressView, VariationProgressView}
+import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
 import scala.concurrent.ExecutionContext
 
@@ -33,7 +33,7 @@ class TaskListController @Inject()(
                                     override val messagesApi: MessagesApi,
                                     actions: Actions,
                                     view: VariationProgressView,
-                                    transitionView: TransitionProgressView,
+                                    nonTaxToTaxView: NonTaxToTaxProgressView,
                                     val controllerComponents: MessagesControllerComponents,
                                     val config: FrontendAppConfig,
                                     storeConnector: TrustsStoreConnector
@@ -51,7 +51,7 @@ class TaskListController @Inject()(
           val sections = generateTaskList(tasks, identifier, request.userAnswers.trustMldStatus, request.userAnswers.trustTaxability)
 
           if (request.userAnswers.trustTaxability == MigratingFromNonTaxableToTaxable) {
-            Ok(transitionView(identifier,
+            Ok(nonTaxToTaxView(identifier,
               identifierType = request.userAnswers.identifierType,
               mandatory = sections.mandatory,
               affinityGroup = request.user.affinityGroup,

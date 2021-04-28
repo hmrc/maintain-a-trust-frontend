@@ -34,7 +34,7 @@ import sections.settlors.Settlors
 import sections.{Natural, Protectors, TrustDetails, Trustees, TaxLiability}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.{Link, Task}
-import views.html.{TransitionProgressView, VariationProgressView}
+import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
 import scala.concurrent.Future
 
@@ -221,7 +221,7 @@ class TaskListControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          val view = application.injector.instanceOf[TransitionProgressView]
+          val view = application.injector.instanceOf[NonTaxToTaxProgressView]
 
           status(result) mustEqual OK
 

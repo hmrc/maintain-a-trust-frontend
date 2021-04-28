@@ -23,9 +23,9 @@ import sections.{TrustDetails, TaxLiability}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.{Link, Task}
 import views.behaviours.{TransitionsProgressViewBehaviours, ViewBehaviours}
-import views.html.TransitionProgressView
+import views.html.NonTaxToTaxProgressView
 
-class TransitionProgressViewSpec extends ViewBehaviours with TransitionsProgressViewBehaviours {
+class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgressViewBehaviours {
 
   val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
@@ -43,7 +43,7 @@ class TransitionProgressViewSpec extends ViewBehaviours with TransitionsProgress
 
     val userAnswers = emptyUserAnswersForUtr
 
-    val view = viewFor[TransitionProgressView](Some(userAnswers))
+    val view = viewFor[NonTaxToTaxProgressView](Some(userAnswers))
 
     val applyView = view.apply(urn, URN, mandatorySections, group, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(fakeRequest, messages)
 
@@ -77,7 +77,7 @@ class TransitionProgressViewSpec extends ViewBehaviours with TransitionsProgress
 
         val userAnswers = emptyUserAnswersForUrn
 
-        val view = viewFor[TransitionProgressView](Some(userAnswers))
+        val view = viewFor[NonTaxToTaxProgressView](Some(userAnswers))
 
         val applyView = view.apply(urn, UTR, mandatorySections, group, expectedContinueUrl, isAbleToDeclare = true, closingTrust = false)(fakeRequest, messages)
 
