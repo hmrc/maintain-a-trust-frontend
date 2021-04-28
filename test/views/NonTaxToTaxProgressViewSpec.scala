@@ -84,10 +84,10 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
         val doc = asDocument(applyView)
 
         assertRenderedById(doc, "summary-heading")
-        assertRenderedById(doc, "summary-paragraph")
+        assertContainsText(doc, messages("transitionProgress.p5"))
         assertRenderedById(doc, "summary-heading-2")
-        assertRenderedById(doc, "summary-paragraph-2")
-        assertRenderedById(doc, "print-and-save")
+        assertContainsText(doc, messages("transitionProgress.p6"))
+        assertContainsText(doc, messages("transitionProgress.p7"))
 
       }
     }

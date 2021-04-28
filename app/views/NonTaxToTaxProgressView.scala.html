@@ -65,19 +65,14 @@
 
     @if(isAbleToDeclare) {
         <h2 id="summary-heading" class="app-task-list__section">@messages("transitionProgress.subHeading.4")</h2>
-        <div id="summary-paragraph" class="paragraph">
-            <p>@messages("transitionProgress.p5")</p>
-            <p>@messages("transitionProgress.p6")
-                @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", openInNewWindow = false)
-            </p>
-        </div>
+
+        <p>@messages("transitionProgress.p5")</p>
+        <p>@messages("transitionProgress.p6") @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", openInNewWindow = false)</p>
+
         <h2 id="summary-heading-2">@messages("transitionProgress.subHeading.5")</h2>
-        <div id="summary-paragraph-2" class="paragraph">
-            <p>@messages("transitionProgress.p7") <a href="@{appConfig.sa900Link}" target="_blank">@messages("transitionProgress.sa900.link")</a>.</p>
-        </div>
-        <div class="section">
-            <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
-        </div>
+
+        <p>@messages("transitionProgress.p7") <a href="@{appConfig.sa900Link}" target="_blank">@messages("transitionProgress.sa900.link")</a>.</p>
+        <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
     }
 }
 
