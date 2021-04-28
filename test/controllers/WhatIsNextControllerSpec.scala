@@ -524,7 +524,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
     "set taxable migration flag" when {
 
       "NeedsToPayTax selected" must {
-        "don't set flag to true" in {
+        "set flag to true" in {
 
           beforeTest()
 
