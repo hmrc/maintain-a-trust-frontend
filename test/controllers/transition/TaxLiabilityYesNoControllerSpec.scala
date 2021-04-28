@@ -17,7 +17,6 @@
 package controllers.transition
 
 import base.SpecBase
-import connectors.TrustConnector
 import forms.YesNoFormProvider
 import models.UTR
 import org.mockito.Matchers.{any, eq => eqTo}
@@ -85,19 +84,11 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
     "redirect to the next page when true is submitted, marking this as taxable" in {
 
       val mockPlaybackRepository = mock[PlaybackRepository]
-      val mockTrustsConnector = mock[TrustConnector]
 
       when(mockPlaybackRepository.set(any()))
         .thenReturn(Future.successful(true))
 
-      when(mockTrustsConnector.removeTransforms(any())(any(), any()))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
-      when(mockTrustsConnector.setExpressTrust(any(), any())(any(), any()))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
-        .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
         .build()
 
       val request = FakeRequest(POST, taxLiabilityYesNoRoute)
@@ -109,27 +100,17 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       redirectLocation(result).value mustEqual routes.BeforeYouContinueToTaxableController.onPageLoad().url
 
-      verify(mockTrustsConnector).setExpressTrust(any(), eqTo(true))(any(), any())
-
       application.stop()
     }
 
     "redirect to the previous page when false is submitted" in {
 
       val mockPlaybackRepository = mock[PlaybackRepository]
-      val mockTrustsConnector = mock[TrustConnector]
 
       when(mockPlaybackRepository.set(any()))
         .thenReturn(Future.successful(true))
 
-      when(mockTrustsConnector.removeTransforms(any())(any(), any()))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
-      when(mockTrustsConnector.setExpressTrust(any(), any())(any(), any()))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
-        .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
         .build()
 
       val request = FakeRequest(POST, taxLiabilityYesNoRoute)
@@ -141,7 +122,6 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       redirectLocation(result).value mustEqual controllers.routes.WhatIsNextController.onPageLoad().url
 
-      verify(mockTrustsConnector, times(0)).setExpressTrust(any(), eqTo(true))(any(), any())
 
       application.stop()
     }

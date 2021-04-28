@@ -17,7 +17,6 @@
 package controllers.transition
 
 import com.google.inject.{Inject, Singleton}
-import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import pages.transition.TaxLiabilityYesNoPage
@@ -39,7 +38,6 @@ class TaxLiabilityYesNoController @Inject()(
                                        val controllerComponents: MessagesControllerComponents,
                                        yesNoFormProvider: YesNoFormProvider,
                                        view: TaxLiabilityYesNoView,
-                                       trustsConnector: TrustConnector
                                      )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
@@ -73,7 +71,6 @@ class TaxLiabilityYesNoController @Inject()(
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(TaxLiabilityYesNoPage, value))
               _ <- playbackRepository.set(updatedAnswers)
-              _ <- trustsConnector.setExpressTrust(request.userAnswers.identifier, true)
             } yield {
               Redirect(routes.BeforeYouContinueToTaxableController.onPageLoad())
             }
