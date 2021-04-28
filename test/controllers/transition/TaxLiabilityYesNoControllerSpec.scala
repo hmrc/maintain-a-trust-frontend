@@ -19,7 +19,7 @@ package controllers.transition
 import base.SpecBase
 import connectors.TrustConnector
 import forms.YesNoFormProvider
-import models.{URN, UTR}
+import models.UTR
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -107,7 +107,7 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual routes.ConfirmTrustTaxableController.onPageLoad().url
+      redirectLocation(result).value mustEqual routes.BeforeYouContinueToTaxableController.onPageLoad().url
 
       verify(mockTrustsConnector).setExpressTrust(any(), eqTo(true))(any(), any())
 

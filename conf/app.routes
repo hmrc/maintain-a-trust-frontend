@@ -25,14 +25,17 @@ POST       /unique-taxpayer-reference                   controllers.UTRControlle
 GET        /unique-reference-number                     controllers.URNController.onPageLoad()
 POST       /unique-reference-number                     controllers.URNController.onSubmit()
 
+GET        /confirm-trust-has-tax-liablity              controllers.transition.TaxLiabilityYesNoController.onPageLoad()
+POST       /confirm-trust-has-tax-liablity              controllers.transition.TaxLiabilityYesNoController.onSubmit()
+
+GET        /before-you-continue-to-taxable              controllers.transition.BeforeYouContinueToTaxableController.onPageLoad()
+POST       /before-you-continue-to-taxable              controllers.transition.BeforeYouContinueToTaxableController.onSubmit()
+
 GET        /express-trust                               controllers.transition.ExpressTrustYesNoController.onPageLoad()
 POST       /express-trust                               controllers.transition.ExpressTrustYesNoController.onSubmit()
 
 GET        /confirm-trust-is-taxable                    controllers.transition.ConfirmTrustTaxableController.onPageLoad()
 POST       /confirm-trust-is-taxable                    controllers.transition.ConfirmTrustTaxableController.onSubmit()
-
-GET        /confirm-trust-has-tax-liablity              controllers.transition.TaxLiabilityYesNoController.onPageLoad()
-POST       /confirm-trust-has-tax-liablity              controllers.transition.TaxLiabilityYesNoController.onSubmit()
 
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
 

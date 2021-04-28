@@ -75,7 +75,7 @@ class TaxLiabilityYesNoController @Inject()(
               _ <- playbackRepository.set(updatedAnswers)
               _ <- trustsConnector.setExpressTrust(request.userAnswers.identifier, true)
             } yield {
-              Redirect(routes.ConfirmTrustTaxableController.onPageLoad())
+              Redirect(routes.BeforeYouContinueToTaxableController.onPageLoad())
             }
           } else {
             Future.successful(Redirect(controllers.routes.WhatIsNextController.onPageLoad()))

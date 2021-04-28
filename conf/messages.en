@@ -455,6 +455,31 @@ utr.error.invalidCharacters = Enter the trust’s Unique Taxpayer Reference in t
 utr.linkMessage = You can
 utr.linkText = find a lost UTR (opens in a new window or tab)
 
+taxLiabilityYesNo.title = Does the trust still have a tax liability
+taxLiabilityYesNo.heading = Does the trust still have a tax liability
+taxLiabilityYesNo.p1 = Trusts can be liable for any of the following
+taxLiabilityYesNo.bullet1 = Capital Gains tax
+taxLiabilityYesNo.bullet2 = Income Tax
+taxLiabilityYesNo.bullet3 = Inheritance Tax
+taxLiabilityYesNo.bullet4 = Stamp Duty Reserve Tax
+taxLiabilityYesNo.bullet5 = Stamp Duty Land Tax or Land and Buildings Transaction Tax in Scotland
+taxLiabilityYesNo.error.required = Select yes if the trust still has a tax liability
+
+beforeYouContinueToTaxable.title = Before you continue
+beforeYouContinueToTaxable.heading = Before you continue
+beforeYouContinueToTaxable.p1 = Because the trust is now taxable you need to tell us some more information before continuing to maintain
+beforeYouContinueToTaxable.p2 = You will need to tell us if the trust:
+beforeYouContinueToTaxable.bullet1 = is an express trust
+beforeYouContinueToTaxable.bullet2 = is registered in the UK
+beforeYouContinueToTaxable.bullet3 = owns land or property in the UK
+beforeYouContinueToTaxable.bullet4 = has needed to pay tax in the last four years
+beforeYouContinueToTaxable.p3 = You will also need to tell us about any assets the trust owns, such as:
+beforeYouContinueToTaxable.bullet5 = business
+beforeYouContinueToTaxable.bullet6 = money
+beforeYouContinueToTaxable.bullet7 = partnerships
+beforeYouContinueToTaxable.bullet8 = property or land
+beforeYouContinueToTaxable.bullet9 = shares
+
 expressTrustYesNo.title = Are you maintaining an express trust?
 expressTrustYesNo.heading = Are you maintaining an express trust?
 expressTrustYesNo.p1 = An express trust is a trust created deliberately by a settlor, usually in the form of a document such as a written deed of trust.
@@ -470,16 +495,6 @@ confirmTrustTaxable.p2 = As the trust was registered on or before 3 May 2021, yo
 confirmTrustTaxable.subHeading = Confirm the trust is taxable
 confirmTrustTaxable.p3 = A taxable trust is a trust that has paid tax, or still has a tax liability.
 confirmTrustTaxable.p4 = By continuing, you are confirming that the trust has paid tax, or still needs to pay tax.
-
-taxLiabilityYesNo.title = Does the trust still have a tax liability
-taxLiabilityYesNo.heading = Does the trust still have a tax liability
-taxLiabilityYesNo.p1 = Trusts can be liable for any of the following
-taxLiabilityYesNo.bullet1 = Capital Gains tax
-taxLiabilityYesNo.bullet2 = Income Tax
-taxLiabilityYesNo.bullet3 = Inheritance Tax
-taxLiabilityYesNo.bullet4 = Stamp Duty Reserve Tax
-taxLiabilityYesNo.bullet5 = Stamp Duty Land Tax or Land and Buildings Transaction Tax in Scotland
-taxLiabilityYesNo.error.required = Select yes if the trust still has a tax liability
 
 declarationWhatNext.title = What do you want to do next?
 declarationWhatNext.heading = What do you want to do next?
