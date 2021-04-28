@@ -50,7 +50,7 @@ class TaskListController @Inject()(
 
           val sections = generateTaskList(tasks, identifier, request.userAnswers.trustMldStatus, request.userAnswers.trustTaxability)
 
-          if (request.userAnswers.trustTaxability == MigratingFromNonTaxableToTaxable) {
+          if (request.userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
             Ok(nonTaxToTaxView(identifier,
               identifierType = request.userAnswers.identifierType,
               mandatory = sections.mandatory,

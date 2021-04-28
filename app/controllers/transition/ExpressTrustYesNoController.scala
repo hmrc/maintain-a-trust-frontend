@@ -74,7 +74,7 @@ class ExpressTrustYesNoController @Inject()(
             _ <- trustsConnector.removeTransforms(request.userAnswers.identifier)
             _ <- trustsConnector.setExpressTrust(request.userAnswers.identifier, value)
           } yield {
-            if (request.userAnswers.trustTaxability == MigratingFromNonTaxableToTaxable) {
+            if (request.userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
               Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
             } else {
               Redirect(routes.ConfirmTrustTaxableController.onPageLoad())
