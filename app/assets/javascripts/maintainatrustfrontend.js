@@ -43,7 +43,11 @@ $(document).ready(function () {
         e.preventDefault();
         if (window.history && window.history.back && typeof window.history.back === 'function' &&
             (docReferrer !== "" && docReferrer.indexOf(window.location.host) !== -1)) {
-            window.history.back();
+             if (window.location.href.includes('#content')) {
+                    window.history.go(-2);
+                } else {
+                    window.history.back();
+                };
         }
     });
 
