@@ -23,7 +23,7 @@ import generators.ModelGenerators
 import models.Underlying4mldTrustIn4mldMode
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
-import org.mockito.Matchers.{any, eq => eqTo}
+import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.mockito.MockitoSugar
@@ -53,12 +53,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
     reset(mockTrustConnector)
 
     when(mockTrustConnector.removeTransforms(any())(any(), any()))
-      .thenReturn(Future.successful(okResponse))
-
-    when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
-      .thenReturn(Future.successful(okResponse))
-
-    when(mockTrustConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
       .thenReturn(Future.successful(okResponse))
   }
 
@@ -364,14 +358,13 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
       }
 
       "Needs to pay tax" must {
-        "call setTaxableTrust and redirect to feature unavailable" in {
+        "redirect to TaxLiabilityYesNo Page" in {
 
           beforeTest()
 
           val userAnswers = emptyUserAnswersForUtr
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
             .build()
 
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -382,8 +375,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           status(result) mustEqual SEE_OTHER
 
           redirectLocation(result).value mustBe controllers.transition.routes.TaxLiabilityYesNoController.onPageLoad().url
-
-          verify(mockTrustConnector).setTaxableTrust(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
 
           application.stop()
         }
@@ -518,63 +509,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         verify(mockTrustConnector, never()).removeTransforms(any())(any(), any())
 
         application.stop()
-      }
-    }
-
-    "set taxable migration flag" when {
-
-      "NeedsToPayTax selected" must {
-        "set flag to true" in {
-
-          beforeTest()
-
-          val userAnswers = emptyUserAnswersForUrn
-
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
-            .build()
-
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-            .withFormUrlEncodedBody(("value", NeedsToPayTax.toString))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-
-          verify(mockTrustConnector).setTaxableTrust(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
-          verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
-
-          application.stop()
-        }
-      }
-
-      "something other than NeedsToPayTax and GeneratePdf selected" must {
-        "set flag to false" in {
-
-          val gen = arbitrary[WhatIsNext]
-
-          forAll(gen.suchThat(x => x != NeedsToPayTax && x != GeneratePdf)) { answer =>
-            beforeTest()
-
-            val userAnswers = emptyUserAnswersForUtr
-
-            val application = applicationBuilder(userAnswers = Some(userAnswers))
-              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
-              .build()
-
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-              .withFormUrlEncodedBody(("value", answer.toString))
-
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-
-            verify(mockTrustConnector, never()).setTaxableTrust(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
-            verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(false))(any(), any())
-
-            application.stop()
-          }
-        }
       }
     }
 

@@ -17,10 +17,11 @@
 package controllers.transition
 
 import base.SpecBase
+import connectors.TrustConnector
 import forms.YesNoFormProvider
 import models.UTR
 import org.mockito.Matchers.{any, eq => eqTo}
-import org.mockito.Mockito.{times, verify, when}
+import org.mockito.Mockito.{verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.transition.TaxLiabilityYesNoPage
 import play.api.data.Form
@@ -28,7 +29,6 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.PlaybackRepository
-import uk.gov.hmrc.http.HttpResponse
 import utils.TestUserAnswers.utr
 import views.html.transition.TaxLiabilityYesNoView
 
@@ -84,11 +84,19 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
     "redirect to the next page when true is submitted, marking this as taxable" in {
 
       val mockPlaybackRepository = mock[PlaybackRepository]
+      val mockTrustConnector = mock[TrustConnector]
 
       when(mockPlaybackRepository.set(any()))
         .thenReturn(Future.successful(true))
 
+      when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
+      when(mockTrustConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+        .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
         .build()
 
       val request = FakeRequest(POST, taxLiabilityYesNoRoute)
@@ -100,17 +108,27 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       redirectLocation(result).value mustEqual routes.BeforeYouContinueToTaxableController.onPageLoad().url
 
+      verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
+      verify(mockTrustConnector).setTaxableTrust(any(), eqTo(true))(any(), any())
       application.stop()
     }
 
     "redirect to the previous page when false is submitted" in {
 
       val mockPlaybackRepository = mock[PlaybackRepository]
+      val mockTrustConnector = mock[TrustConnector]
 
       when(mockPlaybackRepository.set(any()))
         .thenReturn(Future.successful(true))
 
+      when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
+      when(mockTrustConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+        .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
         .build()
 
       val request = FakeRequest(POST, taxLiabilityYesNoRoute)
@@ -122,6 +140,8 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       redirectLocation(result).value mustEqual controllers.routes.WhatIsNextController.onPageLoad().url
 
+      verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(false))(any(), any())
+      verify(mockTrustConnector).setTaxableTrust(any(), eqTo(false))(any(), any())
 
       application.stop()
     }

@@ -105,11 +105,8 @@ class WhatIsNextController @Inject()(
     }
 
     if (newAnswer != GeneratePdf) {
-      val needsToPayTaxSelected = newAnswer == NeedsToPayTax
       for {
         _ <- removeTransformsIfAnswerHasChanged(hasAnswerChanged)
-        _ <- setTaxableTrustIfNeedsToPayTaxSelected(needsToPayTaxSelected)
-        _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, needsToPayTaxSelected)
       } yield redirect
     } else {
       Future.successful(redirect)
@@ -120,13 +117,6 @@ class WhatIsNextController @Inject()(
                                                 (implicit request: DataRequest[AnyContent]): Future[Unit] = {
     makeRequestIfConditionMet(hasAnswerChanged) {
       trustConnector.removeTransforms(request.userAnswers.identifier)
-    }
-  }
-
-  private def setTaxableTrustIfNeedsToPayTaxSelected(needsToPayTaxSelected: Boolean)
-                                                    (implicit request: DataRequest[AnyContent]): Future[Unit] = {
-    makeRequestIfConditionMet(needsToPayTaxSelected) {
-      trustConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
     }
   }
 
