@@ -21,7 +21,7 @@ import connectors.TrustConnector
 import forms.YesNoFormProvider
 import models.UTR
 import org.mockito.Matchers.{any, eq => eqTo}
-import org.mockito.Mockito.{verify, when}
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.transition.TaxLiabilityYesNoPage
 import play.api.data.Form
@@ -89,6 +89,9 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
       when(mockPlaybackRepository.set(any()))
         .thenReturn(Future.successful(true))
 
+      when(mockTrustConnector.removeTransforms(any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
       when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
         .thenReturn(Future.successful(okResponse))
 
@@ -108,8 +111,10 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       redirectLocation(result).value mustEqual routes.BeforeYouContinueToTaxableController.onPageLoad().url
 
+      verify(mockTrustConnector).removeTransforms(any())(any(), any())
       verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
       verify(mockTrustConnector).setTaxableTrust(any(), eqTo(true))(any(), any())
+
       application.stop()
     }
 
@@ -120,6 +125,9 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       when(mockPlaybackRepository.set(any()))
         .thenReturn(Future.successful(true))
+
+      when(mockTrustConnector.removeTransforms(any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
 
       when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
         .thenReturn(Future.successful(okResponse))
@@ -140,8 +148,9 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       redirectLocation(result).value mustEqual controllers.routes.WhatIsNextController.onPageLoad().url
 
-      verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(false))(any(), any())
-      verify(mockTrustConnector).setTaxableTrust(any(), eqTo(false))(any(), any())
+      verify(mockTrustConnector).removeTransforms(any())(any(), any())
+      verify(mockTrustConnector, times(0)).setTaxableMigrationFlag(any(), any())(any(), any())
+      verify(mockTrustConnector, times(0)).setTaxableTrust(any(), any())(any(), any())
 
       application.stop()
     }

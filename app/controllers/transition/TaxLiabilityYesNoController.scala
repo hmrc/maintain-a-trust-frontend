@@ -26,6 +26,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
+import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.TaxLiabilityYesNoView
 
@@ -72,8 +73,9 @@ class TaxLiabilityYesNoController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(TaxLiabilityYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            _ <- trustConnector.setTaxableTrust(request.userAnswers.identifier, value)
-            _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, value)
+            - <- trustConnector.removeTransforms(request.userAnswers.identifier)
+            _ <- makeRequestIfConditionMet(value)(trustConnector.setTaxableTrust(request.userAnswers.identifier, value))
+            _ <- makeRequestIfConditionMet(value)(trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, value))
           } yield {
             if (value) {
               Redirect(routes.BeforeYouContinueToTaxableController.onPageLoad())
@@ -83,4 +85,14 @@ class TaxLiabilityYesNoController @Inject()(
           }
       )
   }
+
+
+  private def makeRequestIfConditionMet(condition: Boolean)(request: => Future[HttpResponse]): Future[Unit] = {
+    if (condition) {
+      request.map(_ => ())
+    } else {
+      Future.successful(())
+    }
+  }
+
 }
