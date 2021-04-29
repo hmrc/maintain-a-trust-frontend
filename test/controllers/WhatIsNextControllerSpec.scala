@@ -365,6 +365,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           val userAnswers = emptyUserAnswersForUtr
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
             .build()
 
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
