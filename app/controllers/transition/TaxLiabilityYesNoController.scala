@@ -17,6 +17,7 @@
 package controllers.transition
 
 import com.google.inject.{Inject, Singleton}
+import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import pages.transition.TaxLiabilityYesNoPage
@@ -25,6 +26,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
+import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.TaxLiabilityYesNoView
 
@@ -37,7 +39,8 @@ class TaxLiabilityYesNoController @Inject()(
                                        actions: Actions,
                                        val controllerComponents: MessagesControllerComponents,
                                        yesNoFormProvider: YesNoFormProvider,
-                                       view: TaxLiabilityYesNoView
+                                       view: TaxLiabilityYesNoView,
+                                       trustConnector: TrustConnector
                                      )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
@@ -70,6 +73,9 @@ class TaxLiabilityYesNoController @Inject()(
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(TaxLiabilityYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
+            - <- trustConnector.removeTransforms(request.userAnswers.identifier)
+            _ <- makeRequestIfConditionMet(value)(trustConnector.setTaxableTrust(request.userAnswers.identifier, value))
+            _ <- makeRequestIfConditionMet(value)(trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, value))
           } yield {
             if (value) {
               Redirect(routes.BeforeYouContinueToTaxableController.onPageLoad())
@@ -78,6 +84,15 @@ class TaxLiabilityYesNoController @Inject()(
             }
           }
       )
+  }
+
+
+  private def makeRequestIfConditionMet(condition: Boolean)(request: => Future[HttpResponse]): Future[Unit] = {
+    if (condition) {
+      request.map(_ => ())
+    } else {
+      Future.successful(())
+    }
   }
 
 }

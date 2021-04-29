@@ -20,6 +20,8 @@ import models.UserAnswers
 import models.pages.WhatIsNext
 import pages.declaration._
 import pages.makechanges._
+import pages.transition.TaxLiabilityYesNoPage
+import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.libs.json.JsPath
 
 import scala.util.Try
@@ -36,6 +38,7 @@ case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
         removeDeclarationData(userAnswers)
         .flatMap(answers => removeMakeChangesData(answers))
         .flatMap(answers => removeCloseTrustData(answers))
+        .flatMap(answers => removeTransitionData(answers))
     }
   }
 
@@ -59,5 +62,10 @@ case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
 
   private def removeCloseTrustData(userAnswers: UserAnswers): Try[UserAnswers] = {
     userAnswers.deleteAtPath(pages.close.basePath)
+  }
+
+  private def removeTransitionData(userAnswers: UserAnswers): Try[UserAnswers] = {
+    userAnswers.remove(TaxLiabilityYesNoPage)
+      .flatMap(_.remove(ExpressTrustYesNoPage))
   }
 }
