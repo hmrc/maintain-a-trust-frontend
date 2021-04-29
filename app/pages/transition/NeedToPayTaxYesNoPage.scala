@@ -20,10 +20,10 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.TrustDetails
 
-case object TaxLiabilityYesNoPage extends QuestionPage[Boolean] {
+case object NeedToPayTaxYesNoPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ TrustDetails \ toString
 
-  override def toString: String = "taxLiabilityYesNo"
+  override def toString: String = "needToPayTaxYesNo"
 
 }

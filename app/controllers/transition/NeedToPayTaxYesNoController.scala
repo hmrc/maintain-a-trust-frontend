@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
-import pages.transition.TaxLiabilityYesNoPage
+import pages.transition.NeedToPayTaxYesNoPage
 import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -28,23 +28,23 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.transition.TaxLiabilityYesNoView
+import views.html.transition.NeedToPayTaxYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TaxLiabilityYesNoController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       playbackRepository: PlaybackRepository,
-                                       actions: Actions,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       yesNoFormProvider: YesNoFormProvider,
-                                       view: TaxLiabilityYesNoView,
-                                       trustConnector: TrustConnector
+class NeedToPayTaxYesNoController @Inject()(
+                                             override val messagesApi: MessagesApi,
+                                             playbackRepository: PlaybackRepository,
+                                             actions: Actions,
+                                             val controllerComponents: MessagesControllerComponents,
+                                             yesNoFormProvider: YesNoFormProvider,
+                                             view: NeedToPayTaxYesNoView,
+                                             trustConnector: TrustConnector
                                      )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
-  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("taxLiabilityYesNo")
+  private val form: Form[Boolean] = yesNoFormProvider.withPrefix("needToPayTaxYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
@@ -52,7 +52,7 @@ class TaxLiabilityYesNoController @Inject()(
       val identifier = request.userAnswers.identifier
       val identifierType = request.userAnswers.identifierType
 
-      val preparedForm = request.userAnswers.get(TaxLiabilityYesNoPage) match {
+      val preparedForm = request.userAnswers.get(NeedToPayTaxYesNoPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -71,7 +71,7 @@ class TaxLiabilityYesNoController @Inject()(
         },
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(TaxLiabilityYesNoPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(NeedToPayTaxYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
             - <- trustConnector.removeTransforms(request.userAnswers.identifier)
             _ <- makeRequestIfConditionMet(value)(trustConnector.setTaxableTrust(request.userAnswers.identifier, value))

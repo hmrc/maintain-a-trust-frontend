@@ -20,7 +20,7 @@ import models.UserAnswers
 import models.pages.WhatIsNext
 import pages.declaration._
 import pages.makechanges._
-import pages.transition.TaxLiabilityYesNoPage
+import pages.transition.NeedToPayTaxYesNoPage
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.libs.json.JsPath
 
@@ -65,7 +65,7 @@ case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
   }
 
   private def removeTransitionData(userAnswers: UserAnswers): Try[UserAnswers] = {
-    userAnswers.remove(TaxLiabilityYesNoPage)
+    userAnswers.remove(NeedToPayTaxYesNoPage)
       .flatMap(_.remove(ExpressTrustYesNoPage))
   }
 }

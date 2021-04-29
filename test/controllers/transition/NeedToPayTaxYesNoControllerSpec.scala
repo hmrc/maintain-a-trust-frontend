@@ -23,35 +23,35 @@ import models.UTR
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import pages.transition.TaxLiabilityYesNoPage
+import pages.transition.NeedToPayTaxYesNoPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.PlaybackRepository
 import utils.TestUserAnswers.utr
-import views.html.transition.TaxLiabilityYesNoView
+import views.html.transition.NeedToPayTaxYesNoView
 
 import scala.concurrent.Future
 
-class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
+class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("taxLiabilityYesNo")
+  val form: Form[Boolean] = formProvider.withPrefix("needToPayTaxYesNo")
 
-  lazy val taxLiabilityYesNoRoute: String = routes.TaxLiabilityYesNoController.onPageLoad().url
+  lazy val needToPayTaxYesNoRoute: String = routes.NeedToPayTaxYesNoController.onPageLoad().url
 
-  "TaxLiabilityYesNoController" must {
+  "NeedToPayTaxYesNoController" must {
 
     "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
-      val request = FakeRequest(GET, taxLiabilityYesNoRoute)
+      val request = FakeRequest(GET, needToPayTaxYesNoRoute)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[TaxLiabilityYesNoView]
+      val view = application.injector.instanceOf[NeedToPayTaxYesNoView]
 
       status(result) mustEqual OK
 
@@ -63,13 +63,13 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswersForUtr.set(TaxLiabilityYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswersForUtr.set(NeedToPayTaxYesNoPage, true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, taxLiabilityYesNoRoute)
+      val request = FakeRequest(GET, needToPayTaxYesNoRoute)
 
-      val view = application.injector.instanceOf[TaxLiabilityYesNoView]
+      val view = application.injector.instanceOf[NeedToPayTaxYesNoView]
 
       val result = route(application, request).value
 
@@ -102,7 +102,7 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
         .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
         .build()
 
-      val request = FakeRequest(POST, taxLiabilityYesNoRoute)
+      val request = FakeRequest(POST, needToPayTaxYesNoRoute)
         .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value
@@ -139,7 +139,7 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
         .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
         .build()
 
-      val request = FakeRequest(POST, taxLiabilityYesNoRoute)
+      val request = FakeRequest(POST, needToPayTaxYesNoRoute)
         .withFormUrlEncodedBody(("value", "false"))
 
       val result = route(application, request).value
@@ -159,12 +159,12 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
-      val request = FakeRequest(POST, taxLiabilityYesNoRoute)
+      val request = FakeRequest(POST, needToPayTaxYesNoRoute)
         .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val view = application.injector.instanceOf[TaxLiabilityYesNoView]
+      val view = application.injector.instanceOf[NeedToPayTaxYesNoView]
 
       val result = route(application, request).value
 
@@ -180,7 +180,7 @@ class TaxLiabilityYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(POST, taxLiabilityYesNoRoute)
+      val request = FakeRequest(POST, needToPayTaxYesNoRoute)
         .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value
