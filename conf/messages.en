@@ -506,15 +506,13 @@ utr.error.invalidCharacters = Enter the trust’s Unique Taxpayer Reference in t
 utr.linkMessage = You can
 utr.linkText = find a lost UTR (opens in a new window or tab)
 
-taxLiabilityYesNo.title = Does the trust still have a tax liability
-taxLiabilityYesNo.heading = Does the trust still have a tax liability
-taxLiabilityYesNo.p1 = Trusts can be liable for any of the following
-taxLiabilityYesNo.bullet1 = Capital Gains tax
-taxLiabilityYesNo.bullet2 = Income Tax
-taxLiabilityYesNo.bullet3 = Inheritance Tax
-taxLiabilityYesNo.bullet4 = Stamp Duty Reserve Tax
-taxLiabilityYesNo.bullet5 = Stamp Duty Land Tax or Land and Buildings Transaction Tax in Scotland
-taxLiabilityYesNo.error.required = Select yes if the trust still has a tax liability
+needToPayTaxYesNo.title = Does the trust need to pay tax?
+needToPayTaxYesNo.heading = Does the trust need to pay tax?
+needToPayTaxYesNo.p1 = If the trust now has to pay tax, you will need to inform HRMC of this change. The trust may need to pay tax if it has bought:
+needToPayTaxYesNo.bullet1 = property
+needToPayTaxYesNo.bullet2 = shares
+needToPayTaxYesNo.bullet3 = other taxable assets
+needToPayTaxYesNo.error.required = Select yes if the trust needs to pay tax
 
 beforeYouContinueToTaxable.title = Before you continue
 beforeYouContinueToTaxable.heading = Before you continue

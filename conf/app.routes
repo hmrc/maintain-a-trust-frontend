@@ -25,8 +25,8 @@ POST       /unique-taxpayer-reference                   controllers.UTRControlle
 GET        /unique-reference-number                     controllers.URNController.onPageLoad()
 POST       /unique-reference-number                     controllers.URNController.onSubmit()
 
-GET        /confirm-trust-has-tax-liablity              controllers.transition.TaxLiabilityYesNoController.onPageLoad()
-POST       /confirm-trust-has-tax-liablity              controllers.transition.TaxLiabilityYesNoController.onSubmit()
+GET        /trust-needs-to-pay-tax                      controllers.transition.NeedToPayTaxYesNoController.onPageLoad()
+POST       /trust-needs-to-pay-tax                      controllers.transition.NeedToPayTaxYesNoController.onSubmit()
 
 GET        /before-you-continue-to-taxable              controllers.transition.BeforeYouContinueToTaxableController.onPageLoad()
 POST       /before-you-continue-to-taxable              controllers.transition.BeforeYouContinueToTaxableController.onSubmit()

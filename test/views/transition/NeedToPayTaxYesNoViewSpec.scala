@@ -21,17 +21,17 @@ import models.URN
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
-import views.html.transition.TaxLiabilityYesNoView
+import views.html.transition.NeedToPayTaxYesNoView
 
-class TaxLiabilityYesNoViewSpec extends YesNoViewBehaviours {
+class NeedToPayTaxYesNoViewSpec extends YesNoViewBehaviours {
 
-  val prefix = "taxLiabilityYesNo"
+  val prefix = "needToPayTaxYesNo"
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
-  "TaxLiabilityYesNoView" must {
+  "NeedToPayTaxYesNoView" must {
     val urn = "XATRUST12345678"
-    val view = viewFor[TaxLiabilityYesNoView](Some(emptyUserAnswersForUtr))
+    val view = viewFor[NeedToPayTaxYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, urn, URN)(fakeRequest, messages)
@@ -40,7 +40,7 @@ class TaxLiabilityYesNoViewSpec extends YesNoViewBehaviours {
       prefix,
       "urn",
       urn,
-      expectedGuidanceKeys = "p1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5")
+      expectedGuidanceKeys = "p1", "bullet1", "bullet2", "bullet3")
 
     behave like pageWithBackLink(applyView(form))
 

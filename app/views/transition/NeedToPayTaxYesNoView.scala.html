@@ -24,22 +24,20 @@
 @(form: Form[_], identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @content = {
-    <p>@messages("taxLiabilityYesNo.p1")</p>
+    <p>@messages("needToPayTaxYesNo.p1")</p>
 
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("taxLiabilityYesNo.bullet1")</li>
-        <li>@messages("taxLiabilityYesNo.bullet2")</li>
-        <li>@messages("taxLiabilityYesNo.bullet3")</li>
-        <li>@messages("taxLiabilityYesNo.bullet4")</li>
-        <li>@messages("taxLiabilityYesNo.bullet5")</li>
+        <li>@messages("needToPayTaxYesNo.bullet1")</li>
+        <li>@messages("needToPayTaxYesNo.bullet2")</li>
+        <li>@messages("needToPayTaxYesNo.bullet3")</li>
     </ul>
 }
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("taxLiabilityYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("needToPayTaxYesNo.title")}"
 ) {
 
-    @formHelper(action = TaxLiabilityYesNoController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = NeedToPayTaxYesNoController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -47,7 +45,7 @@
 
         @components.input_yes_no(
             field = form("value"),
-            label = messages("taxLiabilityYesNo.heading"),
+            label = messages("needToPayTaxYesNo.heading"),
             legendAsHeading = true,
             caption = Some(messages(s"$identifierType.caption", identifier)),
             additionalContent = Some(content)

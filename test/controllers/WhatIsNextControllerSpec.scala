@@ -358,7 +358,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
       }
 
       "Needs to pay tax" must {
-        "redirect to TaxLiabilityYesNo Page" in {
+        "redirect to NeedToPayTaxYesNo Page" in {
 
           beforeTest()
 
@@ -375,7 +375,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustBe controllers.transition.routes.TaxLiabilityYesNoController.onPageLoad().url
+          redirectLocation(result).value mustBe controllers.transition.routes.NeedToPayTaxYesNoController.onPageLoad().url
 
           application.stop()
         }
