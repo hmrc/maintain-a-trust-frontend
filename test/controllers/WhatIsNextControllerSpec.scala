@@ -381,7 +381,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
+          redirectLocation(result).value mustBe controllers.transition.routes.TaxLiabilityYesNoController.onPageLoad().url
 
           verify(mockTrustConnector).setTaxableTrust(eqTo(userAnswers.identifier), eqTo(true))(any(), any())
 

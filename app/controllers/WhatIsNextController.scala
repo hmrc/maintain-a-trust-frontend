@@ -98,7 +98,7 @@ class WhatIsNextController @Inject()(
         case NoLongerTaxable =>
           controllers.routes.NoTaxLiabilityInfoController.onPageLoad()
         case NeedsToPayTax =>
-          controllers.routes.FeatureNotAvailableController.onPageLoad()
+          controllers.transition.routes.TaxLiabilityYesNoController.onPageLoad()
         case GeneratePdf =>
           controllers.routes.ObligedEntityPdfController.getPdf(userAnswers.identifier)
       }
