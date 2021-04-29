@@ -37,7 +37,7 @@ class TaxLiabilityYesNoController @Inject()(
                                        actions: Actions,
                                        val controllerComponents: MessagesControllerComponents,
                                        yesNoFormProvider: YesNoFormProvider,
-                                       view: TaxLiabilityYesNoView,
+                                       view: TaxLiabilityYesNoView
                                      )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
@@ -66,18 +66,17 @@ class TaxLiabilityYesNoController @Inject()(
           val identifierType = request.userAnswers.identifierType
           Future.successful(BadRequest(view(formWithErrors, identifier, identifierType)))
         },
-        value => {
-          if (value) {
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(TaxLiabilityYesNoPage, value))
-              _ <- playbackRepository.set(updatedAnswers)
-            } yield {
+        value =>
+          for {
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(TaxLiabilityYesNoPage, value))
+            _ <- playbackRepository.set(updatedAnswers)
+          } yield {
+            if (value) {
               Redirect(routes.BeforeYouContinueToTaxableController.onPageLoad())
+            } else {
+              Redirect(controllers.routes.WhatIsNextController.onPageLoad())
             }
-          } else {
-            Future.successful(Redirect(controllers.routes.WhatIsNextController.onPageLoad()))
           }
-        }
       )
   }
 
