@@ -29,6 +29,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.MaintainATrustService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.Session
 import views.html.transition.NeedToPayTaxYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -91,9 +92,15 @@ class NeedToPayTaxYesNoController @Inject()(
   private def updateTransforms(hasAnswerChanged: Boolean, needsToPayTax: Boolean)
                               (implicit request: DataRequest[AnyContent]): Future[Unit] = {
     (hasAnswerChanged, needsToPayTax) match {
-      case (false, _) => Future.successful(())
-      case (true, true) => trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax).map(_ => ())
-      case (true, false) => maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
+      case (false, _) =>
+        logger.info(s"[Session ID: ${Session.id(hc)}] Answer hasn't changed. Nothing to update.")
+        Future.successful(())
+      case (true, true) =>
+        logger.info(s"[Session ID: ${Session.id(hc)}] Answer has changed to yes. Setting taxable trust.")
+        trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax).map(_ => ())
+      case (true, false) =>
+        logger.info(s"[Session ID: ${Session.id(hc)}] Answer has changed to no. Removing transforms and resetting tasks.")
+        maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     }
   }
 

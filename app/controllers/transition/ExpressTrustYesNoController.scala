@@ -29,6 +29,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.MaintainATrustService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.Session
 import views.html.transition.ExpressTrustYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -87,11 +88,12 @@ class ExpressTrustYesNoController @Inject()(
 
   private def removeTransformsIfNotMigrating(isTrustMigrating: Boolean)
                                             (implicit request: DataRequest[AnyContent]): Future[Unit] = {
-
-    logger.debug("Removing transforms in case user redirected here from RefreshedDataPreSubmitRetrievalAction.")
     if (isTrustMigrating) {
+      logger.info(s"[Session ID: ${Session.id(hc)}] Migrating from non-taxable to taxable. Keeping transforms.")
       Future.successful(())
     } else {
+      logger.info(s"[Session ID: ${Session.id(hc)}] Redirected from RefreshedDataPreSubmitRetrievalAction or " +
+        s"transitioning from 4MLD to 5MLD. Removing transforms and resetting tasks.")
       maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     }
   }

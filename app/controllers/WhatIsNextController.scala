@@ -26,12 +26,13 @@ import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
 import models.requests.DataRequest
 import pages.WhatIsNextPage
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
 import services.MaintainATrustService
-import uk.gov.hmrc.http.HttpResponse
+import utils.Session
 import views.html.WhatIsNextView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,7 +50,7 @@ class WhatIsNextController @Inject()(
                                       trustsStoreConnector: TrustsStoreConnector,
                                       maintainATrustService: MaintainATrustService
                                     )(implicit ec: ExecutionContext)
-  extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) {
+  extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) with Logging {
 
   val form: Form[WhatIsNext] = formProvider()
 
@@ -109,7 +110,7 @@ class WhatIsNextController @Inject()(
     if (newAnswer != GeneratePdf) {
       for {
         _ <- removeTransformsIfAnswerHasChanged(hasAnswerChanged)
-        _ <- setTaxableMigrationFlag(newAnswer)
+        _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, newAnswer == NeedsToPayTax)
       } yield redirect
     } else {
       Future.successful(redirect)
@@ -118,19 +119,9 @@ class WhatIsNextController @Inject()(
 
   private def removeTransformsIfAnswerHasChanged(hasAnswerChanged: Boolean)
                                                 (implicit request: DataRequest[AnyContent]): Future[Unit] = {
-    makeRequestIfConditionMet(hasAnswerChanged) {
+    if (hasAnswerChanged) {
+      logger.info(s"[Session ID: ${Session.id(hc)}] Answer has changed. Removing transforms and resetting tasks.")
       maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
-    }
-  }
-
-  private def setTaxableMigrationFlag(newAnswer: WhatIsNext)
-                                     (implicit request: DataRequest[AnyContent]): Future[HttpResponse] = {
-    trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, newAnswer == NeedsToPayTax)
-  }
-
-  private def makeRequestIfConditionMet(condition: Boolean)(request: => Future[_]): Future[Unit] = {
-    if (condition) {
-      request.map(_ => ())
     } else {
       Future.successful(())
     }
