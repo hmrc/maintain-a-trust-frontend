@@ -66,6 +66,7 @@ class ExpressTrustYesNoController @Inject()(
           Future.successful(BadRequest(view(formWithErrors))),
 
         value => {
+
           val isTrustMigrating = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ExpressTrustYesNoPage, value))
@@ -85,6 +86,7 @@ class ExpressTrustYesNoController @Inject()(
 
   private def removeTransformsIfNotMigrating(isTrustMigrating: Boolean)
                                                 (implicit request: DataRequest[AnyContent]): Future[Unit] = {
+
     logger.debug("Removing transforms in case user redirected here from RefreshedDataPreSubmitRetrievalAction.")
     makeRequestIfConditionMet(!isTrustMigrating) {
       trustsConnector.removeTransforms(request.userAnswers.identifier)

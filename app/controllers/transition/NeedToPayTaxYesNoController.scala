@@ -21,7 +21,6 @@ import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
 import models.requests.DataRequest
-import pages.WhatIsNextPage
 import pages.transition.NeedToPayTaxYesNoPage
 import play.api.Logging
 import play.api.data.Form
@@ -90,6 +89,7 @@ class NeedToPayTaxYesNoController @Inject()(
 
   private def updateTransforms(hasAnswerChanged: Boolean, needsToPayTax: Boolean)
                               (implicit request: DataRequest[AnyContent]): Future[HttpResponse] = {
+
 
       (hasAnswerChanged, needsToPayTax) match {
         case (false, _) => Future.successful(HttpResponse(OK, ""))
