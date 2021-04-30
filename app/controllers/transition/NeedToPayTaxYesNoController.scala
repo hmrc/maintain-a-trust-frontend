@@ -88,16 +88,17 @@ class NeedToPayTaxYesNoController @Inject()(
   }
 
   private def updateTransforms(hasAnswerChanged: Boolean, needsToPayTax: Boolean)
-                              (implicit request: DataRequest[AnyContent]): Future[HttpResponse] = {
+                              (implicit request: DataRequest[AnyContent]): Future[Unit] = {
 
+    (hasAnswerChanged, needsToPayTax) match {
+      case (false, _) => Future.successful(())
+      case (true, true) =>
+        for {
+          _ <- trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax)
+          _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, needsToPayTax)
+        } yield ()
+      case (true, false) => trustConnector.removeTransforms(request.userAnswers.identifier).map(_ => ())
+    }
 
-      (hasAnswerChanged, needsToPayTax) match {
-        case (false, _) => Future.successful(HttpResponse(OK, ""))
-        case (true, true) => {
-          trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax)
-          trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, needsToPayTax)
-        }
-        case (true, false) => trustConnector.removeTransforms(request.userAnswers.identifier)
-      }
   }
 }
