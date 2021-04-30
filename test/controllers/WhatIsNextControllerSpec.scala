@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBase
-import connectors.TrustConnector
 import forms.WhatIsNextFormProvider
 import generators.ModelGenerators
 import models.Underlying4mldTrustIn4mldMode
@@ -34,6 +33,7 @@ import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.MaintainATrustService
 import uk.gov.hmrc.auth.core.AffinityGroup
 import views.html.WhatIsNextView
 
@@ -46,14 +46,14 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
   lazy val onPageLoad: String = routes.WhatIsNextController.onPageLoad().url
 
   lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
-
-  val mockTrustConnector: TrustConnector = mock[TrustConnector]
+  
+  val mockMaintainATrustService: MaintainATrustService = mock[MaintainATrustService]
 
   def beforeTest(): Unit = {
-    reset(mockTrustConnector)
+    reset(mockMaintainATrustService)
 
-    when(mockTrustConnector.removeTransforms(any())(any(), any()))
-      .thenReturn(Future.successful(okResponse))
+    when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
+      .thenReturn(Future.successful(()))
   }
 
   "WhatIsNext Controller" must {
@@ -126,7 +126,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
             val userAnswers = emptyUserAnswersForUtr
 
             val application = applicationBuilder(userAnswers = Some(userAnswers), AffinityGroup.Agent)
-              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+              .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
               .build()
 
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -151,7 +151,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
             val userAnswers = emptyUserAnswersForUtr
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
-              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+              .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
               .build()
 
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -179,7 +179,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
             val userAnswers = emptyUserAnswersForUtr
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
-              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+              .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
               .build()
 
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -205,7 +205,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
               val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
-                .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+                .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
                 .build()
 
               implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -231,7 +231,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
                 val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
                 val application = applicationBuilder(userAnswers = Some(userAnswers))
-                  .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+                  .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
                   .build()
 
                 implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -253,7 +253,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
                 val userAnswers = emptyUserAnswersForUrn
 
                 val application = applicationBuilder(userAnswers = Some(userAnswers))
-                  .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+                  .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
                   .build()
 
                 implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -286,7 +286,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
                 .set(WhatIsNextPage, previousAnswer).success.value
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
-                .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+                .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
                 .build()
 
               implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -315,7 +315,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
                 .set(WhatIsNextPage, previousAnswer).success.value
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
-                .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+                .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
                 .build()
 
               implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -341,7 +341,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           val userAnswers = emptyUserAnswersForUtr
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
             .build()
 
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -365,7 +365,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           val userAnswers = emptyUserAnswersForUtr
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
             .build()
 
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -389,7 +389,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
             .build()
 
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -416,7 +416,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           beforeTest()
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
-            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
             .build()
 
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -426,7 +426,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
           status(result) mustEqual SEE_OTHER
 
-          verify(mockTrustConnector).removeTransforms(any())(any(), any())
+          verify(mockMaintainATrustService).removeTransformsAndResetTaskList(any())(any(), any())
 
           application.stop()
         }
@@ -445,7 +445,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
               .set(WhatIsNextPage, previousAnswer).success.value
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
-              .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+              .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
               .build()
 
             implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -455,7 +455,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
             status(result) mustEqual SEE_OTHER
 
-            verify(mockTrustConnector).removeTransforms(any())(any(), any())
+            verify(mockMaintainATrustService).removeTransformsAndResetTaskList(any())(any(), any())
 
             application.stop()
           }
@@ -476,7 +476,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
             .set(WhatIsNextPage, previousAnswer).success.value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+            .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
             .build()
 
           implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -486,7 +486,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
           status(result) mustEqual SEE_OTHER
 
-          verify(mockTrustConnector, never()).removeTransforms(any())(any(), any())
+          verify(mockMaintainATrustService, never()).removeTransformsAndResetTaskList(any())(any(), any())
 
           application.stop()
         }
@@ -497,7 +497,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         beforeTest()
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
-          .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+          .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
           .build()
 
         implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -507,29 +507,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
         status(result) mustEqual SEE_OTHER
 
-        verify(mockTrustConnector, never()).removeTransforms(any())(any(), any())
-
-        application.stop()
-      }
-    }
-
-    "not set taxable migration flag" when {
-      "GeneratePdf selected" in {
-
-        beforeTest()
-
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUrn))
-          .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
-          .build()
-
-        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-          .withFormUrlEncodedBody(("value", GeneratePdf.toString))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        verify(mockTrustConnector, never()).setTaxableMigrationFlag(any(), any())(any(), any())
+        verify(mockMaintainATrustService, never()).removeTransformsAndResetTaskList(any())(any(), any())
 
         application.stop()
       }

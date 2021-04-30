@@ -30,7 +30,7 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.http.HttpResponse
+import services.MaintainATrustService
 import views.html.WhatIsNextView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,7 +45,8 @@ class WhatIsNextController @Inject()(
                                       val controllerComponents: MessagesControllerComponents,
                                       view: WhatIsNextView,
                                       trustConnector: TrustConnector,
-                                      trustsStoreConnector: TrustsStoreConnector
+                                      trustsStoreConnector: TrustsStoreConnector,
+                                      maintainATrustService: MaintainATrustService
                                     )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) {
 
@@ -115,14 +116,8 @@ class WhatIsNextController @Inject()(
 
   private def removeTransformsIfAnswerHasChanged(hasAnswerChanged: Boolean)
                                                 (implicit request: DataRequest[AnyContent]): Future[Unit] = {
-    makeRequestIfConditionMet(hasAnswerChanged) {
-      trustConnector.removeTransforms(request.userAnswers.identifier)
-    }
-  }
-
-  private def makeRequestIfConditionMet(condition: Boolean)(request: => Future[HttpResponse]): Future[Unit] = {
-    if (condition) {
-      request.map(_ => ())
+    if (hasAnswerChanged) {
+      maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     } else {
       Future.successful(())
     }

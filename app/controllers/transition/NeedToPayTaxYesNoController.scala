@@ -27,6 +27,7 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
+import services.MaintainATrustService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.NeedToPayTaxYesNoView
 
@@ -41,7 +42,8 @@ class NeedToPayTaxYesNoController @Inject()(
                                              val controllerComponents: MessagesControllerComponents,
                                              yesNoFormProvider: YesNoFormProvider,
                                              view: NeedToPayTaxYesNoView,
-                                             trustConnector: TrustConnector
+                                             trustConnector: TrustConnector,
+                                             maintainATrustService: MaintainATrustService
                                      )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
@@ -96,7 +98,7 @@ class NeedToPayTaxYesNoController @Inject()(
           _ <- trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax)
           _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, needsToPayTax)
         } yield ()
-      case (true, false) => trustConnector.removeTransforms(request.userAnswers.identifier).map(_ => ())
+      case (true, false) => maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     }
 
   }
