@@ -20,12 +20,14 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
+import models.requests.DataRequest
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
+import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.ExpressTrustYesNoView
 
@@ -64,16 +66,14 @@ class ExpressTrustYesNoController @Inject()(
           Future.successful(BadRequest(view(formWithErrors))),
 
         value => {
-
-          logger.debug("Removing transforms in case user redirected here from RefreshedDataPreSubmitRetrievalAction.")
-
+          val isTrustMigrating = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ExpressTrustYesNoPage, value))
             _ <- playbackRepository.set(updatedAnswers)
-            _ <- trustsConnector.removeTransforms(request.userAnswers.identifier)
+            _ <- removeTransformsIfNotMigrating(isTrustMigrating)
             _ <- trustsConnector.setExpressTrust(request.userAnswers.identifier, value)
           } yield {
-            if (request.userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
+            if (isTrustMigrating) {
               Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
             } else {
               Redirect(routes.ConfirmTrustTaxableController.onPageLoad())
@@ -83,4 +83,19 @@ class ExpressTrustYesNoController @Inject()(
       )
   }
 
+  private def removeTransformsIfNotMigrating(isTrustMigrating: Boolean)
+                                                (implicit request: DataRequest[AnyContent]): Future[Unit] = {
+    logger.debug("Removing transforms in case user redirected here from RefreshedDataPreSubmitRetrievalAction.")
+    makeRequestIfConditionMet(!isTrustMigrating) {
+      trustsConnector.removeTransforms(request.userAnswers.identifier)
+    }
+  }
+
+  private def makeRequestIfConditionMet(condition: Boolean)(request: => Future[HttpResponse]): Future[Unit] = {
+    if (condition) {
+      request.map(_ => ())
+    } else {
+      Future.successful(())
+    }
+  }
 }
