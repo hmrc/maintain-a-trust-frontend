@@ -27,7 +27,6 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.NeedToPayTaxYesNoView
 
@@ -76,7 +75,7 @@ class NeedToPayTaxYesNoController @Inject()(
             hasAnswerChanged <- Future.fromTry(Success(!request.userAnswers.get(NeedToPayTaxYesNoPage).contains(needsToPayTax)))
             updatedAnswers <- Future.fromTry(request.userAnswers.set(NeedToPayTaxYesNoPage, needsToPayTax))
             _ <- playbackRepository.set(updatedAnswers)
-            - <- updateTransforms(hasAnswerChanged, needsToPayTax)
+            _ <- updateTransforms(hasAnswerChanged, needsToPayTax)
           } yield {
             if (needsToPayTax) {
               Redirect(routes.BeforeYouContinueToTaxableController.onPageLoad())
