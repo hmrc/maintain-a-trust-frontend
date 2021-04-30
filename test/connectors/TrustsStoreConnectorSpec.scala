@@ -54,7 +54,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
     server.stop()
   }
 
-  private val utr: String = "1234567890"
+  private val identifier: String = "1234567890"
 
   "trusts store connector" must {
 
@@ -85,11 +85,11 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           |""".stripMargin)
 
       server.stubFor(
-        get(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
+        get(urlEqualTo(s"/trusts-store/maintain/tasks/$identifier"))
           .willReturn(okJson(json.toString))
       )
 
-      val result = connector.getStatusOfTasks(utr)
+      val result = connector.getStatusOfTasks(identifier)
 
       result.futureValue mustBe
         CompletedMaintenanceTasks(
@@ -144,13 +144,13 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
             |""".stripMargin)
 
         server.stubFor(
-          post(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
+          post(urlEqualTo(s"/trusts-store/maintain/tasks/$identifier"))
             .withHeader(CONTENT_TYPE, containing(JSON))
             .withRequestBody(equalTo(json.toString))
             .willReturn(okJson(json.toString))
         )
 
-        val result = connector.set(utr, userAnswers)
+        val result = connector.set(identifier, userAnswers)
 
         result.futureValue mustBe
           CompletedMaintenanceTasks(
@@ -205,13 +205,13 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
             |""".stripMargin)
 
         server.stubFor(
-          post(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
+          post(urlEqualTo(s"/trusts-store/maintain/tasks/$identifier"))
             .withHeader(CONTENT_TYPE, containing(JSON))
             .withRequestBody(equalTo(json.toString))
             .willReturn(okJson(json.toString))
         )
 
-        val result = connector.set(utr, userAnswers)
+        val result = connector.set(identifier, userAnswers)
 
         result.futureValue mustBe
           CompletedMaintenanceTasks(
@@ -243,11 +243,11 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
     val connector = application.injector.instanceOf[TrustsStoreConnector]
 
     server.stubFor(
-      get(urlEqualTo(s"/trusts-store/maintain/tasks/$utr"))
+      get(urlEqualTo(s"/trusts-store/maintain/tasks/$identifier"))
         .willReturn(serverError())
     )
 
-    val result = connector.getStatusOfTasks(utr)
+    val result = connector.getStatusOfTasks(identifier)
 
     result.futureValue mustBe
       CompletedMaintenanceTasks(
@@ -345,6 +345,29 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
 
     val result = Await.result(connector.getFeature("5mld"), Duration.Inf)
     result mustBe FeatureResponse("5mld", isEnabled = false)
+  }
+
+  "return OK when resetting task list" in {
+    val application = applicationBuilder()
+      .configure(
+        Seq(
+          "microservice.services.trusts-store.port" -> server.port(),
+          "auditing.enabled" -> false
+        ): _*
+      ).build()
+
+    val connector = application.injector.instanceOf[TrustsStoreConnector]
+
+    server.stubFor(
+      delete(urlEqualTo(s"/trusts-store/maintain/tasks/$identifier"))
+        .willReturn(
+          aResponse()
+            .withStatus(Status.OK)
+        )
+    )
+
+    val result = Await.result(connector.resetTasks(identifier), Duration.Inf)
+    result.status mustBe Status.OK
   }
 
 }
