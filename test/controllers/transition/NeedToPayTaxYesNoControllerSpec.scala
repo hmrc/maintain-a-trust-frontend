@@ -97,9 +97,6 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
         .thenReturn(Future.successful(okResponse))
 
-      when(mockTrustConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
-
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
         .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
@@ -115,7 +112,6 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       redirectLocation(result).value mustEqual routes.BeforeYouContinueToTaxableController.onPageLoad().url
 
       verify(mockMaintainATrustService, times(0)).removeTransformsAndResetTaskList(any())(any(), any())
-      verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
       verify(mockTrustConnector).setTaxableTrust(any(), eqTo(true))(any(), any())
 
       application.stop()
@@ -136,9 +132,6 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
         .thenReturn(Future.successful(okResponse))
 
-      when(mockTrustConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
-
       val userAnswers = emptyUserAnswersForUtr
         .set(NeedToPayTaxYesNoPage, false).success.value
 
@@ -157,7 +150,6 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       redirectLocation(result).value mustEqual routes.BeforeYouContinueToTaxableController.onPageLoad().url
 
       verify(mockMaintainATrustService, times(0)).removeTransformsAndResetTaskList(any())(any(), any())
-      verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
       verify(mockTrustConnector).setTaxableTrust(any(), eqTo(true))(any(), any())
 
       application.stop()
@@ -178,9 +170,6 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
         .thenReturn(Future.successful(okResponse))
 
-      when(mockTrustConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
-
       val userAnswers = emptyUserAnswersForUtr
         .set(NeedToPayTaxYesNoPage, true).success.value
 
@@ -199,7 +188,6 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       redirectLocation(result).value mustEqual routes.BeforeYouContinueToTaxableController.onPageLoad().url
 
       verify(mockMaintainATrustService, times(0)).removeTransformsAndResetTaskList(any())(any(), any())
-      verify(mockTrustConnector, times(0)).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
       verify(mockTrustConnector, times(0)).setTaxableTrust(any(), eqTo(true))(any(), any())
 
       application.stop()
@@ -220,9 +208,6 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
         .thenReturn(Future.successful(okResponse))
 
-      when(mockTrustConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
-
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
         .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
@@ -238,7 +223,6 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       redirectLocation(result).value mustEqual controllers.routes.WhatIsNextController.onPageLoad().url
 
       verify(mockMaintainATrustService).removeTransformsAndResetTaskList(any())(any(), any())
-      verify(mockTrustConnector, times(0)).setTaxableMigrationFlag(any(), any())(any(), any())
       verify(mockTrustConnector, times(0)).setTaxableTrust(any(), any())(any(), any())
 
       application.stop()

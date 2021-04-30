@@ -31,6 +31,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
 import services.MaintainATrustService
+import uk.gov.hmrc.http.HttpResponse
 import views.html.WhatIsNextView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -108,6 +109,7 @@ class WhatIsNextController @Inject()(
     if (newAnswer != GeneratePdf) {
       for {
         _ <- removeTransformsIfAnswerHasChanged(hasAnswerChanged)
+        _ <- setTaxableMigrationFlag(newAnswer)
       } yield redirect
     } else {
       Future.successful(redirect)
@@ -116,8 +118,19 @@ class WhatIsNextController @Inject()(
 
   private def removeTransformsIfAnswerHasChanged(hasAnswerChanged: Boolean)
                                                 (implicit request: DataRequest[AnyContent]): Future[Unit] = {
-    if (hasAnswerChanged) {
+    makeRequestIfConditionMet(hasAnswerChanged) {
       maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
+    }
+  }
+
+  private def setTaxableMigrationFlag(newAnswer: WhatIsNext)
+                                     (implicit request: DataRequest[AnyContent]): Future[HttpResponse] = {
+    trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, newAnswer == NeedsToPayTax)
+  }
+
+  private def makeRequestIfConditionMet(condition: Boolean)(request: => Future[_]): Future[Unit] = {
+    if (condition) {
+      request.map(_ => ())
     } else {
       Future.successful(())
     }

@@ -17,12 +17,13 @@
 package controllers
 
 import base.SpecBase
+import connectors.TrustConnector
 import forms.WhatIsNextFormProvider
 import generators.ModelGenerators
 import models.Underlying4mldTrustIn4mldMode
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
-import org.mockito.Matchers.any
+import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.mockito.MockitoSugar
@@ -35,6 +36,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.MaintainATrustService
 import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.http.HttpResponse
 import views.html.WhatIsNextView
 
 import scala.concurrent.Future
@@ -47,10 +49,15 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
   lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
   
+  val mockTrustsConnector: TrustConnector = mock[TrustConnector]
   val mockMaintainATrustService: MaintainATrustService = mock[MaintainATrustService]
 
   def beforeTest(): Unit = {
+    reset(mockTrustsConnector)
     reset(mockMaintainATrustService)
+
+    when(mockTrustsConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
+      .thenReturn(Future.successful(HttpResponse(OK, "")))
 
     when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
       .thenReturn(Future.successful(()))
@@ -126,6 +133,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
             val userAnswers = emptyUserAnswersForUtr
 
             val application = applicationBuilder(userAnswers = Some(userAnswers), AffinityGroup.Agent)
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
               .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
               .build()
 
@@ -151,6 +159,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
             val userAnswers = emptyUserAnswersForUtr
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
               .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
               .build()
 
@@ -179,6 +188,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
             val userAnswers = emptyUserAnswersForUtr
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
               .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
               .build()
 
@@ -205,6 +215,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
               val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
+                .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
                 .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
                 .build()
 
@@ -231,6 +242,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
                 val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
                 val application = applicationBuilder(userAnswers = Some(userAnswers))
+                  .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
                   .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
                   .build()
 
@@ -253,6 +265,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
                 val userAnswers = emptyUserAnswersForUrn
 
                 val application = applicationBuilder(userAnswers = Some(userAnswers))
+                  .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
                   .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
                   .build()
 
@@ -286,6 +299,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
                 .set(WhatIsNextPage, previousAnswer).success.value
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
+                .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
                 .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
                 .build()
 
@@ -315,6 +329,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
                 .set(WhatIsNextPage, previousAnswer).success.value
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
+                .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
                 .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
                 .build()
 
@@ -341,6 +356,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           val userAnswers = emptyUserAnswersForUtr
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
             .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
             .build()
 
@@ -365,6 +381,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           val userAnswers = emptyUserAnswersForUtr
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
             .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
             .build()
 
@@ -389,6 +406,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
             .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
             .build()
 
@@ -416,6 +434,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
           beforeTest()
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
             .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
             .build()
 
@@ -445,6 +464,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
               .set(WhatIsNextPage, previousAnswer).success.value
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
               .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
               .build()
 
@@ -476,6 +496,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
             .set(WhatIsNextPage, previousAnswer).success.value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
+            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
             .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
             .build()
 
@@ -497,6 +518,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         beforeTest()
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+          .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
           .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
           .build()
 
@@ -536,4 +558,51 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
       application.stop()
     }
   }
+
+  "set taxable migration flag to true when NeedsToPayTax selected" in {
+
+    beforeTest()
+
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+      .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+      .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
+      .build()
+
+    implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+      .withFormUrlEncodedBody(("value", NeedsToPayTax.toString))
+
+    val result = route(application, request).value
+
+    status(result) mustEqual SEE_OTHER
+
+    verify(mockTrustsConnector).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
+
+    application.stop()
+  }
+
+  "set taxable migration flag to false when new answer is neither NeedsToPayTax nor GeneratePdf" in {
+
+    val gen = arbitrary[WhatIsNext]
+
+    forAll(gen.suchThat(x => x != NeedsToPayTax && x != GeneratePdf)) { answer =>
+      beforeTest()
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+        .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+        .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
+        .build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+        .withFormUrlEncodedBody(("value", answer.toString))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      verify(mockTrustsConnector).setTaxableMigrationFlag(any(), eqTo(false))(any(), any())
+
+      application.stop()
+    }
+  }
+
 }

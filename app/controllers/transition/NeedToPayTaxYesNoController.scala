@@ -93,11 +93,7 @@ class NeedToPayTaxYesNoController @Inject()(
 
     (hasAnswerChanged, needsToPayTax) match {
       case (false, _) => Future.successful(())
-      case (true, true) =>
-        for {
-          _ <- trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax)
-          _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, needsToPayTax)
-        } yield ()
+      case (true, true) => trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax).map(_ => ())
       case (true, false) => maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     }
 
