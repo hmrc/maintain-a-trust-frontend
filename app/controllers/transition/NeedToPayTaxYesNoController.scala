@@ -44,7 +44,7 @@ class NeedToPayTaxYesNoController @Inject()(
                                              view: NeedToPayTaxYesNoView,
                                              trustConnector: TrustConnector,
                                              maintainATrustService: MaintainATrustService
-                                     )(implicit ec: ExecutionContext)
+                                           )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val form: Form[Boolean] = yesNoFormProvider.withPrefix("needToPayTaxYesNo")
@@ -90,12 +90,11 @@ class NeedToPayTaxYesNoController @Inject()(
 
   private def updateTransforms(hasAnswerChanged: Boolean, needsToPayTax: Boolean)
                               (implicit request: DataRequest[AnyContent]): Future[Unit] = {
-
     (hasAnswerChanged, needsToPayTax) match {
       case (false, _) => Future.successful(())
       case (true, true) => trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax).map(_ => ())
       case (true, false) => maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     }
-
   }
+
 }
