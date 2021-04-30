@@ -73,7 +73,7 @@ final case class UserAnswers(internalId: String,
     }
   }
 
-  def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A]): Try[UserAnswers] = {
+  def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A], reads: Reads[A]): Try[UserAnswers] = {
     value match {
       case Some(v) => setValue(page, v)
       case None =>
@@ -82,9 +82,11 @@ final case class UserAnswers(internalId: String,
     }
   }
 
-  def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = setValue(page, value)
+  def set[A](page: Settable[A], value: A)(implicit writes: Writes[A], reads: Reads[A]): Try[UserAnswers] = setValue(page, value)
 
-  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A]): Try[UserAnswers] = {
+  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A], reads: Reads[A]): Try[UserAnswers] = {
+    val hasValueChanged: Boolean = !getAtPath(page.path).contains(value)
+
     val updatedData = data.setObject(page.path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Success(jsValue)
@@ -97,7 +99,7 @@ final case class UserAnswers(internalId: String,
     updatedData.flatMap {
       d =>
         val updatedAnswers = copy(data = d)
-        page.cleanup(Some(value), updatedAnswers)
+        if (hasValueChanged) page.cleanup(Some(value), updatedAnswers) else Success(updatedAnswers)
     }
   }
 

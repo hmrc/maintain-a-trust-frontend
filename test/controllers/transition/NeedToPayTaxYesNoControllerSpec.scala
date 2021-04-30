@@ -111,9 +111,89 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       redirectLocation(result).value mustEqual routes.BeforeYouContinueToTaxableController.onPageLoad().url
 
-      verify(mockTrustConnector).removeTransforms(any())(any(), any())
+      verify(mockTrustConnector, times(0)).removeTransforms(any())(any(), any())
       verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
       verify(mockTrustConnector).setTaxableTrust(any(), eqTo(true))(any(), any())
+
+      application.stop()
+    }
+
+    "redirect to the next page when true is submitted and this doesn't match the previous answer" in {
+
+      val mockPlaybackRepository = mock[PlaybackRepository]
+      val mockTrustConnector = mock[TrustConnector]
+
+      when(mockPlaybackRepository.set(any()))
+        .thenReturn(Future.successful(true))
+
+      when(mockTrustConnector.removeTransforms(any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
+      when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
+      when(mockTrustConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
+      val userAnswers = emptyUserAnswersForUtr
+        .set(NeedToPayTaxYesNoPage, false).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+        .build()
+
+      val request = FakeRequest(POST, needToPayTaxYesNoRoute)
+        .withFormUrlEncodedBody(("value", "true"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.BeforeYouContinueToTaxableController.onPageLoad().url
+
+      verify(mockTrustConnector, times(0)).removeTransforms(any())(any(), any())
+      verify(mockTrustConnector).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
+      verify(mockTrustConnector).setTaxableTrust(any(), eqTo(true))(any(), any())
+
+      application.stop()
+    }
+
+    "redirect to the next page when true is submitted and this matches the previous answer" in {
+
+      val mockPlaybackRepository = mock[PlaybackRepository]
+      val mockTrustConnector = mock[TrustConnector]
+
+      when(mockPlaybackRepository.set(any()))
+        .thenReturn(Future.successful(true))
+
+      when(mockTrustConnector.removeTransforms(any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
+      when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
+      when(mockTrustConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
+        .thenReturn(Future.successful(okResponse))
+
+      val userAnswers = emptyUserAnswersForUtr
+        .set(NeedToPayTaxYesNoPage, true).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+        .build()
+
+      val request = FakeRequest(POST, needToPayTaxYesNoRoute)
+        .withFormUrlEncodedBody(("value", "true"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.BeforeYouContinueToTaxableController.onPageLoad().url
+
+      verify(mockTrustConnector, times(0)).removeTransforms(any())(any(), any())
+      verify(mockTrustConnector, times(0)).setTaxableMigrationFlag(any(), eqTo(true))(any(), any())
+      verify(mockTrustConnector, times(0)).setTaxableTrust(any(), eqTo(true))(any(), any())
 
       application.stop()
     }

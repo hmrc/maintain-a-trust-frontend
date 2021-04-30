@@ -20,17 +20,18 @@ import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
 import forms.YesNoFormProvider
+import models.requests.DataRequest
 import pages.transition.NeedToPayTaxYesNoPage
 import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.NeedToPayTaxYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Success
 
 @Singleton
 class NeedToPayTaxYesNoController @Inject()(
@@ -69,15 +70,14 @@ class NeedToPayTaxYesNoController @Inject()(
           val identifierType = request.userAnswers.identifierType
           Future.successful(BadRequest(view(formWithErrors, identifier, identifierType)))
         },
-        value =>
+        needsToPayTax =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(NeedToPayTaxYesNoPage, value))
+            hasAnswerChanged <- Future.fromTry(Success(!request.userAnswers.get(NeedToPayTaxYesNoPage).contains(needsToPayTax)))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(NeedToPayTaxYesNoPage, needsToPayTax))
             _ <- playbackRepository.set(updatedAnswers)
-            - <- trustConnector.removeTransforms(request.userAnswers.identifier)
-            _ <- makeRequestIfConditionMet(value)(trustConnector.setTaxableTrust(request.userAnswers.identifier, value))
-            _ <- makeRequestIfConditionMet(value)(trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, value))
+            _ <- updateTransforms(hasAnswerChanged, needsToPayTax)
           } yield {
-            if (value) {
+            if (needsToPayTax) {
               Redirect(routes.BeforeYouContinueToTaxableController.onPageLoad())
             } else {
               Redirect(controllers.routes.WhatIsNextController.onPageLoad())
@@ -86,13 +86,18 @@ class NeedToPayTaxYesNoController @Inject()(
       )
   }
 
+  private def updateTransforms(hasAnswerChanged: Boolean, needsToPayTax: Boolean)
+                              (implicit request: DataRequest[AnyContent]): Future[Unit] = {
 
-  private def makeRequestIfConditionMet(condition: Boolean)(request: => Future[HttpResponse]): Future[Unit] = {
-    if (condition) {
-      request.map(_ => ())
-    } else {
-      Future.successful(())
+    (hasAnswerChanged, needsToPayTax) match {
+      case (false, _) => Future.successful(())
+      case (true, true) =>
+        for {
+          _ <- trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax)
+          _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, needsToPayTax)
+        } yield ()
+      case (true, false) => trustConnector.removeTransforms(request.userAnswers.identifier).map(_ => ())
     }
-  }
 
+  }
 }

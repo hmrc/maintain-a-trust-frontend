@@ -23,26 +23,26 @@ import models.pages.IndividualOrBusiness
 import org.scalacheck.Arbitrary
 import org.scalatest.TryValues
 import pages.trustees._
-import play.api.libs.json.Writes
+import play.api.libs.json.{Reads, Writes}
 import queries.Settable
 
 import scala.language.implicitConversions
 
 trait UserAnswersWriting extends TryValues with ModelGenerators {
-  class SettableWriterOps[T : Writes](s: Settable[T]) {
+  class SettableWriterOps[T : Writes](s: Settable[T])(implicit reads: Reads[T]) {
     def is(value: T): State[UserAnswers, Unit] = writeUA(s, value)
     def :=(value: T): State[UserAnswers, Unit] = is(value)
     def withArbitraryValue(implicit arb: Arbitrary[T]): State[UserAnswers, Unit] = writeArbUA(s)
     def isRemoved: State[UserAnswers, Unit] = remove(s)
   }
 
-  implicit def settableStuff[T:Writes](s: Settable[T]) : SettableWriterOps[T] = new SettableWriterOps[T](s)
+  implicit def settableStuff[T:Writes](s: Settable[T])(implicit reads: Reads[T]) : SettableWriterOps[T] = new SettableWriterOps[T](s)
 
-  def writeUA[T](s: Settable[T], value: T)(implicit writes: Writes[T]): State[UserAnswers, Unit] = {
+  def writeUA[T](s: Settable[T], value: T)(implicit writes: Writes[T], reads: Reads[T]): State[UserAnswers, Unit] = {
     State(_.set(s, value).success.value -> Unit)
   }
 
-  def writeArbUA[T](s: Settable[T])(implicit writes: Writes[T], arb: Arbitrary[T]): State[UserAnswers, Unit] = {
+  def writeArbUA[T](s: Settable[T])(implicit writes: Writes[T], reads: Reads[T], arb: Arbitrary[T]): State[UserAnswers, Unit] = {
     arb.arbitrary.sample
       .map(t => writeUA(s, t))
       .getOrElse(throw new Exception(s"Test value generation failure for ${s.path}"))

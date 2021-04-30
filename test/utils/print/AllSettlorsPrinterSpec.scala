@@ -22,12 +22,11 @@ import models.pages.KindOfBusiness.Trading
 import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import pages.settlors.deceased_settlor._
 import pages.settlors.living_settlor._
-import play.api.libs.json.Writes
+import play.api.libs.json.{Reads, Writes}
 import play.twirl.api.Html
 import queries.Settable
 import utils.print.sections.settlors.AllSettlorsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
-
 import java.time.LocalDate
 
 class AllSettlorsPrinterSpec extends SpecBase {
@@ -136,7 +135,7 @@ class AllSettlorsPrinterSpec extends SpecBase {
       )
     }
 
-    def uaSet[T:Writes](settable: Settable[T], value: T) : UserAnswers => UserAnswers = _.set(settable, value).success.value
+    def uaSet[T:Writes](settable: Settable[T], value: T)(implicit reads: Reads[T]) : UserAnswers => UserAnswers = _.set(settable, value).success.value
 
     "generate Company Settlor Section" in {
       def businessSettlorBase(index: Int) = uaSet(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Business) andThen

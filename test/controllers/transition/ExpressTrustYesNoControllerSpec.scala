@@ -21,7 +21,7 @@ import connectors.TrustConnector
 import forms.YesNoFormProvider
 import models.pages.WhatIsNext.NeedsToPayTax
 import org.mockito.Matchers.{any, eq => eqTo}
-import org.mockito.Mockito.{verify, when}
+import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.WhatIsNextPage
 import pages.trustdetails.ExpressTrustYesNoPage
@@ -143,7 +143,7 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       redirectLocation(result).value mustEqual controllers.tasklist.routes.TaskListController.onPageLoad().url
 
-      verify(mockTrustsConnector).removeTransforms(any())(any(), any())
+      verify(mockTrustsConnector, times(0)).removeTransforms(any())(any(), any())
       verify(mockTrustsConnector).setExpressTrust(any(), eqTo(validAnswer))(any(), any())
 
       application.stop()

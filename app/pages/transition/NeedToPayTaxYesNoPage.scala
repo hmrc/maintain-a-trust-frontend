@@ -18,12 +18,11 @@ package pages.transition
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.TrustDetails
 
 case object NeedToPayTaxYesNoPage extends QuestionPage[Boolean] {
 
-  override def path: JsPath = JsPath \ TrustDetails \ toString
+  override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "needToPayTaxYesNo"
+  override def toString: String = "needToPayTax"
 
 }
