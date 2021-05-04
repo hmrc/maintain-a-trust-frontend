@@ -185,7 +185,7 @@ class AllSettlorsPrinterSpec extends SpecBase {
           AnswerRow("Do you know International Exports’s country of residence?", Html("Yes"), None),
           AnswerRow("Does International Exports have UK residency?", Html("No"), None),
           AnswerRow("What is International Exports’s country of residence?", Html("France"), None)
-          ), None),
+        ), None),
         AnswerSection(Some("Settlor 2"), Seq(
           AnswerRow("What is the business’s name?", Html("International Exports"), None),
           AnswerRow("Do you know International Exports’s Unique Taxpayer Reference (UTR) number?", Html("No"), None),
@@ -235,16 +235,16 @@ class AllSettlorsPrinterSpec extends SpecBase {
 
       def baseIndividualSettlor(index: Int) =
         uaSet(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual) andThen
-        uaSet(SettlorIndividualNamePage(index), FullName("Joe", None,  "Bloggs")) andThen
-        uaSet(SettlorIndividualDateOfBirthYesNoPage(index), true) andThen
-        uaSet(SettlorIndividualDateOfBirthPage(index), LocalDate.parse("1934-12-12")) andThen
-        uaSet(SettlorCountryOfNationalityYesNoPage(index), true) andThen
-        uaSet(SettlorCountryOfNationalityInTheUkYesNoPage(index), false) andThen
-        uaSet(SettlorCountryOfNationalityPage(index), "FR") andThen
-        uaSet(SettlorCountryOfResidenceYesNoPage(index), true) andThen
-        uaSet(SettlorCountryOfResidenceInTheUkYesNoPage(index), false) andThen
-        uaSet(SettlorCountryOfResidencePage(index), "FR") andThen
-        uaSet(SettlorIndividualMentalCapacityYesNoPage(index), true)
+          uaSet(SettlorIndividualNamePage(index), FullName("Joe", None,  "Bloggs")) andThen
+          uaSet(SettlorIndividualDateOfBirthYesNoPage(index), true) andThen
+          uaSet(SettlorIndividualDateOfBirthPage(index), LocalDate.parse("1934-12-12")) andThen
+          uaSet(SettlorCountryOfNationalityYesNoPage(index), true) andThen
+          uaSet(SettlorCountryOfNationalityInTheUkYesNoPage(index), false) andThen
+          uaSet(SettlorCountryOfNationalityPage(index), "FR") andThen
+          uaSet(SettlorCountryOfResidenceYesNoPage(index), true) andThen
+          uaSet(SettlorCountryOfResidenceInTheUkYesNoPage(index), false) andThen
+          uaSet(SettlorCountryOfResidencePage(index), "FR") andThen
+          uaSet(SettlorIndividualMentalCapacityYesNoPage(index), true)
 
       def individualSettlorWithNino(index: Int) = baseIndividualSettlor(index) andThen
         uaSet(SettlorIndividualNINOYesNoPage(index), true) andThen
@@ -275,7 +275,7 @@ class AllSettlorsPrinterSpec extends SpecBase {
         individualSettlorWithNoId(3)
 
       val result = helper.entities(answers.apply(emptyUserAnswersForUtr))
-      
+
       result mustBe Seq(
         AnswerSection(None, Nil, Some(messages("answerPage.section.settlors.heading"))),
         AnswerSection(Some("Settlor 1"),Seq(
@@ -341,6 +341,79 @@ class AllSettlorsPrinterSpec extends SpecBase {
           AnswerRow("Do you know Joe Bloggs’s address?", Html("No"), None),
           AnswerRow("Does Joe Bloggs have mental capacity at the time of registration?", Html("Yes"), None)
         ), None)
+      )
+    }
+
+    "generate sections with deceased settlor and additional settlors" in {
+
+      val name = "Adam Smith"
+
+      val answers = emptyUserAnswersForUtr
+
+        .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
+        .set(SettlorDateOfDeathYesNoPage, false).success.value
+        .set(SettlorDateOfBirthYesNoPage, false).success.value
+        .set(DeceasedSettlorCountryOfNationalityYesNoPage, false).success.value
+        .set(SettlorNationalInsuranceYesNoPage, false).success.value
+        .set(DeceasedSettlorCountryOfResidenceYesNoPage, false).success.value
+        .set(SettlorLastKnownAddressYesNoPage, false).success.value
+
+        .set(SettlorIndividualOrBusinessPage(0), IndividualOrBusiness.Business).success.value
+        .set(SettlorBusinessNamePage(0), "Amazon").success.value
+        .set(SettlorUtrYesNoPage(0), false).success.value
+        .set(SettlorCountryOfResidenceYesNoPage(0), false).success.value
+        .set(SettlorAddressYesNoPage(0), false).success.value
+
+        .set(SettlorIndividualOrBusinessPage(1), IndividualOrBusiness.Individual).success.value
+        .set(SettlorIndividualNamePage(1), FullName("Joe", None,  "Bloggs")).success.value
+        .set(SettlorIndividualDateOfBirthYesNoPage(1), false).success.value
+        .set(SettlorCountryOfNationalityYesNoPage(1), false).success.value
+        .set(SettlorIndividualNINOYesNoPage(1), false).success.value
+        .set(SettlorCountryOfResidenceYesNoPage(1), false).success.value
+        .set(SettlorAddressYesNoPage(1), false).success.value
+        .set(SettlorIndividualMentalCapacityYesNoPage(1), true).success.value
+
+      val result = helper.entities(answers)
+
+      result mustBe Seq(
+        AnswerSection(None, Nil, Some(messages("answerPage.section.deceasedSettlor.heading"))),
+        AnswerSection(
+          headingKey = None,
+          rows = Seq(
+            AnswerRow(label = messages("settlorName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
+            AnswerRow(label = messages("settlorDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorLastKnownAddressYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None)
+          ),
+          sectionKey = None
+        ),
+        AnswerSection(None, Nil, Some(messages("answerPage.section.settlors.heading"))),
+        AnswerSection(
+          headingKey = Some("Settlor 1"),
+          rows = Seq(
+            AnswerRow("What is the business’s name?", Html("Amazon"), None),
+            AnswerRow("Do you know Amazon’s Unique Taxpayer Reference (UTR) number?", Html("No"), None),
+            AnswerRow("Do you know Amazon’s country of residence?", Html("No"), None),
+            AnswerRow("Do you know Amazon’s address?", Html("No"), None)
+          ),
+          sectionKey = None
+        ),
+        AnswerSection(
+          headingKey = Some("Settlor 2"),
+          rows = Seq(
+            AnswerRow("What is the settlor’s name?", Html("Joe Bloggs"), None),
+            AnswerRow("Do you know Joe Bloggs’s date of birth?", Html("No"), None),
+            AnswerRow("Do you know Joe Bloggs’s country of nationality?", Html("No"), None),
+            AnswerRow("Do you know Joe Bloggs’s National Insurance number?", Html("No"), None),
+            AnswerRow("Do you know Joe Bloggs’s country of residence?", Html("No"), None),
+            AnswerRow("Do you know Joe Bloggs’s address?", Html("No"), None),
+            AnswerRow("Does Joe Bloggs have mental capacity at the time of registration?", Html("Yes"), None)
+          ),
+          sectionKey = None
+        )
       )
     }
   }
