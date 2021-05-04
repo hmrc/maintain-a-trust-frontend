@@ -37,7 +37,6 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
   "Settlor Extractor" - {
 
     "when no settlors" - {
-
       "must return an error" in {
 
         val entities = DisplayTrustEntitiesType(None,
@@ -50,13 +49,10 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
         val extraction = settlorExtractor.extract(ua, entities)
 
         extraction.left.value mustBe a[FailedToExtractData]
-
       }
-
     }
 
     "when deceased settlor" - {
-
       "must return user answers updated" in {
 
         val entities = DisplayTrustEntitiesType(
@@ -111,7 +107,6 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
     }
 
     "when there are living settlors of different types" - {
-
       "must return user answers updated" in {
 
         val entities = DisplayTrustEntitiesType(
@@ -234,9 +229,126 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
         extraction.right.value.get(SettlorMetaData(2)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
       }
-
     }
 
-  }
+    "when deceased settlor and additional settlors" - {
+      "must return user answers updated" in {
 
+        val entities = DisplayTrustEntitiesType(
+          naturalPerson = None,
+          beneficiary = DisplayTrustBeneficiaryType(
+            individualDetails = Nil,
+            company = Nil,
+            trust = Nil,
+            charity = Nil,
+            unidentified = Nil,
+            large = Nil,
+            other = Nil
+          ),
+          deceased = Some(DisplayTrustWillType(
+            lineNo = Some("1"),
+            bpMatchStatus = Some("01"),
+            name = FullName("First Name", None, "Last Name"),
+            dateOfBirth = None,
+            dateOfDeath = None,
+            countryOfNationality = Some(GB),
+            countryOfResidence = Some(GB),
+            identification = None,
+            entityStart = "2019-11-26"
+          )),
+          leadTrustee = DisplayTrustLeadTrusteeType(leadTrusteeInd = None, leadTrusteeOrg = None),
+          trustees = None,
+          protectors = None,
+          settlors = Some(DisplayTrustSettlors(
+            settlor = List(
+              DisplayTrustSettlor(
+                lineNo = Some(s"1"),
+                bpMatchStatus = Some("01"),
+                name = FullName("individual", Some("living"), "settlor"),
+                dateOfBirth = None,
+                countryOfNationality = Some(GB),
+                countryOfResidence = Some(GB),
+                legallyIncapable = Some(false),
+                identification = None,
+                entityStart = "2019-11-26"
+              )
+            ),
+            settlorCompany = List(
+              DisplayTrustSettlorCompany(
+                lineNo = Some(s"1"),
+                bpMatchStatus = Some("01"),
+                name = s"Company Settlor 1",
+                countryOfResidence = Some(GB),
+                companyType = Some(KindOfBusiness.Trading),
+                companyTime = Some(false),
+                identification = Some(
+                  DisplayTrustIdentificationOrgType(
+                    safeId = Some("8947584-94759745-84758745"),
+                    utr = Some("1234567890"),
+                    address = None
+                  )
+                ),
+                entityStart = "2019-11-26"
+              )
+            )
+          ))
+        )
+
+        val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+
+        val extraction = settlorExtractor.extract(ua, entities)
+
+        extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+        extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+        extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+        extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+        extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+        extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe true
+        extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage).get mustBe true
+        extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage).get mustBe GB
+        extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe true
+        extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage).get mustBe true
+        extraction.right.value.get(DeceasedSettlorCountryOfResidencePage).get mustBe GB
+        extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
+        extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+        extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
+        extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+        extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+
+        extraction.right.value.get(SettlorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+        extraction.right.value.get(SettlorIndividualNamePage(0)).get mustBe FullName("individual", Some("living"), "settlor")
+        extraction.right.value.get(SettlorCountryOfNationalityYesNoPage(0)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfNationalityPage(0)).get mustBe GB
+        extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfResidencePage(0)).get mustBe GB
+        extraction.right.value.get(SettlorIndividualMentalCapacityYesNoPage(0)).get mustBe true
+        extraction.right.value.get(SettlorIndividualNINOYesNoPage(0)).get mustBe false
+        extraction.right.value.get(SettlorIndividualNINOPage(0)) mustNot be(defined)
+        extraction.right.value.get(SettlorAddressYesNoPage(0)).get mustBe false
+        extraction.right.value.get(SettlorAddressUKYesNoPage(0)) mustNot be(defined)
+        extraction.right.value.get(SettlorAddressPage(0)) mustNot be(defined)
+        extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
+        extraction.right.value.get(SettlorIndividualPassportIDCardPage(0)) mustNot be(defined)
+        extraction.right.value.get(SettlorSafeIdPage(0)) mustNot be(defined)
+        extraction.right.value.get(SettlorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+
+        extraction.right.value.get(SettlorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
+        extraction.right.value.get(SettlorBusinessNamePage(1)).get mustBe "Company Settlor 1"
+        extraction.right.value.get(SettlorCountryOfResidenceYesNoPage(1)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe true
+        extraction.right.value.get(SettlorCountryOfResidencePage(1)).get mustBe GB
+        extraction.right.value.get(SettlorUtrYesNoPage(1)).get mustBe true
+        extraction.right.value.get(SettlorUtrPage(1)).get mustBe "1234567890"
+        extraction.right.value.get(SettlorAddressYesNoPage(1)) mustNot be(defined)
+        extraction.right.value.get(SettlorAddressUKYesNoPage(1)) mustNot be(defined)
+        extraction.right.value.get(SettlorAddressPage(1)) mustNot be(defined)
+        extraction.right.value.get(SettlorCompanyTypePage(1)).get mustBe Trading
+        extraction.right.value.get(SettlorCompanyTimePage(1)).get mustBe false
+        extraction.right.value.get(SettlorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+        extraction.right.value.get(SettlorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+      }
+    }
+  }
 }

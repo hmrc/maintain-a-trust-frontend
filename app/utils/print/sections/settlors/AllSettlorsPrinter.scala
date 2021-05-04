@@ -30,11 +30,7 @@ class AllSettlorsPrinter @Inject()(deceasedSettlorPrinter: DeceasedSettlorPrinte
     val deceasedSettlor: Seq[AnswerSection] = deceasedSettlorPrinter.entities(userAnswers)
     val livingSettlors: Seq[AnswerSection] = livingSettlorsPrinter.entities(userAnswers)
 
-    (deceasedSettlor.nonEmpty, livingSettlors.nonEmpty) match {
-      case (true, false) => deceasedSettlor
-      case (false, true) => livingSettlors
-      case _ => Nil
-    }
+    deceasedSettlor ++ livingSettlors
   }
 
 }
