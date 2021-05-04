@@ -27,8 +27,9 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
-import uk.gov.hmrc.http.HttpResponse
+import services.MaintainATrustService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.Session
 import views.html.transition.ExpressTrustYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,7 +42,8 @@ class ExpressTrustYesNoController @Inject()(
                                              yesNoFormProvider: YesNoFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: ExpressTrustYesNoView,
-                                             trustsConnector: TrustConnector
+                                             trustsConnector: TrustConnector,
+                                             maintainATrustService: MaintainATrustService
                                            )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
@@ -85,19 +87,15 @@ class ExpressTrustYesNoController @Inject()(
   }
 
   private def removeTransformsIfNotMigrating(isTrustMigrating: Boolean)
-                                                (implicit request: DataRequest[AnyContent]): Future[Unit] = {
-
-    logger.debug("Removing transforms in case user redirected here from RefreshedDataPreSubmitRetrievalAction.")
-    makeRequestIfConditionMet(!isTrustMigrating) {
-      trustsConnector.removeTransforms(request.userAnswers.identifier)
-    }
-  }
-
-  private def makeRequestIfConditionMet(condition: Boolean)(request: => Future[HttpResponse]): Future[Unit] = {
-    if (condition) {
-      request.map(_ => ())
-    } else {
+                                            (implicit request: DataRequest[AnyContent]): Future[Unit] = {
+    if (isTrustMigrating) {
+      logger.info(s"[Session ID: ${Session.id(hc)}] Migrating from non-taxable to taxable. Keeping transforms.")
       Future.successful(())
+    } else {
+      logger.info(s"[Session ID: ${Session.id(hc)}] Redirected from RefreshedDataPreSubmitRetrievalAction or " +
+        s"transitioning from 4MLD to 5MLD. Removing transforms and resetting tasks.")
+      maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     }
   }
+
 }

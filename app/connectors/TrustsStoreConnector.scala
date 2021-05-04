@@ -30,29 +30,33 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config: FrontendAppConfig
 
   private val trustLockedUrl: String = config.trustsStoreUrl + "/claim"
 
-  private def maintainTasksUrl(utr: String) = s"${config.trustsStoreUrl}/maintain/tasks/$utr"
+  private def maintainTasksUrl(identifier: String) = s"${config.trustsStoreUrl}/maintain/tasks/$identifier"
 
   private def featuresUrl(feature: String) = s"${config.trustsStoreUrl}/features/$feature"
 
-  def get(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[TrustClaim]] = {
-    http.GET[Option[TrustClaim]](trustLockedUrl)(TrustClaim.httpReads(utr), hc, ec)
+  def get(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[TrustClaim]] = {
+    http.GET[Option[TrustClaim]](trustLockedUrl)(TrustClaim.httpReads(identifier), hc, ec)
   }
 
-  def set(utr: String, userAnswers: UserAnswers)
+  def set(identifier: String, userAnswers: UserAnswers)
          (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CompletedMaintenanceTasks] = {
     CompletedMaintenanceTasks.from(userAnswers) match {
       case Some(x) =>
-        http.POST[JsValue, CompletedMaintenanceTasks](maintainTasksUrl(utr), Json.toJson(x))
+        http.POST[JsValue, CompletedMaintenanceTasks](maintainTasksUrl(identifier), Json.toJson(x))
       case None =>
         Future.failed(new RuntimeException("Unable to set tasks status"))
     }
   }
 
-  def getStatusOfTasks(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CompletedMaintenanceTasks] = {
-    http.GET[CompletedMaintenanceTasks](maintainTasksUrl(utr))
+  def getStatusOfTasks(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CompletedMaintenanceTasks] = {
+    http.GET[CompletedMaintenanceTasks](maintainTasksUrl(identifier))
       .recover {
         case _ => CompletedMaintenanceTasks()
       }
+  }
+
+  def resetTasks(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
+    http.DELETE[HttpResponse](maintainTasksUrl(identifier))
   }
 
   def getFeature(feature: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[FeatureResponse] = {

@@ -27,7 +27,9 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
+import services.MaintainATrustService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.Session
 import views.html.transition.NeedToPayTaxYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,8 +43,9 @@ class NeedToPayTaxYesNoController @Inject()(
                                              val controllerComponents: MessagesControllerComponents,
                                              yesNoFormProvider: YesNoFormProvider,
                                              view: NeedToPayTaxYesNoView,
-                                             trustConnector: TrustConnector
-                                     )(implicit ec: ExecutionContext)
+                                             trustConnector: TrustConnector,
+                                             maintainATrustService: MaintainATrustService
+                                           )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val form: Form[Boolean] = yesNoFormProvider.withPrefix("needToPayTaxYesNo")
@@ -88,16 +91,17 @@ class NeedToPayTaxYesNoController @Inject()(
 
   private def updateTransforms(hasAnswerChanged: Boolean, needsToPayTax: Boolean)
                               (implicit request: DataRequest[AnyContent]): Future[Unit] = {
-
     (hasAnswerChanged, needsToPayTax) match {
-      case (false, _) => Future.successful(())
+      case (false, _) =>
+        logger.info(s"[Session ID: ${Session.id(hc)}] Answer hasn't changed. Nothing to update.")
+        Future.successful(())
       case (true, true) =>
-        for {
-          _ <- trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax)
-          _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, needsToPayTax)
-        } yield ()
-      case (true, false) => trustConnector.removeTransforms(request.userAnswers.identifier).map(_ => ())
+        logger.info(s"[Session ID: ${Session.id(hc)}] Answer has changed to yes. Setting taxable trust.")
+        trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax).map(_ => ())
+      case (true, false) =>
+        logger.info(s"[Session ID: ${Session.id(hc)}] Answer has changed to no. Removing transforms and resetting tasks.")
+        maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     }
-
   }
+
 }

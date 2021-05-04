@@ -30,6 +30,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.PlaybackRepository
+import services.MaintainATrustService
 import views.html.transition.ExpressTrustYesNoView
 
 import scala.concurrent.Future
@@ -86,18 +87,20 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       val mockPlaybackRepository = mock[PlaybackRepository]
       val mockTrustsConnector = mock[TrustConnector]
+      val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
         .thenReturn(Future.successful(true))
 
-      when(mockTrustsConnector.removeTransforms(any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
+      when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
+        .thenReturn(Future.successful(()))
 
       when(mockTrustsConnector.setExpressTrust(any(), any())(any(), any()))
         .thenReturn(Future.successful(okResponse))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+        .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
         .build()
 
       val request = FakeRequest(POST, expressTrustYesNoRoute)
@@ -109,7 +112,7 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       redirectLocation(result).value mustEqual routes.ConfirmTrustTaxableController.onPageLoad().url
 
-      verify(mockTrustsConnector).removeTransforms(any())(any(), any())
+      verify(mockMaintainATrustService).removeTransformsAndResetTaskList(any())(any(), any())
       verify(mockTrustsConnector).setExpressTrust(any(), eqTo(validAnswer))(any(), any())
 
       application.stop()
@@ -119,19 +122,20 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       val mockPlaybackRepository = mock[PlaybackRepository]
       val mockTrustsConnector = mock[TrustConnector]
+      val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
         .thenReturn(Future.successful(true))
 
-      when(mockTrustsConnector.removeTransforms(any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
+      when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
+        .thenReturn(Future.successful(()))
 
       when(mockTrustsConnector.setExpressTrust(any(), any())(any(), any()))
         .thenReturn(Future.successful(okResponse))
 
-      val application = applicationBuilder(userAnswers = Some(
-        emptyUserAnswersForUtr.set(WhatIsNextPage, NeedsToPayTax).success.value
-      )).overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr.set(WhatIsNextPage, NeedsToPayTax).success.value))
+        .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+        .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
         .build()
 
       val request = FakeRequest(POST, expressTrustYesNoRoute)
@@ -143,7 +147,7 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       redirectLocation(result).value mustEqual controllers.tasklist.routes.TaskListController.onPageLoad().url
 
-      verify(mockTrustsConnector, times(0)).removeTransforms(any())(any(), any())
+      verify(mockMaintainATrustService, times(0)).removeTransformsAndResetTaskList(any())(any(), any())
       verify(mockTrustsConnector).setExpressTrust(any(), eqTo(validAnswer))(any(), any())
 
       application.stop()
