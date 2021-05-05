@@ -79,8 +79,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           |  "beneficiaries": false,
           |  "settlors": false,
           |  "protectors": false,
-          |  "other": false,
-          |  "nonEeaCompany": false
+          |  "other": false
           |}
           |""".stripMargin)
 
@@ -100,8 +99,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           beneficiaries = false,
           settlors = false,
           protectors = false,
-          other = false,
-          nonEeaCompany = false
+          other = false
         )
 
       application.stop()
@@ -138,8 +136,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
             |  "beneficiaries": true,
             |  "settlors": true,
             |  "protectors": true,
-            |  "other": true,
-            |  "nonEeaCompany": true
+            |  "other": true
             |}
             |""".stripMargin)
 
@@ -161,8 +158,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
             beneficiaries = true,
             settlors = true,
             protectors = true,
-            other = true,
-            nonEeaCompany = true
+            other = true
           )
 
         application.stop()
@@ -199,8 +195,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
             |  "beneficiaries": true,
             |  "settlors": true,
             |  "protectors": true,
-            |  "other": true,
-            |  "nonEeaCompany": true
+            |  "other": true
             |}
             |""".stripMargin)
 
@@ -222,8 +217,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
             beneficiaries = true,
             settlors = true,
             protectors = true,
-            other = true,
-            nonEeaCompany = true
+            other = true
           )
 
         application.stop()
@@ -258,8 +252,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         beneficiaries = false,
         settlors = false,
         protectors = false,
-        other = false,
-        nonEeaCompany = false
+        other = false
       )
 
     application.stop()

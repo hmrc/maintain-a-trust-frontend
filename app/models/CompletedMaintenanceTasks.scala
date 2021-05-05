@@ -26,8 +26,7 @@ case class CompletedMaintenanceTasks(trustDetails: Boolean,
                                      beneficiaries: Boolean,
                                      settlors: Boolean,
                                      protectors: Boolean,
-                                     other: Boolean,
-                                     nonEeaCompany: Boolean)
+                                     other: Boolean)
 
 object CompletedMaintenanceTasks {
 
@@ -41,22 +40,20 @@ object CompletedMaintenanceTasks {
     beneficiaries = false,
     settlors = false,
     protectors = false,
-    other = false,
-    nonEeaCompany = false
+    other = false
   )
 
   def from(userAnswers: UserAnswers): Option[CompletedMaintenanceTasks] = for {
     trustDetails <- userAnswers.getWithDefault(UpdateTrustDetailsYesNoPage, false)
-    assets <- userAnswers.getWithDefault(UpdateAssetsYesNoPage, false)
+    assets <- userAnswers.getWithDefault(AddOrUpdateNonEeaCompanyYesNoPage, false)
     taxLiability <- userAnswers.getWithDefault(UpdateTaxLiabilityYesNoPage, false)
     trustees <- userAnswers.get(UpdateTrusteesYesNoPage)
     beneficiaries <- userAnswers.get(UpdateBeneficiariesYesNoPage)
     settlors <- userAnswers.get(UpdateSettlorsYesNoPage)
     protectors <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
     otherIndividuals <- userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage)
-    nonEeaCompanies <- userAnswers.getWithDefault(AddOrUpdateNonEeaCompanyYesNoPage, false)
   } yield {
-    CompletedMaintenanceTasks(!trustDetails, !assets, !taxLiability, !trustees, !beneficiaries, !settlors, !protectors, !otherIndividuals, !nonEeaCompanies)
+    CompletedMaintenanceTasks(!trustDetails, !assets, !taxLiability, !trustees, !beneficiaries, !settlors, !protectors, !otherIndividuals)
   }
 
 }

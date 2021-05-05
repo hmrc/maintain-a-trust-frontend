@@ -128,7 +128,7 @@ trait TaskListSections {
     val optionalSections = List(
       Task(
         Link(NonEeaBusinessAsset, nonEeaCompanyRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.nonEeaCompany, config.maintainNonEeaCompaniesEnabled))
+        Some(Tag.tagFor(tasks.assets, config.maintainNonEeaCompaniesEnabled))
       ),
       Task(
         Link(Protectors, protectorsRouteEnabled(identifier)),
