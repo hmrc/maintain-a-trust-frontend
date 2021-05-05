@@ -22,12 +22,14 @@ import models.http.{DeclarationForApi, DeclarationResponse, TrustsResponse}
 import play.api.libs.json.JsBoolean
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
-
 import java.time.LocalDate
+
 import javax.inject.Inject
+import play.api.Logging
+
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
+class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) extends Logging {
 
   private lazy val baseUrl: String = s"${config.trustsUrl}/trusts"
 
@@ -100,6 +102,7 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) {
 
   def setTaxableTrust(identifier: String, value: Boolean)
                      (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    logger.info(s"--------------------- setTaxableTrust $value ")
     val url: String = s"$baseUrl/trust-details/$identifier/taxable"
     http.PUT[Boolean, HttpResponse](url, value)
   }
