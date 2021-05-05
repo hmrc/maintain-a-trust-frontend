@@ -77,10 +77,8 @@ class ExpressTrustYesNoController @Inject()(
             _ <- trustsConnector.setExpressTrust(request.userAnswers.identifier, value)
           } yield {
             if (isTrustMigrating) {
-              logger.info(s"--------------------- isTrustMigrating $isTrustMigrating  TaskListController")
               Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
             } else {
-              logger.info(s"--------------------- isTrustMigrating $isTrustMigrating  ConfirmTrustTaxableController")
               Redirect(routes.ConfirmTrustTaxableController.onPageLoad())
             }
           }

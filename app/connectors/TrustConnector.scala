@@ -102,7 +102,6 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) exte
 
   def setTaxableTrust(identifier: String, value: Boolean)
                      (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    logger.info(s"--------------------- setTaxableTrust $value ")
     val url: String = s"$baseUrl/trust-details/$identifier/taxable"
     http.PUT[Boolean, HttpResponse](url, value)
   }
