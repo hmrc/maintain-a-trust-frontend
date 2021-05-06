@@ -36,6 +36,8 @@ class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new YesNoFormProvider()
   val form: Form[Boolean] = formProvider.withPrefix("obligedEntityPdfYesNo")
 
+  val identifier = "1234567890"
+
   lazy val obligedEntityPdfYesNoControllerRoute: String = routes.ObligedEntityPdfYesNoController.onPageLoad().url
 
   override val emptyUserAnswersForUtr: UserAnswers = super.emptyUserAnswersForUtr
@@ -55,7 +57,7 @@ class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form)(request, messages).toString
+        view(form, identifier)(request, messages).toString
 
       application.stop()
     }
@@ -75,7 +77,7 @@ class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(true))(request, messages).toString
+        view(form.fill(true), identifier)(request, messages).toString
 
       application.stop()
     }
@@ -139,7 +141,7 @@ class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm)(request, messages).toString
+        view(boundForm, identifier)(request, messages).toString
 
       application.stop()
     }

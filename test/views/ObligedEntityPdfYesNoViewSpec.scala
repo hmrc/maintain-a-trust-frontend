@@ -28,12 +28,14 @@ class ObligedEntityPdfYesNoViewSpec extends YesNoViewBehaviours {
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
+  val identifier = "1234567890"
+  
   "ObligedEntityPdfYesNo view" must {
 
     val view = viewFor[ObligedEntityPdfYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form)(fakeRequest, messages)
+      view.apply(form, identifier)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView(form),
       messageKeyPrefix,
