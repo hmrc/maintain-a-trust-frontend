@@ -103,7 +103,7 @@ class WhatIsNextController @Inject()(
         case NeedsToPayTax =>
           controllers.transition.routes.NeedToPayTaxYesNoController.onPageLoad()
         case GeneratePdf =>
-          controllers.routes.ObligedEntityPdfController.getPdf(userAnswers.identifier)
+          controllers.routes.ObligedEntityPdfYesNoController.onPageLoad()
       }
     }
 

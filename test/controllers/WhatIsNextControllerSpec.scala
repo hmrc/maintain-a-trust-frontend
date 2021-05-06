@@ -417,7 +417,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustBe controllers.routes.ObligedEntityPdfController.getPdf(userAnswers.identifier).url
+          redirectLocation(result).value mustBe controllers.routes.ObligedEntityPdfYesNoController.onPageLoad().url
 
           application.stop()
         }
