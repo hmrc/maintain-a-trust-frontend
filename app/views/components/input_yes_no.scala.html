@@ -21,7 +21,6 @@
     label: String,
     caption: Option[String] = None,
     labelPrefix: Option[String] = None,
-    labelBold: Boolean = false,
     secondaryLabel: Option[String] = None,
     inputClass: Option[String] = None,
     hint: Option[String] = None,
@@ -70,7 +69,7 @@
                     value="true"
                     @if(field.value.contains("true")){checked="checked"}
             />
-            <label id="@{field.id}-yes-label" class="block-label selection-button-radio @if(labelBold){bold}" for="@{field.id}-yes" data-target="@if(yesAssoc.nonEmpty){@yesAssoc}">
+            <label id="@{field.id}-yes-label" class="block-label selection-button-radio" for="@{field.id}-yes" data-target="@if(yesAssoc.nonEmpty){@yesAssoc}">
                 @if(labelPrefix.isDefined){
                     @messages(s"${labelPrefix.get}.yes")
                 } else {
@@ -87,7 +86,7 @@
                     value="false"
                     @if(field.value.contains("false")){checked="checked"}
             />
-            <label id="@{field.id}-no-label" class="block-label selection-button-radio @if(labelBold){bold}" for="@{field.id}-no" data-target="@if(noAssoc.nonEmpty){@noAssoc}">
+            <label id="@{field.id}-no-label" class="block-label selection-button-radio" for="@{field.id}-no" data-target="@if(noAssoc.nonEmpty){@noAssoc}">
                 @if(labelPrefix.isDefined){
                     @messages(s"${labelPrefix.get}.no")
                 } else {

@@ -263,6 +263,7 @@ site.address.international.country = Country
 site.address.international.country.select = Select a country
 
 obligedEntityPdfYesNo.caption = Trust details PDF
+obligedEntityPdfYesNo.title = Do you want to view evidence of the trust’s registration?
 obligedEntityPdfYesNo.heading = Do you want to view evidence of the trust’s registration?
 obligedEntityPdfYesNo.p1 = You can download and view a PDF document that:
 obligedEntityPdfYesNo.bullet1 = shows the trust’s registration

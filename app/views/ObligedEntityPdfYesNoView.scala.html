@@ -21,7 +21,12 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_], identifier: String)(implicit request: Request[_], messages: Messages)
+
+@helper.javascriptRouter("jsRoutes")(
+    routes.javascript.ObligedEntityPdfController.getPdf,
+    routes.javascript.LogoutController.logout
+)
 
 @content = {
     <p>@messages("obligedEntityPdfYesNo.p1")</p>
@@ -86,7 +91,7 @@
     title = s"${errorPrefix(form)}${messages("obligedEntityPdfYesNo.title")}"
 ) {
 
-    @formHelper(action = ObligedEntityPdfYesNoController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = ObligedEntityPdfYesNoController.onSubmit(), 'autoComplete -> "off", 'id -> "download-pdf", Symbol("data-identifier") -> identifier) {
 
         @components.back_link()
 
@@ -96,12 +101,15 @@
             field = form("value"),
             label = messages("obligedEntityPdfYesNo.heading"),
             labelPrefix = Some("obligedEntityPdfYesNo"),
-            labelBold = true,
             legendAsHeading = true,
             caption = Some(messages("obligedEntityPdfYesNo.caption")),
             additionalContent = Some(content)
         )
 
-        @components.submit_button()
+        <div class="section">
+            <button id="submit" class="button">
+                @messages("site.onlyContinue")
+            </button>
+        </div>
     }
 }

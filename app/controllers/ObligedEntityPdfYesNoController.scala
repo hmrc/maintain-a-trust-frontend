@@ -57,7 +57,7 @@ class ObligedEntityPdfYesNoController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm))
+      Ok(view(preparedForm, request.userAnswers.identifier))
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
@@ -65,7 +65,7 @@ class ObligedEntityPdfYesNoController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.identifier))),
 
         value => {
           for {
