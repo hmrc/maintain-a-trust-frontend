@@ -140,4 +140,7 @@ GET        /unavailable-sections                        controllers.makechanges.
 
 GET        /overview                                    controllers.tasklist.TaskListController.onPageLoad()
 
+GET        /view-evidence/                              controllers.ObligedEntityPdfYesNoController.onPageLoad()
+POST       /view-evidence/                              controllers.ObligedEntityPdfYesNoController.onSubmit()
+
 GET        /get-pdf/:identifier                         controllers.ObligedEntityPdfController.getPdf(identifier)

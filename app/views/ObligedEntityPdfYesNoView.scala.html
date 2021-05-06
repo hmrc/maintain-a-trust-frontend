@@ -1,0 +1,115 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.routes._
+
+@this(
+    main_template: MainTemplate,
+    formHelper: FormWithCSRF
+)
+
+@(form: Form[_], identifier: String)(implicit request: Request[_], messages: Messages)
+
+@helper.javascriptRouter("jsRoutes")(
+    routes.javascript.ObligedEntityPdfController.getPdf,
+    routes.javascript.LogoutController.logout
+)
+
+@content = {
+    <p>@messages("obligedEntityPdfYesNo.p1")</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("obligedEntityPdfYesNo.bullet1")</li>
+        <li>@messages("obligedEntityPdfYesNo.bullet2")</li>
+    </ul>
+
+    <p>@messages("obligedEntityPdfYesNo.p2")</p>
+    <p>@messages("obligedEntityPdfYesNo.p3")</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("obligedEntityPdfYesNo.bullet3")</li>
+        <li>@messages("obligedEntityPdfYesNo.bullet4")</li>
+        <li>@messages("obligedEntityPdfYesNo.bullet5")</li>
+        <li>@messages("obligedEntityPdfYesNo.bullet6")</li>
+    </ul>
+
+    <p>@messages("obligedEntityPdfYesNo.p4")</p>
+
+    <details class="govuk-details section" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+            @messages("obligedEntityPdfYesNo.details.relevant.persons")
+            </span>
+        </summary>
+        <div class="govuk-details__text">
+            <p>@messages("obligedEntityPdfYesNo.details.p1")</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@messages("obligedEntityPdfYesNo.details.bullet1")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet2")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet3")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet4")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet5")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet6")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet7")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet8")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet9")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet10")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet11")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet12")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet13")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet14")</li>
+                <li>@messages("obligedEntityPdfYesNo.details.bullet15")</li>
+            </ul>
+        </div>
+    </details>
+
+    <h2>@messages("obligedEntityPdfYesNo.subheading")</h2>
+
+    <p>@messages("obligedEntityPdfYesNo.p5")</p>
+    <p>@messages("obligedEntityPdfYesNo.p6")</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("obligedEntityPdfYesNo.bullet7")</li>
+        <li>@messages("obligedEntityPdfYesNo.bullet8")</li>
+    </ul>
+}
+
+@main_template(
+    title = s"${errorPrefix(form)}${messages("obligedEntityPdfYesNo.title")}"
+) {
+
+    @formHelper(action = ObligedEntityPdfYesNoController.onSubmit(), 'autoComplete -> "off", 'id -> "download-pdf", Symbol("data-identifier") -> identifier) {
+
+        @components.back_link()
+
+        @components.error_summary(form.errors)
+
+        @components.input_yes_no(
+            field = form("value"),
+            label = messages("obligedEntityPdfYesNo.heading"),
+            labelPrefix = Some("obligedEntityPdfYesNo"),
+            legendAsHeading = true,
+            caption = Some(messages("obligedEntityPdfYesNo.caption")),
+            additionalContent = Some(content)
+        )
+
+        <div class="section">
+            <button id="submit" class="button">
+                @messages("site.onlyContinue")
+            </button>
+        </div>
+    }
+}
