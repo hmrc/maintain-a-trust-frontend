@@ -40,7 +40,7 @@ class AddNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
         view = applyView(form),
         messageKeyPrefix = messageKeyPrefix,
         expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
-        "paragraph2", "bullet6", "bullet7", "bullet8", "bullet9"
+        "paragraph2", "bullet6", "bullet7", "bullet8"
       )
 
       behave like pageWithBackLink(applyView(form))
@@ -64,7 +64,7 @@ class AddNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
         view = applyView(form),
         messageKeyPrefix = messageKeyPrefix,
         expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
-        "paragraph2", "bullet6", "bullet7", "bullet8", "bullet9"
+        "paragraph2", "bullet6", "bullet7", "bullet8"
       )
 
       behave like pageWithBackLink(applyView(form))
