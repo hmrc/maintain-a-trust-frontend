@@ -26,6 +26,32 @@
 
 @(form: Form[_], prefix: String)(implicit request: Request[_], messages: Messages)
 
+@content = {
+    <p>@messages("updateNonEeaCompany.paragraph1")</p>
+
+    @components.bullet_list(
+    "updateNonEeaCompany",
+    List(
+    "bullet1",
+    "bullet2",
+    "bullet3",
+    "bullet4"
+    )
+    )
+
+    <p>@messages("updateNonEeaCompany.paragraph2")</p>
+
+    @components.bullet_list(
+    "updateNonEeaCompany",
+    List(
+    "bullet5",
+    "bullet6",
+    "bullet7",
+    "bullet8"
+    )
+    )
+}
+
 @main_template(
     title = s"${errorPrefix(form)}${messages(s"$prefix.title")}"
 ) {
@@ -40,7 +66,8 @@
             field = form("value"),
             label = messages(s"$prefix.heading"),
             legendClass = Some("heading-large"),
-            legendAsHeading = true
+            legendAsHeading = true,
+            additionalContent = Some(content)
         )
 
         @components.submit_button(Some("site.onlyContinue"))
