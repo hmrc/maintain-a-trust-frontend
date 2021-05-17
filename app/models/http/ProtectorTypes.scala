@@ -46,7 +46,7 @@ case class DisplayTrustProtector(lineNo: Option[String],
                                  name: FullName,
                                  dateOfBirth: Option[LocalDate],
                                  countryOfResidence: Option[String],
-                                 countryOfNationality: Option[String],
+                                 nationality: Option[String],
                                  legallyIncapable: Option[Boolean],
                                  identification: Option[DisplayTrustIdentificationType],
                                  entityStart: String) extends Protector

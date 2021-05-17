@@ -55,7 +55,7 @@ class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSe
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(SettlorIndividualNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
-      .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
+      .flatMap(answers => extractCountryOfNationality(entity.nationality, index, answers))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractMentalCapacity(entity.legallyIncapable, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))

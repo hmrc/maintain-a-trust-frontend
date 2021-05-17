@@ -38,7 +38,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
       case 1 => Some(LocalDate.parse("1970-02-01"))
       case _ => None
     },
-    countryOfNationality = index match {
+    nationality = index match {
       case 0 => Some(GB)
       case 1 => Some("DE")
       case _ => None
@@ -110,7 +110,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
             bpMatchStatus = Some("01"),
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
-            countryOfNationality = Some("FR"),
+            nationality = Some("FR"),
             countryOfResidence = Some("FR"),
             legallyIncapable = None,
             phoneNumber = None,
@@ -154,7 +154,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
             bpMatchStatus = Some("01"),
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             legallyIncapable = None,
             phoneNumber = None,
@@ -269,7 +269,7 @@ class IndividualTrusteeExtractorSpec extends FreeSpec with MustMatchers
             bpMatchStatus = Some("01"),
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             legallyIncapable = None,
             phoneNumber = None,

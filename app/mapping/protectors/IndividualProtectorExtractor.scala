@@ -60,7 +60,7 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(IndividualProtectorNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
-      .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
+      .flatMap(answers => extractCountryOfNationality(entity.nationality, index, answers))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractMentalCapacity(entity.legallyIncapable, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))

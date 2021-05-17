@@ -36,7 +36,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
     bpMatchStatus = Some("01"),
     name = FullName(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = Some(LocalDate.parse("1970-02-01")),
-    countryOfNationality = index match {
+    nationality = index match {
       case 0 => Some(GB)
       case 1 => Some("DE")
       case _ => None
@@ -103,7 +103,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
             bpMatchStatus = Some("01"),
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
-            countryOfNationality = Some("FR"),
+            nationality = Some("FR"),
             countryOfResidence = Some("FR"),
             legallyIncapable = None,
             identification = None,
@@ -144,7 +144,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
             bpMatchStatus = Some("01"),
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             legallyIncapable = None,
             identification = None,
@@ -253,7 +253,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
             bpMatchStatus = Some("01"),
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             legallyIncapable = None,
             identification = None,

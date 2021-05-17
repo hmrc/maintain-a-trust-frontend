@@ -203,7 +203,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
                 bpMatchStatus = Some("01"),
                 name = FullName("First Name", None, "Last Name"),
                 dateOfBirth = None,
-                countryOfNationality = Some(GB),
+                nationality = Some(GB),
                 countryOfResidence = Some(GB),
                 legallyIncapable = Some(false),
                 phoneNumber = None,

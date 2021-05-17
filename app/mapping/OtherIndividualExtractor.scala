@@ -59,7 +59,7 @@ class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(OtherIndividualNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
-      .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
+      .flatMap(answers => extractCountryOfNationality(entity.nationality, index, answers))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(OtherIndividualSafeIdPage(index), entity.identification.flatMap(_.safeId)))
