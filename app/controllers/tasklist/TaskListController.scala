@@ -51,19 +51,17 @@ class TaskListController @Inject()(
         settlorsStatus <- trustsConnector.getSettlorsStatus(identifier)
         beneficiariesStatus <- trustsConnector.getBeneficiariesStatus(identifier)
       } yield {
-        val sections = generateTaskList(tasks, identifier, request.userAnswers.trustMldStatus, request.userAnswers.trustTaxability)
-
         if (request.userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
-          val updatedSections = amendTransitionTaskList(sections, identifier, settlorsStatus, beneficiariesStatus)
-
+          val sections = generateTransitionTaskList(tasks, identifier, settlorsStatus, beneficiariesStatus)
           Ok(nonTaxToTaxView(identifier,
             identifierType = request.userAnswers.identifierType,
-            mandatory = updatedSections.mandatory,
+            mandatory = sections.mandatory,
             affinityGroup = request.user.affinityGroup,
             nextUrl = declarationUrl(request.user.affinityGroup),
             isAbleToDeclare = sections.isAbleToDeclare
           ))
         } else {
+          val sections = generateTaskList(tasks, identifier, request.userAnswers.trustMldStatus)
           Ok(view(identifier,
             identifierType = request.userAnswers.identifierType,
             mandatory = sections.mandatory,
