@@ -16,12 +16,10 @@
 
 package models
 
-sealed trait TrustTaxability {
-  def isTrustMigratingFromNonTaxableToTaxable: Boolean = this == MigratingFromNonTaxableToTaxable
-  def isTrustTaxable: Boolean = this == Taxable || isTrustMigratingFromNonTaxableToTaxable
-}
+import play.api.libs.json.{Format, Json}
 
-case object Taxable extends TrustTaxability
-case object NonTaxable extends TrustTaxability
-case object MigratingFromNonTaxableToTaxable extends TrustTaxability
-case object MigratingFromTaxableToNonTaxable extends TrustTaxability
+case class EntityStatus(completed: Option[Boolean])
+
+object EntityStatus {
+  implicit val format: Format[EntityStatus] = Json.format[EntityStatus]
+}

@@ -22,9 +22,11 @@ import controllers.Assets._
 import generators.Generators
 import models.http._
 import models.pages.ShareClass.Ordinary
-import models.{FullName, TrustDetails}
+import models.{EntityStatus, FullName, TrustDetails}
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.http.Status
 import play.api.libs.json.{JsBoolean, Json}
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
@@ -36,7 +38,7 @@ import scala.concurrent.duration.Duration
 import scala.io.Source
 
 class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues with Generators
-  with SpecBaseHelpers with WireMockHelper with ScalaFutures with Inside {
+  with SpecBaseHelpers with WireMockHelper with ScalaFutures with Inside with ScalaCheckPropertyChecks {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
@@ -787,6 +789,70 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
         result.status mustBe OK
 
         application.stop()
+      }
+    }
+
+    ".getSettlorsStatus" - {
+      "return entity status response when the request is successful" in {
+
+        forAll(arbitrary[Option[Boolean]]) {
+          completed =>
+
+            val json = Json.toJson(EntityStatus(completed))
+
+            val application = applicationBuilder()
+              .configure(
+                Seq(
+                  "microservice.services.trusts.port" -> server.port(),
+                  "auditing.enabled" -> false
+                ): _*
+              ).build()
+
+            val connector = application.injector.instanceOf[TrustConnector]
+
+            server.stubFor(
+              get(urlEqualTo(s"/trusts/settlors/$identifier/complete-for-migration"))
+                .willReturn(okJson(json.toString))
+            )
+
+            val result = Await.result(connector.getSettlorsStatus(identifier), Duration.Inf)
+
+            result mustBe EntityStatus(completed)
+
+            application.stop()
+        }
+      }
+    }
+
+    ".getBeneficiariesStatus" - {
+      "return entity status response when the request is successful" in {
+
+        forAll(arbitrary[Option[Boolean]]) {
+          completed =>
+
+            val json = Json.toJson(EntityStatus(completed))
+
+            val application = applicationBuilder()
+              .configure(
+                Seq(
+                  "microservice.services.trusts.port" -> server.port(),
+                  "auditing.enabled" -> false
+                ): _*
+              ).build()
+
+            val connector = application.injector.instanceOf[TrustConnector]
+
+            server.stubFor(
+              get(urlEqualTo(s"/trusts/beneficiaries/$identifier/complete-for-migration"))
+                .willReturn(okJson(json.toString))
+            )
+
+            val result = Await.result(connector.getBeneficiariesStatus(identifier), Duration.Inf)
+
+            result mustBe EntityStatus(completed)
+
+            application.stop()
+        }
       }
     }
   }

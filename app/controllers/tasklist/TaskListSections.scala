@@ -19,17 +19,17 @@ package controllers.tasklist
 import config.FrontendAppConfig
 import models.pages.Tag
 import models.pages.Tag.InProgress
-import models.{CompletedMaintenanceTasks, MigratingFromNonTaxableToTaxable, TrustMldStatus, TrustTaxability}
+import models.{CompletedMaintenanceTasks, EntityStatus, TrustMldStatus, TrustTaxability}
 import pages.Page
+import sections._
 import sections.assets.{Assets, NonEeaBusinessAsset}
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Protectors, TaxLiability, TrustDetails, Trustees}
 import viewmodels.{Link, Task}
 
 trait TaskListSections {
 
-  case class TaskList(mandatory: List[Task], other: List[Task]) {
+  case class TaskList(mandatory: List[Task] = Nil, other: List[Task] = Nil) {
     val isAbleToDeclare: Boolean = !(mandatory ::: other).exists(_.tag.contains(InProgress))
   }
 
@@ -102,64 +102,85 @@ trait TaskListSections {
                        trustMldStatus: TrustMldStatus,
                        trustTaxability: TrustTaxability): TaskList = {
 
-    def filter5mldSections(task: Task, section: Page): Boolean = {
-      task.link.text == section.toString && !trustMldStatus.is5mldTrustIn5mldMode
-    }
+    if (!trustTaxability.isTrustMigratingFromNonTaxableToTaxable) {
 
-    val mandatorySections = List(
-      Task(
-        Link(TrustDetails, trustDetailsRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
-      ),
-      Task(
-        Link(Settlors, settlorsRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.settlors))
-      ),
-      Task(
-        Link(Trustees, trusteesRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.trustees))
-      ),
-      Task(
-        Link(Beneficiaries, beneficiariesRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.beneficiaries))
-      )
-    ).filterNot(filter5mldSections(_, TrustDetails))
+      def filter5mldSections(task: Task, section: Page): Boolean = {
+        task.link.text == section.toString && !trustMldStatus.is5mldTrustIn5mldMode
+      }
 
-    val optionalSections = List(
-      Task(
-        Link(NonEeaBusinessAsset, nonEeaCompanyRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.assets, config.maintainNonEeaCompaniesEnabled))
-      ),
-      Task(
-        Link(Protectors, protectorsRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.protectors))
-      ),
-      Task(
-        Link(Natural, otherIndividualsRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.other))
-      )
-    ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
+      val mandatorySections = List(
+        Task(
+          Link(TrustDetails, trustDetailsRouteEnabled(identifier)),
+          Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
+        ),
+        Task(
+          Link(Settlors, settlorsRouteEnabled(identifier)),
+          Some(Tag.tagFor(tasks.settlors))
+        ),
+        Task(
+          Link(Trustees, trusteesRouteEnabled(identifier)),
+          Some(Tag.tagFor(tasks.trustees))
+        ),
+        Task(
+          Link(Beneficiaries, beneficiariesRouteEnabled(identifier)),
+          Some(Tag.tagFor(tasks.beneficiaries))
+        )
+      ).filterNot(filter5mldSections(_, TrustDetails))
 
-    val transitionSections = List(
-      Task(
-        Link(TrustDetails, trustDetailsRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
-      ),
-      Task(
-        Link(Assets, trustAssetsRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.assets))
-      ),
-      Task(
-        Link(TaxLiability, taxLiabilityRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.taxLiability))
-      )
-    )
+      val optionalSections = List(
+        Task(
+          Link(NonEeaBusinessAsset, nonEeaCompanyRouteEnabled(identifier)),
+          Some(Tag.tagFor(tasks.assets, config.maintainNonEeaCompaniesEnabled))
+        ),
+        Task(
+          Link(Protectors, protectorsRouteEnabled(identifier)),
+          Some(Tag.tagFor(tasks.protectors))
+        ),
+        Task(
+          Link(Natural, otherIndividualsRouteEnabled(identifier)),
+          Some(Tag.tagFor(tasks.other))
+        )
+      ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
 
-    if (trustTaxability != MigratingFromNonTaxableToTaxable) {
       TaskList(mandatorySections, optionalSections)
     } else {
-      TaskList(transitionSections, List.empty[Task])
+
+      val transitionSections = List(
+        Task(
+          Link(TrustDetails, trustDetailsRouteEnabled(identifier)),
+          Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
+        ),
+        Task(
+          Link(Assets, trustAssetsRouteEnabled(identifier)),
+          Some(Tag.tagFor(tasks.assets))
+        ),
+        Task(
+          Link(TaxLiability, taxLiabilityRouteEnabled(identifier)),
+          Some(Tag.tagFor(tasks.taxLiability))
+        )
+      )
+
+      TaskList(transitionSections)
     }
+  }
+
+  def amendTransitionTaskList(taskList: TaskList,
+                              identifier: String,
+                              settlorsStatus: EntityStatus,
+                              beneficiariesStatus: EntityStatus): TaskList = {
+
+    def task(status: EntityStatus, link: Link): Seq[Task] = status.completed match {
+      case Some(value) => Seq(Task(link, Some(Tag.tagFor(value))))
+      case None => Nil
+    }
+
+    val settlorsTask = task(settlorsStatus, Link(Settlors, settlorsRouteEnabled(identifier)))
+    val beneficiariesTask = task(beneficiariesStatus, Link(Beneficiaries, beneficiariesRouteEnabled(identifier)))
+
+    TaskList(
+      taskList.mandatory ++ settlorsTask ++ beneficiariesTask,
+      taskList.other
+    )
   }
 
 }

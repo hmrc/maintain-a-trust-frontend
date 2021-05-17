@@ -43,8 +43,8 @@ final case class UserAnswers(internalId: String,
     case (_, false) => NonTaxable
   }
 
-  def isTrustMigratingFromNonTaxableToTaxable: Boolean = trustTaxability == MigratingFromNonTaxableToTaxable
-  def isTrustTaxable: Boolean = trustTaxability == Taxable || isTrustMigratingFromNonTaxableToTaxable
+  def isTrustMigratingFromNonTaxableToTaxable: Boolean = trustTaxability.isTrustMigratingFromNonTaxableToTaxable
+  def isTrustTaxable: Boolean = trustTaxability.isTrustTaxable
 
   def trustMldStatus: TrustMldStatus = (is5mldEnabled, isUnderlyingData5mld, isUnderlyingDataTaxable) match {
     case (false, _, _) => Underlying4mldTrustIn4mldMode
