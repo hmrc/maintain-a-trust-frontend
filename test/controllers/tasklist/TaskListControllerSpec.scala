@@ -17,28 +17,31 @@
 package controllers.tasklist
 
 import base.SpecBase
-import connectors.TrustsStoreConnector
-import models.pages.Tag.InProgress
-import models.pages.WhatIsNext
-import models.{CompletedMaintenanceTasks, UserAnswers}
+import connectors.{TrustConnector, TrustsStoreConnector}
+import models.pages.Tag.{InProgress, UpToDate}
+import models.pages.{Tag, WhatIsNext}
+import models.{CompletedMaintenanceTasks, EntityStatus, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.WhatIsNextPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import sections._
 import sections.assets.{Assets, NonEeaBusinessAsset}
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Protectors, TrustDetails, Trustees, TaxLiability}
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.{Link, Task}
 import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
 import scala.concurrent.Future
 
-class TaskListControllerSpec extends SpecBase {
+class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaCheckPropertyChecks {
 
   lazy val onPageLoad: String = controllers.routes.WhatIsNextController.onPageLoad().url
 
@@ -62,6 +65,13 @@ class TaskListControllerSpec extends SpecBase {
     Task(Link(TaxLiability, s"http://localhost:9838/maintain-a-trust/tax-liability/$identifier"), Some(InProgress))
   )
 
+  def mandatorySectionsTransitionToTaxableWithSettlorsAndBeneficiaries(identifier: String, status: Tag): List[Task] =
+    mandatorySectionsTransitionToTaxable(identifier) ++
+      List(
+        Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), Some(status)),
+        Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), Some(status))
+      )
+
   def optionalSections4mld(identifier: String): List[Task] = List(
     Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), Some(InProgress)),
     Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), Some(InProgress))
@@ -70,6 +80,18 @@ class TaskListControllerSpec extends SpecBase {
   def optionalSections5mld(identifier: String): List[Task] =
     Task(Link(NonEeaBusinessAsset, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), Some(InProgress)) ::
       optionalSections4mld(identifier)
+
+  val mockTrustsStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
+  val mockTrustsConnector: TrustConnector = mock[TrustConnector]
+
+  override def beforeEach(): Unit = {
+    reset(mockTrustsStoreConnector, mockTrustsConnector)
+
+    when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+
+    when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(None)))
+    when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(None)))
+  }
 
   "TaskListController Controller" when {
 
@@ -117,9 +139,7 @@ class TaskListControllerSpec extends SpecBase {
 
           val baseAnswers = emptyUserAnswersForUrn
 
-          val urn = baseAnswers.identifier
-
-          behave like transitionTaskListController(baseAnswers, mandatorySectionsTransitionToTaxable(urn))
+          behave like transitionTaskListController(baseAnswers)
         }
       }
     }
@@ -130,16 +150,13 @@ class TaskListControllerSpec extends SpecBase {
 
         "making changes" in {
 
-          val mockConnector = mock[TrustsStoreConnector]
-
           val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers))
             .overrides(
-              bind(classOf[TrustsStoreConnector]).toInstance(mockConnector)
+              bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
+              bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
             ).build()
-
-          when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
           val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
@@ -157,16 +174,13 @@ class TaskListControllerSpec extends SpecBase {
 
         "closing the trust" in {
 
-          val mockConnector = mock[TrustsStoreConnector]
-
           val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers))
             .overrides(
-              bind(classOf[TrustsStoreConnector]).toInstance(mockConnector)
+              bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
+              bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
             ).build()
-
-          when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
           val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
@@ -199,22 +213,19 @@ class TaskListControllerSpec extends SpecBase {
       }
     }
 
-    def transitionTaskListController(baseAnswers: UserAnswers, mandatorySections: List[Task]): Unit = {
+    def transitionTaskListController(baseAnswers: UserAnswers): Unit = {
 
       "return OK and the correct view for a GET" when {
 
         "changing from non taxable to taxable trust" in {
 
-          val mockConnector = mock[TrustsStoreConnector]
-
           val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
 
           val application = applicationBuilder(userAnswers = Some(answers))
             .overrides(
-              bind(classOf[TrustsStoreConnector]).toInstance(mockConnector)
+              bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
+              bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
             ).build()
-
-          when(mockConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
           val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
@@ -225,9 +236,56 @@ class TaskListControllerSpec extends SpecBase {
           status(result) mustEqual OK
 
           contentAsString(result) mustEqual
-            view(baseAnswers.identifier, baseAnswers.identifierType, mandatorySections, Organisation, expectedContinueUrl, isAbleToDeclare = false)(request, messages).toString
+            view(
+              identifier = baseAnswers.identifier,
+              identifierType = baseAnswers.identifierType,
+              mandatory = mandatorySectionsTransitionToTaxable(baseAnswers.identifier),
+              affinityGroup = Organisation,
+              nextUrl = expectedContinueUrl,
+              isAbleToDeclare = false
+            )(request, messages).toString
 
           application.stop()
+        }
+
+        "settlors and beneficiaries also need updating" in {
+
+          forAll(arbitrary[Boolean]) {
+            bool =>
+
+              val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers))
+                .overrides(
+                  bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
+                  bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
+                ).build()
+
+              when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(Some(bool))))
+              when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(Some(bool))))
+
+              val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[NonTaxToTaxProgressView]
+
+              status(result) mustEqual OK
+
+              val entityStatus = if (bool) UpToDate else InProgress
+
+              contentAsString(result) mustEqual
+                view(
+                  identifier = baseAnswers.identifier,
+                  identifierType = baseAnswers.identifierType,
+                  mandatory = mandatorySectionsTransitionToTaxableWithSettlorsAndBeneficiaries(answers.identifier, entityStatus),
+                  affinityGroup = Organisation,
+                  nextUrl = expectedContinueUrl,
+                  isAbleToDeclare = false
+                )(request, messages).toString
+
+              application.stop()
+          }
         }
       }
 

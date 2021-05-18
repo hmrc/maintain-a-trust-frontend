@@ -19,17 +19,17 @@ package controllers.tasklist
 import config.FrontendAppConfig
 import models.pages.Tag
 import models.pages.Tag.InProgress
-import models.{CompletedMaintenanceTasks, MigratingFromNonTaxableToTaxable, TrustMldStatus, TrustTaxability}
+import models.{CompletedMaintenanceTasks, EntityStatus, TrustMldStatus}
 import pages.Page
+import sections._
 import sections.assets.{Assets, NonEeaBusinessAsset}
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Protectors, TaxLiability, TrustDetails, Trustees}
 import viewmodels.{Link, Task}
 
 trait TaskListSections {
 
-  case class TaskList(mandatory: List[Task], other: List[Task]) {
+  case class TaskList(mandatory: List[Task] = Nil, other: List[Task] = Nil) {
     val isAbleToDeclare: Boolean = !(mandatory ::: other).exists(_.tag.contains(InProgress))
   }
 
@@ -99,14 +99,13 @@ trait TaskListSections {
 
   def generateTaskList(tasks: CompletedMaintenanceTasks,
                        identifier: String,
-                       trustMldStatus: TrustMldStatus,
-                       trustTaxability: TrustTaxability): TaskList = {
+                       trustMldStatus: TrustMldStatus): TaskList = {
 
     def filter5mldSections(task: Task, section: Page): Boolean = {
       task.link.text == section.toString && !trustMldStatus.is5mldTrustIn5mldMode
     }
 
-    val mandatorySections = List(
+    val mandatoryTasks = List(
       Task(
         Link(TrustDetails, trustDetailsRouteEnabled(identifier)),
         Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
@@ -125,7 +124,7 @@ trait TaskListSections {
       )
     ).filterNot(filter5mldSections(_, TrustDetails))
 
-    val optionalSections = List(
+    val optionalTasks = List(
       Task(
         Link(NonEeaBusinessAsset, nonEeaCompanyRouteEnabled(identifier)),
         Some(Tag.tagFor(tasks.assets, config.maintainNonEeaCompaniesEnabled))
@@ -140,7 +139,20 @@ trait TaskListSections {
       )
     ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
 
-    val transitionSections = List(
+    TaskList(mandatoryTasks, optionalTasks)
+  }
+
+  def generateTransitionTaskList(tasks: CompletedMaintenanceTasks,
+                                 identifier: String,
+                                 settlorsStatus: EntityStatus,
+                                 beneficiariesStatus: EntityStatus): TaskList = {
+
+    def task(status: EntityStatus, link: Link): Seq[Task] = status.completed match {
+      case Some(value) => Seq(Task(link, Some(Tag.tagFor(value))))
+      case None => Nil
+    }
+
+    val transitionTasks = List(
       Task(
         Link(TrustDetails, trustDetailsRouteEnabled(identifier)),
         Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
@@ -155,11 +167,10 @@ trait TaskListSections {
       )
     )
 
-    if (trustTaxability != MigratingFromNonTaxableToTaxable) {
-      TaskList(mandatorySections, optionalSections)
-    } else {
-      TaskList(transitionSections, List.empty[Task])
-    }
+    val settlorsTask = task(settlorsStatus, Link(Settlors, settlorsRouteEnabled(identifier)))
+    val beneficiariesTask = task(beneficiariesStatus, Link(Beneficiaries, beneficiariesRouteEnabled(identifier)))
+
+    TaskList(transitionTasks ++ settlorsTask ++ beneficiariesTask)
   }
 
 }

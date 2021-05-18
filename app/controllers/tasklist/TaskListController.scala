@@ -18,7 +18,7 @@ package controllers.tasklist
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import connectors.TrustsStoreConnector
+import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
 import models.Enumerable
 import navigation.Navigator.declarationUrl
@@ -36,7 +36,8 @@ class TaskListController @Inject()(
                                     nonTaxToTaxView: NonTaxToTaxProgressView,
                                     val controllerComponents: MessagesControllerComponents,
                                     val config: FrontendAppConfig,
-                                    storeConnector: TrustsStoreConnector
+                                    storeConnector: TrustsStoreConnector,
+                                    trustsConnector: TrustConnector
                                   )(implicit ec: ExecutionContext) extends FrontendBaseController
   with I18nSupport with Enumerable.Implicits with TaskListSections {
 
@@ -45,30 +46,32 @@ class TaskListController @Inject()(
 
       val identifier = request.userAnswers.identifier
 
-      storeConnector.getStatusOfTasks(identifier) map {
-        tasks =>
-
-          val sections = generateTaskList(tasks, identifier, request.userAnswers.trustMldStatus, request.userAnswers.trustTaxability)
-
-          if (request.userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
-            Ok(nonTaxToTaxView(identifier,
-              identifierType = request.userAnswers.identifierType,
-              mandatory = sections.mandatory,
-              affinityGroup = request.user.affinityGroup,
-              nextUrl = declarationUrl(request.user.affinityGroup),
-              isAbleToDeclare = sections.isAbleToDeclare
-            ))
-          } else {
-            Ok(view(identifier,
-              identifierType = request.userAnswers.identifierType,
-              mandatory = sections.mandatory,
-              optional = sections.other,
-              affinityGroup = request.user.affinityGroup,
-              nextUrl = declarationUrl(request.user.affinityGroup),
-              isAbleToDeclare = sections.isAbleToDeclare,
-              closingTrust = request.closingTrust
-            ))
-          }
+      for {
+        tasks <- storeConnector.getStatusOfTasks(identifier)
+        settlorsStatus <- trustsConnector.getSettlorsStatus(identifier)
+        beneficiariesStatus <- trustsConnector.getBeneficiariesStatus(identifier)
+      } yield {
+        if (request.userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
+          val sections = generateTransitionTaskList(tasks, identifier, settlorsStatus, beneficiariesStatus)
+          Ok(nonTaxToTaxView(identifier,
+            identifierType = request.userAnswers.identifierType,
+            mandatory = sections.mandatory,
+            affinityGroup = request.user.affinityGroup,
+            nextUrl = declarationUrl(request.user.affinityGroup),
+            isAbleToDeclare = sections.isAbleToDeclare
+          ))
+        } else {
+          val sections = generateTaskList(tasks, identifier, request.userAnswers.trustMldStatus)
+          Ok(view(identifier,
+            identifierType = request.userAnswers.identifierType,
+            mandatory = sections.mandatory,
+            optional = sections.other,
+            affinityGroup = request.user.affinityGroup,
+            nextUrl = declarationUrl(request.user.affinityGroup),
+            isAbleToDeclare = sections.isAbleToDeclare,
+            closingTrust = request.closingTrust
+          ))
+        }
       }
   }
 }

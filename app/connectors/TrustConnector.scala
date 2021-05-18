@@ -17,16 +17,15 @@
 package connectors
 
 import config.FrontendAppConfig
-import models.TrustDetails
 import models.http.{DeclarationForApi, DeclarationResponse, TrustsResponse}
+import models.{EntityStatus, TrustDetails}
+import play.api.Logging
 import play.api.libs.json.JsBoolean
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+
 import java.time.LocalDate
-
 import javax.inject.Inject
-import play.api.Logging
-
 import scala.concurrent.{ExecutionContext, Future}
 
 class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) extends Logging {
@@ -104,6 +103,18 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) exte
                      (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val url: String = s"$baseUrl/trust-details/$identifier/taxable"
     http.PUT[Boolean, HttpResponse](url, value)
+  }
+
+  def getSettlorsStatus(identifier: String)
+                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EntityStatus] = {
+    val url: String = s"$baseUrl/settlors/$identifier/complete-for-migration"
+    http.GET[EntityStatus](url)
+  }
+
+  def getBeneficiariesStatus(identifier: String)
+                            (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EntityStatus] = {
+    val url: String = s"$baseUrl/beneficiaries/$identifier/complete-for-migration"
+    http.GET[EntityStatus](url)
   }
 
 }
