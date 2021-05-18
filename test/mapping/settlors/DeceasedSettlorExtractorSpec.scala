@@ -62,7 +62,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = Some("FR"),
+            nationality = Some("FR"),
             countryOfResidence = Some("FR"),
             identification = None,
             entityStart = "2019-11-26"
@@ -101,7 +101,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = None,
             entityStart = "2019-11-26"
@@ -138,7 +138,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = Some(LocalDate.parse("2019-02-01")),
-            countryOfNationality = Some(GB),
+            nationality = Some(GB),
             countryOfResidence = Some(GB),
             identification = Some(
               DisplayTrustIdentificationType(
@@ -182,7 +182,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = Some("DE"),
+            nationality = Some("DE"),
             countryOfResidence = Some("DE"),
             identification = Some(
               DisplayTrustIdentificationType(
@@ -225,7 +225,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = Some(
               DisplayTrustIdentificationType(
@@ -269,7 +269,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = Some(
               DisplayTrustIdentificationType(
@@ -313,7 +313,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = Some(
               DisplayTrustIdentificationType(
@@ -358,7 +358,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = Some(LocalDate.parse("1970-10-15")),
             dateOfDeath = Some(LocalDate.parse("2019-02-01")),
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = Some(
               DisplayTrustIdentificationType(
@@ -401,7 +401,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = Some(
               DisplayTrustIdentificationType(
@@ -453,7 +453,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = None,
             entityStart = "2019-11-26"
@@ -490,7 +490,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = Some(LocalDate.parse("2019-02-01")),
-            countryOfNationality = Some(GB),
+            nationality = Some(GB),
             countryOfResidence = Some(GB),
             identification = Some(
               DisplayTrustIdentificationType(
@@ -534,7 +534,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = Some("DE"),
+            nationality = Some("DE"),
             countryOfResidence = Some("DE"),
             identification = Some(
               DisplayTrustIdentificationType(
@@ -577,7 +577,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = Some(
               DisplayTrustIdentificationType(
@@ -621,7 +621,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = Some(
               DisplayTrustIdentificationType(
@@ -665,7 +665,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = Some(
               DisplayTrustIdentificationType(
@@ -709,7 +709,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = Some(LocalDate.parse("1970-10-15")),
             dateOfDeath = Some(LocalDate.parse("2019-02-01")),
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = Some(
               DisplayTrustIdentificationType(
@@ -752,7 +752,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
             name = FullName("First Name", None, "Last Name"),
             dateOfBirth = None,
             dateOfDeath = None,
-            countryOfNationality = None,
+            nationality = None,
             countryOfResidence = None,
             identification = Some(
               DisplayTrustIdentificationType(

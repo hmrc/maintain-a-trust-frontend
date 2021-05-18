@@ -57,7 +57,7 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
       .flatMap(_.set(SettlorNamePage, entity.name))
       .flatMap(answers => extractDateOfDeath(entity.dateOfDeath, answers))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
-      .flatMap(answers => extractCountryOfNationality(entity.countryOfNationality, index, answers))
+      .flatMap(answers => extractCountryOfNationality(entity.nationality, index, answers))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(DeceasedSettlorSafeIdPage, entity.identification.flatMap(_.safeId)))

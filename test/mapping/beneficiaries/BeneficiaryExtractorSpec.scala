@@ -69,7 +69,7 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
               name = FullName("First Name", None, "Last Name"),
               dateOfBirth = None,
               countryOfResidence = Some(GB),
-              countryOfNationality = Some(GB),
+              nationality = Some(GB),
               legallyIncapable = Some(false),
               vulnerableBeneficiary = Some(false),
               beneficiaryType = None,

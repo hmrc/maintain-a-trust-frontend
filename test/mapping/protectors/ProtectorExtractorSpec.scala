@@ -75,7 +75,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 name = FullName(s"First Name", None, s"Last Name"),
                 dateOfBirth = Some(LocalDate.parse("1970-02-01")),
                 countryOfResidence = Some(GB),
-                countryOfNationality = Some(GB),
+                nationality = Some(GB),
                 legallyIncapable = None,
                 identification = Some(
                   DisplayTrustIdentificationType(
@@ -93,7 +93,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 name = FullName(s"First Name", None, s"Last Name"),
                 dateOfBirth = Some(LocalDate.parse("1980-02-01")),
                 countryOfResidence = Some("DE"),
-                countryOfNationality = Some("DE"),
+                nationality = Some("DE"),
                 legallyIncapable = None,
                 identification = Some(
                   DisplayTrustIdentificationType(
@@ -235,7 +235,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 name = FullName(s"First Name", None, s"Last Name"),
                 dateOfBirth = Some(LocalDate.parse("1970-02-01")),
                 countryOfResidence = Some(GB),
-                countryOfNationality = Some(GB),
+                nationality = Some(GB),
                 legallyIncapable = None,
                 identification = Some(
                   DisplayTrustIdentificationType(
@@ -317,7 +317,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 name = FullName(s"First Name", None, s"Last Name"),
                 dateOfBirth = Some(LocalDate.parse("1970-02-01")),
                 countryOfResidence = Some(GB),
-                countryOfNationality = Some(GB),
+                nationality = Some(GB),
                 legallyIncapable = Some(false),
                 identification = Some(
                   DisplayTrustIdentificationType(
@@ -335,7 +335,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 name = FullName(s"First Name", None, s"Last Name"),
                 dateOfBirth = Some(LocalDate.parse("1980-02-01")),
                 countryOfResidence = Some("DE"),
-                countryOfNationality = Some("DE"),
+                nationality = Some("DE"),
                 legallyIncapable = Some(true),
                 identification = Some(
                   DisplayTrustIdentificationType(
@@ -477,7 +477,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 name = FullName(s"First Name", None, s"Last Name"),
                 dateOfBirth = Some(LocalDate.parse("1970-02-01")),
                 countryOfResidence = Some(GB),
-                countryOfNationality = None,
+                nationality = None,
                 legallyIncapable = Some(false),
                 identification = Some(
                   DisplayTrustIdentificationType(
@@ -559,7 +559,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 name = FullName(s"First Name", None, s"Last Name"),
                 dateOfBirth = Some(LocalDate.parse("1970-02-01")),
                 countryOfResidence = Some(GB),
-                countryOfNationality = Some(GB),
+                nationality = Some(GB),
                 legallyIncapable = Some(false),
                 identification = Some(
                   DisplayTrustIdentificationType(
@@ -577,7 +577,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 name = FullName(s"First Name", None, s"Last Name"),
                 dateOfBirth = Some(LocalDate.parse("1980-02-01")),
                 countryOfResidence = Some("DE"),
-                countryOfNationality = Some("DE"),
+                nationality = Some("DE"),
                 legallyIncapable = Some(true),
                 identification = Some(
                   DisplayTrustIdentificationType(
@@ -719,7 +719,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
                 name = FullName(s"First Name", None, s"Last Name"),
                 dateOfBirth = Some(LocalDate.parse("1970-02-01")),
                 countryOfResidence = Some(GB),
-                countryOfNationality = None,
+                nationality = None,
                 legallyIncapable = Some(false),
                 identification = Some(
                   DisplayTrustIdentificationType(
