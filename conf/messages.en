@@ -566,7 +566,7 @@ utr.linkText = find a lost UTR (opens in a new window or tab)
 
 needToPayTaxYesNo.title = Does the trust need to pay tax?
 needToPayTaxYesNo.heading = Does the trust need to pay tax?
-needToPayTaxYesNo.p1 = If the trust now has to pay tax, you will need to inform HRMC of this change. The trust may need to pay tax if it has bought:
+needToPayTaxYesNo.p1 = If the trust now has to pay tax, you will need to inform HMRC of this change. The trust may need to pay tax if it has bought:
 needToPayTaxYesNo.bullet1 = property
 needToPayTaxYesNo.bullet2 = shares
 needToPayTaxYesNo.bullet3 = other taxable assets
@@ -574,18 +574,18 @@ needToPayTaxYesNo.error.required = Select yes if the trust needs to pay tax
 
 beforeYouContinueToTaxable.title = Before you continue
 beforeYouContinueToTaxable.heading = Before you continue
-beforeYouContinueToTaxable.p1 = Because the trust is now taxable you need to tell us some more information before continuing to maintain
+beforeYouContinueToTaxable.p1 = Because the trust is now taxable you need to tell us some more information before continuing to maintain.
 beforeYouContinueToTaxable.p2 = You will need to tell us if the trust:
 beforeYouContinueToTaxable.bullet1 = is an express trust
 beforeYouContinueToTaxable.bullet2 = is registered in the UK
 beforeYouContinueToTaxable.bullet3 = owns land or property in the UK
 beforeYouContinueToTaxable.bullet4 = has needed to pay tax in the last four years
 beforeYouContinueToTaxable.p3 = You will also need to tell us about any assets the trust owns, such as:
-beforeYouContinueToTaxable.bullet5 = business
-beforeYouContinueToTaxable.bullet6 = money
-beforeYouContinueToTaxable.bullet7 = partnerships
-beforeYouContinueToTaxable.bullet8 = property or land
-beforeYouContinueToTaxable.bullet9 = shares
+beforeYouContinueToTaxable.bullet5 = money
+beforeYouContinueToTaxable.bullet6 = property or land
+beforeYouContinueToTaxable.bullet7 = shares
+beforeYouContinueToTaxable.bullet8 = business
+beforeYouContinueToTaxable.bullet9 = partnerships
 
 expressTrustYesNo.title = Are you maintaining an express trust?
 expressTrustYesNo.heading = Are you maintaining an express trust?
