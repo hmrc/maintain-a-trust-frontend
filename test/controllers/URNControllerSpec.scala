@@ -22,7 +22,7 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import play.api.data.Form
 import play.api.inject.bind
-import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
+import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.ActiveSessionRepository
@@ -38,8 +38,6 @@ class URNControllerSpec extends SpecBase {
   val form: Form[String] = formProvider()
 
   lazy val trustURNRoute: String = routes.URNController.onPageLoad().url
-
-  lazy val onSubmit: Call = routes.URNController.onSubmit()
 
   val urn = "abtrust12345678"
 
@@ -62,7 +60,7 @@ class URNControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, onSubmit)(request, messages).toString
+        view(form)(request, messages).toString
 
       application.stop()
     }
@@ -80,7 +78,7 @@ class URNControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, onSubmit)(request, messages).toString
+        view(form)(request, messages).toString
 
       application.stop()
     }
@@ -149,7 +147,7 @@ class URNControllerSpec extends SpecBase {
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, onSubmit)(request, messages).toString
+        view(boundForm)(request, messages).toString
 
       application.stop()
     }

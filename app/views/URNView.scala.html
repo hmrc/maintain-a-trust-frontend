@@ -15,6 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
+@import controllers.routes._
 
 @this(
     main_template: MainTemplate,
@@ -22,13 +23,17 @@
     config: FrontendAppConfig
 )
 
-@(form: Form[_], onSubmit: Call)(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
+
+@content = {
+    <p>@messages("urn.linkMessage") <a href=@config.helplineUrl id="help-link" target="_blank">@messages("urn.linkText")</a>.</p>
+}
 
 @main_template(
     title = s"${errorPrefix(form)}${messages("urn.title")}"
-    ) {
+) {
 
-    @formHelper(action = onSubmit, 'autoComplete -> "off") {
+    @formHelper(action = URNController.onSubmit(), 'autoComplete -> "off") {
 
         @components.back_link()
 
@@ -40,9 +45,7 @@
           labelAsHeading = true,
           hint = Some(messages("urn.hint")),
           labelClass = Some("heading-large"),
-          optionalHtmlContent = Some(
-              Html(s"""<p>${messages("urn.linkMessage")} <a href=${config.helplineUrl} id="help-link" target="_blank">${messages("urn.linkText")}</a>.</p>""")
-          )
+          optionalHtmlContent = Some(content)
         )
 
         @components.submit_button()
