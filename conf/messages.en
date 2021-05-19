@@ -586,6 +586,7 @@ beforeYouContinueToTaxable.bullet6 = property or land
 beforeYouContinueToTaxable.bullet7 = shares
 beforeYouContinueToTaxable.bullet8 = business
 beforeYouContinueToTaxable.bullet9 = partnerships
+beforeYouContinueToTaxable.bullet10 = any other assets
 
 expressTrustYesNo.title = Are you maintaining an express trust?
 expressTrustYesNo.heading = Are you maintaining an express trust?
