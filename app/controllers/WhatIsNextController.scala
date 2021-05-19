@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
 import controllers.makechanges.MakeChangesQuestionRouterController
@@ -48,7 +49,8 @@ class WhatIsNextController @Inject()(
                                       view: WhatIsNextView,
                                       trustConnector: TrustConnector,
                                       trustsStoreConnector: TrustsStoreConnector,
-                                      maintainATrustService: MaintainATrustService
+                                      maintainATrustService: MaintainATrustService,
+                                      appConfig: FrontendAppConfig
                                     )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) with Logging {
 
@@ -100,10 +102,12 @@ class WhatIsNextController @Inject()(
           controllers.close.nontaxable.routes.DateClosedController.onPageLoad()
         case NoLongerTaxable =>
           controllers.routes.NoTaxLiabilityInfoController.onPageLoad()
-        case NeedsToPayTax =>
+        case NeedsToPayTax if appConfig.migrateATrustEnabled =>
           controllers.transition.routes.NeedToPayTaxYesNoController.onPageLoad()
         case GeneratePdf =>
           controllers.routes.ObligedEntityPdfYesNoController.onPageLoad()
+        case _ =>
+          controllers.routes.FeatureNotAvailableController.onPageLoad()
       }
     }
 

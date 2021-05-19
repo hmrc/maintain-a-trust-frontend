@@ -113,6 +113,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val maintainNonEeaCompaniesEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.maintain-non-eea-companies.enabled")
 
   lazy val closeATrustEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.close-a-trust.enabled")
+  lazy val migrateATrustEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.migrate-a-trust.enabled")
 
   private lazy val maintainTrustDetailsFrontendUrl: String =
     configuration.get[String]("urls.maintainTrustDetails")
