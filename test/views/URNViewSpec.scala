@@ -18,7 +18,6 @@ package views
 
 import forms.URNFormProvider
 import play.api.data.Form
-import play.api.mvc.Call
 import play.twirl.api.HtmlFormat
 import views.behaviours.StringViewBehaviours
 import views.html.URNView
@@ -34,7 +33,7 @@ class URNViewSpec extends StringViewBehaviours {
     val view = viewFor[URNView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, Call("POST", ""))(fakeRequest, messages)
+      view.apply(form)(fakeRequest, messages)
 
     behave like normalPage(applyView(form), messageKeyPrefix)
 

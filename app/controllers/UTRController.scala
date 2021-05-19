@@ -19,7 +19,6 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.Actions
 import forms.UTRFormProvider
-import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -37,20 +36,20 @@ class UTRController @Inject()(
                                sessionService: SessionService,
                                val controllerComponents: MessagesControllerComponents,
                                view: UTRView
-                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   private val form: Form[String] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.auth {
     implicit request =>
-      Ok(view(form, routes.UTRController.onSubmit()))
+      Ok(view(form))
   }
 
   def onSubmit(): Action[AnyContent] = actions.auth.async {
     implicit request =>
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, routes.UTRController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors))),
         utr =>
           sessionService.initialiseSession(utr)
       )

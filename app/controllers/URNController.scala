@@ -42,16 +42,17 @@ class URNController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = actions.auth {
     implicit request =>
-      Ok(view(form, routes.URNController.onSubmit()))
+      Ok(view(form))
   }
 
   def onSubmit(): Action[AnyContent] = actions.auth.async {
     implicit request =>
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, routes.URNController.onSubmit()))),
+          Future.successful(BadRequest(view(formWithErrors))),
         urn =>
           sessionService.initialiseSession(urn)
       )
   }
+
 }
