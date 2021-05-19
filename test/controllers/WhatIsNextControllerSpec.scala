@@ -373,28 +373,58 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         }
       }
 
-      "Needs to pay tax" must {
-        "redirect to NeedToPayTaxYesNo Page" in {
+      "Needs to pay tax" when {
 
-          beforeTest()
+        "migrateATrustEnabled feature flag is set to true" must {
+          "redirect to NeedToPayTaxYesNo Page" in {
 
-          val userAnswers = emptyUserAnswersForUtr
+            beforeTest()
 
-          val application = applicationBuilder(userAnswers = Some(userAnswers))
-            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
-            .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
-            .build()
+            val userAnswers = emptyUserAnswersForUtr
 
-          implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-            .withFormUrlEncodedBody(("value", NeedsToPayTax.toString))
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+              .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
+              .configure("microservice.services.features.migrate-a-trust.enabled" -> true)
+              .build()
 
-          val result = route(application, request).value
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+              .withFormUrlEncodedBody(("value", NeedsToPayTax.toString))
 
-          status(result) mustEqual SEE_OTHER
+            val result = route(application, request).value
 
-          redirectLocation(result).value mustBe controllers.transition.routes.NeedToPayTaxYesNoController.onPageLoad().url
+            status(result) mustEqual SEE_OTHER
 
-          application.stop()
+            redirectLocation(result).value mustBe controllers.transition.routes.NeedToPayTaxYesNoController.onPageLoad().url
+
+            application.stop()
+          }
+        }
+
+        "migrateATrustEnabled feature flag is set to false" must {
+          "redirect to FeatureNotAvailable" in {
+
+            beforeTest()
+
+            val userAnswers = emptyUserAnswersForUtr
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+              .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
+              .configure("microservice.services.features.migrate-a-trust.enabled" -> false)
+              .build()
+
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+              .withFormUrlEncodedBody(("value", NeedsToPayTax.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustBe controllers.routes.FeatureNotAvailableController.onPageLoad().url
+
+            application.stop()
+          }
         }
       }
 
