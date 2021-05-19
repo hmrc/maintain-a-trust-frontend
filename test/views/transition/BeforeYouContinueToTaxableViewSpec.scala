@@ -32,7 +32,7 @@ class BeforeYouContinueToTaxableViewSpec extends ViewBehaviours {
       "beforeYouContinueToTaxable",
       "urn",
       urn,
-    "p1", "p2", "bullet1", "bullet2", "bullet3", "bullet4", "p3", "bullet5", "bullet6", "bullet7", "bullet8", "bullet9"
+    "p1", "p2", "bullet1", "bullet2", "bullet3", "bullet4", "p3", "bullet5", "bullet6", "bullet7", "bullet8", "bullet9", "bullet10"
     )
     behave like pageWithBackLink(applyView)
 
