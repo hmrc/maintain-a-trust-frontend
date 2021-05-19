@@ -18,10 +18,9 @@ package services
 
 import base.SpecBase
 import connectors.{TrustConnector, TrustsStoreConnector}
-import controllers.Assets.OK
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
@@ -40,8 +39,8 @@ class MaintainATrustServiceSpec extends SpecBase {
         val mockTrustsConnector = mock[TrustConnector]
         val mockTrustsStoreConnector = mock[TrustsStoreConnector]
 
-        when(mockTrustsConnector.removeTransforms(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
-        when(mockTrustsStoreConnector.resetTasks(any())(any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+        when(mockTrustsConnector.removeTransforms(any())(any(), any())).thenReturn(Future.successful(okResponse))
+        when(mockTrustsStoreConnector.resetTasks(any())(any(), any())).thenReturn(Future.successful(okResponse))
 
         val service = new MaintainATrustService(mockTrustsConnector, mockTrustsStoreConnector)
 

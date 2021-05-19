@@ -26,7 +26,7 @@ import models.pages.WhatIsNext._
 import org.mockito.Matchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.WhatIsNextPage
 import play.api.data.Form
@@ -36,12 +36,11 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.MaintainATrustService
 import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.http.HttpResponse
 import views.html.WhatIsNextView
 
 import scala.concurrent.Future
 
-class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaCheckPropertyChecks with ModelGenerators {
+class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators with BeforeAndAfterEach {
 
   val form: Form[WhatIsNext] = new WhatIsNextFormProvider()()
 
@@ -52,12 +51,12 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
   val mockTrustsConnector: TrustConnector = mock[TrustConnector]
   val mockMaintainATrustService: MaintainATrustService = mock[MaintainATrustService]
 
-  def beforeTest(): Unit = {
+  override def beforeEach(): Unit = {
     reset(mockTrustsConnector)
     reset(mockMaintainATrustService)
 
     when(mockTrustsConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
-      .thenReturn(Future.successful(HttpResponse(OK, "")))
+      .thenReturn(Future.successful(okResponse))
 
     when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
       .thenReturn(Future.successful(()))
@@ -128,8 +127,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         "agent user" must {
           "redirect to AgencyRegisteredAddressUkYesNoController" in {
 
-            beforeTest()
-
             val userAnswers = emptyUserAnswersForUtr
 
             val application = applicationBuilder(userAnswers = Some(userAnswers), AffinityGroup.Agent)
@@ -153,8 +150,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
         "non-agent user" must {
           "redirect to IndividualDeclarationController" in {
-
-            beforeTest()
 
             val userAnswers = emptyUserAnswersForUtr
 
@@ -183,8 +178,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         "4mld" must {
           "redirect to update trustee details" in {
 
-            beforeTest()
-
             val userAnswers = emptyUserAnswersForUtr
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
@@ -209,8 +202,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
           "underlying data is 4mld" must {
             "redirect to update trustee details" in {
-
-              beforeTest()
 
               val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
 
@@ -237,8 +228,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
               "taxable" in {
 
-                beforeTest()
-
                 val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
                 val application = applicationBuilder(userAnswers = Some(userAnswers))
@@ -259,8 +248,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
               }
 
               "non-taxable" in {
-
-                beforeTest()
 
                 val userAnswers = emptyUserAnswersForUrn
 
@@ -293,7 +280,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
             val gen = arbitrary[WhatIsNext]
 
             forAll(gen) { previousAnswer =>
-              beforeTest()
+              beforeEach()
 
               val userAnswers = emptyUserAnswersForUtr
                 .set(WhatIsNextPage, previousAnswer).success.value
@@ -323,7 +310,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
             val gen = arbitrary[WhatIsNext]
 
             forAll(gen) { previousAnswer =>
-              beforeTest()
+              beforeEach()
 
               val userAnswers = emptyUserAnswersForUrn
                 .set(WhatIsNextPage, previousAnswer).success.value
@@ -351,8 +338,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
       "No Longer Taxable" must {
         "redirect to tax liability info page" in {
 
-          beforeTest()
-
           val userAnswers = emptyUserAnswersForUtr
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
@@ -378,8 +363,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         "migrateATrustEnabled feature flag is set to true" must {
           "redirect to NeedToPayTaxYesNo Page" in {
 
-            beforeTest()
-
             val userAnswers = emptyUserAnswersForUtr
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
@@ -403,8 +386,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
         "migrateATrustEnabled feature flag is set to false" must {
           "redirect to FeatureNotAvailable" in {
-
-            beforeTest()
 
             val userAnswers = emptyUserAnswersForUtr
 
@@ -430,8 +411,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
       "Generate PDF" must {
         "redirect to generated PDF" in {
-
-          beforeTest()
 
           val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
 
@@ -461,7 +440,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         val gen = arbitrary[WhatIsNext]
 
         forAll(gen.suchThat(_ != GeneratePdf)) { answer =>
-          beforeTest()
+          beforeEach()
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
             .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -487,8 +466,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
         forAll(gen) { previousAnswer =>
           forAll(gen.suchThat(x => x != previousAnswer && x != GeneratePdf)) { newAnswer =>
-
-            beforeTest()
+            beforeEach()
 
             val userAnswers = emptyUserAnswersForUtr
               .set(WhatIsNextPage, previousAnswer).success.value
@@ -520,7 +498,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
         val gen = arbitrary[WhatIsNext]
 
         forAll(gen) { previousAnswer =>
-          beforeTest()
+          beforeEach()
 
           val userAnswers = emptyUserAnswersForUtr
             .set(WhatIsNextPage, previousAnswer).success.value
@@ -544,8 +522,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
       }
 
       "answer is GeneratePdf" in {
-
-        beforeTest()
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
           .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -591,8 +567,6 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
 
   "set taxable migration flag to true when NeedsToPayTax selected" in {
 
-    beforeTest()
-
     val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
       .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
       .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
@@ -615,7 +589,7 @@ class WhatIsNextControllerSpec extends SpecBase with MockitoSugar with ScalaChec
     val gen = arbitrary[WhatIsNext]
 
     forAll(gen.suchThat(x => x != NeedsToPayTax && x != GeneratePdf)) { answer =>
-      beforeTest()
+      beforeEach()
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
