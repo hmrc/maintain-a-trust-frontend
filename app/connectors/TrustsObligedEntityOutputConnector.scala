@@ -18,9 +18,8 @@ package connectors
 
 import config.FrontendAppConfig
 import play.api.libs.ws.{WSClient, WSResponse}
-import play.api.mvc.Headers
-import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
 import uk.gov.hmrc.http.HttpVerbs.GET
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
 
 import javax.inject.Inject
 import scala.concurrent.Future
