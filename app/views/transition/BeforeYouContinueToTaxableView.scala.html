@@ -21,7 +21,12 @@
     formHelper: FormWithCSRF
 )
 
-@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType, displayExpress: Boolean)(implicit request: Request[_], messages: Messages)
+
+@bulletPoints = @{
+    val defaults = List("bullet2", "bullet3", "bullet4")
+    if (displayExpress) "bullet1" +: defaults else defaults
+}
 
 @main_template(
     title = messages("beforeYouContinueToTaxable.title")
@@ -36,22 +41,24 @@
         <p>@messages("beforeYouContinueToTaxable.p1")</p>
 
         <p>@messages("beforeYouContinueToTaxable.p2")</p>
-        @components.bullet_list("beforeYouContinueToTaxable", List(
-            "bullet1",
-            "bullet2",
-            "bullet3",
-            "bullet4"
-        ))
+
+        @components.bullet_list(
+            "beforeYouContinueToTaxable",
+            bulletPoints
+        )
 
         <p>@messages("beforeYouContinueToTaxable.p3")</p>
-        @components.bullet_list("beforeYouContinueToTaxable", List(
-            "bullet5",
-            "bullet6",
-            "bullet7",
-            "bullet8",
-            "bullet9",
-            "bullet10"
-        ))
+        @components.bullet_list(
+            "beforeYouContinueToTaxable",
+            List(
+                "bullet5",
+                "bullet6",
+                "bullet7",
+                "bullet8",
+                "bullet9",
+                "bullet10"
+            )
+        )
 
         @components.submit_button(Some("site.onlyContinue"))
     }
