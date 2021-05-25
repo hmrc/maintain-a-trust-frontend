@@ -42,9 +42,9 @@ class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) extends En
      * questions when maintaining a deceased settlor.
      *
      * Scenarios:
-     * - 4MLD-registered:
+     *  - 4MLD-registered:
      *    - nationality/residency never asked => don't display answer rows
-     * - 5MLD-registered:
+     *  - 5MLD-registered:
      *    - at least one of nationality/residency known => display answer rows
      *    - nationality/residency unknown => don't display answer rows ***
      *
