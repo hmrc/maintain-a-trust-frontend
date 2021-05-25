@@ -27,6 +27,7 @@ import play.twirl.api.Html
 import queries.Settable
 import utils.print.sections.settlors.AllSettlorsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
+
 import java.time.LocalDate
 
 class AllSettlorsPrinterSpec extends SpecBase {
@@ -79,6 +80,112 @@ class AllSettlorsPrinterSpec extends SpecBase {
         )
       )
 
+    }
+
+    // these unit tests are required while the service doesn't permit maintaining the nationality or residency of a deceased settlor
+    // if a deceased settlor was registered in 4MLD, we don't want to see any answer rows relating to nationality or residency
+    // if a deceased settlor was registered in 5MLD, we want to see the answer rows relating to nationality and residency
+    // however, there is no way of discerning between a 4MLD-registered deceased settlor and a 5MLD-registered deceased settlor with no nationality or residency
+    // therefore it was decided to only show the nationality and residency questions if at least one of them is known
+    // this does mean unfortunately that if a deceased settlor was registered in 5MLD with unknown nationality and residency, the answers won't be shown
+    "correctly display nationality and residency questions" when {
+
+      val name = "Adam Smith"
+
+      "nationality and residency unknown" in {
+
+        val answers = emptyUserAnswersForUtr
+          .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
+          .set(SettlorDateOfDeathYesNoPage, false).success.value
+          .set(SettlorDateOfBirthYesNoPage, false).success.value
+          .set(DeceasedSettlorCountryOfNationalityYesNoPage, false).success.value
+          .set(SettlorNationalInsuranceYesNoPage, true).success.value
+          .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
+          .set(DeceasedSettlorCountryOfResidenceYesNoPage, false).success.value
+
+        val result = helper.entities(answers)
+
+        result mustBe Seq(
+          AnswerSection(None, Nil, Some(messages("answerPage.section.deceasedSettlor.heading"))),
+          AnswerSection(
+            headingKey = None,
+            rows = Seq(
+              AnswerRow(label = messages("settlorName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
+              AnswerRow(label = messages("settlorDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None)
+            ),
+            sectionKey = None
+          )
+        )
+      }
+
+      "only nationality unknown" in {
+
+        val answers = emptyUserAnswersForUtr
+          .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
+          .set(SettlorDateOfDeathYesNoPage, false).success.value
+          .set(SettlorDateOfBirthYesNoPage, false).success.value
+          .set(DeceasedSettlorCountryOfNationalityYesNoPage, false).success.value
+          .set(SettlorNationalInsuranceYesNoPage, true).success.value
+          .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
+          .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).success.value
+          .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, true).success.value
+
+        val result = helper.entities(answers)
+
+        result mustBe Seq(
+          AnswerSection(None, Nil, Some(messages("answerPage.section.deceasedSettlor.heading"))),
+          AnswerSection(
+            headingKey = None,
+            rows = Seq(
+              AnswerRow(label = messages("settlorName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
+              AnswerRow(label = messages("settlorDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None),
+              AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None)
+            ),
+            sectionKey = None
+          )
+        )
+      }
+
+      "only residency unknown" in {
+
+        val answers = emptyUserAnswersForUtr
+          .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
+          .set(SettlorDateOfDeathYesNoPage, false).success.value
+          .set(SettlorDateOfBirthYesNoPage, false).success.value
+          .set(DeceasedSettlorCountryOfNationalityYesNoPage, true).success.value
+          .set(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, true).success.value
+          .set(SettlorNationalInsuranceYesNoPage, true).success.value
+          .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
+          .set(DeceasedSettlorCountryOfResidenceYesNoPage, false).success.value
+
+        val result = helper.entities(answers)
+
+        result mustBe Seq(
+          AnswerSection(None, Nil, Some(messages("answerPage.section.deceasedSettlor.heading"))),
+          AnswerSection(
+            headingKey = None,
+            rows = Seq(
+              AnswerRow(label = messages("settlorName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
+              AnswerRow(label = messages("settlorDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorCountryOfNationalityUkYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None),
+              AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None)
+            ),
+            sectionKey = None
+          )
+        )
+      }
     }
 
     "generate deceased settlor sections for minimum dataset" in {
@@ -355,7 +462,8 @@ class AllSettlorsPrinterSpec extends SpecBase {
         .set(SettlorDateOfBirthYesNoPage, false).success.value
         .set(DeceasedSettlorCountryOfNationalityYesNoPage, false).success.value
         .set(SettlorNationalInsuranceYesNoPage, false).success.value
-        .set(DeceasedSettlorCountryOfResidenceYesNoPage, false).success.value
+        .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).success.value
+        .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, true).success.value
         .set(SettlorLastKnownAddressYesNoPage, false).success.value
 
         .set(SettlorIndividualOrBusinessPage(0), IndividualOrBusiness.Business).success.value
@@ -385,7 +493,8 @@ class AllSettlorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("settlorCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("settlorLastKnownAddressYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None)
           ),
           sectionKey = None
