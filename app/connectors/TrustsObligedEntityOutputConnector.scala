@@ -29,11 +29,7 @@ class TrustsObligedEntityOutputConnector @Inject()(ws: WSClient, config: Fronten
   def getPdf(identifier: String)(implicit hc: HeaderCarrier): Future[WSResponse] = {
     val url: String = s"${config.trustsObligedEntityOutputUrl}/trusts-obliged-entity-output/get-pdf/$identifier"
 
-    val extras = Seq(
-      play.api.http.HeaderNames.USER_AGENT -> config.appName
-    )
-
-    val headers = hc.headers(HeaderNames.explicitlyIncludedHeaders) ++ extras
+    val headers = hc.headers(HeaderNames.explicitlyIncludedHeaders)
 
     ws.url(url)
       .withMethod(GET)
