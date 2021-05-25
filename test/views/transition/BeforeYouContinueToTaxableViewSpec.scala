@@ -22,20 +22,43 @@ import views.html.transition.BeforeYouContinueToTaxableView
 
 class BeforeYouContinueToTaxableViewSpec extends ViewBehaviours {
 
-  "BeforeYouContinueToTaxable" must {
+  "BeforeYouContinueToTaxable" when {
+
     val urn = "XATRUST12345678"
     val view = viewFor[BeforeYouContinueToTaxableView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(urn, URN)(fakeRequest, messages)
+    "express answered at registration" must {
 
-    behave like normalPageTitleWithCaption(applyView,
-      "beforeYouContinueToTaxable",
-      "urn",
-      urn,
-    "p1", "p2", "bullet1", "bullet2", "bullet3", "bullet4", "p3", "bullet5", "bullet6", "bullet7", "bullet8", "bullet9", "bullet10"
-    )
-    behave like pageWithBackLink(applyView)
+      val applyView = view.apply(urn, URN, displayExpress = false)(fakeRequest, messages)
 
-    behave like pageWithASubmitButton(applyView)
+      behave like normalPageTitleWithCaption(
+        view = applyView,
+        messageKeyPrefix = "beforeYouContinueToTaxable",
+        captionKey = "urn",
+        captionParam = urn,
+        expectedGuidanceKeys = "p1", "p2", "bullet2", "bullet3", "bullet4", "p3", "bullet5", "bullet6", "bullet7", "bullet8", "bullet9", "bullet10"
+      )
+
+      behave like pageWithBackLink(applyView)
+
+      behave like pageWithASubmitButton(applyView)
+    }
+
+    "express not answered at registration" must {
+
+      val applyView = view.apply(urn, URN, displayExpress = true)(fakeRequest, messages)
+
+      behave like normalPageTitleWithCaption(
+        view = applyView,
+        messageKeyPrefix = "beforeYouContinueToTaxable",
+        captionKey = "urn",
+        captionParam = urn,
+        expectedGuidanceKeys = "p1", "p2", "bullet1", "bullet2", "bullet3", "bullet4", "p3", "bullet5", "bullet6", "bullet7", "bullet8", "bullet9", "bullet10"
+      )
+
+      behave like pageWithBackLink(applyView)
+
+      behave like pageWithASubmitButton(applyView)
+    }
   }
 }

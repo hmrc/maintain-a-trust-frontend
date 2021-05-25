@@ -17,57 +17,135 @@
 package controllers.transition
 
 import base.SpecBase
-import models.UTR
-import org.scalatestplus.mockito.MockitoSugar
+import connectors.TrustConnector
+import models.{TrustDetails, UTR}
+import org.mockito.Matchers.any
+import org.mockito.Mockito.when
+import org.scalacheck.Arbitrary.arbitrary
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import utils.TestUserAnswers.utr
 import views.html.transition.BeforeYouContinueToTaxableView
 
+import java.time.LocalDate
+import scala.concurrent.Future
 
-class BeforeYouContinueToTaxableControllerSpec extends SpecBase with MockitoSugar {
+class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckPropertyChecks {
 
-  lazy val beforeYouContineToTaxableRoute: String = routes.BeforeYouContinueToTaxableController.onPageLoad().url
+  lazy val beforeYouContinueToTaxableRoute: String = routes.BeforeYouContinueToTaxableController.onPageLoad().url
+
+  val startDate: LocalDate = LocalDate.parse("2000-01-01")
+
+  val mockTrustsConnector: TrustConnector = mock[TrustConnector]
 
   "BeforeYouContinueToTaxableController" when {
 
     ".onPageLoad" must {
-      "return OK and the correct view for a GET" in {
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
+      "return OK and the correct view for a GET" when {
 
-        val request = FakeRequest(GET, beforeYouContineToTaxableRoute)
+        "express answered at registration" in {
 
-        val result = route(application, request).value
+          forAll(arbitrary[Boolean]) { bool =>
 
-        val view = application.injector.instanceOf[BeforeYouContinueToTaxableView]
+            when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+              .thenReturn(Future.successful(TrustDetails(startDate, Some(false), Some(bool))))
 
-        status(result) mustEqual OK
+            val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+              .build()
 
-        contentAsString(result) mustEqual
-          view(utr, UTR)(request, messages).toString
+            val request = FakeRequest(GET, beforeYouContinueToTaxableRoute)
 
-        application.stop()
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[BeforeYouContinueToTaxableView]
+
+            status(result) mustEqual OK
+
+            contentAsString(result) mustEqual
+              view(utr, UTR, displayExpress = false)(request, messages).toString
+
+            application.stop()
+          }
+        }
+
+        "express not answered at registration" in {
+
+          when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+            .thenReturn(Future.successful(TrustDetails(startDate, Some(false), None)))
+
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+            .build()
+
+          val request = FakeRequest(GET, beforeYouContinueToTaxableRoute)
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[BeforeYouContinueToTaxableView]
+
+          status(result) mustEqual OK
+
+          contentAsString(result) mustEqual
+            view(utr, UTR, displayExpress = true)(request, messages).toString
+
+          application.stop()
+        }
       }
     }
 
-    ".onSubmit" must {
-      "redirect to the next page" in {
+    ".onSubmit" when {
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), affinityGroup = Organisation)
-          .build()
+      "express answered at registration" must {
+        "redirect to task list" in {
 
-        val request = FakeRequest(POST, beforeYouContineToTaxableRoute)
+          forAll(arbitrary[Boolean]) { bool =>
 
-        val result = route(application, request).value
+            when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+              .thenReturn(Future.successful(TrustDetails(startDate, Some(false), Some(bool))))
 
-        status(result) mustEqual SEE_OTHER
+            val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+              .build()
 
-        redirectLocation(result).value mustEqual
-          routes.ExpressTrustYesNoController.onPageLoad().url
+            val request = FakeRequest(POST, beforeYouContinueToTaxableRoute)
 
-        application.stop()
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual
+              controllers.tasklist.routes.TaskListController.onPageLoad().url
+
+            application.stop()
+          }
+        }
+      }
+
+      "express not answered at registration" must {
+        "redirect to express trust yes no" in {
+
+          when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+            .thenReturn(Future.successful(TrustDetails(startDate, Some(false), None)))
+
+          val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+            .build()
+
+          val request = FakeRequest(POST, beforeYouContinueToTaxableRoute)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustEqual
+            routes.ExpressTrustYesNoController.onPageLoad().url
+
+          application.stop()
+        }
       }
     }
   }
