@@ -35,25 +35,56 @@ class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) extends En
   }
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
-    converter.fullNameQuestion(SettlorNamePage, userAnswers, "settlorName"),
-    converter.yesNoQuestion(SettlorDateOfDeathYesNoPage, userAnswers, "settlorDateOfDeathYesNo", name),
-    converter.dateQuestion(SettlorDateOfDeathPage, userAnswers, "settlorDateOfDeath", name),
-    converter.yesNoQuestion(SettlorDateOfBirthYesNoPage, userAnswers, "settlorDateOfBirthYesNo", name),
-    converter.dateQuestion(SettlorDateOfBirthPage, userAnswers, "settlorDateOfBirth", name),
-    converter.yesNoQuestion(DeceasedSettlorCountryOfNationalityYesNoPage, userAnswers, "settlorCountryOfNationalityYesNo", name),
-    converter.yesNoQuestion(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, userAnswers, "settlorCountryOfNationalityUkYesNo", name),
-    converter.countryQuestion(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, DeceasedSettlorCountryOfNationalityPage, userAnswers, "settlorCountryOfNationality", name),
-    converter.yesNoQuestion(SettlorNationalInsuranceYesNoPage, userAnswers, "settlorNationalInsuranceYesNo", name),
-    converter.ninoQuestion(SettlorNationalInsuranceNumberPage, userAnswers, "settlorNationalInsuranceNumber", name),
-    converter.yesNoQuestion(DeceasedSettlorCountryOfResidenceYesNoPage, userAnswers, "settlorCountryOfResidenceYesNo", name),
-    converter.yesNoQuestion(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, userAnswers, "settlorCountryOfResidenceUkYesNo", name),
-    converter.countryQuestion(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, DeceasedSettlorCountryOfResidencePage, userAnswers, "settlorCountryOfResidence", name),
-    converter.yesNoQuestion(SettlorLastKnownAddressYesNoPage, userAnswers, "settlorLastKnownAddressYesNo", name),
-    converter.yesNoQuestion(SettlorLastKnownAddressUKYesNoPage, userAnswers, "settlorLastKnownAddressUKYesNo", name),
-    converter.addressQuestion(SettlorLastKnownAddressPage, userAnswers, "settlorUKAddress", name),
-    converter.passportOrIdCardQuestion(SettlorPassportIDCardPage, userAnswers, "settlorPassportOrIdCard", name)
-  )
+                         (implicit messages: Messages): Seq[Option[AnswerRow]] = {
+
+    /**
+     * This print helper behaves slightly differently since we don't ask the nationality or residency
+     * questions when maintaining a deceased settlor.
+     *
+     * Scenarios:
+     *  - 4MLD-registered:
+     *    - nationality/residency never asked => don't display answer rows
+     *  - 5MLD-registered:
+     *    - at least one of nationality/residency known => display answer rows
+     *    - nationality/residency unknown => don't display answer rows ***
+     *
+     *  *** Ideally we would display the answer rows here (with both "do you know" questions answered with "No"), but
+     *      we have no way of differentiating between this and a 4MLD-registered deceased settlor as the datasets look
+     *      the same. So in order to avoid displaying answers to questions that a user has never been given the
+     *      opportunity to answer, this is the approach that was agreed upon.
+     */
+    val nationalityAndResidencyUnknown: Boolean = (
+      userAnswers.get(DeceasedSettlorCountryOfNationalityYesNoPage).contains(true),
+      userAnswers.get(DeceasedSettlorCountryOfResidenceYesNoPage).contains(true)
+    ) match {
+      case (false, false) => true
+      case _ => false
+    }
+
+    def displayRow(row: => Option[AnswerRow]): Option[AnswerRow] = {
+      if (nationalityAndResidencyUnknown) None else row
+    }
+
+    Seq(
+      converter.fullNameQuestion(SettlorNamePage, userAnswers, "settlorName"),
+      converter.yesNoQuestion(SettlorDateOfDeathYesNoPage, userAnswers, "settlorDateOfDeathYesNo", name),
+      converter.dateQuestion(SettlorDateOfDeathPage, userAnswers, "settlorDateOfDeath", name),
+      converter.yesNoQuestion(SettlorDateOfBirthYesNoPage, userAnswers, "settlorDateOfBirthYesNo", name),
+      converter.dateQuestion(SettlorDateOfBirthPage, userAnswers, "settlorDateOfBirth", name),
+      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfNationalityYesNoPage, userAnswers, "settlorCountryOfNationalityYesNo", name)),
+      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, userAnswers, "settlorCountryOfNationalityUkYesNo", name)),
+      displayRow(converter.countryQuestion(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, DeceasedSettlorCountryOfNationalityPage, userAnswers, "settlorCountryOfNationality", name)),
+      converter.yesNoQuestion(SettlorNationalInsuranceYesNoPage, userAnswers, "settlorNationalInsuranceYesNo", name),
+      converter.ninoQuestion(SettlorNationalInsuranceNumberPage, userAnswers, "settlorNationalInsuranceNumber", name),
+      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfResidenceYesNoPage, userAnswers, "settlorCountryOfResidenceYesNo", name)),
+      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, userAnswers, "settlorCountryOfResidenceUkYesNo", name)),
+      displayRow(converter.countryQuestion(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, DeceasedSettlorCountryOfResidencePage, userAnswers, "settlorCountryOfResidence", name)),
+      converter.yesNoQuestion(SettlorLastKnownAddressYesNoPage, userAnswers, "settlorLastKnownAddressYesNo", name),
+      converter.yesNoQuestion(SettlorLastKnownAddressUKYesNoPage, userAnswers, "settlorLastKnownAddressUKYesNo", name),
+      converter.addressQuestion(SettlorLastKnownAddressPage, userAnswers, "settlorUKAddress", name),
+      converter.passportOrIdCardQuestion(SettlorPassportIDCardPage, userAnswers, "settlorPassportOrIdCard", name)
+    )
+  }
 
   override def namePath(index: Int): JsPath = SettlorNamePage.path
 
