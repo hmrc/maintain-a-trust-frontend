@@ -23,20 +23,20 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 object Navigator {
 
   def declarationUrl(affinity: AffinityGroup, ua:UserAnswers): String = {
-    if (!ua.isTrustMigratingFromNonTaxableToTaxable){
-      if (affinity == Agent) {
+
+    ua.isTrustMigratingFromNonTaxableToTaxable match {
+      case true => if (affinity == Agent) {
+        controllers.transition.declaration.routes.AgentDeclarationController.onPageLoad().url
+      } else {
+        controllers.transition.declaration.routes.IndividualDeclarationController.onPageLoad().url
+      }
+      case _ => if (affinity == Agent) {
         controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
       } else {
         controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
-    }
-
-      } else {
-      if (affinity == Agent) {
-        controllers.transition.declaration.routes.AgentDeclarationController.onPageLoad().url
-      } else{
-        controllers.transition.declaration.routes.IndividualDeclarationController.onPageLoad().url
       }
     }
+
   }
 
 }

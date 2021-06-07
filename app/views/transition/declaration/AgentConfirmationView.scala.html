@@ -16,9 +16,11 @@
 
 @import models.NormalMode
 @import controllers.transition.declaration.routes._
+@import config.FrontendAppConfig
 
 @this(
-    main_template: MainTemplate
+    main_template: MainTemplate,
+    config: FrontendAppConfig
 )
 
 @(fakeTvn: String, agentOverviewUrl: String)(implicit request: Request[_], messages: Messages)
@@ -37,14 +39,31 @@
 
     <p class="panel-indent">@components.link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save","confirmationPage.printsave.link", openInNewWindow = false)</p>
 
-    <h2>@messages("confirmationPage.subheading1")</h2>
+    <h2>@messages("agentConfirmation.subheading1")</h2>
 
-    <p>@messages("confirmationPage.paragraph1")</p>
+    <p>@messages("agentConfirmation.paragraph1")</p>
 
-    <p>@messages("confirmationPage.paragraph2")</p>
+    <p>@messages("agentConfirmation.paragraph2")</p>
 
-    <h2>@messages("confirmationPage.subheading2")</h2>
+    <p>@messages("agentConfirmation.paragraph3")</p>
 
+    <p>@messages("agentConfirmation.paragraph4")</p>
+
+    <h2>@messages("agentConfirmation.subheading2")</h2>
+
+    <p>@messages("agentConfirmation.paragraph5")</p>
+
+    <p>@messages("agentConfirmation.paragraph6") <a href="@config.helplineUrl" target="_blank">@messages("agentConfirmation.link")</a>.</p>
+
+    <h2>@messages("agentConfirmation.subheading3")</h2>
+
+    <p>@messages("agentConfirmation.paragraph7")</p>
+
+    <p>@messages("agentConfirmation.paragraph8")</p>
+
+    <p>@messages("agentConfirmation.paragraph9")</p>
+
+    <p>@messages("agentConfirmation.paragraph10") <a href=agentOverviewUrl target="_blank">@messages("agentConfirmation.link2")</a>.</p>
 
      @messages("confirmationPage.agent.you.can") @components.link(agentOverviewUrl, "agent-overview", "confirmationPage.agent.link", false)
 

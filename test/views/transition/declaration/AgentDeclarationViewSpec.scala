@@ -37,7 +37,7 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
     val view = viewFor[AgentDeclarationView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, closingTrust = false)(fakeRequest, messages)
+      view.apply(form)(fakeRequest, messages)
 
     if(appConfig.declarationEmailEnabled) {
       behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1", "paragraph2")
@@ -64,7 +64,7 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
     "display warning text" when {
 
       def applyView(form: Form[_], closingTrust: Boolean): HtmlFormat.Appendable =
-        view.apply(form, closingTrust)(fakeRequest, messages)
+        view.apply(form)(fakeRequest, messages)
 
       "closing trust" in {
         val doc = asDocument(applyView(form, closingTrust = true))
