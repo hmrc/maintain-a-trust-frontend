@@ -143,4 +143,12 @@ GET        /overview                                    controllers.tasklist.Tas
 GET        /view-evidence/                              controllers.ObligedEntityPdfYesNoController.onPageLoad()
 POST       /view-evidence/                              controllers.ObligedEntityPdfYesNoController.onSubmit()
 
+GET        /agent-declaration                           controllers.transition.declaration.AgentDeclarationController.onPageLoad()
+POST       /agent-declaration                           controllers.transition.declaration.AgentDeclarationController.onSubmit()
+
+GET        /individual-declaration                      controllers.transition.declaration.IndividualDeclarationController.onPageLoad()
+POST       /individual-declaration                      controllers.transition.declaration.IndividualDeclarationController.onSubmit()
+
+GET        /confirmation                                controllers.transition.declaration.ConfirmationController.onPageLoad()
+
 GET        /get-pdf/:identifier                         controllers.ObligedEntityPdfController.getPdf(identifier)

@@ -57,7 +57,7 @@ class TaskListController @Inject()(
             identifierType = request.userAnswers.identifierType,
             mandatory = sections.mandatory,
             affinityGroup = request.user.affinityGroup,
-            nextUrl = declarationUrl(request.user.affinityGroup),
+            nextUrl = declarationUrl(request.user.affinityGroup, request.userAnswers),
             isAbleToDeclare = sections.isAbleToDeclare
           ))
         } else {
@@ -67,7 +67,7 @@ class TaskListController @Inject()(
             mandatory = sections.mandatory,
             optional = sections.other,
             affinityGroup = request.user.affinityGroup,
-            nextUrl = declarationUrl(request.user.affinityGroup),
+            nextUrl = declarationUrl(request.user.affinityGroup, request.userAnswers),
             isAbleToDeclare = sections.isAbleToDeclare,
             closingTrust = request.closingTrust
           ))

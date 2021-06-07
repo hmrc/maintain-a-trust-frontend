@@ -1,0 +1,50 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.NormalMode
+@import controllers.transition.declaration.routes._
+
+@this(
+    main_template: MainTemplate
+)
+
+@(fakeTvn: String)(implicit request: Request[_], messages: Messages)
+
+@main_template(
+    title = s"${messages("confirmationPage.title", fakeTvn)}"
+    ) {
+
+    <div class="govuk-main-wrapper--l">
+        <div class="heading-confirmation heading-large">
+        <h1 class="form-title heading-large">@messages("confirmationPage.heading")</h1>
+              <span class="reference-text">@messages("confirmationPage.heading2")</span>
+              <span id="trusts-registration-number" class="reference-number">@fakeTvn</span>
+        </div>
+    </div>
+
+    <p class="panel-indent">@components.link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save","confirmationPage.printsave.link", openInNewWindow = false)</p>
+
+    <h2>@messages("confirmationPage.subheading1")</h2>
+
+    <p>@messages("confirmationPage.paragraph1")</p>
+
+    <p>@messages("confirmationPage.paragraph2")</p>
+
+    <h2>@messages("confirmationPage.subheading2")</h2>
+
+    @messages("confirmationPage.agent.you.can")
+
+}
