@@ -56,6 +56,7 @@ class TaskListController @Inject()(
           Ok(nonTaxToTaxView(identifier,
             identifierType = request.userAnswers.identifierType,
             mandatory = sections.mandatory,
+            additional = sections.other,
             affinityGroup = request.user.affinityGroup,
             nextUrl = declarationUrl(request.user.affinityGroup),
             isAbleToDeclare = sections.isAbleToDeclare
