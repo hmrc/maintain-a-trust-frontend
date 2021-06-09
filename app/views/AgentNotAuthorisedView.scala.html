@@ -33,9 +33,33 @@
     @components.heading_with_caption(headingKey = "agentNotAuthorised.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
     <p>@messages("agentNotAuthorised.p1")</p>
-    <p>@messages("agentNotAuthorised.p2") <a href="@config.agentInvitationsUrl">@messages("agentNotAuthorised.p2.a")</a></p>
+    <h2>@messages("agentNotAuthorised.subheading1")</h2>
+    <p>@messages("agentNotAuthorised.p2")</p>
     <p>@messages("agentNotAuthorised.p3")</p>
-    <p>@messages("agentNotAuthorised.p4") <a href="@config.helplineUrl" target="_blank">@messages("agentNotAuthorised.p4.a")</a></p>
-    <p>@messages("agentNotAuthorised.p5") <a href="@IndexController.onPageLoad()">@messages("agentNotAuthorised.p5.a")</a></p>
+    <h3>@messages("agentNotAuthorised.subheading2")</h3>
+    <p>@messages("agentNotAuthorised.p4") <a href="@config.agentInvitationsUrl">@messages("agentNotAuthorised.p4.a")</a></p>
+    <p>@messages("agentNotAuthorised.p5")</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("agentNotAuthorised.bullet.1")</li>
+        <li>@messages("agentNotAuthorised.bullet.2")</li>
+    </ul>
+
+    <p>@messages("agentNotAuthorised.p6")</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("agentNotAuthorised.bullet.3")</li>
+        <li>@messages("agentNotAuthorised.bullet.4")</li>
+    </ul>
+
+    <p>@messages("agentNotAuthorised.p7") <a href="@config.agentInvitationsUrl">@messages("agentNotAuthorised.p7.a")</a></p>
+
+    <h2>@messages("agentNotAuthorised.subheading3")</h2>
+
+    <p>@messages("agentNotAuthorised.p8") <a href="@config.agentInvitationsUrl">@messages("agentNotAuthorised.p8.a")</a></p>
+
+    <p>@messages("agentNotAuthorised.p9")</p>
+
+    <p>@messages("agentNotAuthorised.p10") <a href="@config.agentInvitationsUrl">@messages("agentNotAuthorised.p10.a")</a></p>
 
 }
