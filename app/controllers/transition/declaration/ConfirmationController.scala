@@ -50,12 +50,12 @@ class ConfirmationController @Inject()(
       }{
         tvn =>
           Ok(
-          if (isAgent) {
-            agentConfirmationView(tvn, agentOverviewUrl = config.agentOverviewUrl)
-              } else {
-                individualConfirmationView(tvn)
-              }
-            )
+            if (isAgent) {
+              agentConfirmationView(tvn)
+            } else {
+              individualConfirmationView(tvn)
+            }
+          )
       }
   }
 }

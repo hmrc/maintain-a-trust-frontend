@@ -17,14 +17,17 @@
 package controllers.transition.declaration
 
 import base.SpecBase
-import models.pages.WhatIsNext.MakeChanges
+import models.pages.WhatIsNext.NeedsToPayTax
 import pages.{TVNPage, WhatIsNextPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import utils.TestUserAnswers
 import views.html.transition.declaration.{AgentConfirmationView, IndividualConfirmationView}
 
 class ConfirmationControllerSpec extends SpecBase {
+
+  private val fakeTvn = "XCTVN0000004912"
 
   "Confirmation Controller" must {
 
@@ -32,13 +35,11 @@ class ConfirmationControllerSpec extends SpecBase {
 
       "return OK and the correct view for a onPageLoad when TVN is available" in {
 
-        val fakeTvn = "XCTVN0000004912"
-
         val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
-          .set(WhatIsNextPage, MakeChanges).success.value
+          .set(WhatIsNextPage, NeedsToPayTax).success.value
           .set(TVNPage, fakeTvn).success.value
 
-        val application = applicationBuilder(userAnswers = Some(playbackAnswers)).build()
+        val application = applicationBuilder(userAnswers = Some(playbackAnswers), affinityGroup = Agent).build()
 
         val request = FakeRequest(GET, routes.ConfirmationController.onPageLoad().url)
 
@@ -49,7 +50,7 @@ class ConfirmationControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(fakeTvn, "#")(request, messages).toString
+          view(fakeTvn)(request, messages).toString
 
         application.stop()
       }
@@ -59,10 +60,8 @@ class ConfirmationControllerSpec extends SpecBase {
 
       "return OK and the correct view for a onPageLoad when TVN is available" in {
 
-        val fakeTvn = "XCTVN0000004912"
-
         val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
-          .set(WhatIsNextPage, MakeChanges).success.value
+          .set(WhatIsNextPage, NeedsToPayTax).success.value
           .set(TVNPage, fakeTvn).success.value
 
         val application = applicationBuilder(userAnswers = Some(playbackAnswers)).build()

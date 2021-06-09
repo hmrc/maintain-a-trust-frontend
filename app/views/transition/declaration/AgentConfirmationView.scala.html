@@ -23,21 +23,21 @@
     config: FrontendAppConfig
 )
 
-@(fakeTvn: String, agentOverviewUrl: String)(implicit request: Request[_], messages: Messages)
+@(tvn: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${messages("confirmationPage.title", fakeTvn)}"
-    ) {
+    title = s"${messages("agentConfirmation.title", tvn)}"
+) {
 
     <div class="govuk-main-wrapper--l">
         <div class="heading-confirmation heading-large">
-        <h1 class="form-title heading-large">@messages("confirmationPage.heading")</h1>
-              <span class="reference-text">@messages("confirmationPage.heading2")</span>
-              <span id="trusts-registration-number" class="reference-number">@fakeTvn</span>
+        <h1 class="form-title heading-large">@messages("agentConfirmation.heading")</h1>
+              <span class="reference-text">@messages("agentConfirmation.heading2")</span>
+              <span id="trusts-registration-number" class="reference-number">@tvn</span>
         </div>
     </div>
 
-    <p class="panel-indent">@components.link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save","confirmationPage.printsave.link", openInNewWindow = false)</p>
+    <p class="panel-indent">@components.link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save", "agentConfirmation.printsave.link", openInNewWindow = false)</p>
 
     <h2>@messages("agentConfirmation.subheading1")</h2>
 
@@ -53,7 +53,7 @@
 
     <p>@messages("agentConfirmation.paragraph5")</p>
 
-    <p>@messages("agentConfirmation.paragraph6") <a href="@config.helplineUrl" target="_blank">@messages("agentConfirmation.link")</a>.</p>
+    <p>@messages("agentConfirmation.paragraph6") <a href="@config.helplineUrl" target="_blank">@messages("agentConfirmation.paragraph6.link")</a>.</p>
 
     <h2>@messages("agentConfirmation.subheading3")</h2>
 
@@ -61,10 +61,10 @@
 
     <p>@messages("agentConfirmation.paragraph8")</p>
 
+    @components.warning("agentConfirmation")
+
     <p>@messages("agentConfirmation.paragraph9")</p>
 
-    <p>@messages("agentConfirmation.paragraph10") <a href=agentOverviewUrl target="_blank">@messages("agentConfirmation.link2")</a>.</p>
-
-     @messages("confirmationPage.agent.you.can") @components.link(agentOverviewUrl, "agent-overview", "confirmationPage.agent.link", false)
+    <p>@messages("agentConfirmation.paragraph10") @components.link(config.agentOverviewUrl, "agent-overview", "agentConfirmation.paragraph10.link", false).</p>
 
 }

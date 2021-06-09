@@ -16,48 +16,40 @@
 
 package views.transition.declaration
 
-import play.twirl.api.HtmlFormat
 import views.behaviours.ViewBehaviours
 import views.html.transition.declaration.IndividualConfirmationView
 
 class IndividualConfirmationViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "individualConfirmationPage"
+  val messageKeyPrefix = "individualConfirmation"
   val fakeTvn = "XC TVN 000 000 4912"
-  val accessibleRefNumber = fakeTvn
 
-  private def confirmationPage(view: HtmlFormat.Appendable) : Unit = {
+  "IndividualConfirmationView" must {
 
-    "assert content" in {
-      val doc = asDocument(view)
+    val view = viewFor[IndividualConfirmationView](Some(emptyUserAnswersForUtr))
+
+    val applyView = view.apply(
+      tvn = fakeTvn
+    )(fakeRequest, messages)
+
+    behave like normalPage(
+      view = applyView,
+      messageKeyPrefix = messageKeyPrefix,
+      expectedGuidanceKeys = "subheading1", "paragraph1", "paragraph2", "paragraph3", "paragraph4", "subheading2",
+      "paragraph5", "paragraph6", "subheading3", "paragraph7", "paragraph8", "paragraph9"
+    )
+
+    behave like pageWithWarning(applyView)
+
+    "render content" in {
+      val doc = asDocument(applyView)
 
       assertContainsText(doc, s"Declaration received")
       assertContainsText(doc, s"Your reference is:")
       assertContainsText(doc, s"$fakeTvn")
       assertContainsText(doc, "Print or save a copy of your answers")
 
-      assertContainsText(doc, "What happens next")
-
-      assertContainsText(doc, "Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.")
-
-      assertContainsText(doc, "If any of the settlor, trustee or beneficiary details change (before you make your next declaration) you will need to update them using the online service.")
-
-      assertContainsText(doc, "Declaring the trust is up to date")
-
-      assertNotRenderedById(doc, "taxable-message")
-
     }
-
-  }
-
-  "Confirmation view for an organisation" must {
-    val view = viewFor[IndividualConfirmationView](Some(emptyUserAnswersForUtr))
-
-    val applyView = view.apply(
-      fakeTvn = fakeTvn
-    )(fakeRequest, messages)
-
-    behave like confirmationPage(applyView)
   }
 
 }

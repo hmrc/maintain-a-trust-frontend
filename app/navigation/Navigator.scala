@@ -16,27 +16,31 @@
 
 package navigation
 
-import models.UserAnswers
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 
 object Navigator {
 
-  def declarationUrl(affinity: AffinityGroup, ua:UserAnswers): String = {
+  def declarationUrl(affinity: AffinityGroup, isTrustMigratingFromNonTaxableToTaxable: Boolean): String = {
 
-    ua.isTrustMigratingFromNonTaxableToTaxable match {
-      case true => if (affinity == Agent) {
-        controllers.transition.declaration.routes.AgentDeclarationController.onPageLoad().url
-      } else {
+    if (affinity == Agent) {
+      controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+    } else {
+      if (isTrustMigratingFromNonTaxableToTaxable) {
         controllers.transition.declaration.routes.IndividualDeclarationController.onPageLoad().url
-      }
-      case _ => if (affinity == Agent) {
-        controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
       } else {
         controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
       }
     }
 
+  }
+
+  def agentDeclarationUrl(isTrustMigratingFromNonTaxableToTaxable: Boolean): String = {
+    if (isTrustMigratingFromNonTaxableToTaxable) {
+      controllers.transition.declaration.routes.AgentDeclarationController.onPageLoad().url
+    } else {
+      controllers.declaration.routes.AgentDeclarationController.onPageLoad().url
+    }
   }
 
 }

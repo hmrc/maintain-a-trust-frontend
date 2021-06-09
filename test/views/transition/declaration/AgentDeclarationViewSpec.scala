@@ -61,20 +61,13 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
       )
     }
 
-    "display warning text" when {
+    "display warning text" in {
 
       def applyView(form: Form[_], closingTrust: Boolean): HtmlFormat.Appendable =
         view.apply(form)(fakeRequest, messages)
 
-      "closing trust" in {
-        val doc = asDocument(applyView(form, closingTrust = true))
-        assertContainsMessages(doc, "declaration.closing.agent.warning")
-      }
-
-      "maintaining trust" in {
-        val doc = asDocument(applyView(form, closingTrust = false))
-        assertContainsMessages(doc, "declaration.variation.agent.warning")
-      }
+      val doc = asDocument(applyView(form, closingTrust = false))
+      assertContainsMessages(doc, "declaration.variation.agent.warning")
 
     }
 

@@ -68,7 +68,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
     val view = viewFor[ConfirmationView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(
-      fakeTvn = fakeTvn,
+      tvn = fakeTvn,
       isAgent = true,
       isTrustTaxable = true,
       agentOverviewUrl = "#"
@@ -83,7 +83,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
     val view = viewFor[ConfirmationView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(
-      fakeTvn = fakeTvn,
+      tvn = fakeTvn,
       isAgent = true,
       isTrustTaxable = true,
       agentOverviewUrl = "#"
@@ -96,7 +96,7 @@ class ConfirmationViewSpec extends ViewBehaviours {
     val view = viewFor[ConfirmationView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(
-      fakeTvn = fakeTvn,
+      tvn = fakeTvn,
       isAgent = true,
       isTrustTaxable = false,
       agentOverviewUrl = "#"

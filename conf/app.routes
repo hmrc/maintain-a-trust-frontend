@@ -140,15 +140,15 @@ GET        /unavailable-sections                        controllers.makechanges.
 
 GET        /overview                                    controllers.tasklist.TaskListController.onPageLoad()
 
-GET        /view-evidence/                              controllers.ObligedEntityPdfYesNoController.onPageLoad()
-POST       /view-evidence/                              controllers.ObligedEntityPdfYesNoController.onSubmit()
+GET        /view-evidence                               controllers.ObligedEntityPdfYesNoController.onPageLoad()
+POST       /view-evidence                               controllers.ObligedEntityPdfYesNoController.onSubmit()
 
-GET        /agent-declaration                           controllers.transition.declaration.AgentDeclarationController.onPageLoad()
-POST       /agent-declaration                           controllers.transition.declaration.AgentDeclarationController.onSubmit()
+GET        /agent-transition-declaration                controllers.transition.declaration.AgentDeclarationController.onPageLoad()
+POST       /agent-transition-declaration                controllers.transition.declaration.AgentDeclarationController.onSubmit()
 
-GET        /individual-declaration                      controllers.transition.declaration.IndividualDeclarationController.onPageLoad()
-POST       /individual-declaration                      controllers.transition.declaration.IndividualDeclarationController.onSubmit()
+GET        /individual-transition-declaration           controllers.transition.declaration.IndividualDeclarationController.onPageLoad()
+POST       /individual-transition-declaration           controllers.transition.declaration.IndividualDeclarationController.onSubmit()
 
-GET        /confirmation                                controllers.transition.declaration.ConfirmationController.onPageLoad()
+GET        /transition-confirmation                     controllers.transition.declaration.ConfirmationController.onPageLoad()
 
 GET        /get-pdf/:identifier                         controllers.ObligedEntityPdfController.getPdf(identifier)

@@ -62,7 +62,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4"
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4"
         )
 
         behave like pageWithBackLink(applyView)
@@ -102,7 +102,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4"
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4"
         )
 
         behave like pageWithBackLink(applyView)
@@ -139,7 +139,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4", "subHeading.3", "p5", "p6", "subHeading.4", "p7", "sa900.link"
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4", "subHeading.3", "p5",
+          "p5.bullet1", "p5.bullet2", "p6", "p7", "p7.bullet1", "p7.bullet2", "p8"
         )
 
         behave like pageWithBackLink(applyView)
@@ -156,10 +157,6 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
 
         "render agent overview link" in {
           assertContainsText(doc, messages("transitionsProgress.return.link"))
-        }
-
-        "render print link" in {
-          assertRenderedById(doc, "print-and-save")
         }
       }
 
@@ -185,7 +182,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4", "subHeading.3", "p5", "p6", "subHeading.4", "p7", "sa900.link"
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4", "subHeading.3", "p5",
+          "p5.bullet1", "p5.bullet2", "p6", "p7", "p7.bullet1", "p7.bullet2", "p8"
         )
 
         behave like pageWithBackLink(applyView)
@@ -197,12 +195,6 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
         behave like pageWithWarning(applyView)
 
         behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
-
-        val doc = asDocument(applyView)
-
-        "render print link" in {
-          assertRenderedById(doc, "print-and-save")
-        }
       }
     }
   }
