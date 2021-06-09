@@ -52,6 +52,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
+          additional = Nil,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = false
@@ -92,6 +93,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
+          additional = Nil,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = false
@@ -129,6 +131,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
+          additional = Nil,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = true
@@ -139,7 +142,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4", "subHeading.3", "p5", "p6", "subHeading.4", "p7", "sa900.link"
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4", "subHeading.4", "p5", "p6", "subHeading.5", "p7", "sa900.link"
         )
 
         behave like pageWithBackLink(applyView)
@@ -175,6 +178,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
+          additional = Nil,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = true
@@ -185,7 +189,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4", "subHeading.3", "p5", "p6", "subHeading.4", "p7", "sa900.link"
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "bullet1", "bullet2", "p3", "p4", "subHeading.4", "p5", "p6", "subHeading.5", "p7", "sa900.link"
         )
 
         behave like pageWithBackLink(applyView)

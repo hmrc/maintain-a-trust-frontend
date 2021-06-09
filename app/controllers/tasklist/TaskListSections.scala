@@ -147,9 +147,10 @@ trait TaskListSections {
                                  settlorsStatus: EntityStatus,
                                  beneficiariesStatus: EntityStatus): TaskList = {
 
-    def task(status: EntityStatus, link: Link): Seq[Task] = status.completed match {
-      case Some(value) => Seq(Task(link, Some(Tag.tagFor(value))))
-      case None => Nil
+    def task(status: EntityStatus, taskCompleted: Boolean, link: Link): List[Task] = status.completed match {
+      case Some(value) => List(Task(link, Some(Tag.tagFor(value))))
+      case None if taskCompleted => List(Task(link, Some(Tag.tagFor(upToDate = true))))
+      case _ => Nil
     }
 
     val transitionTasks = List(
@@ -167,10 +168,10 @@ trait TaskListSections {
       )
     )
 
-    val settlorsTask = task(settlorsStatus, Link(Settlors, settlorsRouteEnabled(identifier)))
-    val beneficiariesTask = task(beneficiariesStatus, Link(Beneficiaries, beneficiariesRouteEnabled(identifier)))
+    val settlorsTask = task(settlorsStatus, tasks.settlors, Link(Settlors, settlorsRouteEnabled(identifier)))
+    val beneficiariesTask = task(beneficiariesStatus, tasks.beneficiaries, Link(Beneficiaries, beneficiariesRouteEnabled(identifier)))
 
-    TaskList(transitionTasks ++ settlorsTask ++ beneficiariesTask)
+    TaskList(transitionTasks, settlorsTask ::: beneficiariesTask)
   }
 
 }

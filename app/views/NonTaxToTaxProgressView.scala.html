@@ -29,6 +29,7 @@
     identifier: String,
     identifierType: IdentifierType,
     mandatory: List[Task],
+    additional: List[Task],
     affinityGroup: AffinityGroup,
     nextUrl: String,
     isAbleToDeclare: Boolean
@@ -62,13 +63,15 @@
 
     @components.task_list("mandatory", mandatory, messages("transitionProgress.subHeading.2"))
 
+    @components.task_list("additional", additional, messages("transitionProgress.subHeading.3"))
+
     @if(isAbleToDeclare) {
-        <h2>@messages("transitionProgress.subHeading.3")</h2>
+        <h2>@messages("transitionProgress.subHeading.4")</h2>
 
         <p>@messages("transitionProgress.p5")</p>
         <p>@messages("transitionProgress.p6") @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", openInNewWindow = false)</p>
 
-        <h2>@messages("transitionProgress.subHeading.4")</h2>
+        <h2>@messages("transitionProgress.subHeading.5")</h2>
 
         <p>@messages("transitionProgress.p7") <a href="@{appConfig.sa900Link}" target="_blank">@messages("transitionProgress.sa900.link")</a>.</p>
 
