@@ -52,6 +52,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
+          additional = Nil,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = false
@@ -92,6 +93,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
+          additional = Nil,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = false
@@ -129,6 +131,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
+          additional = Nil,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = true
@@ -139,7 +142,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4", "subHeading.3", "p5",
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4", "p5",
           "p5.bullet1", "p5.bullet2", "p6", "p7", "p7.bullet1", "p7.bullet2", "p8"
         )
 
@@ -172,6 +175,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
+          additional = Nil,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = true
@@ -182,7 +186,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4", "subHeading.3", "p5",
+          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4", "p5",
           "p5.bullet1", "p5.bullet2", "p6", "p7", "p7.bullet1", "p7.bullet2", "p8"
         )
 

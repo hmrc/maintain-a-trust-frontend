@@ -43,7 +43,7 @@ $(document).ready(function () {
         e.preventDefault();
         if (window.history && window.history.back && typeof window.history.back === 'function' &&
             (docReferrer !== "" && docReferrer.indexOf(window.location.host) !== -1)) {
-             if (window.location.href.includes('#content')) {
+             if (window.location.href.indexOf("content") !== -1) {
                     window.history.go(-2);
                 } else {
                     window.history.back();

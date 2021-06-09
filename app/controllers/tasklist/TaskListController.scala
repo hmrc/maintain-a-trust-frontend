@@ -57,6 +57,7 @@ class TaskListController @Inject()(
             identifier,
             identifierType = request.userAnswers.identifierType,
             mandatory = sections.mandatory,
+            additional = sections.other,
             affinityGroup = request.user.affinityGroup,
             nextUrl = declarationUrl(request.user.affinityGroup, isTrustMigratingFromNonTaxableToTaxable = true),
             isAbleToDeclare = sections.isAbleToDeclare
