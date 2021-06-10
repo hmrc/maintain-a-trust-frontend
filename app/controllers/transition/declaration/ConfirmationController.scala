@@ -17,7 +17,6 @@
 package controllers.transition.declaration
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import controllers.actions.{Actions, RequireClosingTrustAnswerAction}
 import pages.TVNPage
 import play.api.Logging
@@ -35,7 +34,6 @@ class ConfirmationController @Inject()(
                                         val controllerComponents: MessagesControllerComponents,
                                         individualConfirmationView: IndividualConfirmationView,
                                         agentConfirmationView: AgentConfirmationView,
-                                        config: FrontendAppConfig,
                                         answerRequiredAction: RequireClosingTrustAnswerAction
                                       ) extends FrontendBaseController with I18nSupport with Logging {
 

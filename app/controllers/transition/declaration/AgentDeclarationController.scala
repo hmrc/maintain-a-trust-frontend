@@ -115,7 +115,7 @@ class AgentDeclarationController @Inject()(
               .flatMap(_.set(TVNPage, tvn))
           )
           _ <- playbackRepository.set(updatedAnswers)
-        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+        } yield Redirect(controllers.transition.declaration.routes.ConfirmationController.onPageLoad())
       case _ =>
         handleError(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${utr}] Failed to declare")
     }
