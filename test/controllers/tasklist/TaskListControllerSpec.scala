@@ -62,7 +62,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
   def mandatorySectionsTransitionToTaxable(identifier: String): List[Task] = List(
     Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Some(InProgress)),
     Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), Some(InProgress)),
-    Task(Link(TaxLiability, s"http://localhost:9838/maintain-a-trust/tax-liability/$identifier"), Some(InProgress))
+    Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), Some(InProgress))
   )
 
   def optionalSectionsTransitionToTaxable(identifier: String, status: Tag): List[Task] =
