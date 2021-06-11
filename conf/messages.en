@@ -588,6 +588,17 @@ beforeYouContinueToTaxable.bullet8 = business
 beforeYouContinueToTaxable.bullet9 = partnerships
 beforeYouContinueToTaxable.bullet10 = any other assets
 
+migrateTo5mldInformation.title = Before you continue
+migrateTo5mldInformation.heading = Before you continue
+migrateTo5mldInformation.p1 = From 4 May 2021, all trusts need to be registered under the rules of the Fifth Money Laundering Directive.
+migrateTo5mldInformation.p2 = As the trust was registered on or before 3 May 2021, you need to let HMRC know if the trust:
+migrateTo5mldInformation.bullet1 = is an express trust
+migrateTo5mldInformation.bullet2 = has needed to pay tax in the past
+migrateTo5mldInformation.bullet3 = currently needs to pay tax
+migrateTo5mldInformation.p3 = HMRC will only ask for this information once.
+migrateTo5mldInformation.heading2 = What happens next
+migrateTo5mldInformation.p4 = After you have given HMRC the required information, you can sign back into the service and will be able to make changes to the trust record.
+
 expressTrustYesNo.title = Are you maintaining an express trust?
 expressTrustYesNo.heading = Are you maintaining an express trust?
 expressTrustYesNo.p1 = An express trust is a trust created deliberately by a settlor, usually in the form of a document such as a written deed of trust.
@@ -596,13 +607,10 @@ expressTrustYesNo.bullet1 = by someone’s will after they have died
 expressTrustYesNo.bullet2 = during someone’s lifetime, which is known as inter-vivos
 expressTrustYesNo.error.required = Select yes if you are maintaining an express trust
 
-confirmTrustTaxable.title = Before you continue
-confirmTrustTaxable.heading = Before you continue
-confirmTrustTaxable.p1 = From 4 May 2021, all trusts need to be registered under the rules of the Fifth Money Laundering Directive.
-confirmTrustTaxable.p2 = As the trust was registered on or before 3 May 2021, you need to let HMRC know if the trust is a taxable trust.
-confirmTrustTaxable.subHeading = Confirm the trust is taxable
-confirmTrustTaxable.p3 = A taxable trust is a trust that has paid tax, or still has a tax liability.
-confirmTrustTaxable.p4 = By continuing, you are confirming that the trust has paid tax, or still needs to pay tax.
+confirmTrustTaxable.title = Confirm the trust is taxable
+confirmTrustTaxable.heading = Confirm the trust is taxable
+confirmTrustTaxable.p1 = A taxable trust is a trust that has paid tax, or still has a tax liability.
+confirmTrustTaxable.p2 = By continuing, you are confirming that the trust has paid tax, or still needs to pay tax.
 
 declarationWhatNext.title = What do you want to do next?
 declarationWhatNext.heading = What do you want to do next?
