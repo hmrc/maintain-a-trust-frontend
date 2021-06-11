@@ -19,9 +19,11 @@
 
 @(id: String, sections: List[Task], heading: String)(implicit messages: Messages)
 
-<h2 id="task-list--heading--@id" class="app-task-list__section">@heading</h2>
-<ul class="app-task-list__items">
-    @for(task <- sections){
-        @components.task(task)
-    }
-</ul>
+@if(sections.nonEmpty){
+    <h2 id="task-list--heading--@id" class="app-task-list__section">@heading</h2>
+    <ul class="app-task-list__items">
+        @for(task <- sections){
+            @components.task(task)
+        }
+    </ul>
+}

@@ -29,6 +29,7 @@
     identifier: String,
     identifierType: IdentifierType,
     mandatory: List[Task],
+    additional: List[Task],
     affinityGroup: AffinityGroup,
     nextUrl: String,
     isAbleToDeclare: Boolean
@@ -48,7 +49,7 @@
 
     <p>@messages("transitionProgress.p2")</p>
 
-    @components.bullet_list("transitionProgress", Seq("bullet1", "bullet2"))
+    @components.bullet_list("transitionProgress", Seq("p2.bullet1", "p2.bullet2"))
 
     @if(affinityGroup == AffinityGroup.Agent) {
         <a href="@{appConfig.agentOverviewUrl}">@messages("transitionsProgress.return.link")</a>
@@ -62,15 +63,20 @@
 
     @components.task_list("mandatory", mandatory, messages("transitionProgress.subHeading.2"))
 
-    @if(isAbleToDeclare) {
-        <h2>@messages("transitionProgress.subHeading.3")</h2>
+    @components.task_list("additional", additional, messages("transitionProgress.subHeading.3"))
 
-        <p>@messages("transitionProgress.p5")</p>
-        <p>@messages("transitionProgress.p6") @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", openInNewWindow = false)</p>
+    @if(isAbleToDeclare) {
 
         <h2>@messages("transitionProgress.subHeading.4")</h2>
 
-        <p>@messages("transitionProgress.p7") <a href="@{appConfig.sa900Link}" target="_blank">@messages("transitionProgress.sa900.link")</a>.</p>
+        <p>@messages("transitionProgress.p5")</p>
+        @components.bullet_list("transitionProgress", Seq("p5.bullet1", "p5.bullet2"))
+
+        <p>@messages("transitionProgress.p6")</p>
+        <p>@messages("transitionProgress.p7")</p>
+        @components.bullet_list("transitionProgress", Seq("p7.bullet1", "p7.bullet2"))
+
+        <p>@messages("transitionProgress.p8") <a href="@appConfig.helplineUrl" target="_blank">@messages("transitionProgress.p8.link")</a>.</p>
 
         <div class="section">
             <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>

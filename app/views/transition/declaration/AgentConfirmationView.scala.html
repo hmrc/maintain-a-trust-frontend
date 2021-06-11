@@ -1,0 +1,70 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.NormalMode
+@import controllers.transition.declaration.routes._
+@import config.FrontendAppConfig
+
+@this(
+    main_template: MainTemplate,
+    config: FrontendAppConfig
+)
+
+@(tvn: String)(implicit request: Request[_], messages: Messages)
+
+@main_template(
+    title = s"${messages("agentConfirmation.title", tvn)}"
+) {
+
+    <div class="govuk-main-wrapper--l">
+        <div class="heading-confirmation heading-large">
+        <h1 class="form-title heading-large">@messages("agentConfirmation.heading")</h1>
+              <span class="reference-text">@messages("agentConfirmation.heading2")</span>
+              <span id="trusts-registration-number" class="reference-number">@tvn</span>
+        </div>
+    </div>
+
+    <p class="panel-indent">@components.link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save", "agentConfirmation.printsave.link", openInNewWindow = false)</p>
+
+    <h2>@messages("agentConfirmation.subheading1")</h2>
+
+    <p>@messages("agentConfirmation.paragraph1")</p>
+
+    <p>@messages("agentConfirmation.paragraph2")</p>
+
+    <p>@messages("agentConfirmation.paragraph3")</p>
+
+    <p>@messages("agentConfirmation.paragraph4")</p>
+
+    <h2>@messages("agentConfirmation.subheading2")</h2>
+
+    <p>@messages("agentConfirmation.paragraph5")</p>
+
+    <p>@messages("agentConfirmation.paragraph6") <a href="@config.helplineUrl" target="_blank">@messages("agentConfirmation.paragraph6.link")</a>.</p>
+
+    <h2>@messages("agentConfirmation.subheading3")</h2>
+
+    <p>@messages("agentConfirmation.paragraph7")</p>
+
+    <p>@messages("agentConfirmation.paragraph8")</p>
+
+    @components.warning("agentConfirmation")
+
+    <p>@messages("agentConfirmation.paragraph9")</p>
+
+    <p>@messages("agentConfirmation.paragraph10") @components.link(config.agentOverviewUrl, "agent-overview", "agentConfirmation.paragraph10.link", false).</p>
+
+}

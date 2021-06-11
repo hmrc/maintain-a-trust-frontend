@@ -21,17 +21,17 @@
     main_template: MainTemplate
 )
 
-@(fakeTvn: String, isAgent: Boolean, isTrustTaxable: Boolean, agentOverviewUrl: String)(implicit request: Request[_], messages: Messages)
+@(tvn: String, isAgent: Boolean, isTrustTaxable: Boolean, agentOverviewUrl: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${messages("confirmationPage.title", fakeTvn)}"
-    ) {
+    title = s"${messages("confirmationPage.title", tvn)}"
+) {
 
     <div class="govuk-main-wrapper--l">
         <div class="heading-confirmation heading-large">
         <h1 class="form-title heading-large">@messages("confirmationPage.heading")</h1>
               <span class="reference-text">@messages("confirmationPage.heading2")</span>
-              <span id="trusts-registration-number" class="reference-number">@fakeTvn</span>
+              <span id="trusts-registration-number" class="reference-number">@tvn</span>
         </div>
     </div>
 

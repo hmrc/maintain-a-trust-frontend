@@ -113,7 +113,7 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
           status(result) mustEqual SEE_OTHER
 
           redirectLocation(result).value mustEqual
-            controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+            controllers.transition.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
           val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
           verify(playbackRepository).set(uaCaptor.capture)

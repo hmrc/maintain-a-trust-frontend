@@ -20,6 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.InternationalAddressFormProvider
 import models.InternationalAddress
+import navigation.Navigator.agentDeclarationUrl
 import pages.declaration.AgencyRegisteredAddressInternationalPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -42,7 +43,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
                                                                 view: AgencyRegisteredAddressInternationalView
                                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val form: Form[InternationalAddress] = formProvider()
+  private val form: Form[InternationalAddress] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
@@ -69,7 +70,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
                 .set(AgencyRegisteredAddressInternationalPage, value)
             )
             _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(controllers.declaration.routes.AgentDeclarationController.onPageLoad())
+          } yield Redirect(agentDeclarationUrl(request.userAnswers.isTrustMigratingFromNonTaxableToTaxable))
         }
       )
 
