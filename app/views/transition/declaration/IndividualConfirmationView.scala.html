@@ -1,0 +1,68 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.NormalMode
+@import controllers.transition.declaration.routes._
+@import config.FrontendAppConfig
+
+@this(
+    main_template: MainTemplate,
+    config: FrontendAppConfig
+)
+
+@(tvn: String)(implicit request: Request[_], messages: Messages)
+
+@main_template(
+    title = s"${messages("individualConfirmation.title", tvn)}"
+) {
+
+    <div class="govuk-main-wrapper--l">
+        <div class="heading-confirmation heading-large">
+        <h1 class="form-title heading-large">@messages("individualConfirmation.heading")</h1>
+              <span class="reference-text">@messages("individualConfirmation.heading2")</span>
+              <span id="trusts-registration-number" class="reference-number">@tvn</span>
+        </div>
+    </div>
+
+    <p class="panel-indent">@components.link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save", "individualConfirmation.printsave.link", openInNewWindow = false)</p>
+
+    <h2>@messages("individualConfirmation.subheading1")</h2>
+
+    <p>@messages("individualConfirmation.paragraph1")</p>
+
+    <p>@messages("individualConfirmation.paragraph2")</p>
+
+    <p>@messages("individualConfirmation.paragraph3")</p>
+
+    <p>@messages("individualConfirmation.paragraph4")</p>
+
+    <h2>@messages("individualConfirmation.subheading2")</h2>
+
+    <p>@messages("individualConfirmation.paragraph5")</p>
+
+    <p>@messages("individualConfirmation.paragraph6") <a href="@config.helplineUrl" target="_blank">@messages("individualConfirmation.paragraph6.link")</a>.</p>
+
+    <h2>@messages("individualConfirmation.subheading3")</h2>
+
+    <p>@messages("individualConfirmation.paragraph7")</p>
+
+    <p>@messages("individualConfirmation.paragraph8")</p>
+
+    @components.warning("individualConfirmation")
+
+    <p>@messages("individualConfirmation.paragraph9")</p>
+
+}

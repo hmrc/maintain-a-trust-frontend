@@ -1,0 +1,97 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.transition.declaration.routes._
+@import uk.gov.hmrc.auth.core.AffinityGroup
+@import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
+@import config.FrontendAppConfig
+
+@this(
+    appConfig: FrontendAppConfig,
+    main_template: MainTemplate,
+    formHelper: FormWithCSRF
+)
+
+@(form: Form[_])(implicit request: Request[_], messages: Messages)
+
+@main_template(
+    title = s"${errorPrefix(form)}${messages("declaration.title")}"
+) {
+
+    @formHelper(action = AgentDeclarationController.onSubmit(), 'autoComplete -> "off") {
+
+        @components.back_link()
+
+        @components.error_summary(form.errors)
+
+        <fieldset>
+
+            <legend>
+                @components.heading("declaration.heading")
+            </legend>
+
+            @components.input_text(
+                field = form("firstName"),
+                label = messages("declaration.firstName"),
+                autoComplete = Some("given-name")
+            )
+
+            @components.input_text(
+                field = form("middleName"),
+                label = messages("declaration.middleName")
+            )
+
+            @components.input_text(
+                field = form("lastName"),
+                label = messages("declaration.lastName"),
+                autoComplete = Some("family-name")
+            )
+
+            @components.input_text(
+                field = form("agencyName"),
+                label = messages("declaration.agencyName")
+            )
+
+            @components.input_text(
+                field = form("telephoneNumber"),
+                label = messages("declaration.telephoneNumber"),
+                inputClass = Some("form-control-3-4"),
+                autoComplete = Some("tel")
+            )
+
+            @components.input_text(
+                field = form("crn"),
+                label = messages("declaration.crn"),
+                inputClass = Some("form-control-3-4")
+            )
+
+        </fieldset>
+
+        @if(appConfig.declarationEmailEnabled) {
+            <p>@messages("declaration.paragraph1")</p>
+            <p>@messages("declaration.paragraph2")</p>
+            @components.input_text(
+                field = form("email"),
+                inputClass = Some("declaration-email"),
+                label = messages("declaration.email")
+            )
+        }
+
+        <p class="panel-indent">@messages(s"declaration.variation.agent.warning")</p>
+
+        @components.submit_button(Some("site.confirm-send"))
+    }
+}

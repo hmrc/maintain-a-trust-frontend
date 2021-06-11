@@ -113,18 +113,13 @@ declaration.error.crn.length = Internal reference for this client must be 56 cha
 declaration.error.email.length = Your email must be 35 characters or less
 declaration.error.email.invalid = Enter a valid email address with no spaces, like name@example.com
 
-
 # Agent declarations warnings
 declaration.variation.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
-
 declaration.closing.agent.warning = I confirm that my client has taken all reasonable steps to obtain up to date and accurate information for all of the entities given in this registration before closing this trust. I understand that if my client knowingly provides false information and cannot demonstrate that they have taken all reasonable steps, they could be subject to penalties.
-
 
 # Individual declaration warnings
 declaration.variation.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief. I will ensure it is regularly kept up to date as required including changes of address. If I discover that I have made an error or something has changed, I will update this register.
-
 declaration.closing.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief before closing this trust. I understand that if I knowingly provide false information and cannot demonstrate that I have taken all reasonable steps, I could be subject to penalties.
-
 
 deedOfVariation.replaceAbsoluteInterestOverWill = to replace an absolute interest over a will
 deedOfVariation.replaceWillTrust = to replace a will trust
@@ -153,7 +148,7 @@ informationMaintainingTaxableTrust.paragraph1 = We need to ask you some question
 informationMaintainingTaxableTrust.subheading2 = Updating the trust’s details and making a declaration
 informationMaintainingTaxableTrust.paragraph2 = This service will allow you to either:
 informationMaintainingTaxableTrust.bullet1 = make changes to the trust
-informationMaintainingTaxableTrust.bullet2 = confirm the trust's details are still up to date
+informationMaintainingTaxableTrust.bullet2 = confirm the trust’s details are still up to date
 informationMaintainingTaxableTrust.bullet3 = close the trust
 informationMaintainingTaxableTrust.paragraph3 = Once you have done this, you need to:
 informationMaintainingTaxableTrust.bullet4 = submit any updates to us, so we can update the trust’s record
@@ -658,8 +653,8 @@ transitionProgress.heading = Trust overview
 transitionProgress.p1 = You can make changes to the trust’s record, and make a declaration once you have confirmed that each section is up to date.
 transitionProgress.subHeading.1 = Declare and save your changes
 transitionProgress.p2 = To save any changes you make to the trust’s record, you need to:
-transitionProgress.bullet1 = submit the changes to HMRC, which will update the trust’s records
-transitionProgress.bullet2 = declare that the information HMRC has about the trust is accurate and up to date
+transitionProgress.p2.bullet1 = submit the changes to HMRC, which will update the trust’s records
+transitionProgress.p2.bullet2 = declare that the information HMRC has about the trust is accurate and up to date
 transitionsProgress.return.link = Return to register and maintain a trust for a client
 transitionProgress.warning = If you do not declare that the information is up to date, your changes will not be submitted to HMRC and will not be saved
 transitionProgress.p3 = You can
@@ -667,15 +662,16 @@ transitionProgress.p3.link = return to the service and update the trust’s reco
 transitionProgress.p4 = You can print a copy of your draft answers as well as a copy of the declaration.
 transitionProgress.subHeading.2 = All sections to be completed
 transitionProgress.subHeading.3 = Additional sections to be completed
-
-transitionProgress.p5 = You can save or print a draft copy of your saved answers once all sections are up to date, as well as a declared copy after you have made a declaration.
-transitionProgress.subHeading.4 = Summary
-transitionProgress.p6 = You can
-transitionProgress.printsave.link = print or save a draft copy of your saved answers
-
-transitionProgress.subHeading.5 = Update asset details
-transitionProgress.p7 = To update any asset details after making the declaration for this trust, use Self Assessment online or the
-transitionProgress.sa900.link = Trust and Estate Tax Return form (SA900) (opens in a new window or tab)
+transitionProgress.subHeading.4 = What happens next
+transitionProgress.p5 = Once you have declared the changes to the trust record, HMRC will:
+transitionProgress.p5.bullet1 = register the trust as needing to pay tax
+transitionProgress.p5.bullet2 = replace the trust’s Unique Reference Number (URN) with a Unique Taxpayer Reference (UTR)
+transitionProgress.p6 = You will need to use the UTR to make any changes to the trust’s record from now on.
+transitionProgress.p7 = You will also need to annually:
+transitionProgress.p7.bullet1 = submit a Self Assessment: Trust and Estate Tax Return form (SA900) for the trust
+transitionProgress.p7.bullet2 = update the trust record if required, or declare the trust record is up to date
+transitionProgress.p8 = If the trust no longer needs to pay tax at any point,
+transitionProgress.p8.link = contact HMRC (opens in a new window or tab)
 
 taskList.trustDetails.label = Trust details
 taskList.assets.label = Assets
@@ -904,7 +900,7 @@ otherIndividualMentalCapacityYesNo.checkYourAnswersLabel = Does {0} have mental 
 protectorIndividualOrBusiness.checkYourAnswersLabel = Is the protector an individual or a business?
 
 ## Individual
-individualProtectorName.checkYourAnswersLabel = What is the protector's name?
+individualProtectorName.checkYourAnswersLabel = What is the protector’s name?
 individualProtectorDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
 individualProtectorDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
 individualProtectorCountryOfNationalityYesNo.checkYourAnswersLabel = Do you know {0}’s country of nationality?
@@ -1094,3 +1090,43 @@ playbackProblemContactHMRC.p3 = If you have submitted a tax return for this trus
 
 testOnly.fourOrFiveMLD.four = 4MLD
 testOnly.fourOrFiveMLD.five = 5MLD
+
+agentConfirmation.title = Declaration received
+agentConfirmation.heading = Declaration received
+agentConfirmation.heading2 = Your reference is:
+agentConfirmation.printsave.link = Print or save a copy of your answers
+agentConfirmation.subheading1 = What happens next
+agentConfirmation.paragraph1 = HMRC will register the trust as one that needs to pay tax.
+agentConfirmation.paragraph2 = The Unique Reference Number (URN) for the trust will be replaced with a Unique Taxpayer Reference (UTR).
+agentConfirmation.paragraph3 = Your client does not need to claim the trust, or authorise you to maintain the trust again.
+agentConfirmation.paragraph4 = Make a note of your reference number in case you need to contact HMRC.
+agentConfirmation.subheading2 = Getting the Unique Taxpayer Reference (UTR)
+agentConfirmation.paragraph5 = HMRC will post the trust’s UTR to the lead trustee. This can take up to 15 working days if they live in the UK, and up to 21 working days if they live outside the UK.
+agentConfirmation.paragraph6 = If the UTR does not arrive, the lead trustee will need to
+agentConfirmation.paragraph6.link = contact HMRC (opens in a new window or tab)
+agentConfirmation.subheading3 = What you need to do
+agentConfirmation.paragraph7 = You need to use the trust’s UTR to make any changes to the trust’s record from now on.
+agentConfirmation.paragraph8 = This means you cannot make changes to the trust’s record online until the lead trustee gets the trust’s UTR.
+agentConfirmation.warning = If you try to make changes using the trust’s URN, the changes will not be saved.
+agentConfirmation.paragraph9 = If any of the trust details change before you get the UTR, keep a record of the changes and make them online once you have the UTR.
+agentConfirmation.paragraph10 = You can return to
+agentConfirmation.paragraph10.link = register and maintain another trust for a client
+
+individualConfirmation.title = Declaration received
+individualConfirmation.heading = Declaration received
+individualConfirmation.heading2 = Your reference is:
+individualConfirmation.printsave.link = Print or save a copy of your answers
+individualConfirmation.subheading1 = What happens next
+individualConfirmation.paragraph1 = HMRC will register the trust as one that needs to pay tax.
+individualConfirmation.paragraph2 = The Unique Reference Number (URN) for the trust will be replaced with a Unique Taxpayer Reference (UTR).
+individualConfirmation.paragraph3 = This Government Gateway account will still be linked to the trust, as will any agents you may use.
+individualConfirmation.paragraph4 = Make a note of your reference number in case you need to contact HMRC.
+individualConfirmation.subheading2 = Getting the Unique Taxpayer Reference (UTR)
+individualConfirmation.paragraph5 = HMRC will post the trust’s UTR to the lead trustee. This can take up to 15 working days if they live in the UK, and up to 21 working days if they live outside the UK.
+individualConfirmation.paragraph6 = If the UTR does not arrive, the lead trustee will need to
+individualConfirmation.paragraph6.link = contact HMRC (opens in a new window or tab)
+individualConfirmation.subheading3 = What you need to do
+individualConfirmation.paragraph7 = You need to use the trust’s UTR to make any changes to the trust’s record from now on.
+individualConfirmation.paragraph8 = This means you cannot make changes to the trust’s record online until the lead trustee gets the trust’s UTR.
+individualConfirmation.warning = If you try to make changes using the trust’s URN, the changes will not be saved.
+individualConfirmation.paragraph9 = If any of the trust details change before you get the UTR, keep a record of the changes and make them online once you have the UTR.

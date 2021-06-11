@@ -18,7 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.UKAddressFormProvider
-import models.pages.WhatIsNext.MakeChanges
+import models.pages.WhatIsNext.{MakeChanges, NeedsToPayTax}
 import models.{UKAddress, UserAnswers}
 import pages.WhatIsNextPage
 import pages.declaration.AgencyRegisteredAddressUkPage
@@ -76,22 +76,41 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted" in {
+    "redirect to the next page when valid data is submitted" when {
 
-      val application =
-        applicationBuilder(userAnswers = Some(baseAnswers)).build()
+      "migrating from non-taxable to taxable" in {
 
-      val request =
-        FakeRequest(POST, agencyRegisteredAddressUkRoute)
-          .withFormUrlEncodedBody(("line1", "value 1"), ("line2", "value 2"),("postcode", "NE1 1ZZ"))
+        val answers = baseAnswers.set(WhatIsNextPage, NeedsToPayTax).success.value
 
-      val result = route(application, request).value
+        val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      status(result) mustEqual SEE_OTHER
+        val request = FakeRequest(POST, agencyRegisteredAddressUkRoute)
+          .withFormUrlEncodedBody(("line1", "value 1"), ("line2", "value 2"), ("postcode", "NE1 1ZZ"))
 
-      redirectLocation(result).value mustEqual routes.AgentDeclarationController.onPageLoad().url
+        val result = route(application, request).value
 
-      application.stop()
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual controllers.transition.declaration.routes.AgentDeclarationController.onPageLoad().url
+
+        application.stop()
+      }
+
+      "not migrating from non-taxable to taxable" in {
+
+        val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+
+        val request = FakeRequest(POST, agencyRegisteredAddressUkRoute)
+          .withFormUrlEncodedBody(("line1", "value 1"), ("line2", "value 2"), ("postcode", "NE1 1ZZ"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual routes.AgentDeclarationController.onPageLoad().url
+
+        application.stop()
+      }
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
