@@ -36,7 +36,8 @@ class MigrateTo5mldInformationController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
-
-          Ok(view())
+      val identifier = request.userAnswers.identifier
+      val identifierType = request.userAnswers.identifierType
+          Ok(view(identifier,identifierType))
       }
 }

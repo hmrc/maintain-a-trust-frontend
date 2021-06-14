@@ -17,6 +17,7 @@
 package views
 
 
+import models.UTR
 import views.behaviours.ViewBehaviours
 import views.html.MigrateTo5mldInformationView
 
@@ -24,11 +25,16 @@ class MigrateTo5mldInformationViewSpec extends ViewBehaviours {
 
   "InformationMaintainingThisTrust view for UTR" must {
 
+    val utr = "1234567890"
+
     val view = viewFor[MigrateTo5mldInformationView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply()(fakeRequest, messages)
+    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
-    behave like normalPage(applyView, "migrateTo5mldInformation",
+    behave like normalPageTitleWithCaption(applyView,
+      "migrateTo5mldInformation",
+      "utr",
+      utr,
       "p1",
       "p2",
       "bullet1",

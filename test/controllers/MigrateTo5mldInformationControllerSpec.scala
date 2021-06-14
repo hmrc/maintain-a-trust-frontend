@@ -28,6 +28,8 @@ class MigrateTo5mldInformationControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
+      val utr = "1234567890"
+
       val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -41,7 +43,7 @@ class MigrateTo5mldInformationControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view()(request, messages).toString
+        view(utr, UTR)(request, messages).toString
 
       application.stop()
 
