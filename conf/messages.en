@@ -1035,6 +1035,13 @@ trustUkPropertyYesNo.checkYourAnswersLabel = Does the trust own UK land or prope
 trustRecordedOnAnotherRegisterYesNo.checkYourAnswersLabel = Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?
 trustHasBusinessRelationshipInUkYesNo.checkYourAnswersLabel = Does the trust have an ongoing business relationship in the UK?
 
+governedByUkLaw.checkYourAnswersLabel = Is the trust governed by UK law?
+governingCountry.checkYourAnswersLabel = What country governs the trust?
+administeredInUk.checkYourAnswersLabel = Does the trust’s general administration take place in the UK?
+administrationCountry.checkYourAnswersLabel = In what country is the trust administered?
+setUpAfterSettlorDied.checkYourAnswersLabel = Was the trust set up after the settlor died?
+
+
 # Assets
 nonEeaBusiness.name.checkYourAnswersLabel = What is the company’s name?
 nonEeaBusiness.internationalAddress.checkYourAnswersLabel = What is {0}’s address?

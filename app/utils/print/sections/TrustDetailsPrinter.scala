@@ -20,21 +20,39 @@ import models.UserAnswers
 import pages.trustdetails._
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
-
 import javax.inject.Inject
+import pages.settlors.SetUpAfterSettlorDiedYesNoPage
 
 class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends PrinterHelper {
 
   def print(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
-    val rows: Seq[Option[AnswerRow]] = Seq(
-      converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
-      converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
-      converter.utr(userAnswers, "trustUniqueTaxReference"),
-      converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
-      converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
-      converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")
-    )
+    val rows: Seq[Option[AnswerRow]] = if (userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
+      Seq(
+        converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
+        converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
+
+        converter.yesNoQuestion(GovernedInsideTheUKPage, userAnswers,"governedInsideTheUK"),
+        converter.countryQuestion(CountryGoverningTrustPage, userAnswers, "countryGoverningTrust", ""),
+        converter.yesNoQuestion(AdministrationInsideUKPage, userAnswers,"administeredInUk"),
+        converter.countryQuestion(CountryAdministeringTrustPage, userAnswers, "administrationCountry", ""),
+        converter.yesNoQuestion(SetUpAfterSettlorDiedYesNoPage, userAnswers,"setUpAfterSettlorDied"),
+
+        converter.utr(userAnswers, "trustUniqueTaxReference"),
+        converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
+        converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
+        converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")
+      )
+    } else {
+      Seq(
+        converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
+        converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
+        converter.utr(userAnswers, "trustUniqueTaxReference"),
+        converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
+        converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
+        converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")
+      )
+    }
 
     Seq(answerSectionWithRows(rows, userAnswers.isTrustTaxable))
   }
