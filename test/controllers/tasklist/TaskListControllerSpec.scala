@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.{TrustConnector, TrustsStoreConnector}
 import models.pages.Tag.{InProgress, UpToDate}
 import models.pages.{Tag, WhatIsNext}
-import models.{CompletedMaintenanceTasks, EntityStatus, UserAnswers}
+import models.{CompletedMaintenanceTasks, EntityStatus, FirstTaxYearAvailable, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
 import org.scalacheck.Arbitrary.arbitrary
@@ -59,11 +59,14 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
     Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Some(InProgress)) ::
       mandatorySections4mld(identifier)
 
-  def mandatorySectionsTransitionToTaxable(identifier: String): List[Task] = List(
+  def mandatorySectionsTransitionToTaxableWithoutTaxLiability(identifier: String): List[Task] = List(
     Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Some(InProgress)),
-    Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), Some(InProgress)),
-    Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), Some(InProgress))
+    Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), Some(InProgress))
   )
+
+  def mandatorySectionsTransitionToTaxableWithTaxLiability(identifier: String): List[Task] =
+    mandatorySectionsTransitionToTaxableWithoutTaxLiability(identifier) :+
+      Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), Some(InProgress))
 
   def optionalSectionsTransitionToTaxable(identifier: String, status: Tag): List[Task] =
     List(
@@ -86,10 +89,17 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
   override def beforeEach(): Unit = {
     reset(mockTrustsStoreConnector, mockTrustsConnector)
 
-    when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+    when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
+      .thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
-    when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(None)))
-    when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(None)))
+    when(mockTrustsConnector.getSettlorsStatus(any())(any(), any()))
+      .thenReturn(Future.successful(EntityStatus(None)))
+
+    when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any()))
+      .thenReturn(Future.successful(EntityStatus(None)))
+
+    when(mockTrustsConnector.getFirstTaxYearToAskFor(any())(any(), any()))
+      .thenReturn(Future.successful(FirstTaxYearAvailable(1, earlierYearsToDeclare = false)))
   }
 
   "TaskListController Controller" when {
@@ -217,38 +227,82 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
       "return OK and the correct view for a GET" when {
 
         "settlors and beneficiaries not included in additional sections" when {
-          "entity statuses are None and tasks are incomplete" in {
+          "entity statuses are None and tasks are incomplete" when {
 
-            val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+            "there are no tax years to ask for" in {
 
-            val application = applicationBuilder(userAnswers = Some(answers))
-              .overrides(
-                bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
-                bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
-              ).build()
+              val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
 
-            val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+              when(mockTrustsConnector.getFirstTaxYearToAskFor(any())(any(), any()))
+                .thenReturn(Future.successful(FirstTaxYearAvailable(0, earlierYearsToDeclare = false)))
 
-            val result = route(application, request).value
+              val application = applicationBuilder(userAnswers = Some(answers))
+                .overrides(
+                  bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
+                  bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
+                ).build()
 
-            val view = application.injector.instanceOf[NonTaxToTaxProgressView]
+              val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
-            status(result) mustEqual OK
+              val result = route(application, request).value
 
-            contentAsString(result) mustEqual
-              view(
-                identifier = baseAnswers.identifier,
-                identifierType = baseAnswers.identifierType,
-                mandatory = mandatorySectionsTransitionToTaxable(baseAnswers.identifier),
-                additional = Nil,
-                affinityGroup = Organisation,
-                nextUrl = expectedContinueUrl,
-                isAbleToDeclare = false
-              )(request, messages).toString
+              val view = application.injector.instanceOf[NonTaxToTaxProgressView]
 
-            application.stop()
+              status(result) mustEqual OK
+
+              contentAsString(result) mustEqual
+                view(
+                  identifier = baseAnswers.identifier,
+                  identifierType = baseAnswers.identifierType,
+                  mandatory = mandatorySectionsTransitionToTaxableWithoutTaxLiability(baseAnswers.identifier),
+                  additional = Nil,
+                  affinityGroup = Organisation,
+                  nextUrl = expectedContinueUrl,
+                  isAbleToDeclare = false
+                )(request, messages).toString
+
+              application.stop()
+            }
+
+            "there are some tax years to ask for" in {
+
+              forAll(arbitrary[Int].suchThat(_ > 0)) { yearsAgo =>
+                beforeEach()
+
+                val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+
+                when(mockTrustsConnector.getFirstTaxYearToAskFor(any())(any(), any()))
+                  .thenReturn(Future.successful(FirstTaxYearAvailable(yearsAgo, earlierYearsToDeclare = false)))
+
+                val application = applicationBuilder(userAnswers = Some(answers))
+                  .overrides(
+                    bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
+                    bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
+                  ).build()
+
+                val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+                val result = route(application, request).value
+
+                val view = application.injector.instanceOf[NonTaxToTaxProgressView]
+
+                status(result) mustEqual OK
+
+                contentAsString(result) mustEqual
+                  view(
+                    identifier = baseAnswers.identifier,
+                    identifierType = baseAnswers.identifierType,
+                    mandatory = mandatorySectionsTransitionToTaxableWithTaxLiability(baseAnswers.identifier),
+                    additional = Nil,
+                    affinityGroup = Organisation,
+                    nextUrl = expectedContinueUrl,
+                    isAbleToDeclare = false
+                  )(request, messages).toString
+
+                application.stop()
+              }
+            }
           }
-
         }
 
         "settlors and beneficiaries included in additional sections" when {
@@ -287,7 +341,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
               view(
                 identifier = baseAnswers.identifier,
                 identifierType = baseAnswers.identifierType,
-                mandatory = mandatorySectionsTransitionToTaxable(answers.identifier),
+                mandatory = mandatorySectionsTransitionToTaxableWithTaxLiability(answers.identifier),
                 additional = optionalSectionsTransitionToTaxable(answers.identifier, UpToDate),
                 affinityGroup = Organisation,
                 nextUrl = expectedContinueUrl,
@@ -327,7 +381,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                   view(
                     identifier = baseAnswers.identifier,
                     identifierType = baseAnswers.identifierType,
-                    mandatory = mandatorySectionsTransitionToTaxable(answers.identifier),
+                    mandatory = mandatorySectionsTransitionToTaxableWithTaxLiability(answers.identifier),
                     additional = optionalSectionsTransitionToTaxable(answers.identifier, entityStatus),
                     affinityGroup = Organisation,
                     nextUrl = expectedContinueUrl,

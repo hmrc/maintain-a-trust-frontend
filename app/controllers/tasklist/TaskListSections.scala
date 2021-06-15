@@ -145,7 +145,8 @@ trait TaskListSections {
   def generateTransitionTaskList(tasks: CompletedMaintenanceTasks,
                                  identifier: String,
                                  settlorsStatus: EntityStatus,
-                                 beneficiariesStatus: EntityStatus): TaskList = {
+                                 beneficiariesStatus: EntityStatus,
+                                 yearsToAskFor: Int): TaskList = {
 
     def task(status: EntityStatus, taskCompleted: Boolean, link: Link): List[Task] = status.completed match {
       case Some(value) => List(Task(link, Some(Tag.tagFor(value))))
@@ -161,17 +162,21 @@ trait TaskListSections {
       Task(
         Link(Assets, trustAssetsRouteEnabled(identifier)),
         Some(Tag.tagFor(tasks.assets))
-      ),
-      Task(
-        Link(TaxLiability, taxLiabilityRouteEnabled(identifier)),
-        Some(Tag.tagFor(tasks.taxLiability))
       )
+    )
+
+    lazy val taxLiabilityTask = Task(
+      Link(TaxLiability, taxLiabilityRouteEnabled(identifier)),
+      Some(Tag.tagFor(tasks.taxLiability))
     )
 
     val settlorsTask = task(settlorsStatus, tasks.settlors, Link(Settlors, settlorsRouteEnabled(identifier)))
     val beneficiariesTask = task(beneficiariesStatus, tasks.beneficiaries, Link(Beneficiaries, beneficiariesRouteEnabled(identifier)))
 
-    TaskList(transitionTasks, settlorsTask ::: beneficiariesTask)
+    TaskList(
+      if (yearsToAskFor == 0) transitionTasks else transitionTasks :+ taxLiabilityTask,
+      settlorsTask ::: beneficiariesTask
+    )
   }
 
 }

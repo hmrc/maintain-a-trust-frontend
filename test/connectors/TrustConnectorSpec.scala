@@ -22,7 +22,7 @@ import controllers.Assets._
 import generators.Generators
 import models.http._
 import models.pages.ShareClass.Ordinary
-import models.{EntityStatus, FullName, TrustDetails}
+import models.{EntityStatus, FirstTaxYearAvailable, FullName, TrustDetails}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
@@ -852,6 +852,44 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
             result mustBe EntityStatus(completed)
 
             application.stop()
+        }
+      }
+    }
+
+    "getFirstTaxYearToAskFor" - {
+      "return first tax year available when request is successful" in {
+
+        val json = Json.parse(
+          """
+            |{
+            | "yearsAgo": 1,
+            | "earlierYearsToDeclare": false
+            |}
+            |""".stripMargin)
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(s"/trusts/tax-liability/$identifier/first-year-to-ask-for"))
+            .willReturn(okJson(json.toString))
+        )
+
+        val processed = connector.getFirstTaxYearToAskFor(identifier)
+
+        whenReady(processed) {
+          r =>
+            r mustBe FirstTaxYearAvailable(
+              yearsAgo = 1,
+              earlierYearsToDeclare = false
+            )
         }
       }
     }
