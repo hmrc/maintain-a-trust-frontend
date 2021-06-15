@@ -16,10 +16,12 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
+@import controllers.routes._
 
 @this(
     appConfig: FrontendAppConfig,
-    main_template: MainTemplate
+    main_template: MainTemplate,
+    formHelper: FormWithCSRF
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
@@ -29,27 +31,31 @@
     title = messages("migrateTo5mldInformation.title")
 ) {
 
-   @components.back_link()
+   @formHelper(action = MigrateTo5mldInformationController.onSubmit(), 'autoComplete -> "off") {
 
-   @components.heading_with_caption(headingKey = "migrateTo5mldInformation.heading", caption = s"$identifierType.caption", captionParam = identifier)
+        @components.back_link()
 
-    <p>@messages("migrateTo5mldInformation.p1")</p>
+        @components.heading_with_caption(headingKey = "migrateTo5mldInformation.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
-    <p>@messages("migrateTo5mldInformation.p2")</p>
+         <p>@messages("migrateTo5mldInformation.p1")</p>
 
-    @components.bullet_list("migrateTo5mldInformation", List(
-    "bullet1",
-    "bullet2",
-    "bullet3"
-    ))
+         <p>@messages("migrateTo5mldInformation.p2")</p>
 
-    <p>@messages("migrateTo5mldInformation.p3")</p>
+         @components.bullet_list("migrateTo5mldInformation", List(
+         "bullet1",
+         "bullet2",
+         "bullet3"
+         ))
 
-    <h2>@messages("migrateTo5mldInformation.heading2")</h2>
+         <p>@messages("migrateTo5mldInformation.p3")</p>
 
-    <p>@messages("migrateTo5mldInformation.p4")</p>
+         <h2>@messages("migrateTo5mldInformation.heading2")</h2>
 
-    @components.button_link(messages("site.onlyContinue"), controllers.transition.routes.ExpressTrustYesNoController.onPageLoad().url)
+         <p>@messages("migrateTo5mldInformation.p4")</p>
+
+         @components.submit_button()
+
+    }
 
 }
 

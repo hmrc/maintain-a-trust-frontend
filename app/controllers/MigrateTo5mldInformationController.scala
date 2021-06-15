@@ -33,6 +33,14 @@ class MigrateTo5mldInformationController @Inject()(
                                                          )(implicit config: FrontendAppConfig)
   extends FrontendBaseController with I18nSupport with Logging {
 
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier{
+
+    implicit request =>
+
+    Redirect(controllers.transition.routes.ExpressTrustYesNoController.onPageLoad())
+
+  }
+
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
       val identifier = request.userAnswers.identifier

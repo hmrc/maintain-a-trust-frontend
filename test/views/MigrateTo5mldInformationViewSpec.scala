@@ -46,7 +46,7 @@ class MigrateTo5mldInformationViewSpec extends ViewBehaviours {
 
     behave like pageWithBackLink(applyView)
 
-    behave like pageWithContinueButton(applyView, controllers.transition.routes.ExpressTrustYesNoController.onPageLoad().url, Some("site.onlyContinue"))
+    behave like pageWithASubmitButton(applyView)
 
   }
 }

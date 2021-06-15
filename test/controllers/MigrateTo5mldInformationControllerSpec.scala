@@ -24,29 +24,54 @@ import views.html.MigrateTo5mldInformationView
 
 class MigrateTo5mldInformationControllerSpec extends SpecBase {
 
-  "InformationMaintainingThisTrustPage Controller" must {
+  "MigrateTo5mldInformationController" when {
 
-    "return OK and the correct view for a GET" in {
+    ".onPageLoad" must {
+      "return OK and the correct view" in {
 
-      val utr = "1234567890"
+        val utr = "1234567890"
 
-      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-      val request = FakeRequest(GET, routes.MigrateTo5mldInformationController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.MigrateTo5mldInformationController.onPageLoad().url)
 
-      val result = route(application, request).value
+        val result = route(application, request).value
 
-      val view = application.injector.instanceOf[MigrateTo5mldInformationView]
+        val view = application.injector.instanceOf[MigrateTo5mldInformationView]
 
-      status(result) mustEqual OK
+        status(result) mustEqual OK
 
-      contentAsString(result) mustEqual
-        view(utr, UTR)(request, messages).toString
+        contentAsString(result) mustEqual
+          view(utr, UTR)(request, messages).toString
 
-      application.stop()
+        application.stop()
 
+      }
     }
+
+    ".onSubmit" must {
+      "redirect to ExpressTrustYesNoController " in {
+
+
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request = FakeRequest(POST, routes.MigrateTo5mldInformationController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual controllers.transition.routes.ExpressTrustYesNoController.onPageLoad().url
+
+        application.stop()
+
+      }
+    }
+
+
   }
 }
