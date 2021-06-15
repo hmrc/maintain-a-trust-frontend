@@ -118,7 +118,7 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) exte
   }
 
   def getFirstTaxYearToAskFor(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[FirstTaxYearAvailable] = {
-    val url = s"$baseUrl/$identifier/first-year-to-ask-for"
+    val url = s"$baseUrl/tax-liability/$identifier/first-year-to-ask-for"
     http.GET[FirstTaxYearAvailable](url)
   }
 
