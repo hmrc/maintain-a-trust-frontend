@@ -69,7 +69,6 @@ POST       /agency/address/international                controllers.declaration.
 
 GET        /create-agent-services-account               controllers.CreateAgentServicesAccountController.onPageLoad()
 
-GET        /trust-not-claimed                           controllers.TrustNotClaimedController.onPageLoad()
 GET        /agent-not-authorised                        controllers.AgentNotAuthorisedController.onPageLoad()
 
 GET        /status/closed                               controllers.TrustStatusController.closed()
