@@ -50,34 +50,40 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
   val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
   def mandatorySections4mld(identifier: String): List[Task] = List(
-    Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), Some(InProgress)),
-    Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$identifier"), Some(InProgress)),
-    Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), Some(InProgress))
+    Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Some(InProgress)),
+    Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), Some(InProgress)),
+    Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Some(InProgress))
   )
 
   def mandatorySections5mld(identifier: String): List[Task] =
-    Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Some(InProgress)) ::
+    Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Some(InProgress)) ::
       mandatorySections4mld(identifier)
 
   def mandatorySectionsTransitionToTaxable(identifier: String): List[Task] = List(
-    Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Some(InProgress)),
-    Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), Some(InProgress)),
-    Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), Some(InProgress))
+    Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Some(InProgress)),
+    Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), Some(InProgress)),
+    Task(Link(TaxLiability, Some(s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier")), Some(InProgress))
   )
 
   def optionalSectionsTransitionToTaxable(identifier: String, status: Tag): List[Task] =
     List(
-      Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), Some(status)),
-      Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), Some(status))
+      Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Some(status)),
+      Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Some(status))
+    )
+
+  def additionalSectionsWhenTrustDetailsNotCompleted(identifier: String, status: Tag): List[Task] =
+    List(
+      Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Some(status)),
+      Task(Link(Beneficiaries, None), Some(status))
     )
 
   def optionalSections4mld(identifier: String): List[Task] = List(
-    Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), Some(InProgress)),
-    Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), Some(InProgress))
+    Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), Some(InProgress)),
+    Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), Some(InProgress))
   )
 
   def optionalSections5mld(identifier: String): List[Task] =
-    Task(Link(NonEeaBusinessAsset, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), Some(InProgress)) ::
+    Task(Link(NonEeaBusinessAsset, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), Some(InProgress)) ::
       optionalSections4mld(identifier)
 
   val mockTrustsStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
@@ -288,7 +294,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                 identifier = baseAnswers.identifier,
                 identifierType = baseAnswers.identifierType,
                 mandatory = mandatorySectionsTransitionToTaxable(answers.identifier),
-                additional = optionalSectionsTransitionToTaxable(answers.identifier, UpToDate),
+                additional = additionalSectionsWhenTrustDetailsNotCompleted(answers.identifier, UpToDate),
                 affinityGroup = Organisation,
                 nextUrl = expectedContinueUrl,
                 isAbleToDeclare = false
@@ -328,7 +334,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                     identifier = baseAnswers.identifier,
                     identifierType = baseAnswers.identifierType,
                     mandatory = mandatorySectionsTransitionToTaxable(answers.identifier),
-                    additional = optionalSectionsTransitionToTaxable(answers.identifier, entityStatus),
+                    additional = additionalSectionsWhenTrustDetailsNotCompleted(answers.identifier, entityStatus),
                     affinityGroup = Organisation,
                     nextUrl = expectedContinueUrl,
                     isAbleToDeclare = false

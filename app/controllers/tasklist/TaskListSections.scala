@@ -107,34 +107,34 @@ trait TaskListSections {
 
     val mandatoryTasks = List(
       Task(
-        Link(TrustDetails, trustDetailsRouteEnabled(identifier)),
+        Link(TrustDetails, Some(trustDetailsRouteEnabled(identifier))),
         Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
       ),
       Task(
-        Link(Settlors, settlorsRouteEnabled(identifier)),
+        Link(Settlors, Some(settlorsRouteEnabled(identifier))),
         Some(Tag.tagFor(tasks.settlors))
       ),
       Task(
-        Link(Trustees, trusteesRouteEnabled(identifier)),
+        Link(Trustees, Some(trusteesRouteEnabled(identifier))),
         Some(Tag.tagFor(tasks.trustees))
       ),
       Task(
-        Link(Beneficiaries, beneficiariesRouteEnabled(identifier)),
+        Link(Beneficiaries, Some(beneficiariesRouteEnabled(identifier))),
         Some(Tag.tagFor(tasks.beneficiaries))
       )
     ).filterNot(filter5mldSections(_, TrustDetails))
 
     val optionalTasks = List(
       Task(
-        Link(NonEeaBusinessAsset, nonEeaCompanyRouteEnabled(identifier)),
+        Link(NonEeaBusinessAsset, Some(nonEeaCompanyRouteEnabled(identifier))),
         Some(Tag.tagFor(tasks.assets, config.maintainNonEeaCompaniesEnabled))
       ),
       Task(
-        Link(Protectors, protectorsRouteEnabled(identifier)),
+        Link(Protectors, Some(protectorsRouteEnabled(identifier))),
         Some(Tag.tagFor(tasks.protectors))
       ),
       Task(
-        Link(Natural, otherIndividualsRouteEnabled(identifier)),
+        Link(Natural, Some(otherIndividualsRouteEnabled(identifier))),
         Some(Tag.tagFor(tasks.other))
       )
     ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
@@ -155,21 +155,28 @@ trait TaskListSections {
 
     val transitionTasks = List(
       Task(
-        Link(TrustDetails, trustDetailsRouteEnabled(identifier)),
+        Link(TrustDetails, Some(trustDetailsRouteEnabled(identifier))),
         Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
       ),
       Task(
-        Link(Assets, trustAssetsRouteEnabled(identifier)),
+        Link(Assets, Some(trustAssetsRouteEnabled(identifier))),
         Some(Tag.tagFor(tasks.assets))
       ),
       Task(
-        Link(TaxLiability, taxLiabilityRouteEnabled(identifier)),
+        Link(TaxLiability, Some(taxLiabilityRouteEnabled(identifier))),
         Some(Tag.tagFor(tasks.taxLiability))
       )
     )
 
-    val settlorsTask = task(settlorsStatus, tasks.settlors, Link(Settlors, settlorsRouteEnabled(identifier)))
-    val beneficiariesTask = task(beneficiariesStatus, tasks.beneficiaries, Link(Beneficiaries, beneficiariesRouteEnabled(identifier)))
+    val settlorsTask = task(settlorsStatus, tasks.settlors, Link(Settlors, Some(settlorsRouteEnabled(identifier))))
+
+    val beneficiariesLink = if(tasks.trustDetails){
+      Some(beneficiariesRouteEnabled(identifier))
+    } else {
+      None
+    }
+
+    val beneficiariesTask = task(beneficiariesStatus, tasks.beneficiaries, Link(Beneficiaries, beneficiariesLink))
 
     TaskList(transitionTasks, settlorsTask ::: beneficiariesTask)
   }
