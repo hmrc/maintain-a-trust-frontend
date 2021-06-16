@@ -43,9 +43,8 @@
 
     <p>@messages("confirmationPage.paragraph2")</p>
 
-    <h2>@messages("confirmationPage.subheading2")</h2>
-
     @if(isTrustTaxable) {
+        <h2>@messages("confirmationPage.subheading2")</h2>
         <p id="taxable-message">@messages("confirmationPage.paragraph3")</p>
     }
 
