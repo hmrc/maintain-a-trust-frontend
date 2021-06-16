@@ -42,9 +42,9 @@ class ConfirmationViewSpec extends ViewBehaviours {
 
       assertContainsText(doc, "If any of the settlor, trustee or beneficiary details change (before you make your next declaration) you will need to update them using the online service.")
 
-      assertContainsText(doc, "Declaring the trust is up to date")
-
       if (isTrustTaxable) {
+        assertContainsText(doc, "Declaring the trust is up to date")
+        
         assertContainsText(doc, "You need to declare every year the details we have are up to date. This needs to be done through the Trust Registration Service and Self Assessment online or the Trust and Estate Tax Return form (SA900).")
       } else {
         assertNotRenderedById(doc, "taxable-message")
