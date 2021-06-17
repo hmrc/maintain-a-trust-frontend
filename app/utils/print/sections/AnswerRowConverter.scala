@@ -17,7 +17,7 @@
 package utils.print.sections
 
 import models.pages.{KindOfBusiness, RoleInCompany}
-import models.{Address, Description, FullName, HowManyBeneficiaries, PassportOrIdCardDetails, UserAnswers}
+import models.{Address, Description, FullName, HowManyBeneficiaries, PassportOrIdCardDetails, URN, UTR, UserAnswers}
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
 import play.twirl.api.{Html, HtmlFormat}
@@ -39,10 +39,29 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def utr(userAnswers: UserAnswers,
-          labelKey: String,
-          messageArg: String = "")
-         (implicit messages: Messages): Option[AnswerRow] = {
+  def whichIdentifier(userAnswers: UserAnswers)
+                     (implicit messages: Messages): Option[AnswerRow] = {
+
+    userAnswers.identifierType match {
+      case UTR =>
+        Some(AnswerRow(
+          messages(s"whichIdentifier.checkYourAnswersLabel"),
+          HtmlFormat.escape(messages("uniqueTaxReference.checkYourAnswersLabel")),
+          None
+        ))
+      case URN =>
+        Some(AnswerRow(
+          messages(s"whichIdentifier.checkYourAnswersLabel"),
+          HtmlFormat.escape(messages("uniqueReferenceNumber.checkYourAnswersLabel")),
+          None
+        ))
+    }
+  }
+
+  def identifier(userAnswers: UserAnswers,
+                 labelKey: String,
+                 messageArg: String = "")
+                (implicit messages: Messages): Option[AnswerRow] = {
     Some(AnswerRow(
       messages(s"$labelKey.checkYourAnswersLabel", messageArg),
       HtmlFormat.escape(userAnswers.identifier),
@@ -172,6 +191,15 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
+  private def answerRow[T](labelKey: String, messageArg: String = "", answer: Html)
+                  (implicit messages: Messages): AnswerRow = {
+    AnswerRow(
+      label = messages(s"$labelKey.checkYourAnswersLabel", messageArg),
+      answer = answer,
+      changeUrl = None
+    )
+  }
+
   private def question[T](query: Gettable[T],
                           userAnswers: UserAnswers,
                           labelKey: String,
@@ -179,11 +207,7 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                           messageArg: String)
                          (implicit messages: Messages, rds: Reads[T]): Option[AnswerRow] = {
     userAnswers.get(query) map { x =>
-      AnswerRow(
-        label = messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-        answer = format(x),
-        changeUrl = None
-      )
+      answerRow(labelKey, messageArg, format(x))
     }
   }
 
