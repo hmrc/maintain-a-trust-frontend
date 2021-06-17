@@ -38,6 +38,12 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) exte
     http.GET[TrustDetails](url)
   }
 
+  def getTransformedTrustDetails(identifier: String)
+                                  (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
+    val url: String = s"$baseUrl/trust-details/$identifier/transformed"
+    http.GET[TrustDetails](url)
+  }
+
   def getStartDate(identifier: String)
                   (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[LocalDate] = {
     getUntransformedTrustDetails(identifier) map { trustDetails =>
