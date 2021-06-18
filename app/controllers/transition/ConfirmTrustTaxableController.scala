@@ -57,7 +57,10 @@ class ConfirmTrustTaxableController @Inject()(
         updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, MakeChanges))
         _ <- playbackRepository.set(updatedAnswers)
         _ <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
-      } yield Redirect(declarationUrl(request.user.affinityGroup, isTrustMigratingFromNonTaxableToTaxable = true))
+      } yield Redirect(declarationUrl(
+        request.user.affinityGroup,
+        isTrustMigratingFromNonTaxableToTaxable = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
+      ))
   }
 
 }

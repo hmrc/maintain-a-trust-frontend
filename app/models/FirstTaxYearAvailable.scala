@@ -14,29 +14,12 @@
  * limitations under the License.
  */
 
-package views.transition
+package models
 
-import views.behaviours.ViewBehaviours
-import views.html.transition.ConfirmTrustTaxableView
+import play.api.libs.json.{Format, Json}
 
-class ConfirmTrustTaxableViewSpec extends ViewBehaviours {
+case class FirstTaxYearAvailable(yearsAgo: Int, earlierYearsToDeclare: Boolean)
 
-  "ConfirmTrustTaxableView" must {
-
-    val application = applicationBuilder().build()
-
-    val view = application.injector.instanceOf[ConfirmTrustTaxableView]
-
-    val applyView = view.apply()(fakeRequest, messages)
-
-    behave like normalPage(
-      applyView,
-      "confirmTrustTaxable",
-      "p1", "p2"
-    )
-
-    behave like pageWithBackLink(applyView)
-
-    behave like pageWithASubmitButton(applyView)
-  }
+object FirstTaxYearAvailable {
+  implicit val format: Format[FirstTaxYearAvailable] = Json.format[FirstTaxYearAvailable]
 }

@@ -337,7 +337,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
               status(result) mustEqual SEE_OTHER
 
-              redirectLocation(result).value mustEqual controllers.transition.routes.ExpressTrustYesNoController.onPageLoad().url
+              redirectLocation(result).value mustEqual controllers.routes.MigrateTo5mldInformationController.onPageLoad().url
 
               application.stop()
             }

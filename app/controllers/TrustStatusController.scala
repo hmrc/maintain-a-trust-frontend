@@ -201,7 +201,7 @@ class TrustStatusController @Inject()(
   private def routeAfterExtraction[A](answers: UserAnswers, fromVerify: Boolean)(implicit request: OptionalDataRequest[A]): Result = {
     if (answers.trustMldStatus == Underlying4mldTrustIn5mldMode) {
       logger.info(s"[Session ID: ${Session.id(hc)}] underlying data is 4MLD. Need to answer express-trust question.")
-      Redirect(controllers.transition.routes.ExpressTrustYesNoController.onPageLoad())
+      Redirect(controllers.routes.MigrateTo5mldInformationController.onPageLoad())
     } else {
       (request.user.affinityGroup, fromVerify) match {
         case (AffinityGroup.Organisation, false) =>

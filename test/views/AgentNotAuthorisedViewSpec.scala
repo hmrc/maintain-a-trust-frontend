@@ -34,7 +34,10 @@ class AgentNotAuthorisedViewSpec extends ViewBehaviours {
       "agentNotAuthorised",
       "utr",
       utr,
-      "p1", "p2", "p3", "p4", "p5")
+      "p1", "subheading1", "p2", "p3", "subheading2", "p4", "p5",
+      "bullet.1", "bullet.2", "p6", "bullet.3", "bullet.4", "p7", "p7.a", "subheading3",
+      "p8", "p9", "p9.a", "p10", "p11", "p11.a"
+    )
 
     behave like pageWithBackLink(applyView)
   }
@@ -49,7 +52,10 @@ class AgentNotAuthorisedViewSpec extends ViewBehaviours {
       "agentNotAuthorised",
       "urn",
       urn,
-      "p1", "p2", "p3", "p4", "p5")
+      "p1", "subheading1", "p2", "p3", "subheading2", "p4", "p5",
+      "bullet.1", "bullet.2", "p6", "bullet.3", "bullet.4", "p7", "p7.a", "subheading3",
+      "p8", "p9", "p9.a", "p10", "p11", "p11.a"
+    )
 
     behave like pageWithBackLink(applyView)
   }
