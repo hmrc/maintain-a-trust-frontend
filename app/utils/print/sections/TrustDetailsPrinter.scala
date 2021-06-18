@@ -16,7 +16,7 @@
 
 package utils.print.sections
 
-import models.UserAnswers
+import models.{URN, UTR, UserAnswers}
 import pages.trustdetails._
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
@@ -27,10 +27,16 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
 
   def print(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
+    val utrOrUrnRow = userAnswers.identifierType match {
+      case UTR => converter.identifier(userAnswers, "uniqueTaxReference")
+      case URN => converter.identifier(userAnswers, "uniqueReferenceNumber")
+    }
+
     val rows: Seq[Option[AnswerRow]] = Seq(
       converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
       converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
-      converter.utr(userAnswers, "trustUniqueTaxReference"),
+      converter.whichIdentifier(userAnswers),
+      utrOrUrnRow,
       converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
       converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
       converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")

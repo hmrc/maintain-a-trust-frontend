@@ -188,6 +188,10 @@ viewLastDeclarationYesNo.hint = Details declared to HMRC about the settlors, tru
 viewLastDeclarationYesNo.checkYourAnswersLabel = Do you want to view this trust’s last declaration?
 viewLastDeclarationYesNo.error.required = Select yes if you want to view this trust’s last declaration
 
+whichIdentifier.checkYourAnswersLabel = Which unique identifier does the trust have?
+uniqueTaxReference.checkYourAnswersLabel = Unique Taxpayer Reference (UTR)
+uniqueReferenceNumber.checkYourAnswersLabel = Unique Reference Number (URN)
+
 internationalAddress.error.line1.required = Enter address line 1
 internationalAddress.error.line2.required = Enter address line 2
 internationalAddress.error.country.required = Select a country
