@@ -18,7 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import models.http.{DeclarationForApi, DeclarationResponse, TrustsResponse}
-import models.{EntityStatus, FirstTaxYearAvailable, TrustDetails}
+import models.{FirstTaxYearAvailable, MigrationStatus, TrustDetails}
 import play.api.Logging
 import play.api.libs.json.JsBoolean
 import uk.gov.hmrc.http.HttpReads.Implicits._
@@ -106,15 +106,15 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) exte
   }
 
   def getSettlorsStatus(identifier: String)
-                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EntityStatus] = {
+                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[MigrationStatus] = {
     val url: String = s"$baseUrl/settlors/$identifier/complete-for-migration"
-    http.GET[EntityStatus](url)
+    http.GET[MigrationStatus](url)
   }
 
   def getBeneficiariesStatus(identifier: String)
-                            (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EntityStatus] = {
+                            (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[MigrationStatus] = {
     val url: String = s"$baseUrl/beneficiaries/$identifier/complete-for-migration"
-    http.GET[EntityStatus](url)
+    http.GET[MigrationStatus](url)
   }
 
   def getFirstTaxYearToAskFor(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[FirstTaxYearAvailable] = {

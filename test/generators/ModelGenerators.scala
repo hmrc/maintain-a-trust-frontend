@@ -18,11 +18,11 @@ package generators
 
 import models.http._
 import models.pages.WhatIsNext
-
-import java.time.LocalDate
-import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
+import models.{FullName, InternationalAddress, MigrationStatus, PassportOrIdCardDetails, UKAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
+
+import java.time.LocalDate
 
 trait ModelGenerators {
 
@@ -179,6 +179,11 @@ trait ModelGenerators {
         )
       } yield
         response
+    }
+
+  implicit lazy val arbitraryMigrationStatus: Arbitrary[MigrationStatus] =
+    Arbitrary {
+      Gen.oneOf(MigrationStatus.values)
     }
 
 }

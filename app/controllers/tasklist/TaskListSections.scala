@@ -17,9 +17,10 @@
 package controllers.tasklist
 
 import config.FrontendAppConfig
+import models.MigrationStatus._
 import models.pages.Tag
 import models.pages.Tag.InProgress
-import models.{CompletedMaintenanceTasks, EntityStatus, TrustMldStatus}
+import models.{CompletedMaintenanceTasks, MigrationStatus, TrustMldStatus}
 import pages.Page
 import sections._
 import sections.assets.{Assets, NonEeaBusinessAsset}
@@ -144,14 +145,14 @@ trait TaskListSections {
 
   def generateTransitionTaskList(tasks: CompletedMaintenanceTasks,
                                  identifier: String,
-                                 settlorsStatus: EntityStatus,
-                                 beneficiariesStatus: EntityStatus,
+                                 settlorsStatus: MigrationStatus,
+                                 beneficiariesStatus: MigrationStatus,
                                  yearsToAskFor: Int): TaskList = {
 
-    def task(status: EntityStatus, taskCompleted: Boolean, link: Link): List[Task] = status.completed match {
-      case Some(value) => List(Task(link, Some(Tag.tagFor(value))))
-      case None if taskCompleted => List(Task(link, Some(Tag.tagFor(upToDate = true))))
-      case _ => Nil
+    def task(status: MigrationStatus, taskCompleted: Boolean, link: Link): List[Task] = status match {
+      case Updated | NeedsUpdating => List(Task(link, Some(Tag.tagFor(status.upToDate))))
+      case NothingToUpdate if taskCompleted => List(Task(link, Some(Tag.tagFor(upToDate = true))))
+      case NothingToUpdate => Nil
     }
 
     def linkUrl(route: String => String): Option[String] = {
