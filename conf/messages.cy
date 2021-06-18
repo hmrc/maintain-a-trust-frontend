@@ -148,7 +148,6 @@ kindOfTrust.Repair=Ymddiriedolaeth ar gyfer atgyweirio adeiladau hanesyddol
 maintainThisTrust.title=Cynnal yr ymddiriedolaeth hon
 maintainThisTrust.heading=Cynnal yr ymddiriedolaeth hon
 maintainThisTrust.utr.p1.a=Mae’r ymddiriedolaeth sydd â Chyfeirnod Unigryw y Trethdalwr (UTR)
-maintainThisTrust.urn.p1.a=
 maintainThisTrust.p1.b=wedi’i chysylltu â’r cyfrif hwn.
 maintainThisTrust.p2=Gallwch ychwanegu, tynnu a diweddaru {0} yn yr ymddiriedolaeth hon. Ni chaiff eich newidiadau eu cadw hyd nes i chi wneud datganiad.
 maintainThisTrust.p3=Os oes angen i chi gofrestru neu gynnal ymddiriedolaeth arall, bydd angen i chi ddefnyddio cyfrif Porth y Llywodraeth arall.
