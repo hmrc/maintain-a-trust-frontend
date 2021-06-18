@@ -30,12 +30,10 @@ class MigrateTo5mldInformationController @Inject()(
                                                            actions: Actions,
                                                            val controllerComponents: MessagesControllerComponents,
                                                             view: MigrateTo5mldInformationView
-                                                         )(implicit config: FrontendAppConfig)
+                                                         )
   extends FrontendBaseController with I18nSupport with Logging {
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier{
-
-    implicit request =>
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier {
 
     Redirect(controllers.transition.routes.ExpressTrustYesNoController.onPageLoad())
 
