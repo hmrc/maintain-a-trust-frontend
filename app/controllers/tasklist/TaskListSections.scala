@@ -154,6 +154,10 @@ trait TaskListSections {
       case _ => Nil
     }
 
+    def linkUrl(route: String => String): Option[String] = {
+      if (tasks.trustDetails) Some(route(identifier)) else None
+    }
+
     val transitionTasks = List(
       Task(
         Link(TrustDetails, Some(trustDetailsRouteEnabled(identifier))),
@@ -170,15 +174,8 @@ trait TaskListSections {
       Some(Tag.tagFor(tasks.taxLiability))
     )
 
-    val settlorsTask = task(settlorsStatus, tasks.settlors, Link(Settlors, Some(settlorsRouteEnabled(identifier))))
-
-    val beneficiariesLink = if(tasks.trustDetails){
-      Some(beneficiariesRouteEnabled(identifier))
-    } else {
-      None
-    }
-
-    val beneficiariesTask = task(beneficiariesStatus, tasks.beneficiaries, Link(Beneficiaries, beneficiariesLink))
+    val settlorsTask = task(settlorsStatus, tasks.settlors, Link(Settlors, linkUrl(settlorsRouteEnabled)))
+    val beneficiariesTask = task(beneficiariesStatus, tasks.beneficiaries, Link(Beneficiaries, linkUrl(beneficiariesRouteEnabled)))
 
     TaskList(
       if (yearsToAskFor == 0) transitionTasks else transitionTasks :+ taxLiabilityTask,
