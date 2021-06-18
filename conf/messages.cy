@@ -28,6 +28,11 @@ viewLastDeclarationYesNo.heading=A ydych am fwrw golwg dros ddatganiad diwethaf 
 viewLastDeclarationYesNo.hint=Manylion a ddatganwyd i CThEM am y setlwyr, ymddiriedolwyr, buddiolwyr ac os ydynt yn cael eu hychwanegu, amddiffynyddion ac unigolion eraill.
 viewLastDeclarationYesNo.checkYourAnswersLabel=A ydych am fwrw golwg dros ddatganiad diwethaf yr ymddiriedolaeth hon?
 viewLastDeclarationYesNo.error.required=Dewiswch ‘Iawn’ os ydych am fwrw golwg dros ddatganiad diwethaf yr ymddiriedolaeth hon
+
+whichIdentifier.checkYourAnswersLabel = Pa ddynodydd unigryw sydd gan yr ymddiriedolaeth?
+uniqueTaxReference.checkYourAnswersLabel = Cyfeirnod Unigryw y Trethdalwr (UTR)
+uniqueReferenceNumber.checkYourAnswersLabel = Cyfeirnod Unigryw (URN)
+
 maintainThisTrust.urn.p1.a=Yr ymddiriedolaeth gyda’r Cyfeirnod Unigryw (URN)
 session_expired.guidance.2=Bydd angen i chi fewngofnodi i barhau i gynnal yr ymddiriedolaeth.
 site.sign_in=Mewngofnodi

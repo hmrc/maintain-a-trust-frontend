@@ -42,20 +42,12 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
   def whichIdentifier(userAnswers: UserAnswers)
                      (implicit messages: Messages): Option[AnswerRow] = {
 
-    userAnswers.identifierType match {
-      case UTR =>
-        Some(AnswerRow(
-          messages(s"whichIdentifier.checkYourAnswersLabel"),
-          HtmlFormat.escape(messages("uniqueTaxReference.checkYourAnswersLabel")),
-          None
-        ))
-      case URN =>
-        Some(AnswerRow(
-          messages(s"whichIdentifier.checkYourAnswersLabel"),
-          HtmlFormat.escape(messages("uniqueReferenceNumber.checkYourAnswersLabel")),
-          None
-        ))
+    val key = userAnswers.identifierType match {
+      case UTR => "uniqueTaxReference.checkYourAnswersLabel"
+      case URN => "uniqueReferenceNumber.checkYourAnswersLabel"
     }
+
+    Some(AnswerRow(messages(s"whichIdentifier.checkYourAnswersLabel"), HtmlFormat.escape(messages(key)), None))
   }
 
   def identifier(userAnswers: UserAnswers,
