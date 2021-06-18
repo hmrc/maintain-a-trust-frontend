@@ -30,13 +30,13 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
   private val utr = "utr"
 
   private val mandatorySections = List(
-    Task(Link(Settlors, ""), None),
-    Task(Link(Trustees, ""), None),
-    Task(Link(Beneficiaries, ""), None)
+    Task(Link(Settlors, Some("")), None),
+    Task(Link(Trustees, Some("")), None),
+    Task(Link(Beneficiaries, Some("")), None)
   )
 
   private val optionalSections = List(
-    Task(Link(Natural, ""),None)
+    Task(Link(Natural, Some("")),None)
   )
 
   private val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
