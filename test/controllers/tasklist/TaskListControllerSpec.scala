@@ -18,9 +18,11 @@ package controllers.tasklist
 
 import base.SpecBase
 import connectors.{TrustConnector, TrustsStoreConnector}
+import generators.ModelGenerators
+import models.MigrationStatus.{NeedsUpdating, NothingToUpdate}
 import models.pages.Tag.{InProgress, UpToDate}
 import models.pages.{Tag, WhatIsNext}
-import models.{CompletedMaintenanceTasks, EntityStatus, FirstTaxYearAvailable, UserAnswers}
+import models.{CompletedMaintenanceTasks, FirstTaxYearAvailable, MigrationStatus, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
 import org.scalacheck.Arbitrary.arbitrary
@@ -41,7 +43,7 @@ import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
 import scala.concurrent.Future
 
-class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaCheckPropertyChecks {
+class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaCheckPropertyChecks with ModelGenerators {
 
   lazy val onPageLoad: String = controllers.routes.WhatIsNextController.onPageLoad().url
 
@@ -105,10 +107,10 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
       .thenReturn(Future.successful(CompletedMaintenanceTasks()))
 
     when(mockTrustsConnector.getSettlorsStatus(any())(any(), any()))
-      .thenReturn(Future.successful(EntityStatus(None)))
+      .thenReturn(Future.successful(NothingToUpdate))
 
     when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any()))
-      .thenReturn(Future.successful(EntityStatus(None)))
+      .thenReturn(Future.successful(NothingToUpdate))
 
     when(mockTrustsConnector.getFirstTaxYearToAskFor(any())(any(), any()))
       .thenReturn(Future.successful(FirstTaxYearAvailable(1, earlierYearsToDeclare = false)))
@@ -365,8 +367,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
           "beneficiary/settlor statuses are Some" in {
 
-            forAll(arbitrary[Boolean]) {
-              bool =>
+            forAll(arbitrary[MigrationStatus].suchThat(_ != NothingToUpdate)) {
+              migrationStatus =>
 
                 when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
                   .thenReturn(Future.successful(CompletedMaintenanceTasks(
@@ -388,8 +390,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                     bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
                   ).build()
 
-                when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(Some(bool))))
-                when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(Some(bool))))
+                when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(migrationStatus))
+                when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(migrationStatus))
 
                 val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
@@ -399,7 +401,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
                 status(result) mustEqual OK
 
-                val entityStatus = if (bool) UpToDate else InProgress
+                val entityStatus = if (migrationStatus.upToDate) UpToDate else InProgress
 
                 contentAsString(result) mustEqual
                   view(
@@ -426,8 +428,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                 bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
               ).build()
 
-            when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(Some(false))))
-            when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(Some(false))))
+            when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(NeedsUpdating))
+            when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(NeedsUpdating))
 
             val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 

@@ -16,10 +16,22 @@
 
 package models
 
-import play.api.libs.json.{Format, Json}
+import models.MigrationStatus.NeedsUpdating
 
-case class EntityStatus(completed: Option[Boolean])
+sealed trait MigrationStatus {
+  def upToDate: Boolean = this != NeedsUpdating
+}
 
-object EntityStatus {
-  implicit val format: Format[EntityStatus] = Json.format[EntityStatus]
+object MigrationStatus extends Enumerable.Implicits {
+
+  case object NothingToUpdate extends WithName("nothing-to-update") with MigrationStatus
+  case object NeedsUpdating extends WithName("needs-updating") with MigrationStatus
+  case object Updated extends WithName("updated") with MigrationStatus
+
+  val values: List[MigrationStatus] = List(
+    NothingToUpdate, NeedsUpdating, Updated
+  )
+
+  implicit val enumerable: Enumerable[MigrationStatus] = Enumerable(values.map(v => v.toString -> v): _*)
+
 }

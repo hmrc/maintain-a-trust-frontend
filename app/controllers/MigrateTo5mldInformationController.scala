@@ -17,7 +17,6 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import controllers.actions.Actions
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -27,22 +26,19 @@ import views.html._
 
 @Singleton
 class MigrateTo5mldInformationController @Inject()(
-                                                           actions: Actions,
-                                                           val controllerComponents: MessagesControllerComponents,
-                                                            view: MigrateTo5mldInformationView
-                                                         )
-  extends FrontendBaseController with I18nSupport with Logging {
+                                                    actions: Actions,
+                                                    val controllerComponents: MessagesControllerComponents,
+                                                    view: MigrateTo5mldInformationView
+                                                  ) extends FrontendBaseController with I18nSupport with Logging {
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier {
-
     Redirect(controllers.transition.routes.ExpressTrustYesNoController.onPageLoad())
-
   }
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
       val identifier = request.userAnswers.identifier
       val identifierType = request.userAnswers.identifierType
-          Ok(view(identifier,identifierType))
-      }
+      Ok(view(identifier,identifierType))
+  }
 }
