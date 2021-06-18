@@ -59,8 +59,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
     Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Some(InProgress)) ::
       mandatorySections4mld(identifier)
 
-  def mandatorySectionsTransitionToTaxable(identifier: String): List[Task] = List(
-    Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Some(InProgress)),
+  def mandatorySectionsTransitionToTaxable(identifier: String, status: Tag = InProgress): List[Task] = List(
+    Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Some(status)),
     Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), Some(InProgress)),
     Task(Link(TaxLiability, Some(s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier")), Some(InProgress))
   )
@@ -71,10 +71,10 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
       Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Some(status))
     )
 
-  def additionalSectionsWhenTrustDetailsNotCompleted(identifier: String, status: Tag): List[Task] =
+  def additionalSectionsWhenTrustDetailsNotCompleted(): List[Task] =
     List(
-      Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Some(status)),
-      Task(Link(Beneficiaries, None), Some(status))
+      Task(Link(Settlors, None), Some(InProgress)),
+      Task(Link(Beneficiaries, None), Some(InProgress))
     )
 
   def optionalSections4mld(identifier: String): List[Task] = List(
@@ -263,7 +263,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
             when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
               .thenReturn(Future.successful(CompletedMaintenanceTasks(
-                trustDetails = false,
+                trustDetails = true,
                 assets = false,
                 taxLiability = false,
                 trustees = false,
@@ -293,8 +293,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
               view(
                 identifier = baseAnswers.identifier,
                 identifierType = baseAnswers.identifierType,
-                mandatory = mandatorySectionsTransitionToTaxable(answers.identifier),
-                additional = additionalSectionsWhenTrustDetailsNotCompleted(answers.identifier, UpToDate),
+                mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, UpToDate),
+                additional = optionalSectionsTransitionToTaxable(answers.identifier, UpToDate),
                 affinityGroup = Organisation,
                 nextUrl = expectedContinueUrl,
                 isAbleToDeclare = false
@@ -307,6 +307,18 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
             forAll(arbitrary[Boolean]) {
               bool =>
+
+                when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
+                  .thenReturn(Future.successful(CompletedMaintenanceTasks(
+                    trustDetails = true,
+                    assets = false,
+                    taxLiability = false,
+                    trustees = false,
+                    beneficiaries = false,
+                    settlors = false,
+                    protectors = false,
+                    other = false
+                  )))
 
                 val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
 
@@ -333,8 +345,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                   view(
                     identifier = baseAnswers.identifier,
                     identifierType = baseAnswers.identifierType,
-                    mandatory = mandatorySectionsTransitionToTaxable(answers.identifier),
-                    additional = additionalSectionsWhenTrustDetailsNotCompleted(answers.identifier, entityStatus),
+                    mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, UpToDate),
+                    additional = optionalSectionsTransitionToTaxable(answers.identifier, entityStatus),
                     affinityGroup = Organisation,
                     nextUrl = expectedContinueUrl,
                     isAbleToDeclare = false
@@ -342,6 +354,41 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
                 application.stop()
             }
+          }
+
+          "beneficiary/settlor tasks need completing but are disabled because trust details incomplete" in {
+
+            val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+
+            val application = applicationBuilder(userAnswers = Some(answers))
+              .overrides(
+                bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
+                bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
+              ).build()
+
+            when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(Some(false))))
+            when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(EntityStatus(Some(false))))
+
+            val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[NonTaxToTaxProgressView]
+
+            status(result) mustEqual OK
+
+            contentAsString(result) mustEqual
+              view(
+                identifier = baseAnswers.identifier,
+                identifierType = baseAnswers.identifierType,
+                mandatory = mandatorySectionsTransitionToTaxable(answers.identifier),
+                additional = additionalSectionsWhenTrustDetailsNotCompleted(),
+                affinityGroup = Organisation,
+                nextUrl = expectedContinueUrl,
+                isAbleToDeclare = false
+              )(request, messages).toString
+
+            application.stop()
           }
         }
       }
