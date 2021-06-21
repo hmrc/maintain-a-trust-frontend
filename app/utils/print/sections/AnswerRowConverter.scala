@@ -184,7 +184,7 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
   }
 
   private def answerRow[T](labelKey: String, messageArg: String, answer: Html)
-                  (implicit messages: Messages): AnswerRow = {
+                          (implicit messages: Messages): AnswerRow = {
     AnswerRow(
       label = messages(s"$labelKey.checkYourAnswersLabel", messageArg),
       answer = answer,
