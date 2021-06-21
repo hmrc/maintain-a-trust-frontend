@@ -88,6 +88,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.welsh-translation")
 
+  lazy val primaryEnrolmentCheckEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.primaryEnrolmentCheck.enabled")
+
   lazy val countdownLength: String = configuration.get[String]("timeout.countdown")
   lazy val timeoutLength: String = configuration.get[String]("timeout.length")
 
