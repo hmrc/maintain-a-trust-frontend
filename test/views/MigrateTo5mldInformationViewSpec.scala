@@ -14,29 +14,39 @@
  * limitations under the License.
  */
 
-package views.transition
+package views
 
+
+import models.UTR
 import views.behaviours.ViewBehaviours
-import views.html.transition.ConfirmTrustTaxableView
+import views.html.MigrateTo5mldInformationView
 
-class ConfirmTrustTaxableViewSpec extends ViewBehaviours {
+class MigrateTo5mldInformationViewSpec extends ViewBehaviours {
 
-  "ConfirmTrustTaxableView" must {
+  "InformationMaintainingThisTrust view for UTR" must {
 
-    val application = applicationBuilder().build()
+    val utr = "1234567890"
 
-    val view = application.injector.instanceOf[ConfirmTrustTaxableView]
+    val view = viewFor[MigrateTo5mldInformationView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply()(fakeRequest, messages)
+    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
-    behave like normalPage(
-      applyView,
-      "confirmTrustTaxable",
-      "p1", "p2"
-    )
+    behave like normalPageTitleWithCaption(applyView,
+      "migrateTo5mldInformation",
+      "utr",
+      utr,
+      "p1",
+      "p2",
+      "bullet1",
+      "bullet2",
+      "bullet3",
+      "p3",
+      "heading2",
+      "p4")
 
     behave like pageWithBackLink(applyView)
 
     behave like pageWithASubmitButton(applyView)
+
   }
 }

@@ -70,7 +70,7 @@ class ViewLastDeclarationYesNoController @Inject()(
             if (value) {
               Redirect(controllers.print.routes.PrintLastDeclaredAnswersController.onPageLoad())
             } else {
-                Redirect(routes.WhatIsNextController.onPageLoad())
+              Redirect(routes.WhatIsNextController.onPageLoad())
             }
           }
         }

@@ -22,7 +22,7 @@ import controllers.Assets._
 import generators.Generators
 import models.http._
 import models.pages.ShareClass.Ordinary
-import models.{EntityStatus, FullName, TrustDetails}
+import models.{FirstTaxYearAvailable, FullName, MigrationStatus, TrustDetails}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
@@ -795,10 +795,10 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
     ".getSettlorsStatus" - {
       "return entity status response when the request is successful" in {
 
-        forAll(arbitrary[Option[Boolean]]) {
-          completed =>
+        forAll(arbitrary[MigrationStatus]) {
+          migrationStatus =>
 
-            val json = Json.toJson(EntityStatus(completed))
+            val json = Json.toJson(migrationStatus)
 
             val application = applicationBuilder()
               .configure(
@@ -817,7 +817,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
 
             val result = Await.result(connector.getSettlorsStatus(identifier), Duration.Inf)
 
-            result mustBe EntityStatus(completed)
+            result mustBe migrationStatus
 
             application.stop()
         }
@@ -827,10 +827,10 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
     ".getBeneficiariesStatus" - {
       "return entity status response when the request is successful" in {
 
-        forAll(arbitrary[Option[Boolean]]) {
-          completed =>
+        forAll(arbitrary[MigrationStatus]) {
+          migrationStatus =>
 
-            val json = Json.toJson(EntityStatus(completed))
+            val json = Json.toJson(migrationStatus)
 
             val application = applicationBuilder()
               .configure(
@@ -849,9 +849,47 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
 
             val result = Await.result(connector.getBeneficiariesStatus(identifier), Duration.Inf)
 
-            result mustBe EntityStatus(completed)
+            result mustBe migrationStatus
 
             application.stop()
+        }
+      }
+    }
+
+    "getFirstTaxYearToAskFor" - {
+      "return first tax year available when request is successful" in {
+
+        val json = Json.parse(
+          """
+            |{
+            | "yearsAgo": 1,
+            | "earlierYearsToDeclare": false
+            |}
+            |""".stripMargin)
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(s"/trusts/tax-liability/$identifier/first-year-to-ask-for"))
+            .willReturn(okJson(json.toString))
+        )
+
+        val processed = connector.getFirstTaxYearToAskFor(identifier)
+
+        whenReady(processed) {
+          r =>
+            r mustBe FirstTaxYearAvailable(
+              yearsAgo = 1,
+              earlierYearsToDeclare = false
+            )
         }
       }
     }

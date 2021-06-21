@@ -19,7 +19,7 @@ package controllers.transition
 import base.SpecBase
 import connectors.TrustConnector
 import models.UserAnswers
-import models.pages.WhatIsNext.MakeChanges
+import models.pages.WhatIsNext.{MakeChanges, NeedsToPayTax}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{reset, verify, when}
@@ -29,6 +29,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
+import utils.TestUserAnswers
 import views.html.transition.ConfirmTrustTaxableView
 
 import scala.concurrent.Future
@@ -60,67 +61,149 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
     }
 
     ".onSubmit" must {
+
       "redirect to the next page" when {
 
-        "agent" in {
+        "not migrating from non-taxable to taxable" when {
 
-          reset(playbackRepository)
-          when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+          "agent" in {
 
-          val mockTrustsConnector = mock[TrustConnector]
+            reset(playbackRepository)
 
-          when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
-            .thenReturn(Future.successful(okResponse))
+            when(playbackRepository.set(any())).thenReturn(Future.successful(true))
 
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), affinityGroup = Agent)
-            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
-            .build()
+            val mockTrustsConnector = mock[TrustConnector]
 
-          val request = FakeRequest(POST, confirmTrustTaxableRoute)
+            when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
+              .thenReturn(Future.successful(okResponse))
 
-          val result = route(application, request).value
+            val userAnswers = TestUserAnswers.emptyUserAnswersForUtr
 
-          status(result) mustEqual SEE_OTHER
+            val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+              .build()
 
-          redirectLocation(result).value mustEqual
-            controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+            val request = FakeRequest(POST, confirmTrustTaxableRoute)
 
-          val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-          verify(playbackRepository).set(uaCaptor.capture)
-          uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
+            val result = route(application, request).value
 
-          application.stop()
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual
+              controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+
+            val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+            verify(playbackRepository).set(uaCaptor.capture)
+            uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
+
+            application.stop()
+          }
+
+          "non-agent" in {
+
+            reset(playbackRepository)
+
+            when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+
+            val mockTrustsConnector = mock[TrustConnector]
+
+            when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
+              .thenReturn(Future.successful(okResponse))
+
+            val userAnswers = TestUserAnswers.emptyUserAnswersForUtr
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Organisation)
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+              .build()
+
+            val request = FakeRequest(POST, confirmTrustTaxableRoute)
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual
+              controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+
+            val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+            verify(playbackRepository).set(uaCaptor.capture)
+            uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
+
+            application.stop()
+          }
         }
 
-        "non-agent" in {
+        "migrating from non-taxable to taxable" when {
 
-          reset(playbackRepository)
-          when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+          "agent" in {
 
-          val mockTrustsConnector = mock[TrustConnector]
+            reset(playbackRepository)
 
-          when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
-            .thenReturn(Future.successful(okResponse))
+            when(playbackRepository.set(any())).thenReturn(Future.successful(true))
 
-          val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), affinityGroup = Organisation)
-            .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
-            .build()
+            val mockTrustsConnector = mock[TrustConnector]
 
-          val request = FakeRequest(POST, confirmTrustTaxableRoute)
+            when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
+              .thenReturn(Future.successful(okResponse))
 
-          val result = route(application, request).value
+            val userAnswers = TestUserAnswers.emptyUserAnswersForUrn
+              .set(WhatIsNextPage, NeedsToPayTax).success.value
 
-          status(result) mustEqual SEE_OTHER
+            val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+              .build()
 
-          redirectLocation(result).value mustEqual
-            controllers.transition.declaration.routes.IndividualDeclarationController.onPageLoad().url
+            val request = FakeRequest(POST, confirmTrustTaxableRoute)
 
-          val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
-          verify(playbackRepository).set(uaCaptor.capture)
-          uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
+            val result = route(application, request).value
 
-          application.stop()
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual
+              controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+
+            val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+            verify(playbackRepository).set(uaCaptor.capture)
+            uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
+
+            application.stop()
+          }
+
+          "non-agent" in {
+
+            reset(playbackRepository)
+
+            when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+
+            val mockTrustsConnector = mock[TrustConnector]
+
+            when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
+              .thenReturn(Future.successful(okResponse))
+
+            val userAnswers = TestUserAnswers.emptyUserAnswersForUrn
+              .set(WhatIsNextPage, NeedsToPayTax).success.value
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Organisation)
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+              .build()
+
+            val request = FakeRequest(POST, confirmTrustTaxableRoute)
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustEqual
+              controllers.transition.declaration.routes.IndividualDeclarationController.onPageLoad().url
+
+            val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+            verify(playbackRepository).set(uaCaptor.capture)
+            uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
+
+            application.stop()
+          }
         }
+
       }
     }
   }

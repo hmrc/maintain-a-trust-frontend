@@ -18,8 +18,8 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-case class EntityStatus(completed: Option[Boolean])
+case class FirstTaxYearAvailable(yearsAgo: Int, earlierYearsToDeclare: Boolean)
 
-object EntityStatus {
-  implicit val format: Format[EntityStatus] = Json.format[EntityStatus]
+object FirstTaxYearAvailable {
+  implicit val format: Format[FirstTaxYearAvailable] = Json.format[FirstTaxYearAvailable]
 }

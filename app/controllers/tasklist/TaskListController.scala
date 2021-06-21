@@ -50,9 +50,10 @@ class TaskListController @Inject()(
         tasks <- storeConnector.getStatusOfTasks(identifier)
         settlorsStatus <- trustsConnector.getSettlorsStatus(identifier)
         beneficiariesStatus <- trustsConnector.getBeneficiariesStatus(identifier)
+        firstYearToAskFor <- trustsConnector.getFirstTaxYearToAskFor(identifier)
       } yield {
         if (request.userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
-          val sections = generateTransitionTaskList(tasks, identifier, settlorsStatus, beneficiariesStatus)
+          val sections = generateTransitionTaskList(tasks, identifier, settlorsStatus, beneficiariesStatus, firstYearToAskFor.yearsAgo)
           Ok(nonTaxToTaxView(
             identifier,
             identifierType = request.userAnswers.identifierType,

@@ -29,9 +29,9 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
   private val urn = "urn"
 
   private val mandatorySections = List(
-    Task(Link(TrustDetails, ""), None),
-    Task(Link(Assets, ""), None),
-    Task(Link(TaxLiability, ""), None)
+    Task(Link(TrustDetails, Some("")), None),
+    Task(Link(Assets, Some("")), None),
+    Task(Link(TaxLiability, Some("")), None)
   )
 
   private val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
