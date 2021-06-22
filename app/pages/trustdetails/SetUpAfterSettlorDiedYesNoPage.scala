@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pages.settlors
+package pages.trustdetails
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
@@ -22,7 +22,8 @@ import sections.settlors.Settlors
 
 case object SetUpAfterSettlorDiedYesNoPage extends QuestionPage[Boolean] {
 
-  override def path: JsPath = Settlors.path \toString
+  // TODO - change to path: JsPath = JsPath \ TrustDetails \ toString but deploy out of hours
+  override def path: JsPath = Settlors.path \ toString
 
   override def toString: String = "setUpAfterSettlorDiedYesNo"
 

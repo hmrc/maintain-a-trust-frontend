@@ -177,7 +177,7 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
   def countryQuestion(query: Gettable[String],
                       userAnswers: UserAnswers,
                       labelKey: String,
-                      messageArg: String)
+                      messageArg: String = "")
                      (implicit messages: Messages): Option[AnswerRow] = {
     val format = (x: String) => checkAnswersFormatters.country(x)
     question(query, userAnswers, labelKey, format, messageArg)

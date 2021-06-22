@@ -18,7 +18,9 @@ package utils.print
 
 import java.time.LocalDate
 import base.SpecBase
-import pages.trustdetails._
+import models.pages.WhatIsNext.NeedsToPayTax
+import pages.WhatIsNextPage
+import pages.trustdetails.{SetUpAfterSettlorDiedYesNoPage, _}
 import play.twirl.api.Html
 import utils.print.sections.TrustDetailsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
@@ -27,62 +29,109 @@ class TrustDetailsPrinterSpec extends SpecBase {
 
   private val helper: TrustDetailsPrinter = injector.instanceOf[TrustDetailsPrinter]
 
-  "TrustDetailsPrinter" must {
+  "TrustDetailsPrinter" when {
 
-    "generate an answer section with trust name, created date and utr" in {
+    "migrating from non-taxable to taxable" must {
 
-      val answers = emptyUserAnswersForUtr
-        .set(TrustNamePage, "Trust Ltd.").success.value
-        .set(WhenTrustSetupPage, LocalDate.of(2019,6,1)).success.value
-        .set(TrustUkPropertyYesNoPage, true).success.value
-        .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
-        .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value
+      val baseAnswers = emptyUserAnswersForUtr
+        .set(WhatIsNextPage, NeedsToPayTax).success.value
 
-      val actualSection = helper.print(answers)
+      "generate an answer section" in {
 
-      actualSection mustBe Seq(
-        AnswerSection(
-          headingKey = None,
-          rows = Seq(
-            AnswerRow("What is the trust’s name?", Html("Trust Ltd."), None),
-            AnswerRow("When was the trust created?", Html("1 June 2019"), None),
-            AnswerRow("Which unique identifier does the trust have?", Html("Unique Taxpayer Reference (UTR)"), None),
-            AnswerRow("Unique Taxpayer Reference (UTR)", Html("1234567890"), None),
-            AnswerRow("Does the trust own UK land or property?", Html("Yes"), None),
-            AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
-            AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None)
-          ),
-          sectionKey = Some("Trust details")
+        val answers = baseAnswers
+          .set(TrustNamePage, "Trust Ltd.").success.value
+          .set(WhenTrustSetupPage, LocalDate.of(2019, 6, 1)).success.value
+          .set(GovernedInsideTheUKPage, false).success.value
+          .set(CountryGoverningTrustPage, "FR").success.value
+          .set(AdministrationInsideUKPage, false).success.value
+          .set(CountryAdministeringTrustPage, "DE").success.value
+          .set(SetUpAfterSettlorDiedYesNoPage, false).success.value
+          .set(TrustUkPropertyYesNoPage, true).success.value
+          .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
+          .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value
+
+        val actualSection = helper.print(answers)
+
+        actualSection mustBe Seq(
+          AnswerSection(
+            headingKey = None,
+            rows = Seq(
+              AnswerRow("What is the trust’s name?", Html("Trust Ltd."), None),
+              AnswerRow("When was the trust created?", Html("1 June 2019"), None),
+              AnswerRow("Which unique identifier does the trust have?", Html("Unique Taxpayer Reference (UTR)"), None),
+              AnswerRow("Unique Taxpayer Reference (UTR)", Html("1234567890"), None),
+              AnswerRow("Is the trust governed by UK law?", Html("No"), None),
+              AnswerRow("What country governs the trust?", Html("France"), None),
+              AnswerRow("Does the trust’s general administration take place in the UK?", Html("No"), None),
+              AnswerRow("In what country is the trust administered?", Html("Germany"), None),
+              AnswerRow("Was the trust set up after the settlor died?", Html("No"), None),
+              AnswerRow("Does the trust own UK land or property?", Html("Yes"), None),
+              AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
+              AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None)
+            ),
+            sectionKey = Some("Trust details")
+          )
         )
-      )
+      }
     }
 
-    "generate an answer section with trust name, created date and urn" in {
+    "not migrating from non-taxable to taxable" must {
 
-      val answers = emptyUserAnswersForUrn
-        .set(TrustNamePage, "Trust Ltd.").success.value
-        .set(WhenTrustSetupPage, LocalDate.of(2019,6,1)).success.value
-        .set(TrustUkPropertyYesNoPage, true).success.value
-        .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
-        .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value
+      "generate an answer section with trust name, created date and utr" in {
 
-      val actualSection = helper.print(answers)
+        val answers = emptyUserAnswersForUtr
+          .set(TrustNamePage, "Trust Ltd.").success.value
+          .set(WhenTrustSetupPage, LocalDate.of(2019, 6, 1)).success.value
+          .set(TrustUkPropertyYesNoPage, true).success.value
+          .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
+          .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value
 
-      actualSection mustBe Seq(
-        AnswerSection(
-          headingKey = None,
-          rows = Seq(
-            AnswerRow("What is the trust’s name?", Html("Trust Ltd."), None),
-            AnswerRow("When was the trust created?", Html("1 June 2019"), None),
-            AnswerRow("Which unique identifier does the trust have?", Html("Unique Reference Number (URN)"), None),
-            AnswerRow("Unique Reference Number (URN)", Html("XATRUST12345678"), None),
-            AnswerRow("Does the trust own UK land or property?", Html("Yes"), None),
-            AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
-            AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None)
-          ),
-          sectionKey = Some("Trust details")
+        val actualSection = helper.print(answers)
+
+        actualSection mustBe Seq(
+          AnswerSection(
+            headingKey = None,
+            rows = Seq(
+              AnswerRow("What is the trust’s name?", Html("Trust Ltd."), None),
+              AnswerRow("When was the trust created?", Html("1 June 2019"), None),
+              AnswerRow("Which unique identifier does the trust have?", Html("Unique Taxpayer Reference (UTR)"), None),
+              AnswerRow("Unique Taxpayer Reference (UTR)", Html("1234567890"), None),
+              AnswerRow("Does the trust own UK land or property?", Html("Yes"), None),
+              AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
+              AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None)
+            ),
+            sectionKey = Some("Trust details")
+          )
         )
-      )
+      }
+
+      "generate an answer section with trust name, created date and urn" in {
+
+        val answers = emptyUserAnswersForUrn
+          .set(TrustNamePage, "Trust Ltd.").success.value
+          .set(WhenTrustSetupPage, LocalDate.of(2019, 6, 1)).success.value
+          .set(TrustUkPropertyYesNoPage, true).success.value
+          .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
+          .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value
+
+        val actualSection = helper.print(answers)
+
+        actualSection mustBe Seq(
+          AnswerSection(
+            headingKey = None,
+            rows = Seq(
+              AnswerRow("What is the trust’s name?", Html("Trust Ltd."), None),
+              AnswerRow("When was the trust created?", Html("1 June 2019"), None),
+              AnswerRow("Which unique identifier does the trust have?", Html("Unique Reference Number (URN)"), None),
+              AnswerRow("Unique Reference Number (URN)", Html("XATRUST12345678"), None),
+              AnswerRow("Does the trust own UK land or property?", Html("Yes"), None),
+              AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
+              AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None)
+            ),
+            sectionKey = Some("Trust details")
+          )
+        )
+      }
     }
   }
 

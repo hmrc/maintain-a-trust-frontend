@@ -17,11 +17,11 @@
 package utils.print.sections
 
 import models.{URN, UTR, UserAnswers}
-import pages.trustdetails._
+import pages.trustdetails.{SetUpAfterSettlorDiedYesNoPage, _}
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
+
 import javax.inject.Inject
-import pages.settlors.SetUpAfterSettlorDiedYesNoPage
 
 class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends PrinterHelper {
 
@@ -36,15 +36,15 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
       Seq(
         converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
         converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
+
         converter.whichIdentifier(userAnswers),
-
-        converter.yesNoQuestion(GovernedInsideTheUKPage, userAnswers,"governedInsideTheUK"),
-        converter.countryQuestion(CountryGoverningTrustPage, userAnswers, "countryGoverningTrust", ""),
-        converter.yesNoQuestion(AdministrationInsideUKPage, userAnswers,"administrationInsideUK"),
-        converter.countryQuestion(CountryAdministeringTrustPage, userAnswers, "administrationCountry", ""),
-        converter.yesNoQuestion(SetUpAfterSettlorDiedYesNoPage, userAnswers,"setUpAfterSettlorDied"),
-
         utrOrUrnRow,
+
+        converter.yesNoQuestion(GovernedInsideTheUKPage, userAnswers, "governedByUkLaw"),
+        converter.countryQuestion(CountryGoverningTrustPage, userAnswers, "governingCountry"),
+        converter.yesNoQuestion(AdministrationInsideUKPage, userAnswers, "administeredInUk"),
+        converter.countryQuestion(CountryAdministeringTrustPage, userAnswers, "administrationCountry"),
+        converter.yesNoQuestion(SetUpAfterSettlorDiedYesNoPage, userAnswers, "setUpAfterSettlorDied"),
         converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
         converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
         converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")
@@ -53,8 +53,10 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
       Seq(
         converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
         converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
+
         converter.whichIdentifier(userAnswers),
         utrOrUrnRow,
+
         converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
         converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
         converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")

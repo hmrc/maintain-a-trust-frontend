@@ -21,9 +21,8 @@ import generators.Generators
 import models.http._
 import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
-import pages.settlors._
 import pages.settlors.living_settlor.trust_type._
-import pages.trustdetails.{ExpressTrustYesNoPage, TrustTaxableYesNoPage, TrustUkPropertyYesNoPage, TrustUkResidentYesNoPage}
+import pages.trustdetails._
 
 import java.time.LocalDate
 
