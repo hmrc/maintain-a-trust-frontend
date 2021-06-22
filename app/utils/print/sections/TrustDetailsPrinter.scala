@@ -33,7 +33,8 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
     }
 
     val rows: Seq[Option[AnswerRow]] = if (userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
-      Seq(converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
+      Seq(
+        converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
         converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
         converter.whichIdentifier(userAnswers),
 
@@ -49,7 +50,8 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
         converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")
       )
     } else {
-      Seq(converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
+      Seq(
+        converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
         converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
         converter.whichIdentifier(userAnswers),
         utrOrUrnRow,

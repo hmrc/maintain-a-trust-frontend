@@ -67,10 +67,7 @@ final case class UserAnswers(internalId: String,
   }
 
   def getWithDefault[A](page: Gettable[A], default: A)(implicit rds: Reads[A]): Option[A] = {
-    get(page) match {
-      case None => Some(default)
-      case x => x
-    }
+    get(page).orElse(Some(default))
   }
 
   def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A], reads: Reads[A]): Try[UserAnswers] = {

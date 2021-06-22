@@ -218,7 +218,7 @@ class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSug
               .thenReturn(Future.successful(response))
             when(featureFlagService.is5mldEnabled()(any(), any()))
               .thenReturn(Future.successful(true))
-            when(playbackExtractor.extract(eqTo(userAnswers.clearData), eqTo(response.playback))(any(), any()))
+            when(playbackExtractor.extract(eqTo(userAnswers), eqTo(response.playback))(any(), any()))
               .thenReturn(Future.successful(Right(userAnswers)))
             when(playbackRepository.set(any()))
               .thenReturn(Future.successful(true))

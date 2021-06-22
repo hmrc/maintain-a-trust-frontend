@@ -80,23 +80,22 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
           s" Redirecting to express page to start 4MLD -> 5MLD transition journey.")
         Future.successful(Left(Redirect(controllers.transition.routes.ExpressTrustYesNoController.onPageLoad())))
       } else {
-        playbackExtractor.extract(request.userAnswers.clearData, playback) flatMap {
-          case Right(answers) =>
-            for {
-              updatedAnswers <- Future.fromTry {
-                answers
-                  .set(WhatIsNextPage, data.whatIsNext)
-                  .flatMap(_.set(AgentDeclarationPage, data.agent))
-                  .flatMap(answers => setClosureDate(answers, data.endDate))
+        Future.fromTry {
+          request.userAnswers.clearData
+            .set(WhatIsNextPage, data.whatIsNext)
+            .flatMap(_.set(AgentDeclarationPage, data.agent))
+            .flatMap(answers => setClosureDate(answers, data.endDate))
+        } flatMap { updatedAnswers =>
+          playbackExtractor.extract(updatedAnswers, playback) flatMap {
+            case Right(extractedAnswers) =>
+              playbackRepository.set(extractedAnswers) map { _ =>
+                logger.debug(s"[RefreshedDraftDataRetrievalAction] Set updated user answers in db")
+                Right(DataRequest(request.request, extractedAnswers, request.user))
               }
-              _ <- playbackRepository.set(updatedAnswers)
-            } yield {
-              logger.debug(s"[RefreshedDraftDataRetrievalAction] Set updated user answers in db")
-              Right(DataRequest(request.request, updatedAnswers, request.user))
-            }
-          case Left(reason) =>
-            logger.warn(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to $reason")
-            Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+            case Left(reason) =>
+              logger.warn(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to $reason")
+              Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+          }
         }
       }
     } recoverWith {

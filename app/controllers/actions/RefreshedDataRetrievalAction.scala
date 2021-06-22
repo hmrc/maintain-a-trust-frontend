@@ -82,25 +82,24 @@ class RefreshedDataRetrievalActionImpl @Inject()(
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    playbackExtractor.extract(request.userAnswers.clearData, playback) flatMap {
-      case Right(answers) =>
-        for {
-          updatedAnswers <- Future.fromTry {
-            answers
-              .set(WhatIsNextPage, data.whatIsNext)
-              .flatMap(_.set(TVNPage, data.tvn))
-              .flatMap(_.set(SubmissionDatePage, data.date))
-              .flatMap(_.set(AgentDeclarationPage, data.agent))
-              .flatMap(answers => setClosureDate(answers, data.endDate))
+    Future.fromTry {
+      request.userAnswers.clearData
+        .set(WhatIsNextPage, data.whatIsNext)
+        .flatMap(_.set(TVNPage, data.tvn))
+        .flatMap(_.set(SubmissionDatePage, data.date))
+        .flatMap(_.set(AgentDeclarationPage, data.agent))
+        .flatMap(answers => setClosureDate(answers, data.endDate))
+    } flatMap { updatedAnswers =>
+      playbackExtractor.extract(updatedAnswers, playback) flatMap {
+        case Right(extractedAnswers) =>
+          playbackRepository.set(extractedAnswers) map { _ =>
+            logger.debug(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${extractedAnswers.identifier}] Set updated user answers in db")
+            Right(DataRequest(request.request, extractedAnswers, request.user))
           }
-          _ <- playbackRepository.set(updatedAnswers)
-        } yield {
-          logger.debug(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${answers.identifier}] Set updated user answers in db")
-          Right(DataRequest(request.request, updatedAnswers, request.user))
-        }
-      case Left(reason) =>
-        logger.warn(s"[Session ID: ${Session.id(hc)}] unable to extract user answers due to $reason")
-        Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+        case Left(reason) =>
+          logger.warn(s"[Session ID: ${Session.id(hc)}] unable to extract user answers due to $reason")
+          Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+      }
     }
   }
 

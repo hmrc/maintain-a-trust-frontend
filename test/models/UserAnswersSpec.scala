@@ -16,11 +16,12 @@
 
 package models
 
-import _root_.pages.WhatIsNextPage
+import _root_.pages._
 import base.SpecBase
 import forms.Validation
 import models.pages.WhatIsNext.{NeedsToPayTax, NoLongerTaxable}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.libs.json.Json
 import wolfendale.scalacheck.regexp.RegexpGen
 
 class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
@@ -105,6 +106,19 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
             }
           }
         }
+      }
+    }
+
+    ".clearData" must {
+
+      "clear answers" in {
+
+        val previousAnswers = emptyUserAnswersForUtr
+          .set(ViewLastDeclarationYesNoPage, false).success.value
+
+        val result = previousAnswers.clearData
+
+        result.data mustBe Json.obj()
       }
     }
   }

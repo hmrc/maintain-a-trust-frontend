@@ -57,7 +57,7 @@ class UserAnswersExtractorImpl @Inject()(
 
     for {
       is5mldEnabled <- featureFlagService.is5mldEnabled()
-      trustDetails <- trustsConnector.getTransformedTrustDetails(answers.identifier)
+      trustDetails <- trustsConnector.getUntransformedTrustDetails(answers.identifier)
     } yield {
 
       val updatedAnswers = answers.copy(
