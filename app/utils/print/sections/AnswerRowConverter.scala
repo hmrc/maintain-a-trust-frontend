@@ -183,8 +183,8 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  private def answerRow[T](labelKey: String, messageArg: String = "", answer: Html)
-                  (implicit messages: Messages): AnswerRow = {
+  private def answerRow[T](labelKey: String, messageArg: String, answer: Html)
+                          (implicit messages: Messages): AnswerRow = {
     AnswerRow(
       label = messages(s"$labelKey.checkYourAnswersLabel", messageArg),
       answer = answer,

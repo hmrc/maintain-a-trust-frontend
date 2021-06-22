@@ -30,7 +30,5 @@ class TrustsAuthorisedFunctions @Inject()(override val authConnector: AuthConnec
     case _ : AuthorisationException => Redirect(controllers.routes.UnauthorisedController.onPageLoad())
   }
 
-  def redirectToLogin: Result = {
-    Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
-  }
+  def redirectToLogin: Result = Redirect(config.redirectToLoginUrl)
 }

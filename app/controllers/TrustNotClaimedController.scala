@@ -17,31 +17,22 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.FrontendAppConfig
 import controllers.actions.Actions
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.{AgentNotAuthorisedView, OldAgentNotAuthorisedView}
+import views.html.TrustNotClaimedView
 
 @Singleton
-class AgentNotAuthorisedController @Inject()(
-                                              val controllerComponents: MessagesControllerComponents,
-                                              actions: Actions,
-                                              newView: AgentNotAuthorisedView,
-                                              oldView: OldAgentNotAuthorisedView,
-                                              config: FrontendAppConfig
-                                            ) extends FrontendBaseController with I18nSupport {
+class TrustNotClaimedController @Inject()(
+                                           override val messagesApi: MessagesApi,
+                                           actions: Actions,
+                                           val controllerComponents: MessagesControllerComponents,
+                                           view: TrustNotClaimedView
+                                         ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.authWithData {
     implicit request =>
-
-      Ok {
-        if (config.primaryEnrolmentCheckEnabled) {
-          oldView(request.userAnswers.identifier, request.userAnswers.identifierType)
-        } else {
-          newView(request.userAnswers.identifier, request.userAnswers.identifierType)
-        }
-      }
+      Ok(view(request.userAnswers.identifier, request.userAnswers.identifierType))
   }
 }
