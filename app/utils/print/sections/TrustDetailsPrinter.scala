@@ -17,7 +17,7 @@
 package utils.print.sections
 
 import models.{URN, UTR, UserAnswers}
-import pages.trustdetails.{SetUpAfterSettlorDiedYesNoPage, _}
+import pages.trustdetails._
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
 
