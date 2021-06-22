@@ -37,7 +37,7 @@
     <ol class="govuk-list govuk-list--number">
         <li class="bold">@messages("trustNotClaimed.bullet.1.title")
             <p>@messages("trustNotClaimed.bullet.1.p1")</p>
-            <p>@messages("trustNotClaimed.bullet.1.p2") <a target="_blank" href="https://www.tax.service.gov.uk/government-gateway-registration-frontend/choose-your-account?continue=%2Ftrusts-forms%2Fform%2Fregistration-of-a-trust%2Fnew&origin=unknown">@messages("trustNotClaimed.bullet.1.p2.a")</a>.</p>
+            <p>@messages("trustNotClaimed.bullet.1.p2") <a target="_blank" href="@{appConfig.redirectToLoginUrl}">@messages("trustNotClaimed.bullet.1.p2.a")</a>.</p>
             <p>@messages("trustNotClaimed.bullet.1.p3")</p>
             <p>@messages("trustNotClaimed.bullet.1.p4")</p>
         </li>
