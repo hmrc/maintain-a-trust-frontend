@@ -19,6 +19,17 @@ agentCannotAccessTrustYet.bullet.4 = If you need to close the trust, you will ne
 agentCannotAccessTrustYet.heading.3 = Changes you cannot tell us about on this service
 agentCannotAccessTrustYet.p4 = You are not required to update the trust’s details, tax liability or assets. Use Self Assessment Online for trusts or the Trust and Estate Tax Return form (SA900) to update any of these.
 
+agentNotAuthorised.old.title = You have not been authorised by a trustee to access this trust
+agentNotAuthorised.old.heading = You have not been authorised by a trustee to access this trust
+agentNotAuthorised.old.p1 = The trustee who claimed the trust needs to give you authorisation.
+agentNotAuthorised.old.p2 = You can create an authorisation link to send to the trustee through
+agentNotAuthorised.old.p2.a = Agent Services.
+agentNotAuthorised.old.p3 = The trustee who claimed the trust must use the same Government Gateway account to approve your request.
+agentNotAuthorised.old.p4 = If you need help with this service
+agentNotAuthorised.old.p4.a = contact the trusts helpline (opens in a new window or tab).
+agentNotAuthorised.old.p5 = You can
+agentNotAuthorised.old.p5.a = return to register and maintain a trust for a client.
+
 agentNotAuthorised.title = You cannot access this trust
 agentNotAuthorised.heading = You cannot access this trust
 agentNotAuthorised.p1 = To access the trust, one of the trustees needs to authorise your access so you can maintain the trust online on their behalf.
@@ -336,6 +347,23 @@ trustLocked.p1 = You have not passed the security questions for this trust.
 trustLocked.p2 = Access to this trust has been locked for 30 minutes. You can try to access this trust again after this time.
 trustLocked.p3 = If you need help with the service
 trustLocked.link1 = contact the trusts helpline (opens in a new window or tab)
+
+trustNotClaimed.title = Your client must claim the trust and authorise your access
+trustNotClaimed.heading = Your client must claim the trust and authorise your access
+trustNotClaimed.p1 = One of the trustees must complete these 2 steps so you can maintain the trust online on their behalf.
+trustNotClaimed.bullet.1.title = Trustee must claim the trust
+trustNotClaimed.bullet.1.p1 = A trustee needs to log onto the Trust Registration Service using their Government Gateway account. The account they use must be an organisation account, not an individual account.
+trustNotClaimed.bullet.1.p2 = If they do not have an account, they can
+trustNotClaimed.bullet.1.p2.a = register for one here (opens in a new tab)
+trustNotClaimed.bullet.1.p3 = The trustee needs to correctly answer questions about the trust so HMRC can prove the connection between the trustee and the trust.
+trustNotClaimed.bullet.1.p4 = The trustee must complete this step before you can request authorisation from them to maintain the trust.
+trustNotClaimed.bullet.2.title = Trustee must authorise your online access to the trust
+trustNotClaimed.bullet.2.p1 = Through Agent Services you can create an authorisation link to send to the trustee.
+trustNotClaimed.bullet.2.p2 = The trustee needs to use the same Government Gateway organisation account used to claim the trust to approve your request.
+trustNotClaimed.bullet.2.p3 = If you need help with the service
+trustNotClaimed.bullet.2.p3.a = contact the trusts helpline (opens in a new window or tab)
+trustNotClaimed.bullet.2.p4 = You can
+trustNotClaimed.bullet.2.p4.a = return to register and maintain a trust for a client
 
 trustResidentInTheUK.yes = Based on your answers, the trust is resident in the UK
 trustResidentInTheUK.no = Based on your answers, the trust is not resident in the UK

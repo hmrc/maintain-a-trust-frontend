@@ -16,13 +16,13 @@
 
 package config
 
-import java.net.{URI, URLEncoder}
-
 import com.google.inject.{Inject, Singleton}
 import controllers.routes
 import play.api.Configuration
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.{Call, Request}
+
+import java.net.{URI, URLEncoder}
 
 @Singleton
 class FrontendAppConfig @Inject()(val configuration: Configuration) {
@@ -68,6 +68,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
   lazy val logoutUrl: String = loadConfig("urls.logout")
 
+  lazy val redirectToLoginUrl: String = s"$loginUrl?continue=$loginContinueUrl"
+
   lazy val logoutAudit: Boolean =
     configuration.get[Boolean]("microservice.services.features.auditing.logout")
 
@@ -87,6 +89,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   lazy val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.welsh-translation")
+
+  lazy val primaryEnrolmentCheckEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.primaryEnrolmentCheck.enabled")
 
   lazy val countdownLength: String = configuration.get[String]("timeout.countdown")
   lazy val timeoutLength: String = configuration.get[String]("timeout.length")

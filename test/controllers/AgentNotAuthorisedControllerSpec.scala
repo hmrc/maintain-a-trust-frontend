@@ -20,32 +20,62 @@ import base.SpecBase
 import models.UTR
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.AgentNotAuthorisedView
+import views.html.{AgentNotAuthorisedView, OldAgentNotAuthorisedView}
 
 class AgentNotAuthorisedControllerSpec extends SpecBase {
 
-  "AgentNotAuthorised Controller" must {
+  "AgentNotAuthorised Controller" when {
 
-    "return OK and the correct view for a GET" in {
+    "primary enrolment check enabled" must {
+      "return OK and the correct view for a GET" in {
 
-      val answers = emptyUserAnswersForUtr
+        val answers = emptyUserAnswersForUtr
 
-      val application = applicationBuilder(userAnswers = Some(answers)).build()
+        val application = applicationBuilder(userAnswers = Some(answers))
+          .configure(Map("microservice.services.features.primaryEnrolmentCheck.enabled" -> true))
+          .build()
 
-      val request = FakeRequest(GET, routes.AgentNotAuthorisedController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.AgentNotAuthorisedController.onPageLoad().url)
 
-      val result = route(application, request).value
+        val result = route(application, request).value
 
-      val view = application.injector.instanceOf[AgentNotAuthorisedView]
+        val view = application.injector.instanceOf[OldAgentNotAuthorisedView]
 
-      val utr = "1234567890"
+        val utr = "1234567890"
 
-      status(result) mustEqual OK
+        status(result) mustEqual OK
 
-      contentAsString(result) mustEqual
-        view(utr, UTR)(request, messages).toString
+        contentAsString(result) mustEqual
+          view(utr, UTR)(request, messages).toString
 
-      application.stop()
+        application.stop()
+      }
+    }
+
+    "primary enrolment check not enabled" must {
+      "return OK and the correct view for a GET" in {
+
+        val answers = emptyUserAnswersForUtr
+
+        val application = applicationBuilder(userAnswers = Some(answers))
+          .configure(Map("microservice.services.features.primaryEnrolmentCheck.enabled" -> false))
+          .build()
+
+        val request = FakeRequest(GET, routes.AgentNotAuthorisedController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[AgentNotAuthorisedView]
+
+        val utr = "1234567890"
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(utr, UTR)(request, messages).toString
+
+        application.stop()
+      }
     }
   }
 }
