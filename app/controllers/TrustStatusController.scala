@@ -112,7 +112,7 @@ class TrustStatusController @Inject()(
   }
 
   private def tryToPlayback(identifier: String, fromVerify: Boolean)(implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
-    trustConnector.playbackFromEtmp(identifier) flatMap {
+    trustConnector.playback(identifier) flatMap {
       case Closed =>
         logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due it being closed")
         Future.successful(Redirect(controllers.routes.TrustStatusController.closed()))

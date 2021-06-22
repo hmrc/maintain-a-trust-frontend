@@ -188,7 +188,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
           .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
-        when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(Closed))
+        when(fakeTrustConnector.playback(any[String])(any(), any())).thenReturn(Future.successful(Closed))
 
         when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
@@ -206,7 +206,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
           .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
-        when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(Processing))
+        when(fakeTrustConnector.playback(any[String])(any(), any())).thenReturn(Future.successful(Processing))
 
         when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
@@ -224,7 +224,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
           .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
-        when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(IdentifierNotFound))
+        when(fakeTrustConnector.playback(any[String])(any(), any())).thenReturn(Future.successful(IdentifierNotFound))
 
         when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
@@ -256,7 +256,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
           .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
-        when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(TrustServiceUnavailable))
+        when(fakeTrustConnector.playback(any[String])(any(), any())).thenReturn(Future.successful(TrustServiceUnavailable))
 
         when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
@@ -274,7 +274,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
           .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
-        when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(ClosedRequestResponse))
+        when(fakeTrustConnector.playback(any[String])(any(), any())).thenReturn(Future.successful(ClosedRequestResponse))
 
         when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
@@ -292,7 +292,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
           .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
-        when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any())).thenReturn(Future.successful(TrustsErrorResponse))
+        when(fakeTrustConnector.playback(any[String])(any(), any())).thenReturn(Future.successful(TrustsErrorResponse))
 
         when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
@@ -325,7 +325,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
                 .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
-              when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
+              when(fakeTrustConnector.playback(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
@@ -361,7 +361,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
                 .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
 
-              when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
+              when(fakeTrustConnector.playback(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
@@ -392,7 +392,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
                 .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
 
-              when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
+              when(fakeTrustConnector.playback(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
@@ -437,7 +437,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
               when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
-              when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
+              when(fakeTrustConnector.playback(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(playbackRepository.set(any())).thenReturn(Future.successful(true))
@@ -491,7 +491,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
             when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
               .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
 
-            when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
+            when(fakeTrustConnector.playback(any[String])(any(), any()))
               .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
             when(playbackRepository.set(any())).thenReturn(Future.successful(true))
@@ -530,7 +530,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
               when(fakeFeatureFlagService.is5mldEnabled()(any(), any())).thenReturn(Future.successful(true))
 
-              when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
+              when(fakeTrustConnector.playback(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))

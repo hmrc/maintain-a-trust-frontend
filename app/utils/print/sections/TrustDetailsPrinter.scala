@@ -31,7 +31,7 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
       case UTR => converter.identifier(userAnswers, "uniqueTaxReference")
       case URN => converter.identifier(userAnswers, "uniqueReferenceNumber")
     }
-    
+
     val rows: Seq[Option[AnswerRow]] = if (userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
       Seq(converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
         converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
@@ -39,7 +39,7 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
 
         converter.yesNoQuestion(GovernedInsideTheUKPage, userAnswers,"governedInsideTheUK"),
         converter.countryQuestion(CountryGoverningTrustPage, userAnswers, "countryGoverningTrust", ""),
-        converter.yesNoQuestion(AdministrationInsideUKPage, userAnswers,"administeredInUk"),
+        converter.yesNoQuestion(AdministrationInsideUKPage, userAnswers,"administrationInsideUK"),
         converter.countryQuestion(CountryAdministeringTrustPage, userAnswers, "administrationCountry", ""),
         converter.yesNoQuestion(SetUpAfterSettlorDiedYesNoPage, userAnswers,"setUpAfterSettlorDied"),
 
