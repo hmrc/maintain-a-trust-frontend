@@ -47,7 +47,7 @@ class IndividualTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrustTr
   private def extractTelephone(entity: DisplayTrustTrusteeIndividualType,
                               index: Int,
                               answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       answers.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber)
     }
   }

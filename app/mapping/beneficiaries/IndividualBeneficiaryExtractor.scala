@@ -72,14 +72,14 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
   }
 
   private def extractRoleInCompany(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       answers.set(IndividualBeneficiaryRoleInCompanyPage(index), individualBeneficiary.beneficiaryType)
     }
   }
 
 
   private def extractVulnerability(vulnerable: Option[Boolean], index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       vulnerable match {
         case Some(value) => answers.set(IndividualBeneficiaryVulnerableYesNoPage(index), value)
         case None =>

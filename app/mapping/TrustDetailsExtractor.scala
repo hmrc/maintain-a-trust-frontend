@@ -51,7 +51,7 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
 
   private def extractGovernedBy(lawCountry: Option[String],
                                 answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       lawCountry match {
         case Some(country) => answers
           .set(GovernedInsideTheUKPage, false)
@@ -64,7 +64,7 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
 
   private def extractAdminBy(administrationCountry: Option[String],
                              answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       administrationCountry match {
         case Some(country) => answers
           .set(AdministrationInsideUKPage, false)
@@ -77,7 +77,7 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
 
   private def extractResidentialType(residentialStatus: Option[ResidentialStatusType],
                                      answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       residentialStatus match {
         case Some(ResidentialStatusType(Some(uk), None)) => ukTrust(uk, answers)
         case Some(ResidentialStatusType(None, Some(nonUK))) => nonUKTrust(nonUK, answers)
@@ -95,7 +95,7 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
       case _ => answers
         .set(TrustResidentOffshorePage, false)
     }
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       answers
         .set(EstablishedUnderScotsLawPage, uk.scottishLaw)
         .flatMap(answers => extractOffShore(answers))
@@ -109,7 +109,7 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
       case _ => Success(answers)
     }
 
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       answers
         .set(RegisteringTrustFor5APage, nonUK.sch5atcgga92)
         .flatMap(_.set(InheritanceTaxActPage, nonUK.s218ihta84))

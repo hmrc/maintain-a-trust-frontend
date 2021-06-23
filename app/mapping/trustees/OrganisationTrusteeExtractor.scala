@@ -44,7 +44,7 @@ class OrganisationTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrust
   private def extractTelephoneAndEmail(entity: DisplayTrustTrusteeOrgType,
                                index: Int,
                                answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       answers.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber)
         .flatMap(_.set(TrusteeEmailPage(index), entity.email))
     }
