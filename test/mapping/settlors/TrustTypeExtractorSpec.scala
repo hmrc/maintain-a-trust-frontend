@@ -19,8 +19,10 @@ package mapping.settlors
 import base.SpecBaseHelpers
 import generators.Generators
 import models.http._
+import models.pages.WhatIsNext.NeedsToPayTax
 import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import pages.WhatIsNextPage
 import pages.settlors.living_settlor.trust_type._
 import pages.trustdetails._
 
@@ -110,6 +112,49 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
         "must return user answers" in {
 
           val ua = emptyUserAnswersForUrn
+
+          val extraction = trustTypeExtractor.extract(ua, trust)
+
+          extraction.right.value mustBe ua
+
+        }
+      }
+
+      "migrating from non-taxable to taxable" - {
+
+        val trust = DisplayTrust(
+          details = TrustDetailsType(
+            startDate = LocalDate.parse("1970-02-01"),
+            trustTaxable = Some(false),
+            expressTrust = None,
+            trustUKResident = None,
+            trustUKProperty = None,
+            lawCountry = None,
+            administrationCountry = None,
+            residentialStatus = None,
+            typeOfTrust = None,
+            deedOfVariation = None,
+            interVivos = None,
+            efrbsStartDate = None,
+            trustRecorded = None,
+            trustUKRelation = None
+          ),
+          entities = DisplayTrustEntitiesType(
+            None,
+            DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
+            None,
+            DisplayTrustLeadTrusteeType(None, None),
+            None,
+            None,
+            None
+          ),
+          assets = None
+        )
+
+        "must return user answers" in {
+
+          val ua = emptyUserAnswersForUrn
+            .set(WhatIsNextPage, NeedsToPayTax).success.value
 
           val extraction = trustTypeExtractor.extract(ua, trust)
 

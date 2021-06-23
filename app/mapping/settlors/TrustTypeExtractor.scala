@@ -68,7 +68,10 @@ class TrustTypeExtractor extends ConditionalExtractor with Logging {
         case Some(TypeOfTrust.WillTrustOrIntestacyTrust) => answers
           .set(SetUpAfterSettlorDiedYesNoPage, true)
 
-        case _ =>
+        case None if answers.isTrustMigratingFromNonTaxableToTaxable =>
+          Success(answers)
+
+        case None =>
           Failure(new Throwable("No trust type for taxable trust."))
       }
     }
