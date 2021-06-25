@@ -34,7 +34,11 @@ case class TrustDetailsType(startDate: LocalDate,
                             interVivos: Option[Boolean],
                             efrbsStartDate: Option[LocalDate],
                             trustRecorded: Option[Boolean],
-                            trustUKRelation: Option[Boolean]) {
+                            trustUKRelation: Option[Boolean],
+                            residentOffshore: Option[Boolean],
+                            previouslyResident: Option[String],
+                            registeringTrustFor5A: Option[Boolean]
+                           ) {
 
   def isTaxable: Boolean = !trustTaxable.contains(false)
 }

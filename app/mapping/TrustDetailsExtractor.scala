@@ -66,7 +66,7 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
                              answers: UserAnswers): Try[UserAnswers] = {
     extractIfTaxable(answers) {
       administrationCountry match {
-        case Some(country) => answers
+        case Some(country) if country != "GB" => answers
           .set(AdministrationInsideUKPage, false)
           .flatMap(_.set(CountryAdministeringTrustPage, country))
         case _ => answers

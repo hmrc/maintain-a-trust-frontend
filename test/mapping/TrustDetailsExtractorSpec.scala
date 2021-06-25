@@ -55,7 +55,10 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             interVivos = Some(true),
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20)),
             trustRecorded = Some(true),
-            trustUKRelation = None
+            trustUKRelation = None,
+            residentOffshore = None,
+            previouslyResident = None,
+            registeringTrustFor5A = None
           )
 
           val ua = emptyUserAnswersForUtr
@@ -93,7 +96,10 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             interVivos = Some(true),
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20)),
             trustRecorded = Some(false),
-            trustUKRelation = Some(true)
+            trustUKRelation = Some(true),
+            residentOffshore = None,
+            previouslyResident = None,
+            registeringTrustFor5A = None
           )
 
           val ua = emptyUserAnswersForUtr
@@ -137,7 +143,10 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             interVivos = Some(true),
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20)),
             trustRecorded = Some(true),
-            trustUKRelation = None
+            trustUKRelation = None,
+            residentOffshore = None,
+            previouslyResident = None,
+            registeringTrustFor5A = None
           )
 
           val ua = emptyUserAnswersForUrn
@@ -174,7 +183,10 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             interVivos = Some(true),
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20)),
             trustRecorded = Some(false),
-            trustUKRelation = Some(true)
+            trustUKRelation = Some(true),
+            residentOffshore = None,
+            previouslyResident = None,
+            registeringTrustFor5A = None
           )
 
           val ua = emptyUserAnswersForUrn
@@ -200,6 +212,53 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
         }
       }
 
+      "migrating from non-taxable to taxable" - {
+
+        "uk" in {
+
+          val trust = TrustDetailsType(
+            startDate = LocalDate.of(2019, 6, 1),
+            trustTaxable = Some(true),
+            expressTrust = Some(true),
+            trustUKResident = Some(true),
+            trustUKProperty = Some(false),
+            lawCountry = None,
+            administrationCountry = Some("GB"),
+            residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, None)), None)),
+            typeOfTrust = Some(WillTrustOrIntestacyTrust),
+            deedOfVariation = None,
+            interVivos = None,
+            efrbsStartDate = None,
+            trustRecorded = Some(false),
+            trustUKRelation = None,
+            residentOffshore = Some(false),
+            previouslyResident = None,
+            registeringTrustFor5A = None
+          )
+
+          val ua = emptyUserAnswersForUtr
+
+          val extraction = trusteeDetailsExtractor.extract(ua, trust)
+
+          extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
+          extraction.right.value.get(TrustTaxableYesNoPage).get mustBe true
+          extraction.right.value.get(ExpressTrustYesNoPage).get mustBe true
+          extraction.right.value.get(TrustUkResidentYesNoPage).get mustBe true
+          extraction.right.value.get(TrustUkPropertyYesNoPage).get mustBe false
+          extraction.right.value.get(GovernedInsideTheUKPage).get mustBe true
+          extraction.right.value.get(CountryGoverningTrustPage) must not be defined
+          extraction.right.value.get(AdministrationInsideUKPage).get mustBe true
+          extraction.right.value.get(CountryAdministeringTrustPage) must not be defined
+          extraction.right.value.get(TrustRecordedOnAnotherRegisterYesNoPage).get mustBe false
+          extraction.right.value.get(EstablishedUnderScotsLawPage).get mustBe true
+          extraction.right.value.get(TrustResidentOffshorePage).get mustBe false
+          extraction.right.value.get(TrustPreviouslyResidentPage) must not be defined
+          extraction.right.value.get(RegisteringTrustFor5APage) must not be defined
+
+        }
+
+      }
+
       "assume taxable if trustTaxable is not defined" in {
 
         val trust = TrustDetailsType(
@@ -216,7 +275,10 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           interVivos = Some(true),
           efrbsStartDate = Some(LocalDate.of(2018, 4, 20)),
           trustRecorded = None,
-          trustUKRelation = None
+          trustUKRelation = None,
+          residentOffshore = None,
+          previouslyResident = None,
+          registeringTrustFor5A = None
         )
 
         val ua = emptyUserAnswersForUtr
@@ -237,6 +299,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
         extraction.right.value.get(TrustResidentOffshorePage).get mustBe false
         extraction.right.value.get(TrustPreviouslyResidentPage) must not be defined
       }
+
     }
 
   }

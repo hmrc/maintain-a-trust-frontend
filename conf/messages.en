@@ -1077,7 +1077,13 @@ governingCountry.checkYourAnswersLabel = What country governs the trust?
 administeredInUk.checkYourAnswersLabel = Does the trust’s general administration take place in the UK?
 administrationCountry.checkYourAnswersLabel = In what country is the trust administered?
 setUpAfterSettlorDied.checkYourAnswersLabel = Was the trust set up after the settlor died?
-
+whereTrusteesBased.checkYourAnswersLabel = Are the trustees based in the UK?
+establishedUnderScotsLaw.checkYourAnswersLabel = Was the trust created under Scots law?
+previouslyResidentOffshore.checkYourAnswersLabel = Has the trust ever been based offshore?
+previouslyResidentOffshoreCountry.checkYourAnswersLabel = Where was the trust based before?
+settlorBenefitsFromAssets.checkYourAnswersLabel = Are you registering the trust because the settlor benefits from the trust’s assets?
+forPurposeOfSection218.checkYourAnswersLabel = Are you registering the trust for Inheritance Tax reasons?
+agentCreatedTrust.checkYourAnswersLabel = Has an agent who is not a barrister created this trust?
 
 # Assets
 nonEeaBusiness.name.checkYourAnswersLabel = What is the company’s name?

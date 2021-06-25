@@ -44,10 +44,19 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
         converter.countryQuestion(CountryGoverningTrustPage, userAnswers, "governingCountry"),
         converter.yesNoQuestion(AdministrationInsideUKPage, userAnswers, "administeredInUk"),
         converter.countryQuestion(CountryAdministeringTrustPage, userAnswers, "administrationCountry"),
-        converter.yesNoQuestion(SetUpAfterSettlorDiedYesNoPage, userAnswers, "setUpAfterSettlorDied"),
+        converter.yesNoQuestion(SetUpAfterSettlorDiedYesNoPage, userAnswers, "setUpAfterSettlorDied"), // TODO Check if this is need for Trust Details section (does not use the value for question asked in maintain trust details!)
+
         converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
         converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
-        converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")
+
+        converter.yesNoQuestion(TrustUkResidentYesNoPage, userAnswers, "whereTrusteesBased"),
+        converter.yesNoQuestion(EstablishedUnderScotsLawPage, userAnswers, "establishedUnderScotsLaw"),
+        converter.yesNoQuestion(TrustResidentOffshorePage, userAnswers, "previouslyResidentOffshore"),
+        converter.countryQuestion(TrustPreviouslyResidentPage, userAnswers, "previouslyResidentOffshoreCountry"),
+        converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo"),
+        converter.yesNoQuestion(RegisteringTrustFor5APage, userAnswers, "settlorBenefitsFromAssets"),
+        converter.yesNoQuestion(InheritanceTaxActPage, userAnswers, "forPurposeOfSection218"),
+        converter.yesNoQuestion(AgentOtherThanBarristerPage, userAnswers, "agentCreatedTrust"),
       )
     } else {
       Seq(
