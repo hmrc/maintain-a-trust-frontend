@@ -40,7 +40,7 @@ class TrustTypeExtractor extends ConditionalExtractor with Logging {
   }
 
   private def extractTrustType(trust: DisplayTrust, answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       trust.details.typeOfTrust match {
         case Some(TypeOfTrust.DeedOfVariation) => answers
           .set(KindOfTrustPage, KindOfTrust.Deed)

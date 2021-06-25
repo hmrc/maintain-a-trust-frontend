@@ -22,7 +22,7 @@ import scala.util.{Success, Try}
 
 trait ConditionalExtractor {
 
-  def extractIfTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
+  def extractIfTaxableOrMigratingToTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
     if (answers.isTrustTaxable) {
       block
     } else {

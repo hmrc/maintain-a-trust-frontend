@@ -77,7 +77,7 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
   override def extractIndIdentification(identification: Option[DisplayTrustIdentificationType],
                                         index: Int,
                                         answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       identification match {
         case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
           answers.set(ninoYesNoPage(index), true)

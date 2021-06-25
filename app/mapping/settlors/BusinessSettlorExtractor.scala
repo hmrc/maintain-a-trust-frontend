@@ -49,7 +49,7 @@ class BusinessSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSett
   }
 
   private def extractSettlorCompanyTypeAndTime(entity: DisplayTrustSettlorCompany, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       answers.set(SettlorCompanyTypePage(index), entity.companyType)
         .flatMap(_.set(SettlorCompanyTimePage(index), entity.companyTime))
     }

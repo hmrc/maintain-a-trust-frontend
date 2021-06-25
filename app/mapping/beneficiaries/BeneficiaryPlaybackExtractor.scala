@@ -34,7 +34,7 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
   def extractShareOfIncome(shareOfIncome: Option[String],
                            index: Int,
                            answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       shareOfIncome match {
         case Some(income) =>
           answers.set(shareOfIncomeYesNoPage(index), false)
@@ -48,7 +48,7 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
   override def extractOrgIdentification(identification: Option[DisplayTrustIdentificationOrgType],
                                         index: Int,
                                         answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       identification map {
         case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
           answers.set(utrPage(index), utr)
