@@ -20,9 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import controllers.routes
 import play.api.Configuration
 import play.api.i18n.{Lang, Messages}
-import play.api.mvc.{Call, Request}
-
-import java.net.{URI, URLEncoder}
+import play.api.mvc.Call
 
 @Singleton
 class FrontendAppConfig @Inject()(val configuration: Configuration) {
@@ -151,13 +149,6 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   lazy val sa900Link: String =
     configuration.get[String]("urls.sa900")
 
-  private lazy val accessibilityBaseLinkUrl: String = configuration.get[String]("urls.accessibility")
-
-  def accessibilityLinkUrl(implicit request: Request[_]): String = {
-    val userAction = URLEncoder.encode(new URI(request.uri).getPath, "UTF-8")
-    s"$accessibilityBaseLinkUrl?userAction=$userAction"
-  }
-
   def helplineUrl(implicit messages: Messages): String = {
     val path = messages.lang.code match {
       case WELSH => "urls.welshHelpline"
@@ -168,7 +159,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
   }
 
   def registerTrustAsTrusteeGuidanceUrl(): String = {
-      configuration.get[String]("urls.registerTrustAsTrusteeGuidance")
+    configuration.get[String]("urls.registerTrustAsTrusteeGuidance")
   }
 
 }
