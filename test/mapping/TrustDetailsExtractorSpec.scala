@@ -19,13 +19,12 @@ package mapping
 import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
-import models.pages.DeedOfVariation.ReplacedWill
+import models.pages.DeedOfVariation.{AdditionToWill, ReplacedWill}
 import models.pages.NonResidentType
 import models.pages.NonResidentType.Domiciled
 import models.pages.TypeOfTrust.{DeedOfVariation, WillTrustOrIntestacyTrust}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustdetails._
-
 import java.time.LocalDate
 
 class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherValues with Generators with SpecBaseHelpers {
@@ -214,7 +213,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
 
       "migrating from non-taxable to taxable" - {
 
-        "uk" in {
+        "trustees based in the UK" in {
 
           val trust = TrustDetailsType(
             startDate = LocalDate.of(2019, 6, 1),
@@ -222,16 +221,16 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             expressTrust = Some(true),
             trustUKResident = Some(true),
             trustUKProperty = Some(false),
-            lawCountry = None,
-            administrationCountry = Some("GB"),
-            residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, None)), None)),
+            lawCountry = Some("ES"),
+            administrationCountry = Some("IT"),
+            residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, Some("DE"))), None)),
             typeOfTrust = Some(WillTrustOrIntestacyTrust),
-            deedOfVariation = None,
+            deedOfVariation = Some(AdditionToWill),
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = Some(false),
             trustUKRelation = None,
-            residentOffshore = Some(false),
+            residentOffshore = None,
             previouslyResident = None,
             registeringTrustFor5A = None
           )
@@ -245,16 +244,16 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           extraction.right.value.get(ExpressTrustYesNoPage).get mustBe true
           extraction.right.value.get(TrustUkResidentYesNoPage).get mustBe true
           extraction.right.value.get(TrustUkPropertyYesNoPage).get mustBe false
-          extraction.right.value.get(GovernedInsideTheUKPage).get mustBe true
-          extraction.right.value.get(CountryGoverningTrustPage) must not be defined
-          extraction.right.value.get(AdministrationInsideUKPage).get mustBe true
-          extraction.right.value.get(CountryAdministeringTrustPage) must not be defined
+          extraction.right.value.get(GovernedInsideTheUKPage).get mustBe false
+          extraction.right.value.get(CountryGoverningTrustPage).get mustBe "ES"
+          extraction.right.value.get(AdministrationInsideUKPage).get mustBe false
+          extraction.right.value.get(CountryAdministeringTrustPage).get mustBe "IT"
           extraction.right.value.get(TrustRecordedOnAnotherRegisterYesNoPage).get mustBe false
           extraction.right.value.get(EstablishedUnderScotsLawPage).get mustBe true
-          extraction.right.value.get(TrustResidentOffshorePage).get mustBe false
-          extraction.right.value.get(TrustPreviouslyResidentPage) must not be defined
+          extraction.right.value.get(TrustResidentOffshorePage).get mustBe true
+          extraction.right.value.get(TrustPreviouslyResidentPage).get mustBe "DE"
           extraction.right.value.get(RegisteringTrustFor5APage) must not be defined
-
+          extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false
         }
 
       }
