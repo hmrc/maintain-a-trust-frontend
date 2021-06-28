@@ -19,24 +19,22 @@ package utils
 import models.pages.RoleInCompany
 import models.pages.RoleInCompany.NA
 import models.{Address, Description, InternationalAddress, PassportOrIdCardDetails, UKAddress}
-import org.joda.time.{LocalDate => JodaDate}
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
 import play.twirl.api.HtmlFormat.escape
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.language.LanguageUtils
 import utils.countryoptions.CountryOptions
 
-import java.time.{LocalDate => JavaDate}
+import java.time.LocalDate
 import javax.inject.Inject
 import scala.util.Try
 
 class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
                                       (implicit countryOptions: CountryOptions) {
 
-  def formatDate(date: JavaDate)(implicit messages: Messages): String = {
-    val convertedDate: JodaDate = new JodaDate(date.getYear, date.getMonthValue, date.getDayOfMonth)
-    languageUtils.Dates.formatDate(convertedDate)
+  def formatDate(date: LocalDate)(implicit messages: Messages): String = {
+    languageUtils.Dates.formatDate(date)
   }
 
   def yesOrNo(answer: Boolean)(implicit messages: Messages): Html = {
