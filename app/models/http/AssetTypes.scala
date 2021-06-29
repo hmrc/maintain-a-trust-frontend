@@ -78,7 +78,13 @@ case class DisplayBusinessAssetType(orgName: String,
                                     utr: Option[String],
                                     businessDescription: String,
                                     address: Option[AddressType],
-                                    businessValue: Option[Long]) extends Asset
+                                    businessValue: Option[Long]) extends Asset with EntityType {
+
+  override val bpMatchStatus: Option[String] = None
+  override val lineNo: Option[String] = None
+  override val entityStart: String = LocalDate.now.toString
+
+}
 
 object DisplayBusinessAssetType {
   implicit val businessAssetTypeFormat: Format[DisplayBusinessAssetType] = Json.format[DisplayBusinessAssetType]

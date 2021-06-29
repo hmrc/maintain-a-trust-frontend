@@ -14,29 +14,28 @@
  * limitations under the License.
  */
 
-package mapping
+package mapping.assets
 
-import mapping.PlaybackImplicits.AddressConverter
+import mapping.PlaybackExtractor
+import mapping.PlaybackImplicits.AddressOptionConverter
 import models.UserAnswers
-import models.http.DisplayNonEEABusinessType
-import pages.assets.nonEeaBusiness._
+import models.http.DisplayBusinessAssetType
+import pages.assets.business._
 
 import scala.util.Try
 
-class NonEeaBusinessAssetExtractor extends PlaybackExtractor[DisplayNonEEABusinessType] {
+class BusinessAssetExtractor extends PlaybackExtractor[DisplayBusinessAssetType] {
 
   override val optionalEntity: Boolean = true
 
   override def updateUserAnswers(answers: Try[UserAnswers],
-                                 entity: DisplayNonEEABusinessType,
+                                 entity: DisplayBusinessAssetType,
                                  index: Int): Try[UserAnswers] = {
     answers
-      .flatMap(_.set(NonEeaBusinessLineNoPage(index), entity.lineNo))
-      .flatMap(_.set(NonEeaBusinessNamePage(index), entity.orgName))
-      .flatMap(_.set(NonEeaBusinessGoverningCountryPage(index), entity.govLawCountry))
-      .flatMap(_.set(NonEeaBusinessAddressPage(index), entity.address.convert))
-      .flatMap(_.set(NonEeaBusinessStartDatePage(index), entity.startDate))
-      .flatMap(_.set(NonEeaBusinessEndDatePage(index), entity.endDate))
+      .flatMap(_.set(BusinessNamePage(index), entity.orgName))
+      .flatMap(_.set(BusinessDescriptionPage(index), entity.businessDescription))
+      .flatMap(_.set(BusinessAddressPage(index), entity.address.convert))
+      .flatMap(_.set(BusinessValuePage(index), entity.businessValue))
   }
 
 }

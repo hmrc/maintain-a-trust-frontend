@@ -808,6 +808,7 @@ answerPage.section.trustsDetails.heading = Trust details
 answerPage.section.assets.heading = Assets
 answerPage.section.nonEeaBusinesses.heading = Ownership or controlling interest of a Non-EEA company
 answerPage.section.nonEeaBusiness.subheading = Non-EEA Company {0}
+answerPage.section.asset.business.subheading = Business {0}
 
 # CHECK YOUR ANSWERS LABELS
 
@@ -1089,6 +1090,13 @@ agentCreatedTrust.checkYourAnswersLabel = Has an agent who is not a barrister cr
 nonEeaBusiness.name.checkYourAnswersLabel = What is the company’s name?
 nonEeaBusiness.internationalAddress.checkYourAnswersLabel = What is {0}’s address?
 nonEeaBusiness.governingCountry.checkYourAnswersLabel = Which country’s laws govern {0}?
+
+asset.business.name.checkYourAnswersLabel = What is the business’s name?
+asset.business.description.checkYourAnswersLabel = What is the description for {0}?
+asset.business.addressUkYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+asset.business.address.checkYourAnswersLabel = What is {0}’s address?
+asset.business.value.checkYourAnswersLabel = What is the current value of the business?
+
 
 # Task List
 taskList.up-to-date = Up to date

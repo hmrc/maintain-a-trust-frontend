@@ -20,7 +20,8 @@ import base.SpecBase
 import models.InternationalAddress
 import models.pages.WhatIsNext.NeedsToPayTax
 import pages.WhatIsNextPage
-import pages.assets.nonEeaBusiness.{NonEeaBusinessAddressPage, NonEeaBusinessGoverningCountryPage, NonEeaBusinessNamePage}
+import pages.assets.business._
+import pages.assets.nonEeaBusiness._
 import play.twirl.api.Html
 import utils.print.sections.assets.AllAssetsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
@@ -32,6 +33,39 @@ class AllAssetsPrinterSpec extends SpecBase {
   private val address = InternationalAddress("Line 1", "Line 2", None, "DE")
 
   "AllAssetsPrinter" must {
+
+    "generate assets assets sections" when {
+
+      "migrating from non-taxable to taxable" in {
+
+        val businessName = "Business Name"
+
+        val answers = emptyUserAnswersForUtr
+          .set(WhatIsNextPage, NeedsToPayTax).success.value
+          .set(BusinessNamePage(0), businessName).success.value
+          .set(BusinessDescriptionPage(0), "Business Description").success.value
+          .set(BusinessAddressPage(0), InternationalAddress("line1", "line2", None, "FR")).success.value
+          .set(BusinessValuePage(0), 101L).success.value
+
+        val result = helper.entities(answers)
+
+        result mustBe Seq(
+          AnswerSection(None, Nil, Some(messages("answerPage.section.assets.heading"))),
+          AnswerSection(
+            headingKey = Some("Business 1"),
+            rows = Seq(
+              AnswerRow(label = messages("asset.business.name.checkYourAnswersLabel"), answer = Html(businessName), changeUrl = None),
+              AnswerRow(label = messages("asset.business.description.checkYourAnswersLabel", businessName), answer = Html("Business Description"), changeUrl = None),
+              AnswerRow(label = messages("asset.business.address.checkYourAnswersLabel", businessName), answer = Html("line1<br />line2<br />France"), changeUrl = None),
+              AnswerRow(label = messages("asset.business.value.checkYourAnswersLabel", businessName), answer = Html("£101"), changeUrl = None)
+            ),
+            sectionKey = None
+          )
+        )
+
+      }
+
+    }
 
     "generate Non-Eea Company section" when {
 
@@ -106,5 +140,6 @@ class AllAssetsPrinterSpec extends SpecBase {
         )
       }
     }
+
   }
 }

@@ -79,6 +79,15 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
+  def currencyQuestion(query: Gettable[Long],
+                       userAnswers: UserAnswers,
+                       labelKey: String,
+                       messageArg: String = "")
+                      (implicit messages: Messages): Option[AnswerRow] = {
+    val format = (x: Long) => checkAnswersFormatters.currency(x.toString)
+    question(query, userAnswers, labelKey, format, messageArg)
+  }
+
   def dateQuestion(query: Gettable[LocalDate],
                    userAnswers: UserAnswers,
                    labelKey: String,
