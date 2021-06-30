@@ -45,21 +45,13 @@
 
     <p>@messages("transitionProgress.p1")</p>
 
-    <h2>@messages("transitionProgress.subHeading.1")</h2>
-
-    <p>@messages("transitionProgress.p2")</p>
-
-    @components.bullet_list("transitionProgress", Seq("p2.bullet1", "p2.bullet2"))
+    @if(!isAbleToDeclare) {<p>@messages("transitionProgress.p2")</p>}
 
     @if(affinityGroup == AffinityGroup.Agent) {
         <a href="@{appConfig.agentOverviewUrl}">@messages("transitionsProgress.return.link")</a>
     }
 
     @components.warning("transitionProgress")
-
-    <p>@messages("transitionProgress.p3") @components.link(appConfig.loginContinueUrl, "return-to-service", "transitionProgress.p3.link", false)</p>
-
-    <p>@messages("transitionProgress.p4")</p>
 
     @components.task_list("mandatory", mandatory, messages("transitionProgress.subHeading.2"))
 
@@ -72,14 +64,13 @@
         <p>@messages("transitionProgress.p5")</p>
         @components.bullet_list("transitionProgress", Seq("p5.bullet1", "p5.bullet2"))
 
-        <p>@messages("transitionProgress.p6")</p>
-        <p>@messages("transitionProgress.p7")</p>
-        @components.bullet_list("transitionProgress", Seq("p7.bullet1", "p7.bullet2"))
-
-        <p>@messages("transitionProgress.p8") <a href="@appConfig.helplineUrl" target="_blank">@messages("transitionProgress.p8.link")</a>.</p>
+        <p>@messages("transitionProgress.p6") @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", true)@messages("transitionProgress.p6b")</p>
+        <p>@messages("transitionProgress.p7") @components.link(appConfig.loginContinueUrl, "return-to-service", "transitionProgress.p7.link", true).</p>
 
         <div class="section">
             <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
         </div>
+    } else {
+        <p>@messages("transitionProgress.p3")</p>
     }
 }
