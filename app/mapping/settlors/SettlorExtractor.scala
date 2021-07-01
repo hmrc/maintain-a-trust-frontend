@@ -38,7 +38,8 @@ class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtrac
     }
 
     settlors match {
-      case Nil => Left(FailedToExtractData("Settlor Extraction Error - No settlors"))
+      case Nil =>
+        Left(FailedToExtractData("Settlor Extraction Error - No settlors"))
       case _ =>
         settlors.combineArraysWithPath(LivingSettlors.path) match {
           case Some(value) => Right(value)
