@@ -246,17 +246,17 @@ transitionProgress.p2=Gallwch argraffu copi o’ch atebion drafft yn ogystal â 
 transitionsProgress.return.link=Dychwelyd i gofrestru ymddiriedolaeth a’i chynnal ar ran cleient
 transitionProgress.warning=Os nad ydych yn datgan bod yr wybodaeth yn gyfredol, ni fydd eich newidiadau’n cael eu cyflwyno i CThEM ac ni fyddant yn cael eu cadw
 
-transitionProgress.subHeading.2=Pob adran i’w chwblhau
-transitionProgress.subHeading.3=Crynodeb
-transitionProgress.subHeading.4=Datgan a chadw’ch newidiadau
-transitionProgress.p5=Er mwyn cadw unrhyw newidiadau a wnewch i gofnod yr ymddiriedolaeth, mae angen i chi wneud y canlynol:
-transitionProgress.p5.bullet1=gyflwyno’r newidiadau i CThEM, a fydd yn diweddaru cofnodion yr ymddiriedolaeth
-transitionProgress.p5.bullet2=datgan bod yr wybodaeth sydd gan CThEM am yr ymddiriedolaeth yn gywir ac yn gyfredol
-transitionProgress.p6=Gallwch
+transitionProgress.subHeading.1=Pob adran i’w chwblhau
+transitionProgress.subHeading.2=Crynodeb
+transitionProgress.subHeading.3=Datgan a chadw’ch newidiadau
+transitionProgress.p4=Er mwyn cadw unrhyw newidiadau a wnewch i gofnod yr ymddiriedolaeth, mae angen i chi wneud y canlynol:
+transitionProgress.p4.bullet1=gyflwyno’r newidiadau i CThEM, a fydd yn diweddaru cofnodion yr ymddiriedolaeth
+transitionProgress.p4.bullet2=datgan bod yr wybodaeth sydd gan CThEM am yr ymddiriedolaeth yn gywir ac yn gyfredol
+transitionProgress.p5=Gallwch
 transitionProgress.printsave.link=argraffu neu gadw copi drafft o’ch atebion sydd wedi’u cadw (yn agor ffenestr neu dab newydd)
 
-transitionProgress.p7=Gallwch
-transitionProgress.p7.link=ddychwelyd i’r gwasanaeth a diweddaru cofnod yr ymddiriedolaeth ar unrhyw adeg.
+transitionProgress.p6=Gallwch
+transitionProgress.p6.link=ddychwelyd i’r gwasanaeth a diweddaru cofnod yr ymddiriedolaeth ar unrhyw adeg.
 taskList.trustDetails.label=Manylion yr Ymddiriedolaeth
 taskList.assets.label=Asedion
 taskList.taxLiability.label=Blynyddoedd Rhwymedigaeth Treth

@@ -53,19 +53,19 @@
 
     @components.warning("transitionProgress")
 
-    @components.task_list("mandatory", mandatory, messages("transitionProgress.subHeading.2"))
+    @components.task_list("mandatory", mandatory, messages("transitionProgress.subHeading.1"))
 
-    @components.task_list("additional", additional, messages("transitionProgress.subHeading.3"))
+    @components.task_list("additional", additional, messages("transitionProgress.subHeading.2"))
 
     @if(isAbleToDeclare) {
 
-        <h2>@messages("transitionProgress.subHeading.4")</h2>
+        <h2>@messages("transitionProgress.subHeading.3")</h2>
 
-        <p>@messages("transitionProgress.p5")</p>
-        @components.bullet_list("transitionProgress", Seq("p5.bullet1", "p5.bullet2"))
+        <p>@messages("transitionProgress.p4")</p>
+        @components.bullet_list("transitionProgress", Seq("p4.bullet1", "p4.bullet2"))
 
-        <p>@messages("transitionProgress.p6") @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", true)@messages("transitionProgress.p6b")</p>
-        <p>@messages("transitionProgress.p7") @components.link(appConfig.loginContinueUrl, "return-to-service", "transitionProgress.p7.link", true).</p>
+        <p>@messages("transitionProgress.p5") @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", true)@messages("transitionProgress.p5b")</p>
+        <p>@messages("transitionProgress.p6") @components.link(appConfig.loginContinueUrl, "return-to-service", "transitionProgress.p6.link").</p>
 
         <div class="section">
             <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
