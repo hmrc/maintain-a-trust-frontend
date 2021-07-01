@@ -21,6 +21,7 @@ import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtraction
 import models.UserAnswers
 import models.UserAnswersCombinator._
 import models.http.DisplayTrustBeneficiaryType
+import play.api.Logging
 
 class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBeneficiaryExtractor,
                                      companyBeneficiaryExtractor: CompanyBeneficiaryExtractor,
@@ -28,7 +29,7 @@ class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBenefic
                                      otherBeneficiaryExtractor: OtherBeneficiaryExtractor,
                                      classOfBeneficiaryExtractor: ClassOfBeneficiaryExtractor,
                                      individualBeneficiaryExtractor: IndividualBeneficiaryExtractor,
-                                     largeBeneficiaryExtractor: LargeBeneficiaryExtractor) {
+                                     largeBeneficiaryExtractor: LargeBeneficiaryExtractor) extends Logging {
 
   def extract(answers: UserAnswers, data: DisplayTrustBeneficiaryType): Either[PlaybackExtractionError, UserAnswers] = {
 
@@ -43,13 +44,16 @@ class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBenefic
     ).collect {
       case Right(z) => z
     }
-    
+
     beneficiaries match {
-      case Nil => Left(FailedToExtractData("Beneficiary Extraction Error - No beneficiaries"))
-      case _ => beneficiaries.combine match {
-        case Some(value) => Right(value)
-        case None => Left(FailedToExtractData("Beneficiary Extraction Error - Failed to combine beneficiary answers"))
-      }
+      case Nil =>
+        logger.warn(s"[Identifier: ${answers.identifier}] No beneficiaries")
+        Right(answers)
+      case _ =>
+        beneficiaries.combine match {
+          case Some(value) => Right(value)
+          case None => Left(FailedToExtractData("Beneficiary Extraction Error - Failed to combine beneficiary answers"))
+        }
     }
   }
 }

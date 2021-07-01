@@ -21,11 +21,12 @@ import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtraction
 import models.UserAnswers
 import models.UserAnswersCombinator._
 import models.http.DisplayTrustEntitiesType
+import play.api.Logging
 import sections.settlors.LivingSettlors
 
 class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtractor,
                                  individualSettlorExtractor: IndividualSettlorExtractor,
-                                 businessSettlorExtractor: BusinessSettlorExtractor) {
+                                 businessSettlorExtractor: BusinessSettlorExtractor) extends Logging {
 
   def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
 
@@ -37,14 +38,15 @@ class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtrac
       case Right(z) => z
     }
 
-    val noDeceasedSettlor: Boolean = data.deceased.isEmpty
-
-    (settlors, noDeceasedSettlor) match {
-      case (Nil, _) => Left(FailedToExtractData("Settlor Extraction Error - No settlors"))
-      case _ => settlors.combineArraysWithPath(LivingSettlors.path) match {
-        case Some(value) => Right(value)
-        case None => Left(FailedToExtractData("Settlor Extraction Error - Failed to combine settlor answers"))
-      }
+    settlors match {
+      case Nil =>
+        logger.warn(s"[Identifier: ${answers.identifier}] No settlors")
+        Right(answers)
+      case _ =>
+        settlors.combineArraysWithPath(LivingSettlors.path) match {
+          case Some(value) => Right(value)
+          case None => Left(FailedToExtractData("Settlor Extraction Error - Failed to combine settlor answers"))
+        }
     }
   }
 
