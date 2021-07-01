@@ -63,7 +63,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4"
+          expectedGuidanceKeys = "p1", "p2", "p3"
         )
 
         behave like pageWithBackLink(applyView)
@@ -104,7 +104,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4"
+          expectedGuidanceKeys = "p1", "p2", "p3"
         )
 
         behave like pageWithBackLink(applyView)
@@ -142,8 +142,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4", "p5",
-          "p5.bullet1", "p5.bullet2", "p6", "p7", "p7.bullet1", "p7.bullet2", "p8"
+          expectedGuidanceKeys = "p1", "p4", "p4.bullet1", "p4.bullet2", "p5",
+          "printsave.link", "p5b", "p6", "p6.link"
         )
 
         behave like pageWithBackLink(applyView)
@@ -186,8 +186,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "subHeading.1", "p2", "p2.bullet1", "p2.bullet2", "p3", "p4", "p5",
-          "p5.bullet1", "p5.bullet2", "p6", "p7", "p7.bullet1", "p7.bullet2", "p8"
+          expectedGuidanceKeys = "p1", "p4", "p4.bullet1", "p4.bullet2", "p5",
+          "printsave.link", "p5b", "p6", "p6.link"
         )
 
         behave like pageWithBackLink(applyView)
