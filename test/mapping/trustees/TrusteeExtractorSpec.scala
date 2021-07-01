@@ -29,20 +29,22 @@ import utils.Constants.GB
 class TrusteeExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val trusteeExtractor : TrusteeExtractor =
+  val trusteeExtractor: TrusteeExtractor =
     injector.instanceOf[TrusteeExtractor]
 
   "Trustee Extractor" - {
 
     "when no trustees" - {
+      "must return original answers" in {
 
-      "must return an error" in {
-
-        val leadTrustee = DisplayTrustEntitiesType(None,
-          DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
-          None,
-          DisplayTrustLeadTrusteeType(None, None),
-          None, None, None
+        val leadTrustee = DisplayTrustEntitiesType(
+          naturalPerson = None,
+          beneficiary = DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
+          deceased = None,
+          leadTrustee = DisplayTrustLeadTrusteeType(None, None),
+          trustees = None,
+          protectors = None,
+          settlors = None
         )
 
         val ua = emptyUserAnswersForUtr
@@ -50,9 +52,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 
         extraction.left.value mustBe a[FailedToExtractData]
-
       }
-
     }
 
     "when there is only a lead trustee with only a utr identification" - {
