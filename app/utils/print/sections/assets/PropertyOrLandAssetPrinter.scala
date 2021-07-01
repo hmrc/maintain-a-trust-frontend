@@ -35,16 +35,18 @@ class PropertyOrLandAssetPrinter @Inject()(converter: AnswerRowConverter) extend
 
   override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                          (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
-    converter.stringQuestion(PropertyOrLandDescriptionPage(index), userAnswers, "asset.propertyOrLand.description"),
     converter.yesNoQuestion(PropertyOrLandAddressYesNoPage(index), userAnswers, "asset.propertyOrLand.addressYesNo"),
     converter.yesNoQuestion(PropertyOrLandAddressUkYesNoPage(index), userAnswers, "asset.propertyOrLand.addressUkYesNo"),
     converter.addressQuestion(PropertyOrLandAddressPage(index), userAnswers, "asset.propertyOrLand.address"),
+    converter.stringQuestion(PropertyOrLandDescriptionPage(index), userAnswers, "asset.propertyOrLand.description"),
     converter.currencyQuestion(PropertyOrLandTotalValuePage(index), userAnswers, "asset.propertyOrLand.totalValue"),
     converter.yesNoQuestion(TrustOwnAllThePropertyOrLandPage(index), userAnswers, "asset.propertyOrLand.trustOwnAllYesNo"),
     converter.currencyQuestion(PropertyLandValueTrustPage(index), userAnswers, "asset.propertyOrLand.valueInTrust")
   )
 
   override def namePath(index: Int): JsPath = PropertyOrLandDescriptionPage(index).path
+
+  override val optionalName: Boolean = true
 
   override def section: QuestionPage[JsArray] = PropertyOrLandAsset
 

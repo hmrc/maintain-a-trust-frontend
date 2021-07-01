@@ -43,9 +43,8 @@ class AssetsExtractor @Inject()(nonEeaBusinessAssetExtractor: NonEeaBusinessAsse
         assets match {
           case Nil => Left(FailedToExtractData("Assets Extraction Error - No assets"))
           case _ => assets.combine match {
-            case Some(value) => {
+            case Some(value) =>
               Right(value)
-            }
             case None => Left(FailedToExtractData("Assets Extraction Error - Failed to combine asset answers"))
           }
         }

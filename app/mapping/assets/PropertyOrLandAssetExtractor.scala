@@ -42,7 +42,7 @@ class PropertyOrLandAssetExtractor extends PlaybackExtractor[PropertyLandType] {
       .flatMap(answers => extractPreviousValue(entity.valuePrevious, index, answers))
   }
 
-  def extractPreviousValue(valuePrevious: Option[Long], index: Int, answers: UserAnswers): Try[UserAnswers] = {
+  private def extractPreviousValue(valuePrevious: Option[Long], index: Int, answers: UserAnswers): Try[UserAnswers] = {
     valuePrevious match {
       case Some(value) =>
         answers.set(TrustOwnAllThePropertyOrLandPage(index), false)

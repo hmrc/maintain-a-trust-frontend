@@ -53,20 +53,12 @@ class AllAssetsPrinterSpec extends SpecBase {
           .set(PropertyOrLandTotalValuePage(0), 2000L).success.value
           .set(TrustOwnAllThePropertyOrLandPage(0), true).success.value
 
-          // TODO - Do we need this
-//          .set(PropertyOrLandAddressUkYesNoPage(0), None).success.value
-//          .set(PropertyOrLandAddressPage(0), None).success.value
-//          .set(PropertyLandValueTrustPage(0), None).success.value
-
           .set(PropertyOrLandAddressYesNoPage(1), true).success.value
           .set(PropertyOrLandAddressUkYesNoPage(1), false).success.value
           .set(PropertyOrLandAddressPage(1), InternationalAddress("line1", "line2", None, "FR")).success.value
           .set(PropertyOrLandTotalValuePage(1), 2000L).success.value
           .set(TrustOwnAllThePropertyOrLandPage(1), false).success.value
           .set(PropertyLandValueTrustPage(1), 1000L).success.value
-
-          // TODO - Do we need this
-//          .set(PropertyOrLandDescriptionPage(1), None).success.value
 
         val result = helper.entities(answers)
 
@@ -85,8 +77,8 @@ class AllAssetsPrinterSpec extends SpecBase {
           AnswerSection(
             headingKey = Some("Property or land 1"),
             rows = Seq(
-              AnswerRow(label = messages("asset.propertyOrLand.description.checkYourAnswersLabel"), answer = Html("Building land name"), changeUrl = None),
               AnswerRow(label = messages("asset.propertyOrLand.addressYesNo.checkYourAnswersLabel"), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("asset.propertyOrLand.description.checkYourAnswersLabel"), answer = Html("Building land name"), changeUrl = None),
               AnswerRow(label = messages("asset.propertyOrLand.totalValue.checkYourAnswersLabel"), answer = Html("£2000"), changeUrl = None),
               AnswerRow(label = messages("asset.propertyOrLand.trustOwnAllYesNo.checkYourAnswersLabel"), answer = Html("Yes"), changeUrl = None)
             ),
