@@ -110,61 +110,6 @@ class BusinessAssetExtractorSpec extends FreeSpec with MustMatchers
         }
       }
 
-//      "for a non taxable trust" - {
-//
-//        "with minimum data must return user answers updated" in {
-//
-//          val businessAssets = List(DisplayBusinessAssetType(
-//            orgName = "Business 1",
-//            utr = None,
-//            businessDescription = "Business Asset Description",
-//            address = AddressType(s"line1", "line2", None, None, None, "FR"),
-//            businessValue = Some(101)
-//          ))
-//
-//          val ua = emptyUserAnswersForUtr
-//
-//          val extraction = assetExtractor.extract(ua, businessAssets)
-//
-//          extraction.right.value.get(NonEeaBusinessLineNoPage(0)).get mustBe "1"
-//          extraction.right.value.get(NonEeaBusinessNamePage(0)).get mustBe "Non EEA Business 1"
-//          extraction.right.value.get(NonEeaBusinessAddressPage(0)).get mustBe InternationalAddress("line 1", "line2", None, "FR")
-//          extraction.right.value.get(NonEeaBusinessGoverningCountryPage(0)).get mustBe "FR"
-//          extraction.right.value.get(NonEeaBusinessStartDatePage(0)).get mustBe LocalDate.of(2019, 11, 26)
-//          extraction.right.value.get(NonEeaBusinessEndDatePage(0)) mustNot be(defined)
-//        }
-//
-//        "with full data must return user answers updated" in {
-//          val businessAssets = (for (index <- 0 to 2) yield generateBusiness(index)).toList
-//
-//          val ua = emptyUserAnswersForUrn
-//
-//          val extraction = assetExtractor.extract(ua, businessAssets)
-//
-//          extraction mustBe 'right
-//
-//          extraction.right.value.get(NonEeaBusinessLineNoPage(0)).get mustBe "0"
-//          extraction.right.value.get(NonEeaBusinessNamePage(0)).get mustBe "Non EEA Business 0"
-//          extraction.right.value.get(NonEeaBusinessAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "FR")
-//          extraction.right.value.get(NonEeaBusinessGoverningCountryPage(0)).get mustBe "FR"
-//          extraction.right.value.get(NonEeaBusinessStartDatePage(0)).get mustBe LocalDate.of(2019, 11, 26)
-//          extraction.right.value.get(NonEeaBusinessEndDatePage(0)).get mustBe LocalDate.of(2020, 1, 1)
-//
-//          extraction.right.value.get(NonEeaBusinessLineNoPage(1)).get mustBe "1"
-//          extraction.right.value.get(NonEeaBusinessNamePage(1)).get mustBe "Non EEA Business 1"
-//          extraction.right.value.get(NonEeaBusinessAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
-//          extraction.right.value.get(NonEeaBusinessGoverningCountryPage(1)).get mustBe "DE"
-//          extraction.right.value.get(NonEeaBusinessStartDatePage(1)).get mustBe LocalDate.of(2019, 11, 26)
-//          extraction.right.value.get(NonEeaBusinessEndDatePage(1)).get mustBe LocalDate.of(2020, 2, 1)
-//
-//          extraction.right.value.get(NonEeaBusinessLineNoPage(2)).get mustBe "2"
-//          extraction.right.value.get(NonEeaBusinessNamePage(2)).get mustBe "Non EEA Business 2"
-//          extraction.right.value.get(NonEeaBusinessAddressPage(2)).get mustBe InternationalAddress("line 2", "line2", None, "ES")
-//          extraction.right.value.get(NonEeaBusinessGoverningCountryPage(2)).get mustBe "ES"
-//          extraction.right.value.get(NonEeaBusinessStartDatePage(2)).get mustBe LocalDate.of(2019, 11, 26)
-//          extraction.right.value.get(NonEeaBusinessEndDatePage(2)) mustNot be(defined)
-//        }
-//      }
     }
 
   }

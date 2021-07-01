@@ -809,6 +809,7 @@ answerPage.section.assets.heading = Assets
 answerPage.section.nonEeaBusinesses.heading = Ownership or controlling interest of a Non-EEA company
 answerPage.section.nonEeaBusiness.subheading = Non-EEA Company {0}
 answerPage.section.asset.business.subheading = Business {0}
+answerPage.section.asset.propertyOrLand.subheading = Property or land {0}
 
 # CHECK YOUR ANSWERS LABELS
 
@@ -1096,6 +1097,14 @@ asset.business.description.checkYourAnswersLabel = What is the description for {
 asset.business.addressUkYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 asset.business.address.checkYourAnswersLabel = What is {0}’s address?
 asset.business.value.checkYourAnswersLabel = What is the current value of the business?
+
+asset.propertyOrLand.addressYesNo.checkYourAnswersLabel = Does the property or land have an address?
+asset.propertyOrLand.addressUkYesNo.checkYourAnswersLabel = Is the property or land’s address in the UK?
+asset.propertyOrLand.address.checkYourAnswersLabel = What is the property or land’s address?
+asset.propertyOrLand.description.checkYourAnswersLabel = What is the description of the property or land?
+asset.propertyOrLand.totalValue.checkYourAnswersLabel = What is the current total value of the property or land?
+asset.propertyOrLand.trustOwnAllYesNo.checkYourAnswersLabel = Does the trust own all of the property or land?
+asset.propertyOrLand.valueInTrust.checkYourAnswersLabel = What is the value of the property or land owned by the trust?
 
 
 # Task List

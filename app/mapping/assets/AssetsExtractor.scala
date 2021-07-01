@@ -23,7 +23,8 @@ import models.UserAnswersCombinator._
 import models.http.DisplayTrustAssets
 
 class AssetsExtractor @Inject()(nonEeaBusinessAssetExtractor: NonEeaBusinessAssetExtractor,
-                                businessAssetExtractor: BusinessAssetExtractor) {
+                                businessAssetExtractor: BusinessAssetExtractor,
+                                propertyOrLandAssetExtractor: PropertyOrLandAssetExtractor) {
 
   def extract(answers: UserAnswers, data: Option[DisplayTrustAssets]): Either[PlaybackExtractionError, UserAnswers] = {
 
@@ -33,7 +34,8 @@ class AssetsExtractor @Inject()(nonEeaBusinessAssetExtractor: NonEeaBusinessAsse
 
         val assets: List[UserAnswers] = List(
           nonEeaBusinessAssetExtractor.extract(answers, a.nonEEABusiness),
-          businessAssetExtractor.extract(answers, a.business)
+          businessAssetExtractor.extract(answers, a.business),
+          propertyOrLandAssetExtractor.extract(answers, a.propertyOrLand)
         ).collect {
           case Right(z) => z
         }

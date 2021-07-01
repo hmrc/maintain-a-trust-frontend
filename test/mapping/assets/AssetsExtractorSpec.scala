@@ -20,11 +20,12 @@ import java.time.LocalDate
 
 import base.SpecBaseHelpers
 import generators.Generators
-import models.InternationalAddress
+import models.{InternationalAddress, UKAddress}
 import models.http._
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.assets.business._
-import pages.assets.nonEeaBusiness.{NonEeaBusinessAddressPage, NonEeaBusinessEndDatePage, NonEeaBusinessGoverningCountryPage, NonEeaBusinessLineNoPage, NonEeaBusinessNamePage, NonEeaBusinessStartDatePage}
+import pages.assets.nonEeaBusiness._
+import pages.assets.propertyOrLand._
 
 class AssetsExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -57,7 +58,19 @@ class AssetsExtractorSpec extends FreeSpec with MustMatchers
 
           val assets = DisplayTrustAssets(
             monetary = Nil,
-            propertyOrLand = Nil,
+            propertyOrLand = List(PropertyLandType(
+              buildingLandName = None,
+              address = Some(AddressType(s"line1", "line2", None, None, Some("NE1 1AA"), "GB")),
+              valueFull = 2000L,
+              valuePrevious = Some(1000L)
+            ),
+              PropertyLandType(
+                buildingLandName = Some(s"building land name 1"),
+                address = None,
+                valueFull = 2000L,
+                valuePrevious = None
+              )
+            ),
             shares = Nil,
             business = List(DisplayBusinessAssetType(
               orgName = "Business 1",
@@ -81,6 +94,21 @@ class AssetsExtractorSpec extends FreeSpec with MustMatchers
           val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, Some(assets))
+
+          extraction.right.value.get(PropertyOrLandDescriptionPage(0)) mustNot be(defined)
+          extraction.right.value.get(PropertyOrLandAddressYesNoPage(0)).get mustBe true
+          extraction.right.value.get(PropertyOrLandAddressUkYesNoPage(0)).get mustBe true
+          extraction.right.value.get(PropertyOrLandAddressPage(0)).get mustBe UKAddress("line1", "line2", None, None, "NE1 1AA")
+          extraction.right.value.get(PropertyOrLandTotalValuePage(0)).get mustBe 2000L
+          extraction.right.value.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe false
+          extraction.right.value.get(PropertyLandValueTrustPage(0)).get mustBe 1000L
+
+          extraction.right.value.get(PropertyOrLandDescriptionPage(1)).get mustBe "building land name 1"
+          extraction.right.value.get(PropertyOrLandAddressYesNoPage(1)).get mustBe false
+          extraction.right.value.get(PropertyOrLandAddressPage(1)) mustNot be(defined)
+          extraction.right.value.get(PropertyOrLandTotalValuePage(1)).get mustBe 2000L
+          extraction.right.value.get(TrustOwnAllThePropertyOrLandPage(1)).get mustBe true
+          extraction.right.value.get(PropertyLandValueTrustPage(1)) mustNot be(defined)
 
           extraction.right.value.get(BusinessNamePage(0)).get mustBe "Business 1"
           extraction.right.value.get(BusinessDescriptionPage(0)).get mustBe "Business Asset Description"

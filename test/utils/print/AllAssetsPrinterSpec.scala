@@ -22,6 +22,7 @@ import models.pages.WhatIsNext.NeedsToPayTax
 import pages.WhatIsNextPage
 import pages.assets.business._
 import pages.assets.nonEeaBusiness._
+import pages.assets.propertyOrLand._
 import play.twirl.api.Html
 import utils.print.sections.assets.AllAssetsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
@@ -47,6 +48,26 @@ class AllAssetsPrinterSpec extends SpecBase {
           .set(BusinessAddressPage(0), InternationalAddress("line1", "line2", None, "FR")).success.value
           .set(BusinessValuePage(0), 101L).success.value
 
+          .set(PropertyOrLandAddressYesNoPage(0), false).success.value
+          .set(PropertyOrLandDescriptionPage(0), "Building land name").success.value
+          .set(PropertyOrLandTotalValuePage(0), 2000L).success.value
+          .set(TrustOwnAllThePropertyOrLandPage(0), true).success.value
+
+          // TODO - Do we need this
+//          .set(PropertyOrLandAddressUkYesNoPage(0), None).success.value
+//          .set(PropertyOrLandAddressPage(0), None).success.value
+//          .set(PropertyLandValueTrustPage(0), None).success.value
+
+          .set(PropertyOrLandAddressYesNoPage(1), true).success.value
+          .set(PropertyOrLandAddressUkYesNoPage(1), false).success.value
+          .set(PropertyOrLandAddressPage(1), InternationalAddress("line1", "line2", None, "FR")).success.value
+          .set(PropertyOrLandTotalValuePage(1), 2000L).success.value
+          .set(TrustOwnAllThePropertyOrLandPage(1), false).success.value
+          .set(PropertyLandValueTrustPage(1), 1000L).success.value
+
+          // TODO - Do we need this
+//          .set(PropertyOrLandDescriptionPage(1), None).success.value
+
         val result = helper.entities(answers)
 
         result mustBe Seq(
@@ -58,6 +79,28 @@ class AllAssetsPrinterSpec extends SpecBase {
               AnswerRow(label = messages("asset.business.description.checkYourAnswersLabel", businessName), answer = Html("Business Description"), changeUrl = None),
               AnswerRow(label = messages("asset.business.address.checkYourAnswersLabel", businessName), answer = Html("line1<br />line2<br />France"), changeUrl = None),
               AnswerRow(label = messages("asset.business.value.checkYourAnswersLabel", businessName), answer = Html("£101"), changeUrl = None)
+            ),
+            sectionKey = None
+          ),
+          AnswerSection(
+            headingKey = Some("Property or land 1"),
+            rows = Seq(
+              AnswerRow(label = messages("asset.propertyOrLand.description.checkYourAnswersLabel"), answer = Html("Building land name"), changeUrl = None),
+              AnswerRow(label = messages("asset.propertyOrLand.addressYesNo.checkYourAnswersLabel"), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("asset.propertyOrLand.totalValue.checkYourAnswersLabel"), answer = Html("£2000"), changeUrl = None),
+              AnswerRow(label = messages("asset.propertyOrLand.trustOwnAllYesNo.checkYourAnswersLabel"), answer = Html("Yes"), changeUrl = None)
+            ),
+            sectionKey = None
+          ),
+          AnswerSection(
+            headingKey = Some("Property or land 2"),
+            rows = Seq(
+              AnswerRow(label = messages("asset.propertyOrLand.addressYesNo.checkYourAnswersLabel"), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("asset.propertyOrLand.addressUkYesNo.checkYourAnswersLabel"), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("asset.propertyOrLand.address.checkYourAnswersLabel"), answer = Html("line1<br />line2<br />France"), changeUrl = None),
+              AnswerRow(label = messages("asset.propertyOrLand.totalValue.checkYourAnswersLabel"), answer = Html("£2000"), changeUrl = None),
+              AnswerRow(label = messages("asset.propertyOrLand.trustOwnAllYesNo.checkYourAnswersLabel"), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("asset.propertyOrLand.valueInTrust.checkYourAnswersLabel"), answer = Html("£1000"), changeUrl = None)
             ),
             sectionKey = None
           )
