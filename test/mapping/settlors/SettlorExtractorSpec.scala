@@ -18,6 +18,7 @@ package mapping.settlors
 
 import base.SpecBaseHelpers
 import generators.Generators
+import mapping.PlaybackExtractionErrors.FailedToExtractData
 import models.http._
 import models.pages.KindOfBusiness.Trading
 import models.pages.{IndividualOrBusiness, KindOfBusiness}
@@ -52,7 +53,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
 
         val extraction = settlorExtractor.extract(ua, entities)
 
-        extraction.right.value mustBe ua
+        extraction.left.value mustBe a[FailedToExtractData]
       }
     }
 

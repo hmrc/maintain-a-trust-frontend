@@ -21,13 +21,12 @@ import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtraction
 import models.UserAnswers
 import models.UserAnswersCombinator._
 import models.http.DisplayTrustEntitiesType
-import play.api.Logging
 import sections.Trustees
 
 class TrusteeExtractor @Inject()(individualLeadTrusteeExtractor: IndividualLeadTrusteeExtractor,
                                  organisationLeadTrusteeExtractor: OrganisationLeadTrusteeExtractor,
                                  individualTrusteeExtractor: IndividualTrusteeExtractor,
-                                 organisationTrusteeExtractor: OrganisationTrusteeExtractor) extends Logging {
+                                 organisationTrusteeExtractor: OrganisationTrusteeExtractor) {
 
   def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
 
@@ -44,8 +43,7 @@ class TrusteeExtractor @Inject()(individualLeadTrusteeExtractor: IndividualLeadT
 
     (trustees, noLeadTrustee) match {
       case (Nil, _) =>
-        logger.warn(s"[Identifier: ${answers.identifier}] No trustees")
-        Right(answers)
+        Left(FailedToExtractData("Trustee Extraction Error - No trustees"))
       case (_, true) =>
         Left(FailedToExtractData("Trustee Extraction Error - Missing lead trustee"))
       case (_, false) =>

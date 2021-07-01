@@ -18,6 +18,7 @@ package mapping.trustees
 
 import base.SpecBaseHelpers
 import generators.Generators
+import mapping.PlaybackExtractionErrors.FailedToExtractData
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, MetaData}
@@ -50,7 +51,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 
-        extraction.right.value mustBe ua
+        extraction.left.value mustBe a[FailedToExtractData]
       }
     }
 

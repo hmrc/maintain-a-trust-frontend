@@ -21,12 +21,11 @@ import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtraction
 import models.UserAnswers
 import models.UserAnswersCombinator._
 import models.http.DisplayTrustEntitiesType
-import play.api.Logging
 import sections.settlors.LivingSettlors
 
 class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtractor,
                                  individualSettlorExtractor: IndividualSettlorExtractor,
-                                 businessSettlorExtractor: BusinessSettlorExtractor) extends Logging {
+                                 businessSettlorExtractor: BusinessSettlorExtractor) {
 
   def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
 
@@ -39,9 +38,7 @@ class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtrac
     }
 
     settlors match {
-      case Nil =>
-        logger.warn(s"[Identifier: ${answers.identifier}] No settlors")
-        Right(answers)
+      case Nil => Left(FailedToExtractData("Settlor Extraction Error - No settlors"))
       case _ =>
         settlors.combineArraysWithPath(LivingSettlors.path) match {
           case Some(value) => Right(value)
