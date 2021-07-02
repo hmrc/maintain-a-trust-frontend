@@ -79,7 +79,7 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
       )
     }
 
-    Seq(answerSectionWithRows(rows, userAnswers.isTrustTaxableOrMigratingToTaxable))
+    Seq(answerSectionWithRows(rows, userAnswers.isTrustMigratingFromNonTaxableToTaxable))
   }
 
   override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("trustsDetails")

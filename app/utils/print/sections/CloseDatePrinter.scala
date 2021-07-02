@@ -28,13 +28,13 @@ class CloseDatePrinter @Inject()(converter: AnswerRowConverter) extends PrinterH
 
   def print(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection = {
 
-    val row: Option[AnswerRow] = if (userAnswers.isTrustTaxableOrMigratingToTaxable) {
+    val row: Option[AnswerRow] = if (userAnswers.isTrustTaxable) {
       converter.dateQuestion(DateLastAssetSharedOutPage, userAnswers, "dateLastAssetSharedOut")
     } else {
       converter.dateQuestion(DateClosedPage, userAnswers, "dateClosed")
     }
 
-    answerSectionWithRows(Seq(row), userAnswers.isTrustTaxableOrMigratingToTaxable)
+    answerSectionWithRows(Seq(row), userAnswers.isTrustTaxable)
   }
 
   override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("closeDate")
