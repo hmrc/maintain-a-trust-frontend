@@ -42,8 +42,10 @@ class TrusteeExtractor @Inject()(individualLeadTrusteeExtractor: IndividualLeadT
     val noLeadTrustee: Boolean = data.leadTrustee.leadTrusteeInd.isEmpty && data.leadTrustee.leadTrusteeOrg.isEmpty
 
     (trustees, noLeadTrustee) match {
-      case (Nil, _) => Left(FailedToExtractData("Trustee Extraction Error - No trustees"))
-      case (_, true) => Left(FailedToExtractData("Trustee Extraction Error - Missing lead trustee"))
+      case (Nil, _) =>
+        Left(FailedToExtractData("Trustee Extraction Error - No trustees"))
+      case (_, true) =>
+        Left(FailedToExtractData("Trustee Extraction Error - Missing lead trustee"))
       case (_, false) =>
         trustees.combineArraysWithPath(Trustees.path) match {
           case Some(value) => Right(value)

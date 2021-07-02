@@ -37,12 +37,17 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
   "Settlor Extractor" - {
 
     "when no settlors" - {
-      "must return an error" in {
+      "must return original answers" in {
 
-        val entities = DisplayTrustEntitiesType(None,
-          DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
-          None, DisplayTrustLeadTrusteeType(None, None),
-          None, None, None)
+        val entities = DisplayTrustEntitiesType(
+          naturalPerson = None,
+          beneficiary = DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil),
+          deceased = None,
+          leadTrustee = DisplayTrustLeadTrusteeType(None, None),
+          trustees = None,
+          protectors = None,
+          settlors = None
+        )
 
         val ua = emptyUserAnswersForUtr
 
