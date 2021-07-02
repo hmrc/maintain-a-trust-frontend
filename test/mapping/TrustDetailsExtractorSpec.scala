@@ -54,10 +54,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             interVivos = Some(true),
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20)),
             trustRecorded = Some(true),
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           )
 
           val ua = emptyUserAnswersForUtr
@@ -95,10 +92,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             interVivos = Some(true),
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20)),
             trustRecorded = Some(false),
-            trustUKRelation = Some(true),
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = Some(true)
           )
 
           val ua = emptyUserAnswersForUtr
@@ -142,10 +136,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             interVivos = Some(true),
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20)),
             trustRecorded = Some(true),
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           )
 
           val ua = emptyUserAnswersForUrn
@@ -182,10 +173,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             interVivos = Some(true),
             efrbsStartDate = Some(LocalDate.of(2018, 4, 20)),
             trustRecorded = Some(false),
-            trustUKRelation = Some(true),
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = Some(true)
           )
 
           val ua = emptyUserAnswersForUrn
@@ -229,10 +217,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = Some(false),
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           )
 
           val ua = emptyUserAnswersForUtr
@@ -253,7 +238,6 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           extraction.right.value.get(TrustResidentOffshorePage).get mustBe true
           extraction.right.value.get(TrustPreviouslyResidentPage).get mustBe "DE"
           extraction.right.value.get(RegisteringTrustFor5APage) must not be defined
-//          extraction.right.value.get(SetUpAfterSettlorDiedYesNoPage).get mustBe false  // TODO Set as false in maintain-trust-details-frontend ?
         }
 
       }
@@ -274,10 +258,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           interVivos = Some(true),
           efrbsStartDate = Some(LocalDate.of(2018, 4, 20)),
           trustRecorded = None,
-          trustUKRelation = None,
-          residentOffshore = None,
-          previouslyResident = None,
-          registeringTrustFor5A = None
+          trustUKRelation = None
         )
 
         val ua = emptyUserAnswersForUtr

@@ -53,27 +53,27 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
         "taxable" in {
           val userAnswers = emptyUserAnswersForUtr
           userAnswers.trustTaxability mustBe Taxable
-          userAnswers.isTrustTaxable mustBe true
+          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe true
         }
 
         "non-taxable" in {
           val userAnswers = emptyUserAnswersForUrn
           userAnswers.trustTaxability mustBe NonTaxable
-          userAnswers.isTrustTaxable mustBe false
+          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe false
         }
 
         "migrating from non-taxable to taxable" in {
           val userAnswers = emptyUserAnswersForUrn
             .set(WhatIsNextPage, NeedsToPayTax).success.value
           userAnswers.trustTaxability mustBe MigratingFromNonTaxableToTaxable
-          userAnswers.isTrustTaxable mustBe true
+          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe true
         }
 
         "migrating from taxable to non-taxable" in {
           val userAnswers = emptyUserAnswersForUtr
             .set(WhatIsNextPage, NoLongerTaxable).success.value
           userAnswers.trustTaxability mustBe MigratingFromTaxableToNonTaxable
-          userAnswers.isTrustTaxable mustBe false
+          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe false
         }
       }
     }

@@ -146,8 +146,8 @@ declaration.closing.agent.warning = I confirm that my client has taken all reaso
 declaration.variation.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief. I will ensure it is regularly kept up to date as required including changes of address. If I discover that I have made an error or something has changed, I will update this register.
 declaration.closing.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief before closing this trust. I understand that if I knowingly provide false information and cannot demonstrate that I have taken all reasonable steps, I could be subject to penalties.
 
-deedOfVariation.replaceAbsoluteInterestOverWill = to replace an absolute interest over a will
-deedOfVariation.replaceWillTrust = to replace a will trust
+deedOfVariation.replaceAbsoluteInterestOverWill = To replace an absolute interest over a will
+deedOfVariation.replaceWillTrust = To replace a will trust
 
 error.browser.title.prefix = Error:
 error.summary.title = There is a problem
@@ -1001,6 +1001,8 @@ settlorBusinessAddressUK.checkYourAnswersLabel = What is {0}’s address?
 settlorBusinessAddressInternational.checkYourAnswersLabel = What is {0}’s address?
 settlorBusinessType.checkYourAnswersLabel = What kind of business is {0}?
 settlorBusinessTime.checkYourAnswersLabel = At the date of each contribution to the trust, had the business been in existence for at least 2 years?
+kindOfBusiness.Trading = Trading
+kindOfBusiness.Investment = Investment
 
 ### Individual
 settlorIndividualName.checkYourAnswersLabel = What is the settlor’s name?
@@ -1073,6 +1075,11 @@ governingCountry.checkYourAnswersLabel = What country governs the trust?
 administeredInUk.checkYourAnswersLabel = Does the trust’s general administration take place in the UK?
 administrationCountry.checkYourAnswersLabel = In what country is the trust administered?
 setUpAfterSettlorDied.checkYourAnswersLabel = Was the trust set up after the settlor died?
+typeOfTrust.checkYourAnswersLabel = What kind of trust did the settlor create?
+whyDeedOfVariationCreated.checkYourAnswersLabel = Why was the deed of variation created?
+holdoverReliefClaimed.checkYourAnswersLabel = Was Gift Hold-Over Relief claimed on any of the trust’s assets?
+efrbsYesNo.checkYourAnswersLabel = Is this an employer-financed retirement benefits scheme?
+efrbsStartDate.checkYourAnswersLabel = When did the employer-financed retirement benefits scheme start?
 whereTrusteesBased.checkYourAnswersLabel = Are the trustees based in the UK?
 establishedUnderScotsLaw.checkYourAnswersLabel = Was the trust created under Scots law?
 previouslyResidentOffshore.checkYourAnswersLabel = Has the trust ever been based offshore?

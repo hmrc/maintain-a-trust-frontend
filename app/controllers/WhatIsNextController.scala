@@ -96,7 +96,7 @@ class WhatIsNextController @Inject()(
           redirectToDeclaration
         case MakeChanges =>
           redirectToFirstUpdateQuestion
-        case CloseTrust if userAnswers.isTrustTaxable =>
+        case CloseTrust if userAnswers.isTrustTaxableOrMigratingToTaxable =>
           controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
         case CloseTrust =>
           controllers.close.nontaxable.routes.DateClosedController.onPageLoad()

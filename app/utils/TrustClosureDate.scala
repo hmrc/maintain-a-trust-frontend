@@ -27,7 +27,7 @@ import scala.util.{Success, Try}
 object TrustClosureDate {
 
   def getClosureDate(userAnswers: UserAnswers): Option[LocalDate] = {
-    if (userAnswers.isTrustTaxable) {
+    if (userAnswers.isTrustTaxableOrMigratingToTaxable) {
       userAnswers.get(DateLastAssetSharedOutPage)
     } else {
       userAnswers.get(DateClosedPage)
@@ -37,7 +37,7 @@ object TrustClosureDate {
   def setClosureDate(answers: UserAnswers, date: Option[LocalDate]): Try[UserAnswers] = {
     date match {
       case Some(value) =>
-        val page: QuestionPage[LocalDate] = if (answers.isTrustTaxable) DateLastAssetSharedOutPage else DateClosedPage
+        val page: QuestionPage[LocalDate] = if (answers.isTrustTaxableOrMigratingToTaxable) DateLastAssetSharedOutPage else DateClosedPage
         answers.set(page, value)
       case None =>
         Success(answers)

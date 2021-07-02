@@ -53,10 +53,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = None,
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           ),
           entities = DisplayTrustEntitiesType(
             None,
@@ -98,10 +95,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = None,
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           ),
           entities = DisplayTrustEntitiesType(
             None,
@@ -143,10 +137,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = None,
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           ),
           entities = DisplayTrustEntitiesType(
             None,
@@ -192,10 +183,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = None,
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           ),
           entities = DisplayTrustEntitiesType(
             None,
@@ -248,10 +236,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = None,
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           ),
           entities = DisplayTrustEntitiesType(
             None,
@@ -304,10 +289,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             interVivos = Some(true),
             efrbsStartDate = None,
             trustRecorded = None,
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           ),
           entities = DisplayTrustEntitiesType(
             None,
@@ -360,10 +342,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             interVivos = None,
             efrbsStartDate = Some(LocalDate.parse("1970-02-01")),
             trustRecorded = None,
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           ),
           entities = DisplayTrustEntitiesType(
             None,
@@ -412,10 +391,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = None,
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           ),
           entities = DisplayTrustEntitiesType(
             None,
@@ -468,10 +444,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = None,
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           ),
           entities = DisplayTrustEntitiesType(
             None,
@@ -524,10 +497,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = None,
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           ),
           entities = DisplayTrustEntitiesType(
             None,
@@ -580,10 +550,7 @@ class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValue
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = None,
-            trustUKRelation = None,
-            residentOffshore = None,
-            previouslyResident = None,
-            registeringTrustFor5A = None
+            trustUKRelation = None
           ),
           entities = DisplayTrustEntitiesType(
             None,

@@ -17,6 +17,7 @@
 package utils.print.sections
 
 import models.{URN, UTR, UserAnswers}
+import pages.settlors.living_settlor.trust_type.{EfrbsStartDatePage, EfrbsYesNoPage, HoldoverReliefYesNoPage, HowDeedOfVariationCreatedPage, KindOfTrustPage}
 import pages.trustdetails._
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
@@ -44,7 +45,13 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
         converter.countryQuestion(CountryGoverningTrustPage, userAnswers, "governingCountry"),
         converter.yesNoQuestion(AdministrationInsideUKPage, userAnswers, "administeredInUk"),
         converter.countryQuestion(CountryAdministeringTrustPage, userAnswers, "administrationCountry"),
-        converter.yesNoQuestion(SetUpAfterSettlorDiedYesNoPage, userAnswers, "setUpAfterSettlorDied"), // TODO Check if this is need for Trust Details section (does not use the value for question asked in maintain trust details!)
+
+        converter.yesNoQuestion(SetUpAfterSettlorDiedYesNoPage, userAnswers, "setUpAfterSettlorDied"),
+        converter.enumQuestion(KindOfTrustPage, userAnswers, "typeOfTrust", "kindOfTrust"),
+        converter.enumQuestion(HowDeedOfVariationCreatedPage, userAnswers, "whyDeedOfVariationCreated", "deedOfVariation"),
+        converter.yesNoQuestion(HoldoverReliefYesNoPage, userAnswers, "holdoverReliefClaimed"),
+        converter.yesNoQuestion(EfrbsYesNoPage, userAnswers, "efrbsYesNo"),
+        converter.dateQuestion(EfrbsStartDatePage, userAnswers, "efrbsStartDate"),
 
         converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
         converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
@@ -72,7 +79,7 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
       )
     }
 
-    Seq(answerSectionWithRows(rows, userAnswers.isTrustTaxable))
+    Seq(answerSectionWithRows(rows, userAnswers.isTrustTaxableOrMigratingToTaxable))
   }
 
   override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("trustsDetails")
