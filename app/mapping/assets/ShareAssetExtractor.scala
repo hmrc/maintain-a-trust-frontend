@@ -17,10 +17,10 @@
 package mapping.assets
 
 import mapping.PlaybackExtractor
-import models.http.DisplaySharesType
-import models.pages.{ShareClass, ShareType}
-import models.pages.ShareType.Quoted
 import models.UserAnswers
+import models.http.DisplaySharesType
+import models.pages.ShareClass
+import models.pages.ShareType.Quoted
 import pages.assets.shares._
 
 import scala.util.Try
@@ -32,37 +32,21 @@ class ShareAssetExtractor extends PlaybackExtractor[DisplaySharesType] {
   override def updateUserAnswers(answers: Try[UserAnswers],
                                  entity: DisplaySharesType,
                                  index: Int): Try[UserAnswers] = {
-
     answers
       .flatMap(answers => extractPortfolioOrNonPortfolio(entity, index, answers))
-      .flatMap(_.set(ShareNamePage(index), entity.orgName))
   }
 
   private def extractPortfolioOrNonPortfolio(entity: DisplaySharesType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
-    entity.isPortfolio match {
-      case Some(true) =>
-        answers.set(SharesInAPortfolioPage(index), true)
-          .flatMap(_.set(SharePortfolioNamePage(index), entity.orgName))
-          .flatMap(_.set(SharePortfolioOnStockExchangePage(index), onStockExchange(entity.typeOfShare)))
-          .flatMap(_.set(SharePortfolioQuantityInTrustPage(index), entity.numberOfShares))
-          .flatMap(_.set(SharePortfolioValueInTrustPage(index), entity.value))
-      case _ =>
-//        val shareClass = ShareClass.fromDES(entity.shareClass)
-        answers.set(SharesInAPortfolioPage(index), false)
-          .flatMap(_.set(ShareCompanyNamePage(index), entity.orgName))
-          .flatMap(_.set(ShareOnStockExchangePage(index), onStockExchange(entity.typeOfShare)))
-          .flatMap(_.set(ShareClassPage(index), entity.shareClass))
-          .flatMap(_.set(ShareQuantityInTrustPage(index), entity.numberOfShares))
-          .flatMap(_.set(ShareValueInTrustPage(index), entity.value))
-    }
+    answers.set(SharesInAPortfolioPage(index), entity.isPortfolio)
+      .flatMap(_.set(ShareNamePage(index), entity.orgName))
+      .flatMap(_.set(ShareOnStockExchangePage(index), entity.typeOfShare.contains(Quoted)))
+      .flatMap(_.set(ShareClassPage(index), shareClass(entity)))
+      .flatMap(_.set(ShareQuantityInTrustPage(index), entity.numberOfShares))
+      .flatMap(_.set(ShareValueInTrustPage(index), entity.value))
   }
 
-  private def onStockExchange(shareType: Option[ShareType]): Boolean = {
-    shareType match {
-      case Some(Quoted) => true
-      case _ => false
-    }
+  private def shareClass(entity: DisplaySharesType): Option[ShareClass] = {
+    if (entity.isPortfolio.contains(true)) None else entity.shareClassDisplay
   }
-
 
 }

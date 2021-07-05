@@ -346,7 +346,7 @@
             "numberOfShares": "0",
             "orgName": "Smart Estates",
             "utr": "2134514321",
-            "shareClass": "Ordinary shares",
+            "shareClassDisplay": "ordinary",
             "typeOfShare": "Quoted",
             "value": 9891828
           }

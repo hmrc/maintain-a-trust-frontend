@@ -72,7 +72,7 @@ object PropertyLandType {
 case class DisplaySharesType(numberOfShares: Option[String],
                              orgName: String,
                              utr: Option[String],
-                             shareClass: Option[ShareClass],
+                             shareClassDisplay: Option[ShareClass],
                              typeOfShare: Option[ShareType],
                              value: Option[Long],
                              isPortfolio: Option[Boolean]) extends Asset with EntityType {

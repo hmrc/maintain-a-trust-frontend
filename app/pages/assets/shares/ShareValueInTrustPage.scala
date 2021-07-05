@@ -24,5 +24,5 @@ case class ShareValueInTrustPage(index: Int) extends QuestionPage[Long] {
 
   override def path: JsPath = JsPath \ Assets \ ShareAsset \ index \ toString
 
-  override def toString: String = "nonPortfolioSharesValue"
+  override def toString: String = "value"
 }

@@ -64,15 +64,13 @@ class AllAssetsPrinterSpec extends SpecBase {
 
           .set(ShareNamePage(0), "Portfolio Name").success.value
           .set(SharesInAPortfolioPage(0),true).success.value
-          .set(SharePortfolioNamePage(0),"Portfolio Name").success.value
-          .set(SharePortfolioOnStockExchangePage(0), true).success.value
-          .set(SharePortfolioQuantityInTrustPage(0), "1000").success.value
-          .set(SharePortfolioValueInTrustPage(0), 100L).success.value
+          .set(ShareOnStockExchangePage(0), true).success.value
+          .set(ShareQuantityInTrustPage(0), "1000").success.value
+          .set(ShareValueInTrustPage(0), 100L).success.value
 
           .set(ShareClassPage(1), ShareClass.Preference).success.value
           .set(ShareNamePage(1), "Share Name").success.value
           .set(SharesInAPortfolioPage(1),false).success.value
-          .set(ShareCompanyNamePage(1), "Share Name").success.value
           .set(ShareOnStockExchangePage(1), false).success.value
           .set(ShareQuantityInTrustPage(1), "2000").success.value
           .set(ShareValueInTrustPage(1), 200L).success.value

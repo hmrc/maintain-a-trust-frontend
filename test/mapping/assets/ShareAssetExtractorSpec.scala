@@ -27,11 +27,11 @@ import pages.assets.shares._
 class ShareAssetExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  def generateAssets(index: Int) = DisplaySharesType(
+  def generateAssets(index: Int): DisplaySharesType = DisplaySharesType(
     numberOfShares = None,
     orgName = "",
     utr = None,
-    shareClass = Some(Ordinary),
+    shareClassDisplay = Some(Ordinary),
     typeOfShare = Some(Quoted),
     value = Some(100L),
     isPortfolio = Some(true)
@@ -69,7 +69,7 @@ class ShareAssetExtractorSpec extends FreeSpec with MustMatchers
             numberOfShares = Some("1000"),
             orgName = "Portfolio Name",
             utr = None,
-            shareClass = Some(Other),
+            shareClassDisplay = Some(Other),
             typeOfShare = Some(Quoted),
             value = Some(100L),
             isPortfolio = Some(true)
@@ -80,15 +80,11 @@ class ShareAssetExtractorSpec extends FreeSpec with MustMatchers
           val extraction = assetExtractor.extract(ua, shareAssets)
 
           extraction.right.value.get(SharesInAPortfolioPage(0)).get mustBe true
-          extraction.right.value.get(SharePortfolioNamePage(0)).get mustBe "Portfolio Name"
-          extraction.right.value.get(SharePortfolioOnStockExchangePage(0)).get mustBe true
-          extraction.right.value.get(SharePortfolioQuantityInTrustPage(0)).get mustBe "1000"
-          extraction.right.value.get(SharePortfolioValueInTrustPage(0)).get mustBe 100L
+          extraction.right.value.get(ShareNamePage(0)).get mustBe "Portfolio Name"
+          extraction.right.value.get(ShareOnStockExchangePage(0)).get mustBe true
+          extraction.right.value.get(ShareQuantityInTrustPage(0)).get mustBe "1000"
+          extraction.right.value.get(ShareValueInTrustPage(0)).get mustBe 100L
           extraction.right.value.get(ShareClassPage(0)) mustNot be(defined)
-          extraction.right.value.get(ShareCompanyNamePage(0)) mustNot be(defined)
-          extraction.right.value.get(ShareQuantityInTrustPage(0)) mustNot be(defined)
-          extraction.right.value.get(ShareOnStockExchangePage(0)) mustNot be(defined)
-          extraction.right.value.get(ShareValueInTrustPage(0)) mustNot be(defined)
         }
 
         "with minimum data for non-portfolio share asset must return user answers updated" in {
@@ -97,7 +93,7 @@ class ShareAssetExtractorSpec extends FreeSpec with MustMatchers
             numberOfShares = Some("1000"),
             orgName = "Share Name",
             utr = None,
-            shareClass = Some(Ordinary),
+            shareClassDisplay = Some(Ordinary),
             typeOfShare = Some(Quoted),
             value = Some(100L),
             isPortfolio = Some(false)
@@ -108,15 +104,11 @@ class ShareAssetExtractorSpec extends FreeSpec with MustMatchers
           val extraction = assetExtractor.extract(ua, shareAssets)
 
           extraction.right.value.get(SharesInAPortfolioPage(0)).get mustBe false
-          extraction.right.value.get(ShareCompanyNamePage(0)).get mustBe "Share Name"
+          extraction.right.value.get(ShareNamePage(0)).get mustBe "Share Name"
           extraction.right.value.get(ShareOnStockExchangePage(0)).get mustBe true
           extraction.right.value.get(ShareClassPage(0)).get mustBe Ordinary
           extraction.right.value.get(ShareQuantityInTrustPage(0)).get mustBe "1000"
           extraction.right.value.get(ShareValueInTrustPage(0)).get mustBe 100L
-          extraction.right.value.get(SharePortfolioNamePage(0)) mustNot be(defined)
-          extraction.right.value.get(SharePortfolioQuantityInTrustPage(0)) mustNot be(defined)
-          extraction.right.value.get(SharePortfolioOnStockExchangePage(0)) mustNot be(defined)
-          extraction.right.value.get(SharePortfolioValueInTrustPage(0)) mustNot be(defined)
         }
 
 
@@ -126,7 +118,7 @@ class ShareAssetExtractorSpec extends FreeSpec with MustMatchers
             numberOfShares = Some("1000"),
             orgName = "Portfolio Name",
             utr = None,
-            shareClass = Some(Other),
+            shareClassDisplay = Some(Other),
             typeOfShare = Some(Quoted),
             value = Some(100L),
             isPortfolio = Some(true)
@@ -135,7 +127,7 @@ class ShareAssetExtractorSpec extends FreeSpec with MustMatchers
               numberOfShares = Some("1000"),
               orgName = "Share Name",
               utr = None,
-              shareClass = Some(Ordinary),
+              shareClassDisplay = Some(Ordinary),
               typeOfShare = Some(Quoted),
               value = Some(100L),
               isPortfolio = Some(false)
@@ -147,26 +139,18 @@ class ShareAssetExtractorSpec extends FreeSpec with MustMatchers
           val extraction = assetExtractor.extract(ua, shareAssets)
 
           extraction.right.value.get(SharesInAPortfolioPage(0)).get mustBe true
-          extraction.right.value.get(SharePortfolioNamePage(0)).get mustBe "Portfolio Name"
-          extraction.right.value.get(SharePortfolioOnStockExchangePage(0)).get mustBe true
-          extraction.right.value.get(SharePortfolioQuantityInTrustPage(0)).get mustBe "1000"
-          extraction.right.value.get(SharePortfolioValueInTrustPage(0)).get mustBe 100L
+          extraction.right.value.get(ShareNamePage(0)).get mustBe "Portfolio Name"
+          extraction.right.value.get(ShareOnStockExchangePage(0)).get mustBe true
+          extraction.right.value.get(ShareQuantityInTrustPage(0)).get mustBe "1000"
+          extraction.right.value.get(ShareValueInTrustPage(0)).get mustBe 100L
           extraction.right.value.get(ShareClassPage(0)) mustNot be(defined)
-          extraction.right.value.get(ShareCompanyNamePage(0)) mustNot be(defined)
-          extraction.right.value.get(ShareQuantityInTrustPage(0)) mustNot be(defined)
-          extraction.right.value.get(ShareOnStockExchangePage(0)) mustNot be(defined)
-          extraction.right.value.get(ShareValueInTrustPage(0)) mustNot be(defined)
 
           extraction.right.value.get(SharesInAPortfolioPage(1)).get mustBe false
-          extraction.right.value.get(ShareCompanyNamePage(1)).get mustBe "Share Name"
+          extraction.right.value.get(ShareNamePage(1)).get mustBe "Share Name"
           extraction.right.value.get(ShareOnStockExchangePage(1)).get mustBe true
           extraction.right.value.get(ShareClassPage(1)).get mustBe Ordinary
           extraction.right.value.get(ShareQuantityInTrustPage(1)).get mustBe "1000"
           extraction.right.value.get(ShareValueInTrustPage(1)).get mustBe 100L
-          extraction.right.value.get(SharePortfolioNamePage(1)) mustNot be(defined)
-          extraction.right.value.get(SharePortfolioQuantityInTrustPage(1)) mustNot be(defined)
-          extraction.right.value.get(SharePortfolioOnStockExchangePage(1)) mustNot be(defined)
-          extraction.right.value.get(SharePortfolioValueInTrustPage(1)) mustNot be(defined)
 
         }
 

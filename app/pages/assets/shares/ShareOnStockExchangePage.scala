@@ -24,5 +24,5 @@ case class ShareOnStockExchangePage(index: Int) extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ Assets \ ShareAsset \ index \ toString
 
-  override def toString: String = "nonPortfolioSharesOnStockExchangeYesNo"
+  override def toString: String = "onStockExchangeYesNo"
 }

@@ -25,5 +25,5 @@ case class ShareClassPage(index: Int) extends QuestionPage[ShareClass] {
 
   override def path: JsPath = JsPath \ Assets \ ShareAsset \ index \ toString
 
-  override def toString: String = "shareClass"
+  override def toString: String = "class"
 }

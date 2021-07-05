@@ -286,7 +286,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
         inside(processed) {
           case Processed(data, _) =>
 
-            data.trust.assets.get.shares.head.shareClass.get mustBe Ordinary
+            data.trust.assets.get.shares.head.shareClassDisplay.get mustBe Ordinary
         }
 
         source.close()
