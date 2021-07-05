@@ -34,7 +34,8 @@ case class TrustDetailsType(startDate: LocalDate,
                             trustUKResident: Option[Boolean],
                             trustUKProperty: Option[Boolean],
                             trustRecorded: Option[Boolean],
-                            trustUKRelation: Option[Boolean]) {
+                            trustUKRelation: Option[Boolean],
+                            settlorsUkBased: Option[Boolean] = None) {
 
   def isTaxable: Boolean = !trustTaxable.contains(false)
 }

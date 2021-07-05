@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-package models
+package pages.trustdetails
 
-object Constant {
-  val dateTimePattern = "yyyy-MM-dd"
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+import sections.TrustDetails
+
+case object SettlorsUkBasedPage extends QuestionPage[Boolean] {
+
+  override def path: JsPath = JsPath \ TrustDetails \ toString
+
+  override def toString: String = "settlorsUkBased"
 
 }
