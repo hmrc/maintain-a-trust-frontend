@@ -23,22 +23,22 @@ import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class AllAssetsPrinter @Inject()(businessAssetPrinter: BusinessAssetPrinter,
-                                 nonEeaBusiness: NonEeaBusinessPrinter,
+class AllAssetsPrinter @Inject()(moneyAssetPrinter: MoneyAssetPrinter,
                                  propertyOrLandAssetPrinter: PropertyOrLandAssetPrinter,
                                  shareAssetPrinter: ShareAssetPrinter,
+                                 businessAssetPrinter: BusinessAssetPrinter,
                                  partnershipAssetPrinter: PartnershipAssetPrinter,
                                  otherAssetPrinter: OtherAssetPrinter,
-                                 moneyAssetPrinter: MoneyAssetPrinter) extends PrinterHelper {
+                                 nonEeaBusiness: NonEeaBusinessPrinter) extends PrinterHelper {
 
   def entities(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
     val answerSections: Seq[AnswerSection] = if (userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
       Seq(
         moneyAssetPrinter.entities(userAnswers),
-        businessAssetPrinter.entities(userAnswers),
         propertyOrLandAssetPrinter.entities(userAnswers),
         shareAssetPrinter.entities(userAnswers),
+        businessAssetPrinter.entities(userAnswers),
         partnershipAssetPrinter.entities(userAnswers),
         otherAssetPrinter.entities(userAnswers),
         nonEeaBusiness.entities(userAnswers)

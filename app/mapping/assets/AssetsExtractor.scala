@@ -22,13 +22,13 @@ import models.UserAnswers
 import models.UserAnswersCombinator._
 import models.http.DisplayTrustAssets
 
-class AssetsExtractor @Inject()(nonEeaBusinessAssetExtractor: NonEeaBusinessAssetExtractor,
-                                businessAssetExtractor: BusinessAssetExtractor,
+class AssetsExtractor @Inject()(moneyAssetExtractor: MoneyAssetExtractor,
                                 propertyOrLandAssetExtractor: PropertyOrLandAssetExtractor,
                                 shareAssetExtractor: ShareAssetExtractor,
+                                businessAssetExtractor: BusinessAssetExtractor,
                                 partnershipAssetExtractor: PartnershipAssetExtractor,
                                 otherAssetExtractor: OtherAssetExtractor,
-                                moneyAssetExtractor: MoneyAssetExtractor) {
+                                nonEeaBusinessAssetExtractor: NonEeaBusinessAssetExtractor) {
 
   def extract(answers: UserAnswers, data: Option[DisplayTrustAssets]): Either[PlaybackExtractionError, UserAnswers] = {
 
@@ -37,13 +37,13 @@ class AssetsExtractor @Inject()(nonEeaBusinessAssetExtractor: NonEeaBusinessAsse
       case Some(a) =>
 
         val assets: List[UserAnswers] = List(
-          nonEeaBusinessAssetExtractor.extract(answers, a.nonEEABusiness),
-          businessAssetExtractor.extract(answers, a.business),
+          moneyAssetExtractor.extract(answers, a.monetary),
           propertyOrLandAssetExtractor.extract(answers, a.propertyOrLand),
           shareAssetExtractor.extract(answers, a.shares),
+          businessAssetExtractor.extract(answers, a.business),
           partnershipAssetExtractor.extract(answers, a.partnerShip),
           otherAssetExtractor.extract(answers, a.other),
-          moneyAssetExtractor.extract(answers, a.monetary)
+          nonEeaBusinessAssetExtractor.extract(answers, a.nonEEABusiness)
         ).collect {
           case Right(z) => z
         }
