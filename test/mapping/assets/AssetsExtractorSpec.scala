@@ -29,7 +29,8 @@ import pages.assets.propertyOrLand._
 import pages.assets.shares._
 import java.time.LocalDate
 
-import pages.assets.partnership.{PartnershipDescriptionPage, PartnershipStartDatePage}
+import pages.assets.other._
+import pages.assets.partnership._
 
 class AssetsExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -106,7 +107,10 @@ class AssetsExtractorSpec extends FreeSpec with MustMatchers
               description = "Partnership 1",
               partnershipStart = Some(LocalDate.parse("2019-11-26"))
             )),
-            other = Nil,
+            other = List(DisplayOtherAssetType(
+              description = "Other 1",
+              value = Some(100L)
+            )),
             nonEEABusiness = List(DisplayNonEEABusinessType(
               lineNo = Some("1"),
               orgName = s"Non EEA Business 1",
@@ -164,6 +168,9 @@ class AssetsExtractorSpec extends FreeSpec with MustMatchers
 
           extraction.right.value.get(PartnershipDescriptionPage(0)).get mustBe "Partnership 1"
           extraction.right.value.get(PartnershipStartDatePage(0)).get mustBe LocalDate.of(2019, 11, 26)
+
+          extraction.right.value.get(OtherAssetDescriptionPage(0)).get mustBe "Other 1"
+          extraction.right.value.get(OtherAssetValuePage(0)).get mustBe 100
 
         }
 
