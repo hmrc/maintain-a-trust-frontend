@@ -18,7 +18,6 @@ package mapping.beneficiaries
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractionErrors.FailedToExtractData
 import models.HowManyBeneficiaries.Over1
 import models.http._
 import models.{Description, FullName, MetaData, UKAddress}
@@ -37,14 +36,13 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
   val utr = "1234567890"
 
-  val beneficiaryExtractor : BeneficiaryExtractor =
+  val beneficiaryExtractor: BeneficiaryExtractor =
     injector.instanceOf[BeneficiaryExtractor]
 
   "Beneficiary Extractor" - {
 
-    "when no beneficiary" - {
-
-      "must return an error" in {
+    "when no beneficiaries" - {
+      "must return original answers" in {
 
         val beneficiary = DisplayTrustBeneficiaryType(Nil, Nil, Nil, Nil, Nil, Nil, Nil)
 
@@ -52,10 +50,8 @@ class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
 
         val extraction = beneficiaryExtractor.extract(ua, beneficiary)
 
-        extraction.left.value mustBe a[FailedToExtractData]
-
+        extraction.right.value mustBe ua
       }
-
     }
 
     "when there are beneficiaries of different type" - {

@@ -17,8 +17,8 @@
 package models
 
 sealed trait TrustTaxability {
+  def isTrustTaxable: Boolean = this == Taxable
   def isTrustMigratingFromNonTaxableToTaxable: Boolean = this == MigratingFromNonTaxableToTaxable
-  def isTrustTaxable: Boolean = this == Taxable || isTrustMigratingFromNonTaxableToTaxable
 }
 
 case object Taxable extends TrustTaxability

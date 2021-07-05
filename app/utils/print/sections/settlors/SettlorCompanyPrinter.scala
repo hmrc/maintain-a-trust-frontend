@@ -38,7 +38,7 @@ class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter) extends Ent
     converter.yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorBusinessAddressYesNo", name),
     converter.yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorBusinessAddressUKYesNo", name),
     converter.addressQuestion(SettlorAddressPage(index), userAnswers, "settlorBusinessAddressUK", name),
-    converter.kindOfBusinessQuestion(SettlorCompanyTypePage(index), userAnswers, "settlorBusinessType", name),
+    converter.enumQuestion(SettlorCompanyTypePage(index), userAnswers, "settlorBusinessType", "kindOfBusiness", name),
     converter.yesNoQuestion(SettlorCompanyTimePage(index), userAnswers, "settlorBusinessTime", name)
   )
 

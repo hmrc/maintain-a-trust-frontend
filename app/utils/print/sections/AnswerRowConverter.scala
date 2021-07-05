@@ -16,8 +16,13 @@
 
 package utils.print.sections
 
+<<<<<<< HEAD
 import models.pages.{KindOfBusiness, RoleInCompany, ShareClass}
 import models.{Address, Description, FullName, HowManyBeneficiaries, PassportOrIdCardDetails, URN, UTR, UserAnswers}
+=======
+import models.pages.RoleInCompany
+import models.{Address, Description, FullName, PassportOrIdCardDetails, URN, UTR, UserAnswers}
+>>>>>>> 803b1027f2d2fe9b99729e8a8cc3fd7a5576d275
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
 import play.twirl.api.{Html, HtmlFormat}
@@ -133,15 +138,6 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def numberOfBeneficiariesQuestion(query: Gettable[HowManyBeneficiaries],
-                                    userAnswers: UserAnswers,
-                                    labelKey: String,
-                                    messageArg: String = "")
-                                   (implicit messages: Messages): Option[AnswerRow] = {
-    val format = (x: HowManyBeneficiaries) => checkAnswersFormatters.formatEnum("numberOfBeneficiaries", x)
-    question(query, userAnswers, labelKey, format, messageArg)
-  }
-
   def roleInCompanyQuestion(query: Gettable[RoleInCompany],
                             userAnswers: UserAnswers,
                             labelKey: String,
@@ -169,12 +165,13 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def kindOfBusinessQuestion(query: Gettable[KindOfBusiness],
-                             userAnswers: UserAnswers,
-                             labelKey: String,
-                             messageArg: String)
-                            (implicit messages: Messages): Option[AnswerRow] = {
-    val format = (x: KindOfBusiness) => HtmlFormat.escape(x.toString)
+  def enumQuestion[T](query: Gettable[T],
+                      userAnswers: UserAnswers,
+                      labelKey: String,
+                      enumKey: String,
+                      messageArg: String = "")
+                     (implicit messages: Messages, reads: Reads[T]): Option[AnswerRow] = {
+    val format = (x: T) => checkAnswersFormatters.formatEnum(enumKey, x)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 

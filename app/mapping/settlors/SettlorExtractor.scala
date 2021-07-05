@@ -37,14 +37,14 @@ class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtrac
       case Right(z) => z
     }
 
-    val noDeceasedSettlor: Boolean = data.deceased.isEmpty
-
-    (settlors, noDeceasedSettlor) match {
-      case (Nil, _) => Left(FailedToExtractData("Settlor Extraction Error - No settlors"))
-      case _ => settlors.combineArraysWithPath(LivingSettlors.path) match {
-        case Some(value) => Right(value)
-        case None => Left(FailedToExtractData("Settlor Extraction Error - Failed to combine settlor answers"))
-      }
+    settlors match {
+      case Nil =>
+        Left(FailedToExtractData("Settlor Extraction Error - No settlors"))
+      case _ =>
+        settlors.combineArraysWithPath(LivingSettlors.path) match {
+          case Some(value) => Right(value)
+          case None => Left(FailedToExtractData("Settlor Extraction Error - Failed to combine settlor answers"))
+        }
     }
   }
 

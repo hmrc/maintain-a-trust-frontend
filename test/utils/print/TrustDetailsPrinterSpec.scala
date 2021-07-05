@@ -18,8 +18,10 @@ package utils.print
 
 import java.time.LocalDate
 import base.SpecBase
+import models.pages.{DeedOfVariation, KindOfTrust}
 import models.pages.WhatIsNext.NeedsToPayTax
 import pages.WhatIsNextPage
+import pages.settlors.living_settlor.trust_type.{EfrbsStartDatePage, EfrbsYesNoPage, HoldoverReliefYesNoPage, HowDeedOfVariationCreatedPage, KindOfTrustPage}
 import pages.trustdetails.{SetUpAfterSettlorDiedYesNoPage, _}
 import play.twirl.api.Html
 import utils.print.sections.TrustDetailsPrinter
@@ -28,6 +30,8 @@ import viewmodels.{AnswerRow, AnswerSection}
 class TrustDetailsPrinterSpec extends SpecBase {
 
   private val helper: TrustDetailsPrinter = injector.instanceOf[TrustDetailsPrinter]
+
+  private val date: LocalDate = LocalDate.parse("2019-06-01")
 
   "TrustDetailsPrinter" when {
 
@@ -40,12 +44,17 @@ class TrustDetailsPrinterSpec extends SpecBase {
 
         val answers = baseAnswers
           .set(TrustNamePage, "Trust Ltd.").success.value
-          .set(WhenTrustSetupPage, LocalDate.of(2019, 6, 1)).success.value
+          .set(WhenTrustSetupPage, date).success.value
           .set(GovernedInsideTheUKPage, false).success.value
           .set(CountryGoverningTrustPage, "FR").success.value
           .set(AdministrationInsideUKPage, false).success.value
           .set(CountryAdministeringTrustPage, "DE").success.value
           .set(SetUpAfterSettlorDiedYesNoPage, false).success.value
+          .set(KindOfTrustPage, KindOfTrust.Deed).success.value
+          .set(HowDeedOfVariationCreatedPage, DeedOfVariation.ReplacedWill).success.value
+          .set(HoldoverReliefYesNoPage, true).success.value
+          .set(EfrbsYesNoPage, true).success.value
+          .set(EfrbsStartDatePage, date).success.value
           .set(TrustUkPropertyYesNoPage, true).success.value
           .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
           .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value
@@ -65,6 +74,11 @@ class TrustDetailsPrinterSpec extends SpecBase {
               AnswerRow("Does the trust’s general administration take place in the UK?", Html("No"), None),
               AnswerRow("In what country is the trust administered?", Html("Germany"), None),
               AnswerRow("Was the trust set up after the settlor died?", Html("No"), None),
+              AnswerRow("What kind of trust did the settlor create?", Html("A trust through a Deed of Variation or family agreement"), None),
+              AnswerRow("Why was the deed of variation created?", Html("To replace a will trust"), None),
+              AnswerRow("Was Gift Hold-Over Relief claimed on any of the trust’s assets?", Html("Yes"), None),
+              AnswerRow("Is this an employer-financed retirement benefits scheme?", Html("Yes"), None),
+              AnswerRow("When did the employer-financed retirement benefits scheme start?", Html("1 June 2019"), None),
               AnswerRow("Does the trust own UK land or property?", Html("Yes"), None),
               AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
               AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None)
@@ -109,7 +123,7 @@ class TrustDetailsPrinterSpec extends SpecBase {
 
         val answers = emptyUserAnswersForUrn
           .set(TrustNamePage, "Trust Ltd.").success.value
-          .set(WhenTrustSetupPage, LocalDate.of(2019, 6, 1)).success.value
+          .set(WhenTrustSetupPage, date).success.value
           .set(TrustUkPropertyYesNoPage, true).success.value
           .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
           .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value
