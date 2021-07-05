@@ -16,14 +16,15 @@
 
 package pages.trustdetails
 
+import models.pages.TrusteesBased
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.TrustDetails
 
-case object TrustUkResidentYesNoPage extends QuestionPage[Boolean] {
+case object WhereTrusteesBasedPage extends QuestionPage[TrusteesBased] {
 
   override def path: JsPath = JsPath \ TrustDetails \ toString
 
-  override def toString: String = "trustUKResident"
+  override def toString: String = "whereTrusteesBased"
 
 }

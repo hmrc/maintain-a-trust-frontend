@@ -17,7 +17,7 @@
 package utils.print.sections
 
 import models.{URN, UTR, UserAnswers}
-import pages.settlors.living_settlor.trust_type.{EfrbsStartDatePage, EfrbsYesNoPage, HoldoverReliefYesNoPage, HowDeedOfVariationCreatedPage, KindOfTrustPage}
+import pages.settlors.living_settlor.trust_type._
 import pages.trustdetails._
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
@@ -56,10 +56,13 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
         converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
         converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
 
-        converter.yesNoQuestion(TrustUkResidentYesNoPage, userAnswers, "whereTrusteesBased"),
+        converter.enumQuestion(WhereTrusteesBasedPage, userAnswers, "whereTrusteesBased", "whereTrusteesBased"),
+        converter.yesNoQuestion(SettlorsUkBasedPage, userAnswers, "settlorsUkBased"),
+
         converter.yesNoQuestion(EstablishedUnderScotsLawPage, userAnswers, "establishedUnderScotsLaw"),
         converter.yesNoQuestion(TrustResidentOffshorePage, userAnswers, "previouslyResidentOffshore"),
         converter.countryQuestion(TrustPreviouslyResidentPage, userAnswers, "previouslyResidentOffshoreCountry"),
+
         converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo"),
         converter.yesNoQuestion(RegisteringTrustFor5APage, userAnswers, "settlorBenefitsFromAssets"),
         converter.yesNoQuestion(InheritanceTaxActPage, userAnswers, "forPurposeOfSection218"),

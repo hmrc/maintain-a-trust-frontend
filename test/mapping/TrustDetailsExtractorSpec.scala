@@ -22,14 +22,16 @@ import models.http.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
 import models.pages.DeedOfVariation.{AdditionToWill, ReplacedWill}
 import models.pages.NonResidentType
 import models.pages.NonResidentType.Domiciled
+import models.pages.TrusteesBased._
 import models.pages.TypeOfTrust.{DeedOfVariation, WillTrustOrIntestacyTrust}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.trustdetails._
+
 import java.time.LocalDate
 
 class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherValues with Generators with SpecBaseHelpers {
 
-  val trusteeDetailsExtractor : TrustDetailsExtractor =
+  val trusteeDetailsExtractor: TrustDetailsExtractor =
     injector.instanceOf[TrustDetailsExtractor]
 
   "Trust Details Extractor" - {
@@ -64,7 +66,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
           extraction.right.value.get(TrustTaxableYesNoPage).get mustBe true
           extraction.right.value.get(ExpressTrustYesNoPage).get mustBe false
-          extraction.right.value.get(TrustUkResidentYesNoPage).get mustBe true
+          extraction.right.value.get(WhereTrusteesBasedPage).get mustBe AllTrusteesUkBased
           extraction.right.value.get(GovernedInsideTheUKPage).get mustBe true
           extraction.right.value.get(CountryGoverningTrustPage) must not be defined
           extraction.right.value.get(AdministrationInsideUKPage).get mustBe true
@@ -102,7 +104,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
           extraction.right.value.get(TrustTaxableYesNoPage).get mustBe true
           extraction.right.value.get(ExpressTrustYesNoPage).get mustBe false
-          extraction.right.value.get(TrustUkResidentYesNoPage).get mustBe false
+          extraction.right.value.get(WhereTrusteesBasedPage).get mustBe NoTrusteesUkBased
           extraction.right.value.get(GovernedInsideTheUKPage).get mustBe false
           extraction.right.value.get(CountryGoverningTrustPage).get mustBe "FR"
           extraction.right.value.get(AdministrationInsideUKPage).get mustBe false
@@ -146,7 +148,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
           extraction.right.value.get(TrustTaxableYesNoPage).get mustBe true
           extraction.right.value.get(ExpressTrustYesNoPage).get mustBe true
-          extraction.right.value.get(TrustUkResidentYesNoPage).get mustBe true
+          extraction.right.value.get(WhereTrusteesBasedPage) must not be defined
           extraction.right.value.get(TrustUkPropertyYesNoPage).get mustBe true
           extraction.right.value.get(GovernedInsideTheUKPage) must not be defined
           extraction.right.value.get(CountryGoverningTrustPage) must not be defined
@@ -183,7 +185,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
           extraction.right.value.get(TrustTaxableYesNoPage).get mustBe true
           extraction.right.value.get(ExpressTrustYesNoPage).get mustBe true
-          extraction.right.value.get(TrustUkResidentYesNoPage).get mustBe false
+          extraction.right.value.get(WhereTrusteesBasedPage) must not be defined
           extraction.right.value.get(GovernedInsideTheUKPage) must not be defined
           extraction.right.value.get(CountryGoverningTrustPage) must not be defined
           extraction.right.value.get(AdministrationInsideUKPage) must not be defined
@@ -227,7 +229,49 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
           extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
           extraction.right.value.get(TrustTaxableYesNoPage).get mustBe true
           extraction.right.value.get(ExpressTrustYesNoPage).get mustBe true
-          extraction.right.value.get(TrustUkResidentYesNoPage).get mustBe true
+          extraction.right.value.get(WhereTrusteesBasedPage).get mustBe AllTrusteesUkBased
+          extraction.right.value.get(SettlorsUkBasedPage) must not be defined
+          extraction.right.value.get(TrustUkPropertyYesNoPage).get mustBe false
+          extraction.right.value.get(GovernedInsideTheUKPage).get mustBe false
+          extraction.right.value.get(CountryGoverningTrustPage).get mustBe "ES"
+          extraction.right.value.get(AdministrationInsideUKPage).get mustBe false
+          extraction.right.value.get(CountryAdministeringTrustPage).get mustBe "IT"
+          extraction.right.value.get(TrustRecordedOnAnotherRegisterYesNoPage).get mustBe false
+          extraction.right.value.get(EstablishedUnderScotsLawPage).get mustBe true
+          extraction.right.value.get(TrustResidentOffshorePage).get mustBe true
+          extraction.right.value.get(TrustPreviouslyResidentPage).get mustBe "DE"
+          extraction.right.value.get(RegisteringTrustFor5APage) must not be defined
+        }
+
+        "some trustees based in the UK" in {
+
+          val trust = TrustDetailsType(
+            startDate = LocalDate.of(2019, 6, 1),
+            trustTaxable = Some(true),
+            expressTrust = Some(true),
+            trustUKResident = Some(true),
+            trustUKProperty = Some(false),
+            lawCountry = Some("ES"),
+            administrationCountry = Some("IT"),
+            residentialStatus = Some(ResidentialStatusType(Some(UkType(scottishLaw = true, Some("DE"))), None)),
+            typeOfTrust = Some(WillTrustOrIntestacyTrust),
+            deedOfVariation = Some(AdditionToWill),
+            interVivos = None,
+            efrbsStartDate = None,
+            trustRecorded = Some(false),
+            trustUKRelation = None,
+            settlorsUkBased = Some(true)
+          )
+
+          val ua = emptyUserAnswersForUtr
+
+          val extraction = trusteeDetailsExtractor.extract(ua, trust)
+
+          extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
+          extraction.right.value.get(TrustTaxableYesNoPage).get mustBe true
+          extraction.right.value.get(ExpressTrustYesNoPage).get mustBe true
+          extraction.right.value.get(WhereTrusteesBasedPage).get mustBe InternationalAndUkBasedTrustees
+          extraction.right.value.get(SettlorsUkBasedPage).get mustBe true
           extraction.right.value.get(TrustUkPropertyYesNoPage).get mustBe false
           extraction.right.value.get(GovernedInsideTheUKPage).get mustBe false
           extraction.right.value.get(CountryGoverningTrustPage).get mustBe "ES"
@@ -268,7 +312,7 @@ class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherVa
         extraction.right.value.get(WhenTrustSetupPage).get mustBe LocalDate.of(2019, 6, 1)
         extraction.right.value.get(TrustTaxableYesNoPage).get mustBe true
         extraction.right.value.get(ExpressTrustYesNoPage).get mustBe false
-        extraction.right.value.get(TrustUkResidentYesNoPage).get mustBe true
+        extraction.right.value.get(WhereTrusteesBasedPage).get mustBe AllTrusteesUkBased
         extraction.right.value.get(GovernedInsideTheUKPage).get mustBe true
         extraction.right.value.get(CountryGoverningTrustPage) must not be defined
         extraction.right.value.get(AdministrationInsideUKPage).get mustBe true
