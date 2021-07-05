@@ -27,12 +27,14 @@ class AllAssetsPrinter @Inject()(businessAssetPrinter: BusinessAssetPrinter,
                                  nonEeaBusiness: NonEeaBusinessPrinter,
                                  propertyOrLandAssetPrinter: PropertyOrLandAssetPrinter,
                                  shareAssetPrinter: ShareAssetPrinter,
-                                 partnershipAssetPrinter: PartnershipAssetPrinter) extends PrinterHelper {
+                                 partnershipAssetPrinter: PartnershipAssetPrinter,
+                                 moneyAssetPrinter: MoneyAssetPrinter) extends PrinterHelper {
 
   def entities(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
     val answerSections: Seq[AnswerSection] = if (userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
       Seq(
+        moneyAssetPrinter.entities(userAnswers),
         businessAssetPrinter.entities(userAnswers),
         propertyOrLandAssetPrinter.entities(userAnswers),
         shareAssetPrinter.entities(userAnswers),

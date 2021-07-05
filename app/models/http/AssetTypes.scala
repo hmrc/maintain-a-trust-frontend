@@ -48,7 +48,12 @@ object DisplayTrustAssets {
 
 }
 
-case class AssetMonetaryAmount(assetMonetaryAmount: Long) extends Asset
+case class AssetMonetaryAmount(assetMonetaryAmount: Long) extends Asset with EntityType {
+
+  override val bpMatchStatus: Option[String] = None
+  override val lineNo: Option[String] = None
+  override val entityStart: String = LocalDate.now.toString
+}
 
 object AssetMonetaryAmount {
   implicit val assetMonetaryAmountFormat: Format[AssetMonetaryAmount] = Json.format[AssetMonetaryAmount]

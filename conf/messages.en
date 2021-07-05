@@ -806,6 +806,7 @@ answerPage.section.asset.business.subheading = Business {0}
 answerPage.section.asset.propertyOrLand.subheading = Property or land {0}
 answerPage.section.asset.share.subheading = Share {0}
 answerPage.section.asset.partnership.subheading = Partnership {0}
+answerPage.section.asset.money.subheading = Money
 
 # CHECK YOUR ANSWERS LABELS
 
@@ -1098,6 +1099,8 @@ agentCreatedTrust.checkYourAnswersLabel = Has an agent who is not a barrister cr
 nonEeaBusiness.name.checkYourAnswersLabel = What is the company’s name?
 nonEeaBusiness.internationalAddress.checkYourAnswersLabel = What is {0}’s address?
 nonEeaBusiness.governingCountry.checkYourAnswersLabel = Which country’s laws govern {0}?
+
+asset.money.value.checkYourAnswersLabel = What is the total amount of money in the trust?
 
 asset.business.name.checkYourAnswersLabel = What is the business’s name?
 asset.business.description.checkYourAnswersLabel = What is the description for {0}?

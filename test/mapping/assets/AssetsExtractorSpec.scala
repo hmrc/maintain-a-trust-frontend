@@ -24,18 +24,18 @@ import models.pages.ShareType.Quoted
 import models.{InternationalAddress, UKAddress}
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.assets.business._
+import pages.assets.money.MoneyValuePage
 import pages.assets.nonEeaBusiness._
+import pages.assets.partnership.{PartnershipDescriptionPage, PartnershipStartDatePage}
 import pages.assets.propertyOrLand._
 import pages.assets.shares._
-import java.time.LocalDate
 
-import pages.assets.partnership.{PartnershipDescriptionPage, PartnershipStartDatePage}
+import java.time.LocalDate
 
 class AssetsExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val assetExtractor : AssetsExtractor =
-    injector.instanceOf[AssetsExtractor]
+  val assetExtractor: AssetsExtractor = injector.instanceOf[AssetsExtractor]
 
   "Asset Extractor" - {
 
@@ -61,7 +61,9 @@ class AssetsExtractorSpec extends FreeSpec with MustMatchers
         "must return user answers updated" in {
 
           val assets = DisplayTrustAssets(
-            monetary = Nil,
+            monetary = List(AssetMonetaryAmount(
+              assetMonetaryAmount = 4000L
+            )),
             propertyOrLand = List(PropertyLandType(
               buildingLandName = None,
               address = Some(AddressType(s"line1", "line2", None, None, Some("NE1 1AA"), "GB")),
@@ -120,6 +122,8 @@ class AssetsExtractorSpec extends FreeSpec with MustMatchers
           val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, Some(assets))
+
+          extraction.right.value.get(MoneyValuePage(0)).get mustBe 4000L
 
           extraction.right.value.get(PropertyOrLandDescriptionPage(0)) mustNot be(defined)
           extraction.right.value.get(PropertyOrLandAddressYesNoPage(0)).get mustBe true

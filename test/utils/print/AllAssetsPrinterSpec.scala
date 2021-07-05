@@ -17,13 +17,13 @@
 package utils.print
 
 import java.time.LocalDate
-
 import base.SpecBase
 import models.InternationalAddress
 import models.pages.ShareClass
 import models.pages.WhatIsNext.NeedsToPayTax
 import pages.WhatIsNextPage
 import pages.assets.business._
+import pages.assets.money.MoneyValuePage
 import pages.assets.nonEeaBusiness._
 import pages.assets.partnership._
 import pages.assets.propertyOrLand._
@@ -49,6 +49,7 @@ class AllAssetsPrinterSpec extends SpecBase {
 
         val answers = emptyUserAnswersForUtr
           .set(WhatIsNextPage, NeedsToPayTax).success.value
+
           .set(BusinessNamePage(0), businessName).success.value
           .set(BusinessDescriptionPage(0), "Business Description").success.value
           .set(BusinessAddressPage(0), InternationalAddress("line1", "line2", None, "FR")).success.value
@@ -82,10 +83,19 @@ class AllAssetsPrinterSpec extends SpecBase {
           .set(PartnershipDescriptionPage(0), "Partnership Description").success.value
           .set(PartnershipStartDatePage(0), date).success.value
 
+          .set(MoneyValuePage(0), 4000L).success.value
+
         val result = helper.entities(answers)
 
         result mustBe Seq(
           AnswerSection(None, Nil, Some(messages("answerPage.section.assets.heading"))),
+          AnswerSection(
+            headingKey = Some("Money"),
+            rows = Seq(
+              AnswerRow(label = messages("asset.money.value.checkYourAnswersLabel"), answer = Html("£4000"), changeUrl = None)
+            ),
+            sectionKey = None
+          ),
           AnswerSection(
             headingKey = Some("Business 1"),
             rows = Seq(
