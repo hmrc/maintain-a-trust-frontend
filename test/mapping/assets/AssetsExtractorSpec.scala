@@ -22,10 +22,13 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.{InternationalAddress, UKAddress}
 import models.http._
+import models.pages.ShareClass.{Ordinary, Other}
+import models.pages.ShareType.Quoted
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.assets.business._
 import pages.assets.nonEeaBusiness._
 import pages.assets.propertyOrLand._
+import pages.assets.shares._
 
 class AssetsExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -71,7 +74,25 @@ class AssetsExtractorSpec extends FreeSpec with MustMatchers
                 valuePrevious = None
               )
             ),
-            shares = Nil,
+            shares = List(DisplaySharesType(
+              numberOfShares = Some("1000"),
+              orgName = "Portfolio Name",
+              utr = None,
+              shareClass = Some(Other),
+              typeOfShare = Some(Quoted),
+              value = Some(100L),
+              isPortfolio = Some(true)
+            ),
+              DisplaySharesType(
+                numberOfShares = Some("1000"),
+                orgName = "Share Name",
+                utr = None,
+                shareClass = Some(Ordinary),
+                typeOfShare = Some(Quoted),
+                value = Some(100L),
+                isPortfolio = Some(false)
+              )
+            ),
             business = List(DisplayBusinessAssetType(
               orgName = "Business 1",
               utr = None,
@@ -109,6 +130,28 @@ class AssetsExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(PropertyOrLandTotalValuePage(1)).get mustBe 2000L
           extraction.right.value.get(TrustOwnAllThePropertyOrLandPage(1)).get mustBe true
           extraction.right.value.get(PropertyLandValueTrustPage(1)) mustNot be(defined)
+
+          extraction.right.value.get(SharesInAPortfolioPage(0)).get mustBe true
+          extraction.right.value.get(SharePortfolioNamePage(0)).get mustBe "Portfolio Name"
+          extraction.right.value.get(SharePortfolioOnStockExchangePage(0)).get mustBe true
+          extraction.right.value.get(SharePortfolioQuantityInTrustPage(0)).get mustBe "1000"
+          extraction.right.value.get(SharePortfolioValueInTrustPage(0)).get mustBe 100L
+          extraction.right.value.get(ShareClassPage(0)) mustNot be(defined)
+          extraction.right.value.get(ShareCompanyNamePage(0)) mustNot be(defined)
+          extraction.right.value.get(ShareQuantityInTrustPage(0)) mustNot be(defined)
+          extraction.right.value.get(ShareOnStockExchangePage(0)) mustNot be(defined)
+          extraction.right.value.get(ShareValueInTrustPage(0)) mustNot be(defined)
+
+          extraction.right.value.get(SharesInAPortfolioPage(1)).get mustBe false
+          extraction.right.value.get(ShareCompanyNamePage(1)).get mustBe "Share Name"
+          extraction.right.value.get(ShareOnStockExchangePage(1)).get mustBe true
+          extraction.right.value.get(ShareClassPage(1)).get mustBe Ordinary
+          extraction.right.value.get(ShareQuantityInTrustPage(1)).get mustBe "1000"
+          extraction.right.value.get(ShareValueInTrustPage(1)).get mustBe 100L
+          extraction.right.value.get(SharePortfolioNamePage(1)) mustNot be(defined)
+          extraction.right.value.get(SharePortfolioQuantityInTrustPage(1)) mustNot be(defined)
+          extraction.right.value.get(SharePortfolioOnStockExchangePage(1)) mustNot be(defined)
+          extraction.right.value.get(SharePortfolioValueInTrustPage(1)) mustNot be(defined)
 
           extraction.right.value.get(BusinessNamePage(0)).get mustBe "Business 1"
           extraction.right.value.get(BusinessDescriptionPage(0)).get mustBe "Business Asset Description"

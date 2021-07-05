@@ -74,7 +74,14 @@ case class DisplaySharesType(numberOfShares: Option[String],
                              utr: Option[String],
                              shareClass: Option[ShareClass],
                              typeOfShare: Option[ShareType],
-                             value: Option[Long]) extends Asset
+                             value: Option[Long],
+                             isPortfolio: Option[Boolean]) extends Asset with EntityType {
+
+  override val bpMatchStatus: Option[String] = None
+  override val lineNo: Option[String] = None
+  override val entityStart: String = LocalDate.now.toString
+
+}
 
 object DisplaySharesType {
   implicit val sharesTypeFormat: Format[DisplaySharesType] = Json.format[DisplaySharesType]

@@ -18,11 +18,13 @@ package utils.print
 
 import base.SpecBase
 import models.InternationalAddress
+import models.pages.ShareClass
 import models.pages.WhatIsNext.NeedsToPayTax
 import pages.WhatIsNextPage
 import pages.assets.business._
 import pages.assets.nonEeaBusiness._
 import pages.assets.propertyOrLand._
+import pages.assets.shares._
 import play.twirl.api.Html
 import utils.print.sections.assets.AllAssetsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
@@ -60,6 +62,21 @@ class AllAssetsPrinterSpec extends SpecBase {
           .set(TrustOwnAllThePropertyOrLandPage(1), false).success.value
           .set(PropertyLandValueTrustPage(1), 1000L).success.value
 
+          .set(ShareNamePage(0), "Portfolio Name").success.value
+          .set(SharesInAPortfolioPage(0),true).success.value
+          .set(SharePortfolioNamePage(0),"Portfolio Name").success.value
+          .set(SharePortfolioOnStockExchangePage(0), true).success.value
+          .set(SharePortfolioQuantityInTrustPage(0), "1000").success.value
+          .set(SharePortfolioValueInTrustPage(0), 100L).success.value
+
+          .set(ShareClassPage(1), ShareClass.Preference).success.value
+          .set(ShareNamePage(1), "Share Name").success.value
+          .set(SharesInAPortfolioPage(1),false).success.value
+          .set(ShareCompanyNamePage(1), "Share Name").success.value
+          .set(ShareOnStockExchangePage(1), false).success.value
+          .set(ShareQuantityInTrustPage(1), "2000").success.value
+          .set(ShareValueInTrustPage(1), 200L).success.value
+
         val result = helper.entities(answers)
 
         result mustBe Seq(
@@ -93,6 +110,29 @@ class AllAssetsPrinterSpec extends SpecBase {
               AnswerRow(label = messages("asset.propertyOrLand.totalValue.checkYourAnswersLabel"), answer = Html("£2000"), changeUrl = None),
               AnswerRow(label = messages("asset.propertyOrLand.trustOwnAllYesNo.checkYourAnswersLabel"), answer = Html("No"), changeUrl = None),
               AnswerRow(label = messages("asset.propertyOrLand.valueInTrust.checkYourAnswersLabel"), answer = Html("£1000"), changeUrl = None)
+            ),
+            sectionKey = None
+          ),
+          AnswerSection(
+            headingKey = Some("Share 1"),
+            rows = Seq(
+              AnswerRow(label = messages("asset.shares.inAPortfolioYesNo.checkYourAnswersLabel"), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("asset.shares.portfolioName.checkYourAnswersLabel"), answer = Html("Portfolio Name"), changeUrl = None),
+              AnswerRow(label = messages("asset.shares.portfolioOnStockExchangeYesNo.checkYourAnswersLabel"), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("asset.shares.portfolioQuantityInTrust.checkYourAnswersLabel"), answer = Html("1000"), changeUrl = None),
+              AnswerRow(label = messages("asset.shares.portfolioValueInTrust.checkYourAnswersLabel"), answer = Html("£100"), changeUrl = None)
+            ),
+            sectionKey = None
+          ),
+          AnswerSection(
+            headingKey = Some("Share 2"),
+            rows = Seq(
+              AnswerRow(label = messages("asset.shares.inAPortfolioYesNo.checkYourAnswersLabel"), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("asset.shares.companyName.checkYourAnswersLabel"), answer = Html("Share Name"), changeUrl = None),
+              AnswerRow(label = messages("asset.shares.class.checkYourAnswersLabel", "Share Name"), answer = Html("Preference"), changeUrl = None),
+              AnswerRow(label = messages("asset.shares.onStockExchangeYesNo.checkYourAnswersLabel", "Share Name"), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("asset.shares.quantityInTrust.checkYourAnswersLabel", "Share Name"), answer = Html("2000"), changeUrl = None),
+              AnswerRow(label = messages("asset.shares.valueInTrust.checkYourAnswersLabel", "Share Name"), answer = Html("£200"), changeUrl = None)
             ),
             sectionKey = None
           )

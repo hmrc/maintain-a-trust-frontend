@@ -47,4 +47,18 @@ object ShareClass extends Enumerable.Implicits {
   implicit val enumerable: Enumerable[ShareClass] =
     Enumerable(values.map(v => v.toString -> v): _*)
 
+  def fromDES(value: String): ShareClass = value match {
+    case "Ordinary shares" => Ordinary
+    case "Non-voting shares" => NonVoting
+    case "Redeemable shares" => Redeemable
+    case "Preference shares" => Preference
+    case "Deferred ordinary shares" => Deferred
+    case "Management shares" => Management
+    case "Other classes of shares" => OtherClasses
+    case "Voting shares" => Voting
+    case "Dividend shares" => Dividend
+    case "Capital share" => Capital
+    case _ => Other
+  }
+
 }

@@ -16,7 +16,7 @@
 
 package utils.print.sections
 
-import models.pages.{KindOfBusiness, RoleInCompany}
+import models.pages.{KindOfBusiness, RoleInCompany, ShareClass}
 import models.{Address, Description, FullName, HowManyBeneficiaries, PassportOrIdCardDetails, URN, UTR, UserAnswers}
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
@@ -24,11 +24,20 @@ import play.twirl.api.{Html, HtmlFormat}
 import queries.Gettable
 import utils.CheckAnswersFormatters
 import viewmodels.AnswerRow
-
 import java.time.LocalDate
+
 import javax.inject.Inject
 
 class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatters) {
+
+  def shareClassQuestion(query: Gettable[ShareClass],
+                         userAnswers: UserAnswers,
+                         labelKey: String,
+                         messageArg: String = "")
+                        (implicit messages: Messages): Option[AnswerRow] = {
+    val format = (x: ShareClass) => checkAnswersFormatters.formatEnum("shares.class", x)
+    question(query, userAnswers, labelKey, format, messageArg)
+  }
 
   def ninoQuestion(query: Gettable[String],
                    userAnswers: UserAnswers,

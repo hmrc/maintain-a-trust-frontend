@@ -810,6 +810,7 @@ answerPage.section.nonEeaBusinesses.heading = Ownership or controlling interest 
 answerPage.section.nonEeaBusiness.subheading = Non-EEA Company {0}
 answerPage.section.asset.business.subheading = Business {0}
 answerPage.section.asset.propertyOrLand.subheading = Property or land {0}
+answerPage.section.asset.share.subheading = Share {0}
 
 # CHECK YOUR ANSWERS LABELS
 
@@ -1105,6 +1106,22 @@ asset.propertyOrLand.description.checkYourAnswersLabel = What is the description
 asset.propertyOrLand.totalValue.checkYourAnswersLabel = What is the current total value of the property or land?
 asset.propertyOrLand.trustOwnAllYesNo.checkYourAnswersLabel = Does the trust own all of the property or land?
 asset.propertyOrLand.valueInTrust.checkYourAnswersLabel = What is the value of the property or land owned by the trust?
+
+shares.class.ordinary = Ordinary
+shares.class.preference = Preference
+shares.class.deferred = Deferred
+shares.class.growth = Growth
+shares.class.other = Other
+asset.shares.inAPortfolioYesNo.checkYourAnswersLabel = Are the shares in a portfolio?
+asset.shares.class.checkYourAnswersLabel = What class are the {0} shares?
+asset.shares.companyName.checkYourAnswersLabel = What is the share company’s name?
+asset.shares.onStockExchangeYesNo.checkYourAnswersLabel = Are {0}’s shares listed on a stock exchange?
+asset.shares.quantityInTrust.checkYourAnswersLabel = How many {0} shares are in the trust?
+asset.shares.valueInTrust.checkYourAnswersLabel = What is the current value of {0} shares in the trust?
+asset.shares.portfolioName.checkYourAnswersLabel = What is the share portfolio’s name?
+asset.shares.portfolioOnStockExchangeYesNo.checkYourAnswersLabel = Are the majority of the shares in the portfolio listed on a stock exchange?
+asset.shares.portfolioQuantityInTrust.checkYourAnswersLabel = How many individual shares are in the portfolio?
+asset.shares.portfolioValueInTrust.checkYourAnswersLabel = What is the current value of the portfolio?
 
 
 # Task List
