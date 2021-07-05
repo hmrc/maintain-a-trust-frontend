@@ -16,7 +16,6 @@
 
 package utils.print
 
-import java.time.LocalDate
 import base.SpecBase
 import models.InternationalAddress
 import models.pages.ShareClass
@@ -25,12 +24,15 @@ import pages.WhatIsNextPage
 import pages.assets.business._
 import pages.assets.money.MoneyValuePage
 import pages.assets.nonEeaBusiness._
+import pages.assets.other._
 import pages.assets.partnership._
 import pages.assets.propertyOrLand._
 import pages.assets.shares._
 import play.twirl.api.Html
 import utils.print.sections.assets.AllAssetsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
+
+import java.time.LocalDate
 
 class AllAssetsPrinterSpec extends SpecBase {
 
@@ -82,6 +84,9 @@ class AllAssetsPrinterSpec extends SpecBase {
 
           .set(PartnershipDescriptionPage(0), "Partnership Description").success.value
           .set(PartnershipStartDatePage(0), date).success.value
+
+          .set(OtherAssetDescriptionPage(0), "Other Description").success.value
+          .set(OtherAssetValuePage(0), 100L).success.value
 
           .set(MoneyValuePage(0), 4000L).success.value
 
@@ -156,6 +161,14 @@ class AllAssetsPrinterSpec extends SpecBase {
             rows = Seq(
               AnswerRow(label = messages("asset.partnership.description.checkYourAnswersLabel"), answer = Html("Partnership Description"), changeUrl = None),
               AnswerRow(label = messages("asset.partnership.startDate.checkYourAnswersLabel"), answer = Html("1 June 2019"), changeUrl = None)
+            ),
+            sectionKey = None
+          ),
+          AnswerSection(
+            headingKey = Some("Other 1"),
+            rows = Seq(
+              AnswerRow(label = messages("asset.other.description.checkYourAnswersLabel"), answer = Html("Other Description"), changeUrl = None),
+              AnswerRow(label = messages("asset.other.value.checkYourAnswersLabel", "Other Description"), answer = Html("£100"), changeUrl = None)
             ),
             sectionKey = None
           )

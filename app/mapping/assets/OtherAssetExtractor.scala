@@ -18,22 +18,22 @@ package mapping.assets
 
 import mapping.PlaybackExtractor
 import models.UserAnswers
-import models.http.DisplayTrustPartnershipType
-import pages.assets.partnership._
+import models.http.DisplayOtherAssetType
+import pages.assets.other._
 
 import scala.util.Try
 
-class PartnershipAssetExtractor extends PlaybackExtractor[DisplayTrustPartnershipType] {
+class OtherAssetExtractor extends PlaybackExtractor[DisplayOtherAssetType] {
 
   override val optionalEntity: Boolean = true
 
   override def updateUserAnswers(answers: Try[UserAnswers],
-                                 entity: DisplayTrustPartnershipType,
-                                 index: Int): Try[UserAnswers] = {
+                     entity: DisplayOtherAssetType,
+                     index: Int): Try[UserAnswers] = {
 
     answers
-      .flatMap(_.set(PartnershipDescriptionPage(index), entity.description))
-      .flatMap(_.set(PartnershipStartDatePage(index), entity.partnershipStart))
+      .flatMap(_.set(OtherAssetDescriptionPage(index), entity.description))
+      .flatMap(_.set(OtherAssetValuePage(index), entity.value))
   }
 
 }

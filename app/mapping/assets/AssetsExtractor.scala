@@ -27,6 +27,7 @@ class AssetsExtractor @Inject()(nonEeaBusinessAssetExtractor: NonEeaBusinessAsse
                                 propertyOrLandAssetExtractor: PropertyOrLandAssetExtractor,
                                 shareAssetExtractor: ShareAssetExtractor,
                                 partnershipAssetExtractor: PartnershipAssetExtractor,
+                                otherAssetExtractor: OtherAssetExtractor,
                                 moneyAssetExtractor: MoneyAssetExtractor) {
 
   def extract(answers: UserAnswers, data: Option[DisplayTrustAssets]): Either[PlaybackExtractionError, UserAnswers] = {
@@ -41,6 +42,7 @@ class AssetsExtractor @Inject()(nonEeaBusinessAssetExtractor: NonEeaBusinessAsse
           propertyOrLandAssetExtractor.extract(answers, a.propertyOrLand),
           shareAssetExtractor.extract(answers, a.shares),
           partnershipAssetExtractor.extract(answers, a.partnerShip),
+          otherAssetExtractor.extract(answers, a.other),
           moneyAssetExtractor.extract(answers, a.monetary)
         ).collect {
           case Right(z) => z
