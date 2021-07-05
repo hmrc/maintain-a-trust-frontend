@@ -26,7 +26,7 @@ import pages.assets.propertyOrLand._
 class PropertyOrLandAssetExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  def generateBusiness(index: Int) = PropertyLandType(
+  def generatePropertyOrLand(index: Int) = PropertyLandType(
     buildingLandName = None,
     address = index match {
       case 0 => Some(AddressType(s"line $index", "line2", None, None, None, "FR"))
@@ -171,11 +171,11 @@ class PropertyOrLandAssetExtractorSpec extends FreeSpec with MustMatchers
         }
 
         "with full data must return user answers updated" in {
-          val businessAssets = (for (index <- 0 to 2) yield generateBusiness(index)).toList
+          val propertyOrLandAssets = (for (index <- 0 to 2) yield generatePropertyOrLand(index)).toList
 
           val ua = emptyUserAnswersForUtr
 
-          val extraction = assetExtractor.extract(ua, businessAssets)
+          val extraction = assetExtractor.extract(ua, propertyOrLandAssets)
 
           extraction mustBe 'right
 

@@ -118,7 +118,13 @@ object DisplayTrustPartnershipType {
 }
 
 case class DisplayOtherAssetType(description: String,
-                                 value: Option[Long]) extends Asset
+                                 value: Option[Long]) extends Asset with EntityType {
+
+  override val bpMatchStatus: Option[String] = None
+  override val lineNo: Option[String] = None
+  override val entityStart: String = LocalDate.now.toString
+
+}
 
 object DisplayOtherAssetType {
   implicit val otherAssetTypeFormat: Format[DisplayOtherAssetType] = Json.format[DisplayOtherAssetType]
