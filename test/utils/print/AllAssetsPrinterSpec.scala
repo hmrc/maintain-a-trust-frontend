@@ -16,6 +16,8 @@
 
 package utils.print
 
+import java.time.LocalDate
+
 import base.SpecBase
 import models.InternationalAddress
 import models.pages.ShareClass
@@ -23,6 +25,7 @@ import models.pages.WhatIsNext.NeedsToPayTax
 import pages.WhatIsNextPage
 import pages.assets.business._
 import pages.assets.nonEeaBusiness._
+import pages.assets.partnership._
 import pages.assets.propertyOrLand._
 import pages.assets.shares._
 import play.twirl.api.Html
@@ -34,6 +37,7 @@ class AllAssetsPrinterSpec extends SpecBase {
   private val helper: AllAssetsPrinter = injector.instanceOf[AllAssetsPrinter]
   private val name = "NonEeaBusiness"
   private val address = InternationalAddress("Line 1", "Line 2", None, "DE")
+  private val date: LocalDate = LocalDate.parse("2019-06-01")
 
   "AllAssetsPrinter" must {
 
@@ -74,6 +78,9 @@ class AllAssetsPrinterSpec extends SpecBase {
           .set(ShareOnStockExchangePage(1), false).success.value
           .set(ShareQuantityInTrustPage(1), "2000").success.value
           .set(ShareValueInTrustPage(1), 200L).success.value
+
+          .set(PartnershipDescriptionPage(0), "Partnership Description").success.value
+          .set(PartnershipStartDatePage(0), date).success.value
 
         val result = helper.entities(answers)
 
@@ -131,6 +138,14 @@ class AllAssetsPrinterSpec extends SpecBase {
               AnswerRow(label = messages("asset.shares.onStockExchangeYesNo.checkYourAnswersLabel", "Share Name"), answer = Html("No"), changeUrl = None),
               AnswerRow(label = messages("asset.shares.quantityInTrust.checkYourAnswersLabel", "Share Name"), answer = Html("2000"), changeUrl = None),
               AnswerRow(label = messages("asset.shares.valueInTrust.checkYourAnswersLabel", "Share Name"), answer = Html("£200"), changeUrl = None)
+            ),
+            sectionKey = None
+          ),
+          AnswerSection(
+            headingKey = Some("Partnership 1"),
+            rows = Seq(
+              AnswerRow(label = messages("asset.partnership.description.checkYourAnswersLabel"), answer = Html("Partnership Description"), changeUrl = None),
+              AnswerRow(label = messages("asset.partnership.startDate.checkYourAnswersLabel"), answer = Html("1 June 2019"), changeUrl = None)
             ),
             sectionKey = None
           )

@@ -26,7 +26,8 @@ import javax.inject.Inject
 class AllAssetsPrinter @Inject()(businessAssetPrinter: BusinessAssetPrinter,
                                  nonEeaBusiness: NonEeaBusinessPrinter,
                                  propertyOrLandAssetPrinter: PropertyOrLandAssetPrinter,
-                                 shareAssetPrinter: ShareAssetPrinter) extends PrinterHelper {
+                                 shareAssetPrinter: ShareAssetPrinter,
+                                 partnershipAssetPrinter: PartnershipAssetPrinter) extends PrinterHelper {
 
   def entities(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
@@ -35,6 +36,7 @@ class AllAssetsPrinter @Inject()(businessAssetPrinter: BusinessAssetPrinter,
         businessAssetPrinter.entities(userAnswers),
         propertyOrLandAssetPrinter.entities(userAnswers),
         shareAssetPrinter.entities(userAnswers),
+        partnershipAssetPrinter.entities(userAnswers),
         nonEeaBusiness.entities(userAnswers)
       ).flatten
     } else {

@@ -805,6 +805,7 @@ answerPage.section.nonEeaBusiness.subheading = Non-EEA Company {0}
 answerPage.section.asset.business.subheading = Business {0}
 answerPage.section.asset.propertyOrLand.subheading = Property or land {0}
 answerPage.section.asset.share.subheading = Share {0}
+answerPage.section.asset.partnership.subheading = Partnership {0}
 
 # CHECK YOUR ANSWERS LABELS
 
@@ -1128,6 +1129,8 @@ asset.shares.portfolioOnStockExchangeYesNo.checkYourAnswersLabel = Are the major
 asset.shares.portfolioQuantityInTrust.checkYourAnswersLabel = How many individual shares are in the portfolio?
 asset.shares.portfolioValueInTrust.checkYourAnswersLabel = What is the current value of the portfolio?
 
+asset.partnership.description.checkYourAnswersLabel = What is the description for the partnership?
+asset.partnership.startDate.checkYourAnswersLabel = When did the partnership start?
 
 # Task List
 taskList.up-to-date = Up to date
