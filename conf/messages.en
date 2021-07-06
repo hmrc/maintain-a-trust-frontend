@@ -801,13 +801,13 @@ answerPage.section.trustsDetails.heading = Trust details
 ## Assets
 answerPage.section.assets.heading = Assets
 answerPage.section.nonEeaBusinesses.heading = Ownership or controlling interest of a Non-EEA company
-answerPage.section.nonEeaBusiness.subheading = Non-EEA Company {0}
-answerPage.section.asset.business.subheading = Business {0}
+answerPage.section.asset.money.subheading = Money
 answerPage.section.asset.propertyOrLand.subheading = Property or land {0}
 answerPage.section.asset.share.subheading = Share {0}
+answerPage.section.asset.business.subheading = Business {0}
 answerPage.section.asset.partnership.subheading = Partnership {0}
 answerPage.section.asset.other.subheading = Other {0}
-answerPage.section.asset.money.subheading = Money
+answerPage.section.nonEeaBusiness.subheading = Non-EEA Company {0}
 
 # CHECK YOUR ANSWERS LABELS
 

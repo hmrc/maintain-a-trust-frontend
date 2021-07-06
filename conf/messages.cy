@@ -270,9 +270,6 @@ dateClosed.error.required=Mae’n rhaid i’r dyddiad y cafodd yr ymddiriedolaet
 dateClosed.error.invalid=Nodwch ddyddiad go iawn
 dateClosed.error.future=Mae’n rhaid i’r dyddiad y cafodd yr ymddiriedolaeth ei chau fod heddiw neu yn y gorffennol
 dateClosed.error.past=Ni all y dyddiad y cafodd yr ymddiriedolaeth ei chau fod cyn dyddiad dechrau’r ymddiriedolaeth
-answerPage.section.assets.heading=Asedion
-answerPage.section.nonEeaBusinesses.heading=Cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE
-answerPage.section.nonEeaBusiness.subheading=Cwmni nad yw’n rhan o’r AEE {0}
 charityBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel=A ydych yn gwybod gwlad breswyl {0}?
 charityBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel=A yw {0} yn breswyl yn y DU?
 charityBeneficiaryCountryOfResidence.checkYourAnswersLabel=Beth yw gwlad breswyl {0}?
@@ -726,13 +723,17 @@ section.trustees=ymddiriedolwyr
 section.beneficiaries=buddiolwyr
 section.protectors=amddiffynyddion
 section.natural=unigolion eraill
+
 answerPage.section.closeDate.heading=Dyddiad cau
+
 answerPage.section.settlors.heading=Setlwyr
 answerPage.section.deceasedSettlor.heading=Setlwr
 answerPage.section.settlor.subheading=Setlwr {0}
+
 answerPage.section.trustees.heading=Ymddiriedolwyr
 answerPage.section.leadTrustee.subheading=Prif ymddiriedolwr
 answerPage.section.trustee.subheading=Ymddiriedolwr {0}
+
 answerPage.section.beneficiaries.heading=Buddiolwyr
 answerPage.section.charityBeneficiary.subheading=Buddiolwr elusennol {0}
 answerPage.section.companyBeneficiary.subheading=Buddiolwr cwmni {0}
@@ -741,11 +742,25 @@ answerPage.section.classOfBeneficiary.subheading=Dosbarth y buddiolwr {0}
 answerPage.section.trustBeneficiary.subheading=Buddiolwr ymddiriedolaeth {0}
 answerPage.section.otherBeneficiary.subheading=Buddiolwr arall {0}
 answerPage.section.largeBeneficiary.subheading=Buddiolwr sy’n ymwneud â chyflogaeth {0}
+
 answerPage.section.protectors.heading=Amddiffynyddion
 answerPage.section.protector.subheading=Amddiffynnydd {0}
+
 answerPage.section.otherIndividuals.heading=Unigolion eraill
 answerPage.section.otherIndividual.subheading=Unigolyn arall {0}
+
 answerPage.section.trustsDetails.heading=Manylion yr ymddiriedolaeth
+
+answerPage.section.assets.heading=Asedion
+answerPage.section.nonEeaBusinesses.heading=Cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE
+answerPage.section.asset.money.subheading=Arian
+answerPage.section.asset.propertyOrLand.subheading=Eiddo neu dir {0}
+answerPage.section.asset.share.subheading=Cyfranddaliad {0}
+answerPage.section.asset.business.subheading=Busnes {0}
+answerPage.section.asset.partnership.subheading=Partneriaeth {0}
+answerPage.section.asset.other.subheading=Arall {0}
+answerPage.section.nonEeaBusiness.subheading=Cwmni nad yw’n rhan o’r AEE {0}
+
 charityBeneficiaryName.checkYourAnswersLabel=Beth yw enw’r elusen?
 charityBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel=A oes gan yr ymddiriedolwyr ddisgresiwn dros faint o incwm y gall {0} ei gael?
 charityBeneficiaryShareOfIncome.checkYourAnswersLabel=Pa ganran o asedion yr ymddiriedolaeth y mae gan {0} hawl iddi?
