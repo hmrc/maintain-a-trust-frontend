@@ -20,6 +20,7 @@ import mapping.ConditionalExtractor
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
 import models.http.{DisplayTrust, DisplayTrustWillType}
+import models.pages.DeedOfVariation.AdditionToWill
 import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
 import pages.settlors.living_settlor.trust_type._
 import pages.trustdetails.SetUpAfterSettlorDiedYesNoPage
@@ -41,37 +42,37 @@ class TrustTypeExtractor extends ConditionalExtractor with Logging {
 
   private def extractTrustType(trust: DisplayTrust, answers: UserAnswers): Try[UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
-      trust.details.typeOfTrust match {
-        case Some(TypeOfTrust.DeedOfVariation) => answers
+      (trust.details.typeOfTrust, trust.details.deedOfVariation) match {
+        case (Some(TypeOfTrust.DeedOfVariation), _) | (_, Some(AdditionToWill)) => answers
           .set(KindOfTrustPage, KindOfTrust.Deed)
           .flatMap(answers => extractDeedOfVariation(trust, answers))
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-        case Some(TypeOfTrust.IntervivosSettlementTrust) => answers
+        case (Some(TypeOfTrust.IntervivosSettlementTrust), _) => answers
           .set(KindOfTrustPage, KindOfTrust.Intervivos)
           .flatMap(_.set(HoldoverReliefYesNoPage, trust.details.interVivos))
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-        case Some(TypeOfTrust.EmployeeRelated) => answers
+        case (Some(TypeOfTrust.EmployeeRelated), _) => answers
           .set(KindOfTrustPage, KindOfTrust.Employees)
           .flatMap(answers => extractEfrbs(trust, answers))
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-        case Some(TypeOfTrust.FlatManagementTrust) => answers
+        case (Some(TypeOfTrust.FlatManagementTrust), _) => answers
           .set(KindOfTrustPage, KindOfTrust.FlatManagement)
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-        case Some(TypeOfTrust.HeritageTrust) => answers
+        case (Some(TypeOfTrust.HeritageTrust), _) => answers
           .set(KindOfTrustPage, KindOfTrust.HeritageMaintenanceFund)
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-        case Some(TypeOfTrust.WillTrustOrIntestacyTrust) => answers
+        case (Some(TypeOfTrust.WillTrustOrIntestacyTrust), _) => answers
           .set(SetUpAfterSettlorDiedYesNoPage, true)
 
-        case None if answers.isTrustMigratingFromNonTaxableToTaxable =>
+        case (None, _) if answers.isTrustMigratingFromNonTaxableToTaxable =>
           Success(answers)
 
-        case None =>
+        case (None, _) =>
           Failure(new Throwable("No trust type for taxable trust."))
       }
     }
