@@ -45,7 +45,7 @@ class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends E
     converter.addressQuestion(LargeBeneficiaryAddressPage(index), userAnswers, "largeBeneficiaryAddress", name),
     converter.stringQuestion(LargeBeneficiaryUtrPage(index), userAnswers, "largeBeneficiaryUtr", name),
     converter.descriptionQuestion(LargeBeneficiaryDescriptionPage(index), userAnswers, "largeBeneficiaryDescription", name),
-    converter.numberOfBeneficiariesQuestion(LargeBeneficiaryNumberOfBeneficiariesPage(index), userAnswers, "largeBeneficiaryNumberOfBeneficiaries")
+    converter.enumQuestion(LargeBeneficiaryNumberOfBeneficiariesPage(index), userAnswers, "largeBeneficiaryNumberOfBeneficiaries", "numberOfBeneficiaries")
   )
 
   override def namePath(index: Int): JsPath = LargeBeneficiaryNamePage(index).path

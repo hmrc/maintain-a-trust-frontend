@@ -17,17 +17,37 @@
 package models.pages
 
 import models.{Enumerable, WithName}
+import play.api.libs.json._
 
-sealed trait DeedOfVariation
+sealed trait DeedOfVariation {
+  val asString: String
+}
 
 object DeedOfVariation extends Enumerable.Implicits {
 
-  case object DeedOfVariation extends WithName("Previously there was only an absolute interest under the will") with DeedOfVariation
-  case object ReplacedWill extends WithName("Replaced the will trust") with DeedOfVariation
-  case object AdditionToWill extends WithName("Addition to the will trust") with DeedOfVariation
+  case object PreviouslyAbsoluteInterestUnderWill extends WithName("replaceAbsoluteInterestOverWill") with DeedOfVariation {
+    override val asString: String = "Previously there was only an absolute interest under the will"
+  }
+
+  case object ReplacedWill extends WithName("replaceWillTrust") with DeedOfVariation {
+    override val asString: String = "Replaced the will trust"
+  }
+
+  case object AdditionToWill extends DeedOfVariation {
+    override val asString: String = "Addition to the will trust"
+  }
+
+  implicit val reads: Reads[DeedOfVariation] = Reads {
+    case JsString(PreviouslyAbsoluteInterestUnderWill.asString) => JsSuccess(PreviouslyAbsoluteInterestUnderWill)
+    case JsString(ReplacedWill.asString) => JsSuccess(ReplacedWill)
+    case JsString(AdditionToWill.asString) => JsSuccess(AdditionToWill)
+    case _ => JsError("Invalid DeedOfVariation")
+  }
+
+  implicit val writes: Writes[DeedOfVariation] = Writes(x => JsString(x.asString))
 
   val values: Set[DeedOfVariation] = Set(
-    DeedOfVariation,
+    PreviouslyAbsoluteInterestUnderWill,
     ReplacedWill,
     AdditionToWill
   )

@@ -16,11 +16,12 @@
 
 package models
 
-import _root_.pages.WhatIsNextPage
+import _root_.pages._
 import base.SpecBase
 import forms.Validation
 import models.pages.WhatIsNext.{NeedsToPayTax, NoLongerTaxable}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.libs.json.Json
 import wolfendale.scalacheck.regexp.RegexpGen
 
 class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
@@ -51,28 +52,38 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
 
         "taxable" in {
           val userAnswers = emptyUserAnswersForUtr
+
           userAnswers.trustTaxability mustBe Taxable
           userAnswers.isTrustTaxable mustBe true
+          userAnswers.isTrustMigratingFromNonTaxableToTaxable mustBe false
+          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe true
         }
 
         "non-taxable" in {
           val userAnswers = emptyUserAnswersForUrn
+
           userAnswers.trustTaxability mustBe NonTaxable
           userAnswers.isTrustTaxable mustBe false
+          userAnswers.isTrustMigratingFromNonTaxableToTaxable mustBe false
+          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe false
         }
 
         "migrating from non-taxable to taxable" in {
-          val userAnswers = emptyUserAnswersForUrn
-            .set(WhatIsNextPage, NeedsToPayTax).success.value
+          val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, NeedsToPayTax).success.value
+
           userAnswers.trustTaxability mustBe MigratingFromNonTaxableToTaxable
-          userAnswers.isTrustTaxable mustBe true
+          userAnswers.isTrustTaxable mustBe false
+          userAnswers.isTrustMigratingFromNonTaxableToTaxable mustBe true
+          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe true
         }
 
         "migrating from taxable to non-taxable" in {
-          val userAnswers = emptyUserAnswersForUtr
-            .set(WhatIsNextPage, NoLongerTaxable).success.value
+          val userAnswers = emptyUserAnswersForUtr.set(WhatIsNextPage, NoLongerTaxable).success.value
+
           userAnswers.trustTaxability mustBe MigratingFromTaxableToNonTaxable
           userAnswers.isTrustTaxable mustBe false
+          userAnswers.isTrustMigratingFromNonTaxableToTaxable mustBe false
+          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe false
         }
       }
     }
@@ -105,6 +116,19 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
             }
           }
         }
+      }
+    }
+
+    ".clearData" must {
+
+      "clear answers" in {
+
+        val previousAnswers = emptyUserAnswersForUtr
+          .set(ViewLastDeclarationYesNoPage, false).success.value
+
+        val result = previousAnswers.clearData
+
+        result.data mustBe Json.obj()
       }
     }
   }

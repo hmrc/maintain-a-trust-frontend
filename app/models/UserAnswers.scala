@@ -43,8 +43,9 @@ final case class UserAnswers(internalId: String,
     case (_, false) => NonTaxable
   }
 
-  def isTrustMigratingFromNonTaxableToTaxable: Boolean = trustTaxability.isTrustMigratingFromNonTaxableToTaxable
   def isTrustTaxable: Boolean = trustTaxability.isTrustTaxable
+  def isTrustMigratingFromNonTaxableToTaxable: Boolean = trustTaxability.isTrustMigratingFromNonTaxableToTaxable
+  def isTrustTaxableOrMigratingToTaxable: Boolean = isTrustTaxable || isTrustMigratingFromNonTaxableToTaxable
 
   def trustMldStatus: TrustMldStatus = (is5mldEnabled, isUnderlyingData5mld, isUnderlyingDataTaxable) match {
     case (false, _, _) => Underlying4mldTrustIn4mldMode
@@ -67,10 +68,7 @@ final case class UserAnswers(internalId: String,
   }
 
   def getWithDefault[A](page: Gettable[A], default: A)(implicit rds: Reads[A]): Option[A] = {
-    get(page) match {
-      case None => Some(default)
-      case x => x
-    }
+    get(page).orElse(Some(default))
   }
 
   def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A], reads: Reads[A]): Try[UserAnswers] = {

@@ -19,6 +19,7 @@ package mapping
 import com.google.inject.{ImplementedBy, Inject}
 import connectors.TrustConnector
 import mapping.PlaybackExtractionErrors.{FailedToCombineAnswers, PlaybackExtractionError}
+import mapping.assets.AssetsExtractor
 import mapping.beneficiaries.BeneficiaryExtractor
 import mapping.protectors.ProtectorExtractor
 import mapping.settlors.{SettlorExtractor, TrustTypeExtractor}
@@ -44,7 +45,7 @@ class UserAnswersExtractorImpl @Inject()(
                                           beneficiariesExtractor: BeneficiaryExtractor,
                                           trusteesExtractor: TrusteeExtractor,
                                           settlorsExtractor: SettlorExtractor,
-                                          nonEeaBusinessAssetExtractor: NonEeaBusinessAssetExtractor,
+                                          assetsExtractor: AssetsExtractor,
                                           trustTypeExtractor: TrustTypeExtractor,
                                           protectorsExtractor: ProtectorExtractor,
                                           otherIndividualsExtractor: OtherIndividualExtractor,
@@ -70,7 +71,7 @@ class UserAnswersExtractorImpl @Inject()(
         correspondence <- correspondenceExtractor.extract(updatedAnswers, data.correspondence).right
         beneficiaries <- beneficiariesExtractor.extract(updatedAnswers, data.trust.entities.beneficiary).right
         settlors <- settlorsExtractor.extract(updatedAnswers, data.trust.entities).right
-        assets <- nonEeaBusinessAssetExtractor.extract(updatedAnswers, data.trust.assets.map(_.nonEEABusiness).getOrElse(Nil)).right
+        assets <- assetsExtractor.extract(updatedAnswers, data.trust.assets).right
         trustType <- trustTypeExtractor.extract(updatedAnswers, data.trust).right
         protectors <- protectorsExtractor.extract(updatedAnswers, data.trust.entities.protectors).right
         otherIndividuals <- otherIndividualsExtractor.extract(updatedAnswers, data.trust.entities.naturalPerson.getOrElse(Nil)).right

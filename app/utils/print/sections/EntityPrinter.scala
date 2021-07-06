@@ -25,20 +25,26 @@ trait EntityPrinter[A] {
 
   def printAnswerRows(index: Int, userAnswers: UserAnswers)
                      (implicit messages: Messages, rds: Reads[A]): Option[AnswerSection] = {
-    userAnswers.getAtPath[A](namePath(index)).map(_.toString).map { name =>
-      AnswerSection(
-        headingKey = subHeadingKey.fold[Option[String]](None)(x =>
-          Some(messages(s"answerPage.section.$x.subheading", index + 1))
-        ),
-        rows = answerRows(index, userAnswers, name).flatten
-      )
-    }
+
+    userAnswers.getAtPath[A](namePath(index))
+      .map(_.toString)
+      .orElse(if (optionalName) Some("") else None)
+      .map { name =>
+        AnswerSection(
+          headingKey = subHeadingKey.fold[Option[String]](None)(x =>
+            Some(messages(s"answerPage.section.$x.subheading", index + 1))
+          ),
+          rows = answerRows(index, userAnswers, name).flatten
+        )
+      }
   }
 
   def answerRows(index: Int, userAnswers: UserAnswers, name: String)
                 (implicit messages: Messages): Seq[Option[AnswerRow]]
 
   def namePath(index: Int): JsPath
+
+  val optionalName: Boolean = false
 
   val subHeadingKey: Option[String]
 

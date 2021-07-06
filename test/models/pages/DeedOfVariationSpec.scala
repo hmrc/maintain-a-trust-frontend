@@ -16,47 +16,42 @@
 
 package models.pages
 
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
+import models.pages.DeedOfVariation._
 import org.scalatest.{MustMatchers, OptionValues, WordSpec}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.libs.json.{JsError, JsString, Json}
+import play.api.libs.json.{JsNull, JsString, Json}
 
 class DeedOfVariationSpec extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with OptionValues {
 
   "DeedOfVariation" must {
 
-    "deserialise valid values" in {
+    "serialise and deserailise" when {
 
-      val gen = Gen.oneOf(DeedOfVariation.values.toSeq)
+      "Previously there was only an absolute interest under the will" in {
+        val json = JsString("Previously there was only an absolute interest under the will")
+        val deedOfVariation = json.as[DeedOfVariation]
+        deedOfVariation mustEqual PreviouslyAbsoluteInterestUnderWill
+        Json.toJson(deedOfVariation) mustEqual json
+      }
 
-      forAll(gen) {
-        deedOfVariation =>
+      "Replaced the will trust" in {
+        val json = JsString("Replaced the will trust")
+        val deedOfVariation = json.as[DeedOfVariation]
+        deedOfVariation mustEqual ReplacedWill
+        Json.toJson(deedOfVariation) mustEqual json
+      }
 
-          JsString(deedOfVariation.toString).validate[DeedOfVariation].asOpt.value mustEqual deedOfVariation
+      "Addition to the will trust" in {
+        val json = JsString("Addition to the will trust")
+        val deedOfVariation = json.as[DeedOfVariation]
+        deedOfVariation mustEqual AdditionToWill
+        Json.toJson(deedOfVariation) mustEqual json
       }
     }
 
-    "fail to deserialise invalid values" in {
-
-      val gen = arbitrary[String] suchThat (!DeedOfVariation.values.map(_.toString).contains(_))
-
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[DeedOfVariation] mustEqual JsError("error.invalid")
-      }
-    }
-
-    "serialise" in {
-
-      val gen = Gen.oneOf(DeedOfVariation.values.toSeq)
-
-      forAll(gen) {
-        deedOfVariation =>
-
-          Json.toJson(deedOfVariation) mustEqual JsString(deedOfVariation.toString)
-      }
+    "return error when reading invalid deed of variation" in {
+      val json = JsNull
+      json.validate[DeedOfVariation].isError mustBe true
     }
   }
 }

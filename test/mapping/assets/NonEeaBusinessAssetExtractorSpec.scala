@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package mapping
+package mapping.assets
+
+import java.time.LocalDate
 
 import base.SpecBaseHelpers
 import generators.Generators
@@ -22,8 +24,6 @@ import models.InternationalAddress
 import models.http._
 import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
 import pages.assets.nonEeaBusiness._
-
-import java.time.LocalDate
 
 class NonEeaBusinessAssetExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {

@@ -146,8 +146,8 @@ declaration.closing.agent.warning = I confirm that my client has taken all reaso
 declaration.variation.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief. I will ensure it is regularly kept up to date as required including changes of address. If I discover that I have made an error or something has changed, I will update this register.
 declaration.closing.individual.warning = I confirm that the information given is true and complete to the best of my knowledge and belief before closing this trust. I understand that if I knowingly provide false information and cannot demonstrate that I have taken all reasonable steps, I could be subject to penalties.
 
-deedOfVariation.replaceAbsoluteInterestOverWill = to replace an absolute interest over a will
-deedOfVariation.replaceWillTrust = to replace a will trust
+deedOfVariation.replaceAbsoluteInterestOverWill = To replace an absolute interest over a will
+deedOfVariation.replaceWillTrust = To replace a will trust
 
 error.browser.title.prefix = Error:
 error.summary.title = There is a problem
@@ -802,6 +802,12 @@ answerPage.section.trustsDetails.heading = Trust details
 answerPage.section.assets.heading = Assets
 answerPage.section.nonEeaBusinesses.heading = Ownership or controlling interest of a Non-EEA company
 answerPage.section.nonEeaBusiness.subheading = Non-EEA Company {0}
+answerPage.section.asset.business.subheading = Business {0}
+answerPage.section.asset.propertyOrLand.subheading = Property or land {0}
+answerPage.section.asset.share.subheading = Share {0}
+answerPage.section.asset.partnership.subheading = Partnership {0}
+answerPage.section.asset.other.subheading = Other {0}
+answerPage.section.asset.money.subheading = Money
 
 # CHECK YOUR ANSWERS LABELS
 
@@ -999,6 +1005,8 @@ settlorBusinessAddressUK.checkYourAnswersLabel = What is {0}’s address?
 settlorBusinessAddressInternational.checkYourAnswersLabel = What is {0}’s address?
 settlorBusinessType.checkYourAnswersLabel = What kind of business is {0}?
 settlorBusinessTime.checkYourAnswersLabel = At the date of each contribution to the trust, had the business been in existence for at least 2 years?
+kindOfBusiness.Trading = Trading
+kindOfBusiness.Investment = Investment
 
 ### Individual
 settlorIndividualName.checkYourAnswersLabel = What is the settlor’s name?
@@ -1066,10 +1074,70 @@ trustUkPropertyYesNo.checkYourAnswersLabel = Does the trust own UK land or prope
 trustRecordedOnAnotherRegisterYesNo.checkYourAnswersLabel = Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?
 trustHasBusinessRelationshipInUkYesNo.checkYourAnswersLabel = Does the trust have an ongoing business relationship in the UK?
 
+governedByUkLaw.checkYourAnswersLabel = Is the trust governed by UK law?
+governingCountry.checkYourAnswersLabel = What country governs the trust?
+administeredInUk.checkYourAnswersLabel = Does the trust’s general administration take place in the UK?
+administrationCountry.checkYourAnswersLabel = In what country is the trust administered?
+setUpAfterSettlorDied.checkYourAnswersLabel = Was the trust set up after the settlor died?
+typeOfTrust.checkYourAnswersLabel = What kind of trust did the settlor create?
+whyDeedOfVariationCreated.checkYourAnswersLabel = Why was the deed of variation created?
+holdoverReliefClaimed.checkYourAnswersLabel = Was Gift Hold-Over Relief claimed on any of the trust’s assets?
+efrbsYesNo.checkYourAnswersLabel = Is this an employer-financed retirement benefits scheme?
+efrbsStartDate.checkYourAnswersLabel = When did the employer-financed retirement benefits scheme start?
+whereTrusteesBased.checkYourAnswersLabel = Are the trustees based in the UK?
+whereTrusteesBased.all-uk-based = All the trustees are based in the UK
+whereTrusteesBased.none-uk-based = None of the trustees are based in the UK
+whereTrusteesBased.some-uk-based = The trust contains trustees based in and outside the UK
+settlorsUkBased.checkYourAnswersLabel = Are any of the settlors based in the UK?
+establishedUnderScotsLaw.checkYourAnswersLabel = Was the trust created under Scots law?
+previouslyResidentOffshore.checkYourAnswersLabel = Has the trust ever been based offshore?
+previouslyResidentOffshoreCountry.checkYourAnswersLabel = Where was the trust based before?
+settlorBenefitsFromAssets.checkYourAnswersLabel = Are you registering the trust because the settlor benefits from the trust’s assets?
+forPurposeOfSection218.checkYourAnswersLabel = Are you registering the trust for Inheritance Tax reasons?
+agentCreatedTrust.checkYourAnswersLabel = Has an agent who is not a barrister created this trust?
+
 # Assets
 nonEeaBusiness.name.checkYourAnswersLabel = What is the company’s name?
 nonEeaBusiness.internationalAddress.checkYourAnswersLabel = What is {0}’s address?
 nonEeaBusiness.governingCountry.checkYourAnswersLabel = Which country’s laws govern {0}?
+
+asset.money.value.checkYourAnswersLabel = What is the total amount of money in the trust?
+
+asset.business.name.checkYourAnswersLabel = What is the business’s name?
+asset.business.description.checkYourAnswersLabel = What is the description for {0}?
+asset.business.addressUkYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
+asset.business.address.checkYourAnswersLabel = What is {0}’s address?
+asset.business.value.checkYourAnswersLabel = What is the current value of the business?
+
+asset.propertyOrLand.addressYesNo.checkYourAnswersLabel = Does the property or land have an address?
+asset.propertyOrLand.addressUkYesNo.checkYourAnswersLabel = Is the property or land’s address in the UK?
+asset.propertyOrLand.address.checkYourAnswersLabel = What is the property or land’s address?
+asset.propertyOrLand.description.checkYourAnswersLabel = What is the description of the property or land?
+asset.propertyOrLand.totalValue.checkYourAnswersLabel = What is the current total value of the property or land?
+asset.propertyOrLand.trustOwnAllYesNo.checkYourAnswersLabel = Does the trust own all of the property or land?
+asset.propertyOrLand.valueInTrust.checkYourAnswersLabel = What is the value of the property or land owned by the trust?
+
+shares.class.ordinary = Ordinary
+shares.class.preference = Preference
+shares.class.deferred = Deferred
+shares.class.growth = Growth
+shares.class.other = Other
+asset.shares.inAPortfolioYesNo.checkYourAnswersLabel = Are the shares in a portfolio?
+asset.shares.class.checkYourAnswersLabel = What class are the {0} shares?
+asset.shares.companyName.checkYourAnswersLabel = What is the share company’s name?
+asset.shares.onStockExchangeYesNo.checkYourAnswersLabel = Are {0}’s shares listed on a stock exchange?
+asset.shares.quantityInTrust.checkYourAnswersLabel = How many {0} shares are in the trust?
+asset.shares.valueInTrust.checkYourAnswersLabel = What is the current value of {0} shares in the trust?
+asset.shares.portfolioName.checkYourAnswersLabel = What is the share portfolio’s name?
+asset.shares.portfolioOnStockExchangeYesNo.checkYourAnswersLabel = Are the majority of the shares in the portfolio listed on a stock exchange?
+asset.shares.portfolioQuantityInTrust.checkYourAnswersLabel = How many individual shares are in the portfolio?
+asset.shares.portfolioValueInTrust.checkYourAnswersLabel = What is the current value of the portfolio?
+
+asset.partnership.description.checkYourAnswersLabel = What is the description for the partnership?
+asset.partnership.startDate.checkYourAnswersLabel = When did the partnership start?
+
+asset.other.description.checkYourAnswersLabel = What is the description of the asset?
+asset.other.value.checkYourAnswersLabel = What is the current value of {0}?
 
 # Task List
 taskList.up-to-date = Up to date

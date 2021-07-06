@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package pages.settlors
+package pages.assets.business
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.settlors.Settlors
+import sections.assets.{Assets, BusinessAsset}
 
-case object SetUpAfterSettlorDiedYesNoPage extends QuestionPage[Boolean] {
+final case class BusinessNamePage(index: Int) extends QuestionPage[String] {
 
-  override def path: JsPath = Settlors.path \toString
+  override def path: JsPath = JsPath \ Assets \ BusinessAsset \ index \ toString
 
-  override def toString: String = "setUpAfterSettlorDiedYesNo"
+  override def toString: String = "orgName"
 
 }

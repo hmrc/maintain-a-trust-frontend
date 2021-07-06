@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-package models
+package pages.assets.business
 
-object Constant {
-  val dateTimePattern = "yyyy-MM-dd"
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+import sections.assets.{Assets, BusinessAsset}
+
+final case class BusinessDescriptionPage(index: Int) extends QuestionPage[String] {
+
+  override def path: JsPath = JsPath \ Assets \ BusinessAsset \ index \ toString
+
+  override def toString: String = "businessDescription"
 
 }

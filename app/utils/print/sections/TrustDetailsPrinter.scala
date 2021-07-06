@@ -17,6 +17,7 @@
 package utils.print.sections
 
 import models.{URN, UTR, UserAnswers}
+import pages.settlors.living_settlor.trust_type._
 import pages.trustdetails._
 import play.api.i18n.Messages
 import viewmodels.{AnswerRow, AnswerSection}
@@ -32,17 +33,56 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
       case URN => converter.identifier(userAnswers, "uniqueReferenceNumber")
     }
 
-    val rows: Seq[Option[AnswerRow]] = Seq(
-      converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
-      converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
-      converter.whichIdentifier(userAnswers),
-      utrOrUrnRow,
-      converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
-      converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
-      converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")
-    )
+    val rows: Seq[Option[AnswerRow]] = if (userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
+      Seq(
+        converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
+        converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
 
-    Seq(answerSectionWithRows(rows, userAnswers.isTrustTaxable))
+        converter.whichIdentifier(userAnswers),
+        utrOrUrnRow,
+
+        converter.yesNoQuestion(GovernedInsideTheUKPage, userAnswers, "governedByUkLaw"),
+        converter.countryQuestion(CountryGoverningTrustPage, userAnswers, "governingCountry"),
+        converter.yesNoQuestion(AdministrationInsideUKPage, userAnswers, "administeredInUk"),
+        converter.countryQuestion(CountryAdministeringTrustPage, userAnswers, "administrationCountry"),
+
+        converter.yesNoQuestion(SetUpAfterSettlorDiedYesNoPage, userAnswers, "setUpAfterSettlorDied"),
+        converter.enumQuestion(KindOfTrustPage, userAnswers, "typeOfTrust", "kindOfTrust"),
+        converter.enumQuestion(HowDeedOfVariationCreatedPage, userAnswers, "whyDeedOfVariationCreated", "deedOfVariation"),
+        converter.yesNoQuestion(HoldoverReliefYesNoPage, userAnswers, "holdoverReliefClaimed"),
+        converter.yesNoQuestion(EfrbsYesNoPage, userAnswers, "efrbsYesNo"),
+        converter.dateQuestion(EfrbsStartDatePage, userAnswers, "efrbsStartDate"),
+
+        converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
+        converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
+
+        converter.enumQuestion(WhereTrusteesBasedPage, userAnswers, "whereTrusteesBased", "whereTrusteesBased"),
+        converter.yesNoQuestion(SettlorsUkBasedPage, userAnswers, "settlorsUkBased"),
+
+        converter.yesNoQuestion(EstablishedUnderScotsLawPage, userAnswers, "establishedUnderScotsLaw"),
+        converter.yesNoQuestion(TrustResidentOffshorePage, userAnswers, "previouslyResidentOffshore"),
+        converter.countryQuestion(TrustPreviouslyResidentPage, userAnswers, "previouslyResidentOffshoreCountry"),
+
+        converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo"),
+        converter.yesNoQuestion(RegisteringTrustFor5APage, userAnswers, "settlorBenefitsFromAssets"),
+        converter.yesNoQuestion(InheritanceTaxActPage, userAnswers, "forPurposeOfSection218"),
+        converter.yesNoQuestion(AgentOtherThanBarristerPage, userAnswers, "agentCreatedTrust")
+      )
+    } else {
+      Seq(
+        converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
+        converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
+
+        converter.whichIdentifier(userAnswers),
+        utrOrUrnRow,
+
+        converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
+        converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
+        converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")
+      )
+    }
+
+    Seq(answerSectionWithRows(rows, userAnswers.isTrustMigratingFromNonTaxableToTaxable))
   }
 
   override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("trustsDetails")

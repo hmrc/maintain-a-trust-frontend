@@ -19,10 +19,11 @@ package mapping.settlors
 import mapping.ConditionalExtractor
 import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
-import models.http.{DisplayTrust, DisplayTrustWillType}
+import models.http.{DisplayTrust, DisplayTrustWillType, TrustDetailsType}
+import models.pages.DeedOfVariation.AdditionToWill
 import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
-import pages.settlors.SetUpAfterSettlorDiedYesNoPage
 import pages.settlors.living_settlor.trust_type._
+import pages.trustdetails.SetUpAfterSettlorDiedYesNoPage
 import play.api.Logging
 
 import scala.util.{Failure, Success, Try}
@@ -30,7 +31,7 @@ import scala.util.{Failure, Success, Try}
 class TrustTypeExtractor extends ConditionalExtractor with Logging {
 
   def extract(answers: UserAnswers, data: DisplayTrust): Either[PlaybackExtractionError, UserAnswers] = {
-    extractTrustType(data, answers) match {
+    extractTrustType(data.details, answers) match {
       case Success(a) =>
         Right(a)
       case Failure(exception) =>
@@ -39,55 +40,58 @@ class TrustTypeExtractor extends ConditionalExtractor with Logging {
     }
   }
 
-  private def extractTrustType(trust: DisplayTrust, answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
-      trust.details.typeOfTrust match {
-        case Some(TypeOfTrust.DeedOfVariation) => answers
+  private def extractTrustType(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] = {
+    extractIfTaxableOrMigratingToTaxable(answers) {
+      (details.typeOfTrust, details.deedOfVariation) match {
+        case (Some(TypeOfTrust.DeedOfVariation), _) | (_, Some(AdditionToWill)) => answers
           .set(KindOfTrustPage, KindOfTrust.Deed)
-          .flatMap(answers => extractDeedOfVariation(trust, answers))
+          .flatMap(answers => extractDeedOfVariation(details, answers))
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-        case Some(TypeOfTrust.IntervivosSettlementTrust) => answers
+        case (Some(TypeOfTrust.IntervivosSettlementTrust), _) => answers
           .set(KindOfTrustPage, KindOfTrust.Intervivos)
-          .flatMap(_.set(HoldoverReliefYesNoPage, trust.details.interVivos))
+          .flatMap(_.set(HoldoverReliefYesNoPage, details.interVivos))
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-        case Some(TypeOfTrust.EmployeeRelated) => answers
+        case (Some(TypeOfTrust.EmployeeRelated), _) => answers
           .set(KindOfTrustPage, KindOfTrust.Employees)
-          .flatMap(answers => extractEfrbs(trust, answers))
+          .flatMap(answers => extractEfrbs(details, answers))
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-        case Some(TypeOfTrust.FlatManagementTrust) => answers
+        case (Some(TypeOfTrust.FlatManagementTrust), _) => answers
           .set(KindOfTrustPage, KindOfTrust.FlatManagement)
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-        case Some(TypeOfTrust.HeritageTrust) => answers
+        case (Some(TypeOfTrust.HeritageTrust), _) => answers
           .set(KindOfTrustPage, KindOfTrust.HeritageMaintenanceFund)
           .flatMap(_.set(SetUpAfterSettlorDiedYesNoPage, false))
 
-        case Some(TypeOfTrust.WillTrustOrIntestacyTrust) => answers
+        case (Some(TypeOfTrust.WillTrustOrIntestacyTrust), _) => answers
           .set(SetUpAfterSettlorDiedYesNoPage, true)
 
-        case _ =>
+        case (None, _) if answers.isTrustMigratingFromNonTaxableToTaxable =>
+          Success(answers)
+
+        case (None, _) =>
           Failure(new Throwable("No trust type for taxable trust."))
       }
     }
   }
 
-  private def extractDeedOfVariation(trust: DisplayTrust, answers: UserAnswers): Try[UserAnswers] = {
-    trust.details.deedOfVariation match {
+  private def extractDeedOfVariation(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] = {
+    details.deedOfVariation match {
       case Some(DeedOfVariation.AdditionToWill) =>
         answers.set(SetUpInAdditionToWillTrustYesNoPage, true)
       case Some(_) =>
         answers.set(SetUpInAdditionToWillTrustYesNoPage, false)
-          .flatMap(_.set(HowDeedOfVariationCreatedPage, trust.details.deedOfVariation))
+          .flatMap(_.set(HowDeedOfVariationCreatedPage, details.deedOfVariation))
       case _ =>
         Success(answers)
     }
   }
 
-  private def extractEfrbs(trust: DisplayTrust, answers: UserAnswers): Try[UserAnswers] = {
-    trust.details.efrbsStartDate match {
+  private def extractEfrbs(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] = {
+    details.efrbsStartDate match {
       case Some(date) =>
         answers.set(EfrbsYesNoPage, true)
           .flatMap(_.set(EfrbsStartDatePage, date))

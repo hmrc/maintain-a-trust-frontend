@@ -16,16 +16,12 @@
 
 package models.http
 
-import java.time.LocalDate
-
 import models.pages.{DeedOfVariation, TypeOfTrust}
 import play.api.libs.json._
 
+import java.time.LocalDate
+
 case class TrustDetailsType(startDate: LocalDate,
-                            trustTaxable: Option[Boolean],
-                            expressTrust: Option[Boolean],
-                            trustUKResident: Option[Boolean],
-                            trustUKProperty: Option[Boolean],
                             lawCountry: Option[String],
                             administrationCountry: Option[String],
                             residentialStatus: Option[ResidentialStatusType],
@@ -33,8 +29,13 @@ case class TrustDetailsType(startDate: LocalDate,
                             deedOfVariation: Option[DeedOfVariation],
                             interVivos: Option[Boolean],
                             efrbsStartDate: Option[LocalDate],
+                            trustTaxable: Option[Boolean],
+                            expressTrust: Option[Boolean],
+                            trustUKResident: Option[Boolean],
+                            trustUKProperty: Option[Boolean],
                             trustRecorded: Option[Boolean],
-                            trustUKRelation: Option[Boolean]) {
+                            trustUKRelation: Option[Boolean],
+                            settlorsUkBased: Option[Boolean] = None) {
 
   def isTaxable: Boolean = !trustTaxable.contains(false)
 }

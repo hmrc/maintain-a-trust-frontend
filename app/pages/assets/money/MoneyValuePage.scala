@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package pages.trustdetails
+package pages.assets.money
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.TrustDetails
+import sections.assets.{Assets, MoneyAsset}
 
-case object TrustUkResidentYesNoPage extends QuestionPage[Boolean] {
+final case class MoneyValuePage(index: Int) extends QuestionPage[Long] {
 
-  override def path: JsPath = JsPath \ TrustDetails \ toString
+  override def path: JsPath = JsPath \ Assets \ MoneyAsset \ index \ toString
 
-  override def toString: String = "trustUKResident"
-
+  override def toString: String = "moneyValue"
 }

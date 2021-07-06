@@ -127,7 +127,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
   def extractOptionalAddress(optionalAddress: Option[AddressType],
                              index: Int,
                              answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       optionalAddress match {
         case Some(address) =>
           extractAddress(address, index, answers)
@@ -140,7 +140,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
   def extractIndIdentification(identification: Option[DisplayTrustIdentificationType],
                                index: Int,
                                answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       identification match {
         case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
           answers.set(ninoYesNoPage(index), true)
@@ -173,7 +173,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
   def extractOrgIdentification(identification: Option[DisplayTrustIdentificationOrgType],
                                index: Int,
                                answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxable(answers) {
+    extractIfTaxableOrMigratingToTaxable(answers) {
       identification match {
         case Some(DisplayTrustIdentificationOrgType(_, Some(utr), None)) =>
           answers.set(utrYesNoPage(index), true)

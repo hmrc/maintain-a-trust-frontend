@@ -30,6 +30,14 @@ trait ConditionalExtractor {
     }
   }
 
+  def extractIfTaxableOrMigratingToTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
+    if (answers.isTrustTaxableOrMigratingToTaxable) {
+      block
+    } else {
+      Success(answers)
+    }
+  }
+
   def extractIf5mldTrustIn5mldMode(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
     if (answers.is5mldTrustIn5mldMode) {
       block

@@ -338,9 +338,6 @@ trusteeMentalCapacityYesNo.checkYourAnswersLabel=A oes gan {0} alluedd meddyliol
 trustUkPropertyYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth yn berchen ar dir neu eiddo yn y DU?
 trustRecordedOnAnotherRegisterYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth wedi’i chofrestru ar gofrestr ymddiriedolaeth unrhyw wledydd eraill o fewn yr Ardal Economaidd Ewropeaidd (EEA)?
 trustHasBusinessRelationshipInUkYesNo.checkYourAnswersLabel=A oes gan yr ymddiriedolaeth berthynas fusnes parhaol yn y DU?
-nonEeaBusiness.name.checkYourAnswersLabel=Beth yw enw’r cwmni?
-nonEeaBusiness.internationalAddress.checkYourAnswersLabel=Beth yw cyfeiriad {0}?
-nonEeaBusiness.governingCountry.checkYourAnswersLabel=Cyfreithiau pa wlad sy’n llywodraethu {0}?
 testOnly.fourOrFiveMLD.four=4MLD
 testOnly.fourOrFiveMLD.five=5MLD
 agencyRegisteredAddressUkYesNo.title=A yw cyfeiriad cofrestredig eich asiantaeth yn y DU?
@@ -443,8 +440,8 @@ declaration.variation.agent.warning=Rwy’n cadarnhau bod fy nghleient wedi cymr
 declaration.closing.agent.warning=Rwy’n cadarnhau bod fy nghleient wedi cymryd pob cam rhesymol i gael gwybodaeth gyfredol a chywir am bob un o’r endidau a roddwyd yn y cofrestriad hwn cyn cau’r ymddiriedolaeth hon. Rwy’n deall y gallai fy nghleient fod yn agored i gosbau os bydd yn rhoi gwybodaeth anwir yn fwriadol ac yn methu â dangos ei fod wedi cymryd pob cam rhesymol.
 declaration.variation.individual.warning=Rwy’n cadarnhau bod yr wybodaeth a roddwyd yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a’m cred. Byddaf yn sicrhau ei bod yn cael ei chadw’n gyfredol yn ôl yr angen gan gynnwys newidiadau i’r cyfeiriad. Os byddaf yn darganfod fy mod wedi gwneud gwall neu os bydd rhywbeth wedi newid, byddaf yn diweddaru’r gofrestr hon.
 declaration.closing.individual.warning=Rwy’n cadarnhau bod yr wybodaeth a roddwyd yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a’m cred cyn cau’r ymddiriedolaeth hon. Rwy’n deall y gallwn fod yn agored i gosbau os byddaf yn rhoi gwybodaeth anwir yn fwriadol ac yn methu â dangos fy mod wedi cymryd pob cam rhesymol.
-deedOfVariation.replaceAbsoluteInterestOverWill=disodli buddiant absoliwt dros ewyllys
-deedOfVariation.replaceWillTrust=disodli ymddiriedolaeth ewyllys
+deedOfVariation.replaceAbsoluteInterestOverWill=Disodli buddiant absoliwt dros ewyllys
+deedOfVariation.replaceWillTrust=Disodli ymddiriedolaeth ewyllys
 error.browser.title.prefix=Gwall:
 error.summary.title=Mae problem wedi codi
 error.postcodeInvalid=Nodwch god post go iawn
@@ -477,6 +474,8 @@ problemDeclaring.p2=Os oes angen help arnoch gyda’r gwasanaeth
 problemDeclaring.p3=Gallwch
 problemDeclaring.contact.link=gysylltu â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
 problemDeclaring.return.link=ddychwelyd i gofrestru ymddiriedolaeth a’i chynnal ar ran cleient
+kindOfBusiness.Trading=Masnachu
+kindOfBusiness.Investment=Buddsoddiad
 kindOfTrust.Lifetime=Ymddiriedolaeth a gafodd ei chreu yn ystod ei oes er mwyn trosglwyddo asedion neu eu rhoi fel rhodd
 kindOfTrust.Deed=Ymddiriedolaeth drwy Weithred Amrywio neu gytundeb rhwng y teulu
 kindOfTrust.Employees=Ymddiriedolaeth ar gyfer cyflogeion cwmni
@@ -929,3 +928,44 @@ numberOfBeneficiaries.over101=101 i 200
 numberOfBeneficiaries.over201=201 i 500
 numberOfBeneficiaries.over501=501 i 1,000
 numberOfBeneficiaries.over1001=Dros 1,001
+
+######### Assets #########
+
+asset.money.value.checkYourAnswersLabel=Beth yw cyfanswm yr arian yn yr ymddiriedolaeth?
+
+asset.propertyOrLand.addressYesNo.checkYourAnswersLabel = A oes gan yr eiddo neu dir gyfeiriad?
+asset.propertyOrLand.addressUkYesNo.checkYourAnswersLabel = A yw cyfeiriad yr eiddo neu dir yn y DU?
+asset.propertyOrLand.address.checkYourAnswersLabel = Beth yw cyfeiriad yr eiddo neu dir?
+asset.propertyOrLand.description.checkYourAnswersLabel = Beth yw’r disgrifiad o’r eiddo neu dir?
+asset.propertyOrLand.totalValue.checkYourAnswersLabel = Beth yw cyfanswm gwerth presennol yr eiddo neu dir?
+asset.propertyOrLand.trustOwnAllYesNo.checkYourAnswersLabel = A yw’r ymddiriedolaeth yn berchen ar yr holl eiddo neu dir?
+asset.propertyOrLand.valueInTrust.checkYourAnswersLabel = Beth yw gwerth yr eiddo neu dir y mae’r ymddiriedolaeth yn berchen arno?
+
+asset.shares.inAPortfolioYesNo.checkYourAnswersLabel = A yw’r cyfranddaliadau mewn portffolio?
+asset.shares.class.checkYourAnswersLabel = Pa ddosbarth yw cyfranddaliadau {0}?
+asset.shares.companyName.checkYourAnswersLabel = Beth yw enw’r cwmni cyfranddaliadau?
+asset.shares.onStockExchangeYesNo.checkYourAnswersLabel = A yw cyfranddaliadau {0} wedi’u rhestru ar gyfnewidfa stoc?
+asset.shares.quantityInTrust.checkYourAnswersLabel = Faint o gyfranddaliadau {0} sydd yn yr ymddiriedolaeth?
+asset.shares.valueInTrust.checkYourAnswersLabel = Beth yw gwerth presennol cyfranddaliadau {0} yn yr ymddiriedolaeth?
+asset.shares.portfolioName.checkYourAnswersLabel = Beth yw enw’r portffolio o gyfranddaliadau?
+asset.shares.portfolioOnStockExchangeYesNo.checkYourAnswersLabel = A yw’r rhan fwyaf o’r cyfranddaliadau yn y portffolio wedi’u rhestru ar gyfnewidfa stoc?
+asset.shares.portfolioQuantityInTrust.checkYourAnswersLabel = Faint o gyfranddaliadau unigol sydd yn y portffolio?
+asset.shares.portfolioValueInTrust.checkYourAnswersLabel = Beth yw gwerth presennol y portffolio?
+
+asset.business.name.checkYourAnswersLabel = Beth yw enw’r busnes?
+asset.business.description.checkYourAnswersLabel = Beth yw’r disgrifiad ar gyfer {0}?
+asset.business.addressUkYesNo.checkYourAnswersLabel = A yw cyfeiriad {0} yn y DU?
+asset.business.address.checkYourAnswersLabel = Beth yw cyfeiriad {0}?
+asset.business.value.checkYourAnswersLabel = Beth yw gwerth presennol y busnes?
+
+asset.partnership.description.checkYourAnswersLabel = Beth yw’r disgrifiad ar gyfer y bartneriaeth?
+asset.partnership.startDate.checkYourAnswersLabel = Pryd dechreuodd y bartneriaeth?
+
+asset.other.description.checkYourAnswersLabel = Beth yw’r disgrifiad o’r ased?
+asset.other.value.checkYourAnswersLabel = Beth yw gwerth presennol {0}?
+
+nonEeaBusiness.name.checkYourAnswersLabel = Beth yw enw’r cwmni?
+nonEeaBusiness.internationalAddress.checkYourAnswersLabel = Beth yw cyfeiriad {0}?
+nonEeaBusiness.governingCountry.checkYourAnswersLabel = Cyfreithiau pa wlad sy’n llywodraethu {0}?
+
+##########################
