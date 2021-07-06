@@ -338,9 +338,6 @@ trusteeMentalCapacityYesNo.checkYourAnswersLabel=A oes gan {0} alluedd meddyliol
 trustUkPropertyYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth yn berchen ar dir neu eiddo yn y DU?
 trustRecordedOnAnotherRegisterYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth wedi’i chofrestru ar gofrestr ymddiriedolaeth unrhyw wledydd eraill o fewn yr Ardal Economaidd Ewropeaidd (EEA)?
 trustHasBusinessRelationshipInUkYesNo.checkYourAnswersLabel=A oes gan yr ymddiriedolaeth berthynas fusnes parhaol yn y DU?
-nonEeaBusiness.name.checkYourAnswersLabel=Beth yw enw’r cwmni?
-nonEeaBusiness.internationalAddress.checkYourAnswersLabel=Beth yw cyfeiriad {0}?
-nonEeaBusiness.governingCountry.checkYourAnswersLabel=Cyfreithiau pa wlad sy’n llywodraethu {0}?
 testOnly.fourOrFiveMLD.four=4MLD
 testOnly.fourOrFiveMLD.five=5MLD
 agencyRegisteredAddressUkYesNo.title=A yw cyfeiriad cofrestredig eich asiantaeth yn y DU?
@@ -931,3 +928,44 @@ numberOfBeneficiaries.over101=101 i 200
 numberOfBeneficiaries.over201=201 i 500
 numberOfBeneficiaries.over501=501 i 1,000
 numberOfBeneficiaries.over1001=Dros 1,001
+
+######### Assets #########
+
+asset.money.value.checkYourAnswersLabel=Beth yw cyfanswm yr arian yn yr ymddiriedolaeth?
+
+asset.propertyOrLand.addressYesNo.checkYourAnswersLabel = A oes gan yr eiddo neu dir gyfeiriad?
+asset.propertyOrLand.addressUkYesNo.checkYourAnswersLabel = A yw cyfeiriad yr eiddo neu dir yn y DU?
+asset.propertyOrLand.address.checkYourAnswersLabel = Beth yw cyfeiriad yr eiddo neu dir?
+asset.propertyOrLand.description.checkYourAnswersLabel = Beth yw’r disgrifiad o’r eiddo neu dir?
+asset.propertyOrLand.totalValue.checkYourAnswersLabel = Beth yw cyfanswm gwerth presennol yr eiddo neu dir?
+asset.propertyOrLand.trustOwnAllYesNo.checkYourAnswersLabel = A yw’r ymddiriedolaeth yn berchen ar yr holl eiddo neu dir?
+asset.propertyOrLand.valueInTrust.checkYourAnswersLabel = Beth yw gwerth yr eiddo neu dir y mae’r ymddiriedolaeth yn berchen arno?
+
+asset.shares.inAPortfolioYesNo.checkYourAnswersLabel = A yw’r cyfranddaliadau mewn portffolio?
+asset.shares.class.checkYourAnswersLabel = Pa ddosbarth yw cyfranddaliadau {0}?
+asset.shares.companyName.checkYourAnswersLabel = Beth yw enw’r cwmni cyfranddaliadau?
+asset.shares.onStockExchangeYesNo.checkYourAnswersLabel = A yw cyfranddaliadau {0} wedi’u rhestru ar gyfnewidfa stoc?
+asset.shares.quantityInTrust.checkYourAnswersLabel = Faint o gyfranddaliadau {0} sydd yn yr ymddiriedolaeth?
+asset.shares.valueInTrust.checkYourAnswersLabel = Beth yw gwerth presennol cyfranddaliadau {0} yn yr ymddiriedolaeth?
+asset.shares.portfolioName.checkYourAnswersLabel = Beth yw enw’r portffolio o gyfranddaliadau?
+asset.shares.portfolioOnStockExchangeYesNo.checkYourAnswersLabel = A yw’r rhan fwyaf o’r cyfranddaliadau yn y portffolio wedi’u rhestru ar gyfnewidfa stoc?
+asset.shares.portfolioQuantityInTrust.checkYourAnswersLabel = Faint o gyfranddaliadau unigol sydd yn y portffolio?
+asset.shares.portfolioValueInTrust.checkYourAnswersLabel = Beth yw gwerth presennol y portffolio?
+
+asset.business.name.checkYourAnswersLabel = Beth yw enw’r busnes?
+asset.business.description.checkYourAnswersLabel = Beth yw’r disgrifiad ar gyfer {0}?
+asset.business.addressUkYesNo.checkYourAnswersLabel = A yw cyfeiriad {0} yn y DU?
+asset.business.address.checkYourAnswersLabel = Beth yw cyfeiriad {0}?
+asset.business.value.checkYourAnswersLabel = Beth yw gwerth presennol y busnes?
+
+asset.partnership.description.checkYourAnswersLabel = Beth yw’r disgrifiad ar gyfer y bartneriaeth?
+asset.partnership.startDate.checkYourAnswersLabel = Pryd dechreuodd y bartneriaeth?
+
+asset.other.description.checkYourAnswersLabel = Beth yw’r disgrifiad o’r ased?
+asset.other.value.checkYourAnswersLabel = Beth yw gwerth presennol {0}?
+
+nonEeaBusiness.name.checkYourAnswersLabel = Beth yw enw’r cwmni?
+nonEeaBusiness.internationalAddress.checkYourAnswersLabel = Beth yw cyfeiriad {0}?
+nonEeaBusiness.governingCountry.checkYourAnswersLabel = Cyfreithiau pa wlad sy’n llywodraethu {0}?
+
+##########################
