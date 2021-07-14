@@ -26,7 +26,7 @@ object ViewUtils {
   }
 
   def breadcrumbTitle(title: String)(implicit messages: Messages): String = {
-      s"$title - ${messages("site.service_name")} - GOV.UK"
+      s"$title - ${messages("service.name")} - GOV.UK"
   }
 
 }

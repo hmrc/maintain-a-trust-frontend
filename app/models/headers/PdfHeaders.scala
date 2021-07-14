@@ -36,7 +36,7 @@ case class PdfHeaders(contentDisposition: String, contentType: String, contentLe
                               messagesApi: MessagesApi
                              ): String = contentDisposition match {
     case DispositionRegex(_, instruction, _, filename) =>
-      val serviceName = messagesApi("site.service_name")(languageUtils.getCurrentLang)
+      val serviceName = messagesApi("service.name")(languageUtils.getCurrentLang)
 
       s"$instruction$filename - $serviceName - GOV.UK.pdf"
     case _ =>

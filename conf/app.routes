@@ -1,3 +1,5 @@
+->         /hmrc-frontend                      hmrcfrontend.Routes
+
 # microservice specific routes
 
 GET        /                                            controllers.IndexController.onPageLoad

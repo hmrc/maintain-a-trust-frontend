@@ -247,7 +247,7 @@ session_expired.heading = For your security, we signed you out
 session_expired.guidance = This is because you have been inactive on the service for 15 minutes.
 session_expired.guidance.2 = You will need to sign in to continue maintaining the trust.
 
-site.service_name = Register and Maintain a Trust
+service.name = Register and Maintain a Trust
 site.save.continue = Save and continue
 site.back = Back
 site.edit = Change
