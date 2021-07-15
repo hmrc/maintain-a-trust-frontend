@@ -14,12 +14,20 @@
  * limitations under the License.
  *@
 
-@(messageKeyPrefix: String)(implicit messages: Messages)
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-<div class="govuk-warning-text">
-    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-    <strong class="govuk-warning-text__text">
-        <span class="govuk-warning-text__assistive">@messages("site.warning")</span>
-        @messages(s"$messageKeyPrefix.warning")
-    </strong>
-</div>
+@this(govukButton : GovukButton)
+
+@(
+messageKey: String = "site.continue",
+isStartButton: Boolean = false,
+isPrintButton: Boolean = false,
+attributes: Map[String, String] = Map.empty
+)(implicit messages: Messages)
+
+@govukButton(Button(
+ isStartButton = isStartButton,
+ content = Text(messages(messageKey)),
+ classes = if (isPrintButton) "govuk-button--secondary print-hidden" else "",
+ attributes = if (isPrintButton) Map("onClick" -> "window.print()") else attributes
+))

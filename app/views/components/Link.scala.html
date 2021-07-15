@@ -14,9 +14,8 @@
  * limitations under the License.
  *@
 
-@(
-messageKey: String = "",
-href: String
-)(implicit messages: Messages)
+@this()
 
-<a id="button" href="@href" role="button" class="button print-hidden">@messages(messageKey)</a>
+@(href : String, id : String = "", key : String, openInNewWindow: Boolean = false)(implicit messages: Messages)
+
+<a id="@id" href="@href" @if(openInNewWindow) {target="_blank"}>@messages(key)</a>

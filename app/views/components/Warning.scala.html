@@ -14,9 +14,13 @@
  * limitations under the License.
  *@
 
-@(
-messageKey: String = "",
-inputType: String = "button"
-)(implicit messages: Messages)
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-<input type="@inputType" class="button print-hidden" value="@messages(messageKey)" />
+@this(govukWarningText : GovukWarningText)
+
+@(messageKeyPrefix: String)(implicit messages: Messages)
+
+@govukWarningText(WarningText(
+    iconFallbackText = messages("site.warning"),
+    content = Text(messages(s"$messageKeyPrefix.warning"))
+))

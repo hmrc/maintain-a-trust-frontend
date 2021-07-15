@@ -14,6 +14,13 @@
  * limitations under the License.
  *@
 
-@(href : String, id : String = "", key : String, openInNewWindow: Boolean = false)(implicit messages: Messages)
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-<a id="@id" href="@href" @if(openInNewWindow) {target="_blank"}>@messages(key)</a>
+@this(govukInsetText : GovukInsetText)
+
+@(messageKey: String, id: String)(implicit messages: Messages)
+
+@govukInsetText(InsetText(
+ id = Some(s"inset-text--$id"),
+ content = Text(messages(messageKey))
+))
