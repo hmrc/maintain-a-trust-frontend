@@ -14,11 +14,8 @@
  * limitations under the License.
  *@
 
-@import viewmodels.AnswerRow
+@this()
 
-@(row: AnswerRow)(implicit messages: Messages)
+@(key: String, param: String)(implicit messages: Messages)
 
-<li>
-    <div class="cya-question">@messages(row.label, row.labelArg)</div>
-    <div class="cya-answer">@row.answer</div>
-</li>
+<span class="govuk-caption-l">@messages(key, param)</span>

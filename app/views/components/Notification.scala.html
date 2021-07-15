@@ -14,6 +14,19 @@
  * limitations under the License.
  *@
 
-@(key: String, param: String)(implicit messages: Messages)
+@this()
 
-<span class="govuk-caption-xl">@messages(key, param)</span>
+@()(implicit messages: Messages)
+
+<div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+    <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+            @messages("notification.important")
+        </h2>
+    </div>
+    <div class="govuk-notification-banner__content">
+        <p class="govuk-notification-banner__heading">
+            @messages("notification.instruction")
+        </p>
+    </div>
+</div>

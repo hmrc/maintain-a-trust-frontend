@@ -88,8 +88,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration) {
 
   lazy val primaryEnrolmentCheckEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.primaryEnrolmentCheck.enabled")
 
-  lazy val countdownLength: String = configuration.get[String]("timeout.countdown")
-  lazy val timeoutLength: String = configuration.get[String]("timeout.length")
+  lazy val countdownLength: Int = configuration.get[Int]("timeout.countdown")
+  lazy val timeoutLength: Int = configuration.get[Int]("timeout.length")
 
   def verifyIdentityForATrustUrl(utr: String) =
     s"${configuration.get[String]("urls.startVerifyIdentity")}/$utr"

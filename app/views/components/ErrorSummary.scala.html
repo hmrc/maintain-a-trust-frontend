@@ -14,8 +14,21 @@
  * limitations under the License.
  *@
 
-@()(implicit messages: Messages)
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import utils.DateErrorFormatter._
+@import viewmodels.RadioOption
 
-<button id="print" class="button--secondary print-hidden" onClick="window.print()">
-    @messages("site.print-or-save")
-</button>
+@this(
+    govUkErrorSummary: GovukErrorSummary
+)
+
+@(errors: Seq[FormError], radioOptions: Seq[RadioOption] = Nil, isYesNo: Boolean = false)(implicit messages: Messages)
+
+@if(errors.nonEmpty) {
+    @govUkErrorSummary(ErrorSummary(
+        errorList = errors
+            .map(err => err.copy(key = errorHref(err, radioOptions, isYesNo), args = formatArgs(err.args)))
+            .asTextErrorLinks,
+        title = Text(messages("error.summary.title"))
+    ))
+}

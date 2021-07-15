@@ -14,6 +14,14 @@
  * limitations under the License.
  *@
 
-@(headingKey: String, headingSize: String = "govuk-heading-xl", caption: String, captionParam: String = "")(implicit messages: Messages)
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import utils.AccessibilityHelper._
 
-<h1 class="@headingSize">@components.sub_heading(caption, captionParam) @messages(headingKey)</h1>
+@this(govukPanel : GovukPanel)
+
+@(refNumber: String)(implicit messages: Messages)
+
+@govukPanel(Panel(
+    title = Text(messages("confirmation.heading1")),
+    content = HtmlContent(s"""${messages("confirmation.heading2")}<br><strong>${formatReferenceNumber(refNumber)}</strong>""")
+))

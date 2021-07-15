@@ -14,13 +14,18 @@
  * limitations under the License.
  *@
 
-@(
-  prefix : String,
-  keys : Seq[String]
-)(implicit messages: Messages)
+@this(
+    govukButton: GovukButton,
+)
 
-<ul class="list list-bullet">
- @keys.map { key =>
- <li>@messages(s"$prefix.$key")</li>
- }
-</ul>
+@(overrideMessage: Option[String] = None, submitClass: Option[String] = None, id: String = "submit")(implicit messages: Messages)
+
+@govukButton(Button(
+    attributes = Map("id" -> id),
+    classes = s"button ${submitClass.getOrElse("")}",
+    content = if(overrideMessage.isEmpty) {
+        Text(messages("site.continue"))
+    } else {
+        Text(messages(overrideMessage.get))
+    }
+))

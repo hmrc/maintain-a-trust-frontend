@@ -14,17 +14,8 @@
  * limitations under the License.
  *@
 
-@import viewmodels.Link
+@this()
 
-@(
-hint: Option[String] = None,
-link: Option[Link] = None
-)(implicit messages: Messages)
+@(headingKey: String, optionalParam: Option[String] = None, headingSize: String = "govuk-heading-l")(implicit messages: Messages)
 
-@if(hint.nonEmpty) {
-<span id="form-hint" class="form-hint form-field">@hint
-  @link.map { l =>
-    <a id="link" href="@l.url" target="_blank">@l.text</a>
-  }
-  </span>
-}
+<h1 class="@headingSize">@messages(headingKey, optionalParam.getOrElse(""))</h1>

@@ -14,6 +14,13 @@
  * limitations under the License.
  *@
 
-@(headingKey: String, headingSize: String = "heading-large")(implicit messages: Messages)
+@this(
+ subHeading: SubHeading
+)
 
-<h1 class="@headingSize">@messages(headingKey)</h1>
+@(messagePrefix: String, optionalParam: Option[String] = None, captionParam: Option[String] = None)(implicit messages: Messages)
+
+<h1 class="govuk-heading-l">
+ @subHeading(s"$messagePrefix.caption", captionParam.getOrElse(""))
+ @messages(s"$messagePrefix.heading", optionalParam.getOrElse(""))
+</h1>

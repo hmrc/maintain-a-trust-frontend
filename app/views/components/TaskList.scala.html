@@ -14,23 +14,29 @@
  * limitations under the License.
  *@
 
-@import viewmodels.AnswerSection
-@import views.html._
+@import views.html.components.{Link, TaskItem}
+@import viewmodels.Task
 
-@(answerSection: AnswerSection)(implicit messages: Messages)
+@this(
+        taskItem: TaskItem,
+        link: Link
+)
 
-@if(answerSection.sectionKey.isDefined){
-<h2 class="heading-large">@messages(answerSection.sectionKey.get)</h2>
+
+@(sections: List[Task], additionalSections: List[Task])(implicit messages: Messages)
+
+<h2 id="task-list--heading" class="app-task-list__section">@messages("taskList.sections.heading")</h2>
+
+<ul class="app-task-list__items">
+@for(task <- sections){
+    @taskItem(task)
 }
-
-@if(answerSection.headingKey.isDefined){
-<h3 class="heading-medium">@messages(answerSection.headingKey.get)</h3>
-}
-
-@if(answerSection.rows) {
-<ul role="list" class="govuk-check-your-answers cya-questions-long section">
-    @for(row <- answerSection.rows){
-    @components.answer_row(row)
-    }
 </ul>
+
+<h2 id="task-list-additional--heading" class="app-task-list__section">@messages("taskList.additionalSections.heading")</h2>
+
+<ul class="app-task-list__items">
+@for(task <- additionalSections){
+    @taskItem(task)
 }
+</ul>

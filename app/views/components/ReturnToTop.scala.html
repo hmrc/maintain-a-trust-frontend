@@ -14,21 +14,13 @@
  * limitations under the License.
  *@
 
-@import viewmodels.AnswerRow
+@this()
 
-@(row: AnswerRow)(implicit messages: Messages)
+@()(implicit messages: Messages)
 
-<li>
-    <div class="cya-question">@messages(row.label, row.labelArg)</div>
-    <div class="cya-answer">
-        @row.answer
-    </div>
-    <div class="cya-change">
-        @row.changeUrl.map { url =>
-        <a href='@url'>
-            <span aria-hidden="true">@messages("site.edit")</span>
-            <span class="visually-hidden">@messages("site.hidden-edit", messages(row.label, row.labelArg))</span>
-        </a>
-        }
-    </div>
-</li>
+<p><a id="return-to-top" href="#main-content">
+ <svg role="presentation" focusable="false" class="app-back-to-top__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
+  <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>
+ </svg>
+ @messages("site.return-to-top")
+</a></p>
