@@ -15,9 +15,13 @@
  *@
 
 @import controllers.routes._
+@import views.html.components.{ErrorSummary, InputYesNo, SubmitButton}
 
 @this(
     main_template: MainTemplate,
+    submitButton: SubmitButton,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
     formHelper: FormWithCSRF
 )
 
@@ -30,9 +34,9 @@
 
     @formHelper(action = ViewLastDeclarationYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.error_summary(form.errors)
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
             label = messages("viewLastDeclarationYesNo.heading"),
             legendAsHeading = true,
@@ -40,6 +44,6 @@
             hint = Some(messages("viewLastDeclarationYesNo.hint"))
         )
 
-        @components.submit_button(Some("site.onlyContinue"))
+    @submitButton
     }
 }

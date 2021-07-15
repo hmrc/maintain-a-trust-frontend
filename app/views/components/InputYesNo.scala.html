@@ -21,7 +21,8 @@
     label: String,
     hint: Option[String] = None,
     legendClass: Option[String] = None,
-    legendAsHeading: Boolean = true
+    legendAsHeading: Boolean = true,
+    caption: Option[String] = None,
 )(implicit messages: Messages)
 
 @govukRadios(Radios(
@@ -35,7 +36,11 @@
     hint = if(hint.isDefined) Some(Hint(content = Text(hint.get))) else None,
     fieldset = Some(Fieldset(
         legend = Some(Legend(
-            content = Text(label),
+            content = if (caption.isDefined) {
+                    HtmlContent(
+                    s"""<span class="govuk-caption-l">${caption.get}</span>
+                    |${messages(label)}""".stripMargin)
+            } else Text(label),
             isPageHeading = legendAsHeading,
             classes = legendClass.getOrElse("govuk-fieldset__legend--l")
         ))

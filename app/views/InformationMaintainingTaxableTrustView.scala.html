@@ -16,9 +16,11 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
+@import views.html.components.HeadingWithIdentifierCaption
 
 @this(
     appConfig: FrontendAppConfig,
+    headingWithCaption: HeadingWithIdentifierCaption,
     main_template: MainTemplate
 )
 
@@ -29,7 +31,10 @@
     showBackLink = true
 ) {
 
-    @components.heading_with_caption(headingKey = "informationMaintainingTaxableTrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        messagePrefix = "informationMaintainingTaxableTrust.heading",
+        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+    )
 
     <h2>@messages("informationMaintainingTaxableTrust.subheading1")</h2>
 

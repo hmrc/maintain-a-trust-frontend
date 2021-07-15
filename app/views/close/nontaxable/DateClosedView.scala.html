@@ -30,7 +30,7 @@
 
     @formHelper(action = DateClosedController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.error_summary(form.errors)
+        @errorSummary(form.errors)
 
         @components.input_date(
             field = form("value"),
@@ -39,6 +39,6 @@
             hint = Some(messages("dateClosed.hint"))
         )
 
-        @components.submit_button(Some("site.onlyContinue"))
+@submitButton
     }
 }

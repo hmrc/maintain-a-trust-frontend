@@ -44,7 +44,7 @@
 
     @formHelper(action = UpdateOtherIndividualsYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.error_summary(form.errors)
+        @errorSummary(form.errors)
 
         @components.input_yes_no(
             field = form("value"),
@@ -54,6 +54,6 @@
             additionalContent = Some(content)
         )
 
-        @components.submit_button(Some("site.onlyContinue"))
+@submitButton
     }
 }

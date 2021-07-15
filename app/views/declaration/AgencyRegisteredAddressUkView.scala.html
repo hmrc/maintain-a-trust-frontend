@@ -30,7 +30,7 @@
 
     @formHelper(action = AgencyRegisteredAddressUkController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.error_summary(form.errors)
+        @errorSummary(form.errors)
 
         <fieldset>
 
@@ -42,6 +42,6 @@
 
         </fieldset>
 
-        @components.submit_button()
+        @submitButton()
     }
 }

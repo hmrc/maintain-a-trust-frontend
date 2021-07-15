@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -27,6 +28,7 @@ import views.html.SessionExpiredView
 @Singleton
 class SessionExpiredController @Inject()(
                                           val controllerComponents: MessagesControllerComponents,
+                                          appConfig: FrontendAppConfig,
                                           view: SessionExpiredView
                                         ) extends FrontendBaseController with I18nSupport with Logging {
 
@@ -34,4 +36,9 @@ class SessionExpiredController @Inject()(
     logger.info(s"[Session ID: ${Session.id(hc)}] session has expired due to inactivity, sent here from ${request.headers.get(REFERER).getOrElse("no referer heading")}")
     Ok(view())
   }
+
+  def onSubmit: Action[AnyContent] = Action { _ =>
+    Redirect(appConfig.loginUrl)
+  }
+
 }

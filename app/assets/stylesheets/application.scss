@@ -31,6 +31,23 @@ body:not(.js-enabled) {
   }
 }
 
+// ----------------
+// For trusts-frontend and maintain-a-trust-frontend
+// ----------------
+.agentClientRef, .declarationReferenceNumber {font-weight:700;}
+
+.app-task-list__items {
+  padding-left: 0 !important;
+}
+
+@media print {
+  .print-hidden, .header-wrapper, .service-info, .report-error  {
+    display: none !important;
+  }
+}
+
+// ----------------
+
 p {
   @extend .govuk-body;
 }
@@ -43,14 +60,6 @@ h2 {
   @extend .govuk-heading-m;
 }
 
-.agentClientRef, .declarationReferenceNumber {font-weight:700;}
-
-.app-task-list__items {
-  padding-left: 0 !important;
-}
-
-@media print {
-  .print-hidden, .header-wrapper, .service-info, .report-error  {
-    display: none !important;
-  }
+h3 {
+  @extend .govuk-heading-s;
 }

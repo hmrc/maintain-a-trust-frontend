@@ -18,6 +18,7 @@
 
 @this(
     main_template: MainTemplate,
+    submitButton: SubmitButton,
     formHelper: FormWithCSRF
 )
 
@@ -37,6 +38,6 @@
         <p>@messages("confirmTrustTaxable.p2")</p>
 
 
-        @components.submit_button(Some("site.onlyContinue"))
+    @submitButton
     }
 }

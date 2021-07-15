@@ -31,13 +31,13 @@ object ViewUtils {
       s"$title - ${messages("service.name")} - GOV.UK"
   }
 
-  def errorHref(error: FormError, radioOptions: Seq[RadioOption] = Nil): String = {
+  def errorHref(error: FormError, radioOptions: Seq[RadioOption] = Nil, isYesNo: Boolean = false): String = {
     error.args match {
       case x if x.contains("day") || x.contains("month") || x.contains("year") =>
         s"${error.key}.${error.args.head}"
-      case _ if error.message.toLowerCase.contains("yesno") =>
+      case _ if isYesNo =>
         s"${error.key}-yes"
-      case _ if radioOptions.size != 0 =>
+      case _ if radioOptions.nonEmpty =>
         radioOptions.head.id
       case _ =>
         val isSingleDateField = isDateError(error.message) && !error.message.toLowerCase.contains("yesno")

@@ -16,9 +16,11 @@
 
 @import config.FrontendAppConfig
 @import models.Mode
+@import views.html.components.HeadingWithIdentifierCaption
 
 @this(
     main_template: MainTemplate,
+    headingWithCaption: HeadingWithIdentifierCaption,
     config: FrontendAppConfig
 )
 
@@ -29,7 +31,10 @@
     showBackLink = true
 ) {
 
-    @components.heading_with_caption(headingKey = "maintainThisTrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        messagePrefix = "maintainThisTrust.heading",
+        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+    )
 
     <p>@messages(s"maintainThisTrust.$identifierType.p1.a") <span class="weight-bold">@identifier</span> @messages("maintainThisTrust.p1.b")</p>
 

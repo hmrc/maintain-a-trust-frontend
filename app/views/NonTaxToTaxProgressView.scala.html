@@ -22,6 +22,7 @@
 
 @this(
     appConfig: FrontendAppConfig,
+    hea
     main_template: MainTemplate
 )
 
@@ -40,7 +41,10 @@
     showBackLink = true
 ) {
 
-    @components.heading_with_caption(headingKey = "transitionProgress.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        messagePrefix = "transitionProgress.heading",
+        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+    )
 
     <p>@messages("transitionProgress.p1")</p>
 

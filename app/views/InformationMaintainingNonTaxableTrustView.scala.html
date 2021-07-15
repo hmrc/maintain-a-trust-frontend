@@ -16,9 +16,12 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
+@import views.html.components.{HeadingWithIdentifierCaption, BulletList}
 
 @this(
     appConfig: FrontendAppConfig,
+    headingWithCaption: HeadingWithIdentifierCaption,
+    bullet_list: BulletList,
     main_template: MainTemplate
 )
 
@@ -29,7 +32,10 @@
     showBackLink = true
 ) {
 
-    @components.heading_with_caption(headingKey = "informationMaintainingNonTaxableTrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        messagePrefix = "informationMaintainingNonTaxableTrust.heading",
+        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+    )
 
     <h2>@messages("informationMaintainingNonTaxableTrust.subheading1")</h2>
 
@@ -37,7 +43,7 @@
 
     <p>@messages("informationMaintainingNonTaxableTrust.paragraph2")</p>
 
-    @components.bullet_list(
+    @bullet_list(
         "informationMaintainingNonTaxableTrust",
         List(
             "bullet1",

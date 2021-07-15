@@ -30,7 +30,7 @@
 
     @formHelper(action = DateLastAssetSharedOutYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.error_summary(form.errors)
+        @errorSummary(form.errors)
 
         @components.input_yes_no(
             field = form("value"),
@@ -41,6 +41,6 @@
             caption = Some(messages("dateLastAssetSharedOutYesNo.caption", utr))
         )
 
-        @components.submit_button(Some("site.onlyContinue"))
+@submitButton
     }
 }

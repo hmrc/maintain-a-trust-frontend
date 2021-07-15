@@ -19,10 +19,13 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import viewmodels.Task
+@import views.html.components.{HeadingWithIdentifierCaption, Warning}
 
 @this(
     appConfig: FrontendAppConfig,
-    main_template: MainTemplate
+    main_template: MainTemplate,
+    headingWithCaption: HeadingWithIdentifierCaption,
+    warning: Warning
 )
 
 @(
@@ -41,7 +44,10 @@
     showBackLink = true
 ) {
 
-    @components.heading_with_caption(headingKey = "variationProgress.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        messagePrefix = "variationProgress",
+        caption = @messages("$identifierType.caption", captionParam = identifier)
+    )
 
     <p>@messages("variationProgress.p1")</p>
 
@@ -51,15 +57,13 @@
         <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>
     }
 
-    @{
-        components.warning(
-            if(closingTrust) {
-                "variationProgress.closing"
-            } else {
-                "variationProgress"
-            }
-        )
-    }
+    @warning(
+        if(closingTrust) {
+            "variationProgress.closing"
+        } else {
+            "variationProgress"
+        }
+    )
 
     @components.task_list("mandatory", mandatory, messages("variationProgress.subHeading.2"))
 

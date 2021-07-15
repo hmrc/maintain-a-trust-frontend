@@ -30,7 +30,7 @@ title = s"${errorPrefix(form)} Trust Wizard"
 
  @formHelper(action = TestWizardController.onSubmit(), 'autoComplete -> "off") {
 
-   @components.error_summary(form.errors)
+   @errorSummary(form.errors)
 
    <h1>Trust wizard</h1>
 

@@ -18,6 +18,8 @@
 
 @this(
         appConfig: FrontendAppConfig,
+        headingWithCaption: HeadingWithIdentifierCaption,
+        link: Link,
         main_template: MainTemplate
 )
 
@@ -28,13 +30,16 @@
     showBackLink = true
 ) {
 
-    @components.heading_with_caption(headingKey = "noTaxLiabilityInfo.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        messagePrefix = "noTaxLiabilityInfo.heading",
+        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+    )
 
     <p>@messages("noTaxLiabilityInfo.paragraph1")</p>
 
-    <ul class="list list-bullet">
-        <li>@components.link(appConfig.helplineUrl, "help-link", messages("noTaxLiabilityInfo.bullet1"), openInNewWindow = true)</li>
-        <li>@components.link(appConfig.sa900Link, "sa900-link", messages("noTaxLiabilityInfo.bullet2"), openInNewWindow = true)</li>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@link(appConfig.helplineUrl, "help-link", messages("noTaxLiabilityInfo.bullet1"), openInNewWindow = true)</li>
+        <li>@link(appConfig.sa900Link, "sa900-link", messages("noTaxLiabilityInfo.bullet2"), openInNewWindow = true)</li>
     </ul>
 
     <p>@messages("noTaxLiabilityInfo.paragraph2")</p>

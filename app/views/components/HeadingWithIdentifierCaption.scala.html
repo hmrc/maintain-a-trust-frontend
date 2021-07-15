@@ -15,18 +15,12 @@
  *@
 
 @this(
-    govukButton: GovukButton,
+ subHeading: SubHeading
 )
 
-@(overrideMessage: Option[String] = None, submitClass: Option[String] = None, id: String = "submit")(implicit messages: Messages)
+@(messagePrefix: String, optionalParam: Option[String] = None, caption: String)(implicit messages: Messages)
 
-@govukButton(Button(
-    preventDoubleClick = true,
-    attributes = Map("id" -> id),
-    classes = s"button ${submitClass.getOrElse("")}",
-    content = if(overrideMessage.isEmpty) {
-        Text(messages("site.onlyContinue"))
-    } else {
-        Text(messages(overrideMessage.get))
-    }
-))
+<h1 class="govuk-heading-l">
+ <span class="govuk-caption-l">@caption</span>
+ @messages(s"$messagePrefix.heading", optionalParam.getOrElse(""))
+</h1>

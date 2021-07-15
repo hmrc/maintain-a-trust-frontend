@@ -34,7 +34,7 @@
 
     @formHelper(action = AgentDeclarationController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.error_summary(form.errors)
+        @errorSummary(form.errors)
 
         <fieldset>
 

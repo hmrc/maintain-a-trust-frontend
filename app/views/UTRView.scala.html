@@ -15,9 +15,14 @@
  *@
 
 @import controllers.routes._
+@import views.html.components.{ErrorSummary, InputText, SubmitButton, Heading}
 
 @this(
     main_template: MainTemplate,
+    headingComp: Heading,
+    errorSummary: ErrorSummary,
+    submitButton: SubmitButton,
+    inputText: InputText,
     formHelper: FormWithCSRF
 )
 
@@ -34,17 +39,21 @@
 
     @formHelper(action = UTRController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.error_summary(form.errors)
+        @errorSummary(form.errors)
 
-        @components.input_text(
-          field = form("value"),
-          label = messages("utr.heading"),
-          labelAsHeading = true,
-          hint = Some(messages("utr.hint")),
-          labelClass = Some("heading-large"),
-          optionalHtmlContent = Some(content)
+        @headingComp(messages("utr.heading"))
+
+        @content
+
+        @inputText(
+            field = form("value"),
+            label = messages("utr.heading"),
+            labelAsHeading = false,
+            hint = Some(messages("utr.hint")),
+            labelClass = Some("govuk-visually-hidden"),
+            inputMode = Some("numeric")
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }
