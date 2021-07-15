@@ -88,12 +88,11 @@
 }
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("obligedEntityPdfYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("obligedEntityPdfYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = ObligedEntityPdfYesNoController.onSubmit(), 'autoComplete -> "off", 'id -> "download-pdf", Symbol("data-identifier") -> identifier) {
-
-        @components.back_link()
 
         @components.error_summary(form.errors)
 

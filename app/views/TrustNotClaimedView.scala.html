@@ -25,10 +25,9 @@
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("trustNotClaimed.title")
+    title = messages("trustNotClaimed.title"),
+    showBackLink = true
 ) {
-
-    @components.back_link()
 
     @components.heading_with_caption(headingKey = "trustNotClaimed.heading", caption = s"$identifierType.caption", captionParam = identifier)
 

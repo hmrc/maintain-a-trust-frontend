@@ -26,12 +26,11 @@
 @(form: Form[_], onSubmit: Call)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("agencyRegisteredAddressUkYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("agencyRegisteredAddressUkYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = onSubmit, 'autoComplete -> "off") {
-
-        @components.back_link()
 
         @components.error_summary(form.errors)
 

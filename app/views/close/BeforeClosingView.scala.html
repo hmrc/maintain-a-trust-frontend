@@ -24,12 +24,11 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("beforeClosing.title")
+    title = messages("beforeClosing.title"),
+    showBackLink = true
 ) {
 
     @formHelper(action = BeforeClosingController.onSubmit(), 'autoComplete -> "off") {
-
-        @components.back_link()
 
         @components.heading("beforeClosing.heading")
 

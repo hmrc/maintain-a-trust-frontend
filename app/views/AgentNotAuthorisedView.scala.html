@@ -25,11 +25,9 @@
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("agentNotAuthorised.title")
+    title = messages("agentNotAuthorised.title"),
+    showBackLink = true
 ) {
-
-    @components.back_link()
-
     @components.heading_with_caption(headingKey = "agentNotAuthorised.heading", caption = s"$identifierType.caption", captionParam = identifier)
 
     <p>@messages("agentNotAuthorised.p1")</p>

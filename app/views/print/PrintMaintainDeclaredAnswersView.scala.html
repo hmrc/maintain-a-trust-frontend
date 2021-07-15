@@ -31,10 +31,9 @@
 )(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("playbackDeclarationAnswers.title")
+    title = messages("playbackDeclarationAnswers.title"),
+    showBackLink = true
     ) {
-
-    @components.back_link()
 
     @components.heading("playbackDeclarationAnswers.heading", headingSize = "heading-xlarge")
 

@@ -36,10 +36,9 @@
 )(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("transitionProgress.title")
+    title = messages("transitionProgress.title"),
+    showBackLink = true
 ) {
-
-   @components.back_link()
 
     @components.heading_with_caption(headingKey = "transitionProgress.heading", caption = s"$identifierType.caption", captionParam = identifier)
 

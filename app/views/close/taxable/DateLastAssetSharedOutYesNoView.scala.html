@@ -24,12 +24,11 @@
 @(form: Form[_], utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("dateLastAssetSharedOutYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("dateLastAssetSharedOutYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = DateLastAssetSharedOutYesNoController.onSubmit(), 'autoComplete -> "off") {
-
-        @components.back_link()
 
         @components.error_summary(form.errors)
 

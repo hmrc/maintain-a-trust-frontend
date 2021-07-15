@@ -24,12 +24,11 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("dateClosed.title")}"
+    title = s"${errorPrefix(form)}${messages("dateClosed.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = DateClosedController.onSubmit(), 'autoComplete -> "off") {
-
-        @components.back_link()
 
         @components.error_summary(form.errors)
 

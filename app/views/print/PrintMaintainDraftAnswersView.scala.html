@@ -28,10 +28,9 @@
 )(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("playbackDraftAnswers.title")
+    title = messages("playbackDraftAnswers.title"),
+    showBackLink = true
     ) {
-
-    @components.back_link()
 
     @components.heading("playbackDraftAnswers.heading", headingSize = "heading-xlarge")
 

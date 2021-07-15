@@ -21,10 +21,9 @@
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${messages("howToCloseATrust.title")}"
+    title = s"${messages("howToCloseATrust.title")}",
+    showBackLink = true
 ) {
-
-    @components.back_link()
 
     @components.heading_with_caption(headingKey = "howToCloseATrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
 

@@ -21,10 +21,9 @@
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("agentCannotAccessTrustYet.title")
+    title = messages("agentCannotAccessTrustYet.title"),
+    showBackLink = true
 ) {
-
-    @components.back_link()
 
     @components.heading_with_caption(headingKey = "agentCannotAccessTrustYet.heading", caption = s"$identifierType.caption", captionParam = identifier)
 

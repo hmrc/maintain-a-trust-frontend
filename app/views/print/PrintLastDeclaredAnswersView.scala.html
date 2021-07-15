@@ -24,10 +24,9 @@
 @(entities: Seq[Section], trustDetails: Seq[Section])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("playbackAnswers.title")
+    title = messages("playbackAnswers.title"),
+    showBackLink = true
     ) {
-
-    @components.back_link()
 
     @components.heading("playbackAnswers.heading", headingSize = "heading-xlarge")
 

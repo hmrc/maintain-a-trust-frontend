@@ -28,12 +28,11 @@
 }
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("utr.title")}"
+    title = s"${errorPrefix(form)}${messages("utr.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = UTRController.onSubmit(), 'autoComplete -> "off") {
-
-        @components.back_link()
 
         @components.error_summary(form.errors)
 

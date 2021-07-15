@@ -25,10 +25,9 @@
 @(identifier: String, identifierType: IdentifierType, availableSections: String, continueUrl: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("maintainThisTrust.title")
+    title = messages("maintainThisTrust.title"),
+    showBackLink = true
 ) {
-
-    @components.back_link()
 
     @components.heading_with_caption(headingKey = "maintainThisTrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
 

@@ -35,12 +35,11 @@
 }
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("expressTrustYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("expressTrustYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = ExpressTrustYesNoController.onSubmit(), 'autoComplete -> "off") {
-
-        @components.back_link()
 
         @components.error_summary(form.errors)
 

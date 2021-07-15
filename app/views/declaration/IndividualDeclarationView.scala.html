@@ -28,12 +28,11 @@
 @(form: Form[_], closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("declaration.title")}"
+    title = s"${errorPrefix(form)}${messages("declaration.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = IndividualDeclarationController.onSubmit(), 'autoComplete -> "off") {
-
-        @components.back_link()
 
         @components.error_summary(form.errors)
 
