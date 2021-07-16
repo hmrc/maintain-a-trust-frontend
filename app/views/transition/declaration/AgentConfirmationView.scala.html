@@ -17,9 +17,13 @@
 @import models.NormalMode
 @import controllers.transition.declaration.routes._
 @import config.FrontendAppConfig
+@import views.html.components.{ConfirmationPanel, Link, Warning}
 
 @this(
     main_template: MainTemplate,
+    confirmationPanel: ConfirmationPanel,
+    link: Link,
+    warning: Warning,
     config: FrontendAppConfig
 )
 
@@ -29,15 +33,15 @@
     title = s"${messages("agentConfirmation.title", tvn)}"
 ) {
 
-    <div class="govuk-main-wrapper--l">
-        <div class="heading-confirmation heading-large">
-        <h1 class="form-title heading-large">@messages("agentConfirmation.heading")</h1>
-              <span class="reference-text">@messages("agentConfirmation.heading2")</span>
-              <span id="trusts-registration-number" class="reference-number">@tvn</span>
-        </div>
-    </div>
+    @confirmationPanel(
+        heading = @messages("agentConfirmation.heading"),
+        content = @messages("agentConfirmation.heading2"),
+        refNumber = @tvn
+    )
 
-    <p class="panel-indent">@components.link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save", "agentConfirmation.printsave.link", openInNewWindow = false)</p>
+    <div class="govuk-inset-text">
+        @link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save", "agentConfirmation.printsave.link", openInNewWindow = false)
+    </div>
 
     <h2>@messages("agentConfirmation.subheading1")</h2>
 
@@ -61,10 +65,10 @@
 
     <p>@messages("agentConfirmation.paragraph8")</p>
 
-    @components.warning("agentConfirmation")
+    @warning("agentConfirmation")
 
     <p>@messages("agentConfirmation.paragraph9")</p>
 
-    <p>@messages("agentConfirmation.paragraph10") @components.link(config.agentOverviewUrl, "agent-overview", "agentConfirmation.paragraph10.link", false).</p>
+    <p>@messages("agentConfirmation.paragraph10") @link(config.agentOverviewUrl, "agent-overview", "agentConfirmation.paragraph10.link", false).</p>
 
 }

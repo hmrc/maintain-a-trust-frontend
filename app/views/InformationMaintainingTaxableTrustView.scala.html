@@ -16,11 +16,12 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
-@import views.html.components.HeadingWithIdentifierCaption
+@import views.html.components.{HeadingWithIdentifierCaption, BulletList}
 
 @this(
     appConfig: FrontendAppConfig,
     headingWithCaption: HeadingWithIdentifierCaption,
+    bulletList: BulletList,
     main_template: MainTemplate
 )
 
@@ -44,7 +45,7 @@
 
     <p>@messages("informationMaintainingTaxableTrust.paragraph2")</p>
 
-    @components.bullet_list("informationMaintainingTaxableTrust", List(
+    @bulletList("informationMaintainingTaxableTrust", List(
         "bullet1",
         "bullet2",
         "bullet3"
@@ -52,7 +53,7 @@
 
    <p>@messages("informationMaintainingTaxableTrust.paragraph3")</p>
 
-    @components.bullet_list("informationMaintainingTaxableTrust", List(
+    @bulletList("informationMaintainingTaxableTrust", List(
         "bullet4",
         "bullet5"
     ))

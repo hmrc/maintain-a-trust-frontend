@@ -18,10 +18,16 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
+@import views.html.components.{ErrorSummary, InputText, SubmitButton, Heading, InsetText}
 
 @this(
     appConfig: FrontendAppConfig,
     main_template: MainTemplate,
+    headingComp: Heading,
+    errorSummary: ErrorSummary,
+    submitButton: SubmitButton,
+    inputText: InputText,
+    insetText: InsetText,
     formHelper: FormWithCSRF
 )
 
@@ -36,45 +42,50 @@
 
         @errorSummary(form.errors)
 
-        <fieldset>
+        <fieldset class="govuk-fieldset">
 
-            <legend>
-                @components.heading("declaration.heading")
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                @headingComp("declaration.heading")
             </legend>
 
-            @components.input_text(
+            @inputText(
                 field = form("firstName"),
                 label = messages("declaration.firstName"),
+                inputClass = ("govuk-!-width-one-half"),
                 autoComplete = Some("given-name")
             )
 
-            @components.input_text(
+            @inputText(
                 field = form("middleName"),
+                inputClass = ("govuk-!-width-one-half"),
                 label = messages("declaration.middleName")
             )
 
-            @components.input_text(
+            @inputText(
                 field = form("lastName"),
                 label = messages("declaration.lastName"),
+                inputClass = ("govuk-!-width-one-half"),
                 autoComplete = Some("family-name")
             )
 
-            @components.input_text(
+            @inputText(
                 field = form("agencyName"),
+                inputClass = ("govuk-!-width-one-half"),
                 label = messages("declaration.agencyName")
             )
 
-            @components.input_text(
+            @inputText(
                 field = form("telephoneNumber"),
                 label = messages("declaration.telephoneNumber"),
-                inputClass = Some("form-control-3-4"),
-                autoComplete = Some("tel")
+                inputClass = ("govuk-!-width-one-half"),
+                autoComplete = Some("tel"),
+                inputType = "tel"
             )
 
-            @components.input_text(
+            @inputText(
                 field = form("crn"),
                 label = messages("declaration.crn"),
-                inputClass = Some("form-control-3-4")
+                inputClass = ("govuk-!-width-three-quarters"),
             )
 
         </fieldset>
@@ -82,15 +93,17 @@
         @if(appConfig.declarationEmailEnabled) {
             <p>@messages("declaration.paragraph1")</p>
             <p>@messages("declaration.paragraph2")</p>
-            @components.input_text(
+            @inputText(
                 field = form("email"),
                 inputClass = Some("declaration-email"),
-                label = messages("declaration.email")
+                label = messages("declaration.email"),
+                autocomplete = Some("email"),
+                inputType = "email"
             )
         }
 
-        <p class="panel-indent">@messages(s"declaration.variation.agent.warning")</p>
+        @insetText(@messages(s"declaration.variation.agent.warning"))
 
-        @components.submit_button(Some("site.confirm-send"))
+        @submitButton(Some("site.confirm-send"))
     }
 }

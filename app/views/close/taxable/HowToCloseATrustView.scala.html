@@ -14,8 +14,11 @@
  * limitations under the License.
  *@
 
+@import views.html.components.HeadingWithIdentifierCaption
+
 @this(
-    main_template: MainTemplate
+    main_template: MainTemplate,
+    headingWithCaption: HeadingWithIdentifierCaption
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
@@ -25,7 +28,10 @@
     showBackLink = true
 ) {
 
-    @components.heading_with_caption(headingKey = "howToCloseATrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        messagePrefix = "howToCloseATrust.heading",
+        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+    )
 
     <p>@messages("howToCloseATrust.p1")</p>
 

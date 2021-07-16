@@ -15,10 +15,15 @@
  *@
 
 @import controllers.close.nontaxable.routes._
+@import views.html.components.{SubmitButton, InputDate, ErrorSummary}
+
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    inputDate: InputDate,
+    errorSummary: ErrorSummary,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
@@ -32,13 +37,13 @@
 
         @errorSummary(form.errors)
 
-        @components.input_date(
+        @inputDate(
             field = form("value"),
             legend = messages("dateClosed.heading"),
             headingIsLegend = true,
             hint = Some(messages("dateClosed.hint"))
         )
 
-@submitButton
+        @submitButton
     }
 }

@@ -16,12 +16,13 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
-@import views.html.components.{HeadingWithIdentifierCaption, BulletList}
+@import views.html.components.{HeadingWithIdentifierCaption, BulletList, Warning}
 
 @this(
     appConfig: FrontendAppConfig,
     headingWithCaption: HeadingWithIdentifierCaption,
-    bullet_list: BulletList,
+    bulletList: BulletList,
+    warning: Warning,
     main_template: MainTemplate
 )
 
@@ -43,7 +44,7 @@
 
     <p>@messages("informationMaintainingNonTaxableTrust.paragraph2")</p>
 
-    @bullet_list(
+    @bulletList(
         "informationMaintainingNonTaxableTrust",
         List(
             "bullet1",
@@ -51,7 +52,7 @@
         )
     )
 
-    @components.warning("informationMaintainingNonTaxableTrust")
+    @warning("informationMaintainingNonTaxableTrust")
 
    <p>@messages("informationMaintainingNonTaxableTrust.paragraph3")</p>
 

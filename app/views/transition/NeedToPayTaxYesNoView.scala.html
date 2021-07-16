@@ -15,9 +15,14 @@
  *@
 
 @import controllers.transition.routes._
+@import views.html.components.{ErrorSummary, InputYesNo, SubmitButton, HeadingWithIdentifierCaption}
 
 @this(
     main_template: MainTemplate,
+    submitButton: SubmitButton,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    headingWithCaption: HeadingWithIdentifierCaption,
     formHelper: FormWithCSRF
 )
 
@@ -40,14 +45,21 @@
 
     @formHelper(action = NeedToPayTaxYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @errorSummary(form.errors)
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.input_yes_no(
+        @headingWithCaption(
+            messagePrefix = "needToPayTaxYesNo.heading",
+            caption = @messages(s"$identifierType.caption", captionParam = identifier)
+        )
+
+        @content
+
+        @inputYesNo(
             field = form("value"),
             label = messages("needToPayTaxYesNo.heading"),
-            legendAsHeading = true,
+            legendAsHeading = false,
+            legendClass = Some("govuk-visually-hidden"),
             caption = Some(messages(s"$identifierType.caption", identifier)),
-            additionalContent = Some(content)
         )
 
         @submitButton()

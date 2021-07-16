@@ -16,11 +16,12 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
-@import views.html.components.HeadingWithIdentifierCaption
+@import views.html.components.{Warning, HeadingWithIdentifierCaption}
 
 @this(
     appConfig: FrontendAppConfig,
     headingWithCaption: HeadingWithIdentifierCaption,
+    warning: Warning,
     main_template: MainTemplate
 )
 
@@ -36,8 +37,8 @@
         caption = @messages(s"$identifierType.caption", captionParam = identifier)
     )
 
-    <div class="info-maintaining-warning-margin-top">
-       @components.warning("informationMaintainingThisTrust")
+    <div class="govuk-!-margin-top-5">
+       @warning("informationMaintainingThisTrust")
     </div>
 
     <h2>@messages("informationMaintainingThisTrust.updateDetails")</h2>

@@ -15,9 +15,13 @@
  *@
 
 @import controllers.transition.routes._
+@import views.html.components.{BulletList, SubmitButton, HeadingWithIdentifierCaption}
 
 @this(
     main_template: MainTemplate,
+    headingWithCaption: HeadingWithIdentifierCaption,
+    submitButton: SubmitButton,
+    bulletList: BulletList,
     formHelper: FormWithCSRF
 )
 
@@ -35,19 +39,22 @@
 
     @formHelper(action = BeforeYouContinueToTaxableController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.heading_with_caption(headingKey = "beforeYouContinueToTaxable.heading", caption = s"$identifierType.caption", captionParam = identifier)
+        @headingWithCaption(
+            messagePrefix = "beforeYouContinueToTaxable.heading",
+            caption = @messages(s"$identifierType.caption", captionParam = identifier)
+        )
 
         <p>@messages("beforeYouContinueToTaxable.p1")</p>
 
         <p>@messages("beforeYouContinueToTaxable.p2")</p>
 
-        @components.bullet_list(
+        @bulletList(
             "beforeYouContinueToTaxable",
             bulletPoints
         )
 
         <p>@messages("beforeYouContinueToTaxable.p3")</p>
-        @components.bullet_list(
+        @bulletList(
             "beforeYouContinueToTaxable",
             List(
                 "bullet5",
@@ -59,6 +66,6 @@
             )
         )
 
-@submitButton
+        @submitButton
     }
 }

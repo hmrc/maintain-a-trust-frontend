@@ -18,19 +18,19 @@
 @import views.html.components.Heading
 
 @this(
-appConfig: FrontendAppConfig,
-mainTemplate: MainTemplate,
-headingI: Heading
+    appConfig: FrontendAppConfig,
+    mainTemplate: MainTemplate,
+    headingComp: Heading
 )
 
 @(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
 
-@contentHeader = {
-@headingI(heading)
-}
+    @contentHeader = {
+        @headingComp(heading)
+    }
 
-@mainContent = {
-<p>@message</p>
-}
+    @mainContent = {
+        <p>@message</p>
+    }
 
 @mainTemplate(title = pageTitle, contentHeader = Some(contentHeader))(mainContent = mainContent)

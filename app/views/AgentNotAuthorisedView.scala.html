@@ -16,10 +16,12 @@
 
 @import controllers.routes._
 @import config.FrontendAppConfig
+@import views.html.components.HeadingWithIdentifierCaption
 
 @this(
     main_template: MainTemplate,
-    config: FrontendAppConfig
+    config: FrontendAppConfig,
+    headingWithCaption: HeadingWithIdentifierCaption
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
@@ -28,7 +30,11 @@
     title = messages("agentNotAuthorised.title"),
     showBackLink = true
 ) {
-    @components.heading_with_caption(headingKey = "agentNotAuthorised.heading", caption = s"$identifierType.caption", captionParam = identifier)
+
+     @headingWithCaption(
+        messagePrefix = "agentNotAuthorised.heading",
+        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+    )
 
     <p>@messages("agentNotAuthorised.p1")</p>
     <h2>@messages("agentNotAuthorised.subheading1")</h2>

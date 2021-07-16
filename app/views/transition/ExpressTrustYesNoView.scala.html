@@ -15,9 +15,14 @@
  *@
 
 @import controllers.transition.routes._
+@import views.html.components.{ErrorSummary, InputYesNo, SubmitButton, Heading}
 
 @this(
     main_template: MainTemplate,
+    submitButton: SubmitButton,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    headingComp: Heading,
     formHelper: FormWithCSRF
 )
 
@@ -41,13 +46,17 @@
 
     @formHelper(action = ExpressTrustYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @errorSummary(form.errors)
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.input_yes_no(
+        @headingComp("expressTrustYesNo.heading")
+
+        @content
+
+        @inputYesNo(
             field = form("value"),
             label = messages("expressTrustYesNo.heading"),
-            legendAsHeading = true,
-            additionalContent = Some(content)
+            legendAsHeading = false,
+            legendClass = Some("govuk-visually-hidden")
         )
 
         @submitButton()

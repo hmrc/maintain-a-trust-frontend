@@ -15,10 +15,14 @@
  *@
 
 @import controllers.close.taxable.routes._
+@import views.html.components.{SubmitButton, InputDate, ErrorSummary}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    inputDate: InputDate,
+    errorSummary: ErrorSummary,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_], utr: String)(implicit request: Request[_], messages: Messages)
@@ -30,17 +34,17 @@
 
     @formHelper(action = DateLastAssetSharedOutYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @errorSummary(form.errors)
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
             label = messages("dateLastAssetSharedOutYesNo.heading"),
-            legendClass = Some("heading-xlarge"),
+            legendClass = Some("govuk-heading-xl"),
             legendAsHeading = true,
             hint = Some(messages("dateLastAssetSharedOutYesNo.hint")),
             caption = Some(messages("dateLastAssetSharedOutYesNo.caption", utr))
         )
 
-@submitButton
+        @submitButton
     }
 }

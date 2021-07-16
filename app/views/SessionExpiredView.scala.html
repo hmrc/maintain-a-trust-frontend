@@ -15,11 +15,12 @@
  *@
 
 @import config.FrontendAppConfig
-@import views.html.components.Heading
+@import views.html.components.{Heading, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    headingComp: Heading
+    headingComp: Heading,
+    submitButton: SubmitButton
 )
 
 @()(implicit request: Request[_], messages: Messages)

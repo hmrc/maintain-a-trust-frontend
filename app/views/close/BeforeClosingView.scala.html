@@ -15,10 +15,13 @@
  *@
 
 @import controllers.close.routes._
+@import views.html.components.{Heading, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    headingComp: Heading,
+    submitButton: SubmitButton
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -30,7 +33,7 @@
 
     @formHelper(action = BeforeClosingController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.heading("beforeClosing.heading")
+        @headingComp("beforeClosing.heading")
 
         <h2>@messages("beforeClosing.subheading")</h2>
 

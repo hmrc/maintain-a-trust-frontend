@@ -17,10 +17,12 @@
 @import models.Mode
 @import config.FrontendAppConfig
 @import controllers.routes._
+@import views.html.components.{HeadingWithIdentifierCaption, BulletList}
 
 @this(
     appConfig: FrontendAppConfig,
     main_template: MainTemplate,
+    bulletList: BulletList,
     formHelper: FormWithCSRF
 )
 
@@ -34,13 +36,16 @@
 
    @formHelper(action = MigrateTo5mldInformationController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.heading_with_caption(headingKey = "migrateTo5mldInformation.heading", caption = s"$identifierType.caption", captionParam = identifier)
+        @headingWithCaption(
+            messagePrefix = "migrateTo5mldInformation.heading",
+            caption = @messages(s"$identifierType.caption", captionParam = identifier)
+        )
 
          <p>@messages("migrateTo5mldInformation.p1")</p>
 
          <p>@messages("migrateTo5mldInformation.p2")</p>
 
-         @components.bullet_list("migrateTo5mldInformation", List(
+         @bulletList("migrateTo5mldInformation", List(
          "bullet1",
          "bullet2",
          "bullet3"

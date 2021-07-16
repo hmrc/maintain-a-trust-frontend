@@ -19,9 +19,9 @@
 
 @this(govukPanel : GovukPanel)
 
-@(refNumber: String)(implicit messages: Messages)
+@(heading: String, content: String, refNumber: String)(implicit messages: Messages)
 
 @govukPanel(Panel(
-    title = Text(messages("confirmation.heading1")),
-    content = HtmlContent(s"""${messages("confirmation.heading2")}<br><strong>${formatReferenceNumber(refNumber)}</strong>""")
+    title = Text(heading),
+    content = HtmlContent(s"""${content}<br><strong id="trusts-registration-number">${refNumber}</strong>""")
 ))
