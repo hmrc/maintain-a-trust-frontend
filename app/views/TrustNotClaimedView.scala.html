@@ -16,11 +16,12 @@
 
 @import config.FrontendAppConfig
 @import models.Mode
-@import views.html.components.HeadingWithIdentifierCaption
+@import views.html.components.{HeadingWithIdentifierCaption, Link}
 
 @this(
     main_template: MainTemplate,
-    headingWithCaption: HeadingWithIdentifierCaption
+    headingWithCaption: HeadingWithIdentifierCaption,
+    link: Link,
     appConfig: FrontendAppConfig
 )
 
@@ -33,7 +34,7 @@
 
     @headingWithCaption(
         messagePrefix = "trustNotClaimed",
-        caption = @messages("$identifierType.caption", captionParam = identifier)
+        caption = messages("$identifierType.caption", captionParam = identifier)
     )
 
     <p>@messages("trustNotClaimed.p1")</p>
@@ -42,7 +43,7 @@
         <li>
             <h2 class="govuk-heading-s">@messages("trustNotClaimed.bullet.1.title")</h2>
             <p>@messages("trustNotClaimed.bullet.1.p1")</p>
-            <p>@messages("trustNotClaimed.bullet.1.p2") <a target="_blank" href="@{appConfig.redirectToLoginUrl}">@messages("trustNotClaimed.bullet.1.p2.a")</a>.</p>
+            <p>@messages("trustNotClaimed.bullet.1.p2") @link(appConfig.redirectToLoginUrl, "login", "trustNotClaimed.bullet.1.p2.a", openInNewWindow = true).</p>
             <p>@messages("trustNotClaimed.bullet.1.p3")</p>
             <p>@messages("trustNotClaimed.bullet.1.p4")</p>
         </li>
@@ -50,8 +51,8 @@
             <h2 class="govuk-heading-s">@messages("trustNotClaimed.bullet.2.title")</h2>
             <p>@messages("trustNotClaimed.bullet.2.p1")</p>
             <p>@messages("trustNotClaimed.bullet.2.p2")</p>
-            <p>@messages("trustNotClaimed.bullet.2.p3") <a href="@appConfig.helplineUrl" target="_blank">@messages("trustNotClaimed.bullet.2.p3.a")</a>.</p>
-            <p>@messages("trustNotClaimed.bullet.2.p4") <a href="@{appConfig.agentOverviewUrl}">@messages("trustNotClaimed.bullet.2.p4.a")</a>.</p>
+            <p>@messages("trustNotClaimed.bullet.2.p3") @link(appConfig.helplineUrl, "help-link", "trustNotClaimed.bullet.2.p3.a", openInNewWindow = true).</p>
+            <p>@messages("trustNotClaimed.bullet.2.p4") @link(appConfig.agentOverviewUrl, "agent-overview", "trustNotClaimed.bullet.2.p4.a").</p>
         </li>
     </ol>
 

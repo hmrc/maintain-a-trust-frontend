@@ -36,7 +36,10 @@
 
         @errorSummary(form.errors)
 
-        @ukAddress(form, @messages("agencyRegisteredAddressUk.heading"))
+        @ukAddress(
+            form = form,
+            legend = messages("agencyRegisteredAddressUk.heading")
+        )
 
         @submitButton()
     }

@@ -21,7 +21,7 @@
 @this(
     main_template: MainTemplate,
     confirmationPanel: ConfirmationPanel,
-    link: Link
+    link: Link,
     config: FrontendAppConfig
 )
 
@@ -32,9 +32,9 @@
     ) {
 
     @confirmationPanel(
-        heading = @messages("closeTrustConfirmation.heading"),
-        content = @messages("closeTrustConfirmation.heading2"),
-        refNumber = @fakeTvn
+        heading = messages("closeTrustConfirmation.heading"),
+        content = messages("closeTrustConfirmation.heading2"),
+        refNumber = fakeTvn
     )
 
     <p class="govuk-inset-text">
@@ -51,7 +51,7 @@
 
     <p>@messages("closeTrustConfirmation.paragraph2")</p>
 
-    <p>@messages("closeTrustConfirmation.paragraph3.beforeLink") @link(@config.helplineUrl, "help-link", "closeTrustConfirmation.paragraph3.link", true) @messages("closeTrustConfirmation.paragraph3.afterLink")</p>
+    <p>@messages("closeTrustConfirmation.paragraph3.beforeLink") @link(config.helplineUrl, "help-link", "closeTrustConfirmation.paragraph3.link", true) @messages("closeTrustConfirmation.paragraph3.afterLink")</p>
 
     @if(isAgent: Boolean) {
         @messages("closeTrustConfirmation.agent.you.can") @link(agentOverviewUrl, "agent-overview", "closeTrustConfirmation.agent.link")

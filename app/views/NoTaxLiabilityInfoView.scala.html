@@ -33,14 +33,14 @@
 
     @headingWithCaption(
         messagePrefix = "noTaxLiabilityInfo.heading",
-        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+        caption = messages(s"$identifierType.caption", captionParam = identifier)
     )
 
     <p>@messages("noTaxLiabilityInfo.paragraph1")</p>
 
     <ul class="govuk-list govuk-list--bullet govuk-list--spaced">
-        <li>@link(appConfig.helplineUrl, "help-link", messages("noTaxLiabilityInfo.bullet1"), openInNewWindow = true)</li>
-        <li>@link(appConfig.sa900Link, "sa900-link", messages("noTaxLiabilityInfo.bullet2"), openInNewWindow = true)</li>
+        <li>@link(appConfig.helplineUrl, "help-link", "noTaxLiabilityInfo.bullet1", openInNewWindow = true)</li>
+        <li>@link(appConfig.sa900Link, "sa900-link", "noTaxLiabilityInfo.bullet2", openInNewWindow = true)</li>
     </ul>
 
     <p>@messages("noTaxLiabilityInfo.paragraph2")</p>

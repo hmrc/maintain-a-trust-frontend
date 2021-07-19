@@ -33,11 +33,11 @@
 
     @headingWithCaption(
         messagePrefix = "trustAlreadyClaimed.heading",
-        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+        caption = messages(s"$identifierType.caption", captionParam = identifier)
     )
 
     <p>@messages("trustAlreadyClaimed.p1")</p>
 
-    <p>@messages("trustAlreadyClaimed.p2") @link(@config.helplineUrl, "help-link", @messages("trustAlreadyClaimed.p2.a"), openInNewWindow = true).</p>
+    <p>@messages("trustAlreadyClaimed.p2") @link(config.helplineUrl, "help-link", "trustAlreadyClaimed.p2.a", openInNewWindow = true).</p>
 
 }

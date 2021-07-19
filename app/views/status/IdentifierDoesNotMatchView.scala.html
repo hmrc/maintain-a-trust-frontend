@@ -35,7 +35,7 @@ title = messages("identifierDoesNotMatch.title")
 
  @headingWithCaption(
   messagePrefix = "identifierDoesNotMatch.heading",
-  caption = @messages(s"$identifierType.caption", captionParam = identifier)
+  caption = messages(s"$identifierType.caption", captionParam = identifier)
  )
  <p>@messages("identifierDoesNotMatch.p1")</p>
 
@@ -47,11 +47,11 @@ title = messages("identifierDoesNotMatch.title")
  <p>@messages("identifierDoesNotMatch.p3")</p>
 
   @if(affinityGroup == AffinityGroup.Agent) {
-   <p>@messages(s"identifierDoesNotMatch.p4") @link(@appConfig.agentOverviewUrl, "register-and-maintain-link", @messages(s"identifierDoesNotMatch.return.link")).</p>
+   <p>@messages("identifierDoesNotMatch.p4") @link(appConfig.agentOverviewUrl, "register-and-maintain-link", "identifierDoesNotMatch.return.link").</p>
   } else {
 <p>@components.button_link("identifierDoesNotMatch.sign_out", controllers.routes.LogoutController.logout().url)</p>
   }
 
-  <p>@messages("identifierDoesNotMatch.p5") @link(@appConfig.helplineUrl, "help-link", @messages("identifierDoesNotMatch.contact.link"), openInNewWindow = true).</p>
+  <p>@messages("identifierDoesNotMatch.p5") @link(appConfig.helplineUrl, "help-link", "identifierDoesNotMatch.contact.link", openInNewWindow = true).</p>
 
 }

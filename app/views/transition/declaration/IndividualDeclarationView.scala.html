@@ -51,20 +51,20 @@
             @inputText(
                 field = form("firstName"),
                 label = messages("declaration.firstName"),
-                inputClass = ("govuk-!-width-one-half"),
+                inputClass = Some("govuk-!-width-one-half"),
                 autocomplete = Some("given-name")
             )
 
             @inputText(
                 field = form("middleName"),
-                inputClass = ("govuk-!-width-one-half"),
+                inputClass = Some("govuk-!-width-one-half"),
                 label = messages("declaration.middleName")
             )
 
             @inputText(
                 field = form("lastName"),
                 label = messages("declaration.lastName"),
-                inputClass = ("govuk-!-width-one-half"),
+                inputClass = Some("govuk-!-width-one-half"),
                 autocomplete = Some("family-name")
             )
 

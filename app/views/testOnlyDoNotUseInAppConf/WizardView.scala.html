@@ -42,7 +42,7 @@
 
     @flash.get("wizard").map{ msg =>
         @confirmationPanel(
-            heading = @msg,
+            heading = msg,
             content = "",
             refNumber = ""
         )

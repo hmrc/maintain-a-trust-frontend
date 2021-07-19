@@ -15,9 +15,13 @@
  *@
 
 @import controllers.makechanges.routes._
+@import views.html.components.{SubmitButton, ErrorSummary, InputYesNo}
 
 @this(
     main_template: MainTemplate,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton,
     formHelper: FormWithCSRF
 )
 

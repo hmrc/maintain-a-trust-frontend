@@ -15,11 +15,12 @@
  *@
 
 @import config.FrontendAppConfig
-@import views.html.components.Heading
+@import views.html.components.{Link, Heading}
 
 @this(
     main_template: MainTemplate,
     config: FrontendAppConfig,
+    link: Link,
     headingComp: Heading
 )
 
@@ -32,7 +33,7 @@
 
     @headingComp("featureNotAvailable.heading")
 
-    <p>@messages("featureNotAvailable.p1") <a href="@config.helplineUrl" target="_blank">@messages("featureNotAvailable.link")</a></p>
+    <p>@messages("featureNotAvailable.p1") @link(config.helplineUrl, "help-link", "featureNotAvailable.link", true)</p>
 
     <p>@messages("featureNotAvailable.p2")</p>
 

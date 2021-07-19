@@ -36,12 +36,13 @@
 
     @headingWithCaption(
         messagePrefix = "trustStillProcessing.heading",
-        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+        caption = messages(s"$identifierType.caption", captionParam = identifier)
     )
+
     <p>@messages("trustStillProcessing.p1")</p>
 
-    <p>@messages("trustStillProcessing.p2") @link(@appConfig.helplineUrl, "help-link", @messages("trustStillProcessing.contact.link"), openInNewWindow = true).</p>
+    <p>@messages("trustStillProcessing.p2") @link(appConfig.helplineUrl, "help-link", "trustStillProcessing.contact.link", openInNewWindow = true).</p>
     @if(affinityGroup == AffinityGroup.Agent) {
-        <p>@messages("trustStillProcessing.p3") @link(@appConfig.agentOverviewUrl, "register-and-maintain-link", @messages("trustStillProcessing.return.link")).</p>
+        <p>@messages("trustStillProcessing.p3") @link(appConfig.agentOverviewUrl, "register-and-maintain-link", "trustStillProcessing.return.link").</p>
     }
 }

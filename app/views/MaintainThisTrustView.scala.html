@@ -16,11 +16,12 @@
 
 @import config.FrontendAppConfig
 @import models.Mode
-@import views.html.components.HeadingWithIdentifierCaption
+@import views.html.components.{HeadingWithIdentifierCaption, Link}
 
 @this(
     main_template: MainTemplate,
     headingWithCaption: HeadingWithIdentifierCaption,
+    link: Link,
     config: FrontendAppConfig
 )
 
@@ -33,16 +34,16 @@
 
     @headingWithCaption(
         messagePrefix = "maintainThisTrust.heading",
-        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+        caption = messages(s"$identifierType.caption", captionParam = identifier)
     )
 
-    <p>@messages(s"maintainThisTrust.$identifierType.p1.a") <span class="weight-bold">@identifier</span> @messages("maintainThisTrust.p1.b")</p>
+    <p>@messages(s"maintainThisTrust.$identifierType.p1.a") <span class="govuk-!-font-weight-bold">@identifier</span> @messages("maintainThisTrust.p1.b")</p>
 
     <p>@messages("maintainThisTrust.p2", availableSections)</p>
 
     <p>@messages("maintainThisTrust.p3")</p>
 
-    <p>@messages("maintainThisTrust.p4") <a href="@config.helplineUrl" target="_blank">@messages("maintainThisTrust.p4.a")</a>.</p>
+    <p>@messages("maintainThisTrust.p4") @link(config.helplineUrl, "help-link", "maintainThisTrust.p4.a", true).</p>
 
     <p>@components.button_link("site.onlyContinue", continueUrl)</p>
 

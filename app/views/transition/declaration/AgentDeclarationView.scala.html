@@ -51,33 +51,33 @@
             @inputText(
                 field = form("firstName"),
                 label = messages("declaration.firstName"),
-                inputClass = ("govuk-!-width-one-half"),
+                inputClass = Some("govuk-!-width-one-half"),
                 autoComplete = Some("given-name")
             )
 
             @inputText(
                 field = form("middleName"),
-                inputClass = ("govuk-!-width-one-half"),
+                inputClass = Some("govuk-!-width-one-half"),
                 label = messages("declaration.middleName")
             )
 
             @inputText(
                 field = form("lastName"),
                 label = messages("declaration.lastName"),
-                inputClass = ("govuk-!-width-one-half"),
+                inputClass = Some("govuk-!-width-one-half"),
                 autoComplete = Some("family-name")
             )
 
             @inputText(
                 field = form("agencyName"),
-                inputClass = ("govuk-!-width-one-half"),
+                inputClass = Some("govuk-!-width-one-half"),
                 label = messages("declaration.agencyName")
             )
 
             @inputText(
                 field = form("telephoneNumber"),
                 label = messages("declaration.telephoneNumber"),
-                inputClass = ("govuk-!-width-one-half"),
+                inputClass = Some("govuk-!-width-one-half"),
                 autoComplete = Some("tel"),
                 inputType = "tel"
             )
@@ -85,7 +85,7 @@
             @inputText(
                 field = form("crn"),
                 label = messages("declaration.crn"),
-                inputClass = ("govuk-!-width-three-quarters"),
+                inputClass = Some("govuk-!-width-three-quarters"),
             )
 
         </fieldset>
@@ -102,7 +102,7 @@
             )
         }
 
-        @insetText(@messages(s"declaration.variation.agent.warning"))
+        @insetText(s"declaration.variation.agent.warning")
 
         @submitButton(Some("site.confirm-send"))
     }

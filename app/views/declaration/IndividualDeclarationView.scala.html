@@ -27,11 +27,19 @@
     inputText: InputText,
     submitButton: SubmitButton,
     errorSummary: ErrorSummary,
-    insetText: InsetText
+    insetText: InsetText,
     formHelper: FormWithCSRF
 )
 
 @(form: Form[_], closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
+
+@warningContent = {
+    @if(closingTrust) {
+        @insetText(s"declaration.closing.individual.warning")
+    } else {
+        @insetText(s"declaration.variation.individual.warning")
+    }
+}
 
 @main_template(
     title = s"${errorPrefix(form)}${messages("declaration.title")}",
@@ -50,21 +58,21 @@
 
             @inputText(
                 field = form("firstName"),
-                inputClass = ("govuk-!-width-one-half"),
+                inputClass = Some("govuk-!-width-one-half"),
                 label = messages("declaration.firstName"),
                 autocomplete = Some("given-name")
             )
 
             @inputText(
                 field = form("middleName"),
-                inputClass = ("govuk-!-width-one-half"),
+                inputClass = Some("govuk-!-width-one-half"),
                 label = messages("declaration.middleName")
             )
 
             @inputText(
                 field = form("lastName"),
                 label = messages("declaration.lastName"),
-                inputClass = ("govuk-!-width-one-half"),
+                inputClass = Some("govuk-!-width-one-half"),
                 autocomplete = Some("family-name")
             )
 
@@ -82,10 +90,7 @@
             )
         }
 
-        @{
-            val key: String = if (closingTrust) "closing" else "variation"
-            @insetText(s"declaration.$key.individual.warning")
-        }
+        @warningContent
 
         @submitButton(Some("site.confirm-send"))
     }

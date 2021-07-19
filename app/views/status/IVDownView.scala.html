@@ -34,8 +34,8 @@
 
      @headingWithCaption(
         messagePrefix = "ivDown.heading",
-        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+        caption = messages(s"$identifierType.caption", captionParam = identifier)
     )
 
-    <p>@messages("ivDown.p1") @link(@appConfig.serviceDownContactUrl, "register-and-maintain-link", @messages("ivDown.contact.link")).</p>
+    <p>@messages("ivDown.p1") @link(appConfig.serviceDownContactUrl, "register-and-maintain-link", "ivDown.contact.link").</p>
 }

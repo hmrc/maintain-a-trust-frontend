@@ -35,14 +35,14 @@ title = messages("trustClosed.title")
 
      @headingWithCaption(
         messagePrefix = "trustClosed.heading",
-        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+        caption = messages(s"$identifierType.caption", captionParam = identifier)
     )
 
-  <p>@messages("trustClosed.p1") @link(@appConfig.helplineUrl, "help-link", @messages("trustClosed.contact.link"), openInNewWindow = true)
+  <p>@messages("trustClosed.p1") @link(appConfig.helplineUrl, "help-link", "trustClosed.contact.link", openInNewWindow = true)
       @messages(s"trustClosed.$identifierType.p2")</p>
 
   @if(affinityGroup == AffinityGroup.Agent) {
-    <p>@messages("trustClosed.p3") @link(@appConfig.agentOverviewUrl, "register-and-maintain-link", @messages("trustClosed.return.link")).</p>
+    <p>@messages("trustClosed.p3") @link(appConfig.agentOverviewUrl, "register-and-maintain-link", "trustClosed.return.link").</p>
   } else {
     @components.button_link("site.try-again", controllers.routes.UTRController.onPageLoad().url)
   }

@@ -32,10 +32,10 @@
 
     @headingWithCaption(
         messagePrefix = "trustLocked.heading",
-        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+        caption = messages(s"$identifierType.caption", captionParam = identifier)
     )
 
     <p>@messages("trustLocked.p1")</p>
     <p>@messages("trustLocked.p2")</p>
-    <p>@messages("trustLocked.p3") @link(@appConfig.helplineUrl, "help-link", @messages("trustLocked.link1"), openInNewWindow = true).</p>
+    <p>@messages("trustLocked.p3") @link(appConfig.helplineUrl, "help-link", "trustLocked.link1", openInNewWindow = true).</p>
 }

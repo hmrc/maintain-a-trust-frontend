@@ -31,9 +31,9 @@
 ) {
 
     @confirmationPanel(
-        heading = @messages("confirmationPage.heading"),
-        content = @messages("confirmationPage.heading2"),
-        refNumber = @tvn
+        heading = messages("confirmationPage.heading"),
+        content = messages("confirmationPage.heading2"),
+        refNumber = tvn
     )
 
     <p class="govuk-inset-text">@link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save","confirmationPage.printsave.link")</p>

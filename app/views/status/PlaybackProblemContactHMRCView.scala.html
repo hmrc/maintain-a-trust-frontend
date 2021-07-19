@@ -33,12 +33,12 @@
 
     @headingWithCaption(
         messagePrefix = "playbackProblemContactHMRC.heading",
-        caption = @messages(s"$identifierType.caption", captionParam = identifier)
+        caption = messages(s"$identifierType.caption", captionParam = identifier)
     )
 
     <p>@messages("playbackProblemContactHMRC.p1")</p>
 
-    <p>@messages("playbackProblemContactHMRC.p2.beforeLink") @link(@config.helplineUrl, "help-link", @messages("playbackProblemContactHMRC.p2.link"), openInNewWindow = true) @messages("playbackProblemContactHMRC.p2.afterLink")</p>
+    <p>@messages("playbackProblemContactHMRC.p2.beforeLink") @link(config.helplineUrl, "help-link", "playbackProblemContactHMRC.p2.link", openInNewWindow = true) @messages("playbackProblemContactHMRC.p2.afterLink")</p>
 
     <p>@messages("playbackProblemContactHMRC.p3")</p>
 

@@ -35,9 +35,9 @@
 
     <p>@messages("problemDeclaring.p1")</p>
 
-    <p>@messages("problemDeclaring.p2") @link(@appConfig.helplineUrl, "help-link", @messages("problemDeclaring.contact.link"), openInNewWindow = true) .</p>
+    <p>@messages("problemDeclaring.p2") @link(appConfig.helplineUrl, "help-link", "problemDeclaring.contact.link", openInNewWindow = true) .</p>
 
     @if(affinityGroup == AffinityGroup.Agent) {
-      <p>@messages("problemDeclaring.p3") @link(@appConfig.agentOverviewUrl, "register-and-maintain-link", @messages("problemDeclaring.return.link")).</p>
+      <p>@messages("problemDeclaring.p3") @link(appConfig.agentOverviewUrl, "register-and-maintain-link", "problemDeclaring.return.link").</p>
     }
 }
