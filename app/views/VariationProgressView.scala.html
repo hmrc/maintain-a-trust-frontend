@@ -48,10 +48,6 @@
 
     <p>@messages("variationProgress.p2")</p>
 
-    @if(affinityGroup == AffinityGroup.Agent) {
-        <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>
-    }
-
     @{
         components.warning(
             if(closingTrust) {
@@ -78,6 +74,12 @@
 
         <div class="section">
             <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
+        </div>
+    }
+
+    @if(affinityGroup == AffinityGroup.Agent) {
+        <div class="section">
+            <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>
         </div>
     }
 }
