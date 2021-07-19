@@ -19,11 +19,11 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import viewmodels.Task
-@import views.html.components.{Link, BulletList, Warning, HeadingWithIdentifierCaption}
+@import views.html.components.{Link, BulletList, Warning, HeadingWithCaption}
 
 @this(
     appConfig: FrontendAppConfig,
-    headingWithCaption: HeadingWithIdentifierCaption,
+    headingWithCaption: HeadingWithCaption,
     link: Link,
     bulletList: BulletList,
     warning: Warning,
@@ -46,8 +46,9 @@
 ) {
 
     @headingWithCaption(
-        messagePrefix = "transitionProgress.heading",
-        caption = messages(s"$identifierType.caption", captionParam = identifier)
+        headingPrefix = "transitionProgress",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
     )
 
     <p>@messages("transitionProgress.p1")</p>

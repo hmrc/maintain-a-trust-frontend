@@ -15,11 +15,11 @@
  *@
 
 @import config.FrontendAppConfig
-@import views.html.components.{Link, HeadingWithIdentifierCaption}
+@import views.html.components.{Link, HeadingWithCaption}
 
 @this(
         appConfig: FrontendAppConfig,
-        headingWithCaption: HeadingWithIdentifierCaption,
+        headingWithCaption: HeadingWithCaption,
         link: Link,
         main_template: MainTemplate
 )
@@ -32,8 +32,9 @@
 ) {
 
     @headingWithCaption(
-        messagePrefix = "noTaxLiabilityInfo.heading",
-        caption = messages(s"$identifierType.caption", captionParam = identifier)
+        headingPrefix = "noTaxLiabilityInfo",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
     )
 
     <p>@messages("noTaxLiabilityInfo.paragraph1")</p>

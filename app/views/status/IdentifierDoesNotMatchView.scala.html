@@ -18,11 +18,11 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
-@import views.html.components.{HeadingWithIdentifierCaption, Link}
+@import views.html.components.{HeadingWithCaption, Link}
 
 @this(
 appConfig: FrontendAppConfig,
-headingWithCaption: HeadingWithIdentifierCaption,
+headingWithCaption: HeadingWithCaption,
 link: Link,
 main_template: MainTemplate
 )
@@ -34,9 +34,11 @@ title = messages("identifierDoesNotMatch.title")
 ) {
 
  @headingWithCaption(
-  messagePrefix = "identifierDoesNotMatch.heading",
-  caption = messages(s"$identifierType.caption", captionParam = identifier)
+  headingPrefix = "identifierDoesNotMatch",
+  captionPrefix = s"$identifierType",
+  captionParam = Some(identifier)
  )
+
  <p>@messages("identifierDoesNotMatch.p1")</p>
 
  <p>@messages("identifierDoesNotMatch.p2")</p>

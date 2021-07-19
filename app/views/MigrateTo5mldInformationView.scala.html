@@ -17,7 +17,7 @@
 @import models.Mode
 @import config.FrontendAppConfig
 @import controllers.routes._
-@import views.html.components.{HeadingWithIdentifierCaption, BulletList}
+@import views.html.components.{HeadingWithCaption, BulletList}
 
 @this(
     appConfig: FrontendAppConfig,
@@ -37,8 +37,9 @@
    @formHelper(action = MigrateTo5mldInformationController.onSubmit(), 'autoComplete -> "off") {
 
         @headingWithCaption(
-            messagePrefix = "migrateTo5mldInformation.heading",
-            caption = messages(s"$identifierType.caption", captionParam = identifier)
+            headingPrefix = "migrateTo5mldInformation",
+            captionPrefix = s"$identifierType",
+            captionParam = identifier
         )
 
          <p>@messages("migrateTo5mldInformation.p1")</p>

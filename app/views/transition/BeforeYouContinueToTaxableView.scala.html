@@ -15,11 +15,11 @@
  *@
 
 @import controllers.transition.routes._
-@import views.html.components.{BulletList, SubmitButton, HeadingWithIdentifierCaption}
+@import views.html.components.{BulletList, SubmitButton, HeadingWithCaption}
 
 @this(
     main_template: MainTemplate,
-    headingWithCaption: HeadingWithIdentifierCaption,
+    headingWithCaption: HeadingWithCaption,
     submitButton: SubmitButton,
     bulletList: BulletList,
     formHelper: FormWithCSRF
@@ -40,8 +40,9 @@
     @formHelper(action = BeforeYouContinueToTaxableController.onSubmit(), 'autoComplete -> "off") {
 
         @headingWithCaption(
-            messagePrefix = "beforeYouContinueToTaxable.heading",
-            caption = messages(s"$identifierType.caption", captionParam = identifier)
+            headingPrefix = "beforeYouContinueToTaxable",
+            captionPrefix = s"$identifierType",
+            captionParam = Some(identifier)
         )
 
         <p>@messages("beforeYouContinueToTaxable.p1")</p>

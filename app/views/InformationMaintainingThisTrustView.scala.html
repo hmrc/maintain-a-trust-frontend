@@ -16,11 +16,11 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
-@import views.html.components.{Warning, HeadingWithIdentifierCaption}
+@import views.html.components.{Warning, HeadingWithCaption}
 
 @this(
     appConfig: FrontendAppConfig,
-    headingWithCaption: HeadingWithIdentifierCaption,
+    headingWithCaption: HeadingWithCaption,
     warning: Warning,
     main_template: MainTemplate
 )
@@ -33,8 +33,9 @@
 ) {
 
     @headingWithCaption(
-        messagePrefix = "informationMaintainingThisTrust.heading",
-        caption = messages(s"$identifierType.caption", captionParam = identifier)
+        headingPrefix = "informationMaintainingThisTrust",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
     )
 
     <div class="govuk-!-margin-top-5">

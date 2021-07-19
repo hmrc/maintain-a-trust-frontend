@@ -16,11 +16,11 @@
 
 @import controllers.routes._
 @import config.FrontendAppConfig
-@import views.html.components.HeadingWithIdentifierCaption
+@import views.html.components.HeadingWithCaption
 
 @this(
     main_template: MainTemplate,
-    headingWithCaption: HeadingWithIdentifierCaption,
+    headingWithCaption: HeadingWithCaption,
     config: FrontendAppConfig
 )
 
@@ -32,8 +32,9 @@
 ) {
 
     @headingWithCaption(
-        messagePrefix = "agentNotAuthorised.heading",
-        caption = messages(s"$identifierType.caption", captionParam = identifier)
+        headingPrefix = "agentNotAuthorised",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
     )
 
     <p>@messages("agentNotAuthorised.p1")</p>

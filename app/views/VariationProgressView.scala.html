@@ -19,12 +19,12 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import viewmodels.Task
-@import views.html.components.{HeadingWithIdentifierCaption, Warning}
+@import views.html.components.{HeadingWithCaption, Warning}
 
 @this(
     appConfig: FrontendAppConfig,
     main_template: MainTemplate,
-    headingWithCaption: HeadingWithIdentifierCaption,
+    headingWithCaption: HeadingWithCaption,
     warning: Warning
 )
 
@@ -45,8 +45,9 @@
 ) {
 
     @headingWithCaption(
-        messagePrefix = "variationProgress",
-        caption = messages("$identifierType.caption", captionParam = identifier)
+        headingPrefix = "variationProgress",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
     )
 
     <p>@messages("variationProgress.p1")</p>

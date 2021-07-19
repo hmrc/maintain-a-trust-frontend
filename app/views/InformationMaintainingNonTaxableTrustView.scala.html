@@ -16,11 +16,11 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
-@import views.html.components.{HeadingWithIdentifierCaption, BulletList, Warning}
+@import views.html.components.{HeadingWithCaption, BulletList, Warning}
 
 @this(
     appConfig: FrontendAppConfig,
-    headingWithCaption: HeadingWithIdentifierCaption,
+    headingWithCaption: HeadingWithCaption,
     bulletList: BulletList,
     warning: Warning,
     main_template: MainTemplate
@@ -34,8 +34,9 @@
 ) {
 
     @headingWithCaption(
-        messagePrefix = "informationMaintainingNonTaxableTrust.heading",
-        caption = messages(s"$identifierType.caption", captionParam = identifier)
+        headingPrefix = "informationMaintainingNonTaxableTrust",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
     )
 
     <h2>@messages("informationMaintainingNonTaxableTrust.subheading1")</h2>

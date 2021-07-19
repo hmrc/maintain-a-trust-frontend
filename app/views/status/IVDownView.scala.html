@@ -17,11 +17,11 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
-@import views.html.components.{HeadingWithIdentifierCaption, Link}
+@import views.html.components.{HeadingWithCaption, Link}
 
 @this(
     appConfig: FrontendAppConfig,
-    headingWithCaption: HeadingWithIdentifierCaption,
+    headingWithCaption: HeadingWithCaption,
     link: Link,
     main_template: MainTemplate
 )
@@ -32,9 +32,10 @@
     title = messages("ivDown.title")
     ) {
 
-     @headingWithCaption(
-        messagePrefix = "ivDown.heading",
-        caption = messages(s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "ivDown",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
     )
 
     <p>@messages("ivDown.p1") @link(appConfig.serviceDownContactUrl, "register-and-maintain-link", "ivDown.contact.link").</p>

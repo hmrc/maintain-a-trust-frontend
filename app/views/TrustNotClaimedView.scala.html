@@ -16,11 +16,11 @@
 
 @import config.FrontendAppConfig
 @import models.Mode
-@import views.html.components.{HeadingWithIdentifierCaption, Link}
+@import views.html.components.{HeadingWithCaption, Link}
 
 @this(
     main_template: MainTemplate,
-    headingWithCaption: HeadingWithIdentifierCaption,
+    headingWithCaption: HeadingWithCaption,
     link: Link,
     appConfig: FrontendAppConfig
 )
@@ -33,8 +33,9 @@
 ) {
 
     @headingWithCaption(
-        messagePrefix = "trustNotClaimed",
-        caption = messages("$identifierType.caption", captionParam = identifier)
+        headingPrefix = "trustNotClaimed",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
     )
 
     <p>@messages("trustNotClaimed.p1")</p>

@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
- subHeading: SubHeading
-)
+package utils
 
-@(messagePrefix: String, optionalParam: Option[String] = None, caption: String)(implicit messages: Messages)
+object AccessibilityHelper {
 
-<h1 class="govuk-heading-l">
- <span class="govuk-caption-l">@caption</span>
- @messages(s"$messagePrefix.heading", optionalParam.getOrElse(""))
-</h1>
+  def formatReferenceNumber(referenceNumber: String): String = {
+    val trnFormatter = referenceNumber.replace(" ", "").replace("", " ").trim()
+    trnFormatter
+  }
+
+}

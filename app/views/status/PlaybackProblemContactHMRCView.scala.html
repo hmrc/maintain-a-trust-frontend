@@ -16,11 +16,11 @@
 
 @import config.FrontendAppConfig
 @import models.Mode
-@import views.html.components.{HeadingWithIdentifierCaption, Link}
+@import views.html.components.{HeadingWithCaption, Link}
 
 @this(
     main_template: MainTemplate,
-    headingWithCaption: HeadingWithIdentifierCaption,
+    headingWithCaption: HeadingWithCaption,
     link: Link,
     config: FrontendAppConfig
 )
@@ -32,8 +32,9 @@
 ) {
 
     @headingWithCaption(
-        messagePrefix = "playbackProblemContactHMRC.heading",
-        caption = messages(s"$identifierType.caption", captionParam = identifier)
+        headingPrefix = "playbackProblemContactHMRC",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
     )
 
     <p>@messages("playbackProblemContactHMRC.p1")</p>

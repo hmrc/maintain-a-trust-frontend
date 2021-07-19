@@ -100,14 +100,17 @@
 
         @errorSummary(form.errors, isYesNo = true)
 
-        @headingWithCaption(messagePrefix = "obligedEntityPdfYesNo", hiddenText = false)
+        @headingWithCaption(
+            headingPrefix = "obligedEntityPdfYesNo",
+            captionPrefix = "obligedEntityPdfYesNo",
+            hiddenText = false
+        )
 
         @content
 
         @inputYesNo(
             field = form("value"),
             label = messages("obligedEntityPdfYesNo.heading"),
-            labelPrefix = Some("obligedEntityPdfYesNo"),
             legendAsHeading = false,
             legendClass = Some("govuk-visually-hidden"),
             caption = Some(messages("obligedEntityPdfYesNo.caption"))

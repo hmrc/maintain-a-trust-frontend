@@ -15,14 +15,14 @@
  *@
 
 @import controllers.transition.routes._
-@import views.html.components.{ErrorSummary, InputYesNo, SubmitButton, HeadingWithIdentifierCaption}
+@import views.html.components.{ErrorSummary, InputYesNo, SubmitButton, HeadingWithCaption}
 
 @this(
     main_template: MainTemplate,
     submitButton: SubmitButton,
     errorSummary: ErrorSummary,
     inputYesNo: InputYesNo,
-    headingWithCaption: HeadingWithIdentifierCaption,
+    headingWithCaption: HeadingWithCaption,
     formHelper: FormWithCSRF
 )
 
@@ -47,10 +47,11 @@
 
         @errorSummary(form.errors, isYesNo = true)
 
-        @headingWithCaption(
-            messagePrefix = "needToPayTaxYesNo.heading",
-            caption = messages(s"$identifierType.caption", captionParam = identifier)
-        )
+    @headingWithCaption(
+        headingPrefix = "needToPayTaxYesNo",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
         @content
 

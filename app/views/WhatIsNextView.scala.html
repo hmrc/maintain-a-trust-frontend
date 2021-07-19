@@ -36,14 +36,14 @@
 
     @formHelper(action = WhatIsNextController.onSubmit(), 'autoComplete -> "off") {
 
-        @errorSummary(form.errors, WhatIsNext.options(trustMldStatus))
+        @errorSummary(form.errors, WhatIsNext.options(trustMldStatus).toSeq)
 
         @inputRadio(
             field = form("value"),
             legend = messages("declarationWhatNext.heading"),
             headingIsLegend = true,
             inline = false,
-            inputs = mapRadioOptionsToRadioItems(form("value"), WhatIsNext.options(trustMldStatus))
+            inputs = mapRadioOptionsToRadioItems(form("value"), WhatIsNext.options(trustMldStatus).toSeq)
         )
 
     @submitButton

@@ -15,13 +15,13 @@
  *@
 
 @import config.FrontendAppConfig
-@import views.html.components.{HeadingWithIdentifierCaption, Link}
+@import views.html.components.{HeadingWithCaption, Link}
 
 @this(
     main_template: MainTemplate,
-    headingWithCaption: HeadingWithIdentifierCaption,
+    headingWithCaption: HeadingWithCaption,
     link: Link,
-    config: FrontendAppConfig
+    appConfig: FrontendAppConfig
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
@@ -31,8 +31,9 @@
     ) {
 
     @headingWithCaption(
-        messagePrefix = "trustLocked.heading",
-        caption = messages(s"$identifierType.caption", captionParam = identifier)
+        headingPrefix = "trustLocked",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
     )
 
     <p>@messages("trustLocked.p1")</p>
