@@ -17,9 +17,12 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
+@import views.html.components.{Heading, Link}
 
 @this(
     appConfig: FrontendAppConfig,
+    headingComp: Heading,
+    link: Link,
     main_template: MainTemplate
 )
 
@@ -28,13 +31,13 @@
 @main_template(
     title = messages("problemDeclaring.title")
 ) {
-    @components.heading("problemDeclaring.heading", headingSize = "heading-large heading-with-top-margin")
+    @headingComp("problemDeclaring.heading", headingSize = "govuk-heading-l govuk-!-padding-top-2")
 
     <p>@messages("problemDeclaring.p1")</p>
 
-    <p>@messages("problemDeclaring.p2") <a id="help-link" target="_blank" href="@appConfig.helplineUrl">@messages("problemDeclaring.contact.link")</a>.</p>
+    <p>@messages("problemDeclaring.p2") @link(@appConfig.helplineUrl, "help-link", @messages("problemDeclaring.contact.link"), openInNewWindow = true) .</p>
 
     @if(affinityGroup == AffinityGroup.Agent) {
-      <p>@messages("problemDeclaring.p3") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("problemDeclaring.return.link")</a>.</p>
+      <p>@messages("problemDeclaring.p3") @link(@appConfig.agentOverviewUrl, "register-and-maintain-link", @messages("problemDeclaring.return.link")).</p>
     }
 }

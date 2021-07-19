@@ -16,11 +16,15 @@
 
 @import play.api.mvc.Call
 @import config.FrontendAppConfig
+@import views.html.components.{SubmitButton, ErrorSummary, InputYesNo}
 
 @this(
-        appConfig: FrontendAppConfig,
-        main_template: MainTemplate,
-        formHelper: FormWithCSRF
+    appConfig: FrontendAppConfig,
+    main_template: MainTemplate,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF
 )
 
 @(form: Form[_], onSubmit: Call)(implicit request: Request[_], messages: Messages)
@@ -32,15 +36,15 @@
 
     @formHelper(action = onSubmit, 'autoComplete -> "off") {
 
-        @errorSummary(form.errors)
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
             label = messages("agencyRegisteredAddressUkYesNo.heading"),
-            legendClass = Some("heading-large"),
+            legendClass = Some("govuk-heading-l"),
             legendAsHeading = true
         )
 
-        @components.submit_button(Some("site.save.continue"))
+        @submitButton(Some("site.save.continue"))
     }
 }

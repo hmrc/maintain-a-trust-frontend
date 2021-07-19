@@ -44,8 +44,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration,
   def maintainOtherIndividualsUrl(identifier: String) = s"$maintainOtherIndividualsFrontendUrl/$identifier"
   def maintainNonEeaCompanyUrl(identifier: String) = s"$maintainNonEeaCompaniesFrontendUrl/$identifier"
 
-  val betaFeedbackUrl = s"${contactFrontendConfig.baseUrl}/contact/beta-feedback?service=${contactFrontendConfig.serviceId}"
-  val betaFeedbackUnauthenticatedUrl = s"${contactFrontendConfig.baseUrl}/contact/beta-feedback-unauthenticated?service=${contactFrontendConfig.serviceId}"
+  val betaFeedbackUrl = s"${contactFrontendConfig.baseUrl.get}/contact/beta-feedback?service=${contactFrontendConfig.serviceId.get}"
 
   lazy val agentsSubscriptionsUrl: String = configuration.get[String]("urls.agentSubscriptions")
   lazy val agentServiceRegistrationUrl = s"$agentsSubscriptionsUrl?continue=$loginContinueUrl"

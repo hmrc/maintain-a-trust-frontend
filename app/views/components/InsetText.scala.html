@@ -18,7 +18,7 @@
 
 @this(govukInsetText : GovukInsetText)
 
-@(messageKey: String, id: String)(implicit messages: Messages)
+@(messageKey: String, id: String = "id")(implicit messages: Messages)
 
 @govukInsetText(InsetText(
  id = Some(s"inset-text--$id"),

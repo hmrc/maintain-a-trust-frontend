@@ -15,9 +15,14 @@
  *@
 
 @import controllers.makechanges.routes._
+@import views.html.components.{Heading, SubmitButton, ErrorSummary, InputYesNo}
 
 @this(
     main_template: MainTemplate,
+    headingComp: Heading,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton,
     formHelper: FormWithCSRF
 )
 
@@ -41,14 +46,17 @@
 
     @formHelper(action = UpdateProtectorYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @errorSummary(form.errors)
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.input_yes_no(
+        @headingComp(s"$prefix.heading")
+
+        @content
+
+        @inputYesNo(
             field = form("value"),
             label = messages(s"$prefix.heading"),
-            legendClass = Some("heading-large"),
-            legendAsHeading = true,
-            additionalContent = Some(content)
+            legendClass = Some("govuk-visually-hidden"),
+            legendAsHeading = false,
         )
 
 @submitButton

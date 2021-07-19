@@ -18,11 +18,17 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
+@import views.html.components.{Heading, InputText, SubmitButton, ErrorSummary, InsetText}
 
 @this(
-        appConfig: FrontendAppConfig,
-        main_template: MainTemplate,
-        formHelper: FormWithCSRF
+    appConfig: FrontendAppConfig,
+    main_template: MainTemplate,
+    headingComp: Heading,
+    inputText: InputText,
+    submitButton: SubmitButton,
+    errorSummary: ErrorSummary,
+    insetText: InsetText
+    formHelper: FormWithCSRF
 )
 
 @(form: Form[_], closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
@@ -36,27 +42,30 @@
 
         @errorSummary(form.errors)
 
-        <fieldset>
+        <fieldset class="govuk-fieldset">
 
-            <legend>
-                @components.heading("declaration.heading")
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                @headingComp("declaration.heading")
             </legend>
 
-            @components.input_text(
+            @inputText(
                 field = form("firstName"),
+                inputClass = ("govuk-!-width-one-half"),
                 label = messages("declaration.firstName"),
-                autoComplete = Some("given-name")
+                autocomplete = Some("given-name")
             )
 
-            @components.input_text(
+            @inputText(
                 field = form("middleName"),
+                inputClass = ("govuk-!-width-one-half"),
                 label = messages("declaration.middleName")
             )
 
-            @components.input_text(
+            @inputText(
                 field = form("lastName"),
                 label = messages("declaration.lastName"),
-                autoComplete = Some("family-name")
+                inputClass = ("govuk-!-width-one-half"),
+                autocomplete = Some("family-name")
             )
 
         </fieldset>
@@ -64,18 +73,20 @@
         @if(appConfig.declarationEmailEnabled) {
             <p>@messages("declaration.paragraph1")</p>
             <p>@messages("declaration.paragraph2")</p>
-            @components.input_text(
+            @inputText(
                 field = form("email"),
                 inputClass = Some("declaration-email"),
-                label = messages("declaration.email")
+                label = messages("declaration.email"),
+                autocomplete = Some("email"),
+                inputType = "email"
             )
         }
 
         @{
             val key: String = if (closingTrust) "closing" else "variation"
-            <p class="panel-indent">{messages(s"declaration.$key.individual.warning")}</p>
+            @insetText(s"declaration.$key.individual.warning")
         }
 
-        @components.submit_button(Some("site.confirm-send"))
+        @submitButton(Some("site.confirm-send"))
     }
 }

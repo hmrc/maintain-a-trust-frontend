@@ -16,9 +16,13 @@
 
 @import config.FrontendAppConfig
 @import controllers.routes._
+@import views.html.components.{Heading, SubmitButton, Link}
 
 @this(
     main_template: MainTemplate,
+    headingComp: Heading,
+    link: Link,
+    submitButton: SubmitButton,
     config: FrontendAppConfig
 )
 
@@ -29,7 +33,7 @@
     showBackLink = true
 ) {
 
-    @components.heading(messages("unavailableSections.heading", availableSections), headingSize = "heading-large govuk-fieldset__heading")
+    @headingComp(messages("unavailableSections.heading", availableSections))
 
     <p>
         @messages("unavailableSections.p1", unavailableSections) <a href="@config.helplineUrl" target="_blank">@messages("unavailableSections.p1.a")</a>.

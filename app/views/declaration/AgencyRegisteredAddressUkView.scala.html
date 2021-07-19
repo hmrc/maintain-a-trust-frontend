@@ -15,9 +15,13 @@
  *@
 
 @import controllers.declaration.routes._
+@import views.html.components.{SubmitButton, ErrorSummary, UkAddress}
 
 @this(
     main_template: MainTemplate,
+    errorSummary: ErrorSummary,
+    ukAddress: UkAddress,
+    submitButton: SubmitButton,
     formHelper: FormWithCSRF
 )
 
@@ -32,15 +36,7 @@
 
         @errorSummary(form.errors)
 
-        <fieldset>
-
-            <legend>
-                @components.heading("agencyRegisteredAddressUk.heading")
-            </legend>
-
-            @components.uk_address(form)
-
-        </fieldset>
+        @ukAddress(form, @messages("agencyRegisteredAddressUk.heading"))
 
         @submitButton()
     }
