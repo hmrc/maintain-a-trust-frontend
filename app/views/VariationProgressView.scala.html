@@ -53,17 +53,13 @@
 
     <p>@messages("variationProgress.p2")</p>
 
-    @if(affinityGroup == AffinityGroup.Agent) {
-        <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>
-    }
-
     @warning(
-        if(closingTrust) {
-            "variationProgress.closing"
-        } else {
-            "variationProgress"
-        }
-    )
+            if(closingTrust) {
+                "variationProgress.closing"
+            } else {
+                "variationProgress"
+            }
+        )
 
     @components.task_list("mandatory", mandatory, messages("variationProgress.subHeading.2"))
 
@@ -81,6 +77,12 @@
 
         <div class="section">
             <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
+        </div>
+    }
+
+    @if(affinityGroup == AffinityGroup.Agent) {
+        <div class="section">
+            <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>
         </div>
     }
 }
