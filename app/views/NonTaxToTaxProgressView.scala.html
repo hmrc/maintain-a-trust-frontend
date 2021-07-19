@@ -47,9 +47,6 @@
 
     @if(!isAbleToDeclare) {<p>@messages("transitionProgress.p2")</p>}
 
-    @if(affinityGroup == AffinityGroup.Agent) {
-        <a href="@{appConfig.agentOverviewUrl}">@messages("transitionsProgress.return.link")</a>
-    }
 
     @components.warning("transitionProgress")
 
@@ -72,5 +69,11 @@
         </div>
     } else {
         <p>@messages("transitionProgress.p3")</p>
+    }
+
+    @if(affinityGroup == AffinityGroup.Agent) {
+        <div class="section">
+            <a href="@{appConfig.agentOverviewUrl}">@messages("transitionsProgress.return.link")</a>
+        </div>
     }
 }
