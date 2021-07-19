@@ -57,7 +57,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "display language toggles" in {
 
           val doc = asDocument(view)
-          assertRenderedById(doc, "cymraeg-switch")
+          assertRenderedByCssSelector(doc, "a[lang=cy]")
         }
       }
     }
@@ -106,7 +106,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "display language toggles" in {
 
           val doc = asDocument(view)
-          assertRenderedById(doc, "cymraeg-switch")
+          assertRenderedByCssSelector(doc, "a[lang=cy]")
         }
       }
     }
@@ -149,7 +149,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "display language toggles" in {
 
           val doc = asDocument(view)
-          assertRenderedById(doc, "cymraeg-switch")
+          assertRenderedByCssSelector(doc, "a[lang=cy]")
         }
 
       }
@@ -168,7 +168,7 @@ trait ViewBehaviours extends ViewSpecBase {
     }
   }
 
-  def pageWithASubmitButton(view: HtmlFormat.Appendable) = {
+  def pageWithASubmitButton(view: HtmlFormat.Appendable): Unit = {
 
     "behave like a page with a submit button" must {
       "have a submit button" in {
@@ -178,7 +178,7 @@ trait ViewBehaviours extends ViewSpecBase {
     }
   }
 
-  def pageWithPrintButton(view: HtmlFormat.Appendable) = {
+  def pageWithPrintButton(view: HtmlFormat.Appendable): Unit = {
     "behave like a page with a print button" must {
       "have a print button" in {
         val doc = asDocument(view)
@@ -187,7 +187,7 @@ trait ViewBehaviours extends ViewSpecBase {
     }
   }
 
-  def pageWithContinueButton(view: HtmlFormat.Appendable, url: String, expectedTextKey: Option[String] = None) = {
+  def pageWithContinueButton(view: HtmlFormat.Appendable, url: String, expectedTextKey: Option[String] = None): Unit = {
 
     "behave like a page with a Continue button" must {
       "have a continue button" in {
@@ -236,7 +236,7 @@ trait ViewBehaviours extends ViewSpecBase {
     "behave like a page with a hint" must {
       "have a hint" in {
         val doc = asDocument(view)
-        assertRenderedById(doc, "form-hint")
+        assertRenderedById(doc, "govuk-hint")
       }
     }
   }

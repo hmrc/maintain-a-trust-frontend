@@ -27,7 +27,7 @@ trait StringViewBehaviours extends QuestionViewBehaviours[String] {
   def stringPage(form: Form[String],
                  createView: Form[String] => HtmlFormat.Appendable,
                  messageKeyPrefix: String,
-                 expectedHintKey: Option[String] = None) = {
+                 expectedHintKey: Option[String] = None): Unit = {
 
     "behave like a page with a string value field" when {
 
@@ -61,13 +61,13 @@ trait StringViewBehaviours extends QuestionViewBehaviours[String] {
         "show an error summary" in {
 
           val doc = asDocument(createView(form.withError(error)))
-          assertRenderedById(doc, "error-summary-heading")
+          assertRenderedById(doc, "error-summary-title")
         }
 
         "show an error in the value field's label" in {
 
           val doc = asDocument(createView(form.withError(error)))
-          val errorSpan = doc.getElementsByClass("error-message").first
+          val errorSpan = doc.getElementsByClass("govuk-error-message").first
           errorSpan.text mustBe s"""${messages("site.error")} ${messages(errorMessage)}"""
         }
 
@@ -85,7 +85,7 @@ trait StringViewBehaviours extends QuestionViewBehaviours[String] {
                                  createView: Form[String] => HtmlFormat.Appendable,
                                  messageKeyPrefix: String,
                                  messageKeyParam: String,
-                                 expectedHintKey: Option[String] = None) = {
+                                 expectedHintKey: Option[String] = None): Unit = {
 
     "behave like a page with a string value field with a dynamic title" when {
 
@@ -119,13 +119,13 @@ trait StringViewBehaviours extends QuestionViewBehaviours[String] {
         "show an error summary" in {
 
           val doc = asDocument(createView(form.withError(error)))
-          assertRenderedById(doc, "error-summary-heading")
+          assertRenderedById(doc, "error-summary-title")
         }
 
         "show an error in the value field's label" in {
 
           val doc = asDocument(createView(form.withError(error)))
-          val errorSpan = doc.getElementsByClass("error-message").first
+          val errorSpan = doc.getElementsByClass("govuk-error-message").first
           errorSpan.text mustBe s"""${messages("site.error")} ${messages(errorMessage)}"""
         }
 
