@@ -15,7 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
-@import views.html.components.HeadingWithIdentifierCaption
+@import views.html.components.{Link, HeadingWithIdentifierCaption}
 
 @this(
         appConfig: FrontendAppConfig,
@@ -38,7 +38,7 @@
 
     <p>@messages("noTaxLiabilityInfo.paragraph1")</p>
 
-    <ul class="govuk-list govuk-list--bullet">
+    <ul class="govuk-list govuk-list--bullet govuk-list--spaced">
         <li>@link(appConfig.helplineUrl, "help-link", messages("noTaxLiabilityInfo.bullet1"), openInNewWindow = true)</li>
         <li>@link(appConfig.sa900Link, "sa900-link", messages("noTaxLiabilityInfo.bullet2"), openInNewWindow = true)</li>
     </ul>

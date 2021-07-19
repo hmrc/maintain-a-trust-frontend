@@ -43,7 +43,7 @@
             legend = messages("declarationWhatNext.heading"),
             headingIsLegend = true,
             inline = false,
-            inputs = mapRadioOptionsToRadioItems(form("value"), false, WhatIsNext.options(trustMldStatus))
+            inputs = mapRadioOptionsToRadioItems(form("value"), WhatIsNext.options(trustMldStatus))
         )
 
     @submitButton

@@ -18,9 +18,12 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
+@import views.html.components.{HeadingWithIdentifierCaption, Link}
 
 @this(
 appConfig: FrontendAppConfig,
+headingWithCaption: HeadingWithIdentifierCaption,
+link: Link,
 main_template: MainTemplate
 )
 
@@ -30,8 +33,10 @@ main_template: MainTemplate
 title = messages("identifierDoesNotMatch.title")
 ) {
 
- @components.heading_with_caption(headingKey = "identifierDoesNotMatch.heading", caption = s"$identifierType.caption", captionParam = identifier)
-
+ @headingWithCaption(
+  messagePrefix = "identifierDoesNotMatch.heading",
+  caption = @messages(s"$identifierType.caption", captionParam = identifier)
+ )
  <p>@messages("identifierDoesNotMatch.p1")</p>
 
  <p>@messages("identifierDoesNotMatch.p2")</p>
@@ -42,11 +47,11 @@ title = messages("identifierDoesNotMatch.title")
  <p>@messages("identifierDoesNotMatch.p3")</p>
 
   @if(affinityGroup == AffinityGroup.Agent) {
-   <p>@messages(s"identifierDoesNotMatch.p4") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages(s"identifierDoesNotMatch.return.link")</a>.</p>
+   <p>@messages(s"identifierDoesNotMatch.p4") @link(@appConfig.agentOverviewUrl, "register-and-maintain-link", @messages(s"identifierDoesNotMatch.return.link")).</p>
   } else {
 <p>@components.button_link("identifierDoesNotMatch.sign_out", controllers.routes.LogoutController.logout().url)</p>
   }
 
-  <p>@messages("identifierDoesNotMatch.p5") <a id="help-link" target="_blank" href="@appConfig.helplineUrl">@messages("identifierDoesNotMatch.contact.link")</a>.</p>
+  <p>@messages("identifierDoesNotMatch.p5") @link(@appConfig.helplineUrl, "help-link", @messages("identifierDoesNotMatch.contact.link"), openInNewWindow = true).</p>
 
 }

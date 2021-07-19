@@ -16,56 +16,60 @@
 
 @import controllers.testOnlyDoNotUseInAppConf.routes._
 @import controllers.testOnlyDoNotUseInAppConf.FourOrFiveMLD
+@import views.html.components.{ErrorSummary, ConfirmationPanel, InputRadio, InputYesNo, InputTextArea, SubmitButton}
 
 @this(
-main_template: MainTemplate,
-formHelper: FormWithCSRF
+    main_template: MainTemplate,
+    errorSummary: ErrorSummary,
+    confirmationPanel: ConfirmationPanel,
+    inputRadio: InputRadio,
+    inputYesNo: InputYesNo,
+    inputTextarea: InputTextArea,
+    formHelper: FormWithCSRF
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages, flash: Flash)
 
 @main_template(
-title = s"${errorPrefix(form)} Trust Wizard"
+    title = s"${errorPrefix(form)} Trust Wizard"
 ) {
 
  @formHelper(action = TestWizardController.onSubmit(), 'autoComplete -> "off") {
 
-   @errorSummary(form.errors)
+   @errorSummary(form.errors, FourOrFiveMLD.options.toSeq)
 
    <h1>Trust wizard</h1>
 
     @flash.get("wizard").map{ msg =>
-
-    <div class="heading-confirmation heading-large">
-        <h1 class="heading-large">
-            @msg
-        </h1>
-    </div>
+        @confirmationPanel(
+            heading = @msg,
+            content = "",
+            refNumber = ""
+        )
     }
 
     <h2>Legislation</h2>
 
-   @components.input_radio(
+   @inputRadio(
     field = form("mode"),
     legend = "Which mode do you want to test?",
-    inputs = FourOrFiveMLD.options.toSeq,
-    fieldsetClass=Some("inline")
+    inputs = mapRadioOptionsToRadioItems(form("value"), FourOrFiveMLD.options.toSeq)
    )
 
     <h2>Test Users</h2>
 
-   @components.input_yes_no(
+   @inputYesNo(
     field = form("cleanup"),
     label = "Do you want to remove test users?"
    )
 
-    @components.input_textarea(
+    @inputTextarea(
         field = form("testUser"),
         label = "Insert a test user (optional)",
         hint = Some("Enter JSON to be submitted to Enrolment Store Proxy.")
     )
 
-   @components.submit_button(Some("site.onlyContinue"))
+   @submitButton()
 
   }
 }

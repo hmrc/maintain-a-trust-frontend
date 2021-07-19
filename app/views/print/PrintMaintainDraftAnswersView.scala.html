@@ -15,9 +15,13 @@
  *@
 
 @import viewmodels.{AnswerSection, RepeaterAnswerSection, Section}
+@import views.html.components.{Heading, Button, ReturnToTop}
 
 @this(
     main_template: MainTemplate,
+    headingComp: Heading,
+    button: Button,
+    returnToTop: ReturnToTop,
     formHelper: FormWithCSRF
 )
 
@@ -32,7 +36,7 @@
     showBackLink = true
     ) {
 
-    @components.heading("playbackDraftAnswers.heading", headingSize = "heading-xlarge")
+    @headingComp("playbackDraftAnswers.heading", headingSize = "govuk-heading-xl")
 
     <p>@messages("playbackDraftAnswers.p1")</p>
 
@@ -42,9 +46,7 @@
 
     <p>@messages("playbackDraftAnswers.p4")</p>
 
-    <div class="section">
-        @components.button_print()
-    </div>
+    @button(messageKey = "site.print-or-save", isPrintButton = true)
 
     @if(closeDateSection.rows) {
         @components.summary_answer_section(closeDateSection)
@@ -71,5 +73,5 @@
     <p>@messages("playbackAnswers.informationFirstRegistered")</p>
     <p>@messages("playbackAnswers.selfAssessmentOnline")</p>
 
-    @components.return_to_top()
+    @returnToTop()
 }

@@ -15,9 +15,13 @@
  *@
 
 @import viewmodels.{AnswerSection, RepeaterAnswerSection, Section}
+@import views.html.components.{Heading, Button, ReturnToTop}
 
 @this(
     main_template: MainTemplate,
+    headingComp: Heading,
+    button: Button,
+    returnToTop: ReturnToTop,
     formHelper: FormWithCSRF
 )
 
@@ -36,23 +40,21 @@
     showBackLink = true
     ) {
 
-    @components.heading("playbackFinalDeclarationAnswers.heading", headingSize = "heading-xlarge")
+    @headingComp("playbackFinalDeclarationAnswers.heading", headingSize = "govuk-heading-xl")
 
-    <p class="declarationReferenceNumber">
+    <p class="govuk-!-font-weight-bold">
         <span>@messages("playbackFinalDeclarationAnswers.p1", tvn)</span>
     </p>
 
     @if(isAgent: Boolean) {
-        <p class="agentClientRef">
+        <p class="govuk-!-font-weight-bold">
             <span>@messages("playbackFinalDeclarationAnswers.p2", crn)</span>
         </p>
     }
 
     <p>@messages("playbackFinalDeclarationAnswers.p3", declarationSent)</p>
 
-    <div class="section">
-        @components.button_print()
-    </div>
+    @button(messageKey = "site.print-or-save", isPrintButton = true)
 
     @components.summary_answer_section(closeDateSection)
 
@@ -77,5 +79,5 @@
     <p>@messages("playbackAnswers.informationFirstRegistered")</p>
     <p>@messages("playbackAnswers.selfAssessmentOnline")</p>
 
-    @components.return_to_top()
+    @returnToTop()
 }

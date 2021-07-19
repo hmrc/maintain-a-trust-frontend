@@ -15,9 +15,14 @@
  *@
 
 @import viewmodels.{AnswerSection, RepeaterAnswerSection, Section}
+@import views.html.components.{Heading, Button, Warning, ReturnToTop}
 
 @this(
     main_template: MainTemplate,
+    headingComp: Heading,
+    button: Button,
+    returnToTop: ReturnToTop,
+    warning: Warning,
     formHelper: FormWithCSRF
 )
 
@@ -35,25 +40,23 @@
     showBackLink = true
     ) {
 
-    @components.heading("playbackDeclarationAnswers.heading", headingSize = "heading-xlarge")
+    @headingComp("playbackDeclarationAnswers.heading", headingSize = "govuk-heading-xl")
 
-    <p class="declarationReferenceNumber">
+    <p class="govuk-!-font-weight-bold">
         <span>@messages("playbackDeclarationAnswers.p1", tvn)</span>
     </p>
 
     @if(isAgent: Boolean) {
-        <p class="agentClientRef">
+        <p class="govuk-!-font-weight-bold">
             <span>@messages("playbackDeclarationAnswers.p2", crn)</span>
         </p>
     }
 
     <p>@messages("playbackDeclarationAnswers.p3", declarationSent)</p>
 
-    @components.warning("playbackAnswers.declareAnnually")
+    @warning("playbackAnswers.declareAnnually")
 
-    <div class="section">
-        @components.button_print()
-    </div>
+    @button(messageKey = "site.print-or-save", isPrintButton = true)
 
     @for(section <- trustDetails){
         @{
@@ -76,5 +79,5 @@
     <p>@messages("playbackAnswers.informationFirstRegistered")</p>
     <p>@messages("playbackAnswers.selfAssessmentOnline")</p>
 
-    @components.return_to_top()
+    @returnToTop()
 }

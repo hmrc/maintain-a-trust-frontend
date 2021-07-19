@@ -15,9 +15,14 @@
  *@
 
 @import viewmodels.{AnswerSection, RepeaterAnswerSection, Section}
+@import views.html.components.{Heading, Button, Warning, ReturnToTop}
 
 @this(
     main_template: MainTemplate,
+    headingComp: Heading,
+    button: Button,
+    returnToTop: ReturnToTop,
+    warning: Warning,
     formHelper: FormWithCSRF
 )
 
@@ -28,14 +33,14 @@
     showBackLink = true
     ) {
 
-    @components.heading("playbackAnswers.heading", headingSize = "heading-xlarge")
+    @headingComp("playbackAnswers.heading", headingSize = "govuk-heading-xl")
 
-    @components.warning("playbackAnswers.declareAnnually")
+    @warning("playbackAnswers.declareAnnually")
 
-    <div class="section">
-        <p>@components.button_link("site.button.continue.maintaining", controllers.routes.WhatIsNextController.onPageLoad().url)</p>
+    <div class="govuk-button-group">
+        @components.button_link("site.button.continue.maintaining", controllers.routes.WhatIsNextController.onPageLoad().url)
 
-        @components.button_print()
+        @button(messageKey = "site.print-or-save", isPrintButton = true)
     </div>
 
     @for(section <- trustDetails){
@@ -59,5 +64,5 @@
     <p>@messages("playbackAnswers.informationFirstRegistered")</p>
     <p>@messages("playbackAnswers.selfAssessmentOnline")</p>
 
-    @components.return_to_top()
+    @returnToTop()
 }
