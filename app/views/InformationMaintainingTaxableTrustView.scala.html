@@ -16,12 +16,14 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
-@import views.html.components.{HeadingWithCaption, BulletList}
+@import views.html.components.{HeadingWithCaption, BulletList, SubmitButton}
 
 @this(
     appConfig: FrontendAppConfig,
     headingWithCaption: HeadingWithCaption,
     bulletList: BulletList,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
     main_template: MainTemplate
 )
 
@@ -65,7 +67,8 @@
 
     <p>@messages("informationMaintainingTaxableTrust.paragraph6")</p>
 
-    @components.button_link(messages("site.startMaintaining"), controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url)
-
+    @formHelper(action = controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url, 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.startMaintaining")))
+    }
 }
 

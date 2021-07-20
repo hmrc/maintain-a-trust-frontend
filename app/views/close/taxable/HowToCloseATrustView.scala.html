@@ -14,10 +14,12 @@
  * limitations under the License.
  *@
 
-@import views.html.components.HeadingWithCaption
+@import views.html.components.{HeadingWithCaption, SubmitButton}
 
 @this(
     main_template: MainTemplate,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
     headingWithCaption: HeadingWithCaption
 )
 
@@ -43,5 +45,7 @@
 
     <p>@messages("howToCloseATrust.p2")</p>
 
-    @components.button_link(messages("site.sign_out"), controllers.routes.LogoutController.logout().url)
+    @formHelper(action = controllers.routes.LogoutController.logout().url, 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.sign_out")))
+    }
 }

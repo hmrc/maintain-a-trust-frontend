@@ -16,12 +16,14 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
-@import views.html.components.{Warning, HeadingWithCaption}
+@import views.html.components.{Warning, HeadingWithCaption, SubmitButton}
 
 @this(
     appConfig: FrontendAppConfig,
     headingWithCaption: HeadingWithCaption,
     warning: Warning,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
     main_template: MainTemplate
 )
 
@@ -50,7 +52,8 @@
 
    <p>@messages("informationMaintainingThisTrust.paragraph4")</p>
 
-    @components.button_link(messages("site.startMaintaining"), controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url)
-
+    @formHelper(action = controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url, 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.startMaintaining")))
+    }
 }
 

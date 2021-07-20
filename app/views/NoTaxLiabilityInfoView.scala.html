@@ -15,13 +15,15 @@
  *@
 
 @import config.FrontendAppConfig
-@import views.html.components.{Link, HeadingWithCaption}
+@import views.html.components.{Link, HeadingWithCaption, SubmitButton}
 
 @this(
-        appConfig: FrontendAppConfig,
-        headingWithCaption: HeadingWithCaption,
-        link: Link,
-        main_template: MainTemplate
+    appConfig: FrontendAppConfig,
+    headingWithCaption: HeadingWithCaption,
+    link: Link,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
+    main_template: MainTemplate
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
@@ -46,7 +48,8 @@
 
     <p>@messages("noTaxLiabilityInfo.paragraph2")</p>
 
-    @components.button_link(messages("site.save.continue"), controllers.routes.WhatIsNextController.onPageLoad().url)
-
+    @formHelper(action = controllers.routes.WhatIsNextController.onPageLoad().url, 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.save.continue")))
+    }
 }
 

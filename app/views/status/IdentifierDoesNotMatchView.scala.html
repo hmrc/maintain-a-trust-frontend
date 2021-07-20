@@ -18,12 +18,14 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
-@import views.html.components.{HeadingWithCaption, Link}
+@import views.html.components.{HeadingWithCaption, Link, SubmitButton}
 
 @this(
 appConfig: FrontendAppConfig,
 headingWithCaption: HeadingWithCaption,
 link: Link,
+submitButton: SubmitButton,
+formHelper: FormWithCSRF,
 main_template: MainTemplate
 )
 
@@ -51,7 +53,9 @@ title = messages("identifierDoesNotMatch.title")
   @if(affinityGroup == AffinityGroup.Agent) {
    <p>@messages("identifierDoesNotMatch.p4") @link(appConfig.agentOverviewUrl, "register-and-maintain-link", "identifierDoesNotMatch.return.link").</p>
   } else {
-<p>@components.button_link("identifierDoesNotMatch.sign_out", controllers.routes.LogoutController.logout().url)</p>
+   @formHelper(action = controllers.routes.LogoutController.logout().url, 'autoComplete -> "off") {
+    @submitButton(Some(messages("identifierDoesNotMatch.sign_out")))
+   }
   }
 
   <p>@messages("identifierDoesNotMatch.p5") @link(appConfig.helplineUrl, "help-link", "identifierDoesNotMatch.contact.link", openInNewWindow = true).</p>

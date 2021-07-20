@@ -25,7 +25,8 @@
     inputRadio: InputRadio,
     inputYesNo: InputYesNo,
     inputTextarea: InputTextArea,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages, flash: Flash)

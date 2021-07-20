@@ -16,12 +16,14 @@
 
 @import config.FrontendAppConfig
 @import models.Mode
-@import views.html.components.{HeadingWithCaption, Link}
+@import views.html.components.{HeadingWithCaption, Link, SubmitButton}
 
 @this(
     main_template: MainTemplate,
     headingWithCaption: HeadingWithCaption,
     link: Link,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
     config: FrontendAppConfig
 )
 
@@ -46,7 +48,9 @@
 
     <p>@messages("maintainThisTrust.p4") @link(config.helplineUrl, "help-link", "maintainThisTrust.p4.a", true).</p>
 
-    <p>@components.button_link("site.onlyContinue", continueUrl)</p>
+    @formHelper(action = continueUrl, 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.onlyContinue")))
+    }
 
 }
 

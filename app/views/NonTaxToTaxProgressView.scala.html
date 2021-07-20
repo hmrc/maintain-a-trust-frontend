@@ -72,7 +72,9 @@
         <p>@messages("transitionProgress.p5") @link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", true)@messages("transitionProgress.p5b")</p>
         <p>@messages("transitionProgress.p6") @link(appConfig.loginContinueUrl, "return-to-service", "transitionProgress.p6.link").</p>
 
-        @components.button_link(messages("taskList.summary.continue"), nextUrl)
+        @formHelper(action = nextUrl, 'autoComplete -> "off") {
+            @submitButton(Some(messages("taskList.summary.continue")))
+        }
 
     } else {
         <p>@messages("transitionProgress.p3")</p>

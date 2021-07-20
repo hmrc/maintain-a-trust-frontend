@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.{AnswerSection, RepeaterAnswerSection, Section}
-@import views.html.components.{Heading, Button, Warning, ReturnToTop}
+@import views.html.components.{Heading, Button, Warning, ReturnToTop, SubmitButton}
 
 @this(
     main_template: MainTemplate,
@@ -23,6 +23,7 @@
     button: Button,
     returnToTop: ReturnToTop,
     warning: Warning,
+    submitButton: SubmitButton,
     formHelper: FormWithCSRF
 )
 
@@ -37,11 +38,15 @@
 
     @warning("playbackAnswers.declareAnnually")
 
-    <div class="govuk-button-group">
-        @components.button_link("site.button.continue.maintaining", controllers.routes.WhatIsNextController.onPageLoad().url)
+    @formHelper(action = controllers.routes.WhatIsNextController.onPageLoad().url, 'autoComplete -> "off") {
 
-        @button(messageKey = "site.print-or-save", isPrintButton = true)
-    </div>
+        <div class="govuk-button-group">
+            @submitButton(Some(messages("site.button.continue.maintaining")))
+
+            @button(messageKey = "site.print-or-save", isPrintButton = true)
+        </div>
+
+    }
 
     @for(section <- trustDetails){
         @{
