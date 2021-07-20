@@ -16,20 +16,21 @@
 
 package navigation
 
+import play.api.mvc.Call
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 
 object Navigator {
 
-  def declarationUrl(affinity: AffinityGroup, isTrustMigratingFromNonTaxableToTaxable: Boolean): String = {
+  def declarationUrl(affinity: AffinityGroup, isTrustMigratingFromNonTaxableToTaxable: Boolean): Call = {
 
     if (affinity == Agent) {
-      controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+      controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad()
     } else {
       if (isTrustMigratingFromNonTaxableToTaxable) {
-        controllers.transition.declaration.routes.IndividualDeclarationController.onPageLoad().url
+        controllers.transition.declaration.routes.IndividualDeclarationController.onPageLoad()
       } else {
-        controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+        controllers.declaration.routes.IndividualDeclarationController.onPageLoad()
       }
     }
 

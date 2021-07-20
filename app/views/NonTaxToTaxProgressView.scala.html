@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import play.api.mvc.Call
 @import controllers.declaration.routes._
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.auth.core.AffinityGroup
@@ -39,7 +40,7 @@
     mandatory: List[Task],
     additional: List[Task],
     affinityGroup: AffinityGroup,
-    nextUrl: String,
+    nextUrl: Call,
     isAbleToDeclare: Boolean
 )(implicit request: Request[_], messages: Messages)
 

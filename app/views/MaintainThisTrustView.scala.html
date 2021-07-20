@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import play.api.mvc.Call
 @import config.FrontendAppConfig
 @import models.Mode
 @import views.html.components.{HeadingWithCaption, Link, SubmitButton}
@@ -27,7 +28,7 @@
     config: FrontendAppConfig
 )
 
-@(identifier: String, identifierType: IdentifierType, availableSections: String, continueUrl: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType, availableSections: String, continueUrl: Call)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = messages("maintainThisTrust.title"),
