@@ -48,7 +48,7 @@
 
     <p>@messages("noTaxLiabilityInfo.paragraph2")</p>
 
-    @formHelper(action = controllers.routes.WhatIsNextController.onPageLoad().url, 'autoComplete -> "off") {
+    @formHelper(action = controllers.routes.WhatIsNextController.onPageLoad(), 'autoComplete -> "off") {
         @submitButton(Some(messages("site.save.continue")))
     }
 }

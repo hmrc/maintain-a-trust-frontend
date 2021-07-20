@@ -47,7 +47,7 @@ title = messages("trustClosed.title")
   @if(affinityGroup == AffinityGroup.Agent) {
     <p>@messages("trustClosed.p3") @link(appConfig.agentOverviewUrl, "register-and-maintain-link", "trustClosed.return.link").</p>
   } else {
-    @formHelper(action = controllers.routes.UTRController.onPageLoad().url, 'autoComplete -> "off") {
+    @formHelper(action = controllers.routes.UTRController.onPageLoad(), 'autoComplete -> "off") {
         @submitButton(Some(messages("site.try-again")))
     }
   }

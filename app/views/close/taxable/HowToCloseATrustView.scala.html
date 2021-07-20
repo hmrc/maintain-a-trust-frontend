@@ -45,7 +45,7 @@
 
     <p>@messages("howToCloseATrust.p2")</p>
 
-    @formHelper(action = controllers.routes.LogoutController.logout().url, 'autoComplete -> "off") {
+    @formHelper(action = controllers.routes.LogoutController.logout(), 'autoComplete -> "off") {
         @submitButton(Some(messages("site.sign_out")))
     }
 }

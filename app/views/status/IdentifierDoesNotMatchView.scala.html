@@ -53,7 +53,7 @@ title = messages("identifierDoesNotMatch.title")
   @if(affinityGroup == AffinityGroup.Agent) {
    <p>@messages("identifierDoesNotMatch.p4") @link(appConfig.agentOverviewUrl, "register-and-maintain-link", "identifierDoesNotMatch.return.link").</p>
   } else {
-   @formHelper(action = controllers.routes.LogoutController.logout().url, 'autoComplete -> "off") {
+   @formHelper(action = controllers.routes.LogoutController.logout(), 'autoComplete -> "off") {
     @submitButton(Some(messages("identifierDoesNotMatch.sign_out")))
    }
   }

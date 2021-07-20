@@ -61,7 +61,7 @@
 
     <p>@messages("informationMaintainingNonTaxableTrust.paragraph4")</p>
 
-    @formHelper(action = controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url, 'autoComplete -> "off") {
+    @formHelper(action = controllers.routes.ViewLastDeclarationYesNoController.onPageLoad(), 'autoComplete -> "off") {
         @submitButton(Some(messages("site.startMaintaining")))
     }
 }
