@@ -97,6 +97,7 @@ GET        /draft-declaration                           controllers.print.PrintM
 GET        /declared-updates                            controllers.print.PrintMaintainDeclaredAnswersController.onPageLoad()
 
 GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv: Boolean = true)
+POST       /maintain-this-trust                         controllers.MaintainThisTrustController.onSubmit()
 GET        /continue-maintaining-this-trust             controllers.MaintainThisTrustController.onPageLoad(needsIv: Boolean = false)
 
 GET        /update-trust-details                        controllers.makechanges.UpdateTrustDetailsYesNoController.onPageLoad()
