@@ -18,6 +18,7 @@ package views
 
 import play.api.data.{Field, Form, FormError}
 import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.Aliases.Hint
 import viewmodels.RadioOption
 import uk.gov.hmrc.govukfrontend.views.html.components.{RadioItem, Text}
 
@@ -28,7 +29,7 @@ object ViewUtils {
   }
 
   def breadcrumbTitle(title: String)(implicit messages: Messages): String = {
-      s"$title - ${messages("service.name")} - GOV.UK"
+    s"$title - ${messages("service.name")} - GOV.UK"
   }
 
   def errorHref(error: FormError, radioOptions: Seq[RadioOption] = Nil, isYesNo: Boolean = false): String = {
@@ -53,6 +54,21 @@ object ViewUtils {
     error.toLowerCase.contains("date") || error.toLowerCase.contains("when")
   }
 
+  def mapRadioOptionsToRadioItemsWithHints(field: Field,
+                                           inputs: Seq[(RadioOption, String)])(implicit messages: Messages): Seq[RadioItem] =
+    inputs.map {
+      input =>
+        val (item, hint) = input
+        RadioItem(
+          id = Some(item.id),
+          value = Some(item.value),
+          checked = field.value.contains(item.value),
+          content = Text(messages(item.messageKey)),
+          hint = if (hint.nonEmpty) Some(Hint(content = Text(messages(hint)))) else None,
+          attributes = Map.empty
+        )
+    }
+
   def mapRadioOptionsToRadioItems(field: Field,
                                   inputs: Seq[RadioOption])(implicit messages: Messages): Seq[RadioItem] =
     inputs.map(
@@ -68,3 +84,4 @@ object ViewUtils {
     )
 
 }
+
