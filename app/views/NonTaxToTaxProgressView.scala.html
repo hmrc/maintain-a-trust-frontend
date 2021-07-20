@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import viewmodels.Task
-@import views.html.components.{Link, BulletList, Warning, HeadingWithCaption}
+@import views.html.components.{Link, BulletList, Warning, HeadingWithCaption, TaskList}
 
 @this(
     appConfig: FrontendAppConfig,
@@ -27,6 +27,7 @@
     link: Link,
     bulletList: BulletList,
     warning: Warning,
+    taskList: TaskList,
     main_template: MainTemplate
 )
 
@@ -58,9 +59,12 @@
 
     @warning("transitionProgress")
 
-    @components.task_list("mandatory", mandatory, messages("transitionProgress.subHeading.1"))
-
-    @components.task_list("additional", additional, messages("transitionProgress.subHeading.2"))
+    @taskList(
+        heading = messages("transitionProgress.subHeading.1"),
+        additionalHeading = messages("transitionProgress.subHeading.2"),
+        sections = mandatory,
+        additionalSections = additional
+    )
 
     @if(isAbleToDeclare) {
 

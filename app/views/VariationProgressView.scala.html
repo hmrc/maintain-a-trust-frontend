@@ -66,9 +66,12 @@
             }
         )
 
-    @taskList("mandatory", mandatory, messages("variationProgress.subHeading.2"))
-
-    @taskList("additional", optional, messages("variationProgress.subHeading.3"))
+    @taskList(
+        heading = messages("variationProgress.subHeading.2"),
+        additionalHeading = messages("variationProgress.subHeading.3"),
+        sections = mandatory,
+        additionalSections = optional
+    )
 
     @if(isAbleToDeclare) {
         <h2>@messages("variationProgress.subHeading.4")</h2>
