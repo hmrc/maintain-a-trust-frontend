@@ -14,12 +14,14 @@
  * limitations under the License.
  *@
 
-@import viewmodels.{AnswerSection, RepeaterAnswerSection, Section}
+@import viewmodels.{AnswerSection, Section}
+@import utils.SectionFormatter.formatAnswerSection
 @import views.html.components.{Heading, Button, Warning, ReturnToTop}
 
 @this(
     main_template: MainTemplate,
     headingComp: Heading,
+    govukSummaryList: GovukSummaryList,
     button: Button,
     returnToTop: ReturnToTop,
     warning: Warning,
@@ -27,8 +29,8 @@
 )
 
 @(
-    entities: Seq[Section],
-    trustDetails: Seq[Section],
+    entities: Seq[AnswerSection],
+    trustDetails: Seq[AnswerSection],
     tvn: String,
     crn: String,
     declarationSent: String,
@@ -59,21 +61,11 @@
     @button(messageKey = "site.print-or-save", isPrintButton = true)
 
     @for(section <- trustDetails){
-        @{
-            section match {
-                case a: AnswerSection => components.summary_answer_section(a)
-                case r: RepeaterAnswerSection => components.repeater_answer_section(r)
-            }
-        }
+        @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
     }
 
     @for(section <- entities){
-        @{
-            section match {
-                case a: AnswerSection => components.summary_answer_section(a)
-                case r: RepeaterAnswerSection => components.repeater_answer_section(r)
-            }
-        }
+        @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
     }
 
     <p>@messages("playbackAnswers.informationFirstRegistered")</p>
