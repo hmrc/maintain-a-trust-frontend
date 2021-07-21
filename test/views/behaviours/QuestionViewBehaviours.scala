@@ -110,7 +110,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
                          key: String,
                          args: String*): Unit = {
 
-    val fields = Seq(s"${key}_day", s"${key}_month", s"${key}_year")
+    val fields = Seq(s"$key.day", s"$key.month", s"$key.year")
 
     "behave like a question page" when {
 
@@ -151,7 +151,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
         s"show an error in the legend" in {
 
           val doc = asDocument(createView(form.withError(FormError(key, "error"))))
-          assertRenderedById(doc, s"govuk-error-message-$key-input")
+          assertRenderedById(doc, s"$key-error")
         }
       }
     }

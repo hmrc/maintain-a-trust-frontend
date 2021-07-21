@@ -29,5 +29,5 @@ attributes: Map[String, String] = Map.empty
  isStartButton = isStartButton,
  content = Text(messages(messageKey)),
  classes = if (isPrintButton) "govuk-button--secondary print-hidden" else "",
- attributes = if (isPrintButton) Map("onClick" -> "window.print()") else attributes
+ attributes = if (isPrintButton) Map("onClick" -> "window.print()", "id" -> "print") else attributes
 ))
