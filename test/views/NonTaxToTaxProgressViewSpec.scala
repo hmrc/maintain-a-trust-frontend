@@ -17,6 +17,7 @@
 package views
 
 import models.URN
+import play.api.mvc.Call
 import sections.assets.Assets
 import sections.{TaxLiability, TrustDetails}
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
@@ -34,7 +35,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
     Task(Link(TaxLiability, Some("")), None)
   )
 
-  private val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+  private val expectedContinueUrl: Call = controllers.declaration.routes.IndividualDeclarationController.onPageLoad()
 
   "TransitionProgressView" when {
 
@@ -154,7 +155,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
 
         behave like pageWithWarning(applyView)
 
-        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+        behave like pageWithContinueButton(applyView, Some("taskList.summary.continue"))
 
         val doc = asDocument(applyView)
 
@@ -198,7 +199,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
 
         behave like pageWithWarning(applyView)
 
-        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+        behave like pageWithContinueButton(applyView, Some("taskList.summary.continue"))
       }
     }
   }

@@ -16,18 +16,21 @@
 
 package views
 
+import controllers.routes
 import models.{URN, UTR}
+import play.api.mvc.Call
 import views.behaviours.ViewBehaviours
 import views.html.MaintainThisTrustView
 
 class MaintainThisTrustViewSpec extends ViewBehaviours {
 
+  val continue: Call = routes.MaintainThisTrustController.onSubmit()
 
-  "TrustAlreadyClaimed view for UTR" must {
+    "TrustAlreadyClaimed view for UTR" must {
     val utr = "0987654321"
     val view = viewFor[MaintainThisTrustView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(utr, UTR, "test", "")(fakeRequest, messages)
+    val applyView = view.apply(utr, UTR, "test", continue)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "maintainThisTrust",
@@ -41,7 +44,7 @@ class MaintainThisTrustViewSpec extends ViewBehaviours {
     val urn = "XATRUST12345678"
     val view = viewFor[MaintainThisTrustView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(urn, URN, "", "")(fakeRequest, messages)
+    val applyView = view.apply(urn, URN, "", continue)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "maintainThisTrust",

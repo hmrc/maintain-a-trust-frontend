@@ -45,7 +45,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       contentAsString(result) mustEqual
         view(utr, UTR,
           "settlors, trustees, beneficiaries, protectors and other individuals",
-          frontendAppConfig.verifyIdentityForATrustUrl(utr)
+          routes.MaintainThisTrustController.onSubmit()
         )(request, messages).toString
 
       application.stop()
@@ -69,7 +69,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       contentAsString(result) mustEqual
         view(urn, URN,
           "settlors, trustees, beneficiaries, protectors and other individuals",
-          frontendAppConfig.verifyIdentityForATrustUrl(urn)
+          routes.MaintainThisTrustController.onSubmit()
         )(request, messages).toString
 
       application.stop()
@@ -94,7 +94,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       contentAsString(result) mustEqual
         view(utr, UTR,
           "settlors, trustees, beneficiaries, protectors and other individuals",
-          routes.InformationMaintainingThisTrustController.onPageLoad().url
+          routes.InformationMaintainingThisTrustController.onPageLoad()
         )(request, messages).toString
 
       application.stop()

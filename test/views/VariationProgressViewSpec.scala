@@ -17,6 +17,7 @@
 package views
 
 import models.UTR
+import play.api.mvc.Call
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
 import sections.{Natural, Trustees}
@@ -39,7 +40,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
     Task(Link(Natural, Some("")),None)
   )
 
-  private val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+  private val expectedContinueUrl: Call = controllers.declaration.routes.IndividualDeclarationController.onPageLoad()
 
   "VariationProgressView" when {
 
@@ -164,7 +165,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
         behave like pageWithWarning(applyView)
 
-        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+        behave like pageWithContinueButton(applyView, Some("taskList.summary.continue"))
 
         val doc = asDocument(applyView)
 
@@ -213,7 +214,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
         behave like pageWithWarning(applyView)
 
-        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+        behave like pageWithContinueButton(applyView, Some("taskList.summary.continue"))
 
         val doc = asDocument(applyView)
 
