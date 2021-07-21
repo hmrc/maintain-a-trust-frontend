@@ -31,12 +31,8 @@
 @prefix = {@determinePrefix(closingTrust)}
 
 @content = {
-    @if(closingTrust){
-        <p>@messages(s"$prefix.additionalContent1")</p>
-        <p>@messages(s"$prefix.additionalContent2")</p>
-    } else {
-        <p>@messages(s"$prefix.additionalContent1")</p>
-    }
+    <p>@messages(s"$prefix.additionalContent1")</p>
+    <p>@messages(s"$prefix.additionalContent2")</p>
 }
 
 @main_template(
@@ -48,16 +44,26 @@
 
         @errorSummary(form.errors, isYesNo = true)
 
-        @headingComp(s"$prefix.heading")
+        @if(closingTrust){
+            @headingComp(s"$prefix.heading")
 
-        @content
+            @content
 
-        @inputYesNo(
-            field = form("value"),
-            label = messages(s"$prefix.heading"),
-            legendClass = Some("govuk-visually-hidden"),
-            legendAsHeading = true
-        )
+            @inputYesNo(
+                field = form("value"),
+                label = messages(s"$prefix.heading"),
+                legendClass = Some("govuk-visually-hidden"),
+                legendAsHeading = false
+            )
+        } else {
+            @inputYesNo(
+                field = form("value"),
+                label = messages(s"$prefix.heading"),
+                legendClass = Some("govuk-heading-l"),
+                legendAsHeading = true,
+                hint = Some(messages(s"$prefix.additionalContent1"))
+            )
+        }
 
         @submitButton()
     }

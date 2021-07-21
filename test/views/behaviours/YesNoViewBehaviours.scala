@@ -55,7 +55,7 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
         "not render an error summary" in {
 
           val doc = asDocument(createView(form))
-          assertNotRenderedById(doc, "error-summary_header")
+          assertNotRenderedById(doc, "error-summary-title")
         }
       }
 
@@ -108,7 +108,7 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
     "not render an error summary" in {
 
       val doc = asDocument(createView(form.fill(answer)))
-      assertNotRenderedById(doc, "error-summary_header")
+      assertNotRenderedById(doc, "error-summary-title")
     }
   }
 }
