@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(document).ready(function() {
 
     $("#download-pdf").submit(function(event) {
         var identifier = document.querySelector("#download-pdf").dataset.identifier;
@@ -8,7 +8,7 @@ $(document).ready(function () {
             window.open(jsRoutes.controllers.ObligedEntityPdfController.getPdf(identifier).url);
             window.location = jsRoutes.controllers.LogoutController.logout().url;
         }
-    })
+    });
 
-}
+})
 
