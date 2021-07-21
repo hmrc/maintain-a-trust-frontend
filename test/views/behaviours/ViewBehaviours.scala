@@ -231,7 +231,7 @@ trait ViewBehaviours extends ViewSpecBase {
     "behave like a page with a hint" must {
       "have a hint" in {
         val doc = asDocument(view)
-        assertRenderedById(doc, "govuk-hint")
+        assertContainsClass(doc, "govuk-hint")
       }
     }
   }

@@ -124,9 +124,9 @@ trait ViewSpecBase extends SpecBase {
     assert(radio.attr("name") == name, s"\n\nElement $id does not have name $name")
     assert(radio.attr("value") == value, s"\n\nElement $id does not have value $value")
     if (isChecked) {
-      assert(radio.attr("checked") == "checked", s"\n\nElement $id is not checked")
+      assert(radio.hasAttr("checked"), s"\n\nElement $id is not checked")
     } else {
-      assert(!radio.hasAttr("checked") && radio.attr("checked") != "checked", s"\n\nElement $id is checked")
+      assert(!radio.hasAttr("checked"), s"\n\nElement $id is checked")
     }
   }
 
