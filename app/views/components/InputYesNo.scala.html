@@ -33,7 +33,7 @@
         case Some(e) => Some(ErrorMessage(content = Text(messages(e.message, e.args: _*))))
         case None => None
     },
-    hint = if(hint.isDefined) Some(Hint(content = Text(hint.get))) else None,
+    hint = if(hint.isDefined) Some(Hint(id = Some("govuk-hint"), content = Text(hint.get))) else None,
     fieldset = Some(Fieldset(
         legend = Some(Legend(
             content = if (caption.isDefined) {
