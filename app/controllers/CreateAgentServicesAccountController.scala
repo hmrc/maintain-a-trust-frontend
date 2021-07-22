@@ -27,7 +27,7 @@ import views.html.CreateAgentServicesAccountView
 class CreateAgentServicesAccountController @Inject()(
                                                       val controllerComponents: MessagesControllerComponents,
                                                       view: CreateAgentServicesAccountView,
-                                                      appConfig: FrontendAppConfig,
+                                                      appConfig: FrontendAppConfig
                                                     ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
