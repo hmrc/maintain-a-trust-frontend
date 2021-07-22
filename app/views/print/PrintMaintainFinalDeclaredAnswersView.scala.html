@@ -61,11 +61,21 @@
     @govukSummaryList(SummaryList(rows = formatAnswerSection(closeDateSection)))
 
     @for(section <- trustDetails){
-        @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
+        @if(section.sectionKey.isDefined){
+            <h2 class="govuk-heading-l">@messages(section.sectionKey.get)</h2>
+            @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
+        }
     }
 
     @for(section <- entities){
-        @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
+        @if(section.sectionKey.isDefined){
+        <h2 class="govuk-heading-l">@messages(section.sectionKey.get)</h2>
+        }
+
+        @if(section.headingKey.isDefined){
+            <h3 class="govuk-heading-m">@messages(section.headingKey.get)</h3>
+            @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
+        }
     }
 
     <p>@messages("playbackAnswers.informationFirstRegistered")</p>
