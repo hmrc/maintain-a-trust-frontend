@@ -39,7 +39,9 @@
 
    @errorSummary(form.errors, FourOrFiveMLD.options.toSeq)
 
-   <h1>Trust wizard</h1>
+   <h1 class="govuk-heading-l">
+       Trust wizard
+   </h1>
 
     @flash.get("wizard").map{ msg =>
         @confirmationPanel(
@@ -54,6 +56,8 @@
    @inputRadio(
     field = form("mode"),
     legend = "Which mode do you want to test?",
+    headingIsLegend = false,
+    legendClass = Some(""),
     inputs = mapRadioOptionsToRadioItems(form("value"), FourOrFiveMLD.options.toSeq)
    )
 
@@ -61,7 +65,9 @@
 
    @inputYesNo(
     field = form("cleanup"),
-    label = "Do you want to remove test users?"
+    label = "Do you want to remove test users?",
+    legendClass = Some(""),
+    legendAsHeading = false,
    )
 
     @inputTextarea(
