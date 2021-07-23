@@ -43,13 +43,35 @@ class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) exte
     converter.yesNoQuestion(IndividualBeneficiaryIncomeYesNoPage(index), userAnswers, "individualBeneficiaryIncomeYesNo", name),
     converter.percentageQuestion(IndividualBeneficiaryIncomePage(index), userAnswers, "individualBeneficiaryIncome", name),
     converter.yesNoQuestion(IndividualBeneficiaryCountryOfNationalityYesNoPage(index), userAnswers, "individualBeneficiaryCountryOfNationalityYesNo", name),
-    converter.yesNoQuestion(IndividualBeneficiaryCountryOfNationalityInTheUkYesNoPage(index), userAnswers, "individualBeneficiaryCountryOfNationalityUkYesNo", name),
-    converter.countryQuestion(IndividualBeneficiaryCountryOfNationalityInTheUkYesNoPage(index), IndividualBeneficiaryCountryOfNationalityPage(index), userAnswers, "individualBeneficiaryCountryOfNationality", name),
+    converter.yesNoQuestion(
+      IndividualBeneficiaryCountryOfNationalityInTheUkYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryCountryOfNationalityUkYesNo",
+      name
+    ),
+    converter.countryQuestion(
+      IndividualBeneficiaryCountryOfNationalityInTheUkYesNoPage(index),
+      IndividualBeneficiaryCountryOfNationalityPage(index),
+      userAnswers,
+      "individualBeneficiaryCountryOfNationality",
+      name
+    ),
     converter.yesNoQuestion(IndividualBeneficiaryNationalInsuranceYesNoPage(index), userAnswers, "individualBeneficiaryNationalInsuranceYesNo", name),
     converter.ninoQuestion(IndividualBeneficiaryNationalInsuranceNumberPage(index), userAnswers, "individualBeneficiaryNationalInsuranceNumber", name),
     converter.yesNoQuestion(IndividualBeneficiaryCountryOfResidenceYesNoPage(index), userAnswers, "individualBeneficiaryCountryOfResidenceYesNo", name),
-    converter.yesNoQuestion(IndividualBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "individualBeneficiaryCountryOfResidenceUkYesNo", name),
-    converter.countryQuestion(IndividualBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), IndividualBeneficiaryCountryOfResidencePage(index), userAnswers, "individualBeneficiaryCountryOfResidence", name),
+    converter.yesNoQuestion(
+      IndividualBeneficiaryCountryOfResidenceInTheUkYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryCountryOfResidenceUkYesNo",
+      name
+    ),
+    converter.countryQuestion(
+      IndividualBeneficiaryCountryOfResidenceInTheUkYesNoPage(index),
+      IndividualBeneficiaryCountryOfResidencePage(index),
+      userAnswers,
+      "individualBeneficiaryCountryOfResidence",
+      name
+    ),
     converter.yesNoQuestion(IndividualBeneficiaryAddressYesNoPage(index), userAnswers, "individualBeneficiaryAddressYesNo", name),
     converter.yesNoQuestion(IndividualBeneficiaryAddressUKYesNoPage(index), userAnswers, "individualBeneficiaryAddressUKYesNo", name),
     converter.addressQuestion(IndividualBeneficiaryAddressPage(index), userAnswers, "individualBeneficiaryAddressUK", name),

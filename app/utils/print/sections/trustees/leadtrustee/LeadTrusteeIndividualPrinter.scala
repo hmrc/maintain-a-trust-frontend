@@ -34,12 +34,16 @@ class LeadTrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter) exte
       converter.dateQuestion(TrusteeDateOfBirthPage(index), userAnswers, "trusteeDateOfBirth", name),
       converter.yesNoQuestion(TrusteeCountryOfNationalityYesNoPage(index), userAnswers, "trusteeCountryOfNationalityYesNo", name),
       converter.yesNoQuestion(TrusteeCountryOfNationalityInTheUkYesNoPage(index), userAnswers, "trusteeCountryOfNationalityUkYesNo", name),
-      converter.countryQuestion(TrusteeCountryOfNationalityInTheUkYesNoPage(index), TrusteeCountryOfNationalityPage(index), userAnswers, "trusteeCountryOfNationality", name),
+      converter.countryQuestion(
+        TrusteeCountryOfNationalityInTheUkYesNoPage(index), TrusteeCountryOfNationalityPage(index), userAnswers, "trusteeCountryOfNationality", name
+      ),
       converter.yesNoQuestion(TrusteeAUKCitizenPage(index), userAnswers, "trusteeAUKCitizen", name),
       converter.ninoQuestion(TrusteeNinoPage(index), userAnswers, "trusteeNino", name),
       converter.yesNoQuestion(TrusteeCountryOfResidenceYesNoPage(index), userAnswers, "trusteeCountryOfResidenceYesNo", name),
       converter.yesNoQuestion(TrusteeCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "trusteeCountryOfResidenceUkYesNo", name),
-      converter.countryQuestion(TrusteeCountryOfResidenceInTheUkYesNoPage(index), TrusteeCountryOfResidencePage(index), userAnswers, "trusteeCountryOfResidence", name),
+      converter.countryQuestion(
+        TrusteeCountryOfResidenceInTheUkYesNoPage(index), TrusteeCountryOfResidencePage(index), userAnswers, "trusteeCountryOfResidence", name
+      ),
       converter.yesNoQuestion(TrusteePassportIDCardYesNoPage(index), userAnswers, "trusteePassportOrIdCardYesNo", name),
       converter.passportOrIdCardQuestion(TrusteePassportIDCardPage(index), userAnswers, "trusteePassportOrIdCard", name)
     ) ++

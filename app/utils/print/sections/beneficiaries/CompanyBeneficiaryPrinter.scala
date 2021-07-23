@@ -41,7 +41,13 @@ class CompanyBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends
     converter.percentageQuestion(CompanyBeneficiaryShareOfIncomePage(index), userAnswers, "companyBeneficiaryShareOfIncome", name),
     converter.yesNoQuestion(CompanyBeneficiaryCountryOfResidenceYesNoPage(index), userAnswers, "companyBeneficiaryCountryOfResidenceYesNo", name),
     converter.yesNoQuestion(CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "companyBeneficiaryCountryOfResidenceUkYesNo", name),
-    converter.countryQuestion(CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), CompanyBeneficiaryCountryOfResidencePage(index), userAnswers, "companyBeneficiaryCountryOfResidence", name),
+    converter.countryQuestion(
+      CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(index),
+      CompanyBeneficiaryCountryOfResidencePage(index),
+      userAnswers,
+      "companyBeneficiaryCountryOfResidence",
+      name
+    ),
     converter.yesNoQuestion(CompanyBeneficiaryAddressYesNoPage(index), userAnswers, "companyBeneficiaryAddressYesNo", name),
     converter.yesNoQuestion(CompanyBeneficiaryAddressUKYesNoPage(index), userAnswers, "companyBeneficiaryAddressUKYesNo", name),
     converter.addressQuestion(CompanyBeneficiaryAddressPage(index), userAnswers, "companyBeneficiaryAddress", name),
