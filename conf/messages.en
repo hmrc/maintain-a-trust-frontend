@@ -662,7 +662,7 @@ declarationWhatNext5mld.generate-pdf.hint = Create a digitally signed PDF, which
 noTaxLiabilityInfo.title = You must contact HMRC
 noTaxLiabilityInfo.heading = You must contact HMRC
 noTaxLiabilityInfo.paragraph1 = If the trust you are maintaining no longer has a tax liability, you need to either:
-noTaxLiabilityInfo.bullet1 = Contact HMRC to let them know that you no longer need to declare tax.
+noTaxLiabilityInfo.bullet1 = Contact HMRC to let them know that you no longer need to declare tax
 noTaxLiabilityInfo.bullet2 = Submit a Self Assessment: Trust and Estate Tax Return (SA900)
 noTaxLiabilityInfo.paragraph2 = You no longer need to make an annual declaration for this trust. You will need to notify us of any changes to the trust details.
 
