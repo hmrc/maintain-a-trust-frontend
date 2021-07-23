@@ -16,24 +16,32 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
+@import views.html.components.{Warning, HeadingWithCaption, SubmitButton}
 
 @this(
     appConfig: FrontendAppConfig,
+    headingWithCaption: HeadingWithCaption,
+    warning: Warning,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
     main_template: MainTemplate
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("informationMaintainingThisTrust.title")
+    title = messages("informationMaintainingThisTrust.title"),
+    showBackLink = true
 ) {
 
-   @components.back_link()
+    @headingWithCaption(
+        headingPrefix = "informationMaintainingThisTrust",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
-    @components.heading_with_caption(headingKey = "informationMaintainingThisTrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
-
-    <div class="info-maintaining-warning-margin-top">
-       @components.warning("informationMaintainingThisTrust")
+    <div class="govuk-!-margin-top-5">
+       @warning("informationMaintainingThisTrust")
     </div>
 
     <h2>@messages("informationMaintainingThisTrust.updateDetails")</h2>
@@ -44,7 +52,8 @@
 
    <p>@messages("informationMaintainingThisTrust.paragraph4")</p>
 
-    @components.button_link(messages("site.startMaintaining"), controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url)
-
+    @formHelper(action = controllers.routes.ViewLastDeclarationYesNoController.onPageLoad(), 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.startMaintaining")))
+    }
 }
 

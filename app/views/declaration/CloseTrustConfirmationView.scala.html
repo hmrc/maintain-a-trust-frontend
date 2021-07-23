@@ -16,9 +16,12 @@
 
 @import config.FrontendAppConfig
 @import controllers.declaration.routes._
+@import views.html.components.{ConfirmationPanel, Link}
 
 @this(
     main_template: MainTemplate,
+    confirmationPanel: ConfirmationPanel,
+    link: Link,
     config: FrontendAppConfig
 )
 
@@ -28,17 +31,19 @@
     title = s"${messages("closeTrustConfirmation.title", fakeTvn)}"
     ) {
 
-    <div class="govuk-main-wrapper--l">
-        <div class="heading-confirmation heading-large">
-            <h1 class="form-title heading-large">@messages("closeTrustConfirmation.heading")</h1>
-            <span class="reference-text">@messages("closeTrustConfirmation.heading2")</span>
-            <span id="trusts-registration-number" class="reference-number">@fakeTvn</span>
-        </div>
-    </div>
+    @confirmationPanel(
+        heading = messages("closeTrustConfirmation.heading"),
+        content = messages("closeTrustConfirmation.heading2"),
+        refNumber = fakeTvn
+    )
 
-    <div class="section">
-        <p class="panel-indent">@components.link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save","closeTrustConfirmation.printsave.link", openInNewWindow = false)</p>
-    </div>
+    <p class="govuk-inset-text">
+        @link(
+            controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url,
+            "print-and-save",
+            "closeTrustConfirmation.printsave.link"
+        )
+    </p>
 
     <h2>@messages("closeTrustConfirmation.subheading")</h2>
 
@@ -46,9 +51,9 @@
 
     <p>@messages("closeTrustConfirmation.paragraph2")</p>
 
-    <p>@messages("closeTrustConfirmation.paragraph3.beforeLink") <a id="help-link" href="@config.helplineUrl" target="_blank">@messages("closeTrustConfirmation.paragraph3.link")</a>@messages("closeTrustConfirmation.paragraph3.afterLink")</p>
+    <p>@messages("closeTrustConfirmation.paragraph3.beforeLink") @link(config.helplineUrl, "help-link", "closeTrustConfirmation.paragraph3.link", true) @messages("closeTrustConfirmation.paragraph3.afterLink")</p>
 
     @if(isAgent: Boolean) {
-        @messages("closeTrustConfirmation.agent.you.can") @components.link(agentOverviewUrl, "agent-overview", "closeTrustConfirmation.agent.link", false)
+        @messages("closeTrustConfirmation.agent.you.can") @link(agentOverviewUrl, "agent-overview", "closeTrustConfirmation.agent.link")
     }
 }

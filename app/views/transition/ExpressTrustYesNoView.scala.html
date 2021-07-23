@@ -15,9 +15,14 @@
  *@
 
 @import controllers.transition.routes._
+@import views.html.components.{ErrorSummary, InputYesNo, SubmitButton, Heading}
 
 @this(
     main_template: MainTemplate,
+    submitButton: SubmitButton,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    headingComp: Heading,
     formHelper: FormWithCSRF
 )
 
@@ -35,22 +40,25 @@
 }
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("expressTrustYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("expressTrustYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = ExpressTrustYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.error_summary(form.errors)
+        @headingComp("expressTrustYesNo.heading")
 
-        @components.input_yes_no(
+        @content
+
+        @inputYesNo(
             field = form("value"),
             label = messages("expressTrustYesNo.heading"),
-            legendAsHeading = true,
-            additionalContent = Some(content)
+            legendAsHeading = false,
+            legendClass = Some("govuk-visually-hidden")
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

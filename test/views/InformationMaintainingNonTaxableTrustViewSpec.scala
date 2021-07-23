@@ -47,6 +47,6 @@ class InformationMaintainingNonTaxableTrustViewSpec extends ViewBehaviours {
 
     behave like pageWithBackLink(applyView)
 
-    behave like pageWithContinueButton(applyView, controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url, Some("site.startMaintaining"))
+    behave like pageWithContinueButton(applyView, Some("site.startMaintaining"))
   }
 }

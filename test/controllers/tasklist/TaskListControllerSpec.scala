@@ -49,7 +49,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
   lazy val onSubmit: Call = controllers.routes.WhatIsNextController.onSubmit()
 
-  val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+  val expectedContinueUrl: Call = controllers.declaration.routes.IndividualDeclarationController.onPageLoad()
 
   def mandatorySections4mld(identifier: String): List[Task] = List(
     Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Some(InProgress)),

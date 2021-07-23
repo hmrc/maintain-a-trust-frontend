@@ -47,7 +47,7 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
   override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = DeceasedSettlorCountryOfResidenceYesNoPage
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = DeceasedSettlorCountryOfResidenceInTheUkYesNoPage
   override def countryOfResidencePage(index: Int): QuestionPage[String] = DeceasedSettlorCountryOfResidencePage
-  
+
   override def metaDataPage(index: Int): QuestionPage[MetaData] = DeceasedSettlorMetaData
 
   override def updateUserAnswers(answers: Try[UserAnswers],

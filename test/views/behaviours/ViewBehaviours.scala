@@ -32,9 +32,8 @@ trait ViewBehaviours extends ViewSpecBase {
         "have the correct banner title" in {
 
           val doc = asDocument(view)
-          val nav = doc.getElementById("proposition-menu")
-          val span = nav.children.first
-          span.text mustBe messages("site.service_name")
+          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+          bannerTitle.html() mustBe messages("service.name")
         }
 
         "display the correct browser title" in {
@@ -58,7 +57,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "display language toggles" in {
 
           val doc = asDocument(view)
-          assertRenderedById(doc, "cymraeg-switch")
+          assertRenderedByCssSelector(doc, "a[lang=cy]")
         }
       }
     }
@@ -77,9 +76,8 @@ trait ViewBehaviours extends ViewSpecBase {
         "have the correct banner title" in {
 
           val doc = asDocument(view)
-          val nav = doc.getElementById("proposition-menu")
-          val span = nav.children.first
-          span.text mustBe messages("site.service_name")
+          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+          bannerTitle.html() mustBe messages("service.name")
         }
 
         "display the correct browser title" in {
@@ -108,7 +106,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "display language toggles" in {
 
           val doc = asDocument(view)
-          assertRenderedById(doc, "cymraeg-switch")
+          assertRenderedByCssSelector(doc, "a[lang=cy]")
         }
       }
     }
@@ -126,9 +124,8 @@ trait ViewBehaviours extends ViewSpecBase {
         "have the correct banner title" in {
 
           val doc = asDocument(view)
-          val nav = doc.getElementById("proposition-menu")
-          val span = nav.children.first
-          span.text mustBe messages("site.service_name")
+          val bannerTitle = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+          bannerTitle.html() mustBe messages("service.name")
         }
 
         "display the correct browser title" in {
@@ -152,7 +149,7 @@ trait ViewBehaviours extends ViewSpecBase {
         "display language toggles" in {
 
           val doc = asDocument(view)
-          assertRenderedById(doc, "cymraeg-switch")
+          assertRenderedByCssSelector(doc, "a[lang=cy]")
         }
 
       }
@@ -171,7 +168,7 @@ trait ViewBehaviours extends ViewSpecBase {
     }
   }
 
-  def pageWithASubmitButton(view: HtmlFormat.Appendable) = {
+  def pageWithASubmitButton(view: HtmlFormat.Appendable): Unit = {
 
     "behave like a page with a submit button" must {
       "have a submit button" in {
@@ -181,7 +178,7 @@ trait ViewBehaviours extends ViewSpecBase {
     }
   }
 
-  def pageWithPrintButton(view: HtmlFormat.Appendable) = {
+  def pageWithPrintButton(view: HtmlFormat.Appendable): Unit = {
     "behave like a page with a print button" must {
       "have a print button" in {
         val doc = asDocument(view)
@@ -190,23 +187,18 @@ trait ViewBehaviours extends ViewSpecBase {
     }
   }
 
-  def pageWithContinueButton(view: HtmlFormat.Appendable, url: String, expectedTextKey: Option[String] = None) = {
+  def pageWithContinueButton(view: HtmlFormat.Appendable, expectedTextKey: Option[String] = None): Unit = {
 
     "behave like a page with a Continue button" must {
       "have a continue button" in {
         val doc = asDocument(view)
         assertContainsTextForId(
           doc,
-          "button",
+          "submit",
           expectedTextKey match {
             case Some(key) => messages(key)
             case None => "Continue"
           }
-        )
-        assertAttributeValueForElement(
-          doc.getElementById("button"),
-          "href",
-          url
         )
       }
     }
@@ -239,7 +231,7 @@ trait ViewBehaviours extends ViewSpecBase {
     "behave like a page with a hint" must {
       "have a hint" in {
         val doc = asDocument(view)
-        assertRenderedById(doc, "form-hint")
+        assertContainsClass(doc, "govuk-hint")
       }
     }
   }

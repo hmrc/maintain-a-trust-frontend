@@ -15,34 +15,32 @@
  *@
 
 @import controllers.declaration.routes._
+@import views.html.components.{SubmitButton, ErrorSummary, UkAddress}
 
 @this(
     main_template: MainTemplate,
+    errorSummary: ErrorSummary,
+    ukAddress: UkAddress,
+    submitButton: SubmitButton,
     formHelper: FormWithCSRF
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("agencyRegisteredAddressUk.title")}"
+    title = s"${errorPrefix(form)}${messages("agencyRegisteredAddressUk.title")}",
+    showBackLink = true
     ) {
 
     @formHelper(action = AgencyRegisteredAddressUkController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
+        @ukAddress(
+            form = form,
+            legend = messages("agencyRegisteredAddressUk.heading")
+        )
 
-        <fieldset>
-
-            <legend>
-                @components.heading("agencyRegisteredAddressUk.heading")
-            </legend>
-
-            @components.uk_address(form)
-
-        </fieldset>
-
-        @components.submit_button()
+        @submitButton()
     }
 }

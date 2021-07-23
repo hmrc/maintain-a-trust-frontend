@@ -18,9 +18,14 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
+@import views.html.components.{HeadingWithCaption, Link, SubmitButton}
 
 @this(
 appConfig: FrontendAppConfig,
+headingWithCaption: HeadingWithCaption,
+link: Link,
+submitButton: SubmitButton,
+formHelper: FormWithCSRF,
 main_template: MainTemplate
 )
 
@@ -30,7 +35,11 @@ main_template: MainTemplate
 title = messages("identifierDoesNotMatch.title")
 ) {
 
- @components.heading_with_caption(headingKey = "identifierDoesNotMatch.heading", caption = s"$identifierType.caption", captionParam = identifier)
+ @headingWithCaption(
+  headingPrefix = "identifierDoesNotMatch",
+  captionPrefix = s"$identifierType",
+  captionParam = Some(identifier)
+ )
 
  <p>@messages("identifierDoesNotMatch.p1")</p>
 
@@ -42,11 +51,13 @@ title = messages("identifierDoesNotMatch.title")
  <p>@messages("identifierDoesNotMatch.p3")</p>
 
   @if(affinityGroup == AffinityGroup.Agent) {
-   <p>@messages(s"identifierDoesNotMatch.p4") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages(s"identifierDoesNotMatch.return.link")</a>.</p>
+   <p>@messages("identifierDoesNotMatch.p4") @link(appConfig.agentOverviewUrl, "register-and-maintain-link", "identifierDoesNotMatch.return.link").</p>
   } else {
-<p>@components.button_link("identifierDoesNotMatch.sign_out", controllers.routes.LogoutController.logout().url)</p>
+   @formHelper(action = controllers.routes.LogoutController.logout(), 'autoComplete -> "off") {
+    @submitButton(Some(messages("identifierDoesNotMatch.sign_out")))
+   }
   }
 
-  <p>@messages("identifierDoesNotMatch.p5") <a id="help-link" target="_blank" href="@appConfig.helplineUrl">@messages("identifierDoesNotMatch.contact.link")</a>.</p>
+  <p>@messages("identifierDoesNotMatch.p5") @link(appConfig.helplineUrl, "help-link", "identifierDoesNotMatch.contact.link", openInNewWindow = true).</p>
 
 }

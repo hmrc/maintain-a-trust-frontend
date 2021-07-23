@@ -41,7 +41,13 @@ class TrustBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends E
     converter.percentageQuestion(TrustBeneficiaryShareOfIncomePage(index), userAnswers, "trustBeneficiaryShareOfIncome", name),
     converter.yesNoQuestion(TrustBeneficiaryCountryOfResidenceYesNoPage(index), userAnswers, "trustBeneficiaryCountryOfResidenceYesNo", name),
     converter.yesNoQuestion(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "trustBeneficiaryCountryOfResidenceUkYesNo", name),
-    converter.countryQuestion(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), TrustBeneficiaryCountryOfResidencePage(index), userAnswers, "trustBeneficiaryCountryOfResidence", name),
+    converter.countryQuestion(
+      TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(index),
+      TrustBeneficiaryCountryOfResidencePage(index),
+      userAnswers,
+      "trustBeneficiaryCountryOfResidence",
+      name
+    ),
     converter.yesNoQuestion(TrustBeneficiaryAddressYesNoPage(index), userAnswers, "trustBeneficiaryAddressYesNo", name),
     converter.yesNoQuestion(TrustBeneficiaryAddressUKYesNoPage(index), userAnswers, "trustBeneficiaryAddressUKYesNo", name),
     converter.addressQuestion(TrustBeneficiaryAddressPage(index), userAnswers, "trustBeneficiaryAddress", name),

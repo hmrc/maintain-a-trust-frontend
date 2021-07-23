@@ -17,31 +17,35 @@
 @import controllers.routes._
 @import models.TrustMldStatus
 @import models.pages.WhatIsNext
+@import views.html.components.{ErrorSummary, InputRadio, SubmitButton}
 
 @this(
     main_template: MainTemplate,
+    errorSummary: ErrorSummary,
+    submitButton: SubmitButton,
+    inputRadio: InputRadio,
     formHelper: FormWithCSRF
 )
 
 @(form: Form[_], trustMldStatus: TrustMldStatus)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("declarationWhatNext.title")}"
+    title = s"${errorPrefix(form)}${messages("declarationWhatNext.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = WhatIsNextController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors, WhatIsNext.options(trustMldStatus).map(_._1))
 
-        @components.error_summary(form.errors)
-
-        @components.input_radio_with_hint(
+        @inputRadio(
             field = form("value"),
             legend = messages("declarationWhatNext.heading"),
             headingIsLegend = true,
-            inputs = WhatIsNext.options(trustMldStatus)
+            inline = false,
+            inputs = mapRadioOptionsToRadioItemsWithHints(form("value"), WhatIsNext.options(trustMldStatus))
         )
 
-        @components.submit_button(Some("site.onlyContinue"))
+    @submitButton()
     }
 }

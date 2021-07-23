@@ -16,10 +16,15 @@
 
 @import config.FrontendAppConfig
 @import controllers.routes._
+@import views.html.components.{ErrorSummary, InputText, SubmitButton, Heading}
 
 @this(
     main_template: MainTemplate,
     formHelper: FormWithCSRF,
+    headingComp: Heading,
+    errorSummary: ErrorSummary,
+    submitButton: SubmitButton,
+    inputText: InputText,
     config: FrontendAppConfig
 )
 
@@ -30,24 +35,28 @@
 }
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("urn.title")}"
+    title = s"${errorPrefix(form)}${messages("urn.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = URNController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
+        @headingComp(messages("urn.heading"))
 
-        @components.input_text(
-          field = form("value"),
-          label = messages("urn.heading"),
-          labelAsHeading = true,
-          hint = Some(messages("urn.hint")),
-          labelClass = Some("heading-large"),
-          optionalHtmlContent = Some(content)
+        @content
+
+        @inputText(
+            field = form("value"),
+            label = messages("urn.heading"),
+            labelAsHeading = false,
+            hint = Some(messages("utr.hint")),
+            labelClass = Some("govuk-visually-hidden"),
+            inputClass = Some("govuk-input--width-10"),
+            inputMode = Some("numeric")
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

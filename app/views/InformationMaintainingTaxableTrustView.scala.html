@@ -16,21 +16,29 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
+@import views.html.components.{HeadingWithCaption, BulletList, SubmitButton}
 
 @this(
     appConfig: FrontendAppConfig,
+    headingWithCaption: HeadingWithCaption,
+    bulletList: BulletList,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
     main_template: MainTemplate
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("informationMaintainingTaxableTrust.title")
+    title = messages("informationMaintainingTaxableTrust.title"),
+    showBackLink = true
 ) {
 
-   @components.back_link()
-
-    @components.heading_with_caption(headingKey = "informationMaintainingTaxableTrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "informationMaintainingTaxableTrust",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
     <h2>@messages("informationMaintainingTaxableTrust.subheading1")</h2>
 
@@ -40,7 +48,7 @@
 
     <p>@messages("informationMaintainingTaxableTrust.paragraph2")</p>
 
-    @components.bullet_list("informationMaintainingTaxableTrust", List(
+    @bulletList("informationMaintainingTaxableTrust", List(
         "bullet1",
         "bullet2",
         "bullet3"
@@ -48,7 +56,7 @@
 
    <p>@messages("informationMaintainingTaxableTrust.paragraph3")</p>
 
-    @components.bullet_list("informationMaintainingTaxableTrust", List(
+    @bulletList("informationMaintainingTaxableTrust", List(
         "bullet4",
         "bullet5"
     ))
@@ -59,7 +67,8 @@
 
     <p>@messages("informationMaintainingTaxableTrust.paragraph6")</p>
 
-    @components.button_link(messages("site.startMaintaining"), controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url)
-
+    @formHelper(action = controllers.routes.ViewLastDeclarationYesNoController.onPageLoad(), 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.startMaintaining")))
+    }
 }
 

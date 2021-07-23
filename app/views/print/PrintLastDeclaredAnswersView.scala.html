@@ -14,51 +14,60 @@
  * limitations under the License.
  *@
 
-@import viewmodels.{AnswerSection, RepeaterAnswerSection, Section}
+@import viewmodels.AnswerSection
+@import utils.SectionFormatter.formatAnswerSection
+@import views.html.components.{Heading, Button, Warning, ReturnToTop, SubmitButton}
 
 @this(
     main_template: MainTemplate,
+    headingComp: Heading,
+    govukSummaryList: GovukSummaryList,
+    button: Button,
+    returnToTop: ReturnToTop,
+    warning: Warning,
+    submitButton: SubmitButton,
     formHelper: FormWithCSRF
 )
 
-@(entities: Seq[Section], trustDetails: Seq[Section])(implicit request: Request[_], messages: Messages)
+@(entities: Seq[AnswerSection], trustDetails: Seq[AnswerSection])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("playbackAnswers.title")
+    title = messages("playbackAnswers.title"),
+    showBackLink = true
     ) {
 
-    @components.back_link()
+    @headingComp("playbackAnswers.heading", headingSize = "govuk-heading-xl")
 
-    @components.heading("playbackAnswers.heading", headingSize = "heading-xlarge")
+    @warning("playbackAnswers.declareAnnually")
 
-    @components.warning("playbackAnswers.declareAnnually")
+    @formHelper(action = controllers.routes.WhatIsNextController.onPageLoad(), 'autoComplete -> "off") {
 
-    <div class="section">
-        <p>@components.button_link("site.button.continue.maintaining", controllers.routes.WhatIsNextController.onPageLoad().url)</p>
-
-        @components.button_print()
-    </div>
+        <div class="govuk-button-group">
+            @submitButton(Some(messages("site.button.continue.maintaining")))
+            }
+            @button(messageKey = "site.print-or-save", isPrintButton = true)
+        </div>
 
     @for(section <- trustDetails){
-        @{
-            section match {
-                case a: AnswerSection => components.summary_answer_section(a)
-                case r: RepeaterAnswerSection => components.repeater_answer_section(r)
-            }
+        @if(section.sectionKey.isDefined){
+        <h2 class="govuk-heading-l">@messages(section.sectionKey.get)</h2>
+        @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
         }
     }
 
     @for(section <- entities){
-        @{
-            section match {
-                case a: AnswerSection => components.summary_answer_section(a)
-                case r: RepeaterAnswerSection => components.repeater_answer_section(r)
-            }
+        @if(section.sectionKey.isDefined){
+        <h2 class="govuk-heading-l">@messages(section.sectionKey.get)</h2>
+        }
+
+        @if(section.headingKey.isDefined){
+        <h3 class="govuk-heading-m">@messages(section.headingKey.get)</h3>
+        @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
         }
     }
 
     <p>@messages("playbackAnswers.informationFirstRegistered")</p>
     <p>@messages("playbackAnswers.selfAssessmentOnline")</p>
 
-    @components.return_to_top()
+    @returnToTop()
 }

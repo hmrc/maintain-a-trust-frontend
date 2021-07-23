@@ -15,29 +15,30 @@
  *@
 
 @import controllers.transition.routes._
+@import views.html.components.{SubmitButton, Heading}
 
 @this(
     main_template: MainTemplate,
+    submitButton: SubmitButton,
+    headingComp: Heading,
     formHelper: FormWithCSRF
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("confirmTrustTaxable.title")
+    title = messages("confirmTrustTaxable.title"),
+    showBackLink = true
 ) {
 
     @formHelper(action = ConfirmTrustTaxableController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
-
-        @components.heading("confirmTrustTaxable.heading")
+        @headingComp("confirmTrustTaxable.heading")
 
         <p>@messages("confirmTrustTaxable.p1")</p>
 
         <p>@messages("confirmTrustTaxable.p2")</p>
 
-
-        @components.submit_button(Some("site.onlyContinue"))
+        @submitButton()
     }
 }

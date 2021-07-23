@@ -16,21 +16,26 @@
 
 @import controllers.routes._
 @import config.FrontendAppConfig
+@import views.html.components.HeadingWithCaption
 
 @this(
     main_template: MainTemplate,
+    headingWithCaption: HeadingWithCaption,
     config: FrontendAppConfig
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("agentNotAuthorised.title")
+    title = messages("agentNotAuthorised.title"),
+    showBackLink = true
 ) {
 
-    @components.back_link()
-
-    @components.heading_with_caption(headingKey = "agentNotAuthorised.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "agentNotAuthorised",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
     <p>@messages("agentNotAuthorised.p1")</p>
     <p>@messages("agentNotAuthorised.p2") <a href="@config.agentInvitationsUrl">@messages("agentNotAuthorised.p2.a")</a></p>

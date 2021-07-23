@@ -15,9 +15,14 @@
  *@
 
 @import controllers.makechanges.routes._
+@import views.html.components.{Heading, SubmitButton, ErrorSummary, InputYesNo}
 
 @this(
     main_template: MainTemplate,
+    headingComp: Heading,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton,
     formHelper: FormWithCSRF
 )
 
@@ -35,24 +40,26 @@
 }
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages(s"$prefix.title")}"
+    title = s"${errorPrefix(form)}${messages(s"$prefix.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = AddProtectorYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.error_summary(form.errors)
+        @headingComp(s"$prefix.heading")
 
-        @components.input_yes_no(
+        @content
+
+        @inputYesNo(
             field = form("value"),
             label = messages(s"$prefix.heading"),
-            legendClass = Some("heading-large"),
-            legendAsHeading = true,
-            hint = Some(messages("addProtector.hint")),
-            additionalContent = Some(content)
+            legendClass = Some("govuk-visually-hidden"),
+            legendAsHeading = false,
+            hint = Some(messages("addProtector.hint"))
         )
 
-        @components.submit_button(Some("site.onlyContinue"))
+        @submitButton()
     }
 }

@@ -15,32 +15,41 @@
  *@
 
 @import config.FrontendAppConfig
+@import views.html.components.{Link, HeadingWithCaption, SubmitButton}
 
 @this(
-        appConfig: FrontendAppConfig,
-        main_template: MainTemplate
+    appConfig: FrontendAppConfig,
+    headingWithCaption: HeadingWithCaption,
+    link: Link,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
+    main_template: MainTemplate
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("noTaxLiabilityInfo.title")
+    title = messages("noTaxLiabilityInfo.title"),
+    showBackLink = true
 ) {
 
-    @components.back_link()
-
-    @components.heading_with_caption(headingKey = "noTaxLiabilityInfo.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "noTaxLiabilityInfo",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
     <p>@messages("noTaxLiabilityInfo.paragraph1")</p>
 
-    <ul class="list list-bullet">
-        <li>@components.link(appConfig.helplineUrl, "help-link", messages("noTaxLiabilityInfo.bullet1"), openInNewWindow = true)</li>
-        <li>@components.link(appConfig.sa900Link, "sa900-link", messages("noTaxLiabilityInfo.bullet2"), openInNewWindow = true)</li>
+    <ul class="govuk-list govuk-list--bullet govuk-list--spaced">
+        <li>@link(appConfig.helplineUrl, "help-link", "noTaxLiabilityInfo.bullet1", openInNewWindow = true)</li>
+        <li>@link(appConfig.sa900Link, "sa900-link", "noTaxLiabilityInfo.bullet2", openInNewWindow = true)</li>
     </ul>
 
     <p>@messages("noTaxLiabilityInfo.paragraph2")</p>
 
-    @components.button_link(messages("site.save.continue"), controllers.routes.WhatIsNextController.onPageLoad().url)
-
+    @formHelper(action = controllers.routes.WhatIsNextController.onPageLoad(), 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.save.continue")))
+    }
 }
 

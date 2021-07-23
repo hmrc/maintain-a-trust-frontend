@@ -14,33 +14,44 @@
  * limitations under the License.
  *@
 
+@import play.api.mvc.Call
 @import config.FrontendAppConfig
 @import models.Mode
+@import views.html.components.{HeadingWithCaption, Link, SubmitButton}
 
 @this(
     main_template: MainTemplate,
+    headingWithCaption: HeadingWithCaption,
+    link: Link,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
     config: FrontendAppConfig
 )
 
-@(identifier: String, identifierType: IdentifierType, availableSections: String, continueUrl: String)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType, availableSections: String, continueUrl: Call)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("maintainThisTrust.title")
+    title = messages("maintainThisTrust.title"),
+    showBackLink = true
 ) {
 
-    @components.back_link()
+    @headingWithCaption(
+        headingPrefix = "maintainThisTrust",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
-    @components.heading_with_caption(headingKey = "maintainThisTrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
-
-    <p>@messages(s"maintainThisTrust.$identifierType.p1.a") <span class="weight-bold">@identifier</span> @messages("maintainThisTrust.p1.b")</p>
+    <p>@messages(s"maintainThisTrust.$identifierType.p1.a") <span>@identifier</span> @messages("maintainThisTrust.p1.b")</p>
 
     <p>@messages("maintainThisTrust.p2", availableSections)</p>
 
     <p>@messages("maintainThisTrust.p3")</p>
 
-    <p>@messages("maintainThisTrust.p4") <a href="@config.helplineUrl" target="_blank">@messages("maintainThisTrust.p4.a")</a>.</p>
+    <p>@messages("maintainThisTrust.p4") @link(config.helplineUrl, "help-link", "maintainThisTrust.p4.a", true).</p>
 
-    <p>@components.button_link("site.onlyContinue", continueUrl)</p>
+    @formHelper(action = continueUrl, 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.onlyContinue")))
+    }
 
 }
 

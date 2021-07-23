@@ -15,9 +15,13 @@
  *@
 
 @import controllers.transition.routes._
+@import views.html.components.{BulletList, SubmitButton, HeadingWithCaption}
 
 @this(
     main_template: MainTemplate,
+    headingWithCaption: HeadingWithCaption,
+    submitButton: SubmitButton,
+    bulletList: BulletList,
     formHelper: FormWithCSRF
 )
 
@@ -29,26 +33,29 @@
 }
 
 @main_template(
-    title = messages("beforeYouContinueToTaxable.title")
+    title = messages("beforeYouContinueToTaxable.title"),
+    showBackLink = true
 ) {
 
     @formHelper(action = BeforeYouContinueToTaxableController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
-
-        @components.heading_with_caption(headingKey = "beforeYouContinueToTaxable.heading", caption = s"$identifierType.caption", captionParam = identifier)
+        @headingWithCaption(
+            headingPrefix = "beforeYouContinueToTaxable",
+            captionPrefix = s"$identifierType",
+            captionParam = Some(identifier)
+        )
 
         <p>@messages("beforeYouContinueToTaxable.p1")</p>
 
         <p>@messages("beforeYouContinueToTaxable.p2")</p>
 
-        @components.bullet_list(
+        @bulletList(
             "beforeYouContinueToTaxable",
             bulletPoints
         )
 
         <p>@messages("beforeYouContinueToTaxable.p3")</p>
-        @components.bullet_list(
+        @bulletList(
             "beforeYouContinueToTaxable",
             List(
                 "bullet5",
@@ -60,6 +67,6 @@
             )
         )
 
-        @components.submit_button(Some("site.onlyContinue"))
+        @submitButton()
     }
 }

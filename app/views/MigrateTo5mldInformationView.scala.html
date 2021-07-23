@@ -17,10 +17,14 @@
 @import models.Mode
 @import config.FrontendAppConfig
 @import controllers.routes._
+@import views.html.components.{HeadingWithCaption, BulletList, SubmitButton}
 
 @this(
     appConfig: FrontendAppConfig,
     main_template: MainTemplate,
+    headingWithCaption: HeadingWithCaption,
+    submitButton: SubmitButton,
+    bulletList: BulletList,
     formHelper: FormWithCSRF
 )
 
@@ -28,20 +32,23 @@
 
 
 @main_template(
-    title = messages("migrateTo5mldInformation.title")
+    title = messages("migrateTo5mldInformation.title"),
+    showBackLink = true
 ) {
 
    @formHelper(action = MigrateTo5mldInformationController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
-
-        @components.heading_with_caption(headingKey = "migrateTo5mldInformation.heading", caption = s"$identifierType.caption", captionParam = identifier)
+        @headingWithCaption(
+            headingPrefix = "migrateTo5mldInformation",
+            captionPrefix = s"$identifierType",
+            captionParam = Some(identifier)
+        )
 
          <p>@messages("migrateTo5mldInformation.p1")</p>
 
          <p>@messages("migrateTo5mldInformation.p2")</p>
 
-         @components.bullet_list("migrateTo5mldInformation", List(
+         @bulletList("migrateTo5mldInformation", List(
          "bullet1",
          "bullet2",
          "bullet3"
@@ -53,7 +60,7 @@
 
          <p>@messages("migrateTo5mldInformation.p4")</p>
 
-         @components.submit_button()
+         @submitButton()
 
     }
 

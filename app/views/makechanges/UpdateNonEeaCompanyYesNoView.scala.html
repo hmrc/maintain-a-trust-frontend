@@ -17,10 +17,16 @@
 @import play.api.mvc.Call
 @import config.FrontendAppConfig
 @import controllers.makechanges.routes._
+@import views.html.components.{Heading, SubmitButton, ErrorSummary, InputYesNo, BulletList}
 
 @this(
     appConfig: FrontendAppConfig,
     main_template: MainTemplate,
+    headingComp: Heading,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton,
+    bulletList: BulletList,
     formHelper: FormWithCSRF
 )
 
@@ -29,7 +35,7 @@
 @content = {
     <p>@messages("updateNonEeaCompany.paragraph1")</p>
 
-    @components.bullet_list(
+    @bulletList(
         "updateNonEeaCompany",
         List(
             "bullet1",
@@ -41,7 +47,7 @@
 
     <p>@messages("updateNonEeaCompany.paragraph2")</p>
 
-    @components.bullet_list(
+    @bulletList(
         "updateNonEeaCompany",
         List(
             "bullet5",
@@ -53,23 +59,25 @@
 }
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages(s"$prefix.title")}"
+    title = s"${errorPrefix(form)}${messages(s"$prefix.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = UpdateNonEeaCompanyYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.error_summary(form.errors)
+        @headingComp(s"$prefix.heading")
 
-        @components.input_yes_no(
+        @content
+
+        @inputYesNo(
             field = form("value"),
             label = messages(s"$prefix.heading"),
-            legendClass = Some("heading-large"),
-            legendAsHeading = true,
-            additionalContent = Some(content)
+            legendClass = Some("govuk-visually-hidden"),
+            legendAsHeading = false
         )
 
-        @components.submit_button(Some("site.onlyContinue"))
+        @submitButton()
     }
 }

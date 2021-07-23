@@ -15,33 +15,36 @@
  *@
 
 @import controllers.close.taxable.routes._
+@import views.html.components.{SubmitButton, InputYesNo, ErrorSummary}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    inputYesNo: InputYesNo,
+    errorSummary: ErrorSummary,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_], utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("dateLastAssetSharedOutYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("dateLastAssetSharedOutYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = DateLastAssetSharedOutYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.error_summary(form.errors)
-
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
             label = messages("dateLastAssetSharedOutYesNo.heading"),
-            legendClass = Some("heading-xlarge"),
+            legendClass = Some("govuk-heading-xl"),
             legendAsHeading = true,
             hint = Some(messages("dateLastAssetSharedOutYesNo.hint")),
             caption = Some(messages("dateLastAssetSharedOutYesNo.caption", utr))
         )
 
-        @components.submit_button(Some("site.onlyContinue"))
+        @submitButton()
     }
 }

@@ -41,7 +41,13 @@ class CharityBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends
     converter.percentageQuestion(CharityBeneficiaryShareOfIncomePage(index), userAnswers, "charityBeneficiaryShareOfIncome", name),
     converter.yesNoQuestion(CharityBeneficiaryCountryOfResidenceYesNoPage(index), userAnswers, "charityBeneficiaryCountryOfResidenceYesNo", name),
     converter.yesNoQuestion(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "charityBeneficiaryCountryOfResidenceUkYesNo", name),
-    converter.countryQuestion(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), CharityBeneficiaryCountryOfResidencePage(index), userAnswers, "charityBeneficiaryCountryOfResidence", name),
+    converter.countryQuestion(
+      CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index),
+      CharityBeneficiaryCountryOfResidencePage(index),
+      userAnswers,
+      "charityBeneficiaryCountryOfResidence",
+      name
+    ),
     converter.yesNoQuestion(CharityBeneficiaryAddressYesNoPage(index), userAnswers, "charityBeneficiaryAddressYesNo", name),
     converter.yesNoQuestion(CharityBeneficiaryAddressUKYesNoPage(index), userAnswers, "charityBeneficiaryAddressUKYesNo", name),
     converter.addressQuestion(CharityBeneficiaryAddressPage(index), userAnswers, "charityBeneficiaryAddress", name),

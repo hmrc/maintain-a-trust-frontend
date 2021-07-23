@@ -18,9 +18,14 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
+@import views.html.components.{HeadingWithCaption, Link, SubmitButton}
 
 @this(
     appConfig: FrontendAppConfig,
+    headingWithCaption: HeadingWithCaption,
+    link: Link,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
     main_template: MainTemplate
 )
 
@@ -30,15 +35,21 @@
 title = messages("trustClosed.title")
 ) {
 
-  @components.heading_with_caption(headingKey = "trustClosed.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "trustClosed",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
-  <p>@messages("trustClosed.p1") <a id="help-link" target="_blank" href="@appConfig.helplineUrl">@messages("trustClosed.contact.link")</a>
+  <p>@messages("trustClosed.p1") @link(appConfig.helplineUrl, "help-link", "trustClosed.contact.link", openInNewWindow = true)
       @messages(s"trustClosed.$identifierType.p2")</p>
 
   @if(affinityGroup == AffinityGroup.Agent) {
-    <p>@messages("trustClosed.p3") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("trustClosed.return.link")</a>.</p>
+    <p>@messages("trustClosed.p3") @link(appConfig.agentOverviewUrl, "register-and-maintain-link", "trustClosed.return.link").</p>
   } else {
-    @components.button_link("site.try-again", controllers.routes.UTRController.onPageLoad().url)
+    @formHelper(action = controllers.routes.UTRController.onPageLoad(), 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.try-again")))
+    }
   }
 }
 

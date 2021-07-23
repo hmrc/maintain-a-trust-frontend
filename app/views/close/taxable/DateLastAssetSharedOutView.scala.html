@@ -15,31 +15,34 @@
  *@
 
 @import controllers.close.taxable.routes._
+@import views.html.components.{SubmitButton, InputDate, ErrorSummary}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    inputDate: InputDate,
+    errorSummary: ErrorSummary,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("dateLastAssetSharedOut.title")}"
+    title = s"${errorPrefix(form)}${messages("dateLastAssetSharedOut.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = DateLastAssetSharedOutController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
-
-        @components.input_date(
+        @inputDate(
             field = form("value"),
             legend = messages("dateLastAssetSharedOut.heading"),
-            headingIsLegend = true,
+            legendAsHeading = true,
             hint = Some(messages("dateLastAssetSharedOut.hint"))
         )
 
-        @components.submit_button(Some("site.onlyContinue"))
+        @submitButton()
     }
 }

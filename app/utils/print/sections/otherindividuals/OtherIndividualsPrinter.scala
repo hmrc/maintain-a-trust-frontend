@@ -41,12 +41,24 @@ class OtherIndividualsPrinter @Inject()(converter: AnswerRowConverter) extends E
     converter.dateQuestion(OtherIndividualDateOfBirthPage(index), userAnswers, "otherIndividualDateOfBirth", name),
     converter.yesNoQuestion(OtherIndividualCountryOfNationalityYesNoPage(index), userAnswers, "otherIndividualCountryOfNationalityYesNo", name),
     converter.yesNoQuestion(OtherIndividualCountryOfNationalityInTheUkYesNoPage(index), userAnswers, "otherIndividualCountryOfNationalityUkYesNo", name),
-    converter.countryQuestion(OtherIndividualCountryOfNationalityInTheUkYesNoPage(index), OtherIndividualCountryOfNationalityPage(index), userAnswers, "otherIndividualCountryOfNationality", name),
+    converter.countryQuestion(
+      OtherIndividualCountryOfNationalityInTheUkYesNoPage(index),
+      OtherIndividualCountryOfNationalityPage(index),
+      userAnswers,
+      "otherIndividualCountryOfNationality",
+      name
+    ),
     converter.yesNoQuestion(OtherIndividualNationalInsuranceYesNoPage(index), userAnswers, "otherIndividualNINOYesNo", name),
     converter.ninoQuestion(OtherIndividualNationalInsuranceNumberPage(index), userAnswers, "otherIndividualNINO", name),
     converter.yesNoQuestion(OtherIndividualCountryOfResidenceYesNoPage(index), userAnswers, "otherIndividualCountryOfResidenceYesNo", name),
     converter.yesNoQuestion(OtherIndividualCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "otherIndividualCountryOfResidenceUkYesNo", name),
-    converter.countryQuestion(OtherIndividualCountryOfResidenceInTheUkYesNoPage(index), OtherIndividualCountryOfResidencePage(index), userAnswers, "otherIndividualCountryOfResidence", name),
+    converter.countryQuestion(
+      OtherIndividualCountryOfResidenceInTheUkYesNoPage(index),
+      OtherIndividualCountryOfResidencePage(index),
+      userAnswers,
+      "otherIndividualCountryOfResidence",
+      name
+    ),
     converter.yesNoQuestion(OtherIndividualAddressYesNoPage(index), userAnswers, "otherIndividualAddressYesNo", name),
     converter.yesNoQuestion(OtherIndividualAddressUKYesNoPage(index), userAnswers, "otherIndividualAddressUKYesNo", name),
     converter.addressQuestion(OtherIndividualAddressPage(index), userAnswers, "otherIndividualAddress", name),
