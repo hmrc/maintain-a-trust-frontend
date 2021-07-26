@@ -16,6 +16,7 @@
 
 @import play.api.mvc.Call
 @import controllers.declaration.routes._
+@import controllers.tasklist.routes._
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
@@ -39,7 +40,6 @@
     mandatory: List[Task],
     optional: List[Task],
     affinityGroup: AffinityGroup,
-    nextUrl: Call,
     isAbleToDeclare: Boolean,
     closingTrust: Boolean
 )(implicit request: Request[_], messages: Messages)
@@ -84,7 +84,7 @@
 
         <p>@messages("variationProgress.p5") @link(appConfig.sa900Link, "sa-900", "variationProgress.sa900.link", true).</p>
 
-        @formHelper(action = nextUrl, 'autoComplete -> "off") {
+        @formHelper(action = TaskListController.onSubmit(), 'autoComplete -> "off") {
             @submitButton(Some(messages("taskList.summary.continue")))
         }
     }

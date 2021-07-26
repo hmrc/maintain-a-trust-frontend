@@ -27,7 +27,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class TaskListController @Inject()(
                                     override val messagesApi: MessagesApi,
@@ -60,7 +60,6 @@ class TaskListController @Inject()(
             mandatory = sections.mandatory,
             additional = sections.other,
             affinityGroup = request.user.affinityGroup,
-            nextUrl = declarationUrl(request.user.affinityGroup, isTrustMigratingFromNonTaxableToTaxable = true),
             isAbleToDeclare = sections.isAbleToDeclare
           ))
         } else {
@@ -71,11 +70,18 @@ class TaskListController @Inject()(
             mandatory = sections.mandatory,
             optional = sections.other,
             affinityGroup = request.user.affinityGroup,
-            nextUrl = declarationUrl(request.user.affinityGroup, isTrustMigratingFromNonTaxableToTaxable = false),
             isAbleToDeclare = sections.isAbleToDeclare,
             closingTrust = request.closingTrust
           ))
         }
       }
+  }
+
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
+    implicit request =>
+      Future.successful(Redirect(declarationUrl(
+        request.user.affinityGroup,
+        isTrustMigratingFromNonTaxableToTaxable = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
+      )))
   }
 }

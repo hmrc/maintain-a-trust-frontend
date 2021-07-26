@@ -16,6 +16,7 @@
 
 @import play.api.mvc.Call
 @import controllers.declaration.routes._
+@import controllers.tasklist.routes._
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
@@ -40,7 +41,6 @@
     mandatory: List[Task],
     additional: List[Task],
     affinityGroup: AffinityGroup,
-    nextUrl: Call,
     isAbleToDeclare: Boolean
 )(implicit request: Request[_], messages: Messages)
 
@@ -79,7 +79,7 @@
         <p>@messages("transitionProgress.p5") @link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", true)@messages("transitionProgress.p5b")</p>
         <p>@messages("transitionProgress.p6") @link(appConfig.loginContinueUrl, "return-to-service", "transitionProgress.p6.link").</p>
 
-        @formHelper(action = nextUrl, 'autoComplete -> "off") {
+        @formHelper(action = TaskListController.onSubmit(), 'autoComplete -> "off") {
             @submitButton(Some(messages("taskList.summary.continue")))
         }
 

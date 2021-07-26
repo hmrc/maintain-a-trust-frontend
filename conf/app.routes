@@ -149,6 +149,7 @@ POST       /before-closing                              controllers.close.Before
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
 GET        /overview                                    controllers.tasklist.TaskListController.onPageLoad()
+POST       /overview                                    controllers.tasklist.TaskListController.onSubmit()
 
 GET        /view-evidence                               controllers.ObligedEntityPdfYesNoController.onPageLoad()
 POST       /view-evidence                               controllers.ObligedEntityPdfYesNoController.onSubmit()
