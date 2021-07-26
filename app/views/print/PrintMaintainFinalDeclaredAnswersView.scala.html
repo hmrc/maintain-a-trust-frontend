@@ -74,6 +74,9 @@
 
         @if(section.headingKey.isDefined){
             <h3 class="govuk-heading-m">@messages(section.headingKey.get)</h3>
+        }
+
+        @if(section.rows){
             @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
         }
     }

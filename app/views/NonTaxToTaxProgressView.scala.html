@@ -88,8 +88,6 @@
     }
 
     @if(affinityGroup == AffinityGroup.Agent) {
-        <div class="section">
-            <a href="@{appConfig.agentOverviewUrl}">@messages("transitionsProgress.return.link")</a>
-        </div>
+        <p>@link(appConfig.agentOverviewUrl, "agent-overview", "transitionsProgress.return.link")</p>
     }
 }
