@@ -20,24 +20,26 @@ import models.UTR
 import play.api.mvc.Call
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Trustees}
+import sections.{Natural, Protectors, TrustDetails, Trustees}
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 import viewmodels.{Link, Task}
-import views.behaviours.{VariationsProgressViewBehaviours, ViewBehaviours}
+import views.behaviours.{ProgressViewBehaviours, ViewBehaviours}
 import views.html.VariationProgressView
 
-class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressViewBehaviours {
+class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviours {
 
   private val utr = "utr"
 
   private val mandatorySections = List(
+    Task(Link(TrustDetails, Some("")), None),
     Task(Link(Settlors, Some("")), None),
     Task(Link(Trustees, Some("")), None),
     Task(Link(Beneficiaries, Some("")), None)
   )
 
   private val optionalSections = List(
-    Task(Link(Natural, Some("")),None)
+    Task(Link(Natural, Some("")),None),
+    Task(Link(Protectors, Some("")),None)
   )
 
   private val expectedContinueUrl: Call = controllers.declaration.routes.IndividualDeclarationController.onPageLoad()

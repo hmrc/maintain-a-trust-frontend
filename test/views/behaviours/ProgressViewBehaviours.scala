@@ -20,7 +20,7 @@ import play.twirl.api.HtmlFormat
 import viewmodels.Task
 import views.ViewSpecBase
 
-trait TransitionsProgressViewBehaviours extends ViewSpecBase {
+trait ProgressViewBehaviours extends ViewSpecBase {
 
   def taskListHeading(view: HtmlFormat.Appendable) : Unit = {
 
@@ -31,13 +31,14 @@ trait TransitionsProgressViewBehaviours extends ViewSpecBase {
         "contain a heading" in {
           val doc = asDocument(view)
           assertRenderedById(doc, "task-list--heading--mandatory")
+          assertRenderedById(doc, "task-list--heading--additional")
         }
       }
     }
   }
 
   def taskList(view: HtmlFormat.Appendable,
-               expectedSections : List[Task] = Nil) : Unit = {
+               expectedSections : List[Task]) : Unit = {
 
     expectedSections.foreach {
       section =>
@@ -50,10 +51,45 @@ trait TransitionsProgressViewBehaviours extends ViewSpecBase {
           }
 
           s"render a link" in {
-            val id = s"task-list__task--${section.link.text}"
+            val id = s"task-list__task-link--${section.link.text}"
 
             val doc = asDocument(view)
             doc.getElementById(id).hasAttr("href")
+          }
+
+          section.tag.foreach {
+            _ =>
+
+              s"render a tag" in {
+                val doc = asDocument(view)
+                assertRenderedById(doc, s"task-list__task--${section.link.text}__tag")
+              }
+
+          }
+
+        }
+
+    }
+  }
+
+  def taskListWithNotActiveLink(view: HtmlFormat.Appendable,
+               expectedSections : List[Task]) : Unit = {
+
+    expectedSections.foreach {
+      section =>
+
+        s"${section.link.text}" must {
+
+          s"render a list item" in {
+            val doc = asDocument(view)
+            assertRenderedById(doc, s"task-list__item--${section.link.text}")
+          }
+
+          s"not render a link" in {
+            val id = s"task-list__task--${section.link.text}"
+
+            val doc = asDocument(view)
+            assert(!doc.getElementById(id).hasAttr("href"))
           }
 
           section.tag.foreach {
