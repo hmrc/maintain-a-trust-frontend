@@ -42,6 +42,7 @@ GET        /confirm-trust-is-taxable                    controllers.transition.C
 POST       /confirm-trust-is-taxable                    controllers.transition.ConfirmTrustTaxableController.onSubmit()
 
 GET        /information                                 controllers.InformationMaintainingThisTrustController.onPageLoad()
+POST       /information                                 controllers.InformationMaintainingThisTrustController.onSubmit()
 
 GET        /trust-registered-before-5mld                controllers.MigrateTo5mldInformationController.onPageLoad()
 POST       /trust-registered-before-5mld                controllers.MigrateTo5mldInformationController.onSubmit()

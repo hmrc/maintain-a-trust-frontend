@@ -114,5 +114,25 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
         }
       }
     }
+
+    ".onSubmit" must {
+      "redirect to ViewLastDeclarationYesNoController " in {
+
+        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request = FakeRequest(POST, routes.InformationMaintainingThisTrustController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url
+
+        application.stop()
+
+      }
+    }
   }
 }

@@ -62,4 +62,9 @@ class InformationMaintainingThisTrustController @Inject()(
           }
       }
   }
+
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier {
+    _ =>
+      Redirect(routes.ViewLastDeclarationYesNoController.onPageLoad())
+  }
 }
