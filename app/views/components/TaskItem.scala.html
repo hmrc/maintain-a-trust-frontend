@@ -24,14 +24,21 @@
 
 <li class="app-task-list__item" id="task-list__item--@{task.link.text}">
 
-    <span class="app-task-link">
+    <span class="app-task">
+        @if(task.link.url.isDefined){
         <a class="app-task-list__task-name"
-           id="task-list__task--@{task.link.text}"
-           href="@{task.link.url}"
+           id="task-list__task-link--@{task.link.text}"
+           href="@{task.link.url.get}"
            @task.tag.map { t => aria-describedby="task-list__task--@{task.link.text}__tag" }>
-
             @messages(s"taskList.${task.link.text}.label")
         </a>
+        } else {
+        <span class="app-task-list__task-name"
+              id="task-list__task--@{task.link.text}"
+              @task.tag.map { t => aria-describedby="task-list__task--@{task.link.text}__tag" }>
+            @messages(s"taskList.${task.link.text}.label")
+        </span>
+        }
     </span>
 
     @task.tag.map { t =>

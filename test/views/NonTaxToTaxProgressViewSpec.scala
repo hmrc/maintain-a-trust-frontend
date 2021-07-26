@@ -19,13 +19,14 @@ package views
 import models.URN
 import play.api.mvc.Call
 import sections.assets.Assets
+import sections.beneficiaries.Beneficiaries
 import sections.{TaxLiability, TrustDetails}
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 import viewmodels.{Link, Task}
-import views.behaviours.{TransitionsProgressViewBehaviours, ViewBehaviours}
+import views.behaviours.{ProgressViewBehaviours, ViewBehaviours}
 import views.html.NonTaxToTaxProgressView
 
-class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgressViewBehaviours {
+class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehaviours {
 
   private val urn = "urn"
 
@@ -33,6 +34,14 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
     Task(Link(TrustDetails, Some("")), None),
     Task(Link(Assets, Some("")), None),
     Task(Link(TaxLiability, Some("")), None)
+  )
+
+  private val additionalSections = List(
+    Task(Link(Beneficiaries, None), None)
+  )
+
+  private val additionalSectionsWithLink = List(
+    Task(Link(Beneficiaries, Some("")), None)
   )
 
   private val expectedContinueUrl: Call = controllers.declaration.routes.IndividualDeclarationController.onPageLoad()
@@ -53,7 +62,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
-          additional = Nil,
+          additional = additionalSections,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = false
@@ -72,6 +81,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
         behave like taskListHeading(applyView)
 
         behave like taskList(applyView, mandatorySections)
+
+        behave like taskListWithNotActiveLink(applyView, additionalSections)
 
         behave like pageWithWarning(applyView)
 
@@ -94,7 +105,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
-          additional = Nil,
+          additional = additionalSections,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = false
@@ -114,6 +125,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
 
         behave like taskList(applyView, mandatorySections)
 
+        behave like taskListWithNotActiveLink(applyView, additionalSections)
+
         behave like pageWithWarning(applyView)
       }
     }
@@ -132,7 +145,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
-          additional = Nil,
+          additional = additionalSectionsWithLink,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = true
@@ -152,6 +165,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
         behave like taskListHeading(applyView)
 
         behave like taskList(applyView, mandatorySections)
+
+        behave like taskList(applyView, additionalSectionsWithLink)
 
         behave like pageWithWarning(applyView)
 
@@ -176,7 +191,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
-          additional = Nil,
+          additional = additionalSectionsWithLink,
           affinityGroup = group,
           nextUrl = expectedContinueUrl,
           isAbleToDeclare = true
@@ -196,6 +211,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
         behave like taskListHeading(applyView)
 
         behave like taskList(applyView, mandatorySections)
+
+        behave like taskList(applyView, additionalSectionsWithLink)
 
         behave like pageWithWarning(applyView)
 
