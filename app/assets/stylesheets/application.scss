@@ -34,6 +34,9 @@ body:not(.js-enabled) {
 // ----------------
 // For trusts-frontend and maintain-a-trust-frontend
 // ----------------
+.app-task {
+  display: block;
+}
 
 .app-task-list__items {
   padding-left: 0 !important;

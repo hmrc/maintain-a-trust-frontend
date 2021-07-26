@@ -85,9 +85,8 @@ trait ProgressViewBehaviours extends ViewSpecBase {
             assertRenderedById(doc, s"task-list__item--${section.link.text}")
           }
 
-          s"not render a link" in {
+          s"not render as link" in {
             val id = s"task-list__task--${section.link.text}"
-
             val doc = asDocument(view)
             assert(!doc.getElementById(id).hasAttr("href"))
           }
