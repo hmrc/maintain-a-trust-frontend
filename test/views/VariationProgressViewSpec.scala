@@ -17,7 +17,6 @@
 package views
 
 import models.UTR
-import play.api.mvc.Call
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
 import sections.{Natural, Protectors, TrustDetails, Trustees}
@@ -42,7 +41,6 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
     Task(Link(Protectors, Some("")),None)
   )
 
-  private val expectedContinueUrl: Call = controllers.declaration.routes.IndividualDeclarationController.onPageLoad()
 
   "VariationProgressView" when {
 
@@ -62,7 +60,6 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
           mandatory = mandatorySections,
           optional = optionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = false,
           closingTrust = false
         )(fakeRequest, messages)
@@ -105,7 +102,6 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
           mandatory = mandatorySections,
           optional = optionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = false,
           closingTrust = false
         )(fakeRequest, messages)
@@ -145,7 +141,6 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
           mandatory = mandatorySections,
           optional = optionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = true,
           closingTrust = false
         )(fakeRequest, messages)
@@ -194,7 +189,6 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
           mandatory = mandatorySections,
           optional = optionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = true,
           closingTrust = false
         )(fakeRequest, messages)

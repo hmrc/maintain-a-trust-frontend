@@ -17,7 +17,6 @@
 package views
 
 import models.URN
-import play.api.mvc.Call
 import sections.assets.Assets
 import sections.beneficiaries.Beneficiaries
 import sections.{TaxLiability, TrustDetails}
@@ -44,8 +43,6 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
     Task(Link(Beneficiaries, Some("")), None)
   )
 
-  private val expectedContinueUrl: Call = controllers.declaration.routes.IndividualDeclarationController.onPageLoad()
-
   "TransitionProgressView" when {
 
     "not all sections completed" when {
@@ -64,7 +61,6 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
           mandatory = mandatorySections,
           additional = additionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = false
         )(fakeRequest, messages)
 
@@ -107,7 +103,6 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
           mandatory = mandatorySections,
           additional = additionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = false
         )(fakeRequest, messages)
 
@@ -147,7 +142,6 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
           mandatory = mandatorySections,
           additional = additionalSectionsWithLink,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = true
         )(fakeRequest, messages)
 
@@ -193,7 +187,6 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
           mandatory = mandatorySections,
           additional = additionalSectionsWithLink,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = true
         )(fakeRequest, messages)
 
