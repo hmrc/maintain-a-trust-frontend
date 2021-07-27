@@ -62,6 +62,7 @@ GET        /declare-what-changed                        controllers.WhatIsNextCo
 POST       /declare-what-changed                        controllers.WhatIsNextController.onSubmit()
 
 GET        /declare-tax-change                          controllers.NoTaxLiabilityInfoController.onPageLoad()
+POST       /declare-tax-change                          controllers.NoTaxLiabilityInfoController.onSubmit()
 
 GET        /is-agency-address-in-uk                     controllers.declaration.AgencyRegisteredAddressUkYesNoController.onPageLoad()
 POST       /is-agency-address-in-uk                     controllers.declaration.AgencyRegisteredAddressUkYesNoController.onSubmit()
@@ -93,6 +94,7 @@ GET        /problem-declaring                           controllers.declaration.
 GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
 
 GET        /last-declaration                            controllers.print.PrintLastDeclaredAnswersController.onPageLoad()
+POST       /last-declaration                            controllers.print.PrintLastDeclaredAnswersController.onSubmit()
 
 GET        /draft-declaration                           controllers.print.PrintMaintainDraftAnswersController.onPageLoad()
 

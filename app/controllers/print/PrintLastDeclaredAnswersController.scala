@@ -44,4 +44,9 @@ class PrintLastDeclaredAnswersController @Inject()(
       Future.successful(Ok(view(entities, trustDetails)))
   }
 
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
+    _ =>
+      Future.successful(Redirect(controllers.routes.WhatIsNextController.onPageLoad()))
+  }
+
 }

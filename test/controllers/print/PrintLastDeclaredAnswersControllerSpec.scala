@@ -66,4 +66,24 @@ class PrintLastDeclaredAnswersControllerSpec extends SpecBase {
 
   }
 
+  ".onSubmit" must {
+    "redirect to WhatIsNextController " in {
+
+      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      val request = FakeRequest(POST, routes.PrintLastDeclaredAnswersController.onSubmit().url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.WhatIsNextController.onPageLoad().url
+
+      application.stop()
+
+    }
+  }
+
 }
