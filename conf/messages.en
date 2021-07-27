@@ -248,7 +248,6 @@ session_expired.guidance = This is because you have been inactive on the service
 session_expired.guidance.2 = You will need to sign in to continue maintaining the trust.
 
 service.name = Register and Maintain a Trust
-site.save.continue = Save and continue
 site.back = Back
 site.edit = Change
 site.hidden-edit = Change {0}
