@@ -33,7 +33,7 @@ class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
       "playbackProblemContactHMRC",
       "utr",
       utr,
-      "p1", "p2", "p2.link","p3")
+      "p1", "p2", "p2.link", "p3")
 
   }
 
@@ -47,7 +47,7 @@ class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
       "playbackProblemContactHMRC",
       "urn",
       urn,
-      "p1", "p2", "p2.link","p3")
+      "p1", "p2", "p2.link", "p3")
 
   }
 }
