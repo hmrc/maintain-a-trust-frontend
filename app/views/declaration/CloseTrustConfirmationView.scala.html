@@ -26,7 +26,7 @@
 
 @main_template(
     title = s"${messages("closeTrustConfirmation.title", fakeTvn)}"
-    ) {
+) {
 
     <div class="govuk-main-wrapper--l">
         <div class="heading-confirmation heading-large">
@@ -46,7 +46,7 @@
 
     <p>@messages("closeTrustConfirmation.paragraph2")</p>
 
-    <p>@messages("closeTrustConfirmation.paragraph3.beforeLink") <a id="help-link" href="@config.helplineUrl" target="_blank">@messages("closeTrustConfirmation.paragraph3.link")</a>@messages("closeTrustConfirmation.paragraph3.afterLink")</p>
+    <p>@messages("closeTrustConfirmation.paragraph3.beforeLink") <a id="help-link" href="@config.helplineUrl" target="_blank">@messages("closeTrustConfirmation.paragraph3.link")</a> @messages("closeTrustConfirmation.paragraph3.afterLink")</p>
 
     @if(isAgent: Boolean) {
         @messages("closeTrustConfirmation.agent.you.can") @components.link(agentOverviewUrl, "agent-overview", "closeTrustConfirmation.agent.link", false)

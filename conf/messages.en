@@ -1182,9 +1182,8 @@ playbackFinalDeclarationAnswers.p3 = The trust’s final declaration was sent on
 playbackProblemContactHMRC.title = There is a problem accessing your trust’s registration
 playbackProblemContactHMRC.heading = There is a problem accessing your trust’s registration
 playbackProblemContactHMRC.p1 = To access the trust’s registration, we need to confirm the trust’s details with you.
-playbackProblemContactHMRC.p2.beforeLink = To confirm the trust’s details,
+playbackProblemContactHMRC.p2 = To confirm the trust’s details,
 playbackProblemContactHMRC.p2.link = contact the trusts helpline (opens in a new window or tab)
-playbackProblemContactHMRC.p2.afterLink = .
 playbackProblemContactHMRC.p3 = If you have submitted a tax return for this trust, have the relevant documents ready as you may need to refer to them.
 
 testOnly.fourOrFiveMLD.four = 4MLD
