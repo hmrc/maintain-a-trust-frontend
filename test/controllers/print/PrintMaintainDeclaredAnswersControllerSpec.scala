@@ -131,7 +131,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(playbackAnswers(MakeChanges)), AffinityGroup.Agent).build()
 
-      val request = FakeRequest(GET, routes.PrintMaintainDeclaredAnswersController.onPageLoad().url)
+      val request = FakeRequest(POST, routes.PrintMaintainDeclaredAnswersController.onPageLoad().url)
 
       val result = route(application, request).value
 

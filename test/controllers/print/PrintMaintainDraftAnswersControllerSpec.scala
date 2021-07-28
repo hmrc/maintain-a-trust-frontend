@@ -90,7 +90,7 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), AffinityGroup.Agent).build()
 
-      val request = FakeRequest(GET, routes.PrintMaintainDraftAnswersController.onPageLoad().url)
+      val request = FakeRequest(POST, routes.PrintMaintainDraftAnswersController.onPageLoad().url)
 
       val result = route(application, request).value
 
