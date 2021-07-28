@@ -14,15 +14,24 @@
  * limitations under the License.
  *@
 
+@import play.api.mvc.Call
 @import controllers.declaration.routes._
+@import controllers.tasklist.routes._
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import viewmodels.Task
+@import views.html.components.{HeadingWithCaption, TaskList, Link, Warning, SubmitButton}
 
 @this(
     appConfig: FrontendAppConfig,
-    main_template: MainTemplate
+    main_template: MainTemplate,
+    headingWithCaption: HeadingWithCaption,
+    link: Link,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
+    taskList: TaskList,
+    warning: Warning
 )
 
 @(
@@ -31,55 +40,56 @@
     mandatory: List[Task],
     optional: List[Task],
     affinityGroup: AffinityGroup,
-    nextUrl: String,
     isAbleToDeclare: Boolean,
     closingTrust: Boolean
 )(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("variationProgress.title")
+    title = messages("variationProgress.title"),
+    showBackLink = true
 ) {
 
-    @components.back_link()
-
-    @components.heading_with_caption(headingKey = "variationProgress.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "variationProgress",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
     <p>@messages("variationProgress.p1")</p>
 
     <p>@messages("variationProgress.p2")</p>
 
-    @{
-        components.warning(
+    @warning(
             if(closingTrust) {
                 "variationProgress.closing"
             } else {
                 "variationProgress"
             }
         )
-    }
 
-    @components.task_list("mandatory", mandatory, messages("variationProgress.subHeading.2"))
-
-    @components.task_list("additional", optional, messages("variationProgress.subHeading.3"))
+    @taskList(
+        heading = messages("variationProgress.subHeading.2"),
+        additionalHeading = messages("variationProgress.subHeading.3"),
+        sections = mandatory,
+        additionalSections = optional
+    )
 
     @if(isAbleToDeclare) {
         <h2>@messages("variationProgress.subHeading.4")</h2>
 
         <p>@messages("variationProgress.p3")</p>
-        <p>@messages("variationProgress.p4") @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "variationProgress.printsave.link", openInNewWindow = false)</p>
+        <p>@messages("variationProgress.p4") @link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "variationProgress.printsave.link", openInNewWindow = false).</p>
 
         <h2>@messages("variationProgress.subHeading.5")</h2>
 
-        <p>@messages("variationProgress.p5") <a href="@{appConfig.sa900Link}" target="_blank">@messages("variationProgress.sa900.link")</a>.</p>
+        <p>@messages("variationProgress.p5") @link(appConfig.sa900Link, "sa-900", "variationProgress.sa900.link", true).</p>
 
-        <div class="section">
-            <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
-        </div>
+        @formHelper(action = TaskListController.onSubmit(), 'autoComplete -> "off") {
+            @submitButton(Some(messages("taskList.summary.continue")))
+        }
     }
 
     @if(affinityGroup == AffinityGroup.Agent) {
-        <div class="section">
-            <a href="@{appConfig.agentOverviewUrl}">@messages("variationsProgress.return.link")</a>
-        </div>
+    <p>@link(appConfig.agentOverviewUrl, "agent-overview", "variationsProgress.return.link")</p>
     }
 }

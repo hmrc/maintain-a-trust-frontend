@@ -14,15 +14,25 @@
  * limitations under the License.
  *@
 
+@import play.api.mvc.Call
 @import controllers.declaration.routes._
+@import controllers.tasklist.routes._
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import viewmodels.Task
+@import views.html.components.{Link, BulletList, Warning, HeadingWithCaption, TaskList, SubmitButton}
 
 @this(
     appConfig: FrontendAppConfig,
-    main_template: MainTemplate
+    headingWithCaption: HeadingWithCaption,
+    link: Link,
+    bulletList: BulletList,
+    warning: Warning,
+    taskList: TaskList,
+    main_template: MainTemplate,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF
 )
 
 @(
@@ -31,49 +41,53 @@
     mandatory: List[Task],
     additional: List[Task],
     affinityGroup: AffinityGroup,
-    nextUrl: String,
     isAbleToDeclare: Boolean
 )(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("transitionProgress.title")
+    title = messages("transitionProgress.title"),
+    showBackLink = true
 ) {
 
-   @components.back_link()
-
-    @components.heading_with_caption(headingKey = "transitionProgress.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "transitionProgress",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
     <p>@messages("transitionProgress.p1")</p>
 
     @if(!isAbleToDeclare) {<p>@messages("transitionProgress.p2")</p>}
 
 
-    @components.warning("transitionProgress")
+    @warning("transitionProgress")
 
-    @components.task_list("mandatory", mandatory, messages("transitionProgress.subHeading.1"))
-
-    @components.task_list("additional", additional, messages("transitionProgress.subHeading.2"))
+    @taskList(
+        heading = messages("transitionProgress.subHeading.1"),
+        additionalHeading = messages("transitionProgress.subHeading.2"),
+        sections = mandatory,
+        additionalSections = additional
+    )
 
     @if(isAbleToDeclare) {
 
         <h2>@messages("transitionProgress.subHeading.3")</h2>
 
         <p>@messages("transitionProgress.p4")</p>
-        @components.bullet_list("transitionProgress", Seq("p4.bullet1", "p4.bullet2"))
+        @bulletList("transitionProgress", Seq("p4.bullet1", "p4.bullet2"))
 
-        <p>@messages("transitionProgress.p5") @components.link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", true)@messages("transitionProgress.p5b")</p>
-        <p>@messages("transitionProgress.p6") @components.link(appConfig.loginContinueUrl, "return-to-service", "transitionProgress.p6.link").</p>
+        <p>@messages("transitionProgress.p5") @link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", true)@messages("transitionProgress.p5b")</p>
+        <p>@messages("transitionProgress.p6") @link(appConfig.loginContinueUrl, "return-to-service", "transitionProgress.p6.link").</p>
 
-        <div class="section">
-            <p>@components.button_link(messages("taskList.summary.continue"), nextUrl)</p>
-        </div>
+        @formHelper(action = TaskListController.onSubmit(), 'autoComplete -> "off") {
+            @submitButton(Some(messages("taskList.summary.continue")))
+        }
+
     } else {
         <p>@messages("transitionProgress.p3")</p>
     }
 
     @if(affinityGroup == AffinityGroup.Agent) {
-        <div class="section">
-            <a href="@{appConfig.agentOverviewUrl}">@messages("transitionsProgress.return.link")</a>
-        </div>
+        <p>@link(appConfig.agentOverviewUrl, "agent-overview", "transitionsProgress.return.link")</p>
     }
 }

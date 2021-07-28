@@ -14,17 +14,23 @@
  * limitations under the License.
  *@
 
-@import viewmodels.{AnswerSection, RepeaterAnswerSection, Section}
+@import viewmodels.AnswerSection
+@import utils.SectionFormatter.formatAnswerSection
+@import views.html.components.{Heading, Button, ReturnToTop}
 
 @this(
     main_template: MainTemplate,
+    headingComp: Heading,
+    govukSummaryList: GovukSummaryList,
+    button: Button,
+    returnToTop: ReturnToTop,
     formHelper: FormWithCSRF
 )
 
 @(
     closeDateSection: AnswerSection,
-    entities: Seq[Section],
-    trustDetails: Seq[Section],
+    entities: Seq[AnswerSection],
+    trustDetails: Seq[AnswerSection],
     tvn: String,
     crn: String,
     declarationSent: String,
@@ -32,51 +38,51 @@
 )(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("playbackFinalDeclarationAnswers.title")
+    title = messages("playbackFinalDeclarationAnswers.title"),
+    showBackLink = true
     ) {
 
-    @components.back_link()
+    @headingComp("playbackFinalDeclarationAnswers.heading", headingSize = "govuk-heading-xl")
 
-    @components.heading("playbackFinalDeclarationAnswers.heading", headingSize = "heading-xlarge")
-
-    <p class="declarationReferenceNumber">
+    <p class="govuk-!-font-weight-bold">
         <span>@messages("playbackFinalDeclarationAnswers.p1", tvn)</span>
     </p>
 
     @if(isAgent: Boolean) {
-        <p class="agentClientRef">
+        <p class="govuk-!-font-weight-bold">
             <span>@messages("playbackFinalDeclarationAnswers.p2", crn)</span>
         </p>
     }
 
     <p>@messages("playbackFinalDeclarationAnswers.p3", declarationSent)</p>
 
-    <div class="section">
-        @components.button_print()
-    </div>
+    @button(messageKey = "site.print-or-save", isPrintButton = true)
 
-    @components.summary_answer_section(closeDateSection)
+    @govukSummaryList(SummaryList(rows = formatAnswerSection(closeDateSection)))
 
     @for(section <- trustDetails){
-        @{
-            section match {
-                case a: AnswerSection => components.summary_answer_section(a)
-                case r: RepeaterAnswerSection => components.repeater_answer_section(r)
-            }
+        @if(section.sectionKey.isDefined){
+            <h2 class="govuk-heading-l">@messages(section.sectionKey.get)</h2>
+            @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
         }
     }
 
     @for(section <- entities){
-        @{
-            section match {
-                case a: AnswerSection => components.summary_answer_section(a)
-                case r: RepeaterAnswerSection => components.repeater_answer_section(r)
-            }
+        @if(section.sectionKey.isDefined){
+        <h2 class="govuk-heading-l">@messages(section.sectionKey.get)</h2>
+        }
+
+        @if(section.headingKey.isDefined){
+            <h3 class="govuk-heading-m">@messages(section.headingKey.get)</h3>
+        }
+
+        @if(section.rows){
+            @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
         }
     }
 
     <p>@messages("playbackAnswers.informationFirstRegistered")</p>
     <p>@messages("playbackAnswers.selfAssessmentOnline")</p>
 
-    @components.return_to_top()
+    @returnToTop()
 }

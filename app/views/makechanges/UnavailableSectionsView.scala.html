@@ -16,34 +16,40 @@
 
 @import config.FrontendAppConfig
 @import controllers.routes._
+@import views.html.components.{Heading, SubmitButton, Link}
 
 @this(
     main_template: MainTemplate,
+    headingComp: Heading,
+    link: Link,
+    formHelper: FormWithCSRF,
+    submitButton: SubmitButton,
     config: FrontendAppConfig
 )
 
 @(availableSections: String, unavailableSections: String, futureSections: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("unavailableSections.title", availableSections)
+    title = messages("unavailableSections.title", availableSections),
+    showBackLink = true
 ) {
 
-    @components.back_link()
-
-    @components.heading(messages("unavailableSections.heading", availableSections), headingSize = "heading-large govuk-fieldset__heading")
+    @headingComp(messages("unavailableSections.heading", availableSections))
 
     <p>
-        @messages("unavailableSections.p1", unavailableSections) <a href="@config.helplineUrl" target="_blank">@messages("unavailableSections.p1.a")</a>.
+        @messages("unavailableSections.p1", unavailableSections) @link(config.helplineUrl, "help-link", "unavailableSections.p1.a", openInNewWindow = true).
     </p>
 
     <p>
         @messages("unavailableSections.p2", futureSections)
     </p>
 
-    @components.button_link(messages("site.sign_out"), controllers.routes.LogoutController.logout().url)
+    @formHelper(action = controllers.routes.LogoutController.logout(), 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.sign_out")))
+    }
 
     <p>
-        @messages("unavailableSections.p3.start") <a id="information-about-maintaining-link" href=@InformationMaintainingThisTrustController.onPageLoad().url>@messages("unavailableSections.p3.link")</a> @messages("unavailableSections.p3.end")
+        @messages("unavailableSections.p3.start") @link(InformationMaintainingThisTrustController.onPageLoad().url, "information-about-maintaining-link", "unavailableSections.p3.link") @messages("unavailableSections.p3.end")
     </p>
 
 }

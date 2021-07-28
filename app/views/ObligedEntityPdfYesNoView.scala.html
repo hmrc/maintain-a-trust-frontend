@@ -15,9 +15,14 @@
  *@
 
 @import controllers.routes._
+@import views.html.components.{ErrorSummary, SubmitButton, InputYesNo, HeadingWithCaption}
 
 @this(
     main_template: MainTemplate,
+    submitButton: SubmitButton,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    headingWithCaption: HeadingWithCaption,
     formHelper: FormWithCSRF
 )
 
@@ -88,28 +93,30 @@
 }
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("obligedEntityPdfYesNo.title")}"
+    title = s"${errorPrefix(form)}${messages("obligedEntityPdfYesNo.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = ObligedEntityPdfYesNoController.onSubmit(), 'autoComplete -> "off", 'id -> "download-pdf", Symbol("data-identifier") -> identifier) {
 
-        @components.back_link()
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.error_summary(form.errors)
-
-        @components.input_yes_no(
-            field = form("value"),
-            label = messages("obligedEntityPdfYesNo.heading"),
-            labelPrefix = Some("obligedEntityPdfYesNo"),
-            legendAsHeading = true,
-            caption = Some(messages("obligedEntityPdfYesNo.caption")),
-            additionalContent = Some(content)
+        @headingWithCaption(
+            headingPrefix = "obligedEntityPdfYesNo",
+            captionPrefix = "obligedEntityPdfYesNo",
+            hiddenText = false
         )
 
-        <div class="section">
-            <button id="submit" class="button">
-                @messages("site.onlyContinue")
-            </button>
-        </div>
+        @content
+
+        @inputYesNo(
+            field = form("value"),
+            label = messages("obligedEntityPdfYesNo.heading"),
+            legendAsHeading = false,
+            legendClass = Some("govuk-visually-hidden"),
+            caption = Some(messages("obligedEntityPdfYesNo.caption"))
+        )
+
+        @submitButton()
     }
 }

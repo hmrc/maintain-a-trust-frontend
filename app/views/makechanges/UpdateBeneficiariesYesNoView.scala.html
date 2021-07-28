@@ -15,10 +15,15 @@
  *@
 
 @import controllers.makechanges.routes._
+@import views.html.components.{Heading, SubmitButton, ErrorSummary, InputYesNo}
 
 @this(
-        main_template: MainTemplate,
-        formHelper: FormWithCSRF
+    main_template: MainTemplate,
+    headingComp: Heading,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF
 )
 
 @(form: Form[_], determinePrefix: Boolean => String, closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
@@ -26,32 +31,40 @@
 @prefix = {@determinePrefix(closingTrust)}
 
 @content = {
-    @if(closingTrust){
-        <p>@messages(s"$prefix.additionalContent1")</p>
-        <p>@messages(s"$prefix.additionalContent2")</p>
-    } else {
-        <p>@messages(s"$prefix.additionalContent1")</p>
-    }
+    <p>@messages(s"$prefix.additionalContent1")</p>
+    <p>@messages(s"$prefix.additionalContent2")</p>
 }
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages(s"$prefix.title")}"
+    title = s"${errorPrefix(form)}${messages(s"$prefix.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = UpdateBeneficiariesYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.error_summary(form.errors)
+        @if(closingTrust){
+            @headingComp(s"$prefix.heading")
 
-        @components.input_yes_no(
-            field = form("value"),
-            label = messages(s"$prefix.heading"),
-            legendClass = Some("heading-large"),
-            legendAsHeading = true,
-            additionalContent = Some(content)
-        )
+            @content
 
-        @components.submit_button(Some("site.onlyContinue"))
+            @inputYesNo(
+                field = form("value"),
+                label = messages(s"$prefix.heading"),
+                legendClass = Some("govuk-visually-hidden"),
+                legendAsHeading = false
+            )
+        } else {
+            @inputYesNo(
+                field = form("value"),
+                label = messages(s"$prefix.heading"),
+                legendClass = Some("govuk-heading-l"),
+                legendAsHeading = true,
+                hint = Some(messages(s"$prefix.additionalContent1"))
+            )
+        }
+
+        @submitButton()
     }
 }

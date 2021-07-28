@@ -40,4 +40,9 @@ class NoTaxLiabilityInfoController @Inject()(
 
       Ok(noTaxLiabilityInfoView(identifier, identifierType))
   }
+
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier {
+    _ =>
+      Redirect(routes.WhatIsNextController.onPageLoad())
+  }
 }

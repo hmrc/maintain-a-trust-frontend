@@ -16,21 +16,30 @@
 
 @import models.Mode
 @import config.FrontendAppConfig
+@import views.html.components.{HeadingWithCaption, BulletList, Warning, SubmitButton}
 
 @this(
     appConfig: FrontendAppConfig,
+    headingWithCaption: HeadingWithCaption,
+    bulletList: BulletList,
+    warning: Warning,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
     main_template: MainTemplate
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("informationMaintainingNonTaxableTrust.title")
+    title = messages("informationMaintainingNonTaxableTrust.title"),
+    showBackLink = true
 ) {
 
-   @components.back_link()
-
-    @components.heading_with_caption(headingKey = "informationMaintainingNonTaxableTrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "informationMaintainingNonTaxableTrust",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
     <h2>@messages("informationMaintainingNonTaxableTrust.subheading1")</h2>
 
@@ -38,7 +47,7 @@
 
     <p>@messages("informationMaintainingNonTaxableTrust.paragraph2")</p>
 
-    @components.bullet_list(
+    @bulletList(
         "informationMaintainingNonTaxableTrust",
         List(
             "bullet1",
@@ -46,12 +55,13 @@
         )
     )
 
-    @components.warning("informationMaintainingNonTaxableTrust")
+    @warning("informationMaintainingNonTaxableTrust")
 
    <p>@messages("informationMaintainingNonTaxableTrust.paragraph3")</p>
 
     <p>@messages("informationMaintainingNonTaxableTrust.paragraph4")</p>
 
-    @components.button_link(messages("site.startMaintaining"), controllers.routes.ViewLastDeclarationYesNoController.onPageLoad().url)
-
+    @formHelper(action = controllers.routes.InformationMaintainingThisTrustController.onSubmit(), 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.startMaintaining")))
+    }
 }

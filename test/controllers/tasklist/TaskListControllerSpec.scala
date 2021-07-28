@@ -18,6 +18,7 @@ package controllers.tasklist
 
 import base.SpecBase
 import connectors.{TrustConnector, TrustsStoreConnector}
+import controllers.routes
 import generators.ModelGenerators
 import models.MigrationStatus.{NeedsUpdating, NothingToUpdate}
 import models.pages.Tag.{InProgress, UpToDate}
@@ -37,6 +38,7 @@ import sections._
 import sections.assets.{Assets, NonEeaBusinessAsset}
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import viewmodels.{Link, Task}
 import views.html.{NonTaxToTaxProgressView, VariationProgressView}
@@ -49,7 +51,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
   lazy val onSubmit: Call = controllers.routes.WhatIsNextController.onSubmit()
 
-  val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+  val expectedContinueUrl: Call = controllers.declaration.routes.IndividualDeclarationController.onPageLoad()
 
   def mandatorySections4mld(identifier: String): List[Task] = List(
     Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Some(InProgress)),
@@ -167,6 +169,25 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
       }
     }
 
+    ".onSubmit" must {
+      "redirect to next page" in {
+        val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+          .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+        val application = applicationBuilder(Some(baseAnswers), AffinityGroup.Agent).build()
+
+        val request = FakeRequest(POST, routes.TaskListController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+
+        application.stop()
+      }
+
+    }
+
     def taskListController(baseAnswers: UserAnswers, mandatorySections: List[Task], optionalSections: List[Task]): Unit = {
 
       "return OK and the correct view for a GET" when {
@@ -190,7 +211,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
           status(result) mustEqual OK
 
           contentAsString(result) mustEqual
-            view(baseAnswers.identifier, baseAnswers.identifierType, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
+            view(baseAnswers.identifier, baseAnswers.identifierType, mandatorySections, optionalSections, Organisation, isAbleToDeclare = false, closingTrust = false)(request, messages).toString
 
           application.stop()
         }
@@ -214,7 +235,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
           status(result) mustEqual OK
 
           contentAsString(result) mustEqual
-            view(baseAnswers.identifier, baseAnswers.identifierType, mandatorySections, optionalSections, Organisation, expectedContinueUrl, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
+            view(baseAnswers.identifier, baseAnswers.identifierType, mandatorySections, optionalSections, Organisation, isAbleToDeclare = false, closingTrust = true)(request, messages).toString
 
           application.stop()
         }
@@ -271,7 +292,6 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                   mandatory = mandatorySectionsTransitionToTaxableWithoutTaxLiability(baseAnswers.identifier),
                   additional = Nil,
                   affinityGroup = Organisation,
-                  nextUrl = expectedContinueUrl,
                   isAbleToDeclare = false
                 )(request, messages).toString
 
@@ -309,7 +329,6 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                     mandatory = mandatorySectionsTransitionToTaxableWithTaxLiability(baseAnswers.identifier),
                     additional = Nil,
                     affinityGroup = Organisation,
-                    nextUrl = expectedContinueUrl,
                     isAbleToDeclare = false
                   )(request, messages).toString
 
@@ -358,7 +377,6 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                 mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, UpToDate),
                 additional = optionalSectionsTransitionToTaxable(answers.identifier, UpToDate),
                 affinityGroup = Organisation,
-                nextUrl = expectedContinueUrl,
                 isAbleToDeclare = false
               )(request, messages).toString
 
@@ -410,7 +428,6 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                     mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, UpToDate),
                     additional = optionalSectionsTransitionToTaxable(answers.identifier, entityStatus),
                     affinityGroup = Organisation,
-                    nextUrl = expectedContinueUrl,
                     isAbleToDeclare = false
                   )(request, messages).toString
 
@@ -446,7 +463,6 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                 mandatory = mandatorySectionsTransitionToTaxable(answers.identifier),
                 additional = additionalSectionsWhenTrustDetailsNotCompleted(),
                 affinityGroup = Organisation,
-                nextUrl = expectedContinueUrl,
                 isAbleToDeclare = false
               )(request, messages).toString
 

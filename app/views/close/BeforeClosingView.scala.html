@@ -15,23 +15,25 @@
  *@
 
 @import controllers.close.routes._
+@import views.html.components.{Heading, SubmitButton}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    headingComp: Heading,
+    submitButton: SubmitButton
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("beforeClosing.title")
+    title = messages("beforeClosing.title"),
+    showBackLink = true
 ) {
 
     @formHelper(action = BeforeClosingController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
-
-        @components.heading("beforeClosing.heading")
+        @headingComp("beforeClosing.heading")
 
         <h2>@messages("beforeClosing.subheading")</h2>
 
@@ -49,6 +51,6 @@
 
         <p>@messages("beforeClosing.paragraph3")</p>
 
-        @components.submit_button()
+        @submitButton()
     }
 }

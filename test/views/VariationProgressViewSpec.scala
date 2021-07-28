@@ -19,27 +19,28 @@ package views
 import models.UTR
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Trustees}
+import sections.{Natural, Protectors, TrustDetails, Trustees}
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 import viewmodels.{Link, Task}
-import views.behaviours.{VariationsProgressViewBehaviours, ViewBehaviours}
+import views.behaviours.{ProgressViewBehaviours, ViewBehaviours}
 import views.html.VariationProgressView
 
-class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressViewBehaviours {
+class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviours {
 
   private val utr = "utr"
 
   private val mandatorySections = List(
+    Task(Link(TrustDetails, Some("")), None),
     Task(Link(Settlors, Some("")), None),
     Task(Link(Trustees, Some("")), None),
     Task(Link(Beneficiaries, Some("")), None)
   )
 
   private val optionalSections = List(
-    Task(Link(Natural, Some("")),None)
+    Task(Link(Natural, Some("")),None),
+    Task(Link(Protectors, Some("")),None)
   )
 
-  private val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
   "VariationProgressView" when {
 
@@ -59,7 +60,6 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
           mandatory = mandatorySections,
           optional = optionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = false,
           closingTrust = false
         )(fakeRequest, messages)
@@ -102,7 +102,6 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
           mandatory = mandatorySections,
           optional = optionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = false,
           closingTrust = false
         )(fakeRequest, messages)
@@ -142,7 +141,6 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
           mandatory = mandatorySections,
           optional = optionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = true,
           closingTrust = false
         )(fakeRequest, messages)
@@ -164,7 +162,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
         behave like pageWithWarning(applyView)
 
-        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+        behave like pageWithContinueButton(applyView, Some("taskList.summary.continue"))
 
         val doc = asDocument(applyView)
 
@@ -191,7 +189,6 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
           mandatory = mandatorySections,
           optional = optionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = true,
           closingTrust = false
         )(fakeRequest, messages)
@@ -213,7 +210,7 @@ class VariationProgressViewSpec extends ViewBehaviours with VariationsProgressVi
 
         behave like pageWithWarning(applyView)
 
-        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+        behave like pageWithContinueButton(applyView, Some("taskList.summary.continue"))
 
         val doc = asDocument(applyView)
 

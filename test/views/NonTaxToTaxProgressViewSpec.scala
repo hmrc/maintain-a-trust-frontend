@@ -18,13 +18,14 @@ package views
 
 import models.URN
 import sections.assets.Assets
+import sections.beneficiaries.Beneficiaries
 import sections.{TaxLiability, TrustDetails}
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 import viewmodels.{Link, Task}
-import views.behaviours.{TransitionsProgressViewBehaviours, ViewBehaviours}
+import views.behaviours.{ProgressViewBehaviours, ViewBehaviours}
 import views.html.NonTaxToTaxProgressView
 
-class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgressViewBehaviours {
+class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehaviours {
 
   private val urn = "urn"
 
@@ -34,7 +35,13 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
     Task(Link(TaxLiability, Some("")), None)
   )
 
-  private val expectedContinueUrl: String = controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+  private val additionalSections = List(
+    Task(Link(Beneficiaries, None), None)
+  )
+
+  private val additionalSectionsWithLink = List(
+    Task(Link(Beneficiaries, Some("")), None)
+  )
 
   "TransitionProgressView" when {
 
@@ -52,9 +59,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
-          additional = Nil,
+          additional = additionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = false
         )(fakeRequest, messages)
 
@@ -71,6 +77,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
         behave like taskListHeading(applyView)
 
         behave like taskList(applyView, mandatorySections)
+
+        behave like taskListWithNotActiveLink(applyView, additionalSections)
 
         behave like pageWithWarning(applyView)
 
@@ -93,9 +101,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
-          additional = Nil,
+          additional = additionalSections,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = false
         )(fakeRequest, messages)
 
@@ -112,6 +119,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
         behave like taskListHeading(applyView)
 
         behave like taskList(applyView, mandatorySections)
+
+        behave like taskListWithNotActiveLink(applyView, additionalSections)
 
         behave like pageWithWarning(applyView)
       }
@@ -131,9 +140,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
-          additional = Nil,
+          additional = additionalSectionsWithLink,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = true
         )(fakeRequest, messages)
 
@@ -152,9 +160,11 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
 
         behave like taskList(applyView, mandatorySections)
 
+        behave like taskList(applyView, additionalSectionsWithLink)
+
         behave like pageWithWarning(applyView)
 
-        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+        behave like pageWithContinueButton(applyView, Some("taskList.summary.continue"))
 
         val doc = asDocument(applyView)
 
@@ -175,9 +185,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
-          additional = Nil,
+          additional = additionalSectionsWithLink,
           affinityGroup = group,
-          nextUrl = expectedContinueUrl,
           isAbleToDeclare = true
         )(fakeRequest, messages)
 
@@ -196,9 +205,11 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with TransitionsProgres
 
         behave like taskList(applyView, mandatorySections)
 
+        behave like taskList(applyView, additionalSectionsWithLink)
+
         behave like pageWithWarning(applyView)
 
-        behave like pageWithContinueButton(applyView, expectedContinueUrl, Some("taskList.summary.continue"))
+        behave like pageWithContinueButton(applyView, Some("taskList.summary.continue"))
       }
     }
   }

@@ -21,7 +21,7 @@ import views.html.print.PrintLastDeclaredAnswersView
 
 class PrintLastDeclaredAnswersViewSpec extends ViewBehaviours {
 
-  lazy val continueUrl =  controllers.routes.WhatIsNextController.onPageLoad().url
+  lazy val continueUrl: String =  controllers.routes.WhatIsNextController.onPageLoad().url
 
   "PrintLastDeclaredAnswersView view" must {
 
@@ -31,7 +31,7 @@ class PrintLastDeclaredAnswersViewSpec extends ViewBehaviours {
 
     behave like normalPage(applyView, "playbackAnswers")
 
-    behave like pageWithContinueButton(applyView, continueUrl, Some("site.button.continue.maintaining"))
+    behave like pageWithContinueButton(applyView, Some("site.button.continue.maintaining"))
 
     behave like pageWithPrintButton(applyView)
 

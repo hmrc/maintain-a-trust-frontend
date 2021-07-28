@@ -33,13 +33,30 @@ class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter) extend
     converter.yesNoQuestion(IndividualProtectorDateOfBirthYesNoPage(index), userAnswers, "individualProtectorDateOfBirthYesNo", name),
     converter.dateQuestion(IndividualProtectorDateOfBirthPage(index),userAnswers, "individualProtectorDateOfBirth", name),
     converter.yesNoQuestion(IndividualProtectorCountryOfNationalityYesNoPage(index), userAnswers, "individualProtectorCountryOfNationalityYesNo", name),
-    converter.yesNoQuestion(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(index), userAnswers, "individualProtectorCountryOfNationalityUkYesNo", name),
-    converter.countryQuestion(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(index), IndividualProtectorCountryOfNationalityPage(index), userAnswers, "individualProtectorCountryOfNationality", name),
+    converter.yesNoQuestion(
+      IndividualProtectorCountryOfNationalityInTheUkYesNoPage(index),
+      userAnswers,
+      "individualProtectorCountryOfNationalityUkYesNo",
+      name
+    ),
+    converter.countryQuestion(
+      IndividualProtectorCountryOfNationalityInTheUkYesNoPage(index),
+      IndividualProtectorCountryOfNationalityPage(index),
+      userAnswers,
+      "individualProtectorCountryOfNationality",
+      name
+    ),
     converter.yesNoQuestion(IndividualProtectorNINOYesNoPage(index), userAnswers, "individualProtectorNINOYesNo", name),
     converter.ninoQuestion(IndividualProtectorNINOPage(index), userAnswers, "individualProtectorNINO", name),
     converter.yesNoQuestion(IndividualProtectorCountryOfResidenceYesNoPage(index), userAnswers, "individualProtectorCountryOfResidenceYesNo", name),
     converter.yesNoQuestion(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "individualProtectorCountryOfResidenceUkYesNo", name),
-    converter.countryQuestion(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(index), IndividualProtectorCountryOfResidencePage(index), userAnswers, "individualProtectorCountryOfResidence", name),
+    converter.countryQuestion(
+      IndividualProtectorCountryOfResidenceInTheUkYesNoPage(index),
+      IndividualProtectorCountryOfResidencePage(index),
+      userAnswers,
+      "individualProtectorCountryOfResidence",
+      name
+    ),
     converter.yesNoQuestion(IndividualProtectorAddressYesNoPage(index), userAnswers, "individualProtectorAddressYesNo", name),
     converter.yesNoQuestion(IndividualProtectorAddressUKYesNoPage(index), userAnswers, "individualProtectorAddressUkYesNo", name),
     converter.addressQuestion(IndividualProtectorAddressPage(index), userAnswers, "individualProtectorAddress", name),

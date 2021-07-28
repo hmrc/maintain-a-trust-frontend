@@ -17,9 +17,13 @@
 @import models.NormalMode
 @import controllers.transition.declaration.routes._
 @import config.FrontendAppConfig
+@import views.html.components.{ConfirmationPanel, Link, Warning}
 
 @this(
     main_template: MainTemplate,
+    confirmationPanel: ConfirmationPanel,
+    link: Link,
+    warning: Warning,
     config: FrontendAppConfig
 )
 
@@ -29,15 +33,15 @@
     title = s"${messages("individualConfirmation.title", tvn)}"
 ) {
 
-    <div class="govuk-main-wrapper--l">
-        <div class="heading-confirmation heading-large">
-        <h1 class="form-title heading-large">@messages("individualConfirmation.heading")</h1>
-              <span class="reference-text">@messages("individualConfirmation.heading2")</span>
-              <span id="trusts-registration-number" class="reference-number">@tvn</span>
-        </div>
-    </div>
+    @confirmationPanel(
+        heading = messages("individualConfirmation.heading"),
+        content = messages("individualConfirmation.heading2"),
+        refNumber = tvn
+    )
 
-    <p class="panel-indent">@components.link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save", "individualConfirmation.printsave.link", openInNewWindow = false)</p>
+    <div class="govuk-inset-text">
+        @link(controllers.print.routes.PrintMaintainDeclaredAnswersController.onPageLoad().url, "print-and-save", "individualConfirmation.printsave.link", openInNewWindow = false)
+    </div>
 
     <h2>@messages("individualConfirmation.subheading1")</h2>
 
@@ -61,7 +65,7 @@
 
     <p>@messages("individualConfirmation.paragraph8")</p>
 
-    @components.warning("individualConfirmation")
+    @warning("individualConfirmation")
 
     <p>@messages("individualConfirmation.paragraph9")</p>
 

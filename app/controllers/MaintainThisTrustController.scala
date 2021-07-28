@@ -21,7 +21,7 @@ import config.FrontendAppConfig
 import controllers.actions.Actions
 import models.requests.DataRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.MaintainThisTrustView
 
@@ -66,14 +66,21 @@ class MaintainThisTrustController @Inject()(
         }
       )
 
-      val continueUrl: String = if (needsIv) {
-        config.verifyIdentityForATrustUrl(identifier)
+      val continueUrl: Call = if (needsIv) {
+        routes.MaintainThisTrustController.onSubmit()
       } else {
-        routes.InformationMaintainingThisTrustController.onPageLoad().url
+        routes.InformationMaintainingThisTrustController.onPageLoad()
       }
 
       Ok(view(identifier, identifierType, availableSections, continueUrl))
 
+  }
+
+  def onSubmit: Action[AnyContent] = actions.authWithData {
+    implicit request =>
+      val identifier = request.userAnswers.identifier
+
+      Redirect(config.verifyIdentityForATrustUrl(identifier))
   }
 
 }

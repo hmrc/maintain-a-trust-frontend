@@ -18,9 +18,13 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
+@import views.html.components.{HeadingWithCaption, Link}
+
 
 @this(
     main_template: MainTemplate,
+    headingWithCaption: HeadingWithCaption,
+    link: Link,
     appConfig: FrontendAppConfig
 )
 
@@ -30,12 +34,16 @@
     title = messages("trustStillProcessing.title")
 ) {
 
-    @components.heading_with_caption(headingKey = "trustStillProcessing.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "trustStillProcessing",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
     <p>@messages("trustStillProcessing.p1")</p>
 
-    <p>@messages("trustStillProcessing.p2") <a id="help-link" target="_blank" href="@appConfig.helplineUrl">@messages("trustStillProcessing.contact.link")</a>.</p>
+    <p>@messages("trustStillProcessing.p2") @link(appConfig.helplineUrl, "help-link", "trustStillProcessing.contact.link", openInNewWindow = true).</p>
     @if(affinityGroup == AffinityGroup.Agent) {
-        <p>@messages("trustStillProcessing.p3") <a id="register-and-maintain-link" href="@{appConfig.agentOverviewUrl}">@messages("trustStillProcessing.return.link")</a>.</p>
+        <p>@messages("trustStillProcessing.p3") @link(appConfig.agentOverviewUrl, "register-and-maintain-link", "trustStillProcessing.return.link").</p>
     }
 }

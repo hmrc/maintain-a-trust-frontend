@@ -15,31 +15,35 @@
  *@
 
 @import controllers.close.nontaxable.routes._
+@import views.html.components.{SubmitButton, InputDate, ErrorSummary}
+
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    inputDate: InputDate,
+    errorSummary: ErrorSummary,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("dateClosed.title")}"
+    title = s"${errorPrefix(form)}${messages("dateClosed.title")}",
+    showBackLink = true
 ) {
 
     @formHelper(action = DateClosedController.onSubmit(), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors)
 
-        @components.error_summary(form.errors)
-
-        @components.input_date(
+        @inputDate(
             field = form("value"),
             legend = messages("dateClosed.heading"),
-            headingIsLegend = true,
+            legendAsHeading = true,
             hint = Some(messages("dateClosed.hint"))
         )
 
-        @components.submit_button(Some("site.onlyContinue"))
+        @submitButton()
     }
 }

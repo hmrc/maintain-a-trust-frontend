@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -25,10 +26,16 @@ import views.html.CreateAgentServicesAccountView
 @Singleton
 class CreateAgentServicesAccountController @Inject()(
                                                       val controllerComponents: MessagesControllerComponents,
-                                                      view: CreateAgentServicesAccountView
+                                                      view: CreateAgentServicesAccountView,
+                                                      appConfig: FrontendAppConfig
                                                     ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
     Ok(view())
   }
+
+  def onSubmit: Action[AnyContent] = Action { _ =>
+    Redirect(appConfig.agentServiceRegistrationUrl)
+  }
+
 }

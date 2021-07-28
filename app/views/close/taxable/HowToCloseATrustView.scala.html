@@ -14,19 +14,27 @@
  * limitations under the License.
  *@
 
+@import views.html.components.{HeadingWithCaption, SubmitButton}
+
 @this(
-    main_template: MainTemplate
+    main_template: MainTemplate,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
+    headingWithCaption: HeadingWithCaption
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${messages("howToCloseATrust.title")}"
+    title = s"${messages("howToCloseATrust.title")}",
+    showBackLink = true
 ) {
 
-    @components.back_link()
-
-    @components.heading_with_caption(headingKey = "howToCloseATrust.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "howToCloseATrust",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
     <p>@messages("howToCloseATrust.p1")</p>
 
@@ -37,5 +45,7 @@
 
     <p>@messages("howToCloseATrust.p2")</p>
 
-    @components.button_link(messages("site.sign_out"), controllers.routes.LogoutController.logout().url)
+    @formHelper(action = controllers.routes.LogoutController.logout(), 'autoComplete -> "off") {
+        @submitButton(Some(messages("site.sign_out")))
+    }
 }

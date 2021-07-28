@@ -16,9 +16,12 @@
 
 @import config.FrontendAppConfig
 @import models.Mode
+@import views.html.components.{HeadingWithCaption, Link}
 
 @this(
     main_template: MainTemplate,
+    headingWithCaption: HeadingWithCaption,
+    link: Link,
     config: FrontendAppConfig
 )
 
@@ -28,10 +31,14 @@
     title = messages("trustAlreadyClaimed.title")
 ) {
 
-    @components.heading_with_caption(headingKey = "trustAlreadyClaimed.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "trustAlreadyClaimed",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
     <p>@messages("trustAlreadyClaimed.p1")</p>
 
-    <p>@messages("trustAlreadyClaimed.p2") <a id="help-link" href="@config.helplineUrl" target="_blank">@messages("trustAlreadyClaimed.p2.a")</a>.</p>
+    <p>@messages("trustAlreadyClaimed.p2") @link(config.helplineUrl, "help-link", "trustAlreadyClaimed.p2.a", openInNewWindow = true).</p>
 
 }

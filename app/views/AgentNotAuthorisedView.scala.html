@@ -16,28 +16,34 @@
 
 @import controllers.routes._
 @import config.FrontendAppConfig
+@import views.html.components.{HeadingWithCaption, Link}
 
 @this(
     main_template: MainTemplate,
-    config: FrontendAppConfig
+    config: FrontendAppConfig,
+    link: Link,
+    headingWithCaption: HeadingWithCaption
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = messages("agentNotAuthorised.title")
+    title = messages("agentNotAuthorised.title"),
+    showBackLink = true
 ) {
 
-    @components.back_link()
-
-    @components.heading_with_caption(headingKey = "agentNotAuthorised.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "agentNotAuthorised",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
 
     <p>@messages("agentNotAuthorised.p1")</p>
     <h2>@messages("agentNotAuthorised.subheading1")</h2>
     <p>@messages("agentNotAuthorised.p2")</p>
     <p>@messages("agentNotAuthorised.p3")</p>
     <h3>@messages("agentNotAuthorised.subheading2")</h3>
-    <p>@messages("agentNotAuthorised.p4") <a href="@config.helplineUrl" target="_blank">@messages("agentNotAuthorised.p4.a")</a>.</p>
+    <p>@messages("agentNotAuthorised.p4") @link(config.helplineUrl, "help-link", "agentNotAuthorised.p4.a", true).</p>
     <p>@messages("agentNotAuthorised.p5")</p>
 
     <ul class="govuk-list govuk-list--bullet">
@@ -52,16 +58,16 @@
         <li>@messages("agentNotAuthorised.bullet.4")</li>
     </ul>
 
-    <p>@messages("agentNotAuthorised.p7") <a href="@config.helplineUrl" target="_blank">@messages("agentNotAuthorised.p7.a")</a>.</p>
+    <p>@messages("agentNotAuthorised.p7") @link(config.helplineUrl, "help-link-2", "agentNotAuthorised.p7.a", true).</p>
 
     <h2>@messages("agentNotAuthorised.subheading3")</h2>
 
     <p>@messages("agentNotAuthorised.p8")</p>
 
-    <p>@messages("agentNotAuthorised.p9") <a href="@config.registerTrustAsTrusteeGuidanceUrl" target="_blank">@messages("agentNotAuthorised.p9.a")</a>.</p>
+    <p>@messages("agentNotAuthorised.p9") @link(config.registerTrustAsTrusteeGuidanceUrl, "guidance", "agentNotAuthorised.p9.a", true).</p>
 
     <p>@messages("agentNotAuthorised.p10")</p>
 
-    <p>@messages("agentNotAuthorised.p11") <a href="@IndexController.onPageLoad()">@messages("agentNotAuthorised.p11.a")</a>.</p>
+    <p>@messages("agentNotAuthorised.p11") @link(IndexController.onPageLoad().url, "index", "agentNotAuthorised.p11.a").</p>
 
 }

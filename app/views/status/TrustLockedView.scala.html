@@ -15,10 +15,13 @@
  *@
 
 @import config.FrontendAppConfig
+@import views.html.components.{HeadingWithCaption, Link}
 
 @this(
     main_template: MainTemplate,
-    config: FrontendAppConfig
+    headingWithCaption: HeadingWithCaption,
+    link: Link,
+    appConfig: FrontendAppConfig
 )
 
 @(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
@@ -27,8 +30,13 @@
     title = messages("trustLocked.title")
     ) {
 
-    @components.heading_with_caption(headingKey = "trustLocked.heading", caption = s"$identifierType.caption", captionParam = identifier)
+    @headingWithCaption(
+        headingPrefix = "trustLocked",
+        captionPrefix = s"$identifierType",
+        captionParam = Some(identifier)
+    )
+
     <p>@messages("trustLocked.p1")</p>
     <p>@messages("trustLocked.p2")</p>
-    <p>@messages("trustLocked.p3") <a target="_blank" href="@config.helplineUrl">@messages("trustLocked.link1")</a>.</p>
+    <p>@messages("trustLocked.p3") @link(appConfig.helplineUrl, "help-link", "trustLocked.link1", openInNewWindow = true).</p>
 }
