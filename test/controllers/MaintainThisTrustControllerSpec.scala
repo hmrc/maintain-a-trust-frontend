@@ -21,8 +21,11 @@ import models.{URN, UTR}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.MaintainThisTrustView
+import config.FrontendAppConfig
 
 class MaintainThisTrustControllerSpec extends SpecBase {
+
+  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 
   "MaintainThisTrust Controller" must {
 
@@ -45,7 +48,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       contentAsString(result) mustEqual
         view(utr, UTR,
           "settlors, trustees, beneficiaries, protectors and other individuals",
-          routes.MaintainThisTrustController.onSubmit()
+          routes.MaintainThisTrustController.onSubmit(needsIv = true)
         )(request, messages).toString
 
       application.stop()
@@ -69,7 +72,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       contentAsString(result) mustEqual
         view(urn, URN,
           "settlors, trustees, beneficiaries, protectors and other individuals",
-          routes.MaintainThisTrustController.onSubmit()
+          routes.MaintainThisTrustController.onSubmit(needsIv = true)
         )(request, messages).toString
 
       application.stop()
@@ -94,7 +97,7 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       contentAsString(result) mustEqual
         view(utr, UTR,
           "settlors, trustees, beneficiaries, protectors and other individuals",
-          routes.InformationMaintainingThisTrustController.onPageLoad()
+          routes.MaintainThisTrustController.onSubmit(needsIv = false)
         )(request, messages).toString
 
       application.stop()
@@ -113,5 +116,64 @@ class MaintainThisTrustControllerSpec extends SpecBase {
 
       application.stop()
     }
+  }
+
+  ".onSubmit" must {
+
+    "redirect to InformationMaintainingThisTrust when doesn't need IV" in {
+
+      val application = applicationBuilder(
+        userAnswers = Some(emptyUserAnswersForUtr)
+      ).build()
+
+      val request = FakeRequest(POST, routes.MaintainThisTrustController.onSubmit(needsIv = false).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.InformationMaintainingThisTrustController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "redirect to url with UTR when needs IV" in {
+
+      val utr = "1234567890"
+
+      val application = applicationBuilder(
+        userAnswers = Some(emptyUserAnswersForUtr)
+      ).build()
+
+      val request = FakeRequest(POST, routes.MaintainThisTrustController.onSubmit(needsIv = true).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual appConfig.verifyIdentityForATrustUrl(utr)
+
+      application.stop()
+    }
+
+    "redirect to url with URN when needs IV" in {
+      val urn = "XATRUST12345678"
+
+      val application = applicationBuilder(
+        userAnswers = Some(emptyUserAnswersForUrn)
+      ).build()
+
+      val request = FakeRequest(POST, routes.MaintainThisTrustController.onSubmit(needsIv = true).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual appConfig.verifyIdentityForATrustUrl(urn)
+
+      application.stop()
+    }
+
+
   }
 }
