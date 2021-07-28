@@ -85,6 +85,20 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
 
       application.stop()
     }
+
+    "redirect to what next on submit" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), AffinityGroup.Agent).build()
+
+      val request = FakeRequest(GET, routes.PrintMaintainDraftAnswersController.onPageLoad().url)
+
+      val result = route(application, request).value
+
+      status(result) mustBe SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.tasklist.routes.TaskListController.onPageLoad().url
+
+    }
   }
 
 }

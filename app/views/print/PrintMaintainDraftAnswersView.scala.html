@@ -16,13 +16,14 @@
 
 @import viewmodels.AnswerSection
 @import utils.SectionFormatter.formatAnswerSection
-@import views.html.components.{Heading, Button, ReturnToTop}
+@import views.html.components.{Heading, Button, SubmitButton, ReturnToTop}
 
 @this(
     main_template: MainTemplate,
     headingComp: Heading,
     govukSummaryList: GovukSummaryList,
     button: Button,
+    submit: SubmitButton,
     returnToTop: ReturnToTop,
     formHelper: FormWithCSRF
 )
@@ -47,6 +48,10 @@
     <p>@messages("playbackAnswers.selfAssessmentOnline")</p>
 
     <p>@messages("playbackDraftAnswers.p4")</p>
+
+    @formHelper(action = controllers.print.routes.PrintMaintainDraftAnswersController.onSubmit(), 'autoComplete -> "off") {
+       @submit(overrideMessage = Some("site.button.continue.maintain"))
+    }
 
     @button(messageKey = "site.print-or-save", isPrintButton = true)
 

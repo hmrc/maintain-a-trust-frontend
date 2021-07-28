@@ -57,71 +57,90 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
       .set(CharityBeneficiaryDiscretionYesNoPage(1), false).success.value
       .set(CharityBeneficiaryAddressYesNoPage(1), false).success.value
 
-    "return OK and the correct view for a GET when making changes" in {
+    "return OK and the correct view for a GET" when {
+      "making changes" in {
 
-      val answers = playbackAnswers(MakeChanges)
+        val answers = playbackAnswers(MakeChanges)
 
-      val entities = injector.instanceOf[PrintPlaybackHelper].entities(answers)
+        val entities = injector.instanceOf[PrintPlaybackHelper].entities(answers)
 
-      val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(answers)
+        val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(answers)
 
-      val application = applicationBuilder(userAnswers = Some(answers), AffinityGroup.Agent).build()
+        val application = applicationBuilder(userAnswers = Some(answers), AffinityGroup.Agent).build()
+
+        val request = FakeRequest(GET, routes.PrintMaintainDeclaredAnswersController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[PrintMaintainDeclaredAnswersView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(
+            entities,
+            trustDetails,
+            fakeTvn,
+            fakeCrn,
+            "27 January 2020",
+            isAgent = true
+          )(request, messages).toString
+
+        application.stop()
+      }
+
+
+      "closing" in {
+
+        val answers = playbackAnswers(CloseTrust)
+          .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
+
+        val entities = injector.instanceOf[PrintPlaybackHelper].entities(answers)
+
+        val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(answers)
+
+        val closeDate = injector.instanceOf[PrintPlaybackHelper].closeDate(answers)
+
+        val application = applicationBuilder(userAnswers = Some(answers), AffinityGroup.Agent).build()
+
+        val request = FakeRequest(GET, routes.PrintMaintainDeclaredAnswersController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[PrintMaintainFinalDeclaredAnswersView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(
+            closeDate,
+            entities,
+            trustDetails,
+            fakeTvn,
+            fakeCrn,
+            "27 January 2020",
+            isAgent = true
+          )(request, messages).toString
+
+        application.stop()
+      }
+
+    }
+
+    "redirect to what next on submit" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), AffinityGroup.Agent).build()
 
       val request = FakeRequest(GET, routes.PrintMaintainDeclaredAnswersController.onPageLoad().url)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[PrintMaintainDeclaredAnswersView]
+      status(result) mustBe SEE_OTHER
 
-      status(result) mustEqual OK
+      redirectLocation(result).value mustBe controllers.routes.WhatIsNextController.onPageLoad().url
 
-      contentAsString(result) mustEqual
-        view(
-          entities,
-          trustDetails,
-          fakeTvn,
-          fakeCrn,
-          "27 January 2020",
-          isAgent = true
-        )(request, messages).toString
-
-      application.stop()
     }
 
-    "return OK and the correct view for a GET when closing" in {
-
-      val answers = playbackAnswers(CloseTrust)
-        .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
-
-      val entities = injector.instanceOf[PrintPlaybackHelper].entities(answers)
-
-      val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(answers)
-
-      val closeDate = injector.instanceOf[PrintPlaybackHelper].closeDate(answers)
-
-      val application = applicationBuilder(userAnswers = Some(answers), AffinityGroup.Agent).build()
-
-      val request = FakeRequest(GET, routes.PrintMaintainDeclaredAnswersController.onPageLoad().url)
-
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[PrintMaintainFinalDeclaredAnswersView]
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(
-          closeDate,
-          entities,
-          trustDetails,
-          fakeTvn,
-          fakeCrn,
-          "27 January 2020",
-          isAgent = true
-        )(request, messages).toString
-
-      application.stop()
-    }
   }
 
 }
