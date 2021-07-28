@@ -15,7 +15,6 @@
  *@
 
 @import utils.DateErrorFormatter._
-@import viewmodels.Link
 
 @this(
     govukDateInput: GovukDateInput
@@ -26,10 +25,7 @@
     legend: String,
     legendClass: String = "govuk-fieldset__legend--l",
     hint: Option[String] = None,
-    readerHint: Option[String] = None,
-    link: Option[Link] = None,
-    legendAsHeading: Boolean = false,
-    extraText: Option[String] = None
+    legendAsHeading: Boolean = false
  )(implicit messages: Messages)
 
 @govukDateInput(DateInput(
