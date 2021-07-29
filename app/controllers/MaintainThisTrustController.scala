@@ -66,21 +66,20 @@ class MaintainThisTrustController @Inject()(
         }
       )
 
-      val continueUrl: Call = if (needsIv) {
-        routes.MaintainThisTrustController.onSubmit()
-      } else {
-        routes.InformationMaintainingThisTrustController.onPageLoad()
-      }
+      val continueUrl: Call = routes.MaintainThisTrustController.onSubmit(needsIv)
 
       Ok(view(identifier, identifierType, availableSections, continueUrl))
 
   }
 
-  def onSubmit: Action[AnyContent] = actions.authWithData {
+  def onSubmit(needsIv: Boolean): Action[AnyContent] = actions.authWithData {
     implicit request =>
-      val identifier = request.userAnswers.identifier
-
-      Redirect(config.verifyIdentityForATrustUrl(identifier))
+      if (needsIv) {
+        val identifier = request.userAnswers.identifier
+        Redirect(config.verifyIdentityForATrustUrl(identifier))
+      } else {
+        Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
+      }
   }
 
 }
