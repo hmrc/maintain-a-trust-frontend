@@ -40,25 +40,26 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
 
   "PlaybackDraftAnswersController Controller" must {
 
+    val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
+      .set(WhatIsNextPage, CloseTrust).success.value
+      .set(TVNPage, fakeTvn).success.value
+      .set(AgentDeclarationPage, AgentDeclaration(FullName("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
+      .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value
+      .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
+
+      .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value
+      .set(CharityBeneficiaryDiscretionYesNoPage(0), true).success.value
+      .set(CharityBeneficiaryShareOfIncomePage(0), "10").success.value
+      .set(CharityBeneficiaryAddressYesNoPage(0), true).success.value
+      .set(CharityBeneficiaryAddressUKYesNoPage(0), true).success.value
+      .set(CharityBeneficiaryAddressPage(0), UKAddress("line1", "line2", None, None, "NE11NE")).success.value
+
+      .set(CharityBeneficiaryNamePage(1), "Charity Beneficiary 2").success.value
+      .set(CharityBeneficiaryDiscretionYesNoPage(1), false).success.value
+      .set(CharityBeneficiaryAddressYesNoPage(1), false).success.value
+
+
     "return OK and the correct view for a GET" in {
-
-      val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
-        .set(WhatIsNextPage, CloseTrust).success.value
-        .set(TVNPage, fakeTvn).success.value
-        .set(AgentDeclarationPage, AgentDeclaration(FullName("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
-        .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value
-        .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
-
-        .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value
-        .set(CharityBeneficiaryDiscretionYesNoPage(0), true).success.value
-        .set(CharityBeneficiaryShareOfIncomePage(0), "10").success.value
-        .set(CharityBeneficiaryAddressYesNoPage(0), true).success.value
-        .set(CharityBeneficiaryAddressUKYesNoPage(0), true).success.value
-        .set(CharityBeneficiaryAddressPage(0), UKAddress("line1", "line2", None, None, "NE11NE")).success.value
-
-        .set(CharityBeneficiaryNamePage(1), "Charity Beneficiary 2").success.value
-        .set(CharityBeneficiaryDiscretionYesNoPage(1), false).success.value
-        .set(CharityBeneficiaryAddressYesNoPage(1), false).success.value
 
       val closeDate = injector.instanceOf[PrintPlaybackHelper].closeDate(playbackAnswers)
 
@@ -88,7 +89,7 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
 
     "redirect to what next on submit" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), AffinityGroup.Agent).build()
+      val application = applicationBuilder(userAnswers = Some(playbackAnswers), AffinityGroup.Agent).build()
 
       val request = FakeRequest(POST, routes.PrintMaintainDraftAnswersController.onPageLoad().url)
 
