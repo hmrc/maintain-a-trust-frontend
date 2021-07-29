@@ -97,7 +97,7 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
 
       status(result) mustBe SEE_OTHER
 
-      redirectLocation(result).value mustBe controllers.tasklist.routes.TaskListController.onPageLoad().url
+      redirectLocation(result).value mustBe controllers.routes.WhatIsNextController.onPageLoad().url
 
     }
   }
