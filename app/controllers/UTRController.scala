@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.Actions
-import forms.UTRFormProvider
+import forms.UtrFormProvider
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class UTRController @Inject()(
                                override val messagesApi: MessagesApi,
                                actions: Actions,
-                               formProvider: UTRFormProvider,
+                               formProvider: UtrFormProvider,
                                sessionService: SessionService,
                                val controllerComponents: MessagesControllerComponents,
                                view: UTRView

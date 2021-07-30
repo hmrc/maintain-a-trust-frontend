@@ -16,7 +16,7 @@
 
 package views
 
-import forms.UTRFormProvider
+import forms.UtrFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.StringViewBehaviours
@@ -26,7 +26,7 @@ class UTRViewSpec extends StringViewBehaviours {
 
   val messageKeyPrefix = "utr"
 
-  val form = new UTRFormProvider()()
+  val form = new UtrFormProvider()()
 
   "UTRView view" must {
 
