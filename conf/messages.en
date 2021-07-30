@@ -768,7 +768,7 @@ answerPage.section.closeDate.heading = Close date
 
 ## Settlors
 answerPage.section.settlors.heading = Settlors
-answerPage.section.deceasedSettlor.heading = Settlor
+answerPage.section.deceasedSettlor.heading = Deceased settlor
 answerPage.section.settlor.subheading = Settlor {0}
 
 ## Trustees
