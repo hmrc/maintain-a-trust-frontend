@@ -20,19 +20,17 @@ import forms.mappings.Mappings
 import com.google.inject.Inject
 import play.api.data.Form
 
-class UTRFormProvider @Inject() extends Mappings {
+class UtrFormProvider @Inject() extends Mappings {
 
   def apply(): Form[String] =
     Form(
-      "value" -> text("utr.error.required")
-        .verifying(
-          firstError(
-            maxLength(10, "utr.error.length"),
-            minLength(10, "utr.error.length"),
-            regexp(Validation.utrRegex, "utr.error.invalidCharacters"),
-            isNotEmpty("value", "utr.error.required")
-          ))
+      "value" -> utr(
+        requiredKey = "utr.error.required",
+        invalidKey  = "utr.error.invalidCharacters",
+        lengthKey   = "utr.error.length"
+      ).verifying(isNotEmpty("value", "utr.error.required"))
     )
+
 }
 
 
