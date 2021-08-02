@@ -755,7 +755,7 @@ section.natural=unigolion eraill
 answerPage.section.closeDate.heading=Dyddiad cau
 
 answerPage.section.settlors.heading=Setlwyr
-answerPage.section.deceasedSettlor.heading=Setlwr
+answerPage.section.deceasedSettlor.heading=Setlwr yr ewyllys
 answerPage.section.settlor.subheading=Setlwr {0}
 
 answerPage.section.trustees.heading=Ymddiriedolwyr
