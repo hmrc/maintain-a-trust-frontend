@@ -40,14 +40,13 @@
 
     @warning("playbackAnswers.declareAnnually")
 
-    @formHelper(action = controllers.print.routes.PrintLastDeclaredAnswersController.onSubmit(), 'autoComplete -> "off") {
 
-        <div class="govuk-button-group">
+    <div class="govuk-button-group">
+        @formHelper(action = controllers.print.routes.PrintLastDeclaredAnswersController.onSubmit(), 'autoComplete -> "off") {
             @submitButton(Some(messages("site.button.continue.maintaining")))
-            @button(messageKey = "site.print-or-save", isPrintButton = true)
-        </div>
-
-    }
+        }
+        @button(messageKey = "site.print-or-save", isPrintButton = true)
+    </div>
 
     @for(section <- trustDetails){
         @if(section.sectionKey.isDefined){

@@ -65,3 +65,12 @@ h2 {
 h3 {
   @extend .govuk-heading-s;
 }
+
+// ----------------
+// Ensures the correct alignment of buttons within the button-group
+// ----------------
+@include govuk-media-query() {
+  .govuk-button-group {
+     align-items: normal;
+  }
+}
