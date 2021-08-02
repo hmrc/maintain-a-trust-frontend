@@ -103,8 +103,9 @@ GET        /declared-updates                            controllers.print.PrintM
 POST       /declared-updates                            controllers.print.PrintMaintainDeclaredAnswersController.onSubmit()
 
 GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv: Boolean = true)
-POST       /maintain-this-trust                         controllers.MaintainThisTrustController.onSubmit()
+POST       /maintain-this-trust                         controllers.MaintainThisTrustController.onSubmit(needsIv: Boolean = true)
 GET        /continue-maintaining-this-trust             controllers.MaintainThisTrustController.onPageLoad(needsIv: Boolean = false)
+POST       /continue-maintaining-this-trust             controllers.MaintainThisTrustController.onSubmit(needsIv: Boolean = false)
 
 GET        /update-trust-details                        controllers.makechanges.UpdateTrustDetailsYesNoController.onPageLoad()
 POST       /update-trust-details                        controllers.makechanges.UpdateTrustDetailsYesNoController.onSubmit()

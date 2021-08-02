@@ -24,7 +24,7 @@ import views.html.MaintainThisTrustView
 
 class MaintainThisTrustViewSpec extends ViewBehaviours {
 
-  val continue: Call = routes.MaintainThisTrustController.onSubmit()
+  val continue: Call = routes.MaintainThisTrustController.onSubmit(needsIv = true)
 
     "TrustAlreadyClaimed view for UTR" must {
     val utr = "0987654321"

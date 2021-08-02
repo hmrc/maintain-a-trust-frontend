@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import connectors.TrustConnector
-import forms.UTRFormProvider
+import forms.UtrFormProvider
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import play.api.data.Form
@@ -37,7 +37,7 @@ import scala.concurrent.Future
 
 class UTRControllerSpec extends SpecBase {
 
-  val formProvider = new UTRFormProvider()
+  val formProvider = new UtrFormProvider()
   val form: Form[String] = formProvider()
 
   lazy val trustUTRRoute: String = routes.UTRController.onPageLoad().url
