@@ -668,7 +668,7 @@ noTaxLiabilityInfo.paragraph2 = You no longer need to make an annual declaration
 
 variationProgress.title = Trust overview
 variationProgress.heading = Trust overview
-variationProgress.p1 = You can change information about the trust and make a declaration once you have confirmed each section is up to date.
+variationProgress.p1 = You can make changes to the trust details, and make a declaration once you have confirmed each section is up to date.
 variationProgress.p2 = Any changes you make without declaring will not be saved.
 variationsProgress.return.link = Return to register and maintain a trust for a client
 variationProgress.warning = You need to declare the trust details are up to date. Some questions may have changed since the trust was registered.
