@@ -48,7 +48,7 @@ class PrintMaintainDraftAnswersController @Inject()(
 
   def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer {
     _ =>
-      Redirect(controllers.routes.WhatIsNextController.onPageLoad())
+      Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
   }
 
 }
