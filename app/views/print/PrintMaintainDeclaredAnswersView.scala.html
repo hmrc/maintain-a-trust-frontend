@@ -16,13 +16,14 @@
 
 @import viewmodels.{AnswerSection, Section}
 @import utils.SectionFormatter.formatAnswerSection
-@import views.html.components.{Heading, Button, Warning, ReturnToTop}
+@import views.html.components.{Heading, Button, SubmitButton, Warning, ReturnToTop}
 
 @this(
     main_template: MainTemplate,
     headingComp: Heading,
     govukSummaryList: GovukSummaryList,
     button: Button,
+    submit: SubmitButton,
     returnToTop: ReturnToTop,
     warning: Warning,
     formHelper: FormWithCSRF
@@ -57,6 +58,10 @@
     <p>@messages("playbackDeclarationAnswers.p3", declarationSent)</p>
 
     @warning("playbackAnswers.declareAnnually")
+
+     @formHelper(action = controllers.print.routes.PrintMaintainDeclaredAnswersController.onSubmit(), 'autoComplete -> "off") {
+       @submit(overrideMessage = Some("site.button.continue.maintain"))
+    }
 
     @button(messageKey = "site.print-or-save", isPrintButton = true)
 

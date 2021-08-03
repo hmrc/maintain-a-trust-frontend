@@ -46,4 +46,9 @@ class PrintMaintainDraftAnswersController @Inject()(
       Future.successful(Ok(view(closeDate, entities, trustDetails)))
   }
 
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer {
+    _ =>
+      Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
+  }
+
 }

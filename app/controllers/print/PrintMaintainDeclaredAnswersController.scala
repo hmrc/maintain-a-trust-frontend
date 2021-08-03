@@ -69,4 +69,9 @@ class PrintMaintainDeclaredAnswersController @Inject()(
       ))
   }
 
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer {
+    _ =>
+      Redirect(controllers.routes.WhatIsNextController.onSubmit())
+  }
+
 }

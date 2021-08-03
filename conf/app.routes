@@ -97,8 +97,10 @@ GET        /last-declaration                            controllers.print.PrintL
 POST       /last-declaration                            controllers.print.PrintLastDeclaredAnswersController.onSubmit()
 
 GET        /draft-declaration                           controllers.print.PrintMaintainDraftAnswersController.onPageLoad()
+POST       /draft-declaration                           controllers.print.PrintMaintainDraftAnswersController.onSubmit()
 
 GET        /declared-updates                            controllers.print.PrintMaintainDeclaredAnswersController.onPageLoad()
+POST       /declared-updates                            controllers.print.PrintMaintainDeclaredAnswersController.onSubmit()
 
 GET        /maintain-this-trust                         controllers.MaintainThisTrustController.onPageLoad(needsIv: Boolean = true)
 POST       /maintain-this-trust                         controllers.MaintainThisTrustController.onSubmit(needsIv: Boolean = true)
