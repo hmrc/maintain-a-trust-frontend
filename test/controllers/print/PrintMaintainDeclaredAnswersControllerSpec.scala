@@ -127,20 +127,6 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
     }
 
-    "redirect to what next on submit" in {
-
-      val application = applicationBuilder(userAnswers = Some(playbackAnswers(MakeChanges)), AffinityGroup.Agent).build()
-
-      val request = FakeRequest(POST, routes.PrintMaintainDeclaredAnswersController.onPageLoad().url)
-
-      val result = route(application, request).value
-
-      status(result) mustBe SEE_OTHER
-
-      redirectLocation(result).value mustBe controllers.routes.WhatIsNextController.onPageLoad().url
-
-    }
-
   }
 
 }
