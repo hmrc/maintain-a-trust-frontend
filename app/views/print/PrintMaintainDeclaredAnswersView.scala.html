@@ -59,10 +59,6 @@
 
     @warning("playbackAnswers.declareAnnually")
 
-     @formHelper(action = controllers.print.routes.PrintMaintainDeclaredAnswersController.onSubmit(), 'autoComplete -> "off") {
-       @submit(overrideMessage = Some("site.button.continue.maintain"))
-    }
-
     @button(messageKey = "site.print-or-save", isPrintButton = true)
 
     @for(section <- trustDetails){
