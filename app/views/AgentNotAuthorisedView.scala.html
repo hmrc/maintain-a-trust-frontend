@@ -40,22 +40,29 @@
 
     <p>@messages("agentNotAuthorised.p1")</p>
     <h2>@messages("agentNotAuthorised.subheading1")</h2>
-    <p>@messages("agentNotAuthorised.p2")</p>
+
+    <p>@messages("agentNotAuthorised.p2") @link(config.helplineUrl, "help-link", "agentNotAuthorised.link", true).</p>
     <p>@messages("agentNotAuthorised.p3")</p>
-    <h3>@messages("agentNotAuthorised.subheading2")</h3>
-    <p>@messages("agentNotAuthorised.p4") @link(config.helplineUrl, "help-link", "agentNotAuthorised.p4.a", true).</p>
-    <p>@messages("agentNotAuthorised.p5")</p>
 
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("agentNotAuthorised.bullet.1")</li>
         <li>@messages("agentNotAuthorised.bullet.2")</li>
     </ul>
 
-    <p>@messages("agentNotAuthorised.p6")</p>
+    <h3>@messages("agentNotAuthorised.subheading2")</h3>
+    <p>@messages("agentNotAuthorised.p4") @link(config.helplineUrl, "guidance", "agentNotAuthorised.p4.a", true).</p>
+    <p>@messages("agentNotAuthorised.p5")</p>
 
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("agentNotAuthorised.bullet.3")</li>
         <li>@messages("agentNotAuthorised.bullet.4")</li>
+    </ul>
+
+    <p>@messages("agentNotAuthorised.p6")</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("agentNotAuthorised.bullet.5")</li>
+        <li>@messages("agentNotAuthorised.bullet.6")</li>
     </ul>
 
     <p>@messages("agentNotAuthorised.p7") @link(config.helplineUrl, "help-link-2", "agentNotAuthorised.p7.a", true).</p>
