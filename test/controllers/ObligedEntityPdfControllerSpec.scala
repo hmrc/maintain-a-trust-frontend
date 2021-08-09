@@ -20,7 +20,8 @@ import akka.stream.scaladsl.Source
 import akka.util.ByteString
 import base.SpecBase
 import connectors.TrustsObligedEntityOutputConnector
-import controllers.Assets._
+import play.api.http.Status._
+import play.api.http.HeaderNames._
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import play.api.inject.bind
