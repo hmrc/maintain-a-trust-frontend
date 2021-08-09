@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
-@import views.html.components.{ErrorSummary, InputText, SubmitButton, Heading, InsetText}
+@import views.html.components.{ErrorSummary, InputText, SubmitButton, Heading, InsetText, InputCharacterCount}
 
 @this(
     appConfig: FrontendAppConfig,
@@ -28,6 +28,7 @@
     submitButton: SubmitButton,
     inputText: InputText,
     insetText: InsetText,
+    characterCount: InputCharacterCount,
     formHelper: FormWithCSRF
 )
 
@@ -82,10 +83,13 @@
                 inputType = "tel"
             )
 
-            @inputText(
+            @characterCount(
                 field = form("crn"),
+                id = "crn",
+                name = "crn",
                 label = messages("declaration.crn"),
-                inputClass = Some("govuk-!-width-three-quarters"),
+                isPageHeading = false,
+                maxLength = Some(56)
             )
 
         </fieldset>
