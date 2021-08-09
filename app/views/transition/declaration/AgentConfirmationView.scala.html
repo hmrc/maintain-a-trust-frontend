@@ -27,7 +27,7 @@
     config: FrontendAppConfig
 )
 
-@(tvn: String)(implicit request: Request[_], messages: Messages)
+@(tvn: String, leadTrustee: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
     title = s"${messages("agentConfirmation.title", tvn)}"
@@ -55,7 +55,7 @@
 
     <h2>@messages("agentConfirmation.subheading2")</h2>
 
-    <p>@messages("agentConfirmation.paragraph5")</p>
+    <p>@messages("agentConfirmation.paragraph5", leadTrustee)</p>
 
     <p>@messages("agentConfirmation.paragraph6") <a href="@config.helplineUrl" target="_blank">@messages("agentConfirmation.paragraph6.link")</a>.</p>
 

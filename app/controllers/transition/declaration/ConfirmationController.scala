@@ -45,13 +45,13 @@ class ConfirmationController @Inject()(
       request.userAnswers.get(TVNPage).fold {
         logger.error(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}] no TVN in user answers, cannot render confirmation")
         Redirect(controllers.routes.TrustStatusController.sorryThereHasBeenAProblem())
-      }{
+      } {
         tvn =>
           Ok(
             if (isAgent) {
-              agentConfirmationView(tvn)
+              agentConfirmationView(tvn, request.userAnswers.leadTrusteeName)
             } else {
-              individualConfirmationView(tvn)
+              individualConfirmationView(tvn, request.userAnswers.leadTrusteeName)
             }
           )
       }

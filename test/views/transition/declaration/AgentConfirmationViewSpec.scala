@@ -23,20 +23,22 @@ class AgentConfirmationViewSpec extends ViewBehaviours {
 
   val messageKeyPrefix = "agentConfirmation"
   val fakeTvn = "XC TVN 000 000 4912"
+  val leadTrusteeName = "Name"
 
   "AgentConfirmationView" must {
 
     val view = viewFor[AgentConfirmationView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(
-      tvn = fakeTvn
+      tvn = fakeTvn,
+      leadTrustee = leadTrusteeName
     )(fakeRequest, messages)
 
     behave like normalPage(
       view = applyView,
       messageKeyPrefix = messageKeyPrefix,
       expectedGuidanceKeys = "subheading1", "paragraph1", "paragraph2", "paragraph3", "paragraph4", "subheading2",
-      "paragraph5", "paragraph6", "subheading3", "paragraph7", "paragraph8", "paragraph9", "paragraph10"
+      "paragraph6", "subheading3", "paragraph7", "paragraph8", "paragraph9", "paragraph10"
     )
 
     behave like pageWithWarning(applyView)
@@ -52,6 +54,8 @@ class AgentConfirmationViewSpec extends ViewBehaviours {
       val agentOverviewLink = doc.getElementById("agent-overview")
       assertAttributeValueForElement(agentOverviewLink, "href", frontendAppConfig.agentOverviewUrl)
       assertContainsTextForId(doc, "agent-overview", messages("agentConfirmation.paragraph10.link"))
+
+      assertContainsText(doc, messages(s"$messageKeyPrefix.paragraph5", leadTrusteeName))
 
     }
   }

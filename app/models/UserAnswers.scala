@@ -17,11 +17,14 @@
 package models
 
 import _root_.pages.WhatIsNextPage
+import _root_.pages.trustees._
 import models.pages.WhatIsNext.{NeedsToPayTax, NoLongerTaxable}
 import play.api.Logging
+import play.api.i18n.Messages
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import queries.{Gettable, Settable}
+import sections.Trustees
 
 import java.time.LocalDateTime
 import scala.util.{Failure, Success, Try}
@@ -55,6 +58,22 @@ final case class UserAnswers(internalId: String,
   }
 
   def is5mldTrustIn5mldMode: Boolean = trustMldStatus.is5mldTrustIn5mldMode
+
+  def leadTrusteeName(implicit messages: Messages): String = this.get(Trustees).getOrElse(JsArray())
+    .value
+    .zipWithIndex
+    .find(x => x._1.transform((__ \ IsThisLeadTrusteePage(x._2)).json.pick[JsBoolean]).contains(JsBoolean(true)))
+    .map { x =>
+      for {
+        ind <- x._1.transform((__ \ TrusteeNamePage(x._2)).json.pick)
+        org <- x._1.transform((__ \ TrusteeOrgNamePage(x._2)).json.pick)
+      } yield {
+        ind.asOpt[FullName].map(_.toString) orElse org.asOpt[String]
+      }
+    } match {
+    case Some(JsSuccess(Some(name), _)) => name
+    case _ => messages("leadTrustee.default")
+  }
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
     getAtPath(page.path)
