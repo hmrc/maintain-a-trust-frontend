@@ -21,6 +21,7 @@ import base.SpecBase
 import forms.Validation
 import models.pages.WhatIsNext.{NeedsToPayTax, NoLongerTaxable}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.i18n.{Lang, MessagesImpl}
 import play.api.libs.json.Json
 import wolfendale.scalacheck.regexp.RegexpGen
 
@@ -114,6 +115,46 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
               val userAnswers = emptyUserAnswersForUrn
               userAnswers.trustMldStatus mustBe Underlying5mldNonTaxableTrustIn5mldMode
             }
+          }
+        }
+      }
+    }
+
+    ".leadTrusteeName" must {
+      "return name of lead trustee" when {
+
+        "individual" in {
+
+          val userAnswers = emptyUserAnswersForUtr
+            .set(trustees.IsThisLeadTrusteePage(0), false).success.value
+            .set(trustees.TrusteeNamePage(0), FullName("Joe", None, "Bloggs")).success.value
+            .set(trustees.IsThisLeadTrusteePage(1), true).success.value
+            .set(trustees.TrusteeNamePage(1), FullName("John", None, "Doe")).success.value
+
+          userAnswers.leadTrusteeName mustBe "John Doe"
+        }
+
+        "organisation" in {
+
+          val userAnswers = emptyUserAnswersForUtr
+            .set(trustees.IsThisLeadTrusteePage(0), false).success.value
+            .set(trustees.TrusteeOrgNamePage(0), "Amazon").success.value
+            .set(trustees.IsThisLeadTrusteePage(1), true).success.value
+            .set(trustees.TrusteeOrgNamePage(1), "Google").success.value
+
+          userAnswers.leadTrusteeName mustBe "Google"
+        }
+
+        "lead trustee not found" when {
+
+          "english" in {
+            implicit val messages: MessagesImpl = MessagesImpl(Lang("en"), messagesApi)
+            emptyUserAnswersForUtr.leadTrusteeName mustBe "the lead trustee"
+          }
+
+          "welsh" in {
+            implicit val messages: MessagesImpl = MessagesImpl(Lang("cy"), messagesApi)
+            emptyUserAnswersForUtr.leadTrusteeName mustBe "y prif ymddiriedolwr"
           }
         }
       }

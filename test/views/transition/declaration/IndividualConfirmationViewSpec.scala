@@ -23,20 +23,22 @@ class IndividualConfirmationViewSpec extends ViewBehaviours {
 
   val messageKeyPrefix = "individualConfirmation"
   val fakeTvn = "XC TVN 000 000 4912"
+  val leadTrusteeName = "Name"
 
   "IndividualConfirmationView" must {
 
     val view = viewFor[IndividualConfirmationView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(
-      tvn = fakeTvn
+      tvn = fakeTvn,
+      leadTrustee = leadTrusteeName
     )(fakeRequest, messages)
 
     behave like normalPage(
       view = applyView,
       messageKeyPrefix = messageKeyPrefix,
       expectedGuidanceKeys = "subheading1", "paragraph1", "paragraph2", "paragraph3", "paragraph4", "subheading2",
-      "paragraph5", "paragraph6", "subheading3", "paragraph7", "paragraph8", "paragraph9"
+      "paragraph6", "subheading3", "paragraph7", "paragraph8", "paragraph9"
     )
 
     behave like pageWithWarning(applyView)
@@ -48,6 +50,8 @@ class IndividualConfirmationViewSpec extends ViewBehaviours {
       assertContainsText(doc, s"Your reference is:")
       assertContainsText(doc, s"$fakeTvn")
       assertContainsText(doc, "Print or save a copy of your answers")
+
+      assertContainsText(doc, messages(s"$messageKeyPrefix.paragraph5", leadTrusteeName))
 
     }
   }
