@@ -16,7 +16,7 @@
 
 package base
 
-import controllers.Assets.OK
+import play.api.http.Status.OK
 import controllers.actions._
 import models.UserAnswers
 import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}

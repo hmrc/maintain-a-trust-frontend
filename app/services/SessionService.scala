@@ -17,7 +17,7 @@
 package services
 
 import com.google.inject.Inject
-import controllers.Assets.Redirect
+import play.api.mvc.Results.Redirect
 import models.requests.IdentifierRequest
 import models.{IdentifierSession, UserAnswers}
 import play.api.Logging
