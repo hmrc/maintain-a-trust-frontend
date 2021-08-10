@@ -35,13 +35,21 @@ class FrontendAppConfig @Inject()(val configuration: Configuration,
   private def loadConfig(key: String) = configuration.get[String](key)
 
   def maintainTrustDetailsUrl(identifier: String) = s"$maintainTrustDetailsFrontendUrl/$identifier"
+
   def maintainTrustAssetsUrl(identifier: String) = s"$maintainTrustAssetsFrontendUrl/$identifier"
+
   def maintainTaxLiabilityUrl(identifier: String) = s"$maintainTaxLiabilityFrontendUrl/$identifier"
+
   def maintainTrusteesUrl(identifier: String) = s"$maintainTrusteesFrontendUrl/$identifier"
+
   def maintainBeneficiariesUrl(identifier: String) = s"$maintainBeneficiariesFrontendUrl/$identifier"
+
   def maintainSettlorsUrl(identifier: String) = s"$maintainSettlorsFrontendUrl/$identifier"
+
   def maintainProtectorsUrl(identifier: String) = s"$maintainProtectorsFrontendUrl/$identifier"
+
   def maintainOtherIndividualsUrl(identifier: String) = s"$maintainOtherIndividualsFrontendUrl/$identifier"
+
   def maintainNonEeaCompanyUrl(identifier: String) = s"$maintainNonEeaCompaniesFrontendUrl/$identifier"
 
   val betaFeedbackUrl = s"${contactFrontendConfig.baseUrl.get}/contact/beta-feedback?service=${contactFrontendConfig.serviceId.get}"
@@ -151,4 +159,9 @@ class FrontendAppConfig @Inject()(val configuration: Configuration,
 
     configuration.get[String](path)
   }
+
+  def registerTrustAsTrusteeGuidanceUrl(): String = {
+    configuration.get[String]("urls.registerTrustAsTrusteeGuidance")
   }
+
+}
