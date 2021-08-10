@@ -151,9 +151,4 @@ class FrontendAppConfig @Inject()(val configuration: Configuration,
 
     configuration.get[String](path)
   }
-
-  def registerTrustAsTrusteeGuidanceUrl(): String = {
-    configuration.get[String]("urls.registerTrustAsTrusteeGuidance")
   }
-
-}
