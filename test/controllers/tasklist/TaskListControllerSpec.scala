@@ -260,15 +260,51 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
       "return OK and the correct view for a GET" when {
 
-        "settlors and beneficiaries not included in additional sections" when {
-          "entity statuses are None and tasks are incomplete" when {
+        "beneficiary/settlor statuses are NothingToUpdate and tasks are incomplete" when {
 
-            "there are no tax years to ask for" in {
+          "there are no tax years to ask for" in {
+
+            val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+
+            when(mockTrustsConnector.getFirstTaxYearToAskFor(any())(any(), any()))
+              .thenReturn(Future.successful(FirstTaxYearAvailable(0, earlierYearsToDeclare = false)))
+
+            val application = applicationBuilder(userAnswers = Some(answers))
+              .overrides(
+                bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
+                bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
+              ).build()
+
+            val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+            val result = route(application, request).value
+
+            val view = application.injector.instanceOf[NonTaxToTaxProgressView]
+
+            status(result) mustEqual OK
+
+            contentAsString(result) mustEqual
+              view(
+                identifier = baseAnswers.identifier,
+                identifierType = baseAnswers.identifierType,
+                mandatory = mandatorySectionsTransitionToTaxableWithoutTaxLiability(baseAnswers.identifier),
+                additional = additionalSectionsWhenTrustDetailsNotCompleted,
+                affinityGroup = Organisation,
+                isAbleToDeclare = false
+              )(request, messages).toString
+
+            application.stop()
+          }
+
+          "there are some tax years to ask for" in {
+
+            forAll(arbitrary[Int].suchThat(_ > 0)) { yearsAgo =>
+              beforeEach()
 
               val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
 
               when(mockTrustsConnector.getFirstTaxYearToAskFor(any())(any(), any()))
-                .thenReturn(Future.successful(FirstTaxYearAvailable(0, earlierYearsToDeclare = false)))
+                .thenReturn(Future.successful(FirstTaxYearAvailable(yearsAgo, earlierYearsToDeclare = false)))
 
               val application = applicationBuilder(userAnswers = Some(answers))
                 .overrides(
@@ -288,185 +324,144 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
                 view(
                   identifier = baseAnswers.identifier,
                   identifierType = baseAnswers.identifierType,
-                  mandatory = mandatorySectionsTransitionToTaxableWithoutTaxLiability(baseAnswers.identifier),
-                  additional = Nil,
+                  mandatory = mandatorySectionsTransitionToTaxableWithTaxLiability(baseAnswers.identifier),
+                  additional = additionalSectionsWhenTrustDetailsNotCompleted,
                   affinityGroup = Organisation,
                   isAbleToDeclare = false
                 )(request, messages).toString
 
               application.stop()
             }
-
-            "there are some tax years to ask for" in {
-
-              forAll(arbitrary[Int].suchThat(_ > 0)) { yearsAgo =>
-                beforeEach()
-
-                val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
-
-                when(mockTrustsConnector.getFirstTaxYearToAskFor(any())(any(), any()))
-                  .thenReturn(Future.successful(FirstTaxYearAvailable(yearsAgo, earlierYearsToDeclare = false)))
-
-                val application = applicationBuilder(userAnswers = Some(answers))
-                  .overrides(
-                    bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
-                    bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
-                  ).build()
-
-                val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
-
-                val result = route(application, request).value
-
-                val view = application.injector.instanceOf[NonTaxToTaxProgressView]
-
-                status(result) mustEqual OK
-
-                contentAsString(result) mustEqual
-                  view(
-                    identifier = baseAnswers.identifier,
-                    identifierType = baseAnswers.identifierType,
-                    mandatory = mandatorySectionsTransitionToTaxableWithTaxLiability(baseAnswers.identifier),
-                    additional = Nil,
-                    affinityGroup = Organisation,
-                    isAbleToDeclare = false
-                  )(request, messages).toString
-
-                application.stop()
-              }
-            }
           }
         }
 
-        "settlors and beneficiaries included in additional sections" when {
+        "beneficiary/settlor statuses are NothingToUpdate but tasks have been completed (could happen if entities removed)" in {
 
-          "beneficiary/settlor statuses are NothingToUpdate but tasks have been completed (could happen if entities removed)" in {
+          when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
+            .thenReturn(Future.successful(CompletedMaintenanceTasks(
+              trustDetails = true,
+              assets = false,
+              taxLiability = false,
+              trustees = false,
+              beneficiaries = true,
+              settlors = true,
+              protectors = false,
+              other = false
+            )))
 
-            when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
-              .thenReturn(Future.successful(CompletedMaintenanceTasks(
-                trustDetails = true,
-                assets = false,
-                taxLiability = false,
-                trustees = false,
-                beneficiaries = true,
-                settlors = true,
-                protectors = false,
-                other = false
-              )))
+          val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
 
-            val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+          val application = applicationBuilder(userAnswers = Some(answers))
+            .overrides(
+              bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
+              bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
+            ).build()
 
-            val application = applicationBuilder(userAnswers = Some(answers))
-              .overrides(
-                bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
-                bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
-              ).build()
+          val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
-            val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+          val result = route(application, request).value
 
-            val result = route(application, request).value
+          val view = application.injector.instanceOf[NonTaxToTaxProgressView]
 
-            val view = application.injector.instanceOf[NonTaxToTaxProgressView]
+          status(result) mustEqual OK
 
-            status(result) mustEqual OK
+          contentAsString(result) mustEqual
+            view(
+              identifier = baseAnswers.identifier,
+              identifierType = baseAnswers.identifierType,
+              mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, Completed),
+              additional = optionalSectionsTransitionToTaxable(answers.identifier, Completed),
+              affinityGroup = Organisation,
+              isAbleToDeclare = false
+            )(request, messages).toString
 
-            contentAsString(result) mustEqual
-              view(
-                identifier = baseAnswers.identifier,
-                identifierType = baseAnswers.identifierType,
-                mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, Completed),
-                additional = optionalSectionsTransitionToTaxable(answers.identifier, Completed),
-                affinityGroup = Organisation,
-                isAbleToDeclare = false
-              )(request, messages).toString
+          application.stop()
+        }
 
-            application.stop()
+        "beneficiary/settlor statuses are not NothingToUpdate" in {
+
+          forAll(arbitrary[MigrationTaskStatus].suchThat(_ != NothingToUpdate)) {
+            migrationStatus =>
+
+              when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
+                .thenReturn(Future.successful(CompletedMaintenanceTasks(
+                  trustDetails = true,
+                  assets = false,
+                  taxLiability = false,
+                  trustees = false,
+                  beneficiaries = false,
+                  settlors = false,
+                  protectors = false,
+                  other = false
+                )))
+
+              val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+
+              val application = applicationBuilder(userAnswers = Some(answers))
+                .overrides(
+                  bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
+                  bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
+                ).build()
+
+              when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(migrationStatus))
+              when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(migrationStatus))
+
+              val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+              val result = route(application, request).value
+
+              val view = application.injector.instanceOf[NonTaxToTaxProgressView]
+
+              status(result) mustEqual OK
+
+              val entityStatus = if (migrationStatus == Updated) Completed else NotStarted
+
+              contentAsString(result) mustEqual
+                view(
+                  identifier = baseAnswers.identifier,
+                  identifierType = baseAnswers.identifierType,
+                  mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, Completed),
+                  additional = optionalSectionsTransitionToTaxable(answers.identifier, entityStatus),
+                  affinityGroup = Organisation,
+                  isAbleToDeclare = false
+                )(request, messages).toString
+
+              application.stop()
           }
+        }
 
-          "beneficiary/settlor statuses are not NothingToUpdate" in {
+        "beneficiary/settlor tasks need completing but are disabled because trust details incomplete" in {
 
-            forAll(arbitrary[MigrationTaskStatus].suchThat(_ != NothingToUpdate)) {
-              migrationStatus =>
+          val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
 
-                when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
-                  .thenReturn(Future.successful(CompletedMaintenanceTasks(
-                    trustDetails = true,
-                    assets = false,
-                    taxLiability = false,
-                    trustees = false,
-                    beneficiaries = false,
-                    settlors = false,
-                    protectors = false,
-                    other = false
-                  )))
+          val application = applicationBuilder(userAnswers = Some(answers))
+            .overrides(
+              bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
+              bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
+            ).build()
 
-                val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+          when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(NeedsUpdating))
+          when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(NeedsUpdating))
 
-                val application = applicationBuilder(userAnswers = Some(answers))
-                  .overrides(
-                    bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
-                    bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
-                  ).build()
+          val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
-                when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(migrationStatus))
-                when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(migrationStatus))
+          val result = route(application, request).value
 
-                val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+          val view = application.injector.instanceOf[NonTaxToTaxProgressView]
 
-                val result = route(application, request).value
+          status(result) mustEqual OK
 
-                val view = application.injector.instanceOf[NonTaxToTaxProgressView]
+          contentAsString(result) mustEqual
+            view(
+              identifier = baseAnswers.identifier,
+              identifierType = baseAnswers.identifierType,
+              mandatory = mandatorySectionsTransitionToTaxable(answers.identifier),
+              additional = additionalSectionsWhenTrustDetailsNotCompleted(),
+              affinityGroup = Organisation,
+              isAbleToDeclare = false
+            )(request, messages).toString
 
-                status(result) mustEqual OK
-
-                val entityStatus = if (migrationStatus == Updated) Completed else NotStarted
-
-                contentAsString(result) mustEqual
-                  view(
-                    identifier = baseAnswers.identifier,
-                    identifierType = baseAnswers.identifierType,
-                    mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, Completed),
-                    additional = optionalSectionsTransitionToTaxable(answers.identifier, entityStatus),
-                    affinityGroup = Organisation,
-                    isAbleToDeclare = false
-                  )(request, messages).toString
-
-                application.stop()
-            }
-          }
-
-          "beneficiary/settlor tasks need completing but are disabled because trust details incomplete" in {
-
-            val answers = baseAnswers.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
-
-            val application = applicationBuilder(userAnswers = Some(answers))
-              .overrides(
-                bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
-                bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
-              ).build()
-
-            when(mockTrustsConnector.getSettlorsStatus(any())(any(), any())).thenReturn(Future.successful(NeedsUpdating))
-            when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any())).thenReturn(Future.successful(NeedsUpdating))
-
-            val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
-
-            val result = route(application, request).value
-
-            val view = application.injector.instanceOf[NonTaxToTaxProgressView]
-
-            status(result) mustEqual OK
-
-            contentAsString(result) mustEqual
-              view(
-                identifier = baseAnswers.identifier,
-                identifierType = baseAnswers.identifierType,
-                mandatory = mandatorySectionsTransitionToTaxable(answers.identifier),
-                additional = additionalSectionsWhenTrustDetailsNotCompleted(),
-                affinityGroup = Organisation,
-                isAbleToDeclare = false
-              )(request, messages).toString
-
-            application.stop()
-          }
+          application.stop()
         }
       }
 

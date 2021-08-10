@@ -150,14 +150,12 @@ trait TaskListSections {
                                  yearsToAskFor: Int): TaskList = {
 
     def task(taskStatus: MigrationTaskStatus,
-             taskCompleted: Boolean,
              trustDetailsCompleted: Boolean,
              link: Link): List[Task] = taskStatus match {
       case Updated => List(Task(link, Some(Completed)))
       case NeedsUpdating if trustDetailsCompleted => List(Task(link, Some(NotStarted)))
-      case NeedsUpdating => List(Task(link, Some(CannotStartYet)))
-      case NothingToUpdate if taskCompleted => List(Task(link, Some(Completed)))
-      case NothingToUpdate => Nil
+      case NothingToUpdate if trustDetailsCompleted => List(Task(link, Some(Completed)))
+      case _ => List(Task(link, Some(CannotStartYet)))
     }
 
     def linkUrl(route: String => String): Option[String] = {
@@ -180,8 +178,8 @@ trait TaskListSections {
       Some(Tag.tagFor(tasks.taxLiability))
     )
 
-    val settlorsTask = task(settlorsStatus, tasks.settlors, tasks.trustDetails, Link(Settlors, linkUrl(settlorsRouteEnabled)))
-    val beneficiariesTask = task(beneficiariesStatus, tasks.beneficiaries, tasks.trustDetails, Link(Beneficiaries, linkUrl(beneficiariesRouteEnabled)))
+    val settlorsTask = task(settlorsStatus, tasks.trustDetails, Link(Settlors, linkUrl(settlorsRouteEnabled)))
+    val beneficiariesTask = task(beneficiariesStatus, tasks.trustDetails, Link(Beneficiaries, linkUrl(beneficiariesRouteEnabled)))
 
     TaskList(
       if (yearsToAskFor == 0) transitionTasks else transitionTasks :+ taxLiabilityTask,
