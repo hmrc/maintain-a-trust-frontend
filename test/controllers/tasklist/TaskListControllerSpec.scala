@@ -19,10 +19,10 @@ package controllers.tasklist
 import base.SpecBase
 import connectors.{TrustConnector, TrustsStoreConnector}
 import generators.ModelGenerators
-import models.MigrationStatus.{NeedsUpdating, NothingToUpdate}
-import models.pages.Tag.{Completed, InProgress}
+import models.MigrationTaskStatus.{NeedsUpdating, NothingToUpdate, Updated}
+import models.pages.Tag._
 import models.pages.{Tag, WhatIsNext}
-import models.{CompletedMaintenanceTasks, FirstTaxYearAvailable, MigrationStatus, UserAnswers}
+import models.{CompletedMaintenanceTasks, FirstTaxYearAvailable, MigrationTaskStatus, UserAnswers}
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
 import org.scalacheck.Arbitrary.arbitrary
@@ -85,8 +85,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
   def additionalSectionsWhenTrustDetailsNotCompleted(): List[Task] =
     List(
-      Task(Link(Settlors, None), Some(InProgress)),
-      Task(Link(Beneficiaries, None), Some(InProgress))
+      Task(Link(Settlors, None), Some(CannotStartYet)),
+      Task(Link(Beneficiaries, None), Some(CannotStartYet))
     )
 
   def optionalSections4mld(identifier: String): List[Task] = List(
@@ -339,7 +339,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
         "settlors and beneficiaries included in additional sections" when {
 
-          "beneficiary/settlor statuses are None but tasks have been completed (could happen if entities removed)" in {
+          "beneficiary/settlor statuses are NothingToUpdate but tasks have been completed (could happen if entities removed)" in {
 
             when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
               .thenReturn(Future.successful(CompletedMaintenanceTasks(
@@ -382,9 +382,9 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
             application.stop()
           }
 
-          "beneficiary/settlor statuses are Some" in {
+          "beneficiary/settlor statuses are not NothingToUpdate" in {
 
-            forAll(arbitrary[MigrationStatus].suchThat(_ != NothingToUpdate)) {
+            forAll(arbitrary[MigrationTaskStatus].suchThat(_ != NothingToUpdate)) {
               migrationStatus =>
 
                 when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
@@ -418,7 +418,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
                 status(result) mustEqual OK
 
-                val entityStatus = if (migrationStatus.upToDate) Completed else InProgress
+                val entityStatus = if (migrationStatus == Updated) Completed else NotStarted
 
                 contentAsString(result) mustEqual
                   view(

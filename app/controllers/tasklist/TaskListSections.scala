@@ -17,10 +17,10 @@
 package controllers.tasklist
 
 import config.FrontendAppConfig
-import models.MigrationStatus._
+import models.MigrationTaskStatus._
 import models.pages.Tag
-import models.pages.Tag.InProgress
-import models.{CompletedMaintenanceTasks, MigrationStatus, TrustMldStatus}
+import models.pages.Tag._
+import models.{CompletedMaintenanceTasks, MigrationTaskStatus, TrustMldStatus}
 import pages.Page
 import sections._
 import sections.assets.{Assets, NonEeaBusinessAsset}
@@ -145,13 +145,18 @@ trait TaskListSections {
 
   def generateTransitionTaskList(tasks: CompletedMaintenanceTasks,
                                  identifier: String,
-                                 settlorsStatus: MigrationStatus,
-                                 beneficiariesStatus: MigrationStatus,
+                                 settlorsStatus: MigrationTaskStatus,
+                                 beneficiariesStatus: MigrationTaskStatus,
                                  yearsToAskFor: Int): TaskList = {
 
-    def task(status: MigrationStatus, taskCompleted: Boolean, link: Link): List[Task] = status match {
-      case Updated | NeedsUpdating => List(Task(link, Some(Tag.tagFor(status.upToDate))))
-      case NothingToUpdate if taskCompleted => List(Task(link, Some(Tag.tagFor(completed = true))))
+    def task(taskStatus: MigrationTaskStatus,
+             taskCompleted: Boolean,
+             trustDetailsCompleted: Boolean,
+             link: Link): List[Task] = taskStatus match {
+      case Updated => List(Task(link, Some(Completed)))
+      case NeedsUpdating if trustDetailsCompleted => List(Task(link, Some(NotStarted)))
+      case NeedsUpdating => List(Task(link, Some(CannotStartYet)))
+      case NothingToUpdate if taskCompleted => List(Task(link, Some(Completed)))
       case NothingToUpdate => Nil
     }
 
@@ -175,8 +180,8 @@ trait TaskListSections {
       Some(Tag.tagFor(tasks.taxLiability))
     )
 
-    val settlorsTask = task(settlorsStatus, tasks.settlors, Link(Settlors, linkUrl(settlorsRouteEnabled)))
-    val beneficiariesTask = task(beneficiariesStatus, tasks.beneficiaries, Link(Beneficiaries, linkUrl(beneficiariesRouteEnabled)))
+    val settlorsTask = task(settlorsStatus, tasks.settlors, tasks.trustDetails, Link(Settlors, linkUrl(settlorsRouteEnabled)))
+    val beneficiariesTask = task(beneficiariesStatus, tasks.beneficiaries, tasks.trustDetails, Link(Beneficiaries, linkUrl(beneficiariesRouteEnabled)))
 
     TaskList(
       if (yearsToAskFor == 0) transitionTasks else transitionTasks :+ taxLiabilityTask,

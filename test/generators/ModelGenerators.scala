@@ -18,7 +18,7 @@ package generators
 
 import models.http._
 import models.pages.WhatIsNext
-import models.{FullName, InternationalAddress, MigrationStatus, PassportOrIdCardDetails, UKAddress}
+import models.{FullName, InternationalAddress, MigrationTaskStatus, PassportOrIdCardDetails, UKAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 
@@ -181,9 +181,9 @@ trait ModelGenerators {
         response
     }
 
-  implicit lazy val arbitraryMigrationStatus: Arbitrary[MigrationStatus] =
+  implicit lazy val arbitraryMigrationStatus: Arbitrary[MigrationTaskStatus] =
     Arbitrary {
-      Gen.oneOf(MigrationStatus.values)
+      Gen.oneOf(MigrationTaskStatus.values)
     }
 
 }

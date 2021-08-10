@@ -14,6 +14,7 @@
 * limitations under the License.
 *@
 
+@import models.pages.Tag._
 @import viewmodels.Task
 
 @this(
@@ -44,7 +45,11 @@
     @task.tag.map { t =>
         @govukTag(Tag(
             content = Text(messages(s"taskList.$t")),
-            classes = if(t.toString == "in-progress") "app-task-list__task-completed govuk-tag--grey" else s"app-task-list__task-completed",
+            classes = "app-task-list__task-completed" + (t match {
+                case InProgress => " govuk-tag--blue"
+                case NotStarted | CannotStartYet => " govuk-tag--grey"
+                case _ => ""
+            }),
             attributes = Map("id" -> s"task-list__task--${task.link.text}__tag")
         ))
     }

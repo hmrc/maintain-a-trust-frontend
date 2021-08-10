@@ -22,7 +22,7 @@ import play.api.http.Status._
 import generators.Generators
 import models.http._
 import models.pages.ShareClass.Ordinary
-import models.{FirstTaxYearAvailable, FullName, MigrationStatus, TrustDetails}
+import models.{FirstTaxYearAvailable, FullName, MigrationTaskStatus, TrustDetails}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
@@ -795,7 +795,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
     ".getSettlorsStatus" - {
       "return entity status response when the request is successful" in {
 
-        forAll(arbitrary[MigrationStatus]) {
+        forAll(arbitrary[MigrationTaskStatus]) {
           migrationStatus =>
 
             val json = Json.toJson(migrationStatus)
@@ -827,7 +827,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
     ".getBeneficiariesStatus" - {
       "return entity status response when the request is successful" in {
 
-        forAll(arbitrary[MigrationStatus]) {
+        forAll(arbitrary[MigrationTaskStatus]) {
           migrationStatus =>
 
             val json = Json.toJson(migrationStatus)

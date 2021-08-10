@@ -16,22 +16,18 @@
 
 package models
 
-import models.MigrationStatus.NeedsUpdating
+sealed trait MigrationTaskStatus
 
-sealed trait MigrationStatus {
-  def upToDate: Boolean = this != NeedsUpdating
-}
+object MigrationTaskStatus extends Enumerable.Implicits {
 
-object MigrationStatus extends Enumerable.Implicits {
+  case object NothingToUpdate extends WithName("nothing-to-update") with MigrationTaskStatus
+  case object NeedsUpdating extends WithName("needs-updating") with MigrationTaskStatus
+  case object Updated extends WithName("updated") with MigrationTaskStatus
 
-  case object NothingToUpdate extends WithName("nothing-to-update") with MigrationStatus
-  case object NeedsUpdating extends WithName("needs-updating") with MigrationStatus
-  case object Updated extends WithName("updated") with MigrationStatus
-
-  val values: List[MigrationStatus] = List(
+  val values: List[MigrationTaskStatus] = List(
     NothingToUpdate, NeedsUpdating, Updated
   )
 
-  implicit val enumerable: Enumerable[MigrationStatus] = Enumerable(values.map(v => v.toString -> v): _*)
+  implicit val enumerable: Enumerable[MigrationTaskStatus] = Enumerable(values.map(v => v.toString -> v): _*)
 
 }
