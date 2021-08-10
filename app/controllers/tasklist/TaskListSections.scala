@@ -151,7 +151,7 @@ trait TaskListSections {
 
     def task(status: MigrationStatus, taskCompleted: Boolean, link: Link): List[Task] = status match {
       case Updated | NeedsUpdating => List(Task(link, Some(Tag.tagFor(status.upToDate))))
-      case NothingToUpdate if taskCompleted => List(Task(link, Some(Tag.tagFor(upToDate = true))))
+      case NothingToUpdate if taskCompleted => List(Task(link, Some(Tag.tagFor(completed = true))))
       case NothingToUpdate => Nil
     }
 

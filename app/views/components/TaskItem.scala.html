@@ -17,7 +17,7 @@
 @import viewmodels.Task
 
 @this(
-        govukTag: GovukTag
+    govukTag: GovukTag
 )
 
 @(task: Task)(implicit messages: Messages)
@@ -43,9 +43,9 @@
 
     @task.tag.map { t =>
         @govukTag(Tag(
-        content = Text(messages(s"taskList.${t.toString}")),
-        classes = if(t.toString == "in-progress") "app-task-list__task-completed govuk-tag--grey" else s"app-task-list__task-completed",
-        attributes = Map("id" -> s"task-list__task--${task.link.text}__tag")
+            content = Text(messages(s"taskList.$t")),
+            classes = if(t.toString == "in-progress") "app-task-list__task-completed govuk-tag--grey" else s"app-task-list__task-completed",
+            attributes = Map("id" -> s"task-list__task--${task.link.text}__tag")
         ))
     }
 </li>

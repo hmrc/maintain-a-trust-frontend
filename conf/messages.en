@@ -37,7 +37,7 @@ agentNotAuthorised.subheading1 = The trustee needs to authorise your online acce
 agentNotAuthorised.p2 = Through Agent Services you can create an authorisation link to send to the trustee. The trustee needs to use this link to authorise your access to the trust.
 agentNotAuthorised.p3 = The trustee needs to use the same Government Gateway account used to claim the trust to approve your request.
 agentNotAuthorised.subheading2 = What to do if your trustee cannot use the authorisation link
-agentNotAuthorised.p4 = If your trustee cannot complete the above steps, they need to
+agentNotAuthorised.p4 = If your trustee cannot up-to-date the above steps, they need to
 agentNotAuthorised.p4.a = contact the trusts helpline (opens in a new window or tab)
 agentNotAuthorised.p5 = When the trustee contacts the helpline, they will be asked for:
 agentNotAuthorised.bullet.1 = information to verify their identity
@@ -1140,8 +1140,10 @@ asset.other.description.checkYourAnswersLabel = What is the description of the a
 asset.other.value.checkYourAnswersLabel = What is the current value of {0}?
 
 # Task List
-taskList.up-to-date = Up to date
+taskList.completed = Completed
 taskList.in-progress = In progress
+taskList.not-started = Not started
+taskList.cannot-start-yet = Cannot start yet
 
 # Playback prints
 

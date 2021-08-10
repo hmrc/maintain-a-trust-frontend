@@ -19,7 +19,7 @@ package mapping.trustees
 import models.UserAnswers
 import models.http.DisplayTrustTrusteeIndividualType
 import models.pages.IndividualOrBusiness
-import models.pages.Tag.UpToDate
+import models.pages.Tag.Completed
 import pages.entitystatus.TrusteeStatus
 import pages.trustees._
 
@@ -41,7 +41,7 @@ class IndividualTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrustTr
       .flatMap(answers => extractTelephone(entity, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(TrusteeSafeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap(_.set(TrusteeStatus(index), UpToDate))
+      .flatMap(_.set(TrusteeStatus(index), Completed))
   }
 
   private def extractTelephone(entity: DisplayTrustTrusteeIndividualType,

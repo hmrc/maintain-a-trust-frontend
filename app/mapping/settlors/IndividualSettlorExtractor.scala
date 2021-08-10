@@ -18,7 +18,7 @@ package mapping.settlors
 
 import models.http.DisplayTrustSettlor
 import models.pages.IndividualOrBusiness
-import models.pages.Tag.UpToDate
+import models.pages.Tag.Completed
 import models.{PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
 import pages.entitystatus.LivingSettlorStatus
@@ -60,6 +60,6 @@ class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSe
       .flatMap(answers => extractMentalCapacity(entity.legallyIncapable, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(SettlorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap(_.set(LivingSettlorStatus(index), UpToDate))
+      .flatMap(_.set(LivingSettlorStatus(index), Completed))
   }
 }

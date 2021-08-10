@@ -18,10 +18,9 @@ package controllers.tasklist
 
 import base.SpecBase
 import connectors.{TrustConnector, TrustsStoreConnector}
-import controllers.routes
 import generators.ModelGenerators
 import models.MigrationStatus.{NeedsUpdating, NothingToUpdate}
-import models.pages.Tag.{InProgress, UpToDate}
+import models.pages.Tag.{Completed, InProgress}
 import models.pages.{Tag, WhatIsNext}
 import models.{CompletedMaintenanceTasks, FirstTaxYearAvailable, MigrationStatus, UserAnswers}
 import org.mockito.Matchers.any
@@ -374,8 +373,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
               view(
                 identifier = baseAnswers.identifier,
                 identifierType = baseAnswers.identifierType,
-                mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, UpToDate),
-                additional = optionalSectionsTransitionToTaxable(answers.identifier, UpToDate),
+                mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, Completed),
+                additional = optionalSectionsTransitionToTaxable(answers.identifier, Completed),
                 affinityGroup = Organisation,
                 isAbleToDeclare = false
               )(request, messages).toString
@@ -419,13 +418,13 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
                 status(result) mustEqual OK
 
-                val entityStatus = if (migrationStatus.upToDate) UpToDate else InProgress
+                val entityStatus = if (migrationStatus.upToDate) Completed else InProgress
 
                 contentAsString(result) mustEqual
                   view(
                     identifier = baseAnswers.identifier,
                     identifierType = baseAnswers.identifierType,
-                    mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, UpToDate),
+                    mandatory = mandatorySectionsTransitionToTaxable(answers.identifier, Completed),
                     additional = optionalSectionsTransitionToTaxable(answers.identifier, entityStatus),
                     affinityGroup = Organisation,
                     isAbleToDeclare = false

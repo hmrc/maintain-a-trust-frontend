@@ -19,7 +19,7 @@ package mapping.settlors
 import models.UserAnswers
 import models.http.DisplayTrustSettlorCompany
 import models.pages.IndividualOrBusiness
-import models.pages.Tag.UpToDate
+import models.pages.Tag.Completed
 import pages.QuestionPage
 import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
@@ -45,7 +45,7 @@ class BusinessSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSett
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
       .flatMap(answers => extractSettlorCompanyTypeAndTime(entity, index, answers))
       .flatMap(_.set(SettlorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap(_.set(LivingSettlorStatus(index), UpToDate))
+      .flatMap(_.set(LivingSettlorStatus(index), Completed))
   }
 
   private def extractSettlorCompanyTypeAndTime(entity: DisplayTrustSettlorCompany, index: Int, answers: UserAnswers): Try[UserAnswers] = {
