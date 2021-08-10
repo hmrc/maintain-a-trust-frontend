@@ -22,12 +22,14 @@ import generators.ModelGenerators
 import models.MigrationTaskStatus.NothingToUpdate
 import models.pages.Tag._
 import models.pages.WhatIsNext
-import models.{CompletedMaintenanceTasks, FirstTaxYearAvailable, TaskList}
+import models.{CompletedMaintenanceTasks, FirstTaxYearAvailable, TaskList, UserAnswers}
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.WhatIsNextPage
+import pages.tasks._
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -43,7 +45,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
   val mockVariationProgress: VariationProgress = mock[VariationProgress]
 
   override def beforeEach(): Unit = {
-    reset(mockTrustsStoreConnector, mockTrustsConnector, mockVariationProgress)
+    reset(mockTrustsStoreConnector, mockTrustsConnector, mockVariationProgress, playbackRepository)
 
     when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
       .thenReturn(Future.successful(CompletedMaintenanceTasks()))
@@ -57,11 +59,14 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
     when(mockTrustsConnector.getFirstTaxYearToAskFor(any())(any(), any()))
       .thenReturn(Future.successful(FirstTaxYearAvailable(1, earlierYearsToDeclare = false)))
 
-    when(mockVariationProgress.generateTaskList(any(), any(), any(), any()))
+    when(mockVariationProgress.generateTaskList(any(), any(), any()))
       .thenReturn(TaskList(Nil, Nil))
 
-    when(mockVariationProgress.generateTransitionTaskList(any(), any(), any(), any(), any(), any()))
+    when(mockVariationProgress.generateTransitionTaskList(any(), any(), any(), any(), any()))
       .thenReturn(TaskList(Nil, Nil))
+
+    when(playbackRepository.set(any()))
+      .thenReturn(Future.successful(true))
   }
 
   "TaskListControllerController" must {
@@ -90,7 +95,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
         contentAsString(result) mustEqual
           view(answers.identifier, answers.identifierType, Nil, Nil, Organisation, isAbleToDeclare = true)(request, messages).toString
 
-        verify(mockVariationProgress).generateTransitionTaskList(any(), any(), any(), any(), any(), any())
+        verify(mockVariationProgress).generateTransitionTaskList(any(), any(), any(), any(), any())
 
         application.stop()
       }
@@ -119,7 +124,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
           contentAsString(result) mustEqual
             view(answers.identifier, answers.identifierType, Nil, Nil, Organisation, isAbleToDeclare = true, closingTrust = false)(request, messages).toString
 
-          verify(mockVariationProgress).generateTaskList(any(), any(), any(), any())
+          verify(mockVariationProgress).generateTaskList(any(), any(), any())
 
           application.stop()
         }
@@ -146,26 +151,56 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
           contentAsString(result) mustEqual
             view(answers.identifier, answers.identifierType, Nil, Nil, Organisation, isAbleToDeclare = true, closingTrust = true)(request, messages).toString
 
-          verify(mockVariationProgress).generateTaskList(any(), any(), any(), any())
+          verify(mockVariationProgress).generateTaskList(any(), any(), any())
 
           application.stop()
         }
       }
     }
 
-    "redirect to Technical difficulties page when no value found for What do you want to do next" in {
+    "redirect to Technical difficulties page when no value found for What do you want to do next" when {
 
-      val answers = emptyUserAnswersForUtr
+      "onPageLoad" in {
+        val answers = emptyUserAnswersForUtr
 
-      val application = applicationBuilder(userAnswers = Some(answers)).build()
+        val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+        val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
-      val result = route(application, request).value
+        val result = route(application, request).value
 
-      status(result) mustEqual INTERNAL_SERVER_ERROR
+        status(result) mustEqual INTERNAL_SERVER_ERROR
 
-      application.stop()
+        application.stop()
+      }
+
+      "onSubmit" in {
+        val answers = emptyUserAnswersForUtr
+
+        val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+        val request = FakeRequest(POST, controllers.tasklist.routes.TaskListController.onSubmit().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual INTERNAL_SERVER_ERROR
+
+        application.stop()
+      }
+
+      "redirectToTask" in {
+        val answers = emptyUserAnswersForUtr
+
+        val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+        val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual INTERNAL_SERVER_ERROR
+
+        application.stop()
+      }
     }
 
     "redirect to AgencyRegisteredAddressUkYesNoController for agent" in {
@@ -221,6 +256,174 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
         application.stop()
       }
+    }
+
+    "redirect to trust details service when trust details task selected" in {
+      val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual
+        s"http://localhost:9838/maintain-a-trust/trust-details/${answers.identifier}"
+
+      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+      verify(playbackRepository).set(uaCaptor.capture)
+      uaCaptor.getValue.get(TrustDetailsTaskStartedPage).get mustBe true
+
+      application.stop()
+    }
+
+    "redirect to settlors service when settlors task selected" in {
+      val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual
+        s"http://localhost:9795/maintain-a-trust/settlors/${answers.identifier}"
+
+      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+      verify(playbackRepository).set(uaCaptor.capture)
+      uaCaptor.getValue.get(SettlorsTaskStartedPage).get mustBe true
+
+      application.stop()
+    }
+
+    "redirect to trustees service when trustees task selected" in {
+      val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(TrusteesTaskStartedPage).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual
+        s"http://localhost:9792/maintain-a-trust/trustees/${answers.identifier}"
+
+      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+      verify(playbackRepository).set(uaCaptor.capture)
+      uaCaptor.getValue.get(TrusteesTaskStartedPage).get mustBe true
+
+      application.stop()
+    }
+
+    "redirect to beneficiaries service when beneficiaries task selected" in {
+      val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual
+        s"http://localhost:9793/maintain-a-trust/beneficiaries/${answers.identifier}"
+
+      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+      verify(playbackRepository).set(uaCaptor.capture)
+      uaCaptor.getValue.get(BeneficiariesTaskStartedPage).get mustBe true
+
+      application.stop()
+    }
+
+    "redirect to assets service when assets task selected" in {
+      val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(AssetsTaskStartedPage).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual
+        s"http://localhost:9800/maintain-a-trust/trust-assets/${answers.identifier}"
+
+      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+      verify(playbackRepository).set(uaCaptor.capture)
+      uaCaptor.getValue.get(AssetsTaskStartedPage).get mustBe true
+
+      application.stop()
+    }
+
+    "redirect to tax liability service when tax liability task selected" in {
+      val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(TaxLiabilityTaskStartedPage).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual
+        s"http://localhost:9844/maintain-a-trust/tax-liability/${answers.identifier}"
+
+      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+      verify(playbackRepository).set(uaCaptor.capture)
+      uaCaptor.getValue.get(TaxLiabilityTaskStartedPage).get mustBe true
+
+      application.stop()
+    }
+
+    "redirect to protectors service when protectors task selected" in {
+      val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(ProtectorsTaskStartedPage).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual
+        s"http://localhost:9796/maintain-a-trust/protectors/${answers.identifier}"
+
+      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+      verify(playbackRepository).set(uaCaptor.capture)
+      uaCaptor.getValue.get(ProtectorsTaskStartedPage).get mustBe true
+
+      application.stop()
+    }
+
+    "redirect to other individuals service when other individuals task selected" in {
+      val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(OtherIndividualsTaskStartedPage).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual
+        s"http://localhost:9799/maintain-a-trust/other-individuals/${answers.identifier}"
+
+      val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+      verify(playbackRepository).set(uaCaptor.capture)
+      uaCaptor.getValue.get(OtherIndividualsTaskStartedPage).get mustBe true
+
+      application.stop()
     }
   }
 }

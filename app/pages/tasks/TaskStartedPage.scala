@@ -16,12 +16,11 @@
 
 package pages.tasks
 
-import play.api.libs.json.JsPath
-import sections.Tasks
+import pages.QuestionPage
+import play.api.mvc.JavascriptLiteral
 
-case object TrusteesTaskStartedPage extends TaskStartedPage {
+trait TaskStartedPage extends QuestionPage[Boolean]
 
-  override def path: JsPath = JsPath \ Tasks \ toString
-
-  override def toString: String = "trusteesTaskStarted"
+object TaskStartedPage {
+  implicit val jsLiteral: JavascriptLiteral[TaskStartedPage] = (value: TaskStartedPage) => value.toString
 }

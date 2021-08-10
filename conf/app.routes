@@ -155,6 +155,15 @@ GET        /unavailable-sections                        controllers.makechanges.
 GET        /overview                                    controllers.tasklist.TaskListController.onPageLoad()
 POST       /overview                                    controllers.tasklist.TaskListController.onSubmit()
 
+GET       /redirect-to-trust-details                   controllers.tasklist.TaskListController.redirectToTask(task: TaskStartedPage = TrustDetailsTaskStartedPage)
+GET       /redirect-to-settlors                        controllers.tasklist.TaskListController.redirectToTask(task: TaskStartedPage = SettlorsTaskStartedPage)
+GET       /redirect-to-trustees                        controllers.tasklist.TaskListController.redirectToTask(task: TaskStartedPage = TrusteesTaskStartedPage)
+GET       /redirect-to-beneficiaries                   controllers.tasklist.TaskListController.redirectToTask(task: TaskStartedPage = BeneficiariesTaskStartedPage)
+GET       /redirect-to-assets                          controllers.tasklist.TaskListController.redirectToTask(task: TaskStartedPage = AssetsTaskStartedPage)
+GET       /redirect-to-tax-liability                   controllers.tasklist.TaskListController.redirectToTask(task: TaskStartedPage = TaxLiabilityTaskStartedPage)
+GET       /redirect-to-protectors                      controllers.tasklist.TaskListController.redirectToTask(task: TaskStartedPage = ProtectorsTaskStartedPage)
+GET       /redirect-to-other-individuals               controllers.tasklist.TaskListController.redirectToTask(task: TaskStartedPage = OtherIndividualsTaskStartedPage)
+
 GET        /view-evidence                               controllers.ObligedEntityPdfYesNoController.onPageLoad()
 POST       /view-evidence                               controllers.ObligedEntityPdfYesNoController.onSubmit()
 

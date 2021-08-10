@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package pages.tasks
+package sections
 
-import play.api.libs.json.JsPath
-import sections.Tasks
+import pages.QuestionPage
+import play.api.libs.json.{JsArray, JsPath}
 
-case object TrusteesTaskStartedPage extends TaskStartedPage {
+case object Tasks extends QuestionPage[JsArray] {
 
-  override def path: JsPath = JsPath \ Tasks \ toString
+  override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "trusteesTaskStarted"
+  override def toString: String = "tasks"
+
 }

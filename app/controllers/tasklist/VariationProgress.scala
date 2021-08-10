@@ -33,55 +33,55 @@ import javax.inject.Inject
 
 class VariationProgress @Inject()(config: FrontendAppConfig) {
 
-  private def trustDetailsRouteEnabled(identifier: String): String = {
+  def trustDetailsRouteEnabled(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTrustDetailsEnabled) {
       config.maintainTrustDetailsUrl(identifier)
     }
   }
 
-  private def trustAssetsRouteEnabled(identifier: String): String = {
+  def trustAssetsRouteEnabled(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTrustAssetsEnabled) {
       config.maintainTrustAssetsUrl(identifier)
     }
   }
 
-  private def taxLiabilityRouteEnabled(identifier: String): String = {
+  def taxLiabilityRouteEnabled(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTaxLiabilityEnabled) {
       config.maintainTaxLiabilityUrl(identifier)
     }
   }
 
-  private def settlorsRouteEnabled(identifier: String): String = {
+  def settlorsRouteEnabled(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainSettlorsEnabled) {
       config.maintainSettlorsUrl(identifier)
     }
   }
 
-  private def trusteesRouteEnabled(identifier: String): String = {
+  def trusteesRouteEnabled(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTrusteesEnabled) {
       config.maintainTrusteesUrl(identifier)
     }
   }
 
-  private def beneficiariesRouteEnabled(identifier: String): String = {
+  def beneficiariesRouteEnabled(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainBeneficiariesEnabled) {
       config.maintainBeneficiariesUrl(identifier)
     }
   }
 
-  private def protectorsRouteEnabled(identifier: String): String = {
+  def protectorsRouteEnabled(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainProtectorsEnabled) {
       config.maintainProtectorsUrl(identifier)
     }
   }
 
-  private def otherIndividualsRouteEnabled(identifier: String): String = {
+  def otherIndividualsRouteEnabled(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainOtherIndividualsEnabled) {
       config.maintainOtherIndividualsUrl(identifier)
     }
   }
 
-  private def nonEeaCompanyRouteEnabled(identifier: String): String = {
+  def nonEeaCompanyRouteEnabled(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainNonEeaCompaniesEnabled) {
       config.maintainNonEeaCompanyUrl(identifier)
     }
@@ -95,8 +95,9 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     }
   }
 
+  private def redirectToTask(task: TaskStartedPage): String = controllers.tasklist.routes.TaskListController.redirectToTask(task).url
+
   def generateTaskList(tasks: CompletedMaintenanceTasks,
-                       identifier: String,
                        trustMldStatus: TrustMldStatus,
                        userAnswers: UserAnswers): TaskList = {
 
@@ -106,34 +107,34 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
 
     val mandatoryTasks = List(
       Task(
-        Link(TrustDetails, Some(trustDetailsRouteEnabled(identifier))),
+        Link(TrustDetails, Some(redirectToTask(TrustDetailsTaskStartedPage))),
         Tag.tagFor(tasks.trustDetails, userAnswers.get(TrustDetailsTaskStartedPage), config.maintainTrustDetailsEnabled)
       ),
       Task(
-        Link(Settlors, Some(settlorsRouteEnabled(identifier))),
+        Link(Settlors, Some(redirectToTask(SettlorsTaskStartedPage))),
         Tag.tagFor(tasks.settlors, userAnswers.get(SettlorsTaskStartedPage))
       ),
       Task(
-        Link(Trustees, Some(trusteesRouteEnabled(identifier))),
+        Link(Trustees, Some(redirectToTask(TrusteesTaskStartedPage))),
         Tag.tagFor(tasks.trustees, userAnswers.get(TrusteesTaskStartedPage))
       ),
       Task(
-        Link(Beneficiaries, Some(beneficiariesRouteEnabled(identifier))),
+        Link(Beneficiaries, Some(redirectToTask(BeneficiariesTaskStartedPage))),
         Tag.tagFor(tasks.beneficiaries, userAnswers.get(BeneficiariesTaskStartedPage))
       )
     ).filterNot(filter5mldSections(_, TrustDetails))
 
     val optionalTasks = List(
       Task(
-        Link(NonEeaBusinessAsset, Some(nonEeaCompanyRouteEnabled(identifier))),
+        Link(NonEeaBusinessAsset, Some(redirectToTask(AssetsTaskStartedPage))),
         Tag.tagFor(tasks.assets, userAnswers.get(AssetsTaskStartedPage), config.maintainNonEeaCompaniesEnabled)
       ),
       Task(
-        Link(Protectors, Some(protectorsRouteEnabled(identifier))),
+        Link(Protectors, Some(redirectToTask(ProtectorsTaskStartedPage))),
         Tag.tagFor(tasks.protectors, userAnswers.get(ProtectorsTaskStartedPage))
       ),
       Task(
-        Link(Natural, Some(otherIndividualsRouteEnabled(identifier))),
+        Link(Natural, Some(redirectToTask(OtherIndividualsTaskStartedPage))),
         Tag.tagFor(tasks.other, userAnswers.get(OtherIndividualsTaskStartedPage))
       )
     ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
@@ -142,7 +143,6 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
   }
 
   def generateTransitionTaskList(tasks: CompletedMaintenanceTasks,
-                                 identifier: String,
                                  settlorsStatus: MigrationTaskStatus,
                                  beneficiariesStatus: MigrationTaskStatus,
                                  yearsToAskFor: Int,
@@ -158,23 +158,23 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
       case _ => List(Task(link, CannotStartYet))
     }
 
-    def linkUrl(route: String => String): Option[String] = {
-      if (tasks.trustDetails) Some(route(identifier)) else None
+    def linkUrl(route: String): Option[String] = {
+      if (tasks.trustDetails) Some(route) else None
     }
 
     val transitionTasks = List(
       Task(
-        Link(TrustDetails, Some(trustDetailsRouteEnabled(identifier))),
+        Link(TrustDetails, Some(redirectToTask(TrustDetailsTaskStartedPage))),
         Tag.tagFor(tasks.trustDetails, userAnswers.get(TrustDetailsTaskStartedPage), config.maintainTrustDetailsEnabled)
       ),
       Task(
-        Link(Assets, Some(trustAssetsRouteEnabled(identifier))),
+        Link(Assets, Some(redirectToTask(AssetsTaskStartedPage))),
         Tag.tagFor(tasks.assets, userAnswers.get(AssetsTaskStartedPage))
       )
     )
 
     lazy val taxLiabilityTask = Task(
-      Link(TaxLiability, Some(taxLiabilityRouteEnabled(identifier))),
+      Link(TaxLiability, Some(redirectToTask(TaxLiabilityTaskStartedPage))),
       Tag.tagFor(tasks.taxLiability, userAnswers.get(TaxLiabilityTaskStartedPage))
     )
 
@@ -182,14 +182,14 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
       taskStatus = settlorsStatus,
       trustDetailsCompleted = tasks.trustDetails,
       taskStarted = userAnswers.get(SettlorsTaskStartedPage).contains(true),
-      link = Link(Settlors, linkUrl(settlorsRouteEnabled))
+      link = Link(Settlors, linkUrl(redirectToTask(SettlorsTaskStartedPage)))
     )
 
     val beneficiariesTask = task(
       taskStatus = beneficiariesStatus,
       trustDetailsCompleted = tasks.trustDetails,
       taskStarted = userAnswers.get(BeneficiariesTaskStartedPage).contains(true),
-      link = Link(Beneficiaries, linkUrl(beneficiariesRouteEnabled))
+      link = Link(Beneficiaries, linkUrl(redirectToTask(BeneficiariesTaskStartedPage)))
     )
 
     TaskList(

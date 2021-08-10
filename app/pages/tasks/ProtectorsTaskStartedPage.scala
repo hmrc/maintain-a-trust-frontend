@@ -16,12 +16,12 @@
 
 package pages.tasks
 
-import pages.QuestionPage
 import play.api.libs.json.JsPath
+import sections.Tasks
 
-object ProtectorsTaskStartedPage extends QuestionPage[Boolean] {
+case object ProtectorsTaskStartedPage extends TaskStartedPage {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ Tasks \ toString
 
   override def toString: String = "protectorsTaskStarted"
 }
