@@ -17,24 +17,21 @@
 package controllers.tasklist
 
 import config.FrontendAppConfig
-import models.MigrationTaskStatus._
+import models.MigrationTaskStatus.{NeedsUpdating, NothingToUpdate, Updated}
 import models.pages.Tag
-import models.pages.Tag._
-import models.{CompletedMaintenanceTasks, MigrationTaskStatus, TrustMldStatus}
+import models.pages.Tag.{CannotStartYet, Completed, InProgress, NotStarted}
+import models.{CompletedMaintenanceTasks, MigrationTaskStatus, TaskList, TrustMldStatus, UserAnswers}
 import pages.Page
+import pages.tasks._
 import sections._
 import sections.assets.{Assets, NonEeaBusinessAsset}
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
 import viewmodels.{Link, Task}
 
-trait TaskListSections {
+import javax.inject.Inject
 
-  case class TaskList(mandatory: List[Task] = Nil, other: List[Task] = Nil) {
-    val isAbleToDeclare: Boolean = !(mandatory ::: other).exists(_.tag.contains(InProgress))
-  }
-
-  val config: FrontendAppConfig
+class VariationProgress @Inject()(config: FrontendAppConfig) {
 
   private def trustDetailsRouteEnabled(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTrustDetailsEnabled) {
@@ -100,7 +97,8 @@ trait TaskListSections {
 
   def generateTaskList(tasks: CompletedMaintenanceTasks,
                        identifier: String,
-                       trustMldStatus: TrustMldStatus): TaskList = {
+                       trustMldStatus: TrustMldStatus,
+                       userAnswers: UserAnswers): TaskList = {
 
     def filter5mldSections(task: Task, section: Page): Boolean = {
       task.link.text == section.toString && !trustMldStatus.is5mldTrustIn5mldMode
@@ -109,34 +107,34 @@ trait TaskListSections {
     val mandatoryTasks = List(
       Task(
         Link(TrustDetails, Some(trustDetailsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
+        Some(Tag.tagFor(tasks.trustDetails, userAnswers.get(TrustDetailsTaskStartedPage), config.maintainTrustDetailsEnabled))
       ),
       Task(
         Link(Settlors, Some(settlorsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.settlors))
+        Some(Tag.tagFor(tasks.settlors, userAnswers.get(SettlorsTaskStartedPage)))
       ),
       Task(
         Link(Trustees, Some(trusteesRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.trustees))
+        Some(Tag.tagFor(tasks.trustees, userAnswers.get(TrusteesTaskStartedPage)))
       ),
       Task(
         Link(Beneficiaries, Some(beneficiariesRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.beneficiaries))
+        Some(Tag.tagFor(tasks.beneficiaries, userAnswers.get(BeneficiariesTaskStartedPage)))
       )
     ).filterNot(filter5mldSections(_, TrustDetails))
 
     val optionalTasks = List(
       Task(
         Link(NonEeaBusinessAsset, Some(nonEeaCompanyRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.assets, config.maintainNonEeaCompaniesEnabled))
+        Some(Tag.tagFor(tasks.assets, userAnswers.get(AssetsTaskStartedPage), config.maintainNonEeaCompaniesEnabled))
       ),
       Task(
         Link(Protectors, Some(protectorsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.protectors))
+        Some(Tag.tagFor(tasks.protectors, userAnswers.get(ProtectorsTaskStartedPage)))
       ),
       Task(
         Link(Natural, Some(otherIndividualsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.other))
+        Some(Tag.tagFor(tasks.other, userAnswers.get(OtherIndividualsTaskStartedPage)))
       )
     ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
 
@@ -147,13 +145,15 @@ trait TaskListSections {
                                  identifier: String,
                                  settlorsStatus: MigrationTaskStatus,
                                  beneficiariesStatus: MigrationTaskStatus,
-                                 yearsToAskFor: Int): TaskList = {
+                                 yearsToAskFor: Int,
+                                 userAnswers: UserAnswers): TaskList = {
 
     def task(taskStatus: MigrationTaskStatus,
              trustDetailsCompleted: Boolean,
+             taskStarted: Boolean,
              link: Link): List[Task] = taskStatus match {
       case Updated => List(Task(link, Some(Completed)))
-      case NeedsUpdating if trustDetailsCompleted => List(Task(link, Some(NotStarted)))
+      case NeedsUpdating if trustDetailsCompleted => List(Task(link, Some(if (taskStarted) InProgress else NotStarted)))
       case NothingToUpdate if trustDetailsCompleted => List(Task(link, Some(Completed)))
       case _ => List(Task(link, Some(CannotStartYet)))
     }
@@ -165,21 +165,32 @@ trait TaskListSections {
     val transitionTasks = List(
       Task(
         Link(TrustDetails, Some(trustDetailsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled))
+        Some(Tag.tagFor(tasks.trustDetails, userAnswers.get(TrustDetailsTaskStartedPage), config.maintainTrustDetailsEnabled))
       ),
       Task(
         Link(Assets, Some(trustAssetsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.assets))
+        Some(Tag.tagFor(tasks.assets, userAnswers.get(AssetsTaskStartedPage)))
       )
     )
 
     lazy val taxLiabilityTask = Task(
       Link(TaxLiability, Some(taxLiabilityRouteEnabled(identifier))),
-      Some(Tag.tagFor(tasks.taxLiability))
+      Some(Tag.tagFor(tasks.taxLiability, userAnswers.get(TaxLiabilityTaskStartedPage)))
     )
 
-    val settlorsTask = task(settlorsStatus, tasks.trustDetails, Link(Settlors, linkUrl(settlorsRouteEnabled)))
-    val beneficiariesTask = task(beneficiariesStatus, tasks.trustDetails, Link(Beneficiaries, linkUrl(beneficiariesRouteEnabled)))
+    val settlorsTask = task(
+      taskStatus = settlorsStatus,
+      trustDetailsCompleted = tasks.trustDetails,
+      taskStarted = userAnswers.get(SettlorsTaskStartedPage).contains(true),
+      link = Link(Settlors, linkUrl(settlorsRouteEnabled))
+    )
+
+    val beneficiariesTask = task(
+      taskStatus = beneficiariesStatus,
+      trustDetailsCompleted = tasks.trustDetails,
+      taskStarted = userAnswers.get(BeneficiariesTaskStartedPage).contains(true),
+      link = Link(Beneficiaries, linkUrl(beneficiariesRouteEnabled))
+    )
 
     TaskList(
       if (yearsToAskFor == 0) transitionTasks else transitionTasks :+ taxLiabilityTask,

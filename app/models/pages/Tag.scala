@@ -34,11 +34,13 @@ object Tag extends Enumerable.Implicits {
   implicit val enumerable: Enumerable[Tag] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
 
-  def tagFor(completed: Boolean, featureEnabled: Boolean = true): Tag = {
+  def tagFor(completed: Boolean, started: Option[Boolean], featureEnabled: Boolean = true): Tag = {
     if (completed || !featureEnabled) {
       Completed
-    } else {
+    } else if (started.contains(true)) {
       InProgress
+    } else {
+      NotStarted
     }
   }
 }

@@ -27,7 +27,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class TaskListController @Inject()(
                                     override val messagesApi: MessagesApi,
@@ -37,9 +37,9 @@ class TaskListController @Inject()(
                                     val controllerComponents: MessagesControllerComponents,
                                     val config: FrontendAppConfig,
                                     storeConnector: TrustsStoreConnector,
-                                    trustsConnector: TrustConnector
-                                  )(implicit ec: ExecutionContext) extends FrontendBaseController
-  with I18nSupport with Enumerable.Implicits with TaskListSections {
+                                    trustsConnector: TrustConnector,
+                                    variationProgress: VariationProgress
+                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
 
   def onPageLoad(): Action[AnyContent] = actions.refreshAndRequireIsClosingAnswer.async {
     implicit request =>
@@ -53,9 +53,17 @@ class TaskListController @Inject()(
         firstYearToAskFor <- trustsConnector.getFirstTaxYearToAskFor(identifier)
       } yield {
         if (request.userAnswers.isTrustMigratingFromNonTaxableToTaxable) {
-          val sections = generateTransitionTaskList(tasks, identifier, settlorsStatus, beneficiariesStatus, firstYearToAskFor.yearsAgo)
+          val sections = variationProgress.generateTransitionTaskList(
+            tasks = tasks,
+            identifier = identifier,
+            settlorsStatus = settlorsStatus,
+            beneficiariesStatus = beneficiariesStatus,
+            yearsToAskFor = firstYearToAskFor.yearsAgo,
+            userAnswers = request.userAnswers
+          )
+
           Ok(nonTaxToTaxView(
-            identifier,
+            identifier = identifier,
             identifierType = request.userAnswers.identifierType,
             mandatory = sections.mandatory,
             additional = sections.other,
@@ -63,9 +71,15 @@ class TaskListController @Inject()(
             isAbleToDeclare = sections.isAbleToDeclare
           ))
         } else {
-          val sections = generateTaskList(tasks, identifier, request.userAnswers.trustMldStatus)
+          val sections = variationProgress.generateTaskList(
+            tasks = tasks,
+            identifier = identifier,
+            trustMldStatus = request.userAnswers.trustMldStatus,
+            userAnswers = request.userAnswers
+          )
+
           Ok(view(
-            identifier,
+            identifier = identifier,
             identifierType = request.userAnswers.identifierType,
             mandatory = sections.mandatory,
             optional = sections.other,
@@ -77,11 +91,8 @@ class TaskListController @Inject()(
       }
   }
 
-  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
-      Future.successful(Redirect(declarationUrl(
-        request.user.affinityGroup,
-        isTrustMigratingFromNonTaxableToTaxable = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
-      )))
+      Redirect(declarationUrl(request.user.affinityGroup, request.userAnswers.isTrustMigratingFromNonTaxableToTaxable))
   }
 }
