@@ -107,34 +107,34 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     val mandatoryTasks = List(
       Task(
         Link(TrustDetails, Some(trustDetailsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.trustDetails, userAnswers.get(TrustDetailsTaskStartedPage), config.maintainTrustDetailsEnabled))
+        Tag.tagFor(tasks.trustDetails, userAnswers.get(TrustDetailsTaskStartedPage), config.maintainTrustDetailsEnabled)
       ),
       Task(
         Link(Settlors, Some(settlorsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.settlors, userAnswers.get(SettlorsTaskStartedPage)))
+        Tag.tagFor(tasks.settlors, userAnswers.get(SettlorsTaskStartedPage))
       ),
       Task(
         Link(Trustees, Some(trusteesRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.trustees, userAnswers.get(TrusteesTaskStartedPage)))
+        Tag.tagFor(tasks.trustees, userAnswers.get(TrusteesTaskStartedPage))
       ),
       Task(
         Link(Beneficiaries, Some(beneficiariesRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.beneficiaries, userAnswers.get(BeneficiariesTaskStartedPage)))
+        Tag.tagFor(tasks.beneficiaries, userAnswers.get(BeneficiariesTaskStartedPage))
       )
     ).filterNot(filter5mldSections(_, TrustDetails))
 
     val optionalTasks = List(
       Task(
         Link(NonEeaBusinessAsset, Some(nonEeaCompanyRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.assets, userAnswers.get(AssetsTaskStartedPage), config.maintainNonEeaCompaniesEnabled))
+        Tag.tagFor(tasks.assets, userAnswers.get(AssetsTaskStartedPage), config.maintainNonEeaCompaniesEnabled)
       ),
       Task(
         Link(Protectors, Some(protectorsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.protectors, userAnswers.get(ProtectorsTaskStartedPage)))
+        Tag.tagFor(tasks.protectors, userAnswers.get(ProtectorsTaskStartedPage))
       ),
       Task(
         Link(Natural, Some(otherIndividualsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.other, userAnswers.get(OtherIndividualsTaskStartedPage)))
+        Tag.tagFor(tasks.other, userAnswers.get(OtherIndividualsTaskStartedPage))
       )
     ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
 
@@ -152,10 +152,10 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
              trustDetailsCompleted: Boolean,
              taskStarted: Boolean,
              link: Link): List[Task] = taskStatus match {
-      case Updated => List(Task(link, Some(Completed)))
-      case NeedsUpdating if trustDetailsCompleted => List(Task(link, Some(if (taskStarted) InProgress else NotStarted)))
-      case NothingToUpdate if trustDetailsCompleted => List(Task(link, Some(Completed)))
-      case _ => List(Task(link, Some(CannotStartYet)))
+      case Updated => List(Task(link, Completed))
+      case NeedsUpdating if trustDetailsCompleted => List(Task(link, if (taskStarted) InProgress else NotStarted))
+      case NothingToUpdate if trustDetailsCompleted => List(Task(link, Completed))
+      case _ => List(Task(link, CannotStartYet))
     }
 
     def linkUrl(route: String => String): Option[String] = {
@@ -165,17 +165,17 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     val transitionTasks = List(
       Task(
         Link(TrustDetails, Some(trustDetailsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.trustDetails, userAnswers.get(TrustDetailsTaskStartedPage), config.maintainTrustDetailsEnabled))
+        Tag.tagFor(tasks.trustDetails, userAnswers.get(TrustDetailsTaskStartedPage), config.maintainTrustDetailsEnabled)
       ),
       Task(
         Link(Assets, Some(trustAssetsRouteEnabled(identifier))),
-        Some(Tag.tagFor(tasks.assets, userAnswers.get(AssetsTaskStartedPage)))
+        Tag.tagFor(tasks.assets, userAnswers.get(AssetsTaskStartedPage))
       )
     )
 
     lazy val taxLiabilityTask = Task(
       Link(TaxLiability, Some(taxLiabilityRouteEnabled(identifier))),
-      Some(Tag.tagFor(tasks.taxLiability, userAnswers.get(TaxLiabilityTaskStartedPage)))
+      Tag.tagFor(tasks.taxLiability, userAnswers.get(TaxLiabilityTaskStartedPage))
     )
 
     val settlorsTask = task(

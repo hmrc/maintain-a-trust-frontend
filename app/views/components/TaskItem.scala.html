@@ -27,30 +27,29 @@
 
     <span class="app-task">
         @if(task.link.url.isDefined){
-        <a class="app-task-list__task-name"
-           id="task-list__task-link--@{task.link.text}"
-           href="@{task.link.url.get}"
-           @task.tag.map { t => aria-describedby="task-list__task--@{task.link.text}__tag" }>
-            @messages(s"taskList.${task.link.text}.label")
-        </a>
+            <a class="app-task-list__task-name"
+               id="task-list__task-link--@{task.link.text}"
+               href="@{task.link.url.get}"
+               aria-describedby="task-list__task--@{task.link.text}__tag">
+                @messages(s"taskList.${task.link.text}.label")
+            </a>
         } else {
-        <span class="app-task-list__task-name"
-              id="task-list__task--@{task.link.text}"
-              @task.tag.map { t => aria-describedby="task-list__task--@{task.link.text}__tag" }>
-            @messages(s"taskList.${task.link.text}.label")
-        </span>
+            <span class="app-task-list__task-name"
+                  id="task-list__task--@{task.link.text}"
+                  aria-describedby="task-list__task--@{task.link.text}__tag">
+                @messages(s"taskList.${task.link.text}.label")
+            </span>
         }
     </span>
 
-    @task.tag.map { t =>
-        @govukTag(Tag(
-            content = Text(messages(s"taskList.$t")),
-            classes = "app-task-list__task-completed" + (t match {
-                case InProgress => " govuk-tag--blue"
-                case NotStarted | CannotStartYet => " govuk-tag--grey"
-                case _ => ""
-            }),
-            attributes = Map("id" -> s"task-list__task--${task.link.text}__tag")
-        ))
-    }
+    @govukTag(Tag(
+        content = Text(messages(s"taskList.${task.tag}")),
+        classes = "app-task-list__task-completed" + (task.tag match {
+            case InProgress => " govuk-tag--blue"
+            case NotStarted | CannotStartYet => " govuk-tag--grey"
+            case _ => ""
+        }),
+        attributes = Map("id" -> s"task-list__task--${task.link.text}__tag")
+    ))
+
 </li>

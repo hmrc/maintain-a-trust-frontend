@@ -20,5 +20,5 @@ import models.pages.Tag.Completed
 import viewmodels.Task
 
 case class TaskList(mandatory: List[Task] = Nil, other: List[Task] = Nil) {
-  val isAbleToDeclare: Boolean = (mandatory ::: other).forall(_.tag.contains(Completed))
+  val isAbleToDeclare: Boolean = (mandatory ::: other).forall(_.tag == Completed)
 }

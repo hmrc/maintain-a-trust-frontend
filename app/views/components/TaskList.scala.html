@@ -14,12 +14,12 @@
  * limitations under the License.
  *@
 
-@import views.html.components.{Link, TaskItem}
 @import viewmodels.Task
+@import views.html.components.{Link, TaskItem}
 
 @this(
-        taskItem: TaskItem,
-        link: Link
+    taskItem: TaskItem,
+    link: Link
 )
 
 
@@ -28,15 +28,15 @@
 <h2 id="task-list--heading--mandatory" class="app-task-list__section">@heading</h2>
 
 <ul class="app-task-list__items">
-@for(task <- sections){
-    @taskItem(task)
-}
+    @for(task <- sections){
+        @taskItem(task)
+    }
 </ul>
 
 <h2 id="task-list--heading--additional" class="app-task-list__section">@additionalHeading</h2>
 
 <ul class="app-task-list__items">
-@for(task <- additionalSections){
-    @taskItem(task)
-}
+    @for(task <- additionalSections){
+        @taskItem(task)
+    }
 </ul>

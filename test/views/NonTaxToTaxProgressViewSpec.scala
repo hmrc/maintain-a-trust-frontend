@@ -17,6 +17,7 @@
 package views
 
 import models.URN
+import models.pages.Tag.Completed
 import sections.assets.Assets
 import sections.beneficiaries.Beneficiaries
 import sections.{TaxLiability, TrustDetails}
@@ -30,17 +31,17 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
   private val urn = "urn"
 
   private val mandatorySections = List(
-    Task(Link(TrustDetails, Some("")), None),
-    Task(Link(Assets, Some("")), None),
-    Task(Link(TaxLiability, Some("")), None)
+    Task(Link(TrustDetails, Some("")), Completed),
+    Task(Link(Assets, Some("")), Completed),
+    Task(Link(TaxLiability, Some("")), Completed)
   )
 
   private val additionalSections = List(
-    Task(Link(Beneficiaries, None), None)
+    Task(Link(Beneficiaries, None), Completed)
   )
 
   private val additionalSectionsWithLink = List(
-    Task(Link(Beneficiaries, Some("")), None)
+    Task(Link(Beneficiaries, Some("")), Completed)
   )
 
   "TransitionProgressView" when {
