@@ -23,5 +23,5 @@ case object TaxLiabilityTaskStartedPage extends TaskStartedPage {
 
   override def path: JsPath = JsPath \ Tasks \ toString
 
-  override def toString: String = "taskLiabilityTaskStarted"
+  override def toString: String = "taxLiabilityTaskStarted"
 }

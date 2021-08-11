@@ -33,55 +33,55 @@ import javax.inject.Inject
 
 class VariationProgress @Inject()(config: FrontendAppConfig) {
 
-  def trustDetailsRouteEnabled(identifier: String): String = {
+  def trustDetailsRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTrustDetailsEnabled) {
       config.maintainTrustDetailsUrl(identifier)
     }
   }
 
-  def trustAssetsRouteEnabled(identifier: String): String = {
+  def trustAssetsRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTrustAssetsEnabled) {
       config.maintainTrustAssetsUrl(identifier)
     }
   }
 
-  def taxLiabilityRouteEnabled(identifier: String): String = {
+  def taxLiabilityRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTaxLiabilityEnabled) {
       config.maintainTaxLiabilityUrl(identifier)
     }
   }
 
-  def settlorsRouteEnabled(identifier: String): String = {
+  def settlorsRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainSettlorsEnabled) {
       config.maintainSettlorsUrl(identifier)
     }
   }
 
-  def trusteesRouteEnabled(identifier: String): String = {
+  def trusteesRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTrusteesEnabled) {
       config.maintainTrusteesUrl(identifier)
     }
   }
 
-  def beneficiariesRouteEnabled(identifier: String): String = {
+  def beneficiariesRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainBeneficiariesEnabled) {
       config.maintainBeneficiariesUrl(identifier)
     }
   }
 
-  def protectorsRouteEnabled(identifier: String): String = {
+  def protectorsRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainProtectorsEnabled) {
       config.maintainProtectorsUrl(identifier)
     }
   }
 
-  def otherIndividualsRouteEnabled(identifier: String): String = {
+  def otherIndividualsRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainOtherIndividualsEnabled) {
       config.maintainOtherIndividualsUrl(identifier)
     }
   }
 
-  def nonEeaCompanyRouteEnabled(identifier: String): String = {
+  def nonEeaCompanyRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainNonEeaCompaniesEnabled) {
       config.maintainNonEeaCompanyUrl(identifier)
     }

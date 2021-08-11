@@ -105,14 +105,14 @@ class TaskListController @Inject()(
         _ <- playbackRepository.set(updatedAnswers)
       } yield Redirect {
         task match {
-          case TrustDetailsTaskStartedPage => variationProgress.trustDetailsRouteEnabled(identifier)
-          case SettlorsTaskStartedPage => variationProgress.settlorsRouteEnabled(identifier)
-          case TrusteesTaskStartedPage => variationProgress.trusteesRouteEnabled(identifier)
-          case BeneficiariesTaskStartedPage => variationProgress.beneficiariesRouteEnabled(identifier)
-          case AssetsTaskStartedPage => variationProgress.trustAssetsRouteEnabled(identifier)
-          case TaxLiabilityTaskStartedPage => variationProgress.taxLiabilityRouteEnabled(identifier)
-          case ProtectorsTaskStartedPage => variationProgress.protectorsRouteEnabled(identifier)
-          case OtherIndividualsTaskStartedPage => variationProgress.otherIndividualsRouteEnabled(identifier)
+          case TrustDetailsTaskStartedPage => variationProgress.trustDetailsRoute(identifier)
+          case SettlorsTaskStartedPage => variationProgress.settlorsRoute(identifier)
+          case TrusteesTaskStartedPage => variationProgress.trusteesRoute(identifier)
+          case BeneficiariesTaskStartedPage => variationProgress.beneficiariesRoute(identifier)
+          case AssetsTaskStartedPage => variationProgress.trustAssetsRoute(identifier)
+          case TaxLiabilityTaskStartedPage => variationProgress.taxLiabilityRoute(identifier)
+          case ProtectorsTaskStartedPage => variationProgress.protectorsRoute(identifier)
+          case OtherIndividualsTaskStartedPage => variationProgress.otherIndividualsRoute(identifier)
         }
       }
   }
