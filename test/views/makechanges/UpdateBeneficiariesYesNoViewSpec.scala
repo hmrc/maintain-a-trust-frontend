@@ -57,7 +57,7 @@ class UpdateBeneficiariesYesNoViewSpec extends YesNoViewBehaviours {
       def applyView(form: Form[_]): HtmlFormat.Appendable =
         view.apply(form, determinePrefix, closingTrust = true)(fakeRequest, messages)
 
-      behave like normalPage(applyView(form), messageKeyPrefix, "additionalContent1", "additionalContent2")
+      behave like normalPage(applyView(form), messageKeyPrefix, "additionalContent1")
 
       behave like pageWithBackLink(applyView(form))
 
