@@ -31,15 +31,15 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
   private val utr = "utr"
 
   private val mandatorySections = List(
-    Task(Link(TrustDetails, Some("")), Completed),
-    Task(Link(Settlors, Some("")), Completed),
-    Task(Link(Trustees, Some("")), Completed),
-    Task(Link(Beneficiaries, Some("")), Completed)
+    Task(Link(TrustDetails, "#"), Completed),
+    Task(Link(Settlors, "#"), Completed),
+    Task(Link(Trustees, "#"), Completed),
+    Task(Link(Beneficiaries, "#"), Completed)
   )
 
   private val optionalSections = List(
-    Task(Link(Natural, Some("")), Completed),
-    Task(Link(Protectors, Some("")), Completed)
+    Task(Link(Natural, "#"), Completed),
+    Task(Link(Protectors, "#"), Completed)
   )
 
   "VariationProgressView" when {

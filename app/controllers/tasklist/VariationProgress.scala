@@ -19,7 +19,7 @@ package controllers.tasklist
 import config.FrontendAppConfig
 import models.MigrationTaskStatus.{NeedsUpdating, NothingToUpdate, Updated}
 import models.pages.Tag
-import models.pages.Tag.{CannotStartYet, Completed}
+import models.pages.Tag.{CannotStartYet, Completed, NoActionNeeded}
 import models.{CompletedMaintenanceTasks, MigrationTaskStatus, TaskList, TrustMldStatus}
 import pages.Page
 import sections._
@@ -32,55 +32,55 @@ import javax.inject.Inject
 
 class VariationProgress @Inject()(config: FrontendAppConfig) {
 
-  def trustDetailsRoute(identifier: String): String = {
+  private def trustDetailsRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTrustDetailsEnabled) {
       config.maintainTrustDetailsUrl(identifier)
     }
   }
 
-  def trustAssetsRoute(identifier: String): String = {
+  private def trustAssetsRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTrustAssetsEnabled) {
       config.maintainTrustAssetsUrl(identifier)
     }
   }
 
-  def taxLiabilityRoute(identifier: String): String = {
+  private def taxLiabilityRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTaxLiabilityEnabled) {
       config.maintainTaxLiabilityUrl(identifier)
     }
   }
 
-  def settlorsRoute(identifier: String): String = {
+  private def settlorsRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainSettlorsEnabled) {
       config.maintainSettlorsUrl(identifier)
     }
   }
 
-  def trusteesRoute(identifier: String): String = {
+  private def trusteesRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainTrusteesEnabled) {
       config.maintainTrusteesUrl(identifier)
     }
   }
 
-  def beneficiariesRoute(identifier: String): String = {
+  private def beneficiariesRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainBeneficiariesEnabled) {
       config.maintainBeneficiariesUrl(identifier)
     }
   }
 
-  def protectorsRoute(identifier: String): String = {
+  private def protectorsRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainProtectorsEnabled) {
       config.maintainProtectorsUrl(identifier)
     }
   }
 
-  def otherIndividualsRoute(identifier: String): String = {
+  private def otherIndividualsRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainOtherIndividualsEnabled) {
       config.maintainOtherIndividualsUrl(identifier)
     }
   }
 
-  def nonEeaCompanyRoute(identifier: String): String = {
+  private def nonEeaCompanyRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainNonEeaCompaniesEnabled) {
       config.maintainNonEeaCompanyUrl(identifier)
     }
@@ -104,34 +104,34 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
 
     val mandatoryTasks = List(
       Task(
-        Link(TrustDetails, Some(trustDetailsRoute(identifier))),
+        Link(TrustDetails, trustDetailsRoute(identifier)),
         Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled)
       ),
       Task(
-        Link(Settlors, Some(settlorsRoute(identifier))),
+        Link(Settlors, settlorsRoute(identifier)),
         Tag.tagFor(tasks.settlors)
       ),
       Task(
-        Link(Trustees, Some(trusteesRoute(identifier))),
+        Link(Trustees, trusteesRoute(identifier)),
         Tag.tagFor(tasks.trustees)
       ),
       Task(
-        Link(Beneficiaries, Some(beneficiariesRoute(identifier))),
+        Link(Beneficiaries, beneficiariesRoute(identifier)),
         Tag.tagFor(tasks.beneficiaries)
       )
     ).filterNot(filter5mldSections(_, TrustDetails))
 
     val optionalTasks = List(
       Task(
-        Link(NonEeaBusinessAsset, Some(trustAssetsRoute(identifier))),
+        Link(NonEeaBusinessAsset, trustAssetsRoute(identifier)),
         Tag.tagFor(tasks.assets, config.maintainNonEeaCompaniesEnabled)
       ),
       Task(
-        Link(Protectors, Some(protectorsRoute(identifier))),
+        Link(Protectors, protectorsRoute(identifier)),
         Tag.tagFor(tasks.protectors)
       ),
       Task(
-        Link(Natural, Some(otherIndividualsRoute(identifier))),
+        Link(Natural, otherIndividualsRoute(identifier)),
         Tag.tagFor(tasks.other)
       )
     ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
@@ -151,27 +151,23 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
              link: Link): List[Task] = migrationTaskStatus match {
       case Updated => List(Task(link, Completed))
       case NeedsUpdating if trustDetailsCompleted => List(Task(link, savedTaskStatus))
-      case NothingToUpdate if trustDetailsCompleted => List(Task(link, Completed))
+      case NothingToUpdate if trustDetailsCompleted => List(Task(link, if (savedTaskStatus.isCompleted) Completed else NoActionNeeded))
       case _ => List(Task(link, CannotStartYet))
-    }
-
-    def linkUrl(route: String): Option[String] = {
-      if (tasks.trustDetails.isCompleted) Some(route) else None
     }
 
     val transitionTasks = List(
       Task(
-        Link(TrustDetails, Some(trustDetailsRoute(identifier))),
+        Link(TrustDetails, trustDetailsRoute(identifier)),
         Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled)
       ),
       Task(
-        Link(Assets, Some(trustAssetsRoute(identifier))),
+        Link(Assets, trustAssetsRoute(identifier)),
         Tag.tagFor(tasks.assets)
       )
     )
 
     lazy val taxLiabilityTask = Task(
-      Link(TaxLiability, Some(taxLiabilityRoute(identifier))),
+      Link(TaxLiability, taxLiabilityRoute(identifier)),
       Tag.tagFor(tasks.taxLiability)
     )
 
@@ -179,14 +175,14 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
       migrationTaskStatus = settlorsStatus,
       savedTaskStatus = tasks.settlors,
       trustDetailsCompleted = tasks.trustDetails.isCompleted,
-      link = Link(Settlors, linkUrl(settlorsRoute(identifier)))
+      link = Link(Settlors, settlorsRoute(identifier))
     )
 
     val beneficiariesTask = task(
       migrationTaskStatus = beneficiariesStatus,
       savedTaskStatus = tasks.beneficiaries,
       trustDetailsCompleted = tasks.trustDetails.isCompleted,
-      link = Link(Beneficiaries, linkUrl(beneficiariesRoute(identifier)))
+      link = Link(Beneficiaries, beneficiariesRoute(identifier))
     )
 
     TaskList(

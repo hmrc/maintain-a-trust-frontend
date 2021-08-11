@@ -48,14 +48,14 @@ class VariationProgressSpec extends SpecBase {
             val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, identifier)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
-              Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), NotStarted),
-              Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
+              Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), NotStarted),
+              Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$identifier"), NotStarted),
+              Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), NotStarted)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), NotStarted),
-              Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), NotStarted)
+              Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), NotStarted),
+              Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
             )
           }
 
@@ -77,14 +77,14 @@ class VariationProgressSpec extends SpecBase {
             val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, identifier)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), InProgress),
-              Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), InProgress),
-              Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), InProgress)
+              Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), InProgress),
+              Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$identifier"), InProgress),
+              Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), InProgress)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), InProgress),
-              Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), InProgress)
+              Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), InProgress),
+              Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), InProgress)
             )
           }
 
@@ -106,14 +106,14 @@ class VariationProgressSpec extends SpecBase {
             val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, identifier)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Completed),
-              Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), Completed),
-              Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Completed)
+              Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), Completed),
+              Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$identifier"), Completed),
+              Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), Completed)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), Completed),
-              Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), Completed)
+              Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), Completed),
+              Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), Completed)
             )
           }
         }
@@ -129,14 +129,14 @@ class VariationProgressSpec extends SpecBase {
             val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn5mldMode, identifier)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
-              Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), NotStarted),
-              Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
+              Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), NotStarted),
+              Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$identifier"), NotStarted),
+              Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), NotStarted)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), NotStarted),
-              Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), NotStarted)
+              Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), NotStarted),
+              Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
             )
           }
 
@@ -151,16 +151,16 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTaskList(tasks, Underlying5mldTaxableTrustIn5mldMode, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), NotStarted),
-                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
-                Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), NotStarted),
-                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), NotStarted),
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), NotStarted),
+                Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$identifier"), NotStarted),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(NonEeaBusinessAsset, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted),
-                Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), NotStarted),
-                Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), NotStarted)
+                Task(Link(NonEeaBusinessAsset, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), NotStarted),
+                Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
               )
             }
 
@@ -173,16 +173,16 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTaskList(tasks, Underlying5mldNonTaxableTrustIn5mldMode, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), NotStarted),
-                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
-                Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), NotStarted),
-                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), NotStarted),
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), NotStarted),
+                Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$identifier"), NotStarted),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(NonEeaBusinessAsset, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted),
-                Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), NotStarted),
-                Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), NotStarted)
+                Task(Link(NonEeaBusinessAsset, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), NotStarted),
+                Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
               )
             }
           }
@@ -204,13 +204,13 @@ class VariationProgressSpec extends SpecBase {
             val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, identifier)
 
             result.mandatory mustBe List(
-              Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), NotStarted),
-              Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted)
+              Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), NotStarted),
+              Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
             )
 
             result.other mustBe List(
-              Task(Link(Settlors, None), CannotStartYet),
-              Task(Link(Beneficiaries, None), CannotStartYet)
+              Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), CannotStartYet),
+              Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), CannotStartYet)
             )
           }
 
@@ -234,13 +234,13 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
-                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted)
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
-                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), NotStarted),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), NotStarted)
               )
             }
 
@@ -262,13 +262,13 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
-                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted)
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Completed),
-                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Completed)
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), NoActionNeeded),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), NoActionNeeded)
               )
             }
 
@@ -290,13 +290,13 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
-                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted)
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Completed),
-                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Completed)
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), Completed),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), Completed)
               )
             }
 
@@ -318,14 +318,14 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 1, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
-                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted),
-                Task(Link(TaxLiability, Some(s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier")), NotStarted)
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Completed),
-                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Completed)
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), NoActionNeeded),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), NoActionNeeded)
               )
             }
 
@@ -347,14 +347,14 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 1, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
-                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted),
-                Task(Link(TaxLiability, Some(s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier")), NotStarted)
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
-                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), NotStarted),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), NotStarted)
               )
             }
 
@@ -376,14 +376,14 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 1, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
-                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), InProgress),
-                Task(Link(TaxLiability, Some(s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier")), InProgress)
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), InProgress),
+                Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), InProgress)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), InProgress),
-                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), InProgress)
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), InProgress),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), InProgress)
               )
             }
 
@@ -405,14 +405,14 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, Updated, Updated, 1, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
-                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), Completed),
-                Task(Link(TaxLiability, Some(s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier")), Completed)
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), Completed),
+                Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), Completed)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Completed),
-                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Completed)
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), Completed),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), Completed)
               )
             }
           }

@@ -23,7 +23,7 @@ import viewmodels.{Link, Task}
 
 class TaskListSpec extends SpecBase {
 
-  private def fakeTask(status: Tag) = Task(Link("text", None), status)
+  private def fakeTask(status: Tag) = Task(Link("text", "#"), status)
 
   "TaskList" when {
     ".isAbleToDeclare" must {

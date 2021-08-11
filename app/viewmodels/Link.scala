@@ -16,4 +16,4 @@
 
 package viewmodels
 
-case class Link(text: String, url: Option[String])
+case class Link(text: String, url: String)

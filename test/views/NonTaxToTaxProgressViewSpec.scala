@@ -17,7 +17,7 @@
 package views
 
 import models.URN
-import models.pages.Tag.Completed
+import models.pages.Tag.{Completed, NoActionNeeded}
 import sections.assets.Assets
 import sections.beneficiaries.Beneficiaries
 import sections.{TaxLiability, TrustDetails}
@@ -31,17 +31,17 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
   private val urn = "urn"
 
   private val mandatorySections = List(
-    Task(Link(TrustDetails, Some("")), Completed),
-    Task(Link(Assets, Some("")), Completed),
-    Task(Link(TaxLiability, Some("")), Completed)
+    Task(Link(TrustDetails, "#"), Completed),
+    Task(Link(Assets, "#"), Completed),
+    Task(Link(TaxLiability, "#"), Completed)
   )
 
   private val additionalSections = List(
-    Task(Link(Beneficiaries, None), Completed)
+    Task(Link(Beneficiaries, "#"), NoActionNeeded)
   )
 
-  private val additionalSectionsWithLink = List(
-    Task(Link(Beneficiaries, Some("")), Completed)
+  private val additionalSectionsCompleted = List(
+    Task(Link(Beneficiaries, "#"), Completed)
   )
 
   "TransitionProgressView" when {
@@ -141,7 +141,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
-          additional = additionalSectionsWithLink,
+          additional = additionalSectionsCompleted,
           affinityGroup = group,
           isAbleToDeclare = true
         )(fakeRequest, messages)
@@ -161,7 +161,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
 
         behave like taskList(applyView, mandatorySections)
 
-        behave like taskList(applyView, additionalSectionsWithLink)
+        behave like taskList(applyView, additionalSectionsCompleted)
 
         behave like pageWithWarning(applyView)
 
@@ -186,7 +186,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
           identifier = urn,
           identifierType = URN,
           mandatory = mandatorySections,
-          additional = additionalSectionsWithLink,
+          additional = additionalSectionsCompleted,
           affinityGroup = group,
           isAbleToDeclare = true
         )(fakeRequest, messages)
@@ -206,7 +206,7 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
 
         behave like taskList(applyView, mandatorySections)
 
-        behave like taskList(applyView, additionalSectionsWithLink)
+        behave like taskList(applyView, additionalSectionsCompleted)
 
         behave like pageWithWarning(applyView)
 
