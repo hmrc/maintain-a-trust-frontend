@@ -38,6 +38,16 @@ class TaskListSpec extends SpecBase {
           val taskList = TaskList(List(fakeTask(Completed)), List(fakeTask(Completed)))
           taskList.isAbleToDeclare mustBe true
         }
+
+        "all tasks require no action" in {
+          val taskList = TaskList(List(fakeTask(NoActionNeeded)), List(fakeTask(NoActionNeeded)))
+          taskList.isAbleToDeclare mustBe true
+        }
+
+        "mixture of completed tasks and tasks that require no action" in {
+          val taskList = TaskList(List(fakeTask(Completed)), List(fakeTask(NoActionNeeded)))
+          taskList.isAbleToDeclare mustBe true
+        }
       }
 
       "return false" when {

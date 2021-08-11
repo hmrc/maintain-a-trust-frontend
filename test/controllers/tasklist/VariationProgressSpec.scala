@@ -195,23 +195,45 @@ class VariationProgressSpec extends SpecBase {
 
         "trust is migrating from non-taxable to taxable" when {
 
-          "trust details task not complete" in {
-            val tasks = CompletedMaintenanceTasks()
+          "trust details task not complete" when {
 
-            val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
-            val identifier = userAnswers.identifier
+            "settlors and beneficiaries need updating" in {
+              val tasks = CompletedMaintenanceTasks()
 
-            val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, identifier)
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val identifier = userAnswers.identifier
 
-            result.mandatory mustBe List(
-              Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), NotStarted),
-              Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
-            )
+              val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, identifier)
 
-            result.other mustBe List(
-              Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), CannotStartYet),
-              Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), CannotStartYet)
-            )
+              result.mandatory mustBe List(
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), NotStarted),
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
+              )
+
+              result.other mustBe List(
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), CannotStartYet),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), CannotStartYet)
+              )
+            }
+
+            "settlors and beneficiaries do not need updating" in {
+              val tasks = CompletedMaintenanceTasks()
+
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val identifier = userAnswers.identifier
+
+              val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, identifier)
+
+              result.mandatory mustBe List(
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), NotStarted),
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
+              )
+
+              result.other mustBe List(
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), NoActionNeeded),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), NoActionNeeded)
+              )
+            }
           }
 
           "trust details task complete" when {

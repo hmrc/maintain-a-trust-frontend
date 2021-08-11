@@ -123,7 +123,7 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
 
     val optionalTasks = List(
       Task(
-        Link(NonEeaBusinessAsset, trustAssetsRoute(identifier)),
+        Link(NonEeaBusinessAsset, nonEeaCompanyRoute(identifier)),
         Tag.tagFor(tasks.assets, config.maintainNonEeaCompaniesEnabled)
       ),
       Task(
@@ -152,6 +152,7 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
       case Updated => List(Task(link, Completed))
       case NeedsUpdating if trustDetailsCompleted => List(Task(link, savedTaskStatus))
       case NothingToUpdate if trustDetailsCompleted => List(Task(link, if (savedTaskStatus.isCompleted) Completed else NoActionNeeded))
+      case NothingToUpdate => List(Task(link, NoActionNeeded))
       case _ => List(Task(link, CannotStartYet))
     }
 
