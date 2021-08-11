@@ -148,12 +148,12 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     def task(migrationTaskStatus: MigrationTaskStatus,
              savedTaskStatus: Tag,
              trustDetailsCompleted: Boolean,
-             link: Link): List[Task] = migrationTaskStatus match {
-      case Updated => List(Task(link, Completed))
-      case NeedsUpdating if trustDetailsCompleted => List(Task(link, if (savedTaskStatus.isCompleted) InProgress else savedTaskStatus))
-      case NothingToUpdate if trustDetailsCompleted => List(Task(link, if (savedTaskStatus.isCompleted) Completed else NoActionNeeded))
-      case NothingToUpdate => List(Task(link, NoActionNeeded))
-      case _ => List(Task(link, CannotStartYet))
+             link: Link): Task = migrationTaskStatus match {
+      case Updated => Task(link, Completed)
+      case NeedsUpdating if trustDetailsCompleted => Task(link, if (savedTaskStatus.isCompleted) InProgress else savedTaskStatus)
+      case NothingToUpdate if trustDetailsCompleted => Task(link, if (savedTaskStatus.isCompleted) Completed else NoActionNeeded)
+      case NothingToUpdate => Task(link, NoActionNeeded)
+      case _ => Task(link, CannotStartYet)
     }
 
     val transitionTasks = List(
@@ -169,7 +169,7 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
 
     lazy val taxLiabilityTask = Task(
       Link(TaxLiability, taxLiabilityRoute(identifier)),
-      Tag.tagFor(tasks.taxLiability)
+      Tag.tagFor(if (yearsToAskFor == 0) NoActionNeeded else tasks.taxLiability)
     )
 
     val settlorsTask = task(
@@ -187,8 +187,8 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     )
 
     TaskList(
-      if (yearsToAskFor == 0) transitionTasks else transitionTasks :+ taxLiabilityTask,
-      settlorsTask ::: beneficiariesTask
+      mandatory = transitionTasks :+ taxLiabilityTask,
+      other = settlorsTask :: beneficiariesTask :: Nil
     )
   }
 

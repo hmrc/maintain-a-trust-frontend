@@ -207,7 +207,8 @@ class VariationProgressSpec extends SpecBase {
 
               result.mandatory mustBe List(
                 Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), NotStarted),
-                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), NoActionNeeded)
               )
 
               result.other mustBe List(
@@ -226,7 +227,8 @@ class VariationProgressSpec extends SpecBase {
 
               result.mandatory mustBe List(
                 Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), NotStarted),
-                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), NoActionNeeded)
               )
 
               result.other mustBe List(
@@ -257,7 +259,8 @@ class VariationProgressSpec extends SpecBase {
 
               result.mandatory mustBe List(
                 Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
-                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), NoActionNeeded)
               )
 
               result.other mustBe List(
@@ -285,7 +288,8 @@ class VariationProgressSpec extends SpecBase {
 
               result.mandatory mustBe List(
                 Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
-                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), NoActionNeeded)
               )
 
               result.other mustBe List(
@@ -313,7 +317,8 @@ class VariationProgressSpec extends SpecBase {
 
               result.mandatory mustBe List(
                 Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
-                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), NoActionNeeded)
               )
 
               result.other mustBe List(
@@ -342,7 +347,8 @@ class VariationProgressSpec extends SpecBase {
 
               result.mandatory mustBe List(
                 Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
-                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(TaxLiability, s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier"), NoActionNeeded)
               )
 
               result.other mustBe List(
