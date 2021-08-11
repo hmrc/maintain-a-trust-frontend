@@ -19,7 +19,7 @@ package controllers.tasklist
 import config.FrontendAppConfig
 import models.MigrationTaskStatus.{NeedsUpdating, NothingToUpdate, Updated}
 import models.pages.Tag
-import models.pages.Tag.{CannotStartYet, Completed, InProgress}
+import models.pages.Tag.{CannotStartYet, Completed}
 import models.{CompletedMaintenanceTasks, MigrationTaskStatus, TaskList, TrustMldStatus}
 import pages.Page
 import sections._
@@ -145,17 +145,18 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
                                  yearsToAskFor: Int,
                                  identifier: String): TaskList = {
 
-    def task(taskStatus: MigrationTaskStatus,
+    def task(migrationTaskStatus: MigrationTaskStatus,
+             savedTaskStatus: Tag,
              trustDetailsCompleted: Boolean,
-             link: Link): List[Task] = taskStatus match {
+             link: Link): List[Task] = migrationTaskStatus match {
       case Updated => List(Task(link, Completed))
-      case NeedsUpdating if trustDetailsCompleted => List(Task(link, InProgress))
+      case NeedsUpdating if trustDetailsCompleted => List(Task(link, savedTaskStatus))
       case NothingToUpdate if trustDetailsCompleted => List(Task(link, Completed))
       case _ => List(Task(link, CannotStartYet))
     }
 
     def linkUrl(route: String): Option[String] = {
-      if (tasks.trustDetails) Some(route) else None
+      if (tasks.trustDetails.isCompleted) Some(route) else None
     }
 
     val transitionTasks = List(
@@ -175,14 +176,16 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     )
 
     val settlorsTask = task(
-      taskStatus = settlorsStatus,
-      trustDetailsCompleted = tasks.trustDetails,
+      migrationTaskStatus = settlorsStatus,
+      savedTaskStatus = tasks.settlors,
+      trustDetailsCompleted = tasks.trustDetails.isCompleted,
       link = Link(Settlors, linkUrl(settlorsRoute(identifier)))
     )
 
     val beneficiariesTask = task(
-      taskStatus = beneficiariesStatus,
-      trustDetailsCompleted = tasks.trustDetails,
+      migrationTaskStatus = beneficiariesStatus,
+      savedTaskStatus = tasks.beneficiaries,
+      trustDetailsCompleted = tasks.trustDetails.isCompleted,
       link = Link(Beneficiaries, linkUrl(beneficiariesRoute(identifier)))
     )
 

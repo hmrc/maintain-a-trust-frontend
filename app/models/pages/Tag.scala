@@ -16,9 +16,12 @@
 
 package models.pages
 
+import models.pages.Tag.Completed
 import models.{Enumerable, WithName}
 
-sealed trait Tag
+sealed trait Tag {
+  def isCompleted: Boolean = this == Completed
+}
 
 object Tag extends Enumerable.Implicits {
 
@@ -26,19 +29,16 @@ object Tag extends Enumerable.Implicits {
   case object InProgress extends WithName("in-progress") with Tag
   case object NotStarted extends WithName("not-started") with Tag
   case object CannotStartYet extends WithName("cannot-start-yet") with Tag
+  case object NoActionNeeded extends WithName("no-action-needed") with Tag
 
   val values: Set[Tag] = Set(
-    Completed, InProgress, NotStarted, CannotStartYet
+    Completed, InProgress, NotStarted, CannotStartYet, NoActionNeeded
   )
 
   implicit val enumerable: Enumerable[Tag] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
 
-  def tagFor(completed: Boolean, featureEnabled: Boolean = true): Tag = {
-    if (completed || !featureEnabled) {
-      Completed
-    } else {
-      NotStarted
-    }
+  def tagFor(status: Tag, featureEnabled: Boolean = true): Tag = {
+    if (!featureEnabled) Completed else status
   }
 }

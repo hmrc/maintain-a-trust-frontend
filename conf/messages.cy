@@ -940,6 +940,7 @@ taskList.completed = Wedi cwblhau
 taskList.in-progress = Ar waith
 taskList.not-started = Heb ddechrau
 taskList.cannot-start-yet = Methu dechrau eto
+taskList.no-action-needed = Dim angen gweithredu
 playbackAnswers.title=Copi diwethaf wedi’i ddatgan o gofrestriad yr ymddiriedolaeth
 playbackAnswers.heading=Copi diwethaf wedi’i ddatgan o gofrestriad yr ymddiriedolaeth
 playbackAnswers.declareAnnually.warning=Dim ond os oes rhwymedigaeth treth y bydd angen i chi ddatgan bod yr ymddiriedolaeth yn gyfredol bob blwyddyn.

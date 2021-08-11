@@ -60,7 +60,16 @@ class VariationProgressSpec extends SpecBase {
           }
 
           "tasks in progress" in {
-            val tasks = CompletedMaintenanceTasks()
+            val tasks = CompletedMaintenanceTasks(
+              trustDetails = NotStarted,
+              assets = NotStarted,
+              taxLiability = NotStarted,
+              trustees = InProgress,
+              beneficiaries = InProgress,
+              settlors = InProgress,
+              protectors = InProgress,
+              other = InProgress
+            )
 
             val userAnswers = emptyUserAnswersForUtr
             val identifier = userAnswers.identifier
@@ -81,14 +90,14 @@ class VariationProgressSpec extends SpecBase {
 
           "tasks completed" in {
             val tasks = CompletedMaintenanceTasks(
-              trustDetails = false,
-              assets = false,
-              taxLiability = false,
-              trustees = true,
-              beneficiaries = true,
-              settlors = true,
-              protectors = true,
-              other = true
+              trustDetails = NotStarted,
+              assets = NotStarted,
+              taxLiability = NotStarted,
+              trustees = Completed,
+              beneficiaries = Completed,
+              settlors = Completed,
+              protectors = Completed,
+              other = Completed
             )
 
             val userAnswers = emptyUserAnswersForUtr
@@ -209,14 +218,14 @@ class VariationProgressSpec extends SpecBase {
 
             "settlors and beneficiaries do need updating" in {
               val tasks = CompletedMaintenanceTasks(
-                trustDetails = true,
-                assets = false,
-                taxLiability = false,
-                trustees = false,
-                beneficiaries = false,
-                settlors = false,
-                protectors = false,
-                other = false
+                trustDetails = Completed,
+                assets = NotStarted,
+                taxLiability = NotStarted,
+                trustees = NotStarted,
+                beneficiaries = NotStarted,
+                settlors = NotStarted,
+                protectors = NotStarted,
+                other = NotStarted
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
@@ -237,14 +246,14 @@ class VariationProgressSpec extends SpecBase {
 
             "settlors and beneficiaries do not need updating" in {
               val tasks = CompletedMaintenanceTasks(
-                trustDetails = true,
-                assets = false,
-                taxLiability = false,
-                trustees = false,
-                beneficiaries = false,
-                settlors = false,
-                protectors = false,
-                other = false
+                trustDetails = Completed,
+                assets = NotStarted,
+                taxLiability = NotStarted,
+                trustees = NotStarted,
+                beneficiaries = NotStarted,
+                settlors = NotStarted,
+                protectors = NotStarted,
+                other = NotStarted
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
@@ -265,14 +274,14 @@ class VariationProgressSpec extends SpecBase {
 
             "settlors and beneficiaries do not need updating but tasks have been completed (can happen if all entities removed)" in {
               val tasks = CompletedMaintenanceTasks(
-                trustDetails = true,
-                assets = false,
-                taxLiability = false,
-                trustees = false,
-                beneficiaries = true,
-                settlors = true,
-                protectors = false,
-                other = false
+                trustDetails = Completed,
+                assets = NotStarted,
+                taxLiability = NotStarted,
+                trustees = NotStarted,
+                beneficiaries = Completed,
+                settlors = Completed,
+                protectors = NotStarted,
+                other = NotStarted
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
@@ -293,14 +302,14 @@ class VariationProgressSpec extends SpecBase {
 
             "years of tax liability to ask for" in {
               val tasks = CompletedMaintenanceTasks(
-                trustDetails = true,
-                assets = false,
-                taxLiability = false,
-                trustees = false,
-                beneficiaries = false,
-                settlors = false,
-                protectors = false,
-                other = false
+                trustDetails = Completed,
+                assets = NotStarted,
+                taxLiability = NotStarted,
+                trustees = NotStarted,
+                beneficiaries = NotStarted,
+                settlors = NotStarted,
+                protectors = NotStarted,
+                other = NotStarted
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
@@ -320,16 +329,45 @@ class VariationProgressSpec extends SpecBase {
               )
             }
 
+            "tasks not started" in {
+              val tasks = CompletedMaintenanceTasks(
+                trustDetails = Completed,
+                assets = NotStarted,
+                taxLiability = NotStarted,
+                trustees = NotStarted,
+                beneficiaries = NotStarted,
+                settlors = NotStarted,
+                protectors = NotStarted,
+                other = NotStarted
+              )
+
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val identifier = userAnswers.identifier
+
+              val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 1, identifier)
+
+              result.mandatory mustBe List(
+                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
+                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted),
+                Task(Link(TaxLiability, Some(s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier")), NotStarted)
+              )
+
+              result.other mustBe List(
+                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
+                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
+              )
+            }
+
             "tasks in progress" in {
               val tasks = CompletedMaintenanceTasks(
-                trustDetails = true,
-                assets = false,
-                taxLiability = false,
-                trustees = false,
-                beneficiaries = false,
-                settlors = false,
-                protectors = false,
-                other = false
+                trustDetails = Completed,
+                assets = InProgress,
+                taxLiability = InProgress,
+                trustees = NotStarted,
+                beneficiaries = InProgress,
+                settlors = InProgress,
+                protectors = NotStarted,
+                other = NotStarted
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
@@ -351,14 +389,14 @@ class VariationProgressSpec extends SpecBase {
 
             "tasks completed" in {
               val tasks = CompletedMaintenanceTasks(
-                trustDetails = true,
-                assets = true,
-                taxLiability = true,
-                trustees = false,
-                beneficiaries = true,
-                settlors = true,
-                protectors = false,
-                other = false
+                trustDetails = Completed,
+                assets = Completed,
+                taxLiability = Completed,
+                trustees = NotStarted,
+                beneficiaries = Completed,
+                settlors = Completed,
+                protectors = NotStarted,
+                other = NotStarted
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value

@@ -1144,6 +1144,7 @@ taskList.completed = Completed
 taskList.in-progress = In progress
 taskList.not-started = Not started
 taskList.cannot-start-yet = Cannot start yet
+taskList.no-action-needed = No action needed
 
 # Playback prints
 

@@ -17,31 +17,35 @@
 package models
 
 import _root_.pages.makechanges._
+import models.pages.Tag
+import models.pages.Tag._
 import play.api.libs.json.{Format, Json}
 
-case class CompletedMaintenanceTasks(trustDetails: Boolean,
-                                     assets: Boolean,
-                                     taxLiability: Boolean,
-                                     trustees: Boolean,
-                                     beneficiaries: Boolean,
-                                     settlors: Boolean,
-                                     protectors: Boolean,
-                                     other: Boolean)
+case class CompletedMaintenanceTasks(trustDetails: Tag,
+                                     assets: Tag,
+                                     taxLiability: Tag,
+                                     trustees: Tag,
+                                     beneficiaries: Tag,
+                                     settlors: Tag,
+                                     protectors: Tag,
+                                     other: Tag)
 
 object CompletedMaintenanceTasks {
 
   implicit val formats: Format[CompletedMaintenanceTasks] = Json.format[CompletedMaintenanceTasks]
 
   def apply(): CompletedMaintenanceTasks = CompletedMaintenanceTasks(
-    trustDetails = false,
-    assets = false,
-    taxLiability = false,
-    trustees = false,
-    beneficiaries = false,
-    settlors = false,
-    protectors = false,
-    other = false
+    trustDetails = NotStarted,
+    assets = NotStarted,
+    taxLiability = NotStarted,
+    trustees = NotStarted,
+    beneficiaries = NotStarted,
+    settlors = NotStarted,
+    protectors = NotStarted,
+    other = NotStarted
   )
+  
+  private def tagForDecision(needToAmend: Boolean): Tag = if (needToAmend) NotStarted else Completed
 
   def from(userAnswers: UserAnswers): Option[CompletedMaintenanceTasks] = for {
     trustDetails <- userAnswers.getWithDefault(UpdateTrustDetailsYesNoPage, false)
@@ -53,7 +57,16 @@ object CompletedMaintenanceTasks {
     protectors <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
     otherIndividuals <- userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage)
   } yield {
-    CompletedMaintenanceTasks(!trustDetails, !assets, !taxLiability, !trustees, !beneficiaries, !settlors, !protectors, !otherIndividuals)
+    CompletedMaintenanceTasks(
+      tagForDecision(trustDetails),
+      tagForDecision(assets),
+      tagForDecision(taxLiability),
+      tagForDecision(trustees),
+      tagForDecision(beneficiaries),
+      tagForDecision(settlors),
+      tagForDecision(protectors),
+      tagForDecision(otherIndividuals)
+    )
   }
 
 }
