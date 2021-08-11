@@ -98,7 +98,7 @@ class TaskListController @Inject()(
       Redirect(declarationUrl(request.user.affinityGroup, request.userAnswers.isTrustMigratingFromNonTaxableToTaxable))
   }
 
-  def redirectToTask(task: TaskStartedPage): Action[AnyContent] = actions.requireIsClosingAnswer.async {
+  def onRedirectToTask(task: TaskStartedPage): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.set(task, true))

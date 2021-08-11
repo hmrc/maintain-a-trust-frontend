@@ -95,7 +95,7 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     }
   }
 
-  private def redirectToTask(task: TaskStartedPage): String = controllers.tasklist.routes.TaskListController.redirectToTask(task).url
+  private def redirectToTask(task: TaskStartedPage): String = controllers.tasklist.routes.TaskListController.onRedirectToTask(task).url
 
   def generateTaskList(tasks: CompletedMaintenanceTasks,
                        trustMldStatus: TrustMldStatus,

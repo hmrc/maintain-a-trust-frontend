@@ -48,14 +48,14 @@ class VariationProgressSpec extends SpecBase {
             val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, userAnswers)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
-              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
-              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
+              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
+              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
+              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
-              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.redirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
+              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
+              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
             )
           }
 
@@ -72,14 +72,14 @@ class VariationProgressSpec extends SpecBase {
             val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, userAnswers)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), InProgress),
-              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrusteesTaskStartedPage).url)), InProgress),
-              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), InProgress)
+              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), InProgress),
+              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), InProgress),
+              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), InProgress)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(ProtectorsTaskStartedPage).url)), InProgress),
-              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.redirectToTask(OtherIndividualsTaskStartedPage).url)), InProgress)
+              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), InProgress),
+              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), InProgress)
             )
           }
 
@@ -105,14 +105,14 @@ class VariationProgressSpec extends SpecBase {
             val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, userAnswers)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), Completed),
-              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrusteesTaskStartedPage).url)), Completed),
-              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
+              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), Completed),
+              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), Completed),
+              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(ProtectorsTaskStartedPage).url)), Completed),
-              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.redirectToTask(OtherIndividualsTaskStartedPage).url)), Completed)
+              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), Completed),
+              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), Completed)
             )
           }
         }
@@ -127,14 +127,14 @@ class VariationProgressSpec extends SpecBase {
             val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn5mldMode, userAnswers)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
-              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
-              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
+              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
+              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
+              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
-              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.redirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
+              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
+              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
             )
           }
 
@@ -148,16 +148,16 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTaskList(tasks, Underlying5mldTaxableTrustIn5mldMode, userAnswers)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)), NotStarted),
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
-                Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), NotStarted),
+                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
+                Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
+                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(NonEeaBusinessAsset, Some(controllers.tasklist.routes.TaskListController.redirectToTask(AssetsTaskStartedPage).url)), NotStarted),
-                Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
-                Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.redirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
+                Task(Link(NonEeaBusinessAsset, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted),
+                Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
+                Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
               )
             }
 
@@ -169,16 +169,16 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTaskList(tasks, Underlying5mldNonTaxableTrustIn5mldMode, userAnswers)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)), NotStarted),
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
-                Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), NotStarted),
+                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
+                Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
+                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(NonEeaBusinessAsset, Some(controllers.tasklist.routes.TaskListController.redirectToTask(AssetsTaskStartedPage).url)), NotStarted),
-                Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
-                Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.redirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
+                Task(Link(NonEeaBusinessAsset, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted),
+                Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
+                Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
               )
             }
           }
@@ -199,8 +199,8 @@ class VariationProgressSpec extends SpecBase {
             val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, userAnswers)
 
             result.mandatory mustBe List(
-              Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)), NotStarted),
-              Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.redirectToTask(AssetsTaskStartedPage).url)), NotStarted)
+              Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), NotStarted),
+              Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted)
             )
 
             result.other mustBe List(
@@ -228,13 +228,13 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, userAnswers)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.redirectToTask(AssetsTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
+                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
+                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
+                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
               )
             }
 
@@ -255,13 +255,13 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, userAnswers)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.redirectToTask(AssetsTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
+                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), Completed),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
+                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), Completed),
+                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
               )
             }
 
@@ -282,13 +282,13 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, userAnswers)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.redirectToTask(AssetsTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
+                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), Completed),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
+                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), Completed),
+                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
               )
             }
 
@@ -309,14 +309,14 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 1, userAnswers)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.redirectToTask(AssetsTaskStartedPage).url)), NotStarted),
-                Task(Link(TaxLiability, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TaxLiabilityTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
+                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted),
+                Task(Link(TaxLiability, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TaxLiabilityTaskStartedPage).url)), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), Completed),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
+                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), Completed),
+                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
               )
             }
 
@@ -342,14 +342,14 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 1, userAnswers)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.redirectToTask(AssetsTaskStartedPage).url)), InProgress),
-                Task(Link(TaxLiability, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TaxLiabilityTaskStartedPage).url)), InProgress)
+                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
+                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), InProgress),
+                Task(Link(TaxLiability, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TaxLiabilityTaskStartedPage).url)), InProgress)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), InProgress),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), InProgress)
+                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), InProgress),
+                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), InProgress)
               )
             }
 
@@ -375,14 +375,14 @@ class VariationProgressSpec extends SpecBase {
               val result = variationProgress.generateTransitionTaskList(tasks, Updated, Updated, 1, userAnswers)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.redirectToTask(AssetsTaskStartedPage).url)), Completed),
-                Task(Link(TaxLiability, Some(controllers.tasklist.routes.TaskListController.redirectToTask(TaxLiabilityTaskStartedPage).url)), Completed)
+                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
+                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), Completed),
+                Task(Link(TaxLiability, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TaxLiabilityTaskStartedPage).url)), Completed)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)), Completed),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
+                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), Completed),
+                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
               )
             }
           }

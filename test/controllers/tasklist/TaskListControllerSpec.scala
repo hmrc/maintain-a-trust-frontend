@@ -193,7 +193,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
         val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-        val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)
+        val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)
 
         val result = route(application, request).value
 
@@ -263,7 +263,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(TrustDetailsTaskStartedPage).url)
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)
 
       val result = route(application, request).value
 
@@ -284,7 +284,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(SettlorsTaskStartedPage).url)
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)
 
       val result = route(application, request).value
 
@@ -305,7 +305,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(TrusteesTaskStartedPage).url)
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)
 
       val result = route(application, request).value
 
@@ -326,7 +326,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(BeneficiariesTaskStartedPage).url)
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)
 
       val result = route(application, request).value
 
@@ -347,7 +347,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(AssetsTaskStartedPage).url)
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)
 
       val result = route(application, request).value
 
@@ -368,7 +368,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(TaxLiabilityTaskStartedPage).url)
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onRedirectToTask(TaxLiabilityTaskStartedPage).url)
 
       val result = route(application, request).value
 
@@ -389,7 +389,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(ProtectorsTaskStartedPage).url)
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)
 
       val result = route(application, request).value
 
@@ -410,7 +410,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
       val application = applicationBuilder(userAnswers = Some(answers)).build()
 
-      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.redirectToTask(OtherIndividualsTaskStartedPage).url)
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)
 
       val result = route(application, request).value
 
