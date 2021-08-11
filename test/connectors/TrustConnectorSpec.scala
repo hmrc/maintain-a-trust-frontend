@@ -18,7 +18,7 @@ package connectors
 
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
-import controllers.Assets._
+import play.api.http.Status._
 import generators.Generators
 import models.http._
 import models.pages.ShareClass.Ordinary

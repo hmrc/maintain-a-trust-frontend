@@ -978,3 +978,5 @@ nonEeaBusiness.internationalAddress.checkYourAnswersLabel = Beth yw cyfeiriad {0
 nonEeaBusiness.governingCountry.checkYourAnswersLabel = Cyfreithiau pa wlad sy’n llywodraethu {0}?
 
 ##########################
+
+leadTrustee.default = y prif ymddiriedolwr

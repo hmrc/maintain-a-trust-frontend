@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import play.api.Logger.logger
+import play.api.Logging
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -36,7 +36,7 @@ class LogoutController @Inject()(
                                   identify: IdentifierAction,
                                   getData: DataRetrievalAction,
                                   requireData: DataRequiredAction,
-                                  auditConnector: AuditConnector)(implicit val ec: ExecutionContext) extends FrontendBaseController {
+                                  auditConnector: AuditConnector)(implicit val ec: ExecutionContext) extends FrontendBaseController with Logging {
 
   def logout: Action[AnyContent] = (identify andThen getData andThen requireData) {
     request =>

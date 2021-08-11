@@ -50,7 +50,7 @@ class ConfirmationControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(fakeTvn)(request, messages).toString
+          view(fakeTvn, "the lead trustee")(request, messages).toString
 
         application.stop()
       }
@@ -75,7 +75,7 @@ class ConfirmationControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(fakeTvn)(request, messages).toString
+          view(fakeTvn, "the lead trustee")(request, messages).toString
 
         application.stop()
       }
