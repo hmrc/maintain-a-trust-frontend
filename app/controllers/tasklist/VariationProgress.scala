@@ -19,7 +19,7 @@ package controllers.tasklist
 import config.FrontendAppConfig
 import models.MigrationTaskStatus.{NeedsUpdating, NothingToUpdate, Updated}
 import models.pages.Tag
-import models.pages.Tag.{CannotStartYet, Completed, NoActionNeeded}
+import models.pages.Tag.{CannotStartYet, Completed, InProgress, NoActionNeeded}
 import models.{CompletedMaintenanceTasks, MigrationTaskStatus, TaskList, TrustMldStatus}
 import pages.Page
 import sections._
@@ -150,7 +150,7 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
              trustDetailsCompleted: Boolean,
              link: Link): List[Task] = migrationTaskStatus match {
       case Updated => List(Task(link, Completed))
-      case NeedsUpdating if trustDetailsCompleted => List(Task(link, savedTaskStatus))
+      case NeedsUpdating if trustDetailsCompleted => List(Task(link, if (savedTaskStatus.isCompleted) InProgress else savedTaskStatus))
       case NothingToUpdate if trustDetailsCompleted => List(Task(link, if (savedTaskStatus.isCompleted) Completed else NoActionNeeded))
       case NothingToUpdate => List(Task(link, NoActionNeeded))
       case _ => List(Task(link, CannotStartYet))

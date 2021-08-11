@@ -322,6 +322,35 @@ class VariationProgressSpec extends SpecBase {
               )
             }
 
+            "settlors and beneficiaries tasks have been completed yet they still need updating " +
+              "(i.e. user says they're done without making the required changes first)" in {
+              val tasks = CompletedMaintenanceTasks(
+                trustDetails = Completed,
+                assets = NotStarted,
+                taxLiability = NotStarted,
+                trustees = NotStarted,
+                beneficiaries = Completed,
+                settlors = Completed,
+                protectors = NotStarted,
+                other = NotStarted
+              )
+
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val identifier = userAnswers.identifier
+
+              val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, identifier)
+
+              result.mandatory mustBe List(
+                Task(Link(TrustDetails, s"http://localhost:9838/maintain-a-trust/trust-details/$identifier"), Completed),
+                Task(Link(Assets, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted)
+              )
+
+              result.other mustBe List(
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), InProgress),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), InProgress)
+              )
+            }
+
             "years of tax liability to ask for" in {
               val tasks = CompletedMaintenanceTasks(
                 trustDetails = Completed,
