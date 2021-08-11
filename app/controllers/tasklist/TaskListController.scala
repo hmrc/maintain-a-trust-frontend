@@ -23,14 +23,12 @@ import controllers.actions.Actions
 import models.Enumerable
 import models.requests.ClosingTrustRequest
 import navigation.Navigator.declarationUrl
-import pages.tasks._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class TaskListController @Inject()(
                                     override val messagesApi: MessagesApi,
@@ -41,8 +39,7 @@ class TaskListController @Inject()(
                                     val config: FrontendAppConfig,
                                     storeConnector: TrustsStoreConnector,
                                     trustsConnector: TrustConnector,
-                                    variationProgress: VariationProgress,
-                                    playbackRepository: PlaybackRepository
+                                    variationProgress: VariationProgress
                                   )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
 
   private def identifier(implicit request: ClosingTrustRequest[AnyContent]): String = request.userAnswers.identifier
@@ -62,7 +59,7 @@ class TaskListController @Inject()(
             settlorsStatus = settlorsStatus,
             beneficiariesStatus = beneficiariesStatus,
             yearsToAskFor = firstYearToAskFor.yearsAgo,
-            userAnswers = request.userAnswers
+            identifier = request.userAnswers.identifier
           )
 
           Ok(nonTaxToTaxView(
@@ -77,7 +74,7 @@ class TaskListController @Inject()(
           val sections = variationProgress.generateTaskList(
             tasks = tasks,
             trustMldStatus = request.userAnswers.trustMldStatus,
-            userAnswers = request.userAnswers
+            identifier = request.userAnswers.identifier
           )
 
           Ok(view(
@@ -96,24 +93,5 @@ class TaskListController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
       Redirect(declarationUrl(request.user.affinityGroup, request.userAnswers.isTrustMigratingFromNonTaxableToTaxable))
-  }
-
-  def onRedirectToTask(task: TaskStartedPage): Action[AnyContent] = actions.requireIsClosingAnswer.async {
-    implicit request =>
-      for {
-        updatedAnswers <- Future.fromTry(request.userAnswers.set(task, true))
-        _ <- playbackRepository.set(updatedAnswers)
-      } yield Redirect {
-        task match {
-          case TrustDetailsTaskStartedPage => variationProgress.trustDetailsRoute(identifier)
-          case SettlorsTaskStartedPage => variationProgress.settlorsRoute(identifier)
-          case TrusteesTaskStartedPage => variationProgress.trusteesRoute(identifier)
-          case BeneficiariesTaskStartedPage => variationProgress.beneficiariesRoute(identifier)
-          case AssetsTaskStartedPage => variationProgress.trustAssetsRoute(identifier)
-          case TaxLiabilityTaskStartedPage => variationProgress.taxLiabilityRoute(identifier)
-          case ProtectorsTaskStartedPage => variationProgress.protectorsRoute(identifier)
-          case OtherIndividualsTaskStartedPage => variationProgress.otherIndividualsRoute(identifier)
-        }
-      }
   }
 }

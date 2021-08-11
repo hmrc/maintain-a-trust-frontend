@@ -17,7 +17,6 @@
 package models
 
 import _root_.pages._
-import _root_.pages.tasks._
 import base.SpecBase
 import forms.Validation
 import models.pages.WhatIsNext.{NeedsToPayTax, NoLongerTaxable}
@@ -171,24 +170,6 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
         val result = previousAnswers.clearData
 
         result.data mustBe Json.obj()
-      }
-
-      "save tasks" in {
-
-        val previousAnswers = emptyUserAnswersForUtr
-          .set(ViewLastDeclarationYesNoPage, false).success.value
-          .set(TrustDetailsTaskStartedPage, true).success.value
-
-        val result = previousAnswers.clearData
-
-        result.data mustBe Json.parse(
-          """
-            |{
-            |  "tasks": {
-            |    "trustDetailsTaskStarted": true
-            |  }
-            |}
-            |""".stripMargin)
       }
     }
   }

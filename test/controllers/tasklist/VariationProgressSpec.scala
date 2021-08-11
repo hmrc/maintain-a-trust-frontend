@@ -17,16 +17,15 @@
 package controllers.tasklist
 
 import _root_.pages.WhatIsNextPage
-import _root_.pages.tasks._
 import base.SpecBase
-import models.{CompletedMaintenanceTasks, Underlying4mldTrustIn4mldMode, Underlying4mldTrustIn5mldMode, Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
 import models.MigrationTaskStatus.{NeedsUpdating, NothingToUpdate, Updated}
 import models.pages.Tag._
 import models.pages.WhatIsNext
+import models.{CompletedMaintenanceTasks, Underlying4mldTrustIn4mldMode, Underlying4mldTrustIn5mldMode, Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
+import sections._
 import sections.assets.{Assets, NonEeaBusinessAsset}
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Protectors, TaxLiability, TrustDetails, Trustees}
 import viewmodels.{Link, Task}
 
 class VariationProgressSpec extends SpecBase {
@@ -44,18 +43,19 @@ class VariationProgressSpec extends SpecBase {
             val tasks = CompletedMaintenanceTasks()
 
             val userAnswers = emptyUserAnswersForUtr
+            val identifier = userAnswers.identifier
 
-            val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, userAnswers)
+            val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, identifier)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
-              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
-              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
+              Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
+              Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), NotStarted),
+              Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
-              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
+              Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), NotStarted),
+              Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), NotStarted)
             )
           }
 
@@ -63,23 +63,19 @@ class VariationProgressSpec extends SpecBase {
             val tasks = CompletedMaintenanceTasks()
 
             val userAnswers = emptyUserAnswersForUtr
-              .set(SettlorsTaskStartedPage, true).success.value
-              .set(TrusteesTaskStartedPage, true).success.value
-              .set(BeneficiariesTaskStartedPage, true).success.value
-              .set(ProtectorsTaskStartedPage, true).success.value
-              .set(OtherIndividualsTaskStartedPage, true).success.value
+            val identifier = userAnswers.identifier
 
-            val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, userAnswers)
+            val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, identifier)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), InProgress),
-              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), InProgress),
-              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), InProgress)
+              Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), InProgress),
+              Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), InProgress),
+              Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), InProgress)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), InProgress),
-              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), InProgress)
+              Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), InProgress),
+              Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), InProgress)
             )
           }
 
@@ -96,23 +92,19 @@ class VariationProgressSpec extends SpecBase {
             )
 
             val userAnswers = emptyUserAnswersForUtr
-              .set(SettlorsTaskStartedPage, true).success.value
-              .set(TrusteesTaskStartedPage, true).success.value
-              .set(BeneficiariesTaskStartedPage, true).success.value
-              .set(ProtectorsTaskStartedPage, true).success.value
-              .set(OtherIndividualsTaskStartedPage, true).success.value
+            val identifier = userAnswers.identifier
 
-            val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, userAnswers)
+            val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, identifier)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), Completed),
-              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), Completed),
-              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
+              Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Completed),
+              Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), Completed),
+              Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Completed)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), Completed),
-              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), Completed)
+              Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), Completed),
+              Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), Completed)
             )
           }
         }
@@ -123,18 +115,19 @@ class VariationProgressSpec extends SpecBase {
             val tasks = CompletedMaintenanceTasks()
 
             val userAnswers = emptyUserAnswersForUtr
+            val identifier = userAnswers.identifier
 
-            val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn5mldMode, userAnswers)
+            val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn5mldMode, identifier)
 
             result.mandatory mustBe List(
-              Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
-              Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
-              Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
+              Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
+              Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), NotStarted),
+              Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
             )
 
             result.other mustBe List(
-              Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
-              Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
+              Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), NotStarted),
+              Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), NotStarted)
             )
           }
 
@@ -144,20 +137,21 @@ class VariationProgressSpec extends SpecBase {
               val tasks = CompletedMaintenanceTasks()
 
               val userAnswers = emptyUserAnswersForUtr
+              val identifier = userAnswers.identifier
 
-              val result = variationProgress.generateTaskList(tasks, Underlying5mldTaxableTrustIn5mldMode, userAnswers)
+              val result = variationProgress.generateTaskList(tasks, Underlying5mldTaxableTrustIn5mldMode, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), NotStarted),
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
-                Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), NotStarted),
+                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
+                Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), NotStarted),
+                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(NonEeaBusinessAsset, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted),
-                Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
-                Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
+                Task(Link(NonEeaBusinessAsset, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted),
+                Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), NotStarted),
+                Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), NotStarted)
               )
             }
 
@@ -165,20 +159,21 @@ class VariationProgressSpec extends SpecBase {
               val tasks = CompletedMaintenanceTasks()
 
               val userAnswers = emptyUserAnswersForUrn
+              val identifier = userAnswers.identifier
 
-              val result = variationProgress.generateTaskList(tasks, Underlying5mldNonTaxableTrustIn5mldMode, userAnswers)
+              val result = variationProgress.generateTaskList(tasks, Underlying5mldNonTaxableTrustIn5mldMode, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), NotStarted),
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
-                Task(Link(Trustees, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrusteesTaskStartedPage).url)), NotStarted),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), NotStarted),
+                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
+                Task(Link(Trustees, Some(s"http://localhost:9792/maintain-a-trust/trustees/$identifier")), NotStarted),
+                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(NonEeaBusinessAsset, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted),
-                Task(Link(Protectors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(ProtectorsTaskStartedPage).url)), NotStarted),
-                Task(Link(Natural, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(OtherIndividualsTaskStartedPage).url)), NotStarted)
+                Task(Link(NonEeaBusinessAsset, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted),
+                Task(Link(Protectors, Some(s"http://localhost:9796/maintain-a-trust/protectors/$identifier")), NotStarted),
+                Task(Link(Natural, Some(s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier")), NotStarted)
               )
             }
           }
@@ -195,12 +190,13 @@ class VariationProgressSpec extends SpecBase {
             val tasks = CompletedMaintenanceTasks()
 
             val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+            val identifier = userAnswers.identifier
 
-            val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, userAnswers)
+            val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, identifier)
 
             result.mandatory mustBe List(
-              Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), NotStarted),
-              Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted)
+              Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), NotStarted),
+              Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted)
             )
 
             result.other mustBe List(
@@ -224,17 +220,18 @@ class VariationProgressSpec extends SpecBase {
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val identifier = userAnswers.identifier
 
-              val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, userAnswers)
+              val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
+                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), NotStarted),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), NotStarted)
+                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), NotStarted),
+                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), NotStarted)
               )
             }
 
@@ -251,17 +248,18 @@ class VariationProgressSpec extends SpecBase {
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val identifier = userAnswers.identifier
 
-              val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, userAnswers)
+              val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
+                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), Completed),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
+                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Completed),
+                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Completed)
               )
             }
 
@@ -278,17 +276,18 @@ class VariationProgressSpec extends SpecBase {
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val identifier = userAnswers.identifier
 
-              val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, userAnswers)
+              val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
+                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), Completed),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
+                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Completed),
+                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Completed)
               )
             }
 
@@ -305,18 +304,19 @@ class VariationProgressSpec extends SpecBase {
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val identifier = userAnswers.identifier
 
-              val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 1, userAnswers)
+              val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 1, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), NotStarted),
-                Task(Link(TaxLiability, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TaxLiabilityTaskStartedPage).url)), NotStarted)
+                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
+                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), NotStarted),
+                Task(Link(TaxLiability, Some(s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier")), NotStarted)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), Completed),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
+                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Completed),
+                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Completed)
               )
             }
 
@@ -333,23 +333,19 @@ class VariationProgressSpec extends SpecBase {
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
-                .set(TrustDetailsTaskStartedPage, true).success.value
-                .set(AssetsTaskStartedPage, true).success.value
-                .set(TaxLiabilityTaskStartedPage, true).success.value
-                .set(SettlorsTaskStartedPage, true).success.value
-                .set(BeneficiariesTaskStartedPage, true).success.value
+              val identifier = userAnswers.identifier
 
-              val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 1, userAnswers)
+              val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 1, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), InProgress),
-                Task(Link(TaxLiability, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TaxLiabilityTaskStartedPage).url)), InProgress)
+                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
+                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), InProgress),
+                Task(Link(TaxLiability, Some(s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier")), InProgress)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), InProgress),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), InProgress)
+                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), InProgress),
+                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), InProgress)
               )
             }
 
@@ -366,23 +362,19 @@ class VariationProgressSpec extends SpecBase {
               )
 
               val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
-                .set(TrustDetailsTaskStartedPage, true).success.value
-                .set(AssetsTaskStartedPage, true).success.value
-                .set(TaxLiabilityTaskStartedPage, true).success.value
-                .set(SettlorsTaskStartedPage, true).success.value
-                .set(BeneficiariesTaskStartedPage, true).success.value
+              val identifier = userAnswers.identifier
 
-              val result = variationProgress.generateTransitionTaskList(tasks, Updated, Updated, 1, userAnswers)
+              val result = variationProgress.generateTransitionTaskList(tasks, Updated, Updated, 1, identifier)
 
               result.mandatory mustBe List(
-                Task(Link(TrustDetails, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TrustDetailsTaskStartedPage).url)), Completed),
-                Task(Link(Assets, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(AssetsTaskStartedPage).url)), Completed),
-                Task(Link(TaxLiability, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(TaxLiabilityTaskStartedPage).url)), Completed)
+                Task(Link(TrustDetails, Some(s"http://localhost:9838/maintain-a-trust/trust-details/$identifier")), Completed),
+                Task(Link(Assets, Some(s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier")), Completed),
+                Task(Link(TaxLiability, Some(s"http://localhost:9844/maintain-a-trust/tax-liability/$identifier")), Completed)
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(SettlorsTaskStartedPage).url)), Completed),
-                Task(Link(Beneficiaries, Some(controllers.tasklist.routes.TaskListController.onRedirectToTask(BeneficiariesTaskStartedPage).url)), Completed)
+                Task(Link(Settlors, Some(s"http://localhost:9795/maintain-a-trust/settlors/$identifier")), Completed),
+                Task(Link(Beneficiaries, Some(s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier")), Completed)
               )
             }
           }

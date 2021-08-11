@@ -24,7 +24,7 @@ import play.api.i18n.Messages
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import queries.{Gettable, Settable}
-import sections.{Tasks, Trustees}
+import sections.Trustees
 
 import java.time.LocalDateTime
 import scala.util.{Failure, Success, Try}
@@ -143,16 +143,7 @@ final case class UserAnswers(internalId: String,
     )
   }
 
-  def clearData: UserAnswers = {
-    // clearing data but persisting tasks data
-
-    val tasksData: JsObject = this.data.transform(Tasks.path.json.pickBranch) match {
-      case JsSuccess(value, _) => value
-      case _ => Json.obj()
-    }
-
-    this.copy(data = tasksData)
-  }
+  def clearData: UserAnswers = this.copy(data = Json.obj())
 
 }
 

@@ -19,10 +19,9 @@ package controllers.tasklist
 import config.FrontendAppConfig
 import models.MigrationTaskStatus.{NeedsUpdating, NothingToUpdate, Updated}
 import models.pages.Tag
-import models.pages.Tag.{CannotStartYet, Completed, InProgress, NotStarted}
-import models.{CompletedMaintenanceTasks, MigrationTaskStatus, TaskList, TrustMldStatus, UserAnswers}
+import models.pages.Tag.{CannotStartYet, Completed, InProgress}
+import models.{CompletedMaintenanceTasks, MigrationTaskStatus, TaskList, TrustMldStatus}
 import pages.Page
-import pages.tasks._
 import sections._
 import sections.assets.{Assets, NonEeaBusinessAsset}
 import sections.beneficiaries.Beneficiaries
@@ -95,11 +94,9 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     }
   }
 
-  private def redirectToTask(task: TaskStartedPage): String = controllers.tasklist.routes.TaskListController.onRedirectToTask(task).url
-
   def generateTaskList(tasks: CompletedMaintenanceTasks,
                        trustMldStatus: TrustMldStatus,
-                       userAnswers: UserAnswers): TaskList = {
+                       identifier: String): TaskList = {
 
     def filter5mldSections(task: Task, section: Page): Boolean = {
       task.link.text == section.toString && !trustMldStatus.is5mldTrustIn5mldMode
@@ -107,35 +104,35 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
 
     val mandatoryTasks = List(
       Task(
-        Link(TrustDetails, Some(redirectToTask(TrustDetailsTaskStartedPage))),
-        Tag.tagFor(tasks.trustDetails, userAnswers.get(TrustDetailsTaskStartedPage), config.maintainTrustDetailsEnabled)
+        Link(TrustDetails, Some(trustDetailsRoute(identifier))),
+        Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled)
       ),
       Task(
-        Link(Settlors, Some(redirectToTask(SettlorsTaskStartedPage))),
-        Tag.tagFor(tasks.settlors, userAnswers.get(SettlorsTaskStartedPage))
+        Link(Settlors, Some(settlorsRoute(identifier))),
+        Tag.tagFor(tasks.settlors)
       ),
       Task(
-        Link(Trustees, Some(redirectToTask(TrusteesTaskStartedPage))),
-        Tag.tagFor(tasks.trustees, userAnswers.get(TrusteesTaskStartedPage))
+        Link(Trustees, Some(trusteesRoute(identifier))),
+        Tag.tagFor(tasks.trustees)
       ),
       Task(
-        Link(Beneficiaries, Some(redirectToTask(BeneficiariesTaskStartedPage))),
-        Tag.tagFor(tasks.beneficiaries, userAnswers.get(BeneficiariesTaskStartedPage))
+        Link(Beneficiaries, Some(beneficiariesRoute(identifier))),
+        Tag.tagFor(tasks.beneficiaries)
       )
     ).filterNot(filter5mldSections(_, TrustDetails))
 
     val optionalTasks = List(
       Task(
-        Link(NonEeaBusinessAsset, Some(redirectToTask(AssetsTaskStartedPage))),
-        Tag.tagFor(tasks.assets, userAnswers.get(AssetsTaskStartedPage), config.maintainNonEeaCompaniesEnabled)
+        Link(NonEeaBusinessAsset, Some(trustAssetsRoute(identifier))),
+        Tag.tagFor(tasks.assets, config.maintainNonEeaCompaniesEnabled)
       ),
       Task(
-        Link(Protectors, Some(redirectToTask(ProtectorsTaskStartedPage))),
-        Tag.tagFor(tasks.protectors, userAnswers.get(ProtectorsTaskStartedPage))
+        Link(Protectors, Some(protectorsRoute(identifier))),
+        Tag.tagFor(tasks.protectors)
       ),
       Task(
-        Link(Natural, Some(redirectToTask(OtherIndividualsTaskStartedPage))),
-        Tag.tagFor(tasks.other, userAnswers.get(OtherIndividualsTaskStartedPage))
+        Link(Natural, Some(otherIndividualsRoute(identifier))),
+        Tag.tagFor(tasks.other)
       )
     ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
 
@@ -146,14 +143,13 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
                                  settlorsStatus: MigrationTaskStatus,
                                  beneficiariesStatus: MigrationTaskStatus,
                                  yearsToAskFor: Int,
-                                 userAnswers: UserAnswers): TaskList = {
+                                 identifier: String): TaskList = {
 
     def task(taskStatus: MigrationTaskStatus,
              trustDetailsCompleted: Boolean,
-             taskStarted: Boolean,
              link: Link): List[Task] = taskStatus match {
       case Updated => List(Task(link, Completed))
-      case NeedsUpdating if trustDetailsCompleted => List(Task(link, if (taskStarted) InProgress else NotStarted))
+      case NeedsUpdating if trustDetailsCompleted => List(Task(link, InProgress))
       case NothingToUpdate if trustDetailsCompleted => List(Task(link, Completed))
       case _ => List(Task(link, CannotStartYet))
     }
@@ -164,32 +160,30 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
 
     val transitionTasks = List(
       Task(
-        Link(TrustDetails, Some(redirectToTask(TrustDetailsTaskStartedPage))),
-        Tag.tagFor(tasks.trustDetails, userAnswers.get(TrustDetailsTaskStartedPage), config.maintainTrustDetailsEnabled)
+        Link(TrustDetails, Some(trustDetailsRoute(identifier))),
+        Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled)
       ),
       Task(
-        Link(Assets, Some(redirectToTask(AssetsTaskStartedPage))),
-        Tag.tagFor(tasks.assets, userAnswers.get(AssetsTaskStartedPage))
+        Link(Assets, Some(trustAssetsRoute(identifier))),
+        Tag.tagFor(tasks.assets)
       )
     )
 
     lazy val taxLiabilityTask = Task(
-      Link(TaxLiability, Some(redirectToTask(TaxLiabilityTaskStartedPage))),
-      Tag.tagFor(tasks.taxLiability, userAnswers.get(TaxLiabilityTaskStartedPage))
+      Link(TaxLiability, Some(taxLiabilityRoute(identifier))),
+      Tag.tagFor(tasks.taxLiability)
     )
 
     val settlorsTask = task(
       taskStatus = settlorsStatus,
       trustDetailsCompleted = tasks.trustDetails,
-      taskStarted = userAnswers.get(SettlorsTaskStartedPage).contains(true),
-      link = Link(Settlors, linkUrl(redirectToTask(SettlorsTaskStartedPage)))
+      link = Link(Settlors, linkUrl(settlorsRoute(identifier)))
     )
 
     val beneficiariesTask = task(
       taskStatus = beneficiariesStatus,
       trustDetailsCompleted = tasks.trustDetails,
-      taskStarted = userAnswers.get(BeneficiariesTaskStartedPage).contains(true),
-      link = Link(Beneficiaries, linkUrl(redirectToTask(BeneficiariesTaskStartedPage)))
+      link = Link(Beneficiaries, linkUrl(beneficiariesRoute(identifier)))
     )
 
     TaskList(
