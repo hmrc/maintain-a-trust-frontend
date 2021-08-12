@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
-package viewmodels
+package models
 
-case class Link(text: String, url: String)
+import models.pages.Tag.{Completed, NoActionNeeded}
+import viewmodels.Task
+
+case class TaskList(mandatory: List[Task] = Nil, other: List[Task] = Nil) {
+  val isAbleToDeclare: Boolean = (mandatory ::: other).forall(x => x.tag == Completed || x.tag == NoActionNeeded)
+}

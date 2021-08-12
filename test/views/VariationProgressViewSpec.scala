@@ -17,6 +17,7 @@
 package views
 
 import models.UTR
+import models.pages.Tag.Completed
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
 import sections.{Natural, Protectors, TrustDetails, Trustees}
@@ -30,17 +31,16 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
   private val utr = "utr"
 
   private val mandatorySections = List(
-    Task(Link(TrustDetails, Some("")), None),
-    Task(Link(Settlors, Some("")), None),
-    Task(Link(Trustees, Some("")), None),
-    Task(Link(Beneficiaries, Some("")), None)
+    Task(Link(TrustDetails, "#"), Completed),
+    Task(Link(Settlors, "#"), Completed),
+    Task(Link(Trustees, "#"), Completed),
+    Task(Link(Beneficiaries, "#"), Completed)
   )
 
   private val optionalSections = List(
-    Task(Link(Natural, Some("")),None),
-    Task(Link(Protectors, Some("")),None)
+    Task(Link(Natural, "#"), Completed),
+    Task(Link(Protectors, "#"), Completed)
   )
-
 
   "VariationProgressView" when {
 

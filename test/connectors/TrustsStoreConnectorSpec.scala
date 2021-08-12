@@ -20,6 +20,7 @@ import base.SpecBase
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.{get, okJson, urlEqualTo, _}
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
+import models.pages.Tag._
 import models.{CompletedMaintenanceTasks, FeatureResponse}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
@@ -72,14 +73,14 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       val json = Json.parse(
         """
           |{
-          |  "trustDetails": false,
-          |  "assets": false,
-          |  "taxLiability": false,
-          |  "trustees": true,
-          |  "beneficiaries": false,
-          |  "settlors": false,
-          |  "protectors": false,
-          |  "other": false
+          |  "trustDetails": "not-started",
+          |  "assets": "not-started",
+          |  "taxLiability": "not-started",
+          |  "trustees": "completed",
+          |  "beneficiaries": "not-started",
+          |  "settlors": "not-started",
+          |  "protectors": "not-started",
+          |  "other": "not-started"
           |}
           |""".stripMargin)
 
@@ -92,14 +93,14 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
 
       result.futureValue mustBe
         CompletedMaintenanceTasks(
-          trustDetails = false,
-          assets = false,
-          taxLiability = false,
-          trustees = true,
-          beneficiaries = false,
-          settlors = false,
-          protectors = false,
-          other = false
+          trustDetails = NotStarted,
+          assets = NotStarted,
+          taxLiability = NotStarted,
+          trustees = Completed,
+          beneficiaries = NotStarted,
+          settlors = NotStarted,
+          protectors = NotStarted,
+          other = NotStarted
         )
 
       application.stop()
@@ -129,14 +130,14 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         val json = Json.parse(
           """
             |{
-            |  "trustDetails": true,
-            |  "assets": true,
-            |  "taxLiability": true,
-            |  "trustees": false,
-            |  "beneficiaries": true,
-            |  "settlors": true,
-            |  "protectors": true,
-            |  "other": true
+            |  "trustDetails": "completed",
+            |  "assets": "completed",
+            |  "taxLiability": "completed",
+            |  "trustees": "not-started",
+            |  "beneficiaries": "completed",
+            |  "settlors": "completed",
+            |  "protectors": "completed",
+            |  "other": "completed"
             |}
             |""".stripMargin)
 
@@ -151,14 +152,14 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
 
         result.futureValue mustBe
           CompletedMaintenanceTasks(
-            trustDetails = true,
-            assets = true,
-            taxLiability = true,
-            trustees = false,
-            beneficiaries = true,
-            settlors = true,
-            protectors = true,
-            other = true
+            trustDetails = Completed,
+            assets = Completed,
+            taxLiability = Completed,
+            trustees = NotStarted,
+            beneficiaries = Completed,
+            settlors = Completed,
+            protectors = Completed,
+            other = Completed
           )
 
         application.stop()
@@ -188,14 +189,14 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         val json = Json.parse(
           """
             |{
-            |  "trustDetails": true,
-            |  "assets": true,
-            |  "taxLiability": true,
-            |  "trustees": false,
-            |  "beneficiaries": true,
-            |  "settlors": true,
-            |  "protectors": true,
-            |  "other": true
+            |  "trustDetails": "completed",
+            |  "assets": "completed",
+            |  "taxLiability": "completed",
+            |  "trustees": "not-started",
+            |  "beneficiaries": "completed",
+            |  "settlors": "completed",
+            |  "protectors": "completed",
+            |  "other": "completed"
             |}
             |""".stripMargin)
 
@@ -210,14 +211,14 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
 
         result.futureValue mustBe
           CompletedMaintenanceTasks(
-            trustDetails = true,
-            assets = true,
-            taxLiability = true,
-            trustees = false,
-            beneficiaries = true,
-            settlors = true,
-            protectors = true,
-            other = true
+            trustDetails = Completed,
+            assets = Completed,
+            taxLiability = Completed,
+            trustees = NotStarted,
+            beneficiaries = Completed,
+            settlors = Completed,
+            protectors = Completed,
+            other = Completed
           )
 
         application.stop()
@@ -245,14 +246,14 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
 
     result.futureValue mustBe
       CompletedMaintenanceTasks(
-        trustDetails = false,
-        assets = false,
-        taxLiability = false,
-        trustees = false,
-        beneficiaries = false,
-        settlors = false,
-        protectors = false,
-        other = false
+        trustDetails = NotStarted,
+        assets = NotStarted,
+        taxLiability = NotStarted,
+        trustees = NotStarted,
+        beneficiaries = NotStarted,
+        settlors = NotStarted,
+        protectors = NotStarted,
+        other = NotStarted
       )
 
     application.stop()

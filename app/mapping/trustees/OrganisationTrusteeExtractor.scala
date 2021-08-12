@@ -19,7 +19,7 @@ package mapping.trustees
 import models.UserAnswers
 import models.http.DisplayTrustTrusteeOrgType
 import models.pages.IndividualOrBusiness
-import models.pages.Tag.UpToDate
+import models.pages.Tag.Completed
 import pages.entitystatus.TrusteeStatus
 import pages.trustees._
 
@@ -38,7 +38,7 @@ class OrganisationTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrust
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
       .flatMap(answers => extractTelephoneAndEmail(entity, index, answers))
       .flatMap(_.set(TrusteeSafeIdPage(index), entity.identification.flatMap(_.safeId)))
-      .flatMap(_.set(TrusteeStatus(index), UpToDate))
+      .flatMap(_.set(TrusteeStatus(index), Completed))
   }
 
   private def extractTelephoneAndEmail(entity: DisplayTrustTrusteeOrgType,

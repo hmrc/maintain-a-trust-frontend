@@ -18,4 +18,4 @@ package viewmodels
 
 import models.pages.Tag
 
-case class Task(link : Link, tag : Option[Tag])
+case class Task(link: Link, tag: Tag)

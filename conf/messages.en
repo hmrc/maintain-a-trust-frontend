@@ -1136,8 +1136,11 @@ asset.other.description.checkYourAnswersLabel = What is the description of the a
 asset.other.value.checkYourAnswersLabel = What is the current value of {0}?
 
 # Task List
-taskList.up-to-date = Up to date
+taskList.completed = Completed
 taskList.in-progress = In progress
+taskList.not-started = Not started
+taskList.cannot-start-yet = Cannot start yet
+taskList.no-action-needed = No action needed
 
 # Playback prints
 

@@ -22,7 +22,7 @@ import views.ViewSpecBase
 
 trait ProgressViewBehaviours extends ViewSpecBase {
 
-  def taskListHeading(view: HtmlFormat.Appendable) : Unit = {
+  def taskListHeading(view: HtmlFormat.Appendable): Unit = {
 
     "behave list a page with a task list" when {
 
@@ -38,71 +38,57 @@ trait ProgressViewBehaviours extends ViewSpecBase {
   }
 
   def taskList(view: HtmlFormat.Appendable,
-               expectedSections : List[Task]) : Unit = {
+               expectedSections: List[Task]): Unit = {
 
     expectedSections.foreach {
       section =>
 
         s"${section.link.text}" must {
 
-          s"render a list item" in {
+          "render a list item" in {
             val doc = asDocument(view)
             assertRenderedById(doc, s"task-list__item--${section.link.text}")
           }
 
-          s"render a link" in {
+          "render a link" in {
             val id = s"task-list__task-link--${section.link.text}"
 
             val doc = asDocument(view)
             doc.getElementById(id).hasAttr("href")
           }
 
-          section.tag.foreach {
-            _ =>
-
-              s"render a tag" in {
-                val doc = asDocument(view)
-                assertRenderedById(doc, s"task-list__task--${section.link.text}__tag")
-              }
-
+          "render a tag" in {
+            val doc = asDocument(view)
+            assertRenderedById(doc, s"task-list__task--${section.link.text}__tag")
           }
-
         }
-
     }
   }
 
   def taskListWithNotActiveLink(view: HtmlFormat.Appendable,
-               expectedSections : List[Task]) : Unit = {
+                                expectedSections: List[Task]): Unit = {
 
     expectedSections.foreach {
       section =>
 
         s"${section.link.text}" must {
 
-          s"render a list item" in {
+          "render a list item" in {
             val doc = asDocument(view)
             assertRenderedById(doc, s"task-list__item--${section.link.text}")
           }
 
-          s"not render as link" in {
+          "not render as link" in {
             val id = s"task-list__task--${section.link.text}"
             val doc = asDocument(view)
             assert(!doc.getElementById(id).hasAttr("href"))
           }
 
-          section.tag.foreach {
-            _ =>
-
-              s"render a tag" in {
-                val doc = asDocument(view)
-                assertRenderedById(doc, s"task-list__task--${section.link.text}__tag")
-              }
-
+          "render a tag" in {
+            val doc = asDocument(view)
+            assertRenderedById(doc, s"task-list__task--${section.link.text}__tag")
           }
-
         }
-
     }
   }
 
