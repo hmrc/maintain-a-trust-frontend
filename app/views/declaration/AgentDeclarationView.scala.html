@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.auth.core.AffinityGroup
 @import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 @import config.FrontendAppConfig
-@import views.html.components.{Heading, InputText, SubmitButton, ErrorSummary, InsetText, InputCharacterCount}
+@import views.html.components.{Heading, InputText, SubmitButton, ErrorSummary, InsetText, InputTextCharacterCount}
 
 @this(
     appConfig: FrontendAppConfig,
@@ -28,7 +28,7 @@
     submitButton: SubmitButton,
     errorSummary: ErrorSummary,
     insetText: InsetText,
-    characterCount: InputCharacterCount,
+    characterCount: InputTextCharacterCount,
     formHelper: FormWithCSRF
 )
 
@@ -97,7 +97,9 @@
                 id = "crn",
                 name = "crn",
                 label = messages("declaration.crn"),
+                isLabelHidden = false,
                 isPageHeading = false,
+                inputClass = Some("govuk-!-width-three-quarters"),
                 maxLength = Some(56)
             )
 
