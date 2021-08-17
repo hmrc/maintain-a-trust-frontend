@@ -217,6 +217,7 @@ class VariationProgressSpec extends SpecBase {
               )
             }
 
+            // needs to be CannotStartYet as we don't know for certain if it's a NoActionNeeded until we know the trust type (i.e. when trust details is completed)
             "settlors and beneficiaries do not need updating" in {
               val tasks = CompletedMaintenanceTasks()
 
@@ -232,8 +233,8 @@ class VariationProgressSpec extends SpecBase {
               )
 
               result.other mustBe List(
-                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), NoActionNeeded),
-                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), NoActionNeeded)
+                Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), CannotStartYet),
+                Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), CannotStartYet)
               )
             }
           }
