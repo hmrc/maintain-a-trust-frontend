@@ -152,7 +152,6 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
       case Updated => Task(link, Completed)
       case NeedsUpdating if trustDetailsCompleted => Task(link, if (savedTaskStatus.isCompleted) InProgress else savedTaskStatus)
       case NothingToUpdate if trustDetailsCompleted => Task(link, if (savedTaskStatus.isCompleted) Completed else NoActionNeeded)
-      case NothingToUpdate => Task(link, NoActionNeeded)
       case _ => Task(link, CannotStartYet)
     }
 
