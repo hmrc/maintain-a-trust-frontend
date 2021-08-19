@@ -480,7 +480,6 @@ session_expired.title=Er eich diogelwch, mae’r gwasanaeth hwn wedi’i ailosod
 session_expired.heading=Er eich diogelwch, mae’r gwasanaeth hwn wedi’i ailosod
 session_expired.guidance=Mae’r manylion a roddwyd gennych wedi’u dileu gan nad ydych wedi mynd yn eich blaen â’r gwasanaeth ers 15 munud.
 session_expired.guidance.2=Bydd angen i chi fewngofnodi i barhau i gynnal yr ymddiriedolaeth.
-site.save.continue=Cadw ac yn eich blaen
 service.name=Cofrestru Ymddiriedolaeth a’i Chynnal
 site.back=Yn ôl
 site.edit=Newid
