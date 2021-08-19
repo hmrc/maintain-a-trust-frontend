@@ -19,11 +19,11 @@ package pages.individual
 import models.UKAddress
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.Natural
+import sections.OtherIndividuals
 
 final case class OtherIndividualAddressUKPage(index: Int) extends QuestionPage[UKAddress] {
 
-  override def path: JsPath = JsPath \ Natural \ index \ toString
+  override def path: JsPath = JsPath \ OtherIndividuals \ index \ toString
 
   override def toString: String = "address"
 }

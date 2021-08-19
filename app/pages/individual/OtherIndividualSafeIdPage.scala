@@ -18,11 +18,11 @@ package pages.individual
 
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.Natural
+import sections.OtherIndividuals
 
 case class OtherIndividualSafeIdPage(index: Int) extends QuestionPage[String] {
 
-  override def path: JsPath = JsPath \ Natural \ index \ toString
+  override def path: JsPath = JsPath \ OtherIndividuals \ index \ toString
 
   override def toString: String = "safeId"
 }

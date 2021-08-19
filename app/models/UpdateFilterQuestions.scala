@@ -23,7 +23,7 @@ case class UpdateFilterQuestions(trustDetails: Boolean,
                                  beneficiaries: Boolean,
                                  settlors: Boolean,
                                  protectors: Boolean,
-                                 natural: Boolean,
+                                 otherIndividuals: Boolean,
                                  nonEeaCompany: Boolean)
 
 object UpdateFilterQuestions {

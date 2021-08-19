@@ -680,7 +680,7 @@ taskList.settlors.label=Setlwyr
 taskList.protectors.label=Amddiffynyddion
 taskList.trustees.label=Ymddiriedolwyr
 taskList.beneficiaries.label=Buddiolwyr
-taskList.natural.label=Unigolion eraill
+taskList.otherIndividuals.label=Unigolion eraill
 taskList.summary.continue=Yn eich blaen i’r datganiad
 featureNotAvailable.p1=Os oes angen i chi wneud unrhyw newidiadau i’r ymddiriedolaeth, gallwch
 featureNotAvailable.link=gysylltu â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
@@ -710,7 +710,7 @@ section.settlors=setlwyr
 section.trustees=ymddiriedolwyr
 section.beneficiaries=buddiolwyr
 section.protectors=amddiffynyddion
-section.natural=unigolion eraill
+section.otherIndividuals=unigolion eraill
 
 answerPage.section.closeDate.heading=Dyddiad cau
 

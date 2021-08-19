@@ -19,11 +19,11 @@ package pages.individual
 import models.MetaData
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.Natural
+import sections.OtherIndividuals
 
 case class OtherIndividualMetaData(index: Int) extends QuestionPage[MetaData]{
 
-  override def path: JsPath = JsPath \ Natural \ index \ toString
+  override def path: JsPath = JsPath \ OtherIndividuals \ index \ toString
 
   override def toString: String = "metaData"
 

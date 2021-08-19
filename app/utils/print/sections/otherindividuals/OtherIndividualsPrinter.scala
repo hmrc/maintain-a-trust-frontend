@@ -21,7 +21,7 @@ import pages.QuestionPage
 import pages.individual._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsArray, JsPath}
-import sections.Natural
+import sections.OtherIndividuals
 import utils.print.sections.{AnswerRowConverter, EntitiesPrinter, EntityPrinter}
 import viewmodels.{AnswerRow, AnswerSection}
 
@@ -69,7 +69,7 @@ class OtherIndividualsPrinter @Inject()(converter: AnswerRowConverter) extends E
 
   override def namePath(index: Int): JsPath = OtherIndividualNamePage(index).path
 
-  override def section: QuestionPage[JsArray] = Natural
+  override def section: QuestionPage[JsArray] = OtherIndividuals
 
   override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] = Some("otherIndividuals")
 

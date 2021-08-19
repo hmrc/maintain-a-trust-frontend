@@ -32,25 +32,23 @@ class UnavailableSectionsController @Inject()(
                                                val controllerComponents: MessagesControllerComponents,
                                                view: UnavailableSectionsView,
                                                config: FrontendAppConfig
-                                     ) extends FrontendBaseController with I18nSupport {
+                                             ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
 
-      case class AvailableSections(
-                                  trustees: (Boolean, String),
-                                  beneficiaries: (Boolean, String),
-                                  settlors: (Boolean, String),
-                                  protectors: (Boolean, String),
-                                  natural: (Boolean, String)
-                                  )
+      case class AvailableSections(trustees: (Boolean, String),
+                                   beneficiaries: (Boolean, String),
+                                   settlors: (Boolean, String),
+                                   protectors: (Boolean, String),
+                                   otherIndividuals: (Boolean, String))
 
       val sections = List(
         (config.maintainSettlorsEnabled, request.messages(messagesApi)("section.settlors")),
         (config.maintainTrusteesEnabled, request.messages(messagesApi)("section.trustees")),
         (config.maintainBeneficiariesEnabled, request.messages(messagesApi)("section.beneficiaries")),
         (config.maintainProtectorsEnabled, request.messages(messagesApi)("section.protectors")),
-        (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.natural"))
+        (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.otherIndividuals"))
       )
 
       val availableSections = commaSeparate(
@@ -81,7 +79,7 @@ class UnavailableSectionsController @Inject()(
   private def commaSeparate(connective: String, list: List[String], acc: String = "")(implicit request: DataRequest[AnyContent]): String = {
     list.size match {
       case 0 => acc
-      case 1 if !acc.isEmpty => commaSeparate(connective, list.tail, acc + " " + connective + " " + list.head)
+      case 1 if acc.nonEmpty => commaSeparate(connective, list.tail, acc + " " + connective + " " + list.head)
       case 1 | 2 => commaSeparate(connective, list.tail, acc + list.head)
       case _ => commaSeparate(connective, list.tail, acc + list.head + ", ")
     }

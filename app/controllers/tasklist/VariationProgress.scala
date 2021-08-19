@@ -131,7 +131,7 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
         Tag.tagFor(tasks.protectors)
       ),
       Task(
-        Link(Natural, otherIndividualsRoute(identifier)),
+        Link(OtherIndividuals, otherIndividualsRoute(identifier)),
         Tag.tagFor(tasks.other)
       )
     ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
