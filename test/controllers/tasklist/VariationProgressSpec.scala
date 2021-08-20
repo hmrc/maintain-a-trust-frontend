@@ -23,7 +23,7 @@ import models.pages.Tag._
 import models.pages.WhatIsNext
 import models.{CompletedMaintenanceTasks, Underlying4mldTrustIn4mldMode, Underlying4mldTrustIn5mldMode, Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
 import sections._
-import sections.assets.{Assets, NonEeaBusinessAsset}
+import sections.assets.Assets
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
 import viewmodels.{Link, Task}
@@ -55,7 +55,7 @@ class VariationProgressSpec extends SpecBase {
 
             result.other mustBe List(
               Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), NotStarted),
-              Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
+              Task(Link(OtherIndividuals, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
             )
           }
 
@@ -84,7 +84,7 @@ class VariationProgressSpec extends SpecBase {
 
             result.other mustBe List(
               Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), InProgress),
-              Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), InProgress)
+              Task(Link(OtherIndividuals, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), InProgress)
             )
           }
 
@@ -113,7 +113,7 @@ class VariationProgressSpec extends SpecBase {
 
             result.other mustBe List(
               Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), Completed),
-              Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), Completed)
+              Task(Link(OtherIndividuals, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), Completed)
             )
           }
         }
@@ -136,7 +136,7 @@ class VariationProgressSpec extends SpecBase {
 
             result.other mustBe List(
               Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), NotStarted),
-              Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
+              Task(Link(OtherIndividuals, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
             )
           }
 
@@ -158,9 +158,9 @@ class VariationProgressSpec extends SpecBase {
               )
 
               result.other mustBe List(
-                Task(Link(NonEeaBusinessAsset, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(CompanyOwnershipOrControllingInterest, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
                 Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), NotStarted),
-                Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
+                Task(Link(OtherIndividuals, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
               )
             }
 
@@ -180,9 +180,9 @@ class VariationProgressSpec extends SpecBase {
               )
 
               result.other mustBe List(
-                Task(Link(NonEeaBusinessAsset, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(Link(CompanyOwnershipOrControllingInterest, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
                 Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), NotStarted),
-                Task(Link(Natural, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
+                Task(Link(OtherIndividuals, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
               )
             }
           }

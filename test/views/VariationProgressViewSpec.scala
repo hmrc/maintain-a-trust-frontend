@@ -20,7 +20,7 @@ import models.UTR
 import models.pages.Tag.Completed
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import sections.{Natural, Protectors, TrustDetails, Trustees}
+import sections.{OtherIndividuals, Protectors, TrustDetails, Trustees}
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
 import viewmodels.{Link, Task}
 import views.behaviours.{ProgressViewBehaviours, ViewBehaviours}
@@ -38,7 +38,7 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
   )
 
   private val optionalSections = List(
-    Task(Link(Natural, "#"), Completed),
+    Task(Link(OtherIndividuals, "#"), Completed),
     Task(Link(Protectors, "#"), Completed)
   )
 

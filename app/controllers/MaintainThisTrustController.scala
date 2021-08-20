@@ -56,7 +56,7 @@ class MaintainThisTrustController @Inject()(
         (config.maintainTrusteesEnabled, request.messages(messagesApi)("section.trustees")),
         (config.maintainBeneficiariesEnabled, request.messages(messagesApi)("section.beneficiaries")),
         (config.maintainProtectorsEnabled, request.messages(messagesApi)("section.protectors")),
-        (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.natural"))
+        (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.otherIndividuals"))
       )
 
       val availableSections = commaSeparate(

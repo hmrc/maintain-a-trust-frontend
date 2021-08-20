@@ -243,7 +243,7 @@ transitionProgress.p6.link=ddychwelyd i’r gwasanaeth a diweddaru cofnod yr ymd
 taskList.trustDetails.label=Manylion yr Ymddiriedolaeth
 taskList.assets.label=Asedion
 taskList.taxLiability.label=Blynyddoedd Rhwymedigaeth Treth
-taskList.nonEEABusiness.label=Cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE
+taskList.companyOwnershipOrControllingInterest.label=Cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE
 featureNotAvailable.title=Nid yw’r rhan hon o’r gwasanaeth ar-lein ar gael eto
 featureNotAvailable.heading=Nid yw’r rhan hon o’r gwasanaeth ar-lein ar gael eto
 dateClosed.title=Pryd gwnaethoch gau’r ymddiriedolaeth?
@@ -679,7 +679,7 @@ taskList.settlors.label=Setlwyr
 taskList.protectors.label=Amddiffynyddion
 taskList.trustees.label=Ymddiriedolwyr
 taskList.beneficiaries.label=Buddiolwyr
-taskList.natural.label=Unigolion eraill
+taskList.otherIndividuals.label=Unigolion eraill
 taskList.summary.continue=Yn eich blaen i’r datganiad
 featureNotAvailable.p1=Os oes angen i chi wneud unrhyw newidiadau i’r ymddiriedolaeth, gallwch
 featureNotAvailable.link=gysylltu â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
@@ -709,7 +709,7 @@ section.settlors=setlwyr
 section.trustees=ymddiriedolwyr
 section.beneficiaries=buddiolwyr
 section.protectors=amddiffynyddion
-section.natural=unigolion eraill
+section.otherIndividuals=unigolion eraill
 
 answerPage.section.closeDate.heading=Dyddiad cau
 

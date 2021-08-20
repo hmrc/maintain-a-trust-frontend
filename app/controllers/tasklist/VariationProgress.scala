@@ -23,7 +23,7 @@ import models.pages.Tag.{CannotStartYet, Completed, InProgress, NoActionNeeded}
 import models.{CompletedMaintenanceTasks, MigrationTaskStatus, TaskList, TrustMldStatus}
 import pages.Page
 import sections._
-import sections.assets.{Assets, NonEeaBusinessAsset}
+import sections.assets.Assets
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
 import viewmodels.{Link, Task}
@@ -80,7 +80,7 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     }
   }
 
-  private def nonEeaCompanyRoute(identifier: String): String = {
+  private def companyOwnershipOrControllingInterestRoute(identifier: String): String = {
     redirectToServiceIfEnabled(config.maintainNonEeaCompaniesEnabled) {
       config.maintainNonEeaCompanyUrl(identifier)
     }
@@ -105,7 +105,7 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     val mandatoryTasks = List(
       Task(
         Link(TrustDetails, trustDetailsRoute(identifier)),
-        Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled)
+        Tag.tagFor(tasks.trustDetails)
       ),
       Task(
         Link(Settlors, settlorsRoute(identifier)),
@@ -123,18 +123,18 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
 
     val optionalTasks = List(
       Task(
-        Link(NonEeaBusinessAsset, nonEeaCompanyRoute(identifier)),
-        Tag.tagFor(tasks.assets, config.maintainNonEeaCompaniesEnabled)
+        Link(CompanyOwnershipOrControllingInterest, companyOwnershipOrControllingInterestRoute(identifier)),
+        Tag.tagFor(tasks.assets)
       ),
       Task(
         Link(Protectors, protectorsRoute(identifier)),
         Tag.tagFor(tasks.protectors)
       ),
       Task(
-        Link(Natural, otherIndividualsRoute(identifier)),
+        Link(OtherIndividuals, otherIndividualsRoute(identifier)),
         Tag.tagFor(tasks.other)
       )
-    ).filterNot(filter5mldSections(_, NonEeaBusinessAsset))
+    ).filterNot(filter5mldSections(_, CompanyOwnershipOrControllingInterest))
 
     TaskList(mandatoryTasks, optionalTasks)
   }
@@ -158,7 +158,7 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     val transitionTasks = List(
       Task(
         Link(TrustDetails, trustDetailsRoute(identifier)),
-        Tag.tagFor(tasks.trustDetails, config.maintainTrustDetailsEnabled)
+        Tag.tagFor(tasks.trustDetails)
       ),
       Task(
         Link(Assets, trustAssetsRoute(identifier)),

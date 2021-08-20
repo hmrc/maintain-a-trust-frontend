@@ -19,11 +19,11 @@ package pages.individual
 import java.time.LocalDate
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import sections.Natural
+import sections.OtherIndividuals
 
 final case class OtherIndividualDateOfBirthPage(index : Int) extends QuestionPage[LocalDate] {
 
-  override def path: JsPath = JsPath \ Natural \ index \ toString
+  override def path: JsPath = JsPath \ OtherIndividuals \ index \ toString
 
   override def toString: String = "dateOfBirth"
 }

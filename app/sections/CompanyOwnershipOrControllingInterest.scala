@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package pages.individual
+package sections
 
-import pages.QuestionPage
-import play.api.libs.json.JsPath
-import sections.OtherIndividuals
+import pages.Page
 
-case class OtherIndividualSafeIdPage(index: Int) extends QuestionPage[String] {
+case object CompanyOwnershipOrControllingInterest extends Page {
 
-  override def path: JsPath = JsPath \ OtherIndividuals \ index \ toString
+  override def toString: String = "companyOwnershipOrControllingInterest"
 
-  override def toString: String = "safeId"
 }
