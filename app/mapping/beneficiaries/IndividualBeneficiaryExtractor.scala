@@ -77,13 +77,16 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
     }
   }
 
-
   private def extractVulnerability(vulnerable: Option[Boolean], index: Int, answers: UserAnswers): Try[UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       vulnerable match {
         case Some(value) => answers.set(IndividualBeneficiaryVulnerableYesNoPage(index), value)
         case None =>
-          logger.error(s"[UTR/URN: ${answers.identifier}] Vulnerability must be answered for taxable trust.")
+          if (answers.isTrustMigratingFromNonTaxableToTaxable) {
+            logger.warn(s"[UTR/URN: ${answers.identifier}] Individual beneficiary vulnerability should be answered as part of trust becoming taxable.")
+          } else {
+            logger.error(s"[UTR/URN: ${answers.identifier}] Individual beneficiary vulnerability must be answered for taxable trust.")
+          }
           Failure(InvalidExtractorState)
       }
     }
