@@ -708,7 +708,7 @@ taskList.protectors.label = Protectors
 taskList.trustees.label = Trustees
 taskList.beneficiaries.label = Beneficiaries
 taskList.otherIndividuals.label = Other individuals
-taskList.nonEEABusiness.label = Ownership or controlling interest of a Non-EEA company
+taskList.companyOwnershipOrControllingInterest.label = Ownership or controlling interest of a Non-EEA company
 taskList.summary.continue = Continue to declaration
 
 featureNotAvailable.title = This part of the online service is not available yet
