@@ -19,7 +19,7 @@ package utils.print
 import base.SpecBase
 import models.pages.IndividualOrBusiness
 import models.pages.KindOfBusiness.Trading
-import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress, UserAnswers}
+import models.{FullName, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
 import pages.settlors.deceased_settlor._
 import pages.settlors.living_settlor._
 import play.api.libs.json.{Reads, Writes}
@@ -235,7 +235,7 @@ class AllSettlorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("settlorLastKnownAddressYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("settlorLastKnownAddressUKYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("settlorUKAddress.checkYourAnswersLabel", name), answer = Html("line 1<br />line 2<br />line 3<br />line 4<br />NE981ZZ"), changeUrl = None),
-            AnswerRow(label = messages("settlorPassportOrIdCard.checkYourAnswersLabel", name), answer = Html("Germany<br />Number ending 6789<br />10 October 2021"), changeUrl = None)
+            AnswerRow(label = messages("settlorPassportOrIdCard.checkYourAnswersLabel", name), answer = Html("Germany<br />123456789<br />10 October 2021"), changeUrl = None)
           ),
           sectionKey = None
         )
@@ -370,7 +370,8 @@ class AllSettlorsPrinterSpec extends SpecBase {
         uaSet(SettlorAddressUKYesNoPage(index), false) andThen
         uaSet(SettlorAddressPage(index), InternationalAddress("Line1", "Line2", Some("Line3"), "DE")) andThen
         uaSet(SettlorIndividualPassportIDCardYesNoPage(index), true) andThen
-        uaSet(SettlorIndividualPassportIDCardPage(index), PassportOrIdCardDetails("DE", "1234567890", LocalDate.of(2020, 1, 1)))
+        uaSet(SettlorIndividualPassportIDCardPage(index), PassportOrIdCardDetails("DE", "1234567890", LocalDate.of(2020, 1, 1))) andThen
+        uaSet(SettlorMetaData(index), MetaData("1", None, ""))
 
       def individualSettlorWithNoId(index: Int) = baseIndividualSettlor(index) andThen
         uaSet(SettlorIndividualNINOYesNoPage(index), false) andThen

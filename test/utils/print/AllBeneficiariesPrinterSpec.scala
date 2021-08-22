@@ -19,7 +19,7 @@ package utils.print
 import base.SpecBase
 import models.HowManyBeneficiaries.Over1
 import models.pages.RoleInCompany
-import models.{Description, FullName, PassportOrIdCardDetails, UKAddress}
+import models.{Description, FullName, MetaData, PassportOrIdCardDetails, UKAddress}
 import pages.beneficiaries.charity._
 import pages.beneficiaries.classOfBeneficiary._
 import pages.beneficiaries.company._
@@ -107,7 +107,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
 
     }
 
-    "generate individual beneficiaries sections" in {
+    "generate individual beneficiaries sections with masked passport" in {
 
       val answers = emptyUserAnswersForUtr
         .set(IndividualBeneficiaryRoleInCompanyPage(0), RoleInCompany.Director).success.value
@@ -160,6 +160,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
         .set(IndividualBeneficiaryPassportIDCardPage(2), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
         .set(IndividualBeneficiaryVulnerableYesNoPage(2), false).success.value
         .set(IndividualBeneficiaryMentalCapacityYesNoPage(2), true).success.value
+        .set(IndividualBeneficiaryMetaData(2), MetaData("1", None, "")).success.value
 
       val result = helper.entities(answers)
 
@@ -239,7 +240,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
 
     }
 
-    "generate individual beneficiaries sections with bad nino" in {
+    "generate individual beneficiaries sections with bad nino and unmasked passport" in {
 
       val answers = emptyUserAnswersForUtr
         .set(IndividualBeneficiaryRoleInCompanyPage(0), RoleInCompany.Director).success.value
@@ -292,6 +293,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
         .set(IndividualBeneficiaryPassportIDCardPage(2), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
         .set(IndividualBeneficiaryVulnerableYesNoPage(2), false).success.value
         .set(IndividualBeneficiaryMentalCapacityYesNoPage(2), true).success.value
+        .set(IndividualBeneficiaryMetaData(2), MetaData("", None, "")).success.value
 
       val result = helper.entities(answers)
 
@@ -361,7 +363,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualBeneficiaryAddressUKYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryAddressUK.checkYourAnswersLabel", name3), answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryPassportIDCardYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryPassportIDCard.checkYourAnswersLabel", name3), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryPassportIDCard.checkYourAnswersLabel", name3), answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryMentalCapacityYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None)
           ),

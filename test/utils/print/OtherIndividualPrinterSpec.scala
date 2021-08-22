@@ -17,7 +17,7 @@
 package utils.print
 
 import base.SpecBase
-import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
+import models.{FullName, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress}
 import pages.individual._
 import play.twirl.api.Html
 import utils.print.sections.otherindividuals.OtherIndividualsPrinter
@@ -87,6 +87,7 @@ class OtherIndividualPrinterSpec extends SpecBase {
         .set(OtherIndividualPassportIDCardYesNoPage(3), true).success.value
         .set(OtherIndividualPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))).success.value
         .set(OtherIndividualMentalCapacityYesNoPage(3), true).success.value
+        .set(OtherIndividualMetaData(3), MetaData("1", None, "")).success.value
       
       val result = helper.entities(answers)
 

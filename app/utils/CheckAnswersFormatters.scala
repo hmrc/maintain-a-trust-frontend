@@ -87,9 +87,13 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     }
   }
 
-  def formatPassportOrIDCard(passportOrIdCard: PassportOrIdCardDetails)(implicit messages: Messages): Html = {
+  def formatPassportOrIDCard(passportOrIdCard: PassportOrIdCardDetails, previouslySubmitted: Boolean)(implicit messages: Messages): Html = {
 
-    def formatNumber(number: String): String = messages("site.number-ending", number.takeRight(4))
+    def formatNumber(number: String): String = if (previouslySubmitted) {
+      messages("site.number-ending", number.takeRight(4))
+    } else {
+      number
+    }
 
     val lines =
       Seq(

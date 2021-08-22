@@ -17,7 +17,7 @@
 package utils.print
 
 import base.SpecBase
-import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
+import models.{FullName, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress}
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees._
 import play.twirl.api.Html
@@ -97,6 +97,7 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- IsThisLeadTrusteePage(0) is true
           _ <- TrusteePassportIDCardPage(0) is PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))
           _ <- TrusteePassportIDCardYesNoPage(0) is true
+          _ <- TrusteeMetaData(0) is MetaData("1", None, "")
         } yield Unit).run(emptyUserAnswersForUtr).value
 
         val result = helper.entities(answers)

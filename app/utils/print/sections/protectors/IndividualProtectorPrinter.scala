@@ -61,7 +61,7 @@ class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter) extend
     converter.yesNoQuestion(IndividualProtectorAddressUKYesNoPage(index), userAnswers, "individualProtectorAddressUkYesNo", name),
     converter.addressQuestion(IndividualProtectorAddressPage(index), userAnswers, "individualProtectorAddress", name),
     converter.yesNoQuestion(IndividualProtectorPassportIDCardYesNoPage(index), userAnswers, "individualProtectorPassportIDCardYesNo", name),
-    converter.passportOrIdCardQuestion(IndividualProtectorPassportIDCardPage(index), userAnswers, "individualProtectorPassportIDCard", name),
+    converter.passportOrIdCardQuestion(IndividualProtectorPassportIDCardPage(index), IndividualProtectorMetaData(index), userAnswers, "individualProtectorPassportIDCard", name),
     converter.yesNoQuestion(IndividualProtectorMentalCapacityYesNoPage(index), userAnswers, "individualProtectorMentalCapacityYesNo", name)
   )
 

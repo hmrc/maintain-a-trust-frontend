@@ -82,7 +82,7 @@ class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) extends En
       converter.yesNoQuestion(SettlorLastKnownAddressYesNoPage, userAnswers, "settlorLastKnownAddressYesNo", name),
       converter.yesNoQuestion(SettlorLastKnownAddressUKYesNoPage, userAnswers, "settlorLastKnownAddressUKYesNo", name),
       converter.addressQuestion(SettlorLastKnownAddressPage, userAnswers, "settlorUKAddress", name),
-      converter.passportOrIdCardQuestion(SettlorPassportIDCardPage, userAnswers, "settlorPassportOrIdCard", name)
+      converter.passportOrIdCardQuestion(SettlorPassportIDCardPage, DeceasedSettlorMetaData, userAnswers, "settlorPassportOrIdCard", name)
     )
   }
 

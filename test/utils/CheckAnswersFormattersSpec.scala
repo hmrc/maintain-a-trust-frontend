@@ -72,19 +72,44 @@ class CheckAnswersFormattersSpec extends SpecBase {
     ".formatPassportOrIDCard" must {
 
       "mask the passport/ID card number" when {
+        "entity has line number" when {
 
-        "English" in {
+          val hasLineNumber = true
 
-          val passportOrIdCard = PassportOrIdCardDetails("FR", "1234567890", date)
-          val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("en"))
-          result mustBe Html("France<br />Number ending 7890<br />3 February 1996")
+          "English" in {
+
+            val passportOrIdCard = PassportOrIdCardDetails("FR", "1234567890", date)
+            val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard, hasLineNumber)(messages("en"))
+            result mustBe Html("France<br />Number ending 7890<br />3 February 1996")
+          }
+
+          "Welsh" in {
+
+            val passportOrIdCard = PassportOrIdCardDetails("FR", "1234567890", date)
+            val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard, hasLineNumber)(messages("cy"))
+            result mustBe Html("Ffrainc<br />Rhif sy’n gorffen gyda 7890<br />3 Chwefror 1996")
+          }
         }
+      }
 
-        "Welsh" in {
+      "not mask the passport/ID card number" when {
+        "entity has no line number" when {
 
-          val passportOrIdCard = PassportOrIdCardDetails("FR", "1234567890", date)
-          val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("cy"))
-          result mustBe Html("Ffrainc<br />Rhif sy’n gorffen gyda 7890<br />3 Chwefror 1996")
+          val hasLineNumber = false
+
+          "English" in {
+
+            val passportOrIdCard = PassportOrIdCardDetails("FR", "1234567890", date)
+            val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard, hasLineNumber)(messages("en"))
+            result mustBe Html("France<br />1234567890<br />3 February 1996")
+          }
+
+          "Welsh" in {
+
+            val passportOrIdCard = PassportOrIdCardDetails("FR", "1234567890", date)
+            val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard, hasLineNumber)(messages("cy"))
+            result mustBe Html("Ffrainc<br />1234567890<br />3 Chwefror 1996")
+          }
         }
       }
     }

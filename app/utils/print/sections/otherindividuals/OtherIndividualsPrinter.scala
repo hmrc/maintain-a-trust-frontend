@@ -63,7 +63,7 @@ class OtherIndividualsPrinter @Inject()(converter: AnswerRowConverter) extends E
     converter.yesNoQuestion(OtherIndividualAddressUKYesNoPage(index), userAnswers, "otherIndividualAddressUKYesNo", name),
     converter.addressQuestion(OtherIndividualAddressPage(index), userAnswers, "otherIndividualAddress", name),
     converter.yesNoQuestion(OtherIndividualPassportIDCardYesNoPage(index), userAnswers, "otherIndividualPassportIDCardYesNo", name),
-    converter.passportOrIdCardQuestion(OtherIndividualPassportIDCardPage(index), userAnswers, "otherIndividualPassportIDCard", name),
+    converter.passportOrIdCardQuestion(OtherIndividualPassportIDCardPage(index), OtherIndividualMetaData(index), userAnswers, "otherIndividualPassportIDCard", name),
     converter.yesNoQuestion(OtherIndividualMentalCapacityYesNoPage(index), userAnswers, "otherIndividualMentalCapacityYesNo", name)
   )
 

@@ -76,7 +76,7 @@ class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) exte
     converter.yesNoQuestion(IndividualBeneficiaryAddressUKYesNoPage(index), userAnswers, "individualBeneficiaryAddressUKYesNo", name),
     converter.addressQuestion(IndividualBeneficiaryAddressPage(index), userAnswers, "individualBeneficiaryAddressUK", name),
     converter.yesNoQuestion(IndividualBeneficiaryPassportIDCardYesNoPage(index), userAnswers, "individualBeneficiaryPassportIDCardYesNo", name),
-    converter.passportOrIdCardQuestion(IndividualBeneficiaryPassportIDCardPage(index), userAnswers, "individualBeneficiaryPassportIDCard", name),
+    converter.passportOrIdCardQuestion(IndividualBeneficiaryPassportIDCardPage(index), IndividualBeneficiaryMetaData(index), userAnswers, "individualBeneficiaryPassportIDCard", name),
     converter.yesNoQuestion(IndividualBeneficiaryVulnerableYesNoPage(index), userAnswers, "individualBeneficiaryVulnerableYesNo", name),
     converter.yesNoQuestion(IndividualBeneficiaryMentalCapacityYesNoPage(index), userAnswers, "individualBeneficiaryMentalCapacityYesNo", name)
   )
