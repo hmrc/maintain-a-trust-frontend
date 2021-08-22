@@ -166,7 +166,7 @@ class OtherIndividualPrinterSpec extends SpecBase {
             AnswerRow(label = messages("otherIndividualAddressUKYesNo.checkYourAnswersLabel", name4), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualAddress.checkYourAnswersLabel", name4), answer = Html("line 1<br />line 2<br />France"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualPassportIDCardYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualPassportIDCard.checkYourAnswersLabel", name4), answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(label = messages("otherIndividualPassportIDCard.checkYourAnswersLabel", name4), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None)
           ),
           sectionKey = None

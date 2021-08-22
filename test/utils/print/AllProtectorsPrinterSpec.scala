@@ -169,7 +169,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualProtectorAddressYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorAddress.checkYourAnswersLabel", name4), answer = Html("line 1<br />line 2<br />DH11DH"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorPassportIDCardYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualProtectorPassportIDCard.checkYourAnswersLabel", name4), answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(label = messages("individualProtectorPassportIDCard.checkYourAnswersLabel", name4), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorMentalCapacityYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None)
           ),
           sectionKey = None
@@ -304,7 +304,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualProtectorAddressYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorAddress.checkYourAnswersLabel", name1), answer = Html("line 1<br />line 2<br />DH11DH"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorPassportIDCardYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualProtectorPassportIDCard.checkYourAnswersLabel", name1), answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(label = messages("individualProtectorPassportIDCard.checkYourAnswersLabel", name1), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorMentalCapacityYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None)
           ),
           sectionKey = None

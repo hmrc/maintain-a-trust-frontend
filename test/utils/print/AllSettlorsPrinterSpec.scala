@@ -235,7 +235,7 @@ class AllSettlorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("settlorLastKnownAddressYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("settlorLastKnownAddressUKYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("settlorUKAddress.checkYourAnswersLabel", name), answer = Html("line 1<br />line 2<br />line 3<br />line 4<br />NE981ZZ"), changeUrl = None),
-            AnswerRow(label = messages("settlorPassportOrIdCard.checkYourAnswersLabel", name), answer = Html("Germany<br />123456789<br />10 October 2021"), changeUrl = None)
+            AnswerRow(label = messages("settlorPassportOrIdCard.checkYourAnswersLabel", name), answer = Html("Germany<br />Number ending 6789<br />10 October 2021"), changeUrl = None)
           ),
           sectionKey = None
         )
@@ -431,7 +431,7 @@ class AllSettlorsPrinterSpec extends SpecBase {
           AnswerRow("Does Joe Bloggs live in the UK?", Html("No"), None),
           AnswerRow("What is Joe Bloggs’s address?", Html("Line1<br />Line2<br />Line3<br />Germany"), None),
           AnswerRow("Do you know Joe Bloggs’s passport or ID card details?", Html("Yes"), None),
-          AnswerRow("What are Joe Bloggs’s passport or ID card details?", Html("Germany<br />1234567890<br />1 January 2020"), None),
+          AnswerRow("What are Joe Bloggs’s passport or ID card details?", Html("Germany<br />Number ending 7890<br />1 January 2020"), None),
           AnswerRow("Does Joe Bloggs have mental capacity at the time of registration?", Html("Yes"), None)
         ), None),
         AnswerSection(Some("Settlor 4"),Seq(

@@ -229,7 +229,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualBeneficiaryAddressUKYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryAddressUK.checkYourAnswersLabel", name3), answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryPassportIDCardYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryPassportIDCard.checkYourAnswersLabel", name3), answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryPassportIDCard.checkYourAnswersLabel", name3), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryMentalCapacityYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None)
           ),
@@ -361,7 +361,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualBeneficiaryAddressUKYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryAddressUK.checkYourAnswersLabel", name3), answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryPassportIDCardYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryPassportIDCard.checkYourAnswersLabel", name3), answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(label = messages("individualBeneficiaryPassportIDCard.checkYourAnswersLabel", name3), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryMentalCapacityYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None)
           ),

@@ -114,7 +114,7 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           "Does William Bonny live in the UK?" -> Html("No"),
           "What is William Bonny’s address?" -> Html("Address 1<br />Address 2<br />Germany"),
           "Do you know William Bonny’s passport or ID card details?" -> Html("Yes"),
-          "What are William Bonny’s passport or ID card details?" -> Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"),
+          "What are William Bonny’s passport or ID card details?" -> Html("Germany<br />Number ending QWER<br />2 February 2020"),
           "Do you know William Bonny’s country of residence?" -> Html("Yes"),
           "Does William Bonny have UK residency?" -> Html("No"),
           "What is William Bonny’s country of residence?" -> Html("France"),
