@@ -20,8 +20,8 @@ import models.pages.RoleInCompany
 import models.pages.RoleInCompany.NA
 import models.{Address, Description, InternationalAddress, PassportOrIdCardDetails, UKAddress}
 import play.api.i18n.Messages
+import play.twirl.api.Html
 import play.twirl.api.HtmlFormat.escape
-import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.language.LanguageUtils
 import utils.countryoptions.CountryOptions
@@ -50,34 +50,32 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     escape(formatted)
   }
 
-  def country(code: String)(implicit messages: Messages): Html =
-    escape(countryOptions.options.find(_.value.equals(code)).map(_.label).getOrElse(""))
+  def country(code: String)(implicit messages: Messages): String =
+    countryOptions.options.find(_.value.equals(code)).map(_.label).getOrElse("")
 
   def currency(value: String): Html = escape(s"£$value")
 
   def percentage(value: String): Html = escape(s"$value%")
 
   def ukAddress(address: UKAddress): Html = {
-    val lines =
-      Seq(
-        Some(escape(address.line1)),
-        Some(escape(address.line2)),
-        address.line3.map(escape),
-        address.line4.map(escape),
-        Some(escape(address.postcode))
-      ).flatten
+    val lines = Seq(
+      Some(address.line1),
+      Some(address.line2),
+      address.line3,
+      address.line4,
+      Some(address.postcode)
+    ).flatten
 
     breakLines(lines)
   }
 
   def internationalAddress(address: InternationalAddress)(implicit messages: Messages): Html = {
-    val lines =
-      Seq(
-        Some(escape(address.line1)),
-        Some(escape(address.line2)),
-        address.line3.map(escape),
-        Some(country(address.country))
-      ).flatten
+    val lines = Seq(
+      Some(address.line1),
+      Some(address.line2),
+      address.line3,
+      Some(country(address.country))
+    ).flatten
 
     breakLines(lines)
   }
@@ -89,12 +87,15 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     }
   }
 
-  def passportOrIDCard(passportOrIdCard: PassportOrIdCardDetails)(implicit messages: Messages): Html = {
+  def formatPassportOrIDCard(passportOrIdCard: PassportOrIdCardDetails)(implicit messages: Messages): Html = {
+
+    def formatNumber(number: String): String = messages("site.number-ending", number.takeRight(4))
+
     val lines =
       Seq(
         Some(country(passportOrIdCard.country)),
-        Some(escape(passportOrIdCard.cardNumber)),
-        Some(escape(formatDate(passportOrIdCard.expiryDate)))
+        Some(formatNumber(passportOrIdCard.cardNumber)),
+        Some(formatDate(passportOrIdCard.expiryDate))
       ).flatten
 
     breakLines(lines)
@@ -113,18 +114,18 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
 
   def description(description: Description): Html = {
     val lines = Seq(
-      Some(HtmlFormat.escape(description.description)),
-      description.description1.map(HtmlFormat.escape),
-      description.description2.map(HtmlFormat.escape),
-      description.description3.map(HtmlFormat.escape),
-      description.description4.map(HtmlFormat.escape)
+      Some(description.description),
+      description.description1,
+      description.description2,
+      description.description3,
+      description.description4
     ).flatten
 
     breakLines(lines)
   }
 
-  private def breakLines(lines: Seq[Html]): Html = {
-    Html(lines.mkString("<br />"))
+  private def breakLines(lines: Seq[String]): Html = {
+    Html(lines.map(escape).mkString("<br />"))
   }
 
 }

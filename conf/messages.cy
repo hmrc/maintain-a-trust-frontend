@@ -481,6 +481,7 @@ session_expired.heading=Er eich diogelwch, mae’r gwasanaeth hwn wedi’i ailos
 session_expired.guidance=Mae’r manylion a roddwyd gennych wedi’u dileu gan nad ydych wedi mynd yn eich blaen â’r gwasanaeth ers 15 munud.
 session_expired.guidance.2=Bydd angen i chi fewngofnodi i barhau i gynnal yr ymddiriedolaeth.
 service.name=Cofrestru Ymddiriedolaeth a’i Chynnal
+
 site.back=Yn ôl
 site.edit=Newid
 site.hidden-edit=Newid {0}
@@ -516,6 +517,8 @@ site.address.international.line2=Cyfeiriad – llinell 2
 site.address.international.line3=Cyfeiriad – llinell 3 (dewisol)
 site.address.international.country=Gwlad
 site.address.international.country.select=Dewiswch wlad
+site.number-ending = Rhif sy’n gorffen gyda {0}
+
 trustAlreadyClaimed.title=Ni allwch gael at yr ymddiriedolaeth hon
 trustAlreadyClaimed.heading=Ni allwch gael at yr ymddiriedolaeth hon
 trustAlreadyClaimed.p1=Mae cyfrif Porth y Llywodraeth arall wedi’i gysylltu â hi. Mewngofnodwch gyda’r cyfrif hwnnw.

@@ -17,8 +17,8 @@
 package utils
 
 import java.time.LocalDate
-
 import base.SpecBase
+import models.PassportOrIdCardDetails
 import play.api.i18n.{Lang, MessagesImpl}
 import play.twirl.api.Html
 
@@ -28,14 +28,14 @@ class CheckAnswersFormattersSpec extends SpecBase {
 
   "CheckAnswersFormatters" when {
 
+    def messages(langCode: String): MessagesImpl = {
+      val lang: Lang = Lang(langCode)
+      MessagesImpl(lang, messagesApi)
+    }
+
+    val date: LocalDate = LocalDate.parse("1996-02-03")
+
     ".formatDate" when {
-
-      def messages(langCode: String): MessagesImpl = {
-        val lang: Lang = Lang(langCode)
-        MessagesImpl(lang, messagesApi)
-      }
-
-      val date: LocalDate = LocalDate.parse("1996-02-03")
 
       "in English mode" must {
         "format date in English" in {
@@ -66,6 +66,26 @@ class CheckAnswersFormattersSpec extends SpecBase {
         val nino = "JP121212"
         val result = checkAnswersFormatters.formatNino(nino)
         result mustBe Html("JP121212")
+      }
+    }
+
+    ".formatPassportOrIDCard" must {
+
+      "mask the passport/ID card number" when {
+
+        "English" in {
+
+          val passportOrIdCard = PassportOrIdCardDetails("FR", "1234567890", date)
+          val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("en"))
+          result mustBe Html("France<br />Number ending 7890<br />3 February 1996")
+        }
+
+        "Welsh" in {
+
+          val passportOrIdCard = PassportOrIdCardDetails("FR", "1234567890", date)
+          val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("cy"))
+          result mustBe Html("Ffrainc<br />Rhif sy’n gorffen gyda 7890<br />3 Chwefror 1996")
+        }
       }
     }
   }

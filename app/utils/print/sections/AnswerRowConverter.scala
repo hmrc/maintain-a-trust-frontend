@@ -16,7 +16,6 @@
 
 package utils.print.sections
 
-
 import models.pages.RoleInCompany
 import models.{Address, Description, FullName, PassportOrIdCardDetails, URN, UTR, UserAnswers}
 import play.api.i18n.Messages
@@ -139,7 +138,7 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                                labelKey: String,
                                messageArg: String = "")
                               (implicit messages: Messages): Option[AnswerRow] = {
-    val format = (x: PassportOrIdCardDetails) => checkAnswersFormatters.passportOrIDCard(x)
+    val format = (x: PassportOrIdCardDetails) => checkAnswersFormatters.formatPassportOrIDCard(x)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
@@ -181,7 +180,7 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                       labelKey: String,
                       messageArg: String = "")
                      (implicit messages: Messages): Option[AnswerRow] = {
-    val format = (x: String) => checkAnswersFormatters.country(x)
+    val format = (x: String) => HtmlFormat.escape(checkAnswersFormatters.country(x))
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
