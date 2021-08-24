@@ -74,7 +74,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
           case _ => None
         },
         passport = index match {
-          case 2 => Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), "DE"))
+          case 2 => Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2)))
           case _ => None
         },
         address = index match {
@@ -324,7 +324,7 @@ class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with
           extraction.right.value.get(IndividualBeneficiaryPassportIDCardYesNoPage(1)).get mustBe false
           extraction.right.value.get(IndividualBeneficiaryPassportIDCardPage(1)) mustNot be(defined)
           extraction.right.value.get(IndividualBeneficiaryPassportIDCardYesNoPage(2)).get mustBe true
-          extraction.right.value.get(IndividualBeneficiaryPassportIDCardPage(2)).get.country mustBe "DE"
+          extraction.right.value.get(IndividualBeneficiaryPassportIDCardPage(2)).get.countryOfIssue mustBe "DE"
 
           extraction.right.value.get(IndividualBeneficiarySafeIdPage(0)).get mustBe "8947584-94759745-84758745"
           extraction.right.value.get(IndividualBeneficiarySafeIdPage(1)).get mustBe "8947584-94759745-84758745"

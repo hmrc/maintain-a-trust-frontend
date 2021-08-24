@@ -16,9 +16,9 @@
 
 package mapping.protectors
 
-import models.http.DisplayTrustProtector
+import models.http.{DisplayTrustProtector, PassportType}
 import models.pages.IndividualOrBusiness
-import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
+import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.protectors.ProtectorIndividualOrBusinessPage
 import pages.protectors.individual._
@@ -36,7 +36,7 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
   override def ninoPage(index: Int): QuestionPage[String] = IndividualProtectorNINOPage(index)
 
   override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorPassportIDCardYesNoPage(index)
-  override def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = IndividualProtectorPassportIDCardPage(index)
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = IndividualProtectorPassportIDCardPage(index)
 
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = IndividualProtectorDateOfBirthPage(index)

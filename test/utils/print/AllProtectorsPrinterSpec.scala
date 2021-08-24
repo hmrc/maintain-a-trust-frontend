@@ -17,8 +17,9 @@
 package utils.print
 
 import base.SpecBase
+import models.http.PassportType
 import models.pages.IndividualOrBusiness
-import models.{FullName, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress}
+import models.{DetailsType, FullName, InternationalAddress, UKAddress}
 import pages.protectors._
 import pages.protectors.business._
 import pages.protectors.individual._
@@ -90,9 +91,8 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(IndividualProtectorAddressYesNoPage(3), true).success.value
         .set(IndividualProtectorAddressPage(3), UKAddress("line 1", "line 2", None, None, "DH11DH")).success.value
         .set(IndividualProtectorPassportIDCardYesNoPage(3), true).success.value
-        .set(IndividualProtectorPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
+        .set(IndividualProtectorPassportIDCardPage(3), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), DetailsType.Combined)).success.value
         .set(IndividualProtectorMentalCapacityYesNoPage(3), true).success.value
-        .set(IndividualProtectorMetaData(3), MetaData("1", None, "")).success.value
 
       val result = helper.entities(answers)
 
@@ -272,9 +272,8 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(IndividualProtectorAddressYesNoPage(0), true).success.value
         .set(IndividualProtectorAddressPage(0), UKAddress("line 1", "line 2", None, None, "DH11DH")).success.value
         .set(IndividualProtectorPassportIDCardYesNoPage(0), true).success.value
-        .set(IndividualProtectorPassportIDCardPage(0), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
+        .set(IndividualProtectorPassportIDCardPage(0), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), DetailsType.Passport)).success.value
         .set(IndividualProtectorMentalCapacityYesNoPage(0), true).success.value
-        .set(IndividualProtectorMetaData(0), MetaData("", None, "")).success.value
 
         .set(ProtectorIndividualOrBusinessPage(1), IndividualOrBusiness.Business).success.value
         .set(BusinessProtectorNamePage(1), "Bernardos").success.value

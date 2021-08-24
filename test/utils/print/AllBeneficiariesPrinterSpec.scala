@@ -18,8 +18,9 @@ package utils.print
 
 import base.SpecBase
 import models.HowManyBeneficiaries.Over1
+import models.http.PassportType
 import models.pages.RoleInCompany
-import models.{Description, FullName, MetaData, PassportOrIdCardDetails, UKAddress}
+import models.{Description, DetailsType, FullName, UKAddress}
 import pages.beneficiaries.charity._
 import pages.beneficiaries.classOfBeneficiary._
 import pages.beneficiaries.company._
@@ -157,10 +158,9 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
         .set(IndividualBeneficiaryAddressUKYesNoPage(2), true).success.value
         .set(IndividualBeneficiaryAddressPage(2), UKAddress("line 1", "line 2", None, None, "NE11NE")).success.value
         .set(IndividualBeneficiaryPassportIDCardYesNoPage(2), true).success.value
-        .set(IndividualBeneficiaryPassportIDCardPage(2), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
+        .set(IndividualBeneficiaryPassportIDCardPage(2), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), DetailsType.Combined)).success.value
         .set(IndividualBeneficiaryVulnerableYesNoPage(2), false).success.value
         .set(IndividualBeneficiaryMentalCapacityYesNoPage(2), true).success.value
-        .set(IndividualBeneficiaryMetaData(2), MetaData("1", None, "")).success.value
 
       val result = helper.entities(answers)
 
@@ -290,10 +290,9 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
         .set(IndividualBeneficiaryAddressUKYesNoPage(2), true).success.value
         .set(IndividualBeneficiaryAddressPage(2), UKAddress("line 1", "line 2", None, None, "NE11NE")).success.value
         .set(IndividualBeneficiaryPassportIDCardYesNoPage(2), true).success.value
-        .set(IndividualBeneficiaryPassportIDCardPage(2), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
+        .set(IndividualBeneficiaryPassportIDCardPage(2), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), DetailsType.Passport)).success.value
         .set(IndividualBeneficiaryVulnerableYesNoPage(2), false).success.value
         .set(IndividualBeneficiaryMentalCapacityYesNoPage(2), true).success.value
-        .set(IndividualBeneficiaryMetaData(2), MetaData("", None, "")).success.value
 
       val result = helper.entities(answers)
 

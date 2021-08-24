@@ -16,12 +16,12 @@
 
 package pages.settlors.deceased_settlor
 
-import models.PassportOrIdCardDetails
+import models.http.PassportType
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.DeceasedSettlor
 
-case object SettlorPassportIDCardPage extends QuestionPage[PassportOrIdCardDetails] {
+case object SettlorPassportIDCardPage extends QuestionPage[PassportType] {
 
   override def path: JsPath = DeceasedSettlor.path \ toString
 

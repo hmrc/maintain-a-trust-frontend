@@ -56,7 +56,7 @@ class TrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter) extends 
     converter.yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
     converter.addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name),
     converter.yesNoQuestion(TrusteePassportIDCardYesNoPage(index), userAnswers, "trusteePassportOrIdCardYesNo", name),
-    converter.passportOrIdCardQuestion(TrusteePassportIDCardPage(index), TrusteeMetaData(index), userAnswers, "trusteePassportOrIdCard", name),
+    converter.passportOrIdCardQuestion(TrusteePassportIDCardPage(index), userAnswers, "trusteePassportOrIdCard", name),
     converter.yesNoQuestion(TrusteeMentalCapacityYesNoPage(index), userAnswers, "trusteeMentalCapacityYesNo", name)
   )
 

@@ -59,7 +59,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
           case _ => None
         },
         passport = index match {
-          case 2 => Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), "DE"))
+          case 2 => Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2)))
           case _ => None
         },
         address = index match {
@@ -239,7 +239,7 @@ class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
           extraction.right.value.get(SettlorAddressUKYesNoPage(2)).get mustBe true
           extraction.right.value.get(SettlorIndividualPassportIDCardYesNoPage(2)).get mustBe true
-          extraction.right.value.get(SettlorIndividualPassportIDCardPage(2)).get.country mustBe "DE"
+          extraction.right.value.get(SettlorIndividualPassportIDCardPage(2)).get.countryOfIssue mustBe "DE"
           extraction.right.value.get(SettlorSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
 
         }

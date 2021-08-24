@@ -16,9 +16,10 @@
 
 package utils
 
+import models.http.PassportType
 import models.pages.RoleInCompany
 import models.pages.RoleInCompany.NA
-import models.{Address, Description, InternationalAddress, PassportOrIdCardDetails, UKAddress}
+import models.{Address, Description, InternationalAddress, UKAddress}
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import play.twirl.api.HtmlFormat.escape
@@ -82,24 +83,24 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
 
   def addressFormatter(address: Address)(implicit messages: Messages): Html = {
     address match {
-      case a:UKAddress => ukAddress(a)
-      case a:InternationalAddress => internationalAddress(a)
+      case a: UKAddress => ukAddress(a)
+      case a: InternationalAddress => internationalAddress(a)
     }
   }
 
-  def formatPassportOrIDCard(passportOrIdCard: PassportOrIdCardDetails, previouslySubmitted: Boolean)(implicit messages: Messages): Html = {
+  def formatPassportOrIDCard(passportOrIdCard: PassportType)(implicit messages: Messages): Html = {
 
-    def formatNumber(number: String): String = if (previouslySubmitted) {
-      messages("site.number-ending", number.takeRight(4))
-    } else {
+    def formatNumber(number: String): String = if (passportOrIdCard.detailsType.isProvisional) {
       number
+    } else {
+      messages("site.number-ending", number.takeRight(4))
     }
 
     val lines =
       Seq(
-        Some(country(passportOrIdCard.country)),
-        Some(formatNumber(passportOrIdCard.cardNumber)),
-        Some(formatDate(passportOrIdCard.expiryDate))
+        Some(country(passportOrIdCard.countryOfIssue)),
+        Some(formatNumber(passportOrIdCard.number)),
+        Some(formatDate(passportOrIdCard.expirationDate))
       ).flatten
 
     breakLines(lines)

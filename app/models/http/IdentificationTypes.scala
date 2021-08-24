@@ -16,9 +16,12 @@
 
 package models.http
 
-import java.time.LocalDate
+import models.DetailsType
+import models.DetailsType.DetailsType
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.json._
 
-import play.api.libs.json.{Format, Json}
+import java.time.LocalDate
 
 case class DisplayTrustIdentificationType(safeId: Option[String],
                                           nino: Option[String],
@@ -37,12 +40,20 @@ object DisplayTrustIdentificationOrgType {
   implicit val trustBeneficiaryIdentificationFormat: Format[DisplayTrustIdentificationOrgType] = Json.format[DisplayTrustIdentificationOrgType]
 }
 
-case class PassportType(number: String,
+case class PassportType(countryOfIssue: String,
+                        number: String,
                         expirationDate: LocalDate,
-                        countryOfIssue: String)
+                        detailsType: DetailsType = DetailsType.Combined)
 
 object PassportType {
-  implicit val passportTypeFormat: Format[PassportType] = Json.format[PassportType]
+  implicit val reads: Reads[PassportType] = (
+    (__ \ "countryOfIssue").read[String] and
+      (__ \ "number").read[String] and
+      (__ \ "expirationDate").read[LocalDate] and
+      (__ \ "detailsType").readWithDefault[DetailsType](DetailsType.Combined)
+    )(PassportType.apply _)
+
+  implicit val writes: Writes[PassportType] = Json.writes[PassportType]
 }
 
 case class AddressType(line1: String,

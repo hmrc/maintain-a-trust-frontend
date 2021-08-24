@@ -17,9 +17,8 @@
 package mapping.settlors
 
 import mapping.PlaybackExtractor
-import mapping.PlaybackImplicits._
 import models.http.{DisplayTrustIdentificationType, DisplayTrustWillType, PassportType}
-import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
+import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.settlors.deceased_settlor._
 
@@ -35,7 +34,7 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
   override def ninoYesNoPage(index: Int): QuestionPage[Boolean] = SettlorNationalInsuranceYesNoPage
   override def ninoPage(index: Int): QuestionPage[String] = SettlorNationalInsuranceNumberPage
 
-  override def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = SettlorPassportIDCardPage
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = SettlorPassportIDCardPage
 
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = SettlorDateOfBirthYesNoPage
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = SettlorDateOfBirthPage
@@ -103,7 +102,7 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
   override def extractPassportIdCard(passport: PassportType,
                                      index: Int,
                                      answers: UserAnswers): Try[UserAnswers] = {
-    answers.set(SettlorPassportIDCardPage, passport.convert)
+    answers.set(SettlorPassportIDCardPage, passport)
   }
 
 }

@@ -17,9 +17,10 @@
 package utils.print
 
 import base.SpecBase
+import models.http.PassportType
 import models.pages.IndividualOrBusiness
 import models.pages.KindOfBusiness.Trading
-import models.{FullName, InternationalAddress, MetaData, PassportOrIdCardDetails, UKAddress, UserAnswers}
+import models.{DetailsType, FullName, InternationalAddress, UKAddress, UserAnswers}
 import pages.settlors.deceased_settlor._
 import pages.settlors.living_settlor._
 import play.api.libs.json.{Reads, Writes}
@@ -212,7 +213,7 @@ class AllSettlorsPrinterSpec extends SpecBase {
           postcode = "NE981ZZ"
         )).success.value
         .set(SettlorPassportIDCardPage,
-          PassportOrIdCardDetails("DE", "123456789", LocalDate.of(2021,10,10))
+          PassportType("DE", "123456789", LocalDate.of(2021,10,10), DetailsType.IdCard)
         ).success.value
 
       val result = helper.entities(answers)
@@ -370,8 +371,7 @@ class AllSettlorsPrinterSpec extends SpecBase {
         uaSet(SettlorAddressUKYesNoPage(index), false) andThen
         uaSet(SettlorAddressPage(index), InternationalAddress("Line1", "Line2", Some("Line3"), "DE")) andThen
         uaSet(SettlorIndividualPassportIDCardYesNoPage(index), true) andThen
-        uaSet(SettlorIndividualPassportIDCardPage(index), PassportOrIdCardDetails("DE", "1234567890", LocalDate.of(2020, 1, 1))) andThen
-        uaSet(SettlorMetaData(index), MetaData("1", None, ""))
+        uaSet(SettlorIndividualPassportIDCardPage(index), PassportType("DE", "1234567890", LocalDate.of(2020, 1, 1), DetailsType.Combined))
 
       def individualSettlorWithNoId(index: Int) = baseIndividualSettlor(index) andThen
         uaSet(SettlorIndividualNINOYesNoPage(index), false) andThen

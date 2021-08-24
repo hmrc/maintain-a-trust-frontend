@@ -16,12 +16,12 @@
 
 package pages.protectors.individual
 
-import models.PassportOrIdCardDetails
+import models.http.PassportType
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.Protectors
 
-final case class IndividualProtectorPassportIDCardPage(index : Int) extends QuestionPage[PassportOrIdCardDetails] {
+final case class IndividualProtectorPassportIDCardPage(index: Int) extends QuestionPage[PassportType] {
 
   override def path: JsPath = Protectors.path \ index \ toString
 

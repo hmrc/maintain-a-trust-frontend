@@ -45,7 +45,7 @@ class LeadTrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter) exte
         TrusteeCountryOfResidenceInTheUkYesNoPage(index), TrusteeCountryOfResidencePage(index), userAnswers, "trusteeCountryOfResidence", name
       ),
       converter.yesNoQuestion(TrusteePassportIDCardYesNoPage(index), userAnswers, "trusteePassportOrIdCardYesNo", name),
-      converter.passportOrIdCardQuestion(TrusteePassportIDCardPage(index), TrusteeMetaData(index), userAnswers, "trusteePassportOrIdCard", name)
+      converter.passportOrIdCardQuestion(TrusteePassportIDCardPage(index), userAnswers, "trusteePassportOrIdCard", name)
     ) ++
       addressAnswers(index, userAnswers, name) ++
       Seq(

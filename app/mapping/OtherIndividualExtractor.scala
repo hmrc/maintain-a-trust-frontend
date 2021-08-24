@@ -16,8 +16,8 @@
 
 package mapping
 
-import models.http.NaturalPersonType
-import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
+import models.http.{NaturalPersonType, PassportType}
+import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.individual._
 
@@ -36,7 +36,7 @@ class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
   override def ninoPage(index: Int): QuestionPage[String] = OtherIndividualNationalInsuranceNumberPage(index)
 
   override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualPassportIDCardYesNoPage(index)
-  override def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = OtherIndividualPassportIDCardPage(index)
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = OtherIndividualPassportIDCardPage(index)
 
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = OtherIndividualDateOfBirthPage(index)

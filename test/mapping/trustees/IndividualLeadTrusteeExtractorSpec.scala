@@ -31,7 +31,7 @@ import java.time.LocalDate
 class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val leadTrusteeIndExtractor : IndividualLeadTrusteeExtractor =
+  val leadTrusteeIndExtractor: IndividualLeadTrusteeExtractor =
     injector.instanceOf[IndividualLeadTrusteeExtractor]
 
   "Lead Trustee Individual Extractor" - {
@@ -217,7 +217,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
               DisplayTrustIdentificationType(
                 safeId = Some("8947584-94759745-84758745"),
                 nino = None,
-                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
                 address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
               ),
             entityStart = "2019-11-26"
@@ -266,7 +266,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
               DisplayTrustIdentificationType(
                 safeId = Some("8947584-94759745-84758745"),
                 nino = None,
-                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
                 address = Some(AddressType("Int line 1", "Int line2", None, None, None, "DE"))
               ),
             entityStart = "2019-11-26"
@@ -415,7 +415,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
               DisplayTrustIdentificationType(
                 safeId = Some("8947584-94759745-84758745"),
                 nino = None,
-                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
                 address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
               ),
             entityStart = "2019-11-26"
@@ -464,7 +464,7 @@ class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
               DisplayTrustIdentificationType(
                 safeId = Some("8947584-94759745-84758745"),
                 nino = None,
-                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
                 address = Some(AddressType("Int line 1", "Int line2", None, None, None, "DE"))
               ),
             entityStart = "2019-11-26"

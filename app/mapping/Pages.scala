@@ -16,7 +16,8 @@
 
 package mapping
 
-import models.{Address, MetaData, PassportOrIdCardDetails}
+import models.http.PassportType
+import models.{Address, MetaData}
 import pages.{EmptyPage, QuestionPage}
 
 import java.time.LocalDate
@@ -44,7 +45,7 @@ trait Pages {
   def ninoPage(index: Int): QuestionPage[String] = new EmptyPage[String]
 
   def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = new EmptyPage[PassportOrIdCardDetails]
+  def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = new EmptyPage[PassportType]
 
   def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
   def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = new EmptyPage[LocalDate]

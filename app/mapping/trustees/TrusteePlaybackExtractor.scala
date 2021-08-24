@@ -17,8 +17,8 @@
 package mapping.trustees
 
 import mapping.PlaybackExtractor
-import models.http.TrusteeType
-import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
+import models.http.{PassportType, TrusteeType}
+import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.trustees._
 
@@ -48,7 +48,7 @@ trait TrusteePlaybackExtractor[T <: TrusteeType] extends PlaybackExtractor[T] {
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = TrusteeDateOfBirthPage(index)
 
   override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = TrusteePassportIDCardYesNoPage(index)
-  override def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = TrusteePassportIDCardPage(index)
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = TrusteePassportIDCardPage(index)
 
   override def ninoYesNoPage(index: Int): QuestionPage[Boolean] = TrusteeNinoYesNoPage(index)
   override def ninoPage(index: Int): QuestionPage[String] = TrusteeNinoPage(index)

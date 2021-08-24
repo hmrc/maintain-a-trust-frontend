@@ -16,8 +16,9 @@
 
 package utils.print.sections
 
+import models.http.PassportType
 import models.pages.RoleInCompany
-import models.{Address, Description, FullName, MetaData, PassportOrIdCardDetails, URN, UTR, UserAnswers}
+import models.{Address, Description, FullName, URN, UTR, UserAnswers}
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
 import play.twirl.api.{Html, HtmlFormat}
@@ -133,14 +134,12 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def passportOrIdCardQuestion(query: Gettable[PassportOrIdCardDetails],
-                               metaData: Gettable[MetaData],
+  def passportOrIdCardQuestion(query: Gettable[PassportType],
                                userAnswers: UserAnswers,
                                labelKey: String,
                                messageArg: String = "")
                               (implicit messages: Messages): Option[AnswerRow] = {
-    val previouslySubmitted = userAnswers.get(metaData).exists(_.lineNo.nonEmpty)
-    val format = (x: PassportOrIdCardDetails) => checkAnswersFormatters.formatPassportOrIDCard(x, previouslySubmitted)
+    val format = (x: PassportType) => checkAnswersFormatters.formatPassportOrIDCard(x)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 

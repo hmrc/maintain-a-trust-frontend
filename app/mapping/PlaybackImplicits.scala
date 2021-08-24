@@ -17,7 +17,7 @@
 package mapping
 
 import models._
-import models.http.{AddressType, PassportType}
+import models.http.AddressType
 import utils.Constants.GB
 
 object PlaybackImplicits {
@@ -61,11 +61,6 @@ object PlaybackImplicits {
           country = country
         )
     }
-  }
-
-  implicit class PassportTypeConverter(passport: PassportType) {
-    def convert: PassportOrIdCardDetails =
-      PassportOrIdCardDetails(passport.countryOfIssue, passport.number, passport.expirationDate)
   }
 
   implicit class AddressOptionConverter(address: Option[AddressType]) {

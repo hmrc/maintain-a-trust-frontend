@@ -22,7 +22,7 @@ import pages.beneficiaries.individual._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsArray, JsPath}
 import sections.beneficiaries.IndividualBeneficiaries
-import utils.print.sections.{EntitiesPrinter, AnswerRowConverter, EntityPrinter}
+import utils.print.sections.{AnswerRowConverter, EntitiesPrinter, EntityPrinter}
 import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
@@ -76,7 +76,7 @@ class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) exte
     converter.yesNoQuestion(IndividualBeneficiaryAddressUKYesNoPage(index), userAnswers, "individualBeneficiaryAddressUKYesNo", name),
     converter.addressQuestion(IndividualBeneficiaryAddressPage(index), userAnswers, "individualBeneficiaryAddressUK", name),
     converter.yesNoQuestion(IndividualBeneficiaryPassportIDCardYesNoPage(index), userAnswers, "individualBeneficiaryPassportIDCardYesNo", name),
-    converter.passportOrIdCardQuestion(IndividualBeneficiaryPassportIDCardPage(index), IndividualBeneficiaryMetaData(index), userAnswers, "individualBeneficiaryPassportIDCard", name),
+    converter.passportOrIdCardQuestion(IndividualBeneficiaryPassportIDCardPage(index), userAnswers, "individualBeneficiaryPassportIDCard", name),
     converter.yesNoQuestion(IndividualBeneficiaryVulnerableYesNoPage(index), userAnswers, "individualBeneficiaryVulnerableYesNo", name),
     converter.yesNoQuestion(IndividualBeneficiaryMentalCapacityYesNoPage(index), userAnswers, "individualBeneficiaryMentalCapacityYesNo", name)
   )

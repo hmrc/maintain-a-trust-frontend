@@ -29,7 +29,7 @@ import java.time.LocalDate
 class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val deceasedSettlorExtractor : DeceasedSettlorExtractor =
+  val deceasedSettlorExtractor: DeceasedSettlorExtractor =
     injector.instanceOf[DeceasedSettlorExtractor]
 
   "Deceased Settlor Extractor" - {
@@ -319,7 +319,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
               DisplayTrustIdentificationType(
                 safeId = None,
                 nino = None,
-                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
                 address = None
               )
             ),
@@ -347,7 +347,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
           extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
           extraction.right.value.get(SettlorPassportIDCardPage) must be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage).get.country mustBe "DE"
+          extraction.right.value.get(SettlorPassportIDCardPage).get.countryOfIssue mustBe "DE"
         }
 
         "with name, date of death, date of birth and nino, must return user answers updated" in {
@@ -407,7 +407,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
               DisplayTrustIdentificationType(
                 safeId = Some("XK0000100152366"),
                 nino = None,
-                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
                 address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
               )
             ),
@@ -435,7 +435,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
           extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe true
           extraction.right.value.get(SettlorLastKnownAddressPage) must be(defined)
           extraction.right.value.get(SettlorPassportIDCardPage) must be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage).get.country mustBe "DE"
+          extraction.right.value.get(SettlorPassportIDCardPage).get.countryOfIssue mustBe "DE"
           extraction.right.value.get(DeceasedSettlorSafeIdPage).get mustBe "XK0000100152366"
           extraction.right.value.get(DeceasedSettlorMetaData).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
@@ -671,7 +671,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
               DisplayTrustIdentificationType(
                 safeId = None,
                 nino = None,
-                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
                 address = None
               )
             ),
@@ -758,7 +758,7 @@ class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
               DisplayTrustIdentificationType(
                 safeId = Some("XK0000100152366"),
                 nino = None,
-                passport = Some(PassportType("KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), "DE")),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
                 address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
               )
             ),

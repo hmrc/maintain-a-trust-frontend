@@ -22,7 +22,7 @@ import pages.settlors.deceased_settlor._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsPath, JsValue}
 import sections.settlors.DeceasedSettlor
-import utils.print.sections.{EntitiesPrinter, AnswerRowConverter, EntityPrinter}
+import utils.print.sections.{AnswerRowConverter, EntitiesPrinter, EntityPrinter}
 import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
@@ -82,7 +82,7 @@ class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) extends En
       converter.yesNoQuestion(SettlorLastKnownAddressYesNoPage, userAnswers, "settlorLastKnownAddressYesNo", name),
       converter.yesNoQuestion(SettlorLastKnownAddressUKYesNoPage, userAnswers, "settlorLastKnownAddressUKYesNo", name),
       converter.addressQuestion(SettlorLastKnownAddressPage, userAnswers, "settlorUKAddress", name),
-      converter.passportOrIdCardQuestion(SettlorPassportIDCardPage, DeceasedSettlorMetaData, userAnswers, "settlorPassportOrIdCard", name)
+      converter.passportOrIdCardQuestion(SettlorPassportIDCardPage, userAnswers, "settlorPassportOrIdCard", name)
     )
   }
 
