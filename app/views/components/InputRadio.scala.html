@@ -30,11 +30,10 @@
     idPrefix = Some(field.id),
     name = field.name,
     classes = if(inline) "govuk-radios--inline" else "",
-    errorMessage = field.error match {
-        case Some(e) => Some(ErrorMessage(content = Text(messages(e.message, e.args:_*))))
-        case None => None
+    errorMessage = field.error.map { e =>
+        ErrorMessage(content = Text(messages(e.message, e.args: _*)))
     },
-    hint = if(hint.isDefined) Some(Hint(content = Text(hint.get))) else None,
+    hint = hint.map(h => Hint(content = Text(h))),
     fieldset = Some(Fieldset(
         legend = Some(Legend(
             content = Text(legend),

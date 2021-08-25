@@ -29,31 +29,36 @@
     idPrefix = Some("yes-no"),
     name = field.name,
     classes = "govuk-radios--inline",
-    errorMessage = field.error match {
-        case Some(e) => Some(ErrorMessage(content = Text(messages(e.message, e.args: _*))))
-        case None => None
+    errorMessage = field.error.map { e =>
+        ErrorMessage(content = Text(messages(e.message, e.args: _*)))
     },
-    hint = if(hint.isDefined) Some(Hint(id = Some("govuk-hint"), content = Text(hint.get))) else None,
+    hint = hint.map(h => Hint(id = Some("govuk-hint"), content = Text(h))),
     fieldset = Some(Fieldset(
         legend = Some(Legend(
-            content = if (caption.isDefined) {
+            content = caption match {
+                case Some(c) => {
                     HtmlContent(
-                    s"""<span class="govuk-caption-l">${caption.get}</span>
-                    |${messages(label)}""".stripMargin)
-            } else Text(label),
+                        s"""<span class="govuk-caption-l">$c</span>
+                        |${messages(label)}""".stripMargin
+                    )
+                }
+                case None => {
+                    Text(label)
+                }
+            },
             isPageHeading = legendAsHeading,
             classes = legendClass.getOrElse("govuk-fieldset__legend--l")
         ))
     )),
     items = Seq(
         RadioItem(
-            id = Some(field.id + "-yes"),
+            id = Some(s"${field.id}-yes"),
             value = Some("true"),
             checked = field.value.contains("true"),
             content = Text(messages("site.yes"))
         ),
         RadioItem(
-            id = Some(field.id + "-no"),
+            id = Some(s"${field.id}-no"),
             value = Some("false"),
             checked = field.value.contains("false"),
             content = Text(messages("site.no"))

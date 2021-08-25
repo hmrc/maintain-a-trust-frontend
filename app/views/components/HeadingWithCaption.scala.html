@@ -15,12 +15,12 @@
 *@
 
 @this(
-subHeading: SubHeading
+    subHeading: SubHeading
 )
 
 @(headingPrefix: String, captionPrefix: String, optionalParam: Option[String] = None, captionParam: Option[String] = None, hiddenText: Boolean = false)(implicit messages: Messages)
 
- <h1 class="govuk-heading-l">
-  @subHeading(s"$captionPrefix.caption", captionParam.getOrElse(""), hiddenText)
-  @messages(s"$headingPrefix.heading", optionalParam.getOrElse(""))
- </h1>
+<h1 class="govuk-heading-l">
+    @subHeading(s"$captionPrefix.caption", captionParam.getOrElse(""), hiddenText)
+    @messages(s"$headingPrefix.heading", optionalParam.getOrElse(""))
+</h1>

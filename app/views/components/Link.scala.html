@@ -16,6 +16,6 @@
 
 @this()
 
-@(href : String, id : String = "", key : String, openInNewWindow: Boolean = false)(implicit messages: Messages)
+@(href: String, id: String = "", key: String, openInNewWindow: Boolean = false)(implicit messages: Messages)
 
 <a id="@id" href="@href" @if(openInNewWindow) {target="_blank" rel="noreferrer noopener"}>@messages(key)</a>

@@ -17,11 +17,11 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import utils.AccessibilityHelper._
 
-@this(govukPanel : GovukPanel)
+@this(govukPanel: GovukPanel)
 
 @(heading: String, content: String, refNumber: String)(implicit messages: Messages)
 
 @govukPanel(Panel(
     title = Text(heading),
-    content = HtmlContent(s"""${content}<br><strong id="trusts-registration-number">${refNumber}</strong>""")
+    content = HtmlContent(s"""$content<br><strong id="trusts-registration-number">$refNumber</strong>""")
 ))

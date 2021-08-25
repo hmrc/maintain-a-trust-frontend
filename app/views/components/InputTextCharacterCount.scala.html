@@ -68,29 +68,29 @@
                     content = Text(label)
                 ),
                 autocomplete = autocomplete,
-                hint = hint.map(hint => Hint(content = Text(hint))),
+                hint = hint.map(h => Hint(content = Text(h))),
                 errorMessage = field.error map { e =>
                     ErrorMessage(content = Text(messages(e.message, e.args: _*)))
                 },
                 spellcheck = Some(false),
                 inputmode = inputMode,
-                prefix = prefix.map(prefix => PrefixOrSuffix(content = Text(prefix))),
-                suffix = suffix.map(suffix => PrefixOrSuffix(content = Text(suffix))),
+                prefix = prefix.map(p => PrefixOrSuffix(content = Text(p))),
+                suffix = suffix.map(s => PrefixOrSuffix(content = Text(s))),
                 classes = "hmrc-js-character-count " + inputClass.getOrElse("")
             ).withFormField(field)
         )
         @if(messagesLanguage == Cy) {
             @govukHint(Hint(
-                content = Text("Gallwch nodi hyd at " + maxLength.getOrElse(maxWords.getOrElse(0)) + {if(maxWords.isDefined) " o eiriau" else " o gymeriadau"}),
-                id = Some(id + "-info"),
-                classes = "hmrc-character-count__message" + {if (countMessageClasses == "") "" else " " + countMessageClasses},
+                content = Text(s"Gallwch nodi hyd at ${maxLength.getOrElse(maxWords.getOrElse(0))} ${if(maxWords.isDefined) "o eiriau" else "o gymeriadau"}"),
+                id = Some(s"${id}-info"),
+                classes = "hmrc-character-count__message" + {if (countMessageClasses.isEmpty) "" else s" $countMessageClasses"},
                 attributes = Map("aria-live" -> "polite")
             ))
         } else {
             @govukHint(Hint(
-                content = Text("You can enter up to " + maxLength.getOrElse(maxWords.getOrElse(0)) + {if(maxWords.isDefined) " words" else " characters"}),
-                id = Some(id + "-info"),
-                classes = "hmrc-character-count__message" + {if (countMessageClasses == "") "" else " " + countMessageClasses},
+                content = Text(s"You can enter up to ${maxLength.getOrElse(maxWords.getOrElse(0))} ${if(maxWords.isDefined) "words" else "characters"}"),
+                id = Some(s"${id}-info"),
+                classes = "hmrc-character-count__message" + {if (countMessageClasses.isEmpty) "" else s" $countMessageClasses"},
                 attributes = Map("aria-live" -> "polite")
             ))
         }

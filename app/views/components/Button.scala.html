@@ -16,18 +16,18 @@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(govukButton : GovukButton)
+@this(govukButton: GovukButton)
 
 @(
-messageKey: String = "site.continue",
-isStartButton: Boolean = false,
-isPrintButton: Boolean = false,
-attributes: Map[String, String] = Map.empty
+    messageKey: String = "site.continue",
+    isStartButton: Boolean = false,
+    isPrintButton: Boolean = false,
+    attributes: Map[String, String] = Map.empty
 )(implicit messages: Messages)
 
 @govukButton(Button(
- isStartButton = isStartButton,
- content = Text(messages(messageKey)),
- classes = if (isPrintButton) "govuk-button--secondary print-hidden" else "",
- attributes = if (isPrintButton) Map("onClick" -> "window.print()", "id" -> "print") else attributes
+    isStartButton = isStartButton,
+    content = Text(messages(messageKey)),
+    classes = if (isPrintButton) "govuk-button--secondary print-hidden" else "",
+    attributes = if (isPrintButton) Map("onClick" -> "window.print()", "id" -> "print") else attributes
 ))

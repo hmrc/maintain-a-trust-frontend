@@ -39,7 +39,7 @@
         classes = labelClasses.mkString(" "),
         content = Text(label)
     ),
-    hint = if(hint.isDefined) Some(Hint(content = Text(hint.get))) else None,
+    hint = hint.map(h => Hint(content = Text(h))),
     items = Seq(SelectItem(value = Some(""), text = placeholder.getOrElse(""))) ++
         options.map(valueOption =>
             SelectItem(

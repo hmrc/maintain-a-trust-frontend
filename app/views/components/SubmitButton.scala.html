@@ -24,9 +24,5 @@
     preventDoubleClick = true,
     attributes = Map("id" -> id),
     classes = s"button ${submitClass.getOrElse("")}",
-    content = if(overrideMessage.isEmpty) {
-        Text(messages("site.onlyContinue"))
-    } else {
-        Text(messages(overrideMessage.get))
-    }
+    content = Text(messages(overrideMessage.getOrElse("site.onlyContinue")))
 ))

@@ -49,7 +49,7 @@
         <p id="taxable-message">@messages("confirmationPage.paragraph3")</p>
     }
 
-    @if(isAgent: Boolean) {
+    @if(isAgent) {
         <p>@messages("confirmationPage.agent.you.can") @link(agentOverviewUrl, "agent-overview", "confirmationPage.agent.link")</p>
     }
 }

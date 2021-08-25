@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import viewmodels.{AnswerSection, Section}
 @import utils.SectionFormatter.formatAnswerSection
-@import views.html.components.{Heading, Button, SubmitButton, Warning, ReturnToTop}
+@import viewmodels.{AnswerSection, Section}
+@import views.html.components.{Button, Heading, ReturnToTop, SubmitButton, Warning}
 
 @this(
     main_template: MainTemplate,
@@ -41,7 +41,7 @@
 @main_template(
     title = messages("playbackDeclarationAnswers.title"),
     showBackLink = true
-    ) {
+) {
 
     @headingComp("playbackDeclarationAnswers.heading", headingSize = "govuk-heading-xl")
 
@@ -49,7 +49,7 @@
         <span>@messages("playbackDeclarationAnswers.p1", tvn)</span>
     </p>
 
-    @if(isAgent: Boolean) {
+    @if(isAgent) {
         <p class="govuk-!-font-weight-bold">
             <span>@messages("playbackDeclarationAnswers.p2", crn)</span>
         </p>
@@ -62,22 +62,22 @@
     @button(messageKey = "site.print-or-save", isPrintButton = true)
 
     @for(section <- trustDetails){
-        @if(section.sectionKey.isDefined){
-            <h2 class="govuk-heading-l">@messages(section.sectionKey.get)</h2>
+        @section.sectionKey.map { sk =>
+            <h2 class="govuk-heading-l">@messages(sk)</h2>
             @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
         }
     }
 
     @for(section <- entities){
-        @if(section.sectionKey.isDefined){
-            <h2 class="govuk-heading-l">@messages(section.sectionKey.get)</h2>
+        @section.sectionKey.map { sk =>
+            <h2 class="govuk-heading-l">@messages(sk)</h2>
         }
 
-        @if(section.headingKey.isDefined){
-            <h3 class="govuk-heading-m">@messages(section.headingKey.get)</h3>
+        @section.headingKey.map { hk =>
+            <h3 class="govuk-heading-m">@messages(hk)</h3>
         }
 
-        @if(section.rows){
+        @if(section.rows.nonEmpty){
             @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
         }
     }

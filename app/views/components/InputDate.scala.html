@@ -26,7 +26,7 @@
     legendClass: String = "govuk-fieldset__legend--l",
     hint: Option[String] = None,
     legendAsHeading: Boolean = false
- )(implicit messages: Messages)
+)(implicit messages: Messages)
 
 @govukDateInput(DateInput(
     fieldset = Some(Fieldset(
@@ -62,6 +62,6 @@
             id = s"${field.id}.year"
         )
     ),
-    hint = hint.map(hint => Hint(content = Text(messages(hint)))),
+    hint = hint.map(h => Hint(content = Text(messages(h)))),
     errorMessage = field.error.map(err => ErrorMessage(content = Text(messages(err.message, formatArgs(err.args): _*))))
 ))

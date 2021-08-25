@@ -19,8 +19,8 @@
 @(key: String, param: String, hiddenText: Boolean = true)(implicit messages: Messages)
 
 <span class="govuk-caption-l">
- @if(hiddenText){
-  <span class="govuk-visually-hidden">@messages(s"$key.hidden")</span>
- }
- @messages(key, param)
+    @if(hiddenText){
+        <span class="govuk-visually-hidden">@messages(s"$key.hidden")</span>
+    }
+    @messages(key, param)
 </span>

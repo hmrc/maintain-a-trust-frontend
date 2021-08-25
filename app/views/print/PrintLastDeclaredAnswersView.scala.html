@@ -34,12 +34,11 @@
 @main_template(
     title = messages("playbackAnswers.title"),
     showBackLink = true
-    ) {
+) {
 
     @headingComp("playbackAnswers.heading", headingSize = "govuk-heading-xl")
 
     @warning("playbackAnswers.declareAnnually")
-
 
     <div class="govuk-button-group">
         @formHelper(action = controllers.print.routes.PrintLastDeclaredAnswersController.onSubmit(), 'autoComplete -> "off") {
@@ -48,23 +47,23 @@
         @button(messageKey = "site.print-or-save", isPrintButton = true)
     </div>
 
-    @for(section <- trustDetails){
-        @if(section.sectionKey.isDefined){
-        <h2 class="govuk-heading-l">@messages(section.sectionKey.get)</h2>
-        @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
+    @for(section <- trustDetails) {
+        @section.sectionKey.map { sk =>
+            <h2 class="govuk-heading-l">@messages(sk)</h2>
+            @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
         }
     }
 
-    @for(section <- entities){
-        @if(section.sectionKey.isDefined){
-        <h2 class="govuk-heading-l">@messages(section.sectionKey.get)</h2>
+    @for(section <- entities) {
+        @section.sectionKey.map { sk =>
+            <h2 class="govuk-heading-l">@messages(sk)</h2>
         }
 
-        @if(section.headingKey.isDefined){
-        <h3 class="govuk-heading-m">@messages(section.headingKey.get)</h3>
+        @section.headingKey.map { hk =>
+            <h3 class="govuk-heading-m">@messages(hk)</h3>
         }
 
-        @if(section.rows){
+        @if(section.rows.nonEmpty) {
             @govukSummaryList(SummaryList(rows = formatAnswerSection(section)))
         }
     }

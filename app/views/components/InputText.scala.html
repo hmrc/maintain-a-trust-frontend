@@ -38,20 +38,19 @@
     Input(
         label = Label(
             isPageHeading = labelAsHeading,
-            classes = if(labelClass.isDefined) labelClass.get else "",
+            classes = labelClass.getOrElse(""),
             content = Text(label)
         ),
         autocomplete = autocomplete,
-        hint = hint.map(hint => Hint(content = Text(hint))),
-        errorMessage = field.error match {
-            case Some(e) => Some(ErrorMessage(content = Text(messages(e.message, e.args: _*))))
-            case None => None
+        hint = hint.map(h => Hint(content = Text(h))),
+        errorMessage = field.error.map { e =>
+            ErrorMessage(content = Text(messages(e.message, e.args: _*)))
         },
         spellcheck = Some(false),
         inputmode = inputMode,
         inputType = inputType,
-        prefix = prefix.map(prefix => PrefixOrSuffix(content = Text(prefix))),
-        suffix = suffix.map(suffix => PrefixOrSuffix(content = Text(suffix))),
-        classes = if(inputClass.isDefined) inputClass.get else ""
+        prefix = prefix.map(p => PrefixOrSuffix(content = Text(p))),
+        suffix = suffix.map(s => PrefixOrSuffix(content = Text(s))),
+        classes = inputClass.getOrElse("")
     ).withFormField(field)
 )

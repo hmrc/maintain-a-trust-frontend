@@ -17,12 +17,12 @@
 @this()
 
 @(
- prefix : String,
- keys : Seq[String]
+    prefix: String,
+    keys: Seq[String]
 )(implicit messages: Messages)
 
 <ul class="govuk-list govuk-list--bullet">
- @keys.map { key =>
- <li>@messages(s"$prefix.$key")</li>
- }
+    @keys.map { key =>
+        <li>@messages(s"$prefix.$key")</li>
+    }
 </ul>
