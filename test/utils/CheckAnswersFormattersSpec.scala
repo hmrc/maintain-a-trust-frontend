@@ -76,24 +76,40 @@ class CheckAnswersFormattersSpec extends SpecBase {
       "mask the passport/ID card number" when {
         "not added in session" when {
 
-          "English" in {
+          "English" when {
 
-            val passportOrIdCard = PassportType("FR", "1234567890", date, DetailsType.Combined)
-            val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("en"))
-            result mustBe Html("France<br />Number ending 7890<br />3 February 1996")
+            "number 4 digits or more" in {
+              val passportOrIdCard = PassportType("FR", "1234567890", date)
+              val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("en"))
+              result mustBe Html("France<br />Number ending 7890<br />3 February 1996")
+            }
+
+            "number less than 4 digits" in {
+              val passportOrIdCard = PassportType("FR", "1", date)
+              val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("en"))
+              result mustBe Html("France<br />Number ending 1<br />3 February 1996")
+            }
           }
 
-          "Welsh" in {
+          "Welsh" when {
 
-            val passportOrIdCard = PassportType("FR", "1234567890", date, DetailsType.Combined)
-            val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("cy"))
-            result mustBe Html("Ffrainc<br />Rhif sy’n gorffen gyda 7890<br />3 Chwefror 1996")
+            "number 4 digits or more" in {
+              val passportOrIdCard = PassportType("FR", "1234567890", date)
+              val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("cy"))
+              result mustBe Html("Ffrainc<br />Rhif sy’n gorffen gyda 7890<br />3 Chwefror 1996")
+            }
+
+            "number less than 4 digits" in {
+              val passportOrIdCard = PassportType("FR", "1", date)
+              val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("cy"))
+              result mustBe Html("Ffrainc<br />Rhif sy’n gorffen gyda 1<br />3 Chwefror 1996")
+            }
           }
         }
       }
 
       "not mask the passport/ID card number" when {
-        "added in session" when {
+        "details added in session" when {
 
           "English" in {
 
