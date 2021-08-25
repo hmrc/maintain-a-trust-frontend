@@ -16,11 +16,13 @@
 
 package utils
 
-import java.time.LocalDate
-
 import base.SpecBase
+import models.DetailsType
+import models.http.PassportType
 import play.api.i18n.{Lang, MessagesImpl}
 import play.twirl.api.Html
+
+import java.time.LocalDate
 
 class CheckAnswersFormattersSpec extends SpecBase {
 
@@ -28,14 +30,14 @@ class CheckAnswersFormattersSpec extends SpecBase {
 
   "CheckAnswersFormatters" when {
 
+    def messages(langCode: String): MessagesImpl = {
+      val lang: Lang = Lang(langCode)
+      MessagesImpl(lang, messagesApi)
+    }
+
+    val date: LocalDate = LocalDate.parse("1996-02-03")
+
     ".formatDate" when {
-
-      def messages(langCode: String): MessagesImpl = {
-        val lang: Lang = Lang(langCode)
-        MessagesImpl(lang, messagesApi)
-      }
-
-      val date: LocalDate = LocalDate.parse("1996-02-03")
 
       "in English mode" must {
         "format date in English" in {
@@ -66,6 +68,63 @@ class CheckAnswersFormattersSpec extends SpecBase {
         val nino = "JP121212"
         val result = checkAnswersFormatters.formatNino(nino)
         result mustBe Html("JP121212")
+      }
+    }
+
+    ".formatPassportOrIDCard" must {
+
+      "mask the passport/ID card number" when {
+        "not added in session" when {
+
+          "English" when {
+
+            "number 4 digits or more" in {
+              val passportOrIdCard = PassportType("FR", "1234567890", date)
+              val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("en"))
+              result mustBe Html("France<br />Number ending 7890<br />3 February 1996")
+            }
+
+            "number less than 4 digits" in {
+              val passportOrIdCard = PassportType("FR", "1", date)
+              val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("en"))
+              result mustBe Html("France<br />Number ending 1<br />3 February 1996")
+            }
+          }
+
+          "Welsh" when {
+
+            "number 4 digits or more" in {
+              val passportOrIdCard = PassportType("FR", "1234567890", date)
+              val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("cy"))
+              result mustBe Html("Ffrainc<br />Rhif sy’n gorffen gyda 7890<br />3 Chwefror 1996")
+            }
+
+            "number less than 4 digits" in {
+              val passportOrIdCard = PassportType("FR", "1", date)
+              val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("cy"))
+              result mustBe Html("Ffrainc<br />Rhif sy’n gorffen gyda 1<br />3 Chwefror 1996")
+            }
+          }
+        }
+      }
+
+      "not mask the passport/ID card number" when {
+        "details added in session" when {
+
+          "English" in {
+
+            val passportOrIdCard = PassportType("FR", "1234567890", date, DetailsType.Passport)
+            val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("en"))
+            result mustBe Html("France<br />1234567890<br />3 February 1996")
+          }
+
+          "Welsh" in {
+
+            val passportOrIdCard = PassportType("FR", "1234567890", date, DetailsType.IdCard)
+            val result = checkAnswersFormatters.formatPassportOrIDCard(passportOrIdCard)(messages("cy"))
+            result mustBe Html("Ffrainc<br />1234567890<br />3 Chwefror 1996")
+          }
+        }
       }
     }
   }

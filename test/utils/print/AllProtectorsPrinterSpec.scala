@@ -17,8 +17,9 @@
 package utils.print
 
 import base.SpecBase
+import models.http.PassportType
 import models.pages.IndividualOrBusiness
-import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
+import models.{DetailsType, FullName, InternationalAddress, UKAddress}
 import pages.protectors._
 import pages.protectors.business._
 import pages.protectors.individual._
@@ -90,7 +91,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(IndividualProtectorAddressYesNoPage(3), true).success.value
         .set(IndividualProtectorAddressPage(3), UKAddress("line 1", "line 2", None, None, "DH11DH")).success.value
         .set(IndividualProtectorPassportIDCardYesNoPage(3), true).success.value
-        .set(IndividualProtectorPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
+        .set(IndividualProtectorPassportIDCardPage(3), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), DetailsType.Combined)).success.value
         .set(IndividualProtectorMentalCapacityYesNoPage(3), true).success.value
 
       val result = helper.entities(answers)
@@ -169,7 +170,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualProtectorAddressYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorAddress.checkYourAnswersLabel", name4), answer = Html("line 1<br />line 2<br />DH11DH"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorPassportIDCardYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualProtectorPassportIDCard.checkYourAnswersLabel", name4), answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(label = messages("individualProtectorPassportIDCard.checkYourAnswersLabel", name4), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorMentalCapacityYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None)
           ),
           sectionKey = None
@@ -271,7 +272,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(IndividualProtectorAddressYesNoPage(0), true).success.value
         .set(IndividualProtectorAddressPage(0), UKAddress("line 1", "line 2", None, None, "DH11DH")).success.value
         .set(IndividualProtectorPassportIDCardYesNoPage(0), true).success.value
-        .set(IndividualProtectorPassportIDCardPage(0), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2))).success.value
+        .set(IndividualProtectorPassportIDCardPage(0), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), DetailsType.Passport)).success.value
         .set(IndividualProtectorMentalCapacityYesNoPage(0), true).success.value
 
         .set(ProtectorIndividualOrBusinessPage(1), IndividualOrBusiness.Business).success.value

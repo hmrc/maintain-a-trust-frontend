@@ -272,6 +272,7 @@ site.print-or-save = Print or save this page
 site.button.continue.maintaining = Continue maintaining this trust
 site.button.continue.maintain = Continue to maintain this trust
 site.return-to-top = Back to top
+site.number-ending = Number ending {0}
 
 site.address.uk.title = What is the address?
 site.address.uk.heading = What is {0}’s address?

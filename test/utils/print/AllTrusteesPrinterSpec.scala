@@ -17,7 +17,8 @@
 package utils.print
 
 import base.SpecBase
-import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
+import models.http.PassportType
+import models.{DetailsType, FullName, InternationalAddress, UKAddress}
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees._
 import play.twirl.api.Html
@@ -95,7 +96,7 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- TrusteeEmailYesNoPage(0) is true
           _ <- TrusteeEmailPage(0) is "aa@aabb.com"
           _ <- IsThisLeadTrusteePage(0) is true
-          _ <- TrusteePassportIDCardPage(0) is PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))
+          _ <- TrusteePassportIDCardPage(0) is PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), DetailsType.Combined)
           _ <- TrusteePassportIDCardYesNoPage(0) is true
         } yield Unit).run(emptyUserAnswersForUtr).value
 
@@ -114,7 +115,7 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           "Does William Bonny live in the UK?" -> Html("No"),
           "What is William Bonny’s address?" -> Html("Address 1<br />Address 2<br />Germany"),
           "Do you know William Bonny’s passport or ID card details?" -> Html("Yes"),
-          "What are William Bonny’s passport or ID card details?" -> Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"),
+          "What are William Bonny’s passport or ID card details?" -> Html("Germany<br />Number ending QWER<br />2 February 2020"),
           "Do you know William Bonny’s country of residence?" -> Html("Yes"),
           "Does William Bonny have UK residency?" -> Html("No"),
           "What is William Bonny’s country of residence?" -> Html("France"),

@@ -167,7 +167,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
                             index: Int,
                             answers: UserAnswers): Try[UserAnswers] = {
     answers.set(passportOrIdCardYesNoPage(index), true)
-      .flatMap(_.set(passportOrIdCardPage(index), passport.convert))
+      .flatMap(_.set(passportOrIdCardPage(index), passport))
   }
 
   def extractOrgIdentification(identification: Option[DisplayTrustIdentificationOrgType],

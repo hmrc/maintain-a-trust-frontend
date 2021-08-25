@@ -17,8 +17,8 @@
 package mapping.beneficiaries
 
 import mapping.PlaybackExtractionErrors.InvalidExtractorState
-import models.http.DisplayTrustIndividualDetailsType
-import models.{Address, MetaData, PassportOrIdCardDetails, UserAnswers}
+import models.http.{DisplayTrustIndividualDetailsType, PassportType}
+import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.beneficiaries.individual._
 
@@ -50,7 +50,7 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
   override def ninoPage(index: Int): QuestionPage[String] = IndividualBeneficiaryNationalInsuranceNumberPage(index)
 
   override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryPassportIDCardYesNoPage(index)
-  override def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = IndividualBeneficiaryPassportIDCardPage(index)
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = IndividualBeneficiaryPassportIDCardPage(index)
 
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = IndividualBeneficiaryDateOfBirthPage(index)

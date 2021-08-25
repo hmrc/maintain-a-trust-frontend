@@ -17,7 +17,8 @@
 package utils.print
 
 import base.SpecBase
-import models.{FullName, InternationalAddress, PassportOrIdCardDetails, UKAddress}
+import models.http.PassportType
+import models.{DetailsType, FullName, InternationalAddress, UKAddress}
 import pages.individual._
 import play.twirl.api.Html
 import utils.print.sections.otherindividuals.OtherIndividualsPrinter
@@ -85,7 +86,7 @@ class OtherIndividualPrinterSpec extends SpecBase {
         .set(OtherIndividualAddressUKYesNoPage(3), false).success.value
         .set(OtherIndividualAddressPage(3), InternationalAddress("line 1", "line 2", None, "FR")).success.value
         .set(OtherIndividualPassportIDCardYesNoPage(3), true).success.value
-        .set(OtherIndividualPassportIDCardPage(3), PassportOrIdCardDetails("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))).success.value
+        .set(OtherIndividualPassportIDCardPage(3), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), DetailsType.Combined)).success.value
         .set(OtherIndividualMentalCapacityYesNoPage(3), true).success.value
       
       val result = helper.entities(answers)
@@ -166,7 +167,7 @@ class OtherIndividualPrinterSpec extends SpecBase {
             AnswerRow(label = messages("otherIndividualAddressUKYesNo.checkYourAnswersLabel", name4), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualAddress.checkYourAnswersLabel", name4), answer = Html("line 1<br />line 2<br />France"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualPassportIDCardYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualPassportIDCard.checkYourAnswersLabel", name4), answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(label = messages("otherIndividualPassportIDCard.checkYourAnswersLabel", name4), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None)
           ),
           sectionKey = None

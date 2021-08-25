@@ -16,10 +16,10 @@
 
 package mapping.settlors
 
-import models.http.DisplayTrustSettlor
+import models.UserAnswers
+import models.http.{DisplayTrustSettlor, PassportType}
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.Completed
-import models.{PassportOrIdCardDetails, UserAnswers}
 import pages.QuestionPage
 import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
@@ -33,7 +33,7 @@ class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSe
   override def ninoPage(index: Int): QuestionPage[String] = SettlorIndividualNINOPage(index)
 
   override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualPassportIDCardYesNoPage(index)
-  override def passportOrIdCardPage(index: Int): QuestionPage[PassportOrIdCardDetails] = SettlorIndividualPassportIDCardPage(index)
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = SettlorIndividualPassportIDCardPage(index)
 
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = SettlorIndividualDateOfBirthPage(index)

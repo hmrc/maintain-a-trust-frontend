@@ -22,7 +22,7 @@ import pages.settlors.deceased_settlor._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsPath, JsValue}
 import sections.settlors.DeceasedSettlor
-import utils.print.sections.{EntitiesPrinter, AnswerRowConverter, EntityPrinter}
+import utils.print.sections.{AnswerRowConverter, EntitiesPrinter, EntityPrinter}
 import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject

@@ -16,12 +16,21 @@
 
 package models
 
-import java.time.LocalDate
+import play.api.libs.json.{Format, Reads, Writes}
 
-import play.api.libs.json.Json
+object DetailsType extends Enumeration {
 
-case class PassportOrIdCardDetails(country: String, cardNumber: String, expiryDate:LocalDate)
+  type DetailsType = Value
 
-object PassportOrIdCardDetails {
-  implicit val format = Json.format[PassportOrIdCardDetails]
+  val Passport: Value = Value("passport")
+  val IdCard: Value = Value("id-card")
+  val Combined: Value = Value("combined")
+
+  implicit val reads: Reads[Value] = Reads.enumNameReads(DetailsType)
+  implicit val writes: Writes[Value] = Writes.enumNameWrites
+  implicit val formats: Format[Value] = Format.apply(reads, writes)
+
+  implicit class DetailsTypeValue(detailsType: Value) {
+    def isProvisional: Boolean = detailsType != Combined
+  }
 }

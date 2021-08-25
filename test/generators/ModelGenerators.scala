@@ -16,9 +16,10 @@
 
 package generators
 
+import models.DetailsType.DetailsType
 import models.http._
 import models.pages.WhatIsNext
-import models.{FullName, InternationalAddress, MigrationTaskStatus, PassportOrIdCardDetails, UKAddress}
+import models.{DetailsType, FullName, InternationalAddress, MigrationTaskStatus, UKAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 
@@ -26,13 +27,19 @@ import java.time.LocalDate
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryPassport: Arbitrary[PassportOrIdCardDetails] =
+  implicit lazy val arbitraryPassport: Arbitrary[PassportType] =
     Arbitrary {
       for {
         field1 <- arbitrary[String]
         field2 <- arbitrary[String]
         field3 <- arbitrary[LocalDate]
-      } yield PassportOrIdCardDetails(field1, field2, field3)
+        field4 <- arbitrary[DetailsType]
+      } yield PassportType(field1, field2, field3, field4)
+    }
+
+  implicit lazy val arbitraryDetailsType: Arbitrary[DetailsType] =
+    Arbitrary {
+      Gen.oneOf(DetailsType.values)
     }
 
   implicit lazy val arbitraryFullName: Arbitrary[FullName] = {
