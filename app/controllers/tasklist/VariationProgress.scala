@@ -148,11 +148,18 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     def task(migrationTaskStatus: MigrationTaskStatus,
              savedTaskStatus: Tag,
              trustDetailsCompleted: Boolean,
-             link: Link): Task = migrationTaskStatus match {
-      case Updated => Task(link, Completed)
-      case NeedsUpdating if trustDetailsCompleted => Task(link, if (savedTaskStatus.isCompleted) InProgress else savedTaskStatus)
-      case NothingToUpdate if trustDetailsCompleted => Task(link, if (savedTaskStatus.isCompleted) Completed else NoActionNeeded)
-      case _ => Task(link, CannotStartYet)
+             link: Link): Task = {
+      val tag: Tag = if (trustDetailsCompleted) {
+        migrationTaskStatus match {
+          case Updated | NothingToUpdate => if (savedTaskStatus.isCompleted) Completed else NoActionNeeded
+          case NeedsUpdating => if (savedTaskStatus.isCompleted) InProgress else savedTaskStatus
+          case _ => CannotStartYet
+        }
+      } else {
+        CannotStartYet
+      }
+
+      Task(link, tag)
     }
 
     val transitionTasks = List(
