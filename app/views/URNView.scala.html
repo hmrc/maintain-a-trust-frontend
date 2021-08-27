@@ -31,7 +31,7 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @content = {
-    <p>@messages("urn.linkMessage") <a href=@config.helplineUrl id="help-link" target="_blank">@messages("urn.linkText")</a>.</p>
+    <p>@messages("urn.linkMessage") <a href=@config.helplineUrl id="help-link" target="_blank" rel="noopener noreferrer">@messages("urn.linkText")</a>.</p>
 }
 
 @main_template(
