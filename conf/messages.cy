@@ -231,7 +231,7 @@ transitionProgress.p3=Gallwch gadw neu argraffu copi drafft o’ch atebion wedi�
 transitionProgress.p5b=. Gallwch hefyd argraffu copi wedi’i ddatgan ar ôl i chi wneud datganiad.
 
 transitionProgress.subHeading.1=Pob adran i’w chwblhau
-transitionProgress.subHeading.2=Crynodeb
+transitionProgress.subHeading.2=Adrannau ychwanegol i’w cwblhau
 transitionProgress.subHeading.3=Datgan a chadw’ch newidiadau
 transitionProgress.p4=Er mwyn cadw unrhyw newidiadau a wnewch i gofnod yr ymddiriedolaeth, mae angen i chi wneud y canlynol:
 transitionProgress.p4.bullet1=gyflwyno’r newidiadau i CThEM, a fydd yn diweddaru cofnodion yr ymddiriedolaeth
@@ -774,7 +774,7 @@ variationProgress.subHeading.2=Adrannau i’w cwblhau
 variationProgress.subHeading.3=Adrannau ychwanegol i’w cwblhau
 variationProgress.closing.warning=Mae angen i chi ddatgan bod manylion yr ymddiriedolaeth yn gyfredol cyn cau. Mae’n bosibl bod rhai cwestiynau wedi newid ers i’r ymddiriedolaeth gael ei chofrestru.
 variationProgress.p3=Gallwch gadw neu argraffu copi drafft o’ch atebion wedi’u cadw unwaith y bydd pob adran yn gyfredol, yn ogystal â chopi wedi’i ddatgan ar ôl i chi wneud datganiad.
-variationProgress.subHeading.4=Crynodeb
+variationProgress.subHeading.4=Adrannau ychwanegol i’w cwblhau
 variationProgress.p4=Gallwch
 variationProgress.printsave.link=argraffu neu gadw copi o’ch atebion
 variationProgress.subHeading.5=Diweddaru manylion asedion
