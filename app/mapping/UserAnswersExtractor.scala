@@ -28,7 +28,6 @@ import models.UserAnswers
 import models.UserAnswersCombinator._
 import models.http.GetTrust
 import play.api.Logging
-import services.FeatureFlagService
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,7 +39,6 @@ trait UserAnswersExtractor {
 }
 
 class UserAnswersExtractorImpl @Inject()(
-                                          featureFlagService: FeatureFlagService,
                                           trustsConnector: TrustConnector,
                                           beneficiariesExtractor: BeneficiaryExtractor,
                                           trusteesExtractor: TrusteeExtractor,
@@ -57,12 +55,10 @@ class UserAnswersExtractorImpl @Inject()(
              (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[PlaybackExtractionError, UserAnswers]] = {
 
     for {
-      is5mldEnabled <- featureFlagService.is5mldEnabled()
       trustDetails <- trustsConnector.getUntransformedTrustDetails(answers.identifier)
     } yield {
 
       val updatedAnswers = answers.copy(
-        is5mldEnabled = is5mldEnabled,
         isUnderlyingData5mld = trustDetails.is5mld,
         isUnderlyingDataTaxable = trustDetails.isTaxable
       )

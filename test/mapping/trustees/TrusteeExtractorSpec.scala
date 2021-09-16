@@ -83,7 +83,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
           None, None
         )
 
-        val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 
@@ -135,7 +135,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
           None, None
         )
 
-        val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 
@@ -217,7 +217,7 @@ class TrusteeExtractorSpec extends FreeSpec with MustMatchers
           settlors = None
         )
 
-        val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
         val extraction = trusteeExtractor.extract(ua, leadTrustee)
 

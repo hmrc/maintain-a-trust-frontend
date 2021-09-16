@@ -78,12 +78,6 @@ class WhatIsNextViewSpec extends ViewBehaviours {
 
   "WhatIsNextView" when {
 
-    "4mld" must {
-      applyTests(Underlying4mldTrustIn4mldMode)
-    }
-
-    "5mld" when {
-
       "underlying trust is 4mld" must {
         applyTests(Underlying4mldTrustIn5mldMode)
       }
@@ -98,6 +92,6 @@ class WhatIsNextViewSpec extends ViewBehaviours {
           applyTests(Underlying5mldNonTaxableTrustIn5mldMode)
         }
       }
-    }
   }
+
 }

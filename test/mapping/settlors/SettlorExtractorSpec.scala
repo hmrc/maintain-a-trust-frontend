@@ -88,7 +88,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
           settlors = None
         )
 
-        val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
         val extraction = settlorExtractor.extract(ua, entities)
 
@@ -180,7 +180,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
           ))
         )
 
-        val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
         val extraction = settlorExtractor.extract(ua, entities)
 
@@ -299,7 +299,7 @@ class SettlorExtractorSpec extends FreeSpec with MustMatchers
           ))
         )
 
-        val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
         val extraction = settlorExtractor.extract(ua, entities)
 

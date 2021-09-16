@@ -46,7 +46,7 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
       val prefix: String = "addNonEeaCompany"
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
-      val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+      val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
         .set(WhatIsNextPage, MakeChanges).success.value
 
       "return OK and the correct view for a GET" in {
@@ -169,7 +169,7 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
       val prefix: String = "addNonEeaCompanyClosing"
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
-      val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+      val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
         .set(WhatIsNextPage, CloseTrust).success.value
 
       "return OK and the correct view for a GET" in {

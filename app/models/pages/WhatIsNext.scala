@@ -35,13 +35,11 @@ object WhatIsNext extends Enumerable.Implicits {
   )
 
   def options(trustMldStatus: TrustMldStatus): List[(RadioOption, String)] = {
-    val suffix: String = if (trustMldStatus != Underlying4mldTrustIn4mldMode) "5mld" else ""
     values
       .filterNot(_ == DeclareTheTrustIsUpToDate && trustMldStatus == Underlying5mldNonTaxableTrustIn5mldMode)
       .filterNot(_ == NoLongerTaxable && trustMldStatus != Underlying5mldTaxableTrustIn5mldMode)
       .filterNot(_ == NeedsToPayTax && trustMldStatus != Underlying5mldNonTaxableTrustIn5mldMode)
-      .filterNot(_ == GeneratePdf && trustMldStatus == Underlying4mldTrustIn4mldMode)
-      .map(value => (RadioOption(s"declarationWhatNext$suffix", value.toString), s"declarationWhatNext$suffix.$value.hint"))
+      .map(value => (RadioOption(s"declarationWhatNext5mld", value.toString), s"declarationWhatNext5mld.$value.hint"))
   }
 
   implicit val enumerable: Enumerable[WhatIsNext] =

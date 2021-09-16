@@ -172,7 +172,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+          val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiary)
 
@@ -195,7 +195,7 @@ class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val largeBeneficiaries = (for (index <- 0 to 2) yield generateLargeBeneficiary(index)).toList
 
-          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+          val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val extraction = largeBeneficiaryExtractor.extract(ua, largeBeneficiaries)
 

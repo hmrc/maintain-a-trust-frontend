@@ -16,7 +16,7 @@
 
 package models.pages
 
-import models.{Underlying4mldTrustIn4mldMode, Underlying4mldTrustIn5mldMode, Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
+import models.{Underlying4mldTrustIn5mldMode, Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.{MustMatchers, OptionValues, WordSpec}
@@ -62,13 +62,6 @@ class WhatIsNextSpec extends WordSpec with MustMatchers with ScalaCheckPropertyC
 
     "determine options correctly" when {
 
-      "in 4mld mode" in {
-        WhatIsNext.options(Underlying4mldTrustIn4mldMode).map(_._1.value) mustBe
-          List("declare", "make-changes", "close-trust")
-      }
-
-      "in 5mld mode" when {
-
         "underlying trust is 4mld" in {
           WhatIsNext.options(Underlying4mldTrustIn5mldMode).map(_._1.value) mustBe
             List("declare", "make-changes", "close-trust", "generate-pdf")
@@ -85,7 +78,7 @@ class WhatIsNextSpec extends WordSpec with MustMatchers with ScalaCheckPropertyC
               List("make-changes", "close-trust", "needs-to-pay-tax", "generate-pdf")
           }
         }
-      }
     }
+
   }
 }

@@ -51,7 +51,7 @@ class NoTaxLiabilityInfoControllerSpec extends SpecBase {
   ".onSubmit" must {
     "redirect to NoTaxLiabilityInfo " in {
 
-      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+      val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

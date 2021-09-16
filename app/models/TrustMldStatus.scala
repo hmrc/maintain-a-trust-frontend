@@ -21,7 +21,6 @@ sealed trait TrustMldStatus {
     this == Underlying5mldTaxableTrustIn5mldMode || this == Underlying5mldNonTaxableTrustIn5mldMode
 }
 
-case object Underlying4mldTrustIn4mldMode extends TrustMldStatus
 case object Underlying4mldTrustIn5mldMode extends TrustMldStatus
 case object Underlying5mldTaxableTrustIn5mldMode extends TrustMldStatus
 case object Underlying5mldNonTaxableTrustIn5mldMode extends TrustMldStatus

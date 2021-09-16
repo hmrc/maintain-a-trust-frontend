@@ -57,7 +57,7 @@ class BeforeClosingControllerSpec extends SpecBase with ScalaCheckPropertyChecks
 
           forAll(arbitrary[Boolean]) { boolean =>
 
-            val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true, isUnderlyingDataTaxable = boolean)
+            val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true, isUnderlyingDataTaxable = boolean)
 
             val application = applicationBuilder(userAnswers = Some(baseAnswers))
               .build()
@@ -78,7 +78,7 @@ class BeforeClosingControllerSpec extends SpecBase with ScalaCheckPropertyChecks
       "not a 5mld trust in 5mld mode" must {
         "redirect to update trustees yes/no" in {
 
-          val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
+          val baseAnswers: UserAnswers = emptyUserAnswersForUtr
 
           val application = applicationBuilder(userAnswers = Some(baseAnswers))
             .build()

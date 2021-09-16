@@ -26,7 +26,7 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
-import services.{AuthenticationService, FeatureFlagService, SessionService}
+import services.{AuthenticationService, SessionService}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
@@ -51,7 +51,6 @@ class TrustStatusController @Inject()(
                                        playbackExtractor: UserAnswersExtractor,
                                        authenticationService: AuthenticationService,
                                        val controllerComponents: MessagesControllerComponents,
-                                       featureFlagService: FeatureFlagService,
                                        sessionService: SessionService
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
@@ -144,12 +143,10 @@ class TrustStatusController @Inject()(
     logger.info(s"[tryToPlayback][Session ID: ${Session.id(hc)}] $identifier trust is in a processed state")
 
     val userAnswersF = for {
-      is5mldEnabled <- featureFlagService.is5mldEnabled()
       trustDetails <- trustConnector.getUntransformedTrustDetails(identifier)
       userAnswers <- sessionService.initialiseUserAnswers(
         identifier = identifier,
         internalId = request.user.internalId,
-        is5mldEnabled = is5mldEnabled,
         isUnderlyingData5mld = trustDetails.is5mld,
         isUnderlyingDataTaxable = trustDetails.isTaxable
       )

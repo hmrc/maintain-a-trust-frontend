@@ -43,8 +43,8 @@ class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
 
       "setup user answers" in {
 
-        forAll(arbitrary[Boolean], arbitrary[Boolean], arbitrary[Boolean]) {
-          (is5mldEnabled, isUnderlyingData5mld, isUnderlyingDataTaxable) =>
+        forAll(arbitrary[Boolean], arbitrary[Boolean]) {
+          (isUnderlyingData5mld, isUnderlyingDataTaxable) =>
 
             val mockPlaybackRepository = mock[PlaybackRepository]
             when(mockPlaybackRepository.set(any())).thenReturn(Future.successful(true))
@@ -58,7 +58,6 @@ class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
             val resultF = userAnswersSetupService.initialiseUserAnswers(
               identifier = identifier,
               internalId = internalId,
-              is5mldEnabled = is5mldEnabled,
               isUnderlyingData5mld = isUnderlyingData5mld,
               isUnderlyingDataTaxable = isUnderlyingDataTaxable
             )
@@ -67,7 +66,6 @@ class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
 
             ua.internalId mustBe internalId
             ua.identifier mustBe identifier
-            ua.is5mldEnabled mustBe is5mldEnabled
             ua.isUnderlyingData5mld mustBe isUnderlyingData5mld
             ua.isUnderlyingDataTaxable mustBe isUnderlyingDataTaxable
 

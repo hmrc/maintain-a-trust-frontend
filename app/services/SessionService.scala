@@ -33,13 +33,12 @@ class SessionService @Inject()(playbackRepository: PlaybackRepository,
 
   def initialiseUserAnswers(identifier: String,
                             internalId: String,
-                            is5mldEnabled: Boolean,
                             isUnderlyingData5mld: Boolean,
                             isUnderlyingDataTaxable: Boolean)
                            (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[UserAnswers] = {
 
     val activeSession = IdentifierSession(internalId, identifier)
-    val newEmptyAnswers = UserAnswers.startNewSession(internalId, identifier, is5mldEnabled, isUnderlyingData5mld, isUnderlyingDataTaxable)
+    val newEmptyAnswers = UserAnswers.startNewSession(internalId, identifier, isUnderlyingData5mld, isUnderlyingDataTaxable)
 
     for {
       _ <- playbackRepository.resetCache(internalId, identifier)
