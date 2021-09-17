@@ -351,7 +351,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             protectorCompany = Nil
           )
 
-          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+          val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -434,7 +434,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+          val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
@@ -508,7 +508,7 @@ class ProtectorExtractorSpec extends FreeSpec with MustMatchers
             )
           )
 
-          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+          val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 

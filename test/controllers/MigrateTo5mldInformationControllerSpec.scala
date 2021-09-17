@@ -31,7 +31,7 @@ class MigrateTo5mldInformationControllerSpec extends SpecBase {
 
         val utr = "1234567890"
 
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -55,7 +55,7 @@ class MigrateTo5mldInformationControllerSpec extends SpecBase {
       "redirect to ExpressTrustYesNoController " in {
 
 
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

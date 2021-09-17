@@ -30,7 +30,6 @@ import play.api.Logging
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, BodyParsers, Result}
 import repositories.PlaybackRepository
-import services.FeatureFlagService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.TrustClosureDate.{getClosureDate, setClosureDate}
@@ -42,8 +41,7 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
                                                            val parser: BodyParsers.Default,
                                                            playbackRepository: PlaybackRepository,
                                                            trustConnector: TrustConnector,
-                                                           playbackExtractor: UserAnswersExtractor,
-                                                           featureFlagService: FeatureFlagService
+                                                           playbackExtractor: UserAnswersExtractor
                                                          )(override implicit val executionContext: ExecutionContext)
   extends RefreshedDataPreSubmitRetrievalAction with Logging {
 
@@ -74,35 +72,28 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
 
   private def extractAndRefreshUserAnswers[A](data: SubmissionData, playback: GetTrust)
                                              (implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] = {
-    featureFlagService.is5mldEnabled() flatMap { is5mldEnabled =>
-      if (!request.userAnswers.is5mldEnabled && is5mldEnabled) {
-        logger.info(s"[RefreshedDraftDataRetrievalAction] 5MLD has been turned on mid-session." +
-          s" Redirecting to express page to start 4MLD -> 5MLD transition journey.")
-        Future.successful(Left(Redirect(controllers.transition.routes.ExpressTrustYesNoController.onPageLoad())))
-      } else {
-        Future.fromTry {
-          request.userAnswers.clearData
-            .set(WhatIsNextPage, data.whatIsNext)
-            .flatMap(_.set(AgentDeclarationPage, data.agent))
-            .flatMap(answers => setClosureDate(answers, data.endDate))
-        } flatMap { updatedAnswers =>
-          playbackExtractor.extract(updatedAnswers, playback) flatMap {
-            case Right(extractedAnswers) =>
-              playbackRepository.set(extractedAnswers) map { _ =>
-                logger.debug(s"[RefreshedDraftDataRetrievalAction] Set updated user answers in db")
-                Right(DataRequest(request.request, extractedAnswers, request.user))
-              }
-            case Left(reason) =>
-              logger.warn(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to $reason")
-              Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
-          }
+      Future.fromTry {
+        request.userAnswers.clearData
+          .set(WhatIsNextPage, data.whatIsNext)
+          .flatMap(_.set(AgentDeclarationPage, data.agent))
+          .flatMap(answers => setClosureDate(answers, data.endDate))
+      } flatMap { updatedAnswers =>
+        playbackExtractor.extract(updatedAnswers, playback) flatMap {
+          case Right(extractedAnswers) =>
+            playbackRepository.set(extractedAnswers) map { _ =>
+              logger.debug(s"[RefreshedDraftDataRetrievalAction] Set updated user answers in db")
+              Right(DataRequest(request.request, extractedAnswers, request.user))
+            }
+          case Left(reason) =>
+            logger.warn(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to $reason")
+            Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
         }
+      } recoverWith {
+        case e =>
+          logger.error(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to ${e.getMessage}")
+          Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
-    } recoverWith {
-      case e =>
-        logger.error(s"[RefreshedDraftDataRetrievalAction] Failed to retrieve is5mldEnabled feature flag: ${e.getMessage}")
-        Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
-    }
+
   }
 
 }

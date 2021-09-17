@@ -27,7 +27,6 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.ActiveSessionRepository
-import services.FeatureFlagService
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.UTRView
@@ -42,7 +41,6 @@ class UTRControllerSpec extends SpecBase {
 
   lazy val trustUTRRoute: String = routes.UTRController.onPageLoad().url
 
-  val mockFeatureFlagService: FeatureFlagService = mock[FeatureFlagService]
   val mockTrustsConnector: TrustConnector = mock[TrustConnector]
 
   val utr = "0987654321"

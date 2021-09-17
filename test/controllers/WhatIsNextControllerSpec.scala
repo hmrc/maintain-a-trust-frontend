@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.TrustConnector
 import forms.WhatIsNextFormProvider
 import generators.ModelGenerators
-import models.Underlying4mldTrustIn4mldMode
+import models.Underlying4mldTrustIn5mldMode
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
 import org.mockito.Matchers.{any, eq => eqTo}
@@ -63,47 +63,6 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
   }
 
   "WhatIsNext Controller" must {
-
-    "return OK and the correct view for a GET" in {
-
-      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val request = FakeRequest(GET, onPageLoad)
-
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[WhatIsNextView]
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(form, Underlying4mldTrustIn4mldMode)(request, messages).toString
-
-      application.stop()
-    }
-
-    "populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      val request = FakeRequest(GET, onPageLoad)
-
-      val view = application.injector.instanceOf[WhatIsNextView]
-
-      val result = route(application, request).value
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(form.fill(WhatIsNext.MakeChanges), Underlying4mldTrustIn4mldMode)(request, messages).toString
-
-      application.stop()
-    }
 
     "redirect to Session Expired if no data" in {
 
@@ -175,35 +134,10 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
 
       "Make Changes" when {
 
-        "4mld" must {
-          "redirect to update trustee details" in {
-
-            val userAnswers = emptyUserAnswersForUtr
-
-            val application = applicationBuilder(userAnswers = Some(userAnswers))
-              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
-              .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
-              .build()
-
-            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-              .withFormUrlEncodedBody(("value", MakeChanges.toString))
-
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-
-            redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
-
-            application.stop()
-          }
-        }
-
-        "5mld" when {
-
           "underlying data is 4mld" must {
             "redirect to update trustee details" in {
 
-              val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
+              val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = false)
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -228,7 +162,7 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
 
               "taxable" in {
 
-                val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+                val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
                 val application = applicationBuilder(userAnswers = Some(userAnswers))
                   .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -269,7 +203,6 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
               }
             }
           }
-        }
       }
 
       "Close Trust" when {
@@ -412,7 +345,7 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
       "Generate PDF" must {
         "redirect to generated PDF" in {
 
-          val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true)
+          val userAnswers = emptyUserAnswersForUtr
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -543,7 +476,7 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
+      val userAnswers = emptyUserAnswersForUtr
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -559,7 +492,7 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
       status(result) mustEqual BAD_REQUEST
 
       contentAsString(result) mustEqual
-        view(boundForm, Underlying4mldTrustIn4mldMode)(request, messages).toString
+        view(boundForm, Underlying4mldTrustIn5mldMode)(request, messages).toString
 
       application.stop()
     }

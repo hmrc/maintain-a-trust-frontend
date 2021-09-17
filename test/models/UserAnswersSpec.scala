@@ -92,22 +92,17 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
     ".trustMldStatus" must {
       "return correct MLD status of the trust" when {
 
-        "4mld" in {
-          val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false)
-          userAnswers.trustMldStatus mustBe Underlying4mldTrustIn4mldMode
-        }
-
         "5mld" when {
 
           "underlying data is 4mld" in {
-            val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
+            val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = false)
             userAnswers.trustMldStatus mustBe Underlying4mldTrustIn5mldMode
           }
 
           "underlying data is 5mld" when {
 
             "taxable" in {
-              val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+              val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
               userAnswers.trustMldStatus mustBe Underlying5mldTaxableTrustIn5mldMode
             }
 

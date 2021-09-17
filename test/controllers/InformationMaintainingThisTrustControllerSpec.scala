@@ -28,31 +28,9 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" when {
 
-      "4mld" in {
-
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isUnderlyingData5mld = false)
-
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[InformationMaintainingThisTrustView]
-
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual
-          view(userAnswers.identifier, UTR)(request, messages).toString
-
-        application.stop()
-      }
-
-      "5mld" when {
-
         "underlying trust data is 4mld" in {
 
-          val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = false)
+          val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = false)
 
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +52,7 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
 
           "taxable" in {
 
-            val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+            val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
             val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -112,13 +90,12 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
             application.stop()
           }
         }
-      }
     }
 
     ".onSubmit" must {
       "redirect to ViewLastDeclarationYesNoController " in {
 
-        val userAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

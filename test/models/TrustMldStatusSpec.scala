@@ -26,10 +26,9 @@ class TrustMldStatusSpec extends SpecBase with ScalaCheckPropertyChecks {
 
     ".is5mldTrustIn5mldMode" must {
 
-      "return false when Underlying4mldTrustIn4mldMode or Underlying4mldTrustIn5mldMode" in {
+      "return false when Underlying4mldTrustIn5mldMode" in {
 
         val trustMldStatuses: Seq[TrustMldStatus] = Seq[TrustMldStatus](
-          Underlying4mldTrustIn4mldMode,
           Underlying4mldTrustIn5mldMode
         )
 

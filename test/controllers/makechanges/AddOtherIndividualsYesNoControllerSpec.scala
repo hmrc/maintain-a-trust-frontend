@@ -52,7 +52,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       "underlying trust data is 4mld" must {
 
-        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isUnderlyingData5mld = false)
+        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = false)
           .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
         "return OK and the correct view for a GET" in {
@@ -167,7 +167,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       "underlying trust data is 5mld" must {
 
-        val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val baseAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
           .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
 
         "return OK and the correct view for a GET" in {
@@ -294,7 +294,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       "underlying trust data is 4mld" must {
 
-        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = false, isUnderlyingData5mld = false)
+        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = false)
           .set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
 
         "return OK and the correct view for a GET" in {
@@ -387,7 +387,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       "underlying trust data is 5mld" must {
 
-        val baseAnswers = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+        val baseAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
           .set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
 
         "return OK and the correct view for a GET" in {

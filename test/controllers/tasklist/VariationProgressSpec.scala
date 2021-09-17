@@ -21,7 +21,7 @@ import base.SpecBase
 import models.MigrationTaskStatus.{NeedsUpdating, NothingToUpdate, Updated}
 import models.pages.Tag._
 import models.pages.WhatIsNext
-import models.{CompletedMaintenanceTasks, Underlying4mldTrustIn4mldMode, Underlying4mldTrustIn5mldMode, Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
+import models.{CompletedMaintenanceTasks, Underlying4mldTrustIn5mldMode, Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
 import sections._
 import sections.assets.Assets
 import sections.beneficiaries.Beneficiaries
@@ -35,90 +35,8 @@ class VariationProgressSpec extends SpecBase {
   "VariationProgress" when {
 
     "generateTaskList" must {
+
       "generate task list" when {
-
-        "in 4mld mode" when {
-
-          "tasks not started" in {
-            val tasks = CompletedMaintenanceTasks()
-
-            val userAnswers = emptyUserAnswersForUtr
-            val identifier = userAnswers.identifier
-
-            val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, identifier)
-
-            result.mandatory mustBe List(
-              Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), NotStarted),
-              Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$identifier"), NotStarted),
-              Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), NotStarted)
-            )
-
-            result.other mustBe List(
-              Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), NotStarted),
-              Task(Link(OtherIndividuals, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
-            )
-          }
-
-          "tasks in progress" in {
-            val tasks = CompletedMaintenanceTasks(
-              trustDetails = NotStarted,
-              assets = NotStarted,
-              taxLiability = NotStarted,
-              trustees = InProgress,
-              beneficiaries = InProgress,
-              settlors = InProgress,
-              protectors = InProgress,
-              other = InProgress
-            )
-
-            val userAnswers = emptyUserAnswersForUtr
-            val identifier = userAnswers.identifier
-
-            val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, identifier)
-
-            result.mandatory mustBe List(
-              Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), InProgress),
-              Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$identifier"), InProgress),
-              Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), InProgress)
-            )
-
-            result.other mustBe List(
-              Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), InProgress),
-              Task(Link(OtherIndividuals, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), InProgress)
-            )
-          }
-
-          "tasks completed" in {
-            val tasks = CompletedMaintenanceTasks(
-              trustDetails = NotStarted,
-              assets = NotStarted,
-              taxLiability = NotStarted,
-              trustees = Completed,
-              beneficiaries = Completed,
-              settlors = Completed,
-              protectors = Completed,
-              other = Completed
-            )
-
-            val userAnswers = emptyUserAnswersForUtr
-            val identifier = userAnswers.identifier
-
-            val result = variationProgress.generateTaskList(tasks, Underlying4mldTrustIn4mldMode, identifier)
-
-            result.mandatory mustBe List(
-              Task(Link(Settlors, s"http://localhost:9795/maintain-a-trust/settlors/$identifier"), Completed),
-              Task(Link(Trustees, s"http://localhost:9792/maintain-a-trust/trustees/$identifier"), Completed),
-              Task(Link(Beneficiaries, s"http://localhost:9793/maintain-a-trust/beneficiaries/$identifier"), Completed)
-            )
-
-            result.other mustBe List(
-              Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), Completed),
-              Task(Link(OtherIndividuals, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), Completed)
-            )
-          }
-        }
-
-        "in 5mld mode" when {
 
           "underlying trust data is 4mld" in {
             val tasks = CompletedMaintenanceTasks()
@@ -186,7 +104,6 @@ class VariationProgressSpec extends SpecBase {
               )
             }
           }
-        }
       }
     }
 

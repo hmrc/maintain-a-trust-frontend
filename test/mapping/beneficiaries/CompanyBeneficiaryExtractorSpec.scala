@@ -130,7 +130,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
             entityStart = "2019-11-26"
           ))
 
-          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+          val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val extraction = companyExtractor.extract(ua, company)
 
@@ -150,7 +150,7 @@ class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
         "with full data must return user answers updated" in {
           val companies = (for (index <- 0 to 2) yield generateCompany(index)).toList
 
-          val ua = emptyUserAnswersForUtr.copy(is5mldEnabled = true, isUnderlyingData5mld = true)
+          val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val extraction = companyExtractor.extract(ua, companies)
 

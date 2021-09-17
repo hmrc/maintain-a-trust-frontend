@@ -32,7 +32,6 @@ import scala.util.{Failure, Success, Try}
 final case class UserAnswers(internalId: String,
                              identifier: String,
                              data: JsObject = Json.obj(),
-                             is5mldEnabled: Boolean = false,
                              isUnderlyingData5mld: Boolean = false,
                              isUnderlyingDataTaxable: Boolean = true,
                              updatedAt: LocalDateTime = LocalDateTime.now) extends Logging {
@@ -50,11 +49,10 @@ final case class UserAnswers(internalId: String,
   def isTrustMigratingFromNonTaxableToTaxable: Boolean = trustTaxability.isTrustMigratingFromNonTaxableToTaxable
   def isTrustTaxableOrMigratingToTaxable: Boolean = isTrustTaxable || isTrustMigratingFromNonTaxableToTaxable
 
-  def trustMldStatus: TrustMldStatus = (is5mldEnabled, isUnderlyingData5mld, isUnderlyingDataTaxable) match {
-    case (false, _, _) => Underlying4mldTrustIn4mldMode
-    case (true, false, _) => Underlying4mldTrustIn5mldMode
-    case (true, true, true) => Underlying5mldTaxableTrustIn5mldMode
-    case (true, true, false) => Underlying5mldNonTaxableTrustIn5mldMode
+  def trustMldStatus: TrustMldStatus = (isUnderlyingData5mld, isUnderlyingDataTaxable) match {
+    case (false, _) => Underlying4mldTrustIn5mldMode
+    case (true, true) => Underlying5mldTaxableTrustIn5mldMode
+    case (true, false) => Underlying5mldNonTaxableTrustIn5mldMode
   }
 
   def is5mldTrustIn5mldMode: Boolean = trustMldStatus.is5mldTrustIn5mldMode
@@ -151,13 +149,11 @@ object UserAnswers {
 
   def startNewSession(internalId: String,
                       identifier: String,
-                      is5mldEnabled: Boolean,
                       isUnderlyingData5mld: Boolean,
                       isUnderlyingDataTaxable: Boolean): UserAnswers =
     UserAnswers(
       internalId = internalId,
       identifier = identifier,
-      is5mldEnabled = is5mldEnabled,
       isUnderlyingData5mld = isUnderlyingData5mld,
       isUnderlyingDataTaxable = isUnderlyingDataTaxable
     )
@@ -166,7 +162,6 @@ object UserAnswers {
     (__ \ "internalId").read[String] and
       (__ \ "identifier").read[String] and
       (__ \ "data").read[JsObject] and
-      (__ \ "is5mldEnabled").readWithDefault[Boolean](false) and
       (__ \ "isUnderlyingData5mld").readWithDefault[Boolean](false) and
       (__ \ "isUnderlyingDataTaxable").readWithDefault[Boolean](true) and
       (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
@@ -176,7 +171,6 @@ object UserAnswers {
     (__ \ "internalId").write[String] and
       (__ \ "identifier").write[String] and
       (__ \ "data").write[JsObject] and
-      (__ \ "is5mldEnabled").write[Boolean] and
       (__ \ "isUnderlyingData5mld").write[Boolean] and
       (__ \ "isUnderlyingDataTaxable").write[Boolean] and
       (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
