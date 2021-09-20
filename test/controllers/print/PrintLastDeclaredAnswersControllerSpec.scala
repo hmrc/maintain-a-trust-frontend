@@ -17,8 +17,10 @@
 package controllers.print
 
 import base.SpecBase
-import models.UKAddress
+import models.pages.IndividualOrBusiness.Individual
+import models.{FullName, UKAddress}
 import pages.beneficiaries.charity._
+import pages.trustees._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.TestUserAnswers
@@ -60,6 +62,42 @@ class PrintLastDeclaredAnswersControllerSpec extends SpecBase {
 
       contentAsString(result) mustEqual
         view(entities, trustDetails)(request, messages).toString
+
+      application.stop()
+    }
+
+    "return OK and the correct view for a GET with Trustee Mental Capacity questions answered when no mental capacity data held" in {
+
+      val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
+        .set(IsThisLeadTrusteePage(0), false).success.value
+        .set(TrusteeIndividualOrBusinessPage(0), Individual).success.value
+        .set(TrusteeNamePage(0), FullName("Trustee", None, "1")).success.value
+        .set(TrusteeDateOfBirthYesNoPage(0), false).success.value
+        .set(TrusteeCountryOfNationalityYesNoPage(0), false).success.value
+        .set(TrusteeNinoYesNoPage(0), false).success.value
+        .set(TrusteeCountryOfResidenceYesNoPage(0), false).success.value
+        .set(TrusteeAddressYesNoPage(0), false).success.value
+        .set(TrusteePassportIDCardYesNoPage(0), false).success.value
+
+      val entities = injector.instanceOf[PrintPlaybackHelper].entities(playbackAnswers)
+
+      val trustDetails = injector.instanceOf[PrintPlaybackHelper].trustDetails(playbackAnswers)
+
+      val application = applicationBuilder(Some(playbackAnswers)).build()
+
+      val request = FakeRequest(GET, controllers.print.routes.PrintLastDeclaredAnswersController.onPageLoad().url)
+
+      val result = route(application, request).value
+
+      val view = application.injector.instanceOf[PrintLastDeclaredAnswersView]
+
+      status(result) mustEqual OK
+
+      contentAsString(result) mustEqual
+        view(entities, trustDetails)(request, messages).toString
+
+      contentAsString(result) must include("Does Trustee 1 have mental capacity at the time of registration?")
+      contentAsString(result) must include("I don’t know or not provided")
 
       application.stop()
     }

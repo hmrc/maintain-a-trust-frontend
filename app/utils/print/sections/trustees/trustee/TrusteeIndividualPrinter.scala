@@ -57,7 +57,7 @@ class TrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter) extends 
     converter.addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name),
     converter.yesNoQuestion(TrusteePassportIDCardYesNoPage(index), userAnswers, "trusteePassportOrIdCardYesNo", name),
     converter.passportOrIdCardQuestion(TrusteePassportIDCardPage(index), userAnswers, "trusteePassportOrIdCard", name),
-    converter.yesNoQuestion(TrusteeMentalCapacityYesNoPage(index), userAnswers, "trusteeMentalCapacityYesNo", name)
+    converter.yesNoDontKnowQuestion(TrusteeMentalCapacityYesNoPage(index), userAnswers, "trusteeMentalCapacityYesNo", name)
   )
 
   override def namePath(index: Int): JsPath = TrusteeNamePage(index).path

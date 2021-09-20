@@ -21,6 +21,7 @@ import models.pages.RoleInCompany
 import models.{Address, Description, FullName, URN, UTR, UserAnswers}
 import play.api.i18n.Messages
 import play.api.libs.json.Reads
+import play.twirl.api.HtmlFormat.escape
 import play.twirl.api.{Html, HtmlFormat}
 import queries.Gettable
 import utils.CheckAnswersFormatters
@@ -105,6 +106,15 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
                    (implicit messages: Messages): Option[AnswerRow] = {
     val format = (x: Boolean) => checkAnswersFormatters.yesOrNo(x)
     question(query, userAnswers, labelKey, format, messageArg)
+  }
+
+  def yesNoDontKnowQuestion(query: Gettable[Boolean],
+                    userAnswers: UserAnswers,
+                    labelKey: String,
+                    messageArg: String = "")
+                   (implicit messages: Messages): Option[AnswerRow] = {
+    val format = (x: Boolean) => checkAnswersFormatters.yesOrNo(x)
+    mentalCapacityQuestion(query, userAnswers, labelKey, format, messageArg)
   }
 
   def fullNameQuestion(query: Gettable[FullName],
@@ -205,4 +215,17 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     }
   }
 
+  private def mentalCapacityQuestion[T](query: Gettable[T],
+                          userAnswers: UserAnswers,
+                          labelKey: String,
+                          format: T => Html,
+                          messageArg: String)
+                         (implicit messages: Messages, rds: Reads[T]): Option[AnswerRow] = {
+    userAnswers.get(query) map { x =>
+      answerRow(labelKey, messageArg, format(x))
+    } match {
+      case Some(value) => Some(value)
+      case None => Some(answerRow(labelKey, messageArg, escape(messages("site.dontknow"))))
+    }
+  }
 }
