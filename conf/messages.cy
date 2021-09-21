@@ -591,6 +591,7 @@ site.hidden-delete=Tynnu {0}
 site.onlyContinue=Yn eich blaen
 site.yes=Iawn
 site.no=Na
+site.dontknow=Nid wyf yn gwybod neu heb ei ddarparu
 site.confirm-send=Cadarnhau ac anfon
 site.try-again=Rhowch gynnig arall arni
 site.sign_in=Mewngofnodi
