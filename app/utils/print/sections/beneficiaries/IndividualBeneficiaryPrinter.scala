@@ -78,7 +78,7 @@ class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) exte
     converter.yesNoQuestion(IndividualBeneficiaryPassportIDCardYesNoPage(index), userAnswers, "individualBeneficiaryPassportIDCardYesNo", name),
     converter.passportOrIdCardQuestion(IndividualBeneficiaryPassportIDCardPage(index), userAnswers, "individualBeneficiaryPassportIDCard", name),
     converter.yesNoQuestion(IndividualBeneficiaryVulnerableYesNoPage(index), userAnswers, "individualBeneficiaryVulnerableYesNo", name),
-    converter.yesNoQuestion(IndividualBeneficiaryMentalCapacityYesNoPage(index), userAnswers, "individualBeneficiaryMentalCapacityYesNo", name)
+    converter.yesNoDontKnowQuestion(IndividualBeneficiaryMentalCapacityYesNoPage(index), userAnswers, "individualBeneficiaryMentalCapacityYesNo", name)
   )
 
   override def namePath(index: Int): JsPath = IndividualBeneficiaryNamePage(index).path

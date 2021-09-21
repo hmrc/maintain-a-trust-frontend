@@ -45,7 +45,7 @@ class SettlorIndividualPrinter @Inject()(converter: AnswerRowConverter) extends 
     converter.addressQuestion(SettlorAddressPage(index), userAnswers, "settlorIndividualAddressUK", name),
     converter.yesNoQuestion(SettlorIndividualPassportIDCardYesNoPage(index), userAnswers, "settlorPassportOrIdCardYesNo", name),
     converter.passportOrIdCardQuestion(SettlorIndividualPassportIDCardPage(index), userAnswers, "settlorPassportOrIdCard", name),
-    converter.yesNoQuestion(SettlorIndividualMentalCapacityYesNoPage(index), userAnswers, "settlorIndividualMentalCapacityYesNo", name)
+    converter.yesNoDontKnowQuestion(SettlorIndividualMentalCapacityYesNoPage(index), userAnswers, "settlorIndividualMentalCapacityYesNo", name)
   )
 
   override def namePath(index: Int): JsPath = SettlorIndividualNamePage(index).path

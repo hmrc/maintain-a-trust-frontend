@@ -62,7 +62,7 @@ class IndividualProtectorPrinter @Inject()(converter: AnswerRowConverter) extend
     converter.addressQuestion(IndividualProtectorAddressPage(index), userAnswers, "individualProtectorAddress", name),
     converter.yesNoQuestion(IndividualProtectorPassportIDCardYesNoPage(index), userAnswers, "individualProtectorPassportIDCardYesNo", name),
     converter.passportOrIdCardQuestion(IndividualProtectorPassportIDCardPage(index), userAnswers, "individualProtectorPassportIDCard", name),
-    converter.yesNoQuestion(IndividualProtectorMentalCapacityYesNoPage(index), userAnswers, "individualProtectorMentalCapacityYesNo", name)
+    converter.yesNoDontKnowQuestion(IndividualProtectorMentalCapacityYesNoPage(index), userAnswers, "individualProtectorMentalCapacityYesNo", name)
   )
 
   override def namePath(index: Int): JsPath = IndividualProtectorNamePage(index).path

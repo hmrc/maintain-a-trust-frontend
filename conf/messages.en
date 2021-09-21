@@ -259,6 +259,7 @@ site.hidden-delete = Remove {0}
 site.onlyContinue = Continue
 site.yes = Yes
 site.no = No
+site.dontknow = I don’t know or not provided
 site.confirm-send = Confirm and send
 site.try-again = Try again
 site.sign_out = Sign out

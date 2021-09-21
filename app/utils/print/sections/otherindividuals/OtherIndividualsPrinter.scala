@@ -64,7 +64,7 @@ class OtherIndividualsPrinter @Inject()(converter: AnswerRowConverter) extends E
     converter.addressQuestion(OtherIndividualAddressPage(index), userAnswers, "otherIndividualAddress", name),
     converter.yesNoQuestion(OtherIndividualPassportIDCardYesNoPage(index), userAnswers, "otherIndividualPassportIDCardYesNo", name),
     converter.passportOrIdCardQuestion(OtherIndividualPassportIDCardPage(index), userAnswers, "otherIndividualPassportIDCard", name),
-    converter.yesNoQuestion(OtherIndividualMentalCapacityYesNoPage(index), userAnswers, "otherIndividualMentalCapacityYesNo", name)
+    converter.yesNoDontKnowQuestion(OtherIndividualMentalCapacityYesNoPage(index), userAnswers, "otherIndividualMentalCapacityYesNo", name)
   )
 
   override def namePath(index: Int): JsPath = OtherIndividualNamePage(index).path
