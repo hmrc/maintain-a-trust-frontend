@@ -223,10 +223,10 @@ noTaxLiabilityInfo.bullet2=Cyflwyno Hunanasesiad: Ffurflen Dreth ar gyfer Ymddir
 noTaxLiabilityInfo.paragraph2=Nid oes angen i chi wneud datganiad blynyddol ar gyfer yr ymddiriedolaeth hon mwyach. Bydd angen i chi roi gwybod i ni am unrhyw newidiadau i fanylion yr ymddiriedolaeth.
 transitionProgress.title=Trosolwg o’r ymddiriedolaeth
 transitionProgress.heading=Trosolwg o’r ymddiriedolaeth
-transitionProgress.p1=Gallwch newid manylion am yr ymddiriedolaeth a gwneud datganiad ar ôl i chi gadarnhau bod pob adran yn gyfredol.
-transitionProgress.p2=Os na wnewch ddatganiad, ni chaiff unrhyw newidiadau a wnewch eu cadw.
+transitionProgress.p1=Gallwch wneud newidiadau i gofnod yr ymddiriedolaeth, a gwneud datganiad unwaith y byddwch wedi cadarnhau bod pob adran yn gyfredol.
+transitionProgress.p2=Gallwch argraffu copi o’ch atebion drafft yn ogystal â chopi o’r datganiad.
 transitionsProgress.return.link=Dychwelyd i gofrestru ymddiriedolaeth a’i chynnal ar ran cleient
-transitionProgress.warning=Mae angen i chi ddatgan bod manylion yr ymddiriedolaeth yn gyfredol. Mae’n bosibl bod rhai cwestiynau wedi newid ers i’r ymddiriedolaeth gael ei chofrestru.
+transitionProgress.warning=Os nad ydych yn datgan bod yr wybodaeth yn gyfredol, ni fydd eich newidiadau'n cael eu cyflwyno i CThEM ac ni fyddant yn cael eu cadw.
 transitionProgress.p3=Gallwch gadw neu argraffu copi drafft o’ch atebion wedi’u cadw unwaith y bydd pob adran wedi’u llenwi, yn ogystal â chopi wedi’i ddatgan ar ôl i chi wneud datganiad.
 transitionProgress.p5b=. Gallwch hefyd argraffu copi wedi’i ddatgan ar ôl i chi wneud datganiad.
 
