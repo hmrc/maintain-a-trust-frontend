@@ -29,6 +29,13 @@ viewLastDeclarationYesNo.hint=Manylion a ddatganwyd i CThEM am y setlwyr, ymddir
 viewLastDeclarationYesNo.checkYourAnswersLabel=A ydych am fwrw golwg dros ddatganiad diwethaf yr ymddiriedolaeth hon?
 viewLastDeclarationYesNo.error.required=Dewiswch ‘Iawn’ os ydych am fwrw golwg dros ddatganiad diwethaf yr ymddiriedolaeth hon
 
+pageNotFound.title = Heb ddod o hyd i’r dudalen
+pageNotFound.heading = Heb ddod o hyd i’r dudalen
+pageNotFound.p1 = Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
+pageNotFound.p2 = Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
+pageNotFound.p3 = Os yw’r cyfeiriad gwe yn gywir, neu eich bod wedi dewis cysylltiad neu fotwm, {0}.
+pageNotFound.link = cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM i siarad â rhywun ynghylch ymddiriedolaeth (yn agor tab newydd)
+
 whichIdentifier.checkYourAnswersLabel = Pa ddynodydd unigryw sydd gan yr ymddiriedolaeth?
 uniqueTaxReference.checkYourAnswersLabel = Cyfeirnod Unigryw y Trethdalwr (UTR)
 uniqueReferenceNumber.checkYourAnswersLabel = Cyfeirnod Unigryw (URN)
