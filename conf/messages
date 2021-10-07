@@ -804,7 +804,7 @@ answerPage.section.nonEeaBusiness.subheading = Non-EEA Company {0}
 ### Charity
 charityBeneficiaryName.checkYourAnswersLabel = What is the name of the charity?
 charityBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
-charityBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+charityBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s income is {0} entitled to?
 charityBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 charityBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 charityBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
@@ -816,12 +816,12 @@ charityBeneficiaryCountryOfResidence.checkYourAnswersLabel = What is {0}’s cou
 ### Class of beneficiary
 classBeneficiaryDescription.checkYourAnswersLabel = What is the description for the class of beneficiaries?
 classBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
-classBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+classBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s income is {0} entitled to?
 
 ### Company
 companyBeneficiaryName.checkYourAnswersLabel = What is the name of the company?
 companyBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
-companyBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+companyBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s income is {0} entitled to?
 companyBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 companyBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 companyBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
@@ -842,7 +842,7 @@ individualBeneficiary.roleInCompany.checkYourAnswersLabel.na = Not a director or
 individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
 individualBeneficiaryDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
 individualBeneficiaryIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
-individualBeneficiaryIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+individualBeneficiaryIncome.checkYourAnswersLabel = What percentage of the trust’s income is {0} entitled to?
 individualBeneficiaryCountryOfNationalityYesNo.checkYourAnswersLabel = Do you know {0}’s country of nationality?
 individualBeneficiaryCountryOfNationalityUkYesNo.checkYourAnswersLabel = Does {0} have UK nationality?
 individualBeneficiaryCountryOfNationality.checkYourAnswersLabel = What is {0}’s country of nationality?
@@ -862,7 +862,7 @@ individualBeneficiaryMentalCapacityYesNo.checkYourAnswersLabel = Does {0} have m
 ### Large
 largeBeneficiaryName.checkYourAnswersLabel = What is the business’s name?
 largeBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
-largeBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+largeBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s income is {0} entitled to?
 largeBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 largeBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 largeBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
@@ -882,7 +882,7 @@ numberOfBeneficiaries.over1001 = Over 1,001
 ### Other
 otherBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
 otherBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
-otherBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+otherBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s income is {0} entitled to?
 otherBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 otherBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 otherBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
@@ -893,7 +893,7 @@ otherBeneficiaryCountryOfResidence.checkYourAnswersLabel = What is {0}’s count
 ### Trust
 trustBeneficiaryName.checkYourAnswersLabel = What is the name of the trust?
 trustBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
-trustBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s assets is {0} entitled to?
+trustBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s income is {0} entitled to?
 trustBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
 trustBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 trustBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
