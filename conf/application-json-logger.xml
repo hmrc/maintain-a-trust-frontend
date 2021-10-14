@@ -14,7 +14,7 @@
 
     <logger name="uk.gov" level="${logger.application:-WARN}"/>
 
-    <root level="${logger.application:-WARN}">
+    <root level="${logger.application:-ERROR}">
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
