@@ -58,7 +58,7 @@ class ActiveSessionRepositoryImpl @Inject()(
     name = Some("session-updated-at-index"),
     expireAfterSeconds = Some(cacheTtl),
     options = BSONDocument.empty,
-    unique = true,
+    unique = false,
     background = false,
     dropDups = false,
     sparse = false,
