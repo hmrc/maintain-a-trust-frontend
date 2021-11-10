@@ -20,7 +20,9 @@ import config.FrontendAppConfig
 import models.http.{DeclarationForApi, DeclarationResponse, TrustsResponse}
 import models.{FirstTaxYearAvailable, MigrationTaskStatus, TrustDetails}
 import play.api.Logging
-import play.api.libs.json.JsBoolean
+import play.api.http.HeaderNames
+import play.api.libs.json.{JsBoolean, Writes}
+import play.api.mvc.Request
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
@@ -76,9 +78,16 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) exte
   }
 
   def declare(identifier: String, payload: DeclarationForApi)
-             (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+             (implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+
+    val trueUserAgent = "True-User-Agent"
+
+    val newHc: HeaderCarrier = hc.withExtraHeaders(
+      trueUserAgent -> request.headers.get(HeaderNames.USER_AGENT).getOrElse("No user agent provided")
+    )
+
     val url: String = s"$baseUrl/declare/$identifier"
-    http.POST[DeclarationForApi, DeclarationResponse](url, payload)
+    http.POST[DeclarationForApi, DeclarationResponse](url, payload)(implicitly[Writes[DeclarationForApi]], DeclarationResponse.httpReads, newHc, ec)
   }
 
   def setTaxableMigrationFlag(identifier: String, value: Boolean)
