@@ -18,7 +18,6 @@ package connectors
 
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
-import play.api.http.Status._
 import generators.Generators
 import models.http._
 import models.pages.ShareClass.Ordinary
@@ -28,7 +27,9 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.http.Status
+import play.api.http.Status._
 import play.api.libs.json.{JsBoolean, Json}
+import play.api.mvc.Request
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.WireMockHelper
 
@@ -422,6 +423,8 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
             .willReturn(okJson(Json.stringify(response)))
         )
 
+        implicit val request: Request[_] = fakeRequest
+
         val result = Await.result(connector.declare(identifier, payload), Duration.Inf)
 
         result mustEqual TVNResponse(tvn)
@@ -444,6 +447,8 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
         server.stubFor(
           post(urlEqualTo(declareUrl(identifier)))
             .willReturn(serviceUnavailable()))
+
+        implicit val request: Request[_] = fakeRequest
 
         val result = Await.result(connector.declare(identifier, payload), Duration.Inf)
 

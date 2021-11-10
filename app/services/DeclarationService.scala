@@ -21,6 +21,7 @@ import connectors.TrustConnector
 import mapping.PlaybackImplicits._
 import models.http.{AgentDetails, Declaration, DeclarationForApi, DeclarationResponse}
 import models.{Address, AgentDeclaration, FullName, IndividualDeclaration}
+import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
@@ -35,7 +36,7 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
                                  agencyAddress: Address,
                                  agentFriendlyName: String,
                                  endDate: Option[LocalDate]
-                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+                               )(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
 
     val agentDetails = AgentDetails(
       arn,
@@ -49,13 +50,13 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
   }
 
   override def individualDeclaration(utr: String, declaration: IndividualDeclaration, endDate: Option[LocalDate])
-                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+                                    (implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
 
     declare(declaration.name, utr, None, endDate)
   }
 
   private def declare(name: FullName, utr: String, agentDetails: Option[AgentDetails], endDate: Option[LocalDate])
-                     (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+                     (implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
 
     val payload = DeclarationForApi(
       declaration = Declaration(name),
@@ -77,9 +78,9 @@ trait DeclarationService {
                         agencyAddress: Address,
                         agentFriendlyName: String,
                         endDate: Option[LocalDate]
-                      )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse]
+                      )(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse]
 
   def individualDeclaration(utr: String, declaration: IndividualDeclaration, endDate: Option[LocalDate])
-                           (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse]
+                           (implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse]
 
 }

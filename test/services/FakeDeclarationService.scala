@@ -16,8 +16,9 @@
 
 package services
 
-import models.http.{DeclarationResponse, DeclarationErrorResponse, TVNResponse}
+import models.http.{DeclarationErrorResponse, DeclarationResponse, TVNResponse}
 import models.{Address, AgentDeclaration, IndividualDeclaration}
+import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
@@ -32,7 +33,7 @@ class FakeDeclarationService extends DeclarationService {
                                  agencyAddress: Address,
                                  agentFriendlyName: String,
                                  endDate: Option[LocalDate]
-                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+                               )(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(TVNResponse("123456"))
   }
 
@@ -40,7 +41,7 @@ class FakeDeclarationService extends DeclarationService {
                                       utr: String,
                                       declaration: IndividualDeclaration,
                                       endDate: Option[LocalDate]
-                                    )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+                                    )(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(TVNResponse("123456"))
   }
 
@@ -55,7 +56,7 @@ class FakeFailingDeclarationService extends DeclarationService {
                                  agencyAddress: Address,
                                  agentFriendlyName: String,
                                  endDate: Option[LocalDate]
-                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+                               )(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(DeclarationErrorResponse)
   }
 
@@ -63,7 +64,7 @@ class FakeFailingDeclarationService extends DeclarationService {
                                       utr: String,
                                       declaration: IndividualDeclaration,
                                       endDate: Option[LocalDate]
-                                    )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+                                    )(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
     Future.successful(DeclarationErrorResponse)
   }
 
