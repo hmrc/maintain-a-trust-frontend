@@ -38,10 +38,10 @@ class SessionService @Inject()(playbackRepository: PlaybackRepository,
                            (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[UserAnswers] = {
 
     val activeSession = IdentifierSession(internalId, identifier)
-    val newEmptyAnswers = UserAnswers.startNewSession(internalId, identifier, isUnderlyingData5mld, isUnderlyingDataTaxable)
+    val newEmptyAnswers = UserAnswers.startNewSession(internalId, identifier, Session.id(hc), isUnderlyingData5mld, isUnderlyingDataTaxable)
 
     for {
-      _ <- playbackRepository.resetCache(internalId, identifier)
+      _ <- playbackRepository.resetCache(internalId, identifier, Session.id(hc))
       _ <- playbackRepository.set(newEmptyAnswers)
       _ <- sessionRepository.set(activeSession)
     } yield {

@@ -36,6 +36,7 @@ class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   private val identifier = "identifier"
   private val internalId = "internalId"
+  private val sessionId: String = utils.Session.id(hc)
 
   "SessionService" when {
 
@@ -48,7 +49,7 @@ class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
 
             val mockPlaybackRepository = mock[PlaybackRepository]
             when(mockPlaybackRepository.set(any())).thenReturn(Future.successful(true))
-            when(mockPlaybackRepository.resetCache(any(), any())).thenReturn(Future.successful(Some(Json.obj())))
+            when(mockPlaybackRepository.resetCache(any(), any(), any())).thenReturn(Future.successful(Some(Json.obj())))
 
             val mockSessionRepository = mock[ActiveSessionRepository]
             when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
@@ -69,7 +70,7 @@ class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
             ua.isUnderlyingData5mld mustBe isUnderlyingData5mld
             ua.isUnderlyingDataTaxable mustBe isUnderlyingDataTaxable
 
-            verify(mockPlaybackRepository).resetCache(internalId, identifier)
+            verify(mockPlaybackRepository).resetCache(internalId, identifier, sessionId)
 
             val identifierSessionCaptor = ArgumentCaptor.forClass(classOf[IdentifierSession])
             verify(mockSessionRepository).set(identifierSessionCaptor.capture())

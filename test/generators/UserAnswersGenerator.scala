@@ -42,6 +42,7 @@ trait UserAnswersGenerator extends TryValues {
       } yield UserAnswers(
         internalId = id,
         identifier = "utr",
+        sessionId = "session",
         data = data.foldLeft(Json.obj()) {
           case (obj, (path, value)) =>
             obj.setObject(path.path, value).get

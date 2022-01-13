@@ -79,9 +79,9 @@ class PlaybackRepositoryImpl @Inject()(
     wildcardProjection = None
   )
 
-  private val internalIdAndIdentifierIndex = Index.apply(BSONSerializationPack)(
-    key = Seq("internalId" -> IndexType.Ascending, "identifier" -> IndexType.Ascending),
-    name = Some("internal-id-and-identifier-compound-index"),
+  private val internalIdAndUtrAndNewIdIndex = Index.apply(BSONSerializationPack)(
+    key = Seq("internalId" -> IndexType.Ascending, "identifier" -> IndexType.Ascending, "newId" -> IndexType.Ascending),
+    name = Some("internal-id-and-utr-and-newId-compound-index"),
     expireAfterSeconds = None,
     options = BSONDocument.empty,
     unique = false,
@@ -109,7 +109,7 @@ class PlaybackRepositoryImpl @Inject()(
     for {
       collection              <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
       createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
-      createdIdIndex          <- collection.indexesManager.ensure(internalIdAndIdentifierIndex)
+      createdIdIndex          <- collection.indexesManager.ensure(internalIdAndUtrAndNewIdIndex)
     } yield createdLastUpdatedIndex && createdIdIndex
   }
 
@@ -140,14 +140,15 @@ class PlaybackRepositoryImpl @Inject()(
     } yield ()
   }
 
-  override def get(internalId: String, identifier: String): Future[Option[UserAnswers]] = {
+  private def selector(internalId: String, identifier: String, sessionId: String): JsObject = Json.obj(
+    "internalId" -> internalId,
+    "identifier" -> identifier,
+    "newId" -> s"$internalId-$identifier-$sessionId"
+  )
+
+  override def get(internalId: String, identifier: String, sessionId: String): Future[Option[UserAnswers]] = {
 
     logger.debug(s"PlaybackRepository getting user answers for $internalId")
-
-    val selector = Json.obj(
-      "internalId" -> internalId,
-      "identifier" -> identifier
-    )
 
     val modifier = Json.obj(
       "$set" -> Json.obj(
@@ -158,7 +159,7 @@ class PlaybackRepositoryImpl @Inject()(
     for {
       col <- collection
       r <- col.findAndUpdate(
-        selector = selector,
+        selector = selector(internalId, identifier, sessionId),
         update = modifier,
         fetchNewObject = true,
         upsert = false,
@@ -175,42 +176,33 @@ class PlaybackRepositoryImpl @Inject()(
 
   override def set(userAnswers: UserAnswers): Future[Boolean] = {
 
-    val selector = Json.obj(
-      "internalId" -> userAnswers.internalId,
-      "identifier" -> userAnswers.identifier
-    )
-
     val modifier = Json.obj(
       "$set" -> userAnswers.copy(updatedAt = LocalDateTime.now)
     )
 
     for {
       col <- collection
-      r <- col.update(ordered = false).one(selector, modifier, upsert = true, multi = false)
+      r <- col.update(ordered = false).one(
+        selector(userAnswers.internalId, userAnswers.identifier, userAnswers.sessionId), modifier, upsert = true, multi = false)
     } yield r.ok
   }
 
-  override def resetCache(internalId: String, identifier: String): Future[Option[JsObject]] = {
+  override def resetCache(internalId: String, identifier: String, sessionId: String): Future[Option[JsObject]] = {
 
     logger.debug(s"PlaybackRepository resetting cache for $internalId")
 
-    val selector = Json.obj(
-      "internalId" -> internalId,
-      "identifier" -> identifier
-    )
-
     for {
       col <- collection
-      r <- col.findAndRemove(selector, None, None, WriteConcern.Default, None, None, Seq.empty)
+      r <- col.findAndRemove(selector(internalId, identifier, sessionId), None, None, WriteConcern.Default, None, None, Seq.empty)
     } yield r.value
   }
 }
 
 trait PlaybackRepository {
 
-  def get(internalId: String, identifier: String): Future[Option[UserAnswers]]
+  def get(internalId: String, identifier: String, sessionId: String): Future[Option[UserAnswers]]
 
   def set(userAnswers: UserAnswers): Future[Boolean]
 
-  def resetCache(internalId: String, identifier: String): Future[Option[JsObject]]
+  def resetCache(internalId: String, identifier: String, sessionId: String): Future[Option[JsObject]]
 }

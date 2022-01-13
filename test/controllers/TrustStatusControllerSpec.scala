@@ -34,6 +34,7 @@ import play.api.test.Helpers._
 import repositories.PlaybackRepository
 import services.{AuthenticationService, FakeAuthenticationService, FakeFailingAuthenticationService}
 import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.http.HeaderCarrier
 import views.html.status._
 
 import java.time.LocalDate
@@ -43,6 +44,8 @@ import scala.io.Source
 class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
   trait BaseSetup {
+
+    implicit val hc: HeaderCarrier = HeaderCarrier()
 
     val builder: GuiceApplicationBuilder
 
@@ -87,8 +90,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual
-        view(AffinityGroup.Individual, utr, UTR)(request, messages).toString
+      contentAsString(result) mustEqual view(AffinityGroup.Individual, utr, UTR)(request, messages).toString
 
       application.stop()
     }

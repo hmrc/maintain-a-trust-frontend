@@ -22,6 +22,7 @@ import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.Logging
 import play.api.mvc.ActionTransformer
 import repositories.{ActiveSessionRepository, PlaybackRepository}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.Session
 
@@ -38,11 +39,11 @@ class DataRetrievalActionImpl @Inject()(activeSessionRepository: ActiveSessionRe
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
 
-    val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     activeSessionRepository.get(request.user.internalId) flatMap {
       case Some(session) =>
-        playbackRepository.get(request.user.internalId, session.identifier) map {
+        playbackRepository.get(request.user.internalId, session.identifier, Session.id(hc)) map {
           case None =>
             logger.info(s"[Session ID: ${Session.id(hc)}] no user answers in mongo for UTR/URN ${session.identifier}")
             createdOptionalDataRequest(request, None, session.identifier)
