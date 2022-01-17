@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,9 +49,9 @@ class UserAnswersCombinatorSpec extends SpecBase {
 
       "no arrays at path" must {
         "return first in list" in {
-          val x = UserAnswers(internalId = "internalId1", identifier = "utr1")
-          val y = UserAnswers(internalId = "internalId2", identifier = "utr2")
-          val z = UserAnswers(internalId = "internalId3", identifier = "utr3")
+          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1")
+          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2")
+          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3")
           val userAnswers = List(x, y, z)
 
           val result = userAnswers.combineArraysWithPath(path).get
@@ -61,9 +61,9 @@ class UserAnswersCombinatorSpec extends SpecBase {
 
       "first input has array at path" must {
         "return first in list" in {
-          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", data = array)
-          val y = UserAnswers(internalId = "internalId2", identifier = "utr2")
-          val z = UserAnswers(internalId = "internalId3", identifier = "utr3")
+          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1",  data = array)
+          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2")
+          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3" )
           val userAnswers = List(x, y, z)
 
           val result = userAnswers.combineArraysWithPath(path).get
@@ -73,9 +73,9 @@ class UserAnswersCombinatorSpec extends SpecBase {
 
       "a different input has array at path" must {
         "return first in list with updated data" in {
-          val x = UserAnswers(internalId = "internalId1", identifier = "utr1")
-          val y = UserAnswers(internalId = "internalId2", identifier = "utr2")
-          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", data = array)
+          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1")
+          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2")
+          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3", data = array)
           val userAnswers = List(x, y, z)
 
           val result = userAnswers.combineArraysWithPath(path).get
@@ -103,9 +103,9 @@ class UserAnswersCombinatorSpec extends SpecBase {
               |""".stripMargin
           ).as[JsObject]
 
-          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", data = array)
-          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", data = array)
-          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", data = array)
+          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1", data = array)
+          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2", data = array)
+          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3", data = array)
           val userAnswers = List(x, y, z)
 
           val result = userAnswers.combineArraysWithPath(path).get

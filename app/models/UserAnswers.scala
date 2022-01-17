@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import scala.util.{Failure, Success, Try}
 
 final case class UserAnswers(internalId: String,
                              identifier: String,
+                             sessionId: String,
                              data: JsObject = Json.obj(),
                              isUnderlyingData5mld: Boolean = false,
                              isUnderlyingDataTaxable: Boolean = true,
@@ -149,11 +150,13 @@ object UserAnswers {
 
   def startNewSession(internalId: String,
                       identifier: String,
+                      sessionId: String,
                       isUnderlyingData5mld: Boolean,
                       isUnderlyingDataTaxable: Boolean): UserAnswers =
     UserAnswers(
       internalId = internalId,
       identifier = identifier,
+      sessionId = sessionId,
       isUnderlyingData5mld = isUnderlyingData5mld,
       isUnderlyingDataTaxable = isUnderlyingDataTaxable
     )
@@ -161,6 +164,7 @@ object UserAnswers {
   implicit lazy val reads: Reads[UserAnswers] = (
     (__ \ "internalId").read[String] and
       (__ \ "identifier").read[String] and
+      (__ \ "sessionId").read[String] and
       (__ \ "data").read[JsObject] and
       (__ \ "isUnderlyingData5mld").readWithDefault[Boolean](false) and
       (__ \ "isUnderlyingDataTaxable").readWithDefault[Boolean](true) and
@@ -170,6 +174,7 @@ object UserAnswers {
   implicit lazy val writes: Writes[UserAnswers] = (
     (__ \ "internalId").write[String] and
       (__ \ "identifier").write[String] and
+      (__ \ "sessionId").write[String] and
       (__ \ "data").write[JsObject] and
       (__ \ "isUnderlyingData5mld").write[Boolean] and
       (__ \ "isUnderlyingDataTaxable").write[Boolean] and

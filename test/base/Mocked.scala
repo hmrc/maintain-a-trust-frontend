@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,5 +30,5 @@ trait Mocked extends MockitoSugar {
 
   when(playbackRepository.set(any())).thenReturn(Future.successful(true))
 
-  when(playbackRepository.resetCache(any(), any())).thenReturn(Future.successful(Some(Json.obj())))
+  when(playbackRepository.resetCache(any(), any(), any())).thenReturn(Future.successful(Some(Json.obj())))
 }

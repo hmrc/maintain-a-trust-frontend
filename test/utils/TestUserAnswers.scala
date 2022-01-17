@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,8 @@ object TestUserAnswers extends TryValues {
   lazy val userInternalId = "internalId"
   lazy val utr = "1234567890"
   lazy val urn = "XATRUST12345678"
+  lazy val sessionId = "sessionId"
 
-  def emptyUserAnswersForUtr: UserAnswers = models.UserAnswers(userInternalId, utr)
-  def emptyUserAnswersForUrn: UserAnswers = models.UserAnswers(userInternalId, urn, isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
+  def emptyUserAnswersForUtr: UserAnswers = UserAnswers(userInternalId, utr, sessionId)
+  def emptyUserAnswersForUrn: UserAnswers = UserAnswers(userInternalId, urn, sessionId, isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
 }
