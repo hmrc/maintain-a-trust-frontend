@@ -79,9 +79,9 @@ class PlaybackRepositoryImpl @Inject()(
     wildcardProjection = None
   )
 
-  private val internalIdAndUtrAndNewIdIndex = Index.apply(BSONSerializationPack)(
-    key = Seq("internalId" -> IndexType.Ascending, "identifier" -> IndexType.Ascending, "newId" -> IndexType.Ascending),
-    name = Some("internal-id-and-utr-and-newId-compound-index"),
+  private val internalIdAndUtrAndSessionIdIndex = Index.apply(BSONSerializationPack)(
+    key = Seq("newId" -> IndexType.Ascending),
+    name = Some("internal-id-and-utr-and-sessionId-compound-index"),
     expireAfterSeconds = None,
     options = BSONDocument.empty,
     unique = false,
@@ -109,7 +109,7 @@ class PlaybackRepositoryImpl @Inject()(
     for {
       collection              <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
       createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
-      createdIdIndex          <- collection.indexesManager.ensure(internalIdAndUtrAndNewIdIndex)
+      createdIdIndex          <- collection.indexesManager.ensure(internalIdAndUtrAndSessionIdIndex)
     } yield createdLastUpdatedIndex && createdIdIndex
   }
 
@@ -141,8 +141,6 @@ class PlaybackRepositoryImpl @Inject()(
   }
 
   private def selector(internalId: String, identifier: String, sessionId: String): JsObject = Json.obj(
-    "internalId" -> internalId,
-    "identifier" -> identifier,
     "newId" -> s"$internalId-$identifier-$sessionId"
   )
 
