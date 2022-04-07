@@ -17,6 +17,7 @@
 @import viewmodels.AnswerSection
 @import utils.SectionFormatter.formatAnswerSection
 @import views.html.components.{Heading, Button, SubmitButton, ReturnToTop}
+@import views.html.helper.CSPNonce
 
 @this(
     main_template: MainTemplate,
@@ -38,6 +39,8 @@
     title = messages("playbackDraftAnswers.title"),
     showBackLink = true
     ) {
+
+    <script src='@routes.Assets.versioned("javascripts/print.js")' @{CSPNonce.attr}></script>
 
     @headingComp("playbackDraftAnswers.heading", headingSize = "govuk-heading-xl")
 
