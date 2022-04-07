@@ -1,6 +1,15 @@
 $(document).ready(function() {
 
+    const printButton = document.getElementById("print-button")
+    printButton.addEventListener("click", print)
+
+    // required because using just "window.print()" in the above event listener causes it to fire on page load
+    function print(){
+        window.print()
+    }
+
     function beforePrintCall(){
+        printButton.removeEventListener("click", print)
         if($('.no-details').length > 0){
             // store current focussed element to return focus to later
             var fe = document.activeElement;
@@ -38,6 +47,7 @@ $(document).ready(function() {
         } else {
             $('details').removeAttr("open");
         }
+        printButton.addEventListener("click", print)
     }
 
     //Chrome
