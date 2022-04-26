@@ -40,7 +40,7 @@ class CorrespondenceExtractor extends Logging {
       case Success(a) =>
         Right(a)
       case Failure(exception) =>
-        logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+        logger.error(s"[CorrespondenceExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
         Left(FailedToExtractData(Correspondence.toString))
     }
   }

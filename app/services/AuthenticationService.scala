@@ -42,7 +42,7 @@ class AuthenticationServiceImpl @Inject()(errorHandler: ErrorHandler,
       case TrustAuthDenied(redirectUrl) =>
         Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
-        logger.warn(s"[Session ID: ${Session.id(hc)}] Unable to authenticate agent with trusts-auth")
+        logger.warn(s"[AuthenticationServiceImpl][authenticateAgent][Session ID: ${Session.id(hc)}] Unable to authenticate agent with trusts-auth")
         Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
     }
   }
@@ -57,7 +57,7 @@ class AuthenticationServiceImpl @Inject()(errorHandler: ErrorHandler,
       case TrustAuthDenied(redirectUrl) =>
         Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
-        logger.warn(s"[Session ID: ${Session.id(hc)}][UTR/URN: $identifier] Unable to authenticate organisation with trusts-auth")
+        logger.warn(s"[AuthenticationServiceImpl][authenticateForIdentifier][Session ID: ${Session.id(hc)}][UTR/URN: $identifier] Unable to authenticate organisation with trusts-auth")
         Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate)))
     }
   }

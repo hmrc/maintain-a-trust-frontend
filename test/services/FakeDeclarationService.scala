@@ -18,6 +18,7 @@ package services
 
 import models.http.{DeclarationErrorResponse, DeclarationResponse, TVNResponse}
 import models.{Address, AgentDeclaration, IndividualDeclaration}
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -57,7 +58,7 @@ class FakeFailingDeclarationService extends DeclarationService {
                                  agentFriendlyName: String,
                                  endDate: Option[LocalDate]
                                )(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
-    Future.successful(DeclarationErrorResponse)
+    Future.successful(DeclarationErrorResponse(INTERNAL_SERVER_ERROR))
   }
 
   override def individualDeclaration(
@@ -65,7 +66,7 @@ class FakeFailingDeclarationService extends DeclarationService {
                                       declaration: IndividualDeclaration,
                                       endDate: Option[LocalDate]
                                     )(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
-    Future.successful(DeclarationErrorResponse)
+    Future.successful(DeclarationErrorResponse(INTERNAL_SERVER_ERROR))
   }
 
 }

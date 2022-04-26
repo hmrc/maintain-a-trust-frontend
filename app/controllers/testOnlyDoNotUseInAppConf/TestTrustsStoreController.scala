@@ -34,13 +34,13 @@ class TestTrustsStoreController @Inject()(
 
   def set4Mld: Action[AnyContent] = Action.async {
     implicit request =>
-      logger.info(s"[Session ID: ${Session.id(hc)}] set 4MLD mode")
+      logger.info(s"[TestTrustsStoreController][set4Mld][Session ID: ${Session.id(hc)}] set 4MLD mode")
       connector.setFeature("5mld", state = false).map(_ => Ok)
   }
 
   def set5Mld: Action[AnyContent] = Action.async {
     implicit request =>
-      logger.info(s"[Session ID: ${Session.id(hc)}] set 5MLD mode")
+      logger.info(s"[TestTrustsStoreController][set5Mld][Session ID: ${Session.id(hc)}] set 5MLD mode")
       connector.setFeature("5mld", state = true).map(_ => Ok)
   }
 
@@ -53,14 +53,14 @@ class TestTrustsStoreController @Inject()(
     implicit request =>
       request.body.asJson match {
         case Some(JsBoolean(value)) =>
-          logger.info(s"[Session ID: ${Session.id(hc)}] setting $feature to $value")
+          logger.info(s"[TestTrustsStoreController][setFeature][Session ID: ${Session.id(hc)}] setting $feature to $value")
           connector.setFeature(feature, value).map(_ => Ok).recover {
-            case e =>
-              logger.error(s"[Session ID: ${Session.id(hc)}] error setting feature: ${e.getMessage}")
+            case ex =>
+              logger.error(s"[TestTrustsStoreController][setFeature][Session ID: ${Session.id(hc)}] error setting feature: ${ex.getMessage}", ex)
               InternalServerError
           }
         case None =>
-          logger.error(s"[Session ID: ${Session.id(hc)}] invalid request body")
+          logger.error(s"[TestTrustsStoreController][setFeature][Session ID: ${Session.id(hc)}] invalid request body")
           Future.successful(BadRequest)
       }
   }

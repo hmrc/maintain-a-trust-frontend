@@ -19,7 +19,7 @@ package controllers.testOnlyDoNotUseInAppConf
 import models.{Enumerable, WithName}
 import viewmodels.RadioOption
 
-sealed trait FourOrFiveMLD
+sealed trait  FourOrFiveMLD
 object FourOrFiveMLD extends Enumerable.Implicits {
 
   case object FourMLD extends WithName("four") with FourOrFiveMLD

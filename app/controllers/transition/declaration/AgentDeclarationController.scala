@@ -83,10 +83,9 @@ class AgentDeclarationController @Inject()(
                   agencyAddress,
                   getClosureDate(request.userAnswers)
                 )(request.request)
-              }).getOrElse(handleError(s"[Session ID: ${Session.id(hc)}] Failed to get agency address"))
-
+              }).getOrElse(handleError(s"[AgentDeclarationController][onSubmit][Session ID: ${Session.id(hc)}] Failed to get agency address"))
             case _ =>
-              handleError("User was not an agent")
+              handleError(s"[AgentDeclarationController][onSubmit][Session ID: ${Session.id(hc)}] User was not an agent")
           }
         }
       )
@@ -117,7 +116,7 @@ class AgentDeclarationController @Inject()(
           _ <- playbackRepository.set(updatedAnswers)
         } yield Redirect(controllers.transition.declaration.routes.ConfirmationController.onPageLoad())
       case _ =>
-        handleError(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${utr}] Failed to declare")
+        handleError(s"[AgentDeclarationController][submitDeclaration][Session ID: ${Session.id(hc)}][UTR/URN: ${utr}] Failed to declare")
     }
   }
 

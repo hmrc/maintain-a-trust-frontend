@@ -36,7 +36,6 @@ trait IndexManager extends Logging {
       collection <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
       indices <- collection.indexesManager.list()
     } yield {
-      logger.info(s"[$collectionName] indices found on collection $indices")
       ()
     }
   }
@@ -61,7 +60,6 @@ trait IndexManager extends Logging {
           _ <- logIndex
         } yield ()
       } else {
-        logger.info(s"[$collectionName] indexes not modified")
         Future.successful(())
       }
     } yield ()

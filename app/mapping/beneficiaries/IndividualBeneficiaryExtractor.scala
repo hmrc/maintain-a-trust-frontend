@@ -83,9 +83,9 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
         case Some(value) => answers.set(IndividualBeneficiaryVulnerableYesNoPage(index), value)
         case None =>
           if (answers.isTrustMigratingFromNonTaxableToTaxable) {
-            logger.warn(s"[UTR/URN: ${answers.identifier}] Individual beneficiary vulnerability should be answered as part of trust becoming taxable.")
+            logger.warn(s"[IndividualBeneficiaryExtractor][extractVulnerability][UTR/URN: ${answers.identifier}] Individual beneficiary vulnerability should be answered as part of trust becoming taxable.")
           } else {
-            logger.error(s"[UTR/URN: ${answers.identifier}] Individual beneficiary vulnerability must be answered for taxable trust.")
+            logger.warn(s"[IndividualBeneficiaryExtractor][extractVulnerability][UTR/URN: ${answers.identifier}] Individual beneficiary vulnerability must be answered for taxable trust.")
           }
           Failure(InvalidExtractorState)
       }

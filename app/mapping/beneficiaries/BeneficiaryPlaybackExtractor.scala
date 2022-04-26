@@ -56,7 +56,7 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
         case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
           extractAddress(address, index, answers)
         case _ =>
-          logger.error(s"[UTR/URN: ${answers.identifier}] both utr/urn and address parsed")
+          logger.error(s"[BeneficiaryPlaybackExtractor][extractOrgIdentification][UTR/URN: ${answers.identifier}] both utr/urn and address parsed")
           Failure(InvalidExtractorState)
       } getOrElse {
         answers.set(addressYesNoPage(index), false)

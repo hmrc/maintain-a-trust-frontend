@@ -124,7 +124,7 @@ class WhatIsNextController @Inject()(
   private def removeTransformsIfAnswerHasChanged(hasAnswerChanged: Boolean)
                                                 (implicit request: DataRequest[AnyContent]): Future[Unit] = {
     if (hasAnswerChanged) {
-      logger.info(s"[Session ID: ${Session.id(hc)}] Answer has changed. Removing transforms and resetting tasks.")
+      logger.info(s"[WhatIsNextController][removeTransformsIfAnswerHasChanged][Session ID: ${Session.id(hc)}] Answer has changed. Removing transforms and resetting tasks.")
       maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     } else {
       Future.successful(())

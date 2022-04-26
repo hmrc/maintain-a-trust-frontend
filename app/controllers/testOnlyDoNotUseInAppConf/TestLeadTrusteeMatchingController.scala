@@ -51,7 +51,7 @@ class TestLeadTrusteeMatchingController @Inject()(actions: Actions,
 
       val payload = IdMatchRequest(UUID.randomUUID().toString, nino, surname.capitalize, forename.capitalize, dob)
 
-      logger.info(s"[TestLeadTrusteeMatching] sending payload to trusts-individual-check service $payload")
+      logger.info(s"[TestLeadTrusteeMatchingController][matchLeadTrustee] sending payload to trusts-individual-check service $payload")
 
       // Implicitly passes through the current header carrier
       http.POST[IdMatchRequest, JsValue](url, payload, Seq(

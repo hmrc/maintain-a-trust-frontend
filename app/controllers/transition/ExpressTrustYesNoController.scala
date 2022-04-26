@@ -89,10 +89,10 @@ class ExpressTrustYesNoController @Inject()(
   private def removeTransformsIfNotMigrating(isTrustMigrating: Boolean)
                                             (implicit request: DataRequest[AnyContent]): Future[Unit] = {
     if (isTrustMigrating) {
-      logger.info(s"[Session ID: ${Session.id(hc)}] Migrating from non-taxable to taxable. Keeping transforms.")
+      logger.info(s"[ExpressTrustYesNoController][removeTransformsIfNotMigrating][Session ID: ${Session.id(hc)}] Migrating from non-taxable to taxable. Keeping transforms.")
       Future.successful(())
     } else {
-      logger.info(s"[Session ID: ${Session.id(hc)}] Redirected from RefreshedDataPreSubmitRetrievalAction or " +
+      logger.info(s"[ExpressTrustYesNoController][removeTransformsIfNotMigrating][Session ID: ${Session.id(hc)}] Redirected from RefreshedDataPreSubmitRetrievalAction or " +
         s"transitioning from 4MLD to 5MLD. Removing transforms and resetting tasks.")
       maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     }

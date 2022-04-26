@@ -45,14 +45,14 @@ class DataRetrievalActionImpl @Inject()(activeSessionRepository: ActiveSessionRe
       case Some(session) =>
         playbackRepository.get(request.user.internalId, session.identifier, Session.id(hc)) map {
           case None =>
-            logger.info(s"[Session ID: ${Session.id(hc)}] no user answers in mongo for UTR/URN ${session.identifier}")
+            logger.info(s"[DataRetrievalActionImpl][transform] no user answers in session for UTR/URN ${session.identifier}")
             createdOptionalDataRequest(request, None, session.identifier)
           case Some(userAnswers) =>
-            logger.info(s"[Session ID: ${Session.id(hc)}] user answers found in mongo for UTR/URN ${session.identifier}")
+            logger.info(s"[DataRetrievalActionImpl][transform] user answers found in session for UTR/URN ${session.identifier}")
             createdOptionalDataRequest(request, Some(userAnswers), session.identifier)
         }
       case None =>
-        logger.error(s"[Session ID: ${Session.id(hc)}] no active UTR/URN found in mongo for session")
+        logger.warn(s"[DataRetrievalActionImpl][transform] no active UTR/URN present in the session data")
         throw new RuntimeException("No session identifier stored in session repository")
     }
 

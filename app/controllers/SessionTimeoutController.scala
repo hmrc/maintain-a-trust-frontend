@@ -34,14 +34,10 @@ class SessionTimeoutController @Inject()(val appConfig: FrontendAppConfig,
                                          mcc: MessagesControllerComponents) extends FrontendController(mcc) with AuthRedirects with Logging {
 
   val keepAlive: Action[AnyContent] = Action.async { implicit request =>
-    logger.info(s"[Session ID: ${Session.id(hc)}] " +
-      s"user requested to extend the time remaining to maintain a trust, user has not been signed out")
     Future.successful(Ok.withSession(request.session))
   }
 
   val timeout: Action[AnyContent] = Action.async { implicit request =>
-    logger.info(s"[Session ID: ${Session.id(hc)}] user remained inactive on the service, user has been signed out")
     Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad().url).withNewSession)
   }
-
 }

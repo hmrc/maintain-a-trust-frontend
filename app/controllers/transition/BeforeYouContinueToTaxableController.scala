@@ -53,14 +53,11 @@ class BeforeYouContinueToTaxableController @Inject()(
       connector.getUntransformedTrustDetails(request.userAnswers.identifier) map { trustDetails =>
         Redirect {
           if (trustDetails.expressTrust.isEmpty) {
-            logger.info(s"[Session ID: ${Session.id(hc)}] Express trust not previously answered. Redirecting to ask for it.")
             routes.ExpressTrustYesNoController.onPageLoad()
           } else {
-            logger.info(s"[Session ID: ${Session.id(hc)}] Express trust previously answered. Redirecting to task list.")
             controllers.tasklist.routes.TaskListController.onPageLoad()
           }
         }
       }
   }
-
 }

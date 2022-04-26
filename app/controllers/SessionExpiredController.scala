@@ -33,7 +33,6 @@ class SessionExpiredController @Inject()(
                                         ) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    logger.info(s"[Session ID: ${Session.id(hc)}] session has expired due to inactivity, sent here from ${request.headers.get(REFERER).getOrElse("no referer heading")}")
     Ok(view())
   }
 

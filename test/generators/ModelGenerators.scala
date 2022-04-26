@@ -22,6 +22,7 @@ import models.pages.WhatIsNext
 import models.{DetailsType, FullName, InternationalAddress, MigrationTaskStatus, UKAddress}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 
 import java.time.LocalDate
 
@@ -181,7 +182,7 @@ trait ModelGenerators {
             IdentifierNotFound,
             TrustServiceUnavailable,
             ClosedRequestResponse,
-            TrustsErrorResponse
+            TrustsErrorResponse(INTERNAL_SERVER_ERROR)
           )
         )
       } yield

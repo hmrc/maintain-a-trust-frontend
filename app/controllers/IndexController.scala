@@ -68,8 +68,7 @@ class IndexController @Inject()(
       case Some(value) =>
         sessionService.initialiseSession(value)
       case None =>
-        logger.info(s"[Session ID: ${Session.id(hc)}]" +
-          s" user is not enrolled, starting maintain journey, redirect to ask for identifier")
+        logger.info(s"[IndexControllerIndexController][initialise][Session ID: ${Session.id(hc)} user is not enrolled, starting maintain journey, redirect to ask for identifier")
         Future.successful(redirectForIdentifier)
     }
   }
