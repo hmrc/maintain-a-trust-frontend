@@ -93,13 +93,13 @@ class NeedToPayTaxYesNoController @Inject()(
                               (implicit request: DataRequest[AnyContent]): Future[Unit] = {
     (hasAnswerChanged, needsToPayTax) match {
       case (false, _) =>
-        logger.info(s"[Session ID: ${Session.id(hc)}] Answer hasn't changed. Nothing to update.")
+        logger.info(s"[NeedToPayTaxYesNoController][updateTransforms][Session ID: ${Session.id(hc)}] Answer hasn't changed. Nothing to update.")
         Future.successful(())
       case (true, true) =>
-        logger.info(s"[Session ID: ${Session.id(hc)}] Answer has changed to yes. Setting taxable trust.")
+        logger.info(s"[NeedToPayTaxYesNoController][updateTransforms][Session ID: ${Session.id(hc)}] Answer has changed to yes. Setting taxable trust.")
         trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax).map(_ => ())
       case (true, false) =>
-        logger.info(s"[Session ID: ${Session.id(hc)}] Answer has changed to no. Removing transforms and resetting tasks.")
+        logger.info(s"[NeedToPayTaxYesNoController][updateTransforms][Session ID: ${Session.id(hc)}] Answer has changed to no. Removing transforms and resetting tasks.")
         maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     }
   }

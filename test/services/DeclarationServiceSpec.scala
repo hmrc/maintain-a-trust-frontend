@@ -23,6 +23,7 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{EitherValues, RecoverMethods}
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.inject.bind
 import play.api.mvc.Request
 import uk.gov.hmrc.auth.core.retrieve.AgentInformation
@@ -93,7 +94,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
       "return InternalServerError when errors" in {
 
         when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
-          .thenReturn(Future.successful(DeclarationErrorResponse))
+          .thenReturn(Future.successful(DeclarationErrorResponse(INTERNAL_SERVER_ERROR)))
 
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -103,7 +104,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         whenReady(service.agentDeclaration(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName", Some(date))) {
           result =>
-            result mustBe DeclarationErrorResponse
+            result mustBe DeclarationErrorResponse(INTERNAL_SERVER_ERROR)
         }
       }
 
@@ -131,7 +132,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
       "return InternalServerError when errors" in {
 
         when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
-          .thenReturn(Future.successful(DeclarationErrorResponse))
+          .thenReturn(Future.successful(DeclarationErrorResponse(INTERNAL_SERVER_ERROR)))
 
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -141,7 +142,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         whenReady(service.individualDeclaration(utr, individualDeclaration, Some(date))) {
           result =>
-            result mustBe DeclarationErrorResponse
+            result mustBe DeclarationErrorResponse(INTERNAL_SERVER_ERROR)
         }
       }
 

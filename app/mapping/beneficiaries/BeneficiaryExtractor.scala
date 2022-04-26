@@ -47,7 +47,7 @@ class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBenefic
 
     beneficiaries match {
       case Nil =>
-        logger.warn(s"[Identifier: ${answers.identifier}] No beneficiaries")
+        logger.warn(s"[BeneficiaryExtractor][extract][Identifier: ${answers.identifier}] No beneficiaries")
         Right(answers)
       case _ =>
         beneficiaries.combine match {

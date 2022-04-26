@@ -34,8 +34,7 @@ class TrustTypeExtractor extends ConditionalExtractor with Logging {
     extractTrustType(data.details, answers) match {
       case Success(a) =>
         Right(a)
-      case Failure(exception) =>
-        logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+      case Failure(_) =>
         Left(FailedToExtractData(DisplayTrustWillType.toString))
     }
   }
@@ -73,7 +72,8 @@ class TrustTypeExtractor extends ConditionalExtractor with Logging {
           Success(answers)
 
         case (None, _) =>
-          Failure(new Throwable("No trust type for taxable trust."))
+          logger.warn(s"[TrustTypeExtractor][extractTrustType][UTR/URN: ${answers.identifier}] failed to extract data due to No trust type for taxable trust")
+          Failure(new Throwable())
       }
     }
   }

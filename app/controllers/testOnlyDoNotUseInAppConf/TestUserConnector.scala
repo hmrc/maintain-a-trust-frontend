@@ -32,7 +32,7 @@ class TestUserConnector @Inject()(http: HttpClient, config: FrontendAppConfig) e
   object InsertedReads {
     implicit lazy val httpReads: HttpReads[Unit] = (_: String, _: String, response: HttpResponse) => {
         // Ignore the response from enrolment-store-stub
-        logger.info(s"[TestUserConnector] response from inserting test user: status ${response.status}, body: ${response.body}")
+        logger.info(s"[TestUserConnector][httpReads] response from inserting test user: status ${response.status}, body: ${response.body}")
         ()
       }
   }

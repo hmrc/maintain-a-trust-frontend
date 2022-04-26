@@ -20,9 +20,10 @@ import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
 import models.IndividualDeclaration
-import models.http.TVNResponse
+import models.http.{DeclarationErrorResponse, TVNResponse}
 import pages.declaration.IndividualDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -44,7 +45,7 @@ class IndividualDeclarationController @Inject()(
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: IndividualDeclarationView,
                                                  service: DeclarationService
-                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   val form: Form[IndividualDeclaration] = formProvider()
 
@@ -82,7 +83,12 @@ class IndividualDeclarationController @Inject()(
                 )
                 _ <- playbackRepository.set(updatedAnswers)
               } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-            case _ =>
+            case DeclarationErrorResponse(status) =>
+              if (status<499) {
+                logger.warn(s"[IndividualDeclarationController][onSubmit] problem declaring trust, received a non successful status code: $status")
+              } else {
+                logger.error(s"[IndividualDeclarationController][onSubmit] problem declaring trust, received a non successful status code: $status")
+              }
               Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
           }
       )

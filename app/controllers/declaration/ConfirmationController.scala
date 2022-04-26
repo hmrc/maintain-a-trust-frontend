@@ -45,7 +45,7 @@ class ConfirmationController @Inject()(
       val isAgent = request.user.affinityGroup == Agent
 
       request.userAnswers.get(TVNPage).fold {
-        logger.error(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}] no TVN in user answers, cannot render confirmation")
+        logger.warn(s"[ConfirmationController][onPageLoad][UTR/URN: ${request.userAnswers.identifier}] no TVN in user answers, cannot render confirmation page")
         Redirect(controllers.routes.TrustStatusController.sorryThereHasBeenAProblem())
       }{
         tvn =>

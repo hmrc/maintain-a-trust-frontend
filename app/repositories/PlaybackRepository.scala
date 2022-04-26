@@ -105,7 +105,6 @@ class PlaybackRepositoryImpl @Inject()(
   )
 
   private lazy val ensureIndexes = {
-    logger.info("Ensuring collection indexes")
     for {
       collection              <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
       createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
@@ -118,7 +117,6 @@ class PlaybackRepositoryImpl @Inject()(
       collection <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
       indices <- collection.indexesManager.list()
     } yield {
-      logger.info(s"[PlaybackRepository] indices found on mongo collection $indices")
       ()
     }
   }
@@ -130,11 +128,11 @@ class PlaybackRepositoryImpl @Inject()(
          for {
            collection <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
            _ <- collection.indexesManager.dropAll()
-           _ <- Future.successful(logger.info(s"[PlaybackRepository] dropped indexes on collection $collectionName"))
+           _ <- Future.successful(logger.info(s"[PlaybackRepositoryImpl][PlaybackRepository] dropped indexes on collection $collectionName"))
            _ <- logIndex
          } yield ()
       } else {
-        logger.info(s"[PlaybackRepository] indexes not modified")
+        logger.info(s"[PlaybackRepositoryImpl][PlaybackRepository] indexes not modified")
         Future.successful(())
       }
     } yield ()
@@ -145,8 +143,6 @@ class PlaybackRepositoryImpl @Inject()(
   )
 
   override def get(internalId: String, identifier: String, sessionId: String): Future[Option[UserAnswers]] = {
-
-    logger.debug(s"PlaybackRepository getting user answers for $internalId")
 
     val modifier = Json.obj(
       "$set" -> Json.obj(
@@ -186,9 +182,7 @@ class PlaybackRepositoryImpl @Inject()(
   }
 
   override def resetCache(internalId: String, identifier: String, sessionId: String): Future[Option[JsObject]] = {
-
-    logger.debug(s"PlaybackRepository resetting cache for $internalId")
-
+    
     for {
       col <- collection
       r <- col.findAndRemove(selector(internalId, identifier, sessionId), None, None, WriteConcern.Default, None, None, Seq.empty)

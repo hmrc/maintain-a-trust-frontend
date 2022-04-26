@@ -45,8 +45,6 @@ class SessionService @Inject()(playbackRepository: PlaybackRepository,
       _ <- playbackRepository.set(newEmptyAnswers)
       _ <- sessionRepository.set(activeSession)
     } yield {
-      logger.info(s"[Session ID: ${Session.id(hc)}]" +
-        s" $identifier user is enrolled, storing identifier in user answers, checking status of trust")
       newEmptyAnswers
     }
   }

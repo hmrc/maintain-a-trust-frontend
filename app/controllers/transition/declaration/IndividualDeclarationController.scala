@@ -25,12 +25,14 @@ import models.IndividualDeclaration
 import models.http.TVNResponse
 import pages.declaration.IndividualDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.DeclarationService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.Session
 import utils.TrustClosureDate.getClosureDate
 import views.html.transition.declaration.IndividualDeclarationView
 
@@ -45,7 +47,7 @@ class IndividualDeclarationController @Inject()(
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: IndividualDeclarationView,
                                                  service: DeclarationService
-                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   val form: Form[IndividualDeclaration] = formProvider()
 
@@ -84,6 +86,7 @@ class IndividualDeclarationController @Inject()(
                 _ <- playbackRepository.set(updatedAnswers)
               } yield Redirect(controllers.transition.declaration.routes.ConfirmationController.onPageLoad())
             case _ =>
+              logger.error(s"[IndividualDeclarationController][onSubmit][Session ID: ${Session.id(hc)}] Failed to declare")
               Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
           }
       )

@@ -29,18 +29,17 @@ object TVNResponse {
   implicit val format: Format[TVNResponse] = Json.format[TVNResponse]
 }
 
-case object DeclarationErrorResponse extends DeclarationResponse
+final case class DeclarationErrorResponse(status: Int) extends DeclarationResponse
+
 
 object DeclarationResponse extends Logging {
 
   implicit lazy val httpReads: HttpReads[DeclarationResponse] = (_: String, _: String, response: HttpResponse) => {
-    logger.info(s"[DeclarationResponse] response status received from trusts api: ${response.status}")
-
     response.status match {
       case OK =>
         response.json.as[TVNResponse]
       case _ =>
-        DeclarationErrorResponse
+        DeclarationErrorResponse(response.status)
     }
   }
 

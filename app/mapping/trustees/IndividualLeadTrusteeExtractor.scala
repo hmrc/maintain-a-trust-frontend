@@ -56,16 +56,16 @@ class IndividualLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTru
           .flatMap(answers => extractPassportIdCard(passport, index, answers))
           .flatMap(answers => extractAddress(address, index, answers))
       case DisplayTrustIdentificationType(_, None, Some(_), None) =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] only passport identification for lead trustee individual returned in DisplayTrustOrEstate api")
+        logger.error(s"[IndividualLeadTrusteeExtractor][extractIdentification][UTR/URN: ${answers.identifier}] only passport identification for lead trustee individual returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
       case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
         answers.set(TrusteeAUKCitizenPage(index), true)
           .flatMap(_.set(TrusteeNinoPage(index), nino))
       case DisplayTrustIdentificationType(_, None, None, Some(_)) =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] only address identification for lead trustee individual returned in DisplayTrustOrEstate api")
+        logger.error(s"[IndividualLeadTrusteeExtractor][extractIdentification][UTR/URN: ${answers.identifier}] only address identification for lead trustee individual returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
       case DisplayTrustIdentificationType(_, _, _, _) =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] no identification for lead trustee individual returned in DisplayTrustOrEstate api")
+        logger.error(s"[IndividualLeadTrusteeExtractor][extractIdentification][UTR/URN: ${answers.identifier}] no identification for lead trustee individual returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
     }
   }

@@ -55,7 +55,7 @@ class TestWizardController @Inject()(
 
       form.bindFromRequest().fold(
         (formWithErrors: Form[_]) => {
-          logger.info(s"[Wizard] error validating the form")
+          logger.warn(s"[TestWizardController][onSubmit] error validating the form")
           Future.successful(BadRequest(view(formWithErrors)))
         },
         values =>
