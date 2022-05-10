@@ -69,10 +69,11 @@ class RefreshedDataRetrievalActionImpl @Inject()(
 
       trustConnector.playback(identifier).flatMap {
         case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, playback)(request)
-        case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
+        case _ =>
+          Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
-      logger.error(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}] unable to get data from user answers")
+      logger.error(s"[RefreshedDataRetrievalActionImpl][refine][UTR/URN: ${request.userAnswers.identifier}] unable to get data from user answers")
       Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
   }
@@ -93,11 +94,10 @@ class RefreshedDataRetrievalActionImpl @Inject()(
       playbackExtractor.extract(updatedAnswers, playback) flatMap {
         case Right(extractedAnswers) =>
           playbackRepository.set(extractedAnswers) map { _ =>
-            logger.debug(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${extractedAnswers.identifier}] Set updated user answers in db")
             Right(DataRequest(request.request, extractedAnswers, request.user))
           }
         case Left(reason) =>
-          logger.warn(s"[Session ID: ${Session.id(hc)}] unable to extract user answers due to $reason")
+          logger.warn(s"[RefreshedDataRetrievalActionImpl][extractAndRefreshUserAnswers] unable to extract user answers due to $reason")
           Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }

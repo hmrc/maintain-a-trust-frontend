@@ -47,7 +47,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
           case Success(a) =>
             Right(a)
           case Failure(exception) =>
-            logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+            logger.warn(s"[PlaybackExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
             Left(FailedToExtractData(classTag[T].runtimeClass.getSimpleName))
         }
     }
@@ -154,7 +154,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
             .flatMap(answers => extractAddress(address, index, answers))
             .flatMap(answers => extractPassportIdCard(passport, index, answers))
         case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
-          logger.error(s"[UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustIdentificationType")
+          logger.error(s"[PlaybackExtractor][extractIndIdentification][UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustIdentificationType")
           Failure(InvalidExtractorState)
         case _ =>
           answers.set(ninoYesNoPage(index), false)

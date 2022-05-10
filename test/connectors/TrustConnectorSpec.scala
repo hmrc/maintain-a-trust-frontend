@@ -452,7 +452,7 @@ class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues wi
 
         val result = Await.result(connector.declare(identifier, payload), Duration.Inf)
 
-        result mustEqual DeclarationErrorResponse
+        result mustEqual DeclarationErrorResponse(SERVICE_UNAVAILABLE)
 
         application.stop()
       }

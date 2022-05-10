@@ -85,7 +85,6 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) exte
     val newHc: HeaderCarrier = hc.withExtraHeaders(
       trueUserAgent -> request.headers.get(HeaderNames.USER_AGENT).getOrElse("No user agent provided")
     )
-
     val url: String = s"$baseUrl/declare/$identifier"
     http.POST[DeclarationForApi, DeclarationResponse](url, payload)(implicitly[Writes[DeclarationForApi]], DeclarationResponse.httpReads, newHc, ec)
   }

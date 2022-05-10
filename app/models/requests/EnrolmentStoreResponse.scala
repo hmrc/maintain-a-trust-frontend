@@ -44,20 +44,18 @@ object EnrolmentStoreResponse extends Logging {
   implicit lazy val httpReads: HttpReads[EnrolmentStoreResponse] =
     new HttpReads[EnrolmentStoreResponse] {
       override def read(method: String, url: String, response: HttpResponse): EnrolmentStoreResponse = {
-        logger.debug(s"Response status received from ES0 api: ${response.status}")
-
         response.status match {
           case OK =>
             response.json.as[EnrolmentStore] match {
               case EnrolmentStore(Seq(), _) =>
-                logger.info(s"UTR has not been claimed")
+                logger.info(s"[EnrolmentStoreResponse][read] UTR has not been claimed")
                 NotClaimed
               case _ =>
-                logger.info(s"UTR has already been claimed")
+                logger.info(s"[EnrolmentStoreResponse][read] UTR has already been claimed")
                 AlreadyClaimed
             }
           case NO_CONTENT =>
-            logger.info(s"UTR is not claimed or delegated")
+            logger.info(s"[EnrolmentStoreResponse][read] UTR is not claimed or delegated")
             NotClaimed
           case SERVICE_UNAVAILABLE =>
             ServiceUnavailable
@@ -66,7 +64,7 @@ object EnrolmentStoreResponse extends Logging {
           case BAD_REQUEST =>
             BadRequest
           case _ =>
-            logger.info(s"Unexpected response from EnrolmentStore")
+            logger.info(s"[EnrolmentStoreResponse][read]Unexpected response from EnrolmentStore")
             ServerError
         }
       }

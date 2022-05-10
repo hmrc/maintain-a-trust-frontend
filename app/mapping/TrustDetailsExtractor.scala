@@ -45,7 +45,7 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
       case Success(a) =>
         Right(a)
       case Failure(exception) =>
-        logger.warn(s"[UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+        logger.warn(s"[TrustDetailsExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
         Left(FailedToExtractData(TrustDetailsType.toString))
     }
   }

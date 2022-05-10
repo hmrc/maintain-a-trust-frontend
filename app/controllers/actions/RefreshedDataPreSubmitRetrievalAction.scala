@@ -42,8 +42,7 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
                                                            playbackRepository: PlaybackRepository,
                                                            trustConnector: TrustConnector,
                                                            playbackExtractor: UserAnswersExtractor
-                                                         )(override implicit val executionContext: ExecutionContext)
-  extends RefreshedDataPreSubmitRetrievalAction with Logging {
+                                                         )(override implicit val executionContext: ExecutionContext) extends RefreshedDataPreSubmitRetrievalAction with Logging {
 
   case class SubmissionData(utr: String, whatIsNext: WhatIsNext, agent: Option[AgentDeclaration], endDate: Option[LocalDate])
 
@@ -65,7 +64,7 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
         case _ => Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
     }).getOrElse {
-      logger.error(s"[RefreshedDraftDataRetrievalAction] unable to get data from user answers")
+      logger.error(s"[RefreshedDraftDataRetrievalActionImpl][refine] unable to get data from user answers")
       Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
   }
@@ -81,16 +80,14 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
         playbackExtractor.extract(updatedAnswers, playback) flatMap {
           case Right(extractedAnswers) =>
             playbackRepository.set(extractedAnswers) map { _ =>
-              logger.debug(s"[RefreshedDraftDataRetrievalAction] Set updated user answers in db")
               Right(DataRequest(request.request, extractedAnswers, request.user))
             }
           case Left(reason) =>
-            logger.warn(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to $reason")
             Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
         }
       } recoverWith {
         case e =>
-          logger.error(s"[RefreshedDraftDataRetrievalAction] unable to extract user answers due to ${e.getMessage}")
+          logger.error(s"[RefreshedDraftDataRetrievalActionImpl][extractAndRefreshUserAnswers] unable to extract user answers due to ${e.getMessage}", e)
           Future.successful(Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
       }
 

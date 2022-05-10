@@ -31,13 +31,13 @@ class EnrolmentStoreStubController @Inject()(
 
   def insertTestUserIntoEnrolmentStore = Action.async(parse.json) {
     implicit request =>
-      logger.info(s"[Session ID: ${Session.id(hc)}] inserting test user: ${request.body}")
+      logger.info(s"[EnrolmentStoreStubController][insertTestUserIntoEnrolmentStore][Session ID: ${Session.id(hc)}] inserting test user: ${request.body}")
       connector.insert(request.body).map(_ => Ok)
   }
 
   def flush = Action.async {
     implicit request =>
-    logger.info(s"[Session ID: ${Session.id(hc)}] flushing test users from enrolment-store")
+    logger.info(s"[EnrolmentStoreStubController][flush][Session ID: ${Session.id(hc)}] flushing test users from enrolment-store")
     connector.delete().map(_ => Ok)
   }
 

@@ -104,7 +104,6 @@ class ActiveSessionRepositoryImpl @Inject()(
   )
 
   private lazy val ensureIndexes = {
-    logger.info("Ensuring collection indexes")
     for {
       collection              <- mongo.api.database.map(_.collection[JSONCollection](collectionName))
       createdLastUpdatedIndex <- collection.indexesManager.ensure(lastUpdatedIndex)
@@ -113,8 +112,6 @@ class ActiveSessionRepositoryImpl @Inject()(
   }
 
   override def get(internalId: String): Future[Option[IdentifierSession]] = {
-
-    logger.debug(s"ActiveIdentifierRepository getting active identifier for $internalId")
 
     val selector = Json.obj("internalId" -> internalId)
 

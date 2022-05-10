@@ -63,16 +63,16 @@ class ObligedEntityPdfController @Inject()(
                 contentType = Some(h.contentType)
               )).withHeaders(CONTENT_DISPOSITION -> h.fileNameWithServiceName)
             case _ =>
-              logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Response has insufficient headers: ${response.headers}.")
+              logger.error(s"[ObligedEntityPdfController][getPdf][Session ID: ${Session.id(hc)}][Identifier: $identifier] Response has no headers: ${response.headers}.")
               InternalServerError(errorHandler.internalServerErrorTemplate)
           }
         } else {
-          logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Error retrieving pdf: $response.")
+          logger.error(s"[ObligedEntityPdfController][getPdf][Session ID: ${Session.id(hc)}][Identifier: $identifier] Error retrieving pdf: $response.")
           InternalServerError(errorHandler.internalServerErrorTemplate)
         }
       } recover {
         case e =>
-          logger.error(s"[Session ID: ${Session.id(hc)}][Identifier: $identifier] Exception thrown when retrieving pdf ${e.getMessage}")
+          logger.error(s"[ObligedEntityPdfController][getPdf][Session ID: ${Session.id(hc)}][Identifier: $identifier] Exception thrown when retrieving pdf ${e.getMessage}")
           InternalServerError(errorHandler.internalServerErrorTemplate)
       }
   }

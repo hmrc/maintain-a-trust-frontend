@@ -58,7 +58,7 @@ class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayT
           .flatMap(_.set(TrusteeUtrPage(index), utr))
 
       case DisplayTrustIdentificationOrgType(_, _, _) =>
-        logger.error(s"[UTR/URN: ${answers.identifier}] no identification for lead trustee company returned in DisplayTrustOrEstate api")
+        logger.error(s"[OrganisationLeadTrusteeExtractor][extractIdentification][UTR/URN: ${answers.identifier}] no identification for lead trustee company returned in DisplayTrustOrEstate api")
         Failure(InvalidExtractorState)
     }
   }

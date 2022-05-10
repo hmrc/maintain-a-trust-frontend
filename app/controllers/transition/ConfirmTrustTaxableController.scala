@@ -50,9 +50,6 @@ class ConfirmTrustTaxableController @Inject()(
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
-
-      logger.debug("Answer for WhatIsNextPage required by declaration controller action set. Setting it here.")
-
       for {
         updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, MakeChanges))
         _ <- playbackRepository.set(updatedAnswers)

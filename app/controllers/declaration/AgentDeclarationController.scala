@@ -19,7 +19,7 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
-import models.http.TVNResponse
+import models.http.{DeclarationErrorResponse, TVNResponse}
 import models.requests.{AgentUser, DataRequest}
 import models.{Address, AgentDeclaration, UserAnswers}
 import pages._
@@ -82,10 +82,9 @@ class AgentDeclarationController @Inject()(
                   agencyAddress,
                   getClosureDate(request.userAnswers)
                 )(request.request)
-              }).getOrElse(handleError(s"[Session ID: ${Session.id(hc)}] Failed to get agency address"))
-
+              }).getOrElse(handleError(s"[AgentDeclarationController][onSubmit] Failed to get agency address"))
             case _ =>
-              handleError("User was not an agent")
+              handleError("[AgentDeclarationController][onSubmit] User was not an agent", isError = false)
           }
         }
       )
@@ -115,13 +114,17 @@ class AgentDeclarationController @Inject()(
           )
           _ <- playbackRepository.set(updatedAnswers)
         } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-      case _ =>
-        handleError(s"[Session ID: ${Session.id(hc)}][UTR/URN: ${utr}] Failed to declare")
+      case DeclarationErrorResponse(status) =>
+        handleError(s"[AgentDeclarationController][onSubmit] problem declaring trust, received a non successful status code: $status", isError = status >= 499)
     }
   }
 
-  private def handleError(message: String): Future[Result] = {
-    logger.error(message)
+  private def handleError(message: String, isError: Boolean = true): Future[Result] = {
+    if(isError) {
+      logger.error(message)
+    } else {
+      logger.warn(message)
+    }
     Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
   }
 
