@@ -24,7 +24,6 @@ import pages.WhatIsNextPage
 import play.api.Logging
 import play.api.mvc.{ActionRefiner, Result, Results}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 

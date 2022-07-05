@@ -16,10 +16,11 @@
 
 package models.http
 
-import org.scalatest.{MustMatchers, WordSpec}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsError, Json}
 
-class TrustsResponseSpec extends WordSpec with MustMatchers {
+class TrustsResponseSpec extends AnyWordSpec with Matchers {
 
   "trust status" must {
 

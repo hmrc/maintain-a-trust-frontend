@@ -32,7 +32,6 @@ import play.api.mvc.{ActionRefiner, BodyParsers, Result}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import utils.Session
 import utils.TrustClosureDate.{getClosureDate, setClosureDate}
 
 import java.time.{LocalDate, LocalDateTime}

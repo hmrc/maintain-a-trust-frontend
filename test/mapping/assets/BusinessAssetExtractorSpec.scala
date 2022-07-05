@@ -20,10 +20,12 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.InternationalAddress
 import models.http._
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.assets.business._
 
-class BusinessAssetExtractorSpec extends FreeSpec with MustMatchers
+class BusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateBusiness(index: Int) = DisplayBusinessAssetType(

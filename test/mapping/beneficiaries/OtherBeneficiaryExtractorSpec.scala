@@ -20,11 +20,13 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{AddressType, DisplayTrustOtherType}
 import models.{InternationalAddress, MetaData, UKAddress}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.beneficiaries.other._
 import utils.Constants.GB
 
-class OtherBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
+class OtherBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateOther(index: Int) = DisplayTrustOtherType(

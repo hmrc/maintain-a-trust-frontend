@@ -17,11 +17,13 @@
 package models.pages
 
 import models.pages.DeedOfVariation._
-import org.scalatest.{MustMatchers, OptionValues, WordSpec}
+import org.scalatest.OptionValues
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.libs.json.{JsNull, JsString, Json}
 
-class DeedOfVariationSpec extends WordSpec with MustMatchers with ScalaCheckPropertyChecks with OptionValues {
+class DeedOfVariationSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
   "DeedOfVariation" must {
 

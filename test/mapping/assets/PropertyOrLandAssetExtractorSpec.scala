@@ -20,10 +20,12 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.http._
 import models.{InternationalAddress, UKAddress}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.assets.propertyOrLand._
 
-class PropertyOrLandAssetExtractorSpec extends FreeSpec with MustMatchers
+class PropertyOrLandAssetExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generatePropertyOrLand(index: Int) = PropertyLandType(

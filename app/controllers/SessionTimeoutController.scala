@@ -23,8 +23,6 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import play.api.Logging
-import utils.Session
-
 import scala.concurrent.Future
 
 @Singleton
@@ -38,6 +36,6 @@ class SessionTimeoutController @Inject()(val appConfig: FrontendAppConfig,
   }
 
   val timeout: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad().url).withNewSession)
+    Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad.url).withNewSession)
   }
 }

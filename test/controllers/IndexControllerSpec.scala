@@ -30,9 +30,9 @@ import scala.concurrent.Future
 
 class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach {
 
-  private lazy val onPageLoad: String = routes.IndexController.onPageLoad().url
-  private lazy val startUtr: String = routes.IndexController.startUtr().url
-  private lazy val startUrn: String = routes.IndexController.startUrn().url
+  private lazy val onPageLoad: String = routes.IndexController.onPageLoad.url
+  private lazy val startUtr: String = routes.IndexController.startUtr.url
+  private lazy val startUrn: String = routes.IndexController.startUrn.url
 
   private val utr: String = "1234567892"
   private val urn: String = "ABTRUST12345678"

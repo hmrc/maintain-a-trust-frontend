@@ -20,10 +20,12 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.MetaData
 import models.http.DisplayTrustUnidentifiedType
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.beneficiaries.classOfBeneficiary._
 
-class ClassOfBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
+class ClassOfBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateClassOfBeneficiary(index: Int) = DisplayTrustUnidentifiedType(

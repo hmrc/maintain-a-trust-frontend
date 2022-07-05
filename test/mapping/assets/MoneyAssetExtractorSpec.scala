@@ -19,10 +19,12 @@ package mapping.assets
 import base.SpecBaseHelpers
 import generators.Generators
 import models.http._
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.assets.money.MoneyValuePage
 
-class MoneyAssetExtractorSpec extends FreeSpec with MustMatchers
+class MoneyAssetExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   val assetExtractor: MoneyAssetExtractor = injector.instanceOf[MoneyAssetExtractor]

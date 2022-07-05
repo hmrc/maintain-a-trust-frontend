@@ -20,11 +20,13 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{AddressType, DisplayTrustCharityType, DisplayTrustIdentificationOrgType}
 import models.{InternationalAddress, MetaData, UKAddress}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.beneficiaries.charity._
 import utils.Constants.GB
 
-class CharityBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
+class CharityBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
   
   def generateCharity(index: Int, isTaxable: Boolean) = DisplayTrustCharityType(

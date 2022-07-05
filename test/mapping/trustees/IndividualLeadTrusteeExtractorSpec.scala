@@ -22,13 +22,15 @@ import mapping.PlaybackExtractionErrors.FailedToExtractData
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, MetaData}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.trustees._
 import utils.Constants.GB
 
 import java.time.LocalDate
 
-class IndividualLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
+class IndividualLeadTrusteeExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   val leadTrusteeIndExtractor: IndividualLeadTrusteeExtractor =

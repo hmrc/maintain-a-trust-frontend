@@ -21,7 +21,9 @@ import generators.Generators
 import models.HowManyBeneficiaries.Over1
 import models.http._
 import models.{Description, FullName, MetaData, UKAddress}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.beneficiaries.charity._
 import pages.beneficiaries.classOfBeneficiary._
 import pages.beneficiaries.company._
@@ -31,7 +33,7 @@ import pages.beneficiaries.other._
 import pages.beneficiaries.trust._
 import utils.Constants.GB
 
-class BeneficiaryExtractorSpec extends FreeSpec with MustMatchers
+class BeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   val utr = "1234567890"

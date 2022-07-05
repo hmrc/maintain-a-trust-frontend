@@ -21,14 +21,16 @@ import generators.Generators
 import models.http._
 import models.pages.WhatIsNext.NeedsToPayTax
 import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.WhatIsNextPage
 import pages.settlors.living_settlor.trust_type._
 import pages.trustdetails._
 
 import java.time.LocalDate
 
-class TrustTypeExtractorSpec extends FreeSpec with MustMatchers with EitherValues with Generators with SpecBaseHelpers {
+class TrustTypeExtractorSpec extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   val trustTypeExtractor: TrustTypeExtractor = injector.instanceOf[TrustTypeExtractor]
   

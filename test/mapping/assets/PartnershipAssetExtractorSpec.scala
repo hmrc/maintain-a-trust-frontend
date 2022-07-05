@@ -21,10 +21,12 @@ import java.time.LocalDate
 import base.SpecBaseHelpers
 import generators.Generators
 import models.http._
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.assets.partnership._
 
-class PartnershipAssetExtractorSpec extends FreeSpec with MustMatchers
+class PartnershipAssetExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generatePartnership(index: Int) = DisplayTrustPartnershipType(
