@@ -20,11 +20,13 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{AddressType, DisplayTrustCompanyType, DisplayTrustIdentificationOrgType}
 import models.{InternationalAddress, MetaData, UKAddress}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.beneficiaries.company._
 import utils.Constants.GB
 
-class CompanyBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
+class CompanyBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
   
   def generateCompany(index: Int) = DisplayTrustCompanyType(

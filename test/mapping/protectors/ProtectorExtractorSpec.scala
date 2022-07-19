@@ -21,7 +21,9 @@ import generators.Generators
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, MetaData}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.protectors._
 import pages.protectors.business._
 import pages.protectors.individual._
@@ -29,7 +31,7 @@ import utils.Constants.GB
 
 import java.time.LocalDate
 
-class ProtectorExtractorSpec extends FreeSpec with MustMatchers
+class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   val protectorExtractor : ProtectorExtractor =

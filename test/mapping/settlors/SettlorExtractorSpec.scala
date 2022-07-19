@@ -23,12 +23,14 @@ import models.http._
 import models.pages.KindOfBusiness.Trading
 import models.pages.{IndividualOrBusiness, KindOfBusiness}
 import models.{FullName, MetaData}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.settlors.deceased_settlor._
 import pages.settlors.living_settlor._
 import utils.Constants.GB
 
-class SettlorExtractorSpec extends FreeSpec with MustMatchers
+class SettlorExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   val settlorExtractor: SettlorExtractor =

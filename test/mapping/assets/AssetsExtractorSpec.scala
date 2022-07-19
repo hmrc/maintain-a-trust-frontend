@@ -22,7 +22,9 @@ import models.http._
 import models.pages.ShareClass.{Ordinary, Other}
 import models.pages.ShareType.Quoted
 import models.{InternationalAddress, UKAddress}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.assets.business._
 import pages.assets.money.MoneyValuePage
 import pages.assets.nonEeaBusiness._
@@ -33,7 +35,7 @@ import pages.assets.shares._
 
 import java.time.LocalDate
 
-class AssetsExtractorSpec extends FreeSpec with MustMatchers
+class AssetsExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   val assetExtractor: AssetsExtractor = injector.instanceOf[AssetsExtractor]

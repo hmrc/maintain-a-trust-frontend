@@ -24,7 +24,10 @@ import models.pages.ShareClass.Ordinary
 import models.{FirstTaxYearAvailable, FullName, MigrationTaskStatus, TrustDetails}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{FreeSpec, Inside, MustMatchers, OptionValues}
+import org.scalatest.OptionValues
+import org.scalatest.Inside
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.http.Status
 import play.api.http.Status._
@@ -38,7 +41,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.io.Source
 
-class TrustConnectorSpec extends FreeSpec with MustMatchers with OptionValues with Generators
+class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues with Generators
   with SpecBaseHelpers with WireMockHelper with ScalaFutures with Inside with ScalaCheckPropertyChecks {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()

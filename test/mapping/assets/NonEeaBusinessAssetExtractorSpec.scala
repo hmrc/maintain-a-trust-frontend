@@ -22,10 +22,12 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.InternationalAddress
 import models.http._
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.assets.nonEeaBusiness._
 
-class NonEeaBusinessAssetExtractorSpec extends FreeSpec with MustMatchers
+class NonEeaBusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateNonEeaBusiness(index: Int) = DisplayNonEEABusinessType(

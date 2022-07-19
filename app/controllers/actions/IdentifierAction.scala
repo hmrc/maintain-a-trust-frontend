@@ -29,7 +29,6 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -70,7 +69,7 @@ class AuthenticatedIdentifierAction @Inject()(
         block(IdentifierRequest(request, OrganisationUser(internalId, enrolments)))
       case Some(_) ~ _ ~ _ =>
         logger.info(s"[AuthenticatedIdentifierAction][invokeBlock] Unauthorised due to affinityGroup being Individual")
-        Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
+        Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad))
       case _ =>
         logger.warn(s"[AuthenticatedIdentifierAction][invokeBlock] Unable to retrieve internal id")
         throw new UnauthorizedException("Unable to retrieve internal Id")

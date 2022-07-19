@@ -20,12 +20,14 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.UKAddress
 import models.http.{AddressType, Correspondence}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.correspondence._
 import pages.trustdetails.TrustNamePage
 import utils.Constants.GB
 
-class CorrespondenceExtractorSpec extends FreeSpec with MustMatchers with EitherValues with Generators with SpecBaseHelpers {
+class CorrespondenceExtractorSpec extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   val correspondenceExtractor: CorrespondenceExtractor =
     injector.instanceOf[CorrespondenceExtractor]

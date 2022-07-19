@@ -21,11 +21,13 @@ import generators.Generators
 import models.HowManyBeneficiaries.{Over1, Over1001, Over201}
 import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLargeType}
 import models.{Description, InternationalAddress, MetaData, UKAddress}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.beneficiaries.large._
 import utils.Constants.GB
 
-class LargeBeneficiaryExtractorSpec extends FreeSpec with MustMatchers
+class LargeBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateLargeBeneficiary(index: Int) = DisplayTrustLargeType(

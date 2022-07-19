@@ -24,12 +24,14 @@ import models.pages.NonResidentType
 import models.pages.NonResidentType.Domiciled
 import models.pages.TrusteesBased._
 import models.pages.TypeOfTrust.{DeedOfVariation, WillTrustOrIntestacyTrust}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.trustdetails._
 
 import java.time.LocalDate
 
-class TrustDetailsExtractorSpec extends FreeSpec with MustMatchers with EitherValues with Generators with SpecBaseHelpers {
+class TrustDetailsExtractorSpec extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   val trusteeDetailsExtractor: TrustDetailsExtractor =
     injector.instanceOf[TrustDetailsExtractor]

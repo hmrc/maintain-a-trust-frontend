@@ -36,7 +36,7 @@ class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionC
     request.userAnswers match {
       case None =>
         logger.warn(s"[DataRequiredActionImpl][refine] [Session ID: ${Session.id(hc)}] no user answers for session in mongo, cannot continue with session")
-        Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad())))
+        Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad)))
       case Some(data) =>
         logger.info(s"[DataRequiredActionImpl][refine] [Session ID: ${Session.id(hc)}][UTR/URN: ${data.identifier}] user answers in request, continuing with journey")
         Future.successful(Right(DataRequest(request.request, data, request.user)))

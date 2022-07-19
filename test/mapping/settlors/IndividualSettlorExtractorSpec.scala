@@ -22,13 +22,15 @@ import models.http._
 import models.pages.IndividualOrBusiness
 import models.pages.KindOfBusiness._
 import models.{FullName, InternationalAddress, MetaData, UKAddress}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.settlors.living_settlor._
 import utils.Constants.GB
 
 import java.time.LocalDate
 
-class IndividualSettlorExtractorSpec extends FreeSpec with MustMatchers
+class IndividualSettlorExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateSettlorIndividual(index: Int) = DisplayTrustSettlor(

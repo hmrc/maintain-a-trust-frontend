@@ -21,13 +21,15 @@ import generators.Generators
 import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustIndividualDetailsType, PassportType}
 import models.pages.RoleInCompany
 import models.{FullName, InternationalAddress, MetaData, UKAddress}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.beneficiaries.individual._
 import utils.Constants.GB
 
 import java.time.LocalDate
 
-class IndividualBeneficiaryExtractorSpec extends FreeSpec with MustMatchers with EitherValues with Generators with SpecBaseHelpers {
+class IndividualBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   def generateIndividual(index: Int) = DisplayTrustIndividualDetailsType(
     lineNo = Some(s"$index"),

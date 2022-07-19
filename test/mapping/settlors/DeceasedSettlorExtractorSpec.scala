@@ -20,13 +20,15 @@ import base.SpecBaseHelpers
 import generators.Generators
 import models.http.{AddressType, DisplayTrustIdentificationType, DisplayTrustWillType, PassportType}
 import models.{FullName, InternationalAddress, MetaData, UKAddress}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.settlors.deceased_settlor._
 import utils.Constants.GB
 
 import java.time.LocalDate
 
-class DeceasedSettlorExtractorSpec extends FreeSpec with MustMatchers
+class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   val deceasedSettlorExtractor: DeceasedSettlorExtractor =

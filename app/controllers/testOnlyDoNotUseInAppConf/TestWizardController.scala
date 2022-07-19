@@ -64,7 +64,7 @@ class TestWizardController @Inject()(
             _ <- flushTestUsers(values.flushTestUsers)
             _ <- insertTestUser(values.testUser)
           } yield {
-            Redirect(routes.TestWizardController.onPageLoad()).flashing("wizard" -> "Wizard has completed")
+            Redirect(routes.TestWizardController.onPageLoad).flashing("wizard" -> "Wizard has completed")
           }
       )
   }

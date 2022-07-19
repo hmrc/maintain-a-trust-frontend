@@ -21,11 +21,13 @@ import generators.Generators
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{InternationalAddress, MetaData, UKAddress}
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.trustees._
 import utils.Constants.GB
 
-class OrganisationTrusteeExtractorSpec extends FreeSpec with MustMatchers
+class OrganisationTrusteeExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateTrusteeCompany(index: Int) = DisplayTrustTrusteeOrgType(

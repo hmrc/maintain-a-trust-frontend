@@ -19,6 +19,7 @@ package forms.behaviours
 import forms.Validation
 import forms.mappings.TelephoneNumber
 import org.scalacheck.Gen
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.data.{Form, FormError}
 import wolfendale.scalacheck.regexp.RegexpGen
 

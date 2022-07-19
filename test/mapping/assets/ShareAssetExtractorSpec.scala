@@ -21,10 +21,12 @@ import generators.Generators
 import models.http._
 import models.pages.ShareClass._
 import models.pages.ShareType._
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.assets.shares._
 
-class ShareAssetExtractorSpec extends FreeSpec with MustMatchers
+class ShareAssetExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   def generateAssets(index: Int): DisplaySharesType = DisplaySharesType(

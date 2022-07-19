@@ -22,11 +22,13 @@ import mapping.PlaybackExtractionErrors.FailedToExtractData
 import models.MetaData
 import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType}
 import models.pages.IndividualOrBusiness
-import org.scalatest.{EitherValues, FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.EitherValues
 import pages.trustees._
 import utils.Constants.GB
 
-class OrganisationLeadTrusteeExtractorSpec extends FreeSpec with MustMatchers
+class OrganisationLeadTrusteeExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   val leadTrusteeOrgExtractor : OrganisationLeadTrusteeExtractor =
