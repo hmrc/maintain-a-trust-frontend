@@ -1063,7 +1063,7 @@ trusteeMentalCapacityYesNo.checkYourAnswersLabel = Does {0} have mental capacity
 trustName.checkYourAnswersLabel = What is the trust’s name?
 whenTrustSetup.checkYourAnswersLabel = When was the trust created?
 trustUniqueTaxReference.checkYourAnswersLabel = What is the trust’s Unique Taxpayer Reference (UTR)?
-trustUkPropertyYesNo.checkYourAnswersLabel = Does the trust own UK land or property?
+trustUkPropertyYesNo.checkYourAnswersLabel = Has the trust acquired land or property in the UK since 6 October 2020?
 trustRecordedOnAnotherRegisterYesNo.checkYourAnswersLabel = Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?
 trustHasBusinessRelationshipInUkYesNo.checkYourAnswersLabel = Does the trust have an ongoing business relationship in the UK?
 
