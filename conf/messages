@@ -612,11 +612,16 @@ migrateTo5mldInformation.heading2 = What happens next
 migrateTo5mldInformation.p4 = After you have given HMRC the required information, you can sign back into the service and will be able to make changes to the trust record.
 
 expressTrustYesNo.title = Are you maintaining an express trust?
-expressTrustYesNo.heading = Are you maintaining an express trust?
-expressTrustYesNo.p1 = An express trust is a trust created deliberately by a settlor, usually in the form of a document such as a written deed of trust.
-expressTrustYesNo.p2 = Express trusts can be created:
+expressTrustYesNo.heading = Express trusts
+expressTrustYesNo.subheading1 = What is an express trust
+expressTrustYesNo.p1 = An express trust is a trust created by the person or organisation who puts assets into the trust. There may be a document such as a written deed of trust.
+expressTrustYesNo.p2 = Most trusts are express trusts.
+expressTrustYesNo.p3 = Express trusts can be created:
 expressTrustYesNo.bullet1 = by someone’s will after they have died
-expressTrustYesNo.bullet2 = during someone’s lifetime, which is known as inter-vivos
+expressTrustYesNo.bullet2 = during someone’s lifetime, which are known as inter-vivos
+expressTrustYesNo.subheading2 = What is not an express trust
+expressTrustYesNo.p4 = Trusts that are imposed by law are not express trusts, for example a trust created by intestacy laws when a person dies without a will.
+expressTrustYesNo.subheading3 = Are you maintaining an express trust?
 expressTrustYesNo.error.required = Select yes if you are maintaining an express trust
 
 confirmTrustTaxable.title = Confirm the trust is taxable

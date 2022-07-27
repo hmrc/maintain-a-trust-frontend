@@ -29,14 +29,24 @@
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @content = {
+    <h2>@messages("expressTrustYesNo.subheading1")</h2>
+
     <p>@messages("expressTrustYesNo.p1")</p>
 
     <p>@messages("expressTrustYesNo.p2")</p>
+
+    <p>@messages("expressTrustYesNo.p3")</p>
 
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("expressTrustYesNo.bullet1")</li>
         <li>@messages("expressTrustYesNo.bullet2")</li>
     </ul>
+
+    <h2>@messages("expressTrustYesNo.subheading2")</h2>
+
+    <p>@messages("expressTrustYesNo.p4")</p>
+
+    <h2>@messages("expressTrustYesNo.subheading3")</h2>
 }
 
 @main_template(
@@ -54,7 +64,7 @@
 
         @inputYesNo(
             field = form("value"),
-            label = messages("expressTrustYesNo.heading"),
+            label = messages("expressTrustYesNo.subheading3"),
             legendAsHeading = false,
             legendClass = Some("govuk-visually-hidden")
         )

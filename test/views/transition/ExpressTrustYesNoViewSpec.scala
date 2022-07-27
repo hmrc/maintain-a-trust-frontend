@@ -19,10 +19,10 @@ package views.transition
 import forms.YesNoFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
-import views.behaviours.YesNoViewBehaviours
+import views.behaviours.IsExpressYesNoViewBehaviours
 import views.html.transition.ExpressTrustYesNoView
 
-class ExpressTrustYesNoViewSpec extends YesNoViewBehaviours {
+class ExpressTrustYesNoViewSpec extends IsExpressYesNoViewBehaviours {
 
   val prefix = "expressTrustYesNo"
 
@@ -38,7 +38,7 @@ class ExpressTrustYesNoViewSpec extends YesNoViewBehaviours {
     behave like normalPage(
       view = applyView(form),
       messageKeyPrefix = prefix,
-      expectedGuidanceKeys = "p1", "p2", "bullet1", "bullet2"
+      expectedGuidanceKeys = "subheading1", "p1", "p2", "p3", "bullet1", "bullet2", "subheading2", "p4", "subheading3"
     )
 
     behave like pageWithBackLink(applyView(form))
