@@ -332,7 +332,7 @@ trusteeCountryOfResidenceUkYesNo.checkYourAnswersLabel=A yw {0} yn breswyl yn y 
 trusteeCountryOfResidence.checkYourAnswersLabel=Beth yw gwlad breswyl {0}?
 trusteeMentalCapacityYesNo.checkYourAnswersLabel=A oes gan {0} alluedd meddyliol ar adeg y cofrestru?
 trustUkPropertyYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth wedi caffael tir neu eiddo yn y DU ers 6 Hydref 2020?
-trustRecordedOnAnotherRegisterYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth wedi’i chofrestru ar gofrestr ymddiriedolaeth unrhyw wledydd eraill o fewn yr Ardal Economaidd Ewropeaidd (AEE)?
+trustRecordedOnAnotherRegisterYesNo.checkYourAnswersLabel=A yw’r ymddiriedolaeth wedi’i chofrestru ar gofrestr ymddiriedolaeth unrhyw wledydd o fewn yr Ardal Economaidd Ewropeaidd (AEE)?
 trustHasBusinessRelationshipInUkYesNo.checkYourAnswersLabel=A oes gan yr ymddiriedolaeth berthynas fusnes parhaol yn y DU?
 
 governedByUkLaw.checkYourAnswersLabel=A yw’r ymddiriedolaeth yn cael ei llywodraethu gan gyfraith y DU?
