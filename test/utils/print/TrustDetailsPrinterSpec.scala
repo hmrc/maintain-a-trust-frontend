@@ -88,7 +88,7 @@ class TrustDetailsPrinterSpec extends SpecBase {
                 AnswerRow("Is this an employer-financed retirement benefits scheme?", Html("Yes"), None),
                 AnswerRow("When did the employer-financed retirement benefits scheme start?", Html("1 June 2019"), None),
                 AnswerRow("Has the trust acquired land or property in the UK since 6 October 2020?", Html("Yes"), None),
-                AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
+                AnswerRow("Is the trust registered on the trust register of any countries within the European Economic Area (EEA)?", Html("No"), None),
                 AnswerRow("Are the trustees based in the UK?", Html("The trust contains trustees based in and outside the UK"), None),
                 AnswerRow("Are any of the settlors based in the UK?", Html("Yes"), None),
                 AnswerRow("Was the trust created under Scots law?", Html("Yes"), None),
@@ -130,7 +130,7 @@ class TrustDetailsPrinterSpec extends SpecBase {
                 AnswerRow("Is this an employer-financed retirement benefits scheme?", Html("Yes"), None),
                 AnswerRow("When did the employer-financed retirement benefits scheme start?", Html("1 June 2019"), None),
                 AnswerRow("Has the trust acquired land or property in the UK since 6 October 2020?", Html("Yes"), None),
-                AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
+                AnswerRow("Is the trust registered on the trust register of any countries within the European Economic Area (EEA)?", Html("No"), None),
                 AnswerRow("Are the trustees based in the UK?", Html("The trust contains trustees based in and outside the UK"), None),
                 AnswerRow("Are any of the settlors based in the UK?", Html("No"), None),
                 AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None),
@@ -167,7 +167,7 @@ class TrustDetailsPrinterSpec extends SpecBase {
               AnswerRow("Which unique identifier does the trust have?", Html("Unique Taxpayer Reference (UTR)"), None),
               AnswerRow("Unique Taxpayer Reference (UTR)", Html("1234567890"), None),
               AnswerRow("Has the trust acquired land or property in the UK since 6 October 2020?", Html("Yes"), None),
-              AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
+              AnswerRow("Is the trust registered on the trust register of any countries within the European Economic Area (EEA)?", Html("No"), None),
               AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None)
             ),
             sectionKey = Some("Trust details")
@@ -195,7 +195,7 @@ class TrustDetailsPrinterSpec extends SpecBase {
               AnswerRow("Which unique identifier does the trust have?", Html("Unique Reference Number (URN)"), None),
               AnswerRow("Unique Reference Number (URN)", Html("XATRUST12345678"), None),
               AnswerRow("Has the trust acquired land or property in the UK since 6 October 2020?", Html("Yes"), None),
-              AnswerRow("Is the trust registered on the trust register of any other countries within the European Economic Area (EEA)?", Html("No"), None),
+              AnswerRow("Is the trust registered on the trust register of any countries within the European Economic Area (EEA)?", Html("No"), None),
               AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None)
             ),
             sectionKey = Some("Trust details")
