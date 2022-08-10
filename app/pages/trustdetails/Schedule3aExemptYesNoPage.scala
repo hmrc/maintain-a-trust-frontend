@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package models
+package pages.trustdetails
 
-import play.api.libs.json.{Format, Json}
+import pages.QuestionPage
+import play.api.libs.json.JsPath
+import sections.TrustDetails
 
-import java.time.LocalDate
+case object Schedule3aExemptYesNoPage extends QuestionPage[Boolean] {
 
-case class TrustDetails(startDate: LocalDate, trustTaxable: Option[Boolean], expressTrust: Option[Boolean], schedule3aExempt: Option[Boolean]) {
+  override def path: JsPath = JsPath \ TrustDetails \ toString
 
-  def is5mld: Boolean = expressTrust.isDefined
-
-  def isTaxable: Boolean = !trustTaxable.contains(false)
-
-  def hasSchedule3aExemptAnswer: Boolean = schedule3aExempt.isDefined
-}
-
-object TrustDetails {
-
-  implicit val formats: Format[TrustDetails] = Json.format[TrustDetails]
+  override def toString: String = "schedule3aExempt"
 
 }

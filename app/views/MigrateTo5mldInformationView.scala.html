@@ -17,7 +17,7 @@
 @import models.Mode
 @import config.FrontendAppConfig
 @import controllers.routes._
-@import views.html.components.{HeadingWithCaption, BulletList, SubmitButton}
+@import views.html.components.{HeadingWithCaption, BulletList, SubmitButton, Link}
 
 @this(
     appConfig: FrontendAppConfig,
@@ -25,10 +25,11 @@
     headingWithCaption: HeadingWithCaption,
     submitButton: SubmitButton,
     bulletList: BulletList,
+    link: Link,
     formHelper: FormWithCSRF
 )
 
-@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType, isAgent: Boolean)(implicit request: Request[_], messages: Messages)
 
 
 @main_template(
@@ -56,9 +57,36 @@
 
          <p>@messages("migrateTo5mldInformation.p3")</p>
 
+        <p>@messages("migrateTo5mldInformation.p4") @link(appConfig.schedule3aGuidanceUrl, "schedule-3a-exempt", "migrateTo5mldInformation.link", true)</p>
+
+        <details class="govuk-details section" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        @messages("migrateTo5mldInformation.details")
+                    </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p>@messages("migrateTo5mldInformation.details.p1")</p>
+                <p>@messages("migrateTo5mldInformation.details.p2")</p>
+                <p>@messages("migrateTo5mldInformation.details.p3")</p>
+                @bulletList("migrateTo5mldInformation.details", List(
+                    "bullet1",
+                    "bullet2"
+                ))
+            </div>
+        </details>
+
+        <p>@messages("migrateTo5mldInformation.p5")</p>
+
+        @if(isAgent) {
+            <p>@messages("migrateTo5mldInformation.agent.p6")</p>
+        } else {
+            <p>@messages("migrateTo5mldInformation.org.p6")</p>
+        }
+
          <h2>@messages("migrateTo5mldInformation.heading2")</h2>
 
-         <p>@messages("migrateTo5mldInformation.p4")</p>
+         <p>@messages("migrateTo5mldInformation.p7")</p>
 
          @submitButton()
 

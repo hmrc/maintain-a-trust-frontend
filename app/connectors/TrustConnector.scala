@@ -113,6 +113,12 @@ class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) exte
     http.PUT[Boolean, HttpResponse](url, value)
   }
 
+  def setSchedule3aExempt(identifier: String, value: Boolean)
+                     (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val url: String = s"$baseUrl/trust-details/$identifier/schedule-3a-exempt"
+    http.PUT[Boolean, HttpResponse](url, value)
+  }
+
   def getSettlorsStatus(identifier: String)
                        (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[MigrationTaskStatus] = {
     val url: String = s"$baseUrl/settlors/$identifier/complete-for-migration"
