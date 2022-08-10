@@ -318,7 +318,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None)))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None, schedule3aExempt = None)))
 
               when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
 
@@ -344,7 +344,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = None)))
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -373,7 +373,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = None)))
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -420,7 +420,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None)))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None, schedule3aExempt = None)))
 
               when(playbackRepository.set(any())).thenReturn(Future.successful(true))
 
@@ -467,7 +467,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
             when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-              .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
+              .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = None)))
 
             when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
               .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -510,7 +510,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = None)))
 
               when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
 

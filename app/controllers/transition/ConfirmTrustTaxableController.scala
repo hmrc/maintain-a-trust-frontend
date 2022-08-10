@@ -22,12 +22,14 @@ import controllers.actions._
 import models.pages.WhatIsNext.MakeChanges
 import navigation.Navigator.declarationUrl
 import pages.WhatIsNextPage
+import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.ConfirmTrustTaxableView
+import config.FrontendAppConfig
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,7 +40,8 @@ class ConfirmTrustTaxableController @Inject()(
                                                actions: Actions,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: ConfirmTrustTaxableView,
-                                               trustsConnector: TrustConnector
+                                               trustsConnector: TrustConnector,
+                                               config: FrontendAppConfig
                                              )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
@@ -54,10 +57,14 @@ class ConfirmTrustTaxableController @Inject()(
         updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, MakeChanges))
         _ <- playbackRepository.set(updatedAnswers)
         _ <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
-      } yield Redirect(declarationUrl(
-        request.user.affinityGroup,
-        isTrustMigratingFromNonTaxableToTaxable = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
-      ))
+      } yield
+        request.userAnswers.get(ExpressTrustYesNoPage) match {
+          case Some(true) if (config.schedule3aExemptEnabled) => Redirect(routes.Schedule3aExemptYesNoController.onPageLoad())
+          case _ => Redirect(declarationUrl(
+            request.user.affinityGroup,
+            isTrustMigratingFromNonTaxableToTaxable = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
+          ))
+        }
   }
 
 }
