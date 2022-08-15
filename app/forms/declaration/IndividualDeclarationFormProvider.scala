@@ -17,6 +17,7 @@
 package forms.declaration
 
 import forms.Validation
+import forms.helpers.WhitespaceHelper._
 import models.IndividualDeclaration
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional}
@@ -27,10 +28,12 @@ class IndividualDeclarationFormProvider extends DeclarationFormProvider {
     Form(
       mapping(
         "" -> fullName,
-        "email" -> optional(text().verifying(
-          firstError(
-            regexp(Validation.emailRegex, "declaration.error.email.invalid"))
-        ))
+        "email" -> optional(text()
+          .transform(trimWhitespace, identity[String])
+          .verifying(
+            firstError(
+              regexp(Validation.emailRegex, "declaration.error.email.invalid"))
+          )).transform(emptyToNone, identity[Option[String]])
       )(IndividualDeclaration.apply)(IndividualDeclaration.unapply)
     )
 }

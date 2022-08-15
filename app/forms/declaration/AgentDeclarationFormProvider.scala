@@ -17,6 +17,7 @@
 package forms.declaration
 
 import forms.Validation
+import forms.helpers.WhitespaceHelper._
 import models.AgentDeclaration
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional}
@@ -47,10 +48,12 @@ class AgentDeclarationFormProvider extends DeclarationFormProvider {
             regexp(Validation.clientRefRegex, "declaration.error.crn.invalid")
           )
         ),
-        "email" -> optional(text().verifying(
-          firstError(
-            regexp(Validation.emailRegex, "declaration.error.email.invalid"))
-        ))
+        "email" -> optional(text()
+          .transform(trimWhitespace, identity[String])
+          .verifying(
+            firstError(
+              regexp(Validation.emailRegex, "declaration.error.email.invalid"))
+          )).transform(emptyToNone, identity[Option[String]])
       )(AgentDeclaration.apply)(AgentDeclaration.unapply)
     )
 }
