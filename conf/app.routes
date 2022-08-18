@@ -40,6 +40,9 @@ POST       /express-trust                               controllers.transition.E
 GET        /confirm-trust-is-taxable                    controllers.transition.ConfirmTrustTaxableController.onPageLoad()
 POST       /confirm-trust-is-taxable                    controllers.transition.ConfirmTrustTaxableController.onSubmit()
 
+GET        /trust-registered-before-schedule-3a         controllers.InformationSchedule3aExemptionController.onPageLoad()
+POST       /trust-registered-before-schedule-3a         controllers.InformationSchedule3aExemptionController.onSubmit()
+
 GET        /has-schedule-3a-exemption                   controllers.transition.Schedule3aExemptYesNoController.onPageLoad()
 POST       /has-schedule-3a-exemption                   controllers.transition.Schedule3aExemptYesNoController.onSubmit()
 

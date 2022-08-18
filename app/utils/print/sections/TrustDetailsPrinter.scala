@@ -78,7 +78,8 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
 
         converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
         converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
-        converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo")
+        converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo"),
+        converter.yesNoQuestion(Schedule3aExemptYesNoPage, userAnswers, "schedule3aExemptYesNo")
       )
     }
 

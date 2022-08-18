@@ -1,0 +1,71 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.Mode
+@import config.FrontendAppConfig
+@import controllers.routes._
+@import views.html.components.{HeadingWithCaption, BulletList, SubmitButton, Link}
+
+@this(
+appConfig: FrontendAppConfig,
+main_template: MainTemplate,
+headingWithCaption: HeadingWithCaption,
+submitButton: SubmitButton,
+bulletList: BulletList,
+link: Link,
+formHelper: FormWithCSRF
+)
+
+@(identifier: String, identifierType: IdentifierType, isAgent: Boolean)(implicit request: Request[_], messages: Messages)
+
+
+@main_template(
+title = messages("migrateTo5mldInformation.title"),
+showBackLink = true
+) {
+
+@formHelper(action = InformationSchedule3aExemptionController.onSubmit(), 'autoComplete -> "off") {
+
+@headingWithCaption(
+headingPrefix = "migrateTo5mldInformation",
+captionPrefix = s"$identifierType",
+captionParam = Some(identifier)
+)
+
+<p>@messages("migrateTo5mldInformation.p1")</p>
+
+<p>@messages("migrateTo5mldInformation.p3")</p>
+
+<p>@messages("migrateTo5mldInformation.p4") @link(appConfig.schedule3aGuidanceUrl, "schedule-3a-exempt", "migrateTo5mldInformation.link", true)</p>
+
+<p>@messages("migrateTo5mldInformation.p5")</p>
+
+@if(isAgent) {
+<p>@messages("migrateTo5mldInformation.agent.p6")</p>
+} else {
+<p>@messages("migrateTo5mldInformation.org.p6")</p>
+}
+
+<h2>@messages("migrateTo5mldInformation.heading2")</h2>
+
+<p>@messages("migrateTo5mldInformation.p7")</p>
+
+@submitButton()
+
+}
+
+}
+

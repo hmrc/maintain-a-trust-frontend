@@ -27,6 +27,8 @@ case class TrustDetails(startDate: LocalDate, trustTaxable: Option[Boolean], exp
   def isTaxable: Boolean = !trustTaxable.contains(false)
 
   def hasSchedule3aExemptAnswer: Boolean = schedule3aExempt.isDefined
+
+  def isExpress: Boolean = (is5mld && expressTrust.get)
 }
 
 object TrustDetails {

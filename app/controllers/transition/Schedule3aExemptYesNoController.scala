@@ -28,8 +28,10 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.Schedule3aExemptYesNoView
-
 import javax.inject.Inject
+import models.pages.WhatIsNext.MakeChanges
+import pages.WhatIsNextPage
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class Schedule3aExemptYesNoController @Inject()(
@@ -63,8 +65,9 @@ class Schedule3aExemptYesNoController @Inject()(
           Future.successful(BadRequest(view(formWithErrors))),
 
         value => {
+          val setAnswers = request.userAnswers.set(Schedule3aExemptYesNoPage, value)
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(Schedule3aExemptYesNoPage, value))
+            updatedAnswers <- Future.fromTry(setAnswers)
             _ <- playbackRepository.set(updatedAnswers)
             _ <- trustsConnector.setSchedule3aExempt(request.userAnswers.identifier, value)
           } yield Redirect(declarationUrl(

@@ -16,10 +16,11 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
 import mapping.UserAnswersExtractor
-import models.{Underlying4mldTrustIn5mldMode, UserAnswers}
+import models.{TrustDetails, Underlying4mldTrustIn5mldMode, UserAnswers}
 import models.http._
 import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.Logging
@@ -31,8 +32,9 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 import views.html.status._
-
 import javax.inject.Inject
+import pages.trustdetails.{ExpressTrustYesNoPage, Schedule3aExemptYesNoPage}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class TrustStatusController @Inject()(
@@ -51,7 +53,8 @@ class TrustStatusController @Inject()(
                                        playbackExtractor: UserAnswersExtractor,
                                        authenticationService: AuthenticationService,
                                        val controllerComponents: MessagesControllerComponents,
-                                       sessionService: SessionService
+                                       sessionService: SessionService,
+                                       frontendAppConfig: FrontendAppConfig
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   def closed(): Action[AnyContent] = actions.authWithOptionalData.async {
@@ -151,11 +154,11 @@ class TrustStatusController @Inject()(
         isUnderlyingData5mld = trustDetails.is5mld,
         isUnderlyingDataTaxable = trustDetails.isTaxable
       )
-    } yield userAnswers
+    } yield (userAnswers, trustDetails)
 
     userAnswersF.flatMap { userAnswers =>
 
-      val dataRequest = DataRequest(request.request, userAnswers, request.user)
+      val dataRequest = DataRequest(request.request, userAnswers._1, request.user)
       authenticationService.authenticateForIdentifier(identifier)(dataRequest, hc).flatMap {
         case Left(failure) =>
           val location = failure.header.headers.getOrElse(LOCATION, "no location header")
@@ -167,7 +170,7 @@ class TrustStatusController @Inject()(
 
           Future.successful(failure)
         case Right(_) =>
-          extract(userAnswers, identifier, playback, fromVerify)
+          extract(userAnswers._1, identifier, playback, fromVerify, userAnswers._2)
       }
     } recoverWith {
       case ex: Throwable =>
@@ -181,7 +184,8 @@ class TrustStatusController @Inject()(
   private def extract(userAnswers: UserAnswers,
                       identifier: String,
                       playback: GetTrust,
-                      fromVerify: Boolean
+                      fromVerify: Boolean,
+                      trustDetails : TrustDetails
                      )
                      (implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
     logger.info(s"[TrustStatusController][extract][Session ID: ${Session.id(hc)}] user authenticated for $identifier, attempting to extract to user answers")
@@ -190,7 +194,7 @@ class TrustStatusController @Inject()(
       case Right(answers) =>
         playbackRepository.set(answers) map { _ =>
           logger.info(s"[TrustStatusController][extract][Session ID: ${Session.id(hc)}] $identifier successfully extracted, showing information about maintaining")
-          routeAfterExtraction(userAnswers, fromVerify)
+          routeAfterExtraction(userAnswers, fromVerify, trustDetails)
         }
       case Left(reason) =>
         logger.warn(s"[TrustStatusController][extract][Session ID: ${Session.id(hc)}] $identifier unable to extract user answers due to $reason")
@@ -198,10 +202,20 @@ class TrustStatusController @Inject()(
     }
   }
 
-  private def routeAfterExtraction[A](answers: UserAnswers, fromVerify: Boolean)(implicit request: OptionalDataRequest[A]): Result = {
+  private def routeAfterExtraction[A](answers: UserAnswers, fromVerify: Boolean, trustDetails: TrustDetails)
+                                     (implicit request: OptionalDataRequest[A]): Result = {
+
+    def askSchedule3aQuestion: Boolean =
+      frontendAppConfig.schedule3aExemptEnabled && !trustDetails.hasSchedule3aExemptAnswer && trustDetails.isTaxable && trustDetails.isExpress
+
     if (answers.trustMldStatus == Underlying4mldTrustIn5mldMode) {
-      logger.info(s"[TrustStatusController][routeAfterExtraction][Session ID: ${Session.id(hc)}] underlying data is 4MLD. Need to answer express-trust question.")
+      logger.info(s"[TrustStatusController][routeAfterExtraction][Session ID: ${Session.id(hc)}] underlying data is 4MLD. " +
+        s"Need to answer express-trust question.")
       Redirect(controllers.routes.MigrateTo5mldInformationController.onPageLoad())
+    } else if (askSchedule3aQuestion) {
+      logger.info(s"[TrustStatusController][routeAfterExtraction][Session ID: ${Session.id(hc)}] User has not answered Schedule3a" +
+        s"redirecting to question page")
+        Redirect(controllers.routes.InformationSchedule3aExemptionController.onPageLoad())
     } else {
       (request.user.affinityGroup, fromVerify) match {
         case (AffinityGroup.Organisation, false) =>
