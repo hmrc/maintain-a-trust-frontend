@@ -19,6 +19,7 @@ package forms.declaration
 import forms.Validation
 import forms.behaviours.StringFieldBehaviours
 import models.AgentDeclaration
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.data.{Form, FormError}
 import wolfendale.scalacheck.regexp.RegexpGen
 
@@ -79,6 +80,24 @@ class AgentDeclarationFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       validDataGenerator = RegexpGen.from(Validation.nameRegex)
     )
+
+    "bind whitespace trim values" in {
+      val result = form.bind(Map("firstName" -> "firstName", "middleName" -> "  middle  ", "lastName" -> "lastName",
+        "agencyName" -> "agencyName", "telephoneNumber" -> "07700900000", "crn" -> "123 456 789A"))
+      result.value.value.name.middleName shouldBe Some("middle")
+    }
+
+    "bind whitespace blank values" in {
+      val result = form.bind(Map("firstName" -> "firstName", "middleName" -> "  ", "lastName" -> "lastName",
+        "agencyName" -> "agencyName", "telephoneNumber" -> "07700900000", "crn" -> "123 456 789A"))
+      result.value.value.name.middleName shouldBe None
+    }
+
+    "bind whitespace no values" in {
+      val result = form.bind(Map("firstName" -> "firstName", "middleName" -> "", "lastName" -> "lastName",
+        "agencyName" -> "agencyName", "telephoneNumber" -> "07700900000", "crn" -> "123 456 789A"))
+      result.value.value.name.middleName shouldBe None
+    }
   }
 
   ".lastName" must {
@@ -220,6 +239,18 @@ class AgentDeclarationFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       validDataGenerator = RegexpGen.from(Validation.emailRegex)
     )
+
+    "bind whitespace trim values" in {
+      val result = form.bind(Map("firstName" -> "firstName", "lastName" -> "lastName", "agencyName" -> "agencyName",
+        "telephoneNumber" -> "07700900000", "crn" -> "123 456 789A", "email" -> "  test@test.com  "))
+      result.value.value.email shouldBe Some("test@test.com")
+    }
+
+    "bind whitespace no values" in {
+      val result = form.bind(Map("firstName" -> "firstName", "lastName" -> "lastName", "agencyName" -> "agencyName",
+        "telephoneNumber" -> "07700900000", "crn" -> "123 456 789A", "email" -> ""))
+      result.value.value.email shouldBe None
+    }
   }
 
 }
