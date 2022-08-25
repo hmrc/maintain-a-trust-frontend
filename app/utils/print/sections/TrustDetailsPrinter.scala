@@ -43,6 +43,7 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
 
         converter.yesNoQuestion(GovernedInsideTheUKPage, userAnswers, "governedByUkLaw"),
         converter.countryQuestion(CountryGoverningTrustPage, userAnswers, "governingCountry"),
+        converter.yesNoQuestion(Schedule3aExemptYesNoPage, userAnswers, "schedule3aExemptYesNo"), //Added to to currently understand how the printing process for now
         converter.yesNoQuestion(AdministrationInsideUKPage, userAnswers, "administeredInUk"),
         converter.countryQuestion(CountryAdministeringTrustPage, userAnswers, "administrationCountry"),
 
