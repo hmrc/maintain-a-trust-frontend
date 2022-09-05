@@ -30,8 +30,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.transition.Schedule3aExemptYesNoView
 
 import javax.inject.Inject
-import models.pages.WhatIsNext.MakeChanges
-import pages.WhatIsNextPage
 import scala.concurrent.{ExecutionContext, Future}
 
 class Schedule3aExemptYesNoController @Inject()(
