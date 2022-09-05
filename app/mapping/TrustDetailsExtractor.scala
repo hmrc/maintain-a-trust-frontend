@@ -37,10 +37,10 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
       .flatMap(_.set(TrustUkPropertyYesNoPage, data.trustUKProperty))
       .flatMap(_.set(TrustRecordedOnAnotherRegisterYesNoPage, data.trustRecorded))
       .flatMap(extractGovernedBy(data.lawCountry, _))
-      .flatMap(extractSchedule3aExempt(data.schedule3aExempt, _)) //Used to currently understand how the extraction process for now
       .flatMap(extractAdminBy(data.administrationCountry, _))
       .flatMap(extractResidentialType(data, _))
       .flatMap(_.set(TrustHasBusinessRelationshipInUkYesNoPage, data.trustUKRelation))
+      .flatMap(_.set(Schedule3aExemptYesNoPage, data.schedule3aExempt))
 
     updated match {
       case Success(a) =>
@@ -60,21 +60,6 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
           .flatMap(_.set(CountryGoverningTrustPage, country))
         case _ => answers
           .set(GovernedInsideTheUKPage, true)
-      }
-    }
-  }
-
-  // Used to currently understand how the extraction process for now
-  private def extractSchedule3aExempt(schedule3aExempt: Option[Boolean],
-                                      answers: UserAnswers): Try[UserAnswers] = {
-    extractIfTaxableOrMigratingToTaxable(answers) {
-      answers.set(Schedule3aExemptYesNoPage, schedule3aExempt)
-      schedule3aExempt match {
-        case Some(true) => answers
-          .set(Schedule3aExemptYesNoPage, true)
-        case Some(false) => answers
-          .set(Schedule3aExemptYesNoPage, false)
-        case None => answers.set(Schedule3aExemptYesNoPage, None)
       }
     }
   }
