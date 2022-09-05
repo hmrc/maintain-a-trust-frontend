@@ -18,16 +18,12 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import controllers.actions.Actions
-import models.pages.WhatIsNext.MakeChanges
-import pages.WhatIsNextPage
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html._
-
-import scala.concurrent.Future
 
 @Singleton
 class MigrateTo5mldInformationController @Inject()(
