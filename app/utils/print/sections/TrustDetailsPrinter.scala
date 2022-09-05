@@ -66,7 +66,8 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
         converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo"),
         converter.yesNoQuestion(RegisteringTrustFor5APage, userAnswers, "settlorBenefitsFromAssets"),
         converter.yesNoQuestion(InheritanceTaxActPage, userAnswers, "forPurposeOfSection218"),
-        converter.yesNoQuestion(AgentOtherThanBarristerPage, userAnswers, "agentCreatedTrust")
+        converter.yesNoQuestion(AgentOtherThanBarristerPage, userAnswers, "agentCreatedTrust"),
+        converter.yesNoQuestion(Schedule3aExemptYesNoPage, userAnswers, "schedule3aExemptYesNo")
       )
     } else {
       Seq(

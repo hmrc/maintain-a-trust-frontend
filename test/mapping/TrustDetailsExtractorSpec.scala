@@ -221,7 +221,8 @@ class TrustDetailsExtractorSpec extends AnyFreeSpec with Matchers with EitherVal
             interVivos = None,
             efrbsStartDate = None,
             trustRecorded = Some(false),
-            trustUKRelation = None
+            trustUKRelation = None,
+            schedule3aExempt = Some(true)
           )
 
           val ua = emptyUserAnswersForUtr
@@ -243,6 +244,7 @@ class TrustDetailsExtractorSpec extends AnyFreeSpec with Matchers with EitherVal
           extraction.right.value.get(TrustResidentOffshorePage).get mustBe true
           extraction.right.value.get(TrustPreviouslyResidentPage).get mustBe "DE"
           extraction.right.value.get(RegisteringTrustFor5APage) must not be defined
+          extraction.value.get(Schedule3aExemptYesNoPage).get mustBe true
         }
 
         "some trustees based in the UK" in {
@@ -262,7 +264,8 @@ class TrustDetailsExtractorSpec extends AnyFreeSpec with Matchers with EitherVal
             efrbsStartDate = None,
             trustRecorded = Some(false),
             trustUKRelation = None,
-            settlorsUkBased = Some(true)
+            settlorsUkBased = Some(true),
+            schedule3aExempt = Some(false)
           )
 
           val ua = emptyUserAnswersForUtr
@@ -284,6 +287,7 @@ class TrustDetailsExtractorSpec extends AnyFreeSpec with Matchers with EitherVal
           extraction.right.value.get(TrustResidentOffshorePage).get mustBe true
           extraction.right.value.get(TrustPreviouslyResidentPage).get mustBe "DE"
           extraction.right.value.get(RegisteringTrustFor5APage) must not be defined
+          extraction.value.get(Schedule3aExemptYesNoPage).get mustBe false
         }
 
       }
