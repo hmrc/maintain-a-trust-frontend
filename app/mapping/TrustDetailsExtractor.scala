@@ -40,6 +40,7 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
       .flatMap(extractAdminBy(data.administrationCountry, _))
       .flatMap(extractResidentialType(data, _))
       .flatMap(_.set(TrustHasBusinessRelationshipInUkYesNoPage, data.trustUKRelation))
+      .flatMap(_.set(Schedule3aExemptYesNoPage, data.schedule3aExempt))
 
     updated match {
       case Success(a) =>

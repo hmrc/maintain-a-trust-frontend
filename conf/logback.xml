@@ -77,6 +77,7 @@
     <logger name="models" level="INFO"/>
     <logger name="repositories" level="INFO"/>
     <logger name="connectors" level="INFO"/>
+    <logger name="uk.gov.hmrc.play.bootstrap.filters.DefaultLoggingFilter" level="WARN"/>
 
     <root level="DEBUG">
         <appender-ref ref="FILE"/>

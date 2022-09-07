@@ -51,7 +51,7 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
           forAll(arbitrary[Boolean]) { bool =>
 
             when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-              .thenReturn(Future.successful(TrustDetails(startDate, Some(false), Some(bool))))
+              .thenReturn(Future.successful(TrustDetails(startDate, Some(false), Some(bool), None)))
 
             val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
               .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -75,7 +75,7 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
         "express not answered at registration" in {
 
           when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-            .thenReturn(Future.successful(TrustDetails(startDate, Some(false), None)))
+            .thenReturn(Future.successful(TrustDetails(startDate, Some(false), None, None)))
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
             .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -105,7 +105,7 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
           forAll(arbitrary[Boolean]) { bool =>
 
             when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-              .thenReturn(Future.successful(TrustDetails(startDate, Some(false), Some(bool))))
+              .thenReturn(Future.successful(TrustDetails(startDate, Some(false), Some(bool), None)))
 
             val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
               .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -129,7 +129,7 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
         "redirect to express trust yes no" in {
 
           when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-            .thenReturn(Future.successful(TrustDetails(startDate, Some(false), None)))
+            .thenReturn(Future.successful(TrustDetails(startDate, Some(false), None, None)))
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
             .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
