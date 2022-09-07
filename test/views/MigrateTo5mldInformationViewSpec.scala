@@ -23,13 +23,13 @@ import views.html.MigrateTo5mldInformationView
 
 class MigrateTo5mldInformationViewSpec extends ViewBehaviours {
 
-  "InformationMaintainingThisTrust view for UTR" must {
+  "InformationMaintainingThisTrust view for UTR for Org User" must {
 
     val utr = "1234567890"
 
     val view = viewFor[MigrateTo5mldInformationView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(utr, UTR)(fakeRequest, messages)
+    val applyView = view.apply(utr, UTR, false)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "migrateTo5mldInformation",
@@ -41,8 +41,51 @@ class MigrateTo5mldInformationViewSpec extends ViewBehaviours {
       "bullet2",
       "bullet3",
       "p3",
+      "details",
+      "details.p1",
+      "details.p2",
+      "details.p3",
+      "details.bullet1",
+      "details.bullet2",
+      "p5",
+      "org.p6",
       "heading2",
-      "p4")
+      "p7")
+
+    behave like pageWithBackLink(applyView)
+
+    behave like pageWithASubmitButton(applyView)
+
+  }
+
+  "InformationMaintainingThisTrust view for UTR for Agent User" must {
+
+    val utr = "1234567890"
+
+    val view = viewFor[MigrateTo5mldInformationView](Some(emptyUserAnswersForUtr))
+
+    val applyView = view.apply(utr, UTR, true)(fakeRequest, messages)
+
+    behave like normalPageTitleWithCaption(applyView,
+      "migrateTo5mldInformation",
+      "utr",
+      utr,
+      "p1",
+      "p2",
+      "bullet1",
+      "bullet2",
+      "bullet3",
+      "p3",
+      "details",
+      "details.p1",
+      "details.p2",
+      "details.p3",
+      "details.bullet1",
+      "details.bullet2",
+      "p5",
+      "agent.p6",
+      "heading2",
+      "p7")
 
     behave like pageWithBackLink(applyView)
 

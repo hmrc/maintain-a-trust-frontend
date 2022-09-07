@@ -58,6 +58,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
       val startDate = "1920-03-28"
       val express: Boolean = false
       val taxable: Boolean = true
+      val schedule3aExempt: Boolean = true
 
       val json = Json.parse(
         s"""
@@ -75,7 +76,8 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           |  "deedOfVariation": "Previously there was only an absolute interest under the will",
           |  "interVivos": false,
           |  "expressTrust": $express,
-          |  "trustTaxable": $taxable
+          |  "trustTaxable": $taxable,
+          |  "schedule3aExempt": $schedule3aExempt
           |}
           |""".stripMargin)
 
@@ -95,7 +97,8 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
       )
 
       val result = Await.result(connector.getUntransformedTrustDetails(identifier), Duration.Inf)
-      result mustBe TrustDetails(startDate = LocalDate.parse(startDate), trustTaxable = Some(taxable), expressTrust = Some(express))
+      result mustBe TrustDetails(startDate = LocalDate.parse(startDate),
+        trustTaxable = Some(taxable), expressTrust = Some(express), schedule3aExempt = Some(schedule3aExempt))
 
       application.stop()
     }

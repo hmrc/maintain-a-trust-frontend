@@ -82,6 +82,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration,
   lazy val agentOverviewUrl: String = configuration.get[String]("urls.agentOverview")
   lazy val serviceDownContactUrl: String = "/contact/problem_reports_nonjs?service=trusts"
 
+  lazy val schedule3aExemptEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.schedule3aExempt.enabled")
+
   lazy val enrolmentStoreProxyUrl: String = configuration.get[Service]("microservice.services.enrolment-store-proxy").baseUrl
 
   lazy val locationCanonicalList: String = loadConfig("location.canonical.list.all")

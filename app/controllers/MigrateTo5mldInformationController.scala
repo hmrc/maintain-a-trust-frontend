@@ -21,6 +21,7 @@ import controllers.actions.Actions
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html._
 
@@ -39,6 +40,7 @@ class MigrateTo5mldInformationController @Inject()(
     implicit request =>
       val identifier = request.userAnswers.identifier
       val identifierType = request.userAnswers.identifierType
-      Ok(view(identifier,identifierType))
+      val isAgent = request.user.affinityGroup == Agent
+      Ok(view(identifier,identifierType,isAgent))
   }
 }

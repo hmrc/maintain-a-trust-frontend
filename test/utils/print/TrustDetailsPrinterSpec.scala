@@ -66,6 +66,7 @@ class TrustDetailsPrinterSpec extends SpecBase {
             .set(EstablishedUnderScotsLawPage, true).success.value
             .set(TrustResidentOffshorePage, true).success.value
             .set(TrustPreviouslyResidentPage, "US").success.value
+            .set(Schedule3aExemptYesNoPage, true).success.value
 
           val actualSection = helper.print(answers)
 
@@ -93,7 +94,8 @@ class TrustDetailsPrinterSpec extends SpecBase {
                 AnswerRow("Are any of the settlors based in the UK?", Html("Yes"), None),
                 AnswerRow("Was the trust created under Scots law?", Html("Yes"), None),
                 AnswerRow("Has the trust ever been based offshore?", Html("Yes"), None),
-                AnswerRow("Where was the trust based before?", Html("United States of America"), None)
+                AnswerRow("Where was the trust based before?", Html("United States of America"), None),
+                AnswerRow("Does the trust have a Schedule 3a data sharing exemption?", Html("Yes"), None)
               ),
               sectionKey = Some("Trust details")
             )
@@ -108,6 +110,7 @@ class TrustDetailsPrinterSpec extends SpecBase {
             .set(RegisteringTrustFor5APage, false).success.value
             .set(InheritanceTaxActPage, true).success.value
             .set(AgentOtherThanBarristerPage, true).success.value
+            .set(Schedule3aExemptYesNoPage, false).success.value
 
           val actualSection = helper.print(answers)
 
@@ -136,7 +139,8 @@ class TrustDetailsPrinterSpec extends SpecBase {
                 AnswerRow("Does the trust have an ongoing business relationship in the UK?", Html("Yes"), None),
                 AnswerRow("Are you registering the trust because the settlor benefits from the trust’s assets?", Html("No"), None),
                 AnswerRow("Are you registering the trust for Inheritance Tax reasons?", Html("Yes"), None),
-                AnswerRow("Has an agent who is not a barrister created this trust?", Html("Yes"), None)
+                AnswerRow("Has an agent who is not a barrister created this trust?", Html("Yes"), None),
+                AnswerRow("Does the trust have a Schedule 3a data sharing exemption?", Html("No"), None)
               ),
               sectionKey = Some("Trust details")
             )

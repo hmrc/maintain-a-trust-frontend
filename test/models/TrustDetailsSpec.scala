@@ -32,7 +32,7 @@ class TrustDetailsSpec extends SpecBase with ScalaCheckPropertyChecks {
         forAll(arbitrary[Option[Boolean]], arbitrary[Boolean]) {
           (trustTaxable, expressTrust) =>
 
-            val trustDetails = TrustDetails(LocalDate.now(), trustTaxable, Some(expressTrust))
+            val trustDetails = TrustDetails(LocalDate.now(), trustTaxable, Some(expressTrust), None)
             trustDetails.is5mld mustBe true
         }
       }
@@ -41,7 +41,7 @@ class TrustDetailsSpec extends SpecBase with ScalaCheckPropertyChecks {
         forAll(arbitrary[Option[Boolean]]) {
           trustTaxable =>
 
-            val trustDetails = TrustDetails(LocalDate.now(), trustTaxable, None)
+            val trustDetails = TrustDetails(LocalDate.now(), trustTaxable, None, None)
             trustDetails.is5mld mustBe false
         }
       }
@@ -55,7 +55,7 @@ class TrustDetailsSpec extends SpecBase with ScalaCheckPropertyChecks {
           forAll(arbitrary[Option[Boolean]]) {
             expressTrust =>
 
-              val trustDetails = TrustDetails(LocalDate.now(), None, expressTrust)
+              val trustDetails = TrustDetails(LocalDate.now(), None, expressTrust, None)
               trustDetails.isTaxable mustBe true
           }
         }
@@ -64,7 +64,7 @@ class TrustDetailsSpec extends SpecBase with ScalaCheckPropertyChecks {
           forAll(arbitrary[Option[Boolean]]) {
             expressTrust =>
 
-              val trustDetails = TrustDetails(LocalDate.now(), Some(true), expressTrust)
+              val trustDetails = TrustDetails(LocalDate.now(), Some(true), expressTrust, None)
               trustDetails.isTaxable mustBe true
           }
         }
@@ -75,11 +75,35 @@ class TrustDetailsSpec extends SpecBase with ScalaCheckPropertyChecks {
           forAll(arbitrary[Option[Boolean]]) {
             expressTrust =>
 
-              val trustDetails = TrustDetails(LocalDate.now(), Some(false), expressTrust)
+              val trustDetails = TrustDetails(LocalDate.now(), Some(false), expressTrust, None)
               trustDetails.isTaxable mustBe false
           }
         }
       }
+
     }
+
+    ".hasSchedule3aExemptAnswer" must {
+
+      "return true when schedule3aExempt is defined" in {
+        forAll(arbitrary[Option[Boolean]], arbitrary[Boolean], arbitrary[Boolean]) {
+          (trustTaxable, expressTrust, schedule3aExempt) =>
+
+            val trustDetails = TrustDetails(LocalDate.now(), trustTaxable, Some(expressTrust), Some(schedule3aExempt))
+            trustDetails.hasSchedule3aExemptAnswer mustBe true
+        }
+      }
+
+      "return false when schedule3aExempt is undefined" in {
+        forAll(arbitrary[Option[Boolean]], arbitrary[Boolean]) {
+          (trustTaxable, expressTrust) =>
+
+            val trustDetails = TrustDetails(LocalDate.now(), trustTaxable, Some(expressTrust), None)
+            trustDetails.hasSchedule3aExemptAnswer mustBe false
+        }
+      }
+    }
+
+
   }
 }

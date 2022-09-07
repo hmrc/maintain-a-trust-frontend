@@ -318,7 +318,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None)))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None, schedule3aExempt = None)))
 
               when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
 
@@ -344,7 +344,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = Some(true))))
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -373,7 +373,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = Some(false))))
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -383,6 +383,34 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               status(result) mustEqual SEE_OTHER
 
               redirectLocation(result).value mustEqual routes.InformationMaintainingThisTrustController.onPageLoad().url
+
+              application.stop()
+            }
+
+            "redirect to interrupt page if schedule3a question has not been answered" in new LocalSetup {
+              override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+
+              val payload: String =
+                Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+
+              val json: JsValue = Json.parse(payload)
+
+              val getTrust = json.as[GetTrustDesResponse].getTrust.value
+
+              when(fakeTrustStoreConnector.get(any[String])(any(), any()))
+                .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+
+              when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = None)))
+
+              when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
+                .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
+
+              when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
+
+              status(result) mustEqual SEE_OTHER
+
+              redirectLocation(result).value mustEqual routes.InformationSchedule3aExemptionController.onPageLoad().url
 
               application.stop()
             }
@@ -420,7 +448,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None)))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None, schedule3aExempt = None)))
 
               when(playbackRepository.set(any())).thenReturn(Future.successful(true))
 
@@ -467,7 +495,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
             when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-              .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
+              .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = None)))
 
             when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
               .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
@@ -510,7 +538,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true))))
+                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = Some(true))))
 
               when(fakePlaybackRepository.set(any())).thenReturn(Future.successful(true))
 
