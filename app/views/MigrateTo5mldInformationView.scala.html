@@ -54,7 +54,9 @@
          "bullet3"
          ))
 
-         <p>@messages("migrateTo5mldInformation.p3")</p>
+        @if(appConfig.schedule3aExemptEnabled) {
+            <p>@messages("migrateTo5mldInformation.p3")</p>
+        }
 
         <details class="govuk-details section" data-module="govuk-details">
             <summary class="govuk-details__summary">
