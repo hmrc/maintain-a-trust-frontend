@@ -36,9 +36,9 @@
 
     @formHelper(action = Schedule3aExemptYesNoController.onSubmit(), 'autoComplete -> "off") {
 
-        @errorSummary(form.errors)
+        @errorSummary(form.errors, isYesNo = true)
 
-        @heading(messages("schedule3aExemptYesNo.heading"))
+        @heading("schedule3aExemptYesNo.heading")
 
         <p>@messages("schedule3aExemptYesNo.p1")</p>
 
