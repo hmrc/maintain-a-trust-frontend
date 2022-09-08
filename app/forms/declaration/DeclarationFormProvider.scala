@@ -17,6 +17,7 @@
 package forms.declaration
 
 import forms.Validation
+import forms.helpers.WhitespaceHelper._
 import forms.mappings.Mappings
 import models.FullName
 import play.api.data.Forms.{mapping, optional}
@@ -35,12 +36,13 @@ trait DeclarationFormProvider extends Mappings {
         )
       ),
     "middleName" -> optional(text()
+      .transform(trimWhitespace, identity[String])
       .verifying(
         firstError(
           maxLength(35, "declaration.error.middleName.length"),
           regexp(Validation.nameRegex, "declaration.error.middleName.invalid"))
       )
-    ),
+    ).transform(emptyToNone, identity[Option[String]]),
     "lastName" -> text("declaration.error.lastName.required")
       .verifying(
         firstError(
