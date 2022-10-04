@@ -33,7 +33,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Session
 import views.html.status._
 import javax.inject.Inject
-import pages.trustdetails.{ExpressTrustYesNoPage, Schedule3aExemptYesNoPage}
 
 import scala.concurrent.{ExecutionContext, Future}
 

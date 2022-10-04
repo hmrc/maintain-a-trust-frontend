@@ -27,6 +27,7 @@ object TestUserAnswers extends TryValues {
   lazy val urn = "XATRUST12345678"
   lazy val sessionId = "sessionId"
 
-  def emptyUserAnswersForUtr: UserAnswers = UserAnswers(userInternalId, utr, sessionId)
-  def emptyUserAnswersForUrn: UserAnswers = UserAnswers(userInternalId, urn, sessionId, isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
+  def emptyUserAnswersForUtr: UserAnswers = UserAnswers(userInternalId, utr, sessionId, s"$userInternalId-$utr-$sessionId")
+  def emptyUserAnswersForUrn: UserAnswers = UserAnswers(userInternalId, urn, sessionId, s"$userInternalId-$urn-$sessionId",
+                                             isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
 }

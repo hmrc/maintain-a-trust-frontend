@@ -32,12 +32,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ObligedEntityPdfYesNoController @Inject()(
-                                             override val messagesApi: MessagesApi,
-                                             playbackRepository: PlaybackRepository,
-                                             actions: Actions,
-                                             yesNoFormProvider: YesNoFormProvider,
-                                             val controllerComponents: MessagesControllerComponents,
-                                             view: ObligedEntityPdfYesNoView
+                                                 override val messagesApi: MessagesApi,
+                                                 playbackRepository: PlaybackRepository,
+                                                 actions: Actions,
+                                                 yesNoFormProvider: YesNoFormProvider,
+                                                 val controllerComponents: MessagesControllerComponents,
+                                                 view: ObligedEntityPdfYesNoView
                                            )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 

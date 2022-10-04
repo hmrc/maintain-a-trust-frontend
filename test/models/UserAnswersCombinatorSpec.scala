@@ -49,9 +49,9 @@ class UserAnswersCombinatorSpec extends SpecBase {
 
       "no arrays at path" must {
         "return first in list" in {
-          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1")
-          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2")
-          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3")
+          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1", newId = "internalId1-utr1-session1")
+          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2", newId = "internalId2-utr2-session2")
+          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3", newId = "internalId3-utr3-session3")
           val userAnswers = List(x, y, z)
 
           val result = userAnswers.combineArraysWithPath(path).get
@@ -61,9 +61,9 @@ class UserAnswersCombinatorSpec extends SpecBase {
 
       "first input has array at path" must {
         "return first in list" in {
-          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1",  data = array)
-          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2")
-          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3" )
+          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1", newId = "internalId1-utr1-session1",  data = array)
+          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2", newId = "internalId2-utr2-session2")
+          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3", newId = "internalId3-utr3-session3" )
           val userAnswers = List(x, y, z)
 
           val result = userAnswers.combineArraysWithPath(path).get
@@ -73,9 +73,9 @@ class UserAnswersCombinatorSpec extends SpecBase {
 
       "a different input has array at path" must {
         "return first in list with updated data" in {
-          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1")
-          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2")
-          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3", data = array)
+          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1", newId = "internalId1-utr1-session1")
+          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2", newId = "internalId2-utr2-session2")
+          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3", newId = "internalId3-utr3-session3", data = array)
           val userAnswers = List(x, y, z)
 
           val result = userAnswers.combineArraysWithPath(path).get
@@ -103,9 +103,9 @@ class UserAnswersCombinatorSpec extends SpecBase {
               |""".stripMargin
           ).as[JsObject]
 
-          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1", data = array)
-          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2", data = array)
-          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3", data = array)
+          val x = UserAnswers(internalId = "internalId1", identifier = "utr1", sessionId = "session1", newId = "internalId1-utr1-session1", data = array)
+          val y = UserAnswers(internalId = "internalId2", identifier = "utr2", sessionId = "session2", newId = "internalId2-utr2-session2", data = array)
+          val z = UserAnswers(internalId = "internalId3", identifier = "utr3", sessionId = "session3", newId = "internalId3-utr3-session3", data = array)
           val userAnswers = List(x, y, z)
 
           val result = userAnswers.combineArraysWithPath(path).get

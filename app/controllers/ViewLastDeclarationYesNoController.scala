@@ -31,12 +31,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ViewLastDeclarationYesNoController @Inject()(
-                                               override val messagesApi: MessagesApi,
-                                               playbackRepository: PlaybackRepository,
-                                               actions: Actions,
-                                               yesNoFormProvider: YesNoFormProvider,
-                                               val controllerComponents: MessagesControllerComponents,
-                                               view: ViewLastDeclarationYesNoView
+                                                    override val messagesApi: MessagesApi,
+                                                    playbackRepository: PlaybackRepository,
+                                                    actions: Actions,
+                                                    yesNoFormProvider: YesNoFormProvider,
+                                                    val controllerComponents: MessagesControllerComponents,
+                                                    view: ViewLastDeclarationYesNoView
                                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   val form: Form[Boolean] = yesNoFormProvider.withPrefix("viewLastDeclarationYesNo")

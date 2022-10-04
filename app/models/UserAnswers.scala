@@ -25,13 +25,13 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 import sections.Trustees
-
 import java.time.LocalDateTime
 import scala.util.{Failure, Success, Try}
 
 final case class UserAnswers(internalId: String,
                              identifier: String,
                              sessionId: String,
+                             newId: String,
                              data: JsObject = Json.obj(),
                              isUnderlyingData5mld: Boolean = false,
                              isUnderlyingDataTaxable: Boolean = true,
@@ -157,6 +157,7 @@ object UserAnswers {
       internalId = internalId,
       identifier = identifier,
       sessionId = sessionId,
+      newId = s"$internalId-$identifier-$sessionId",
       isUnderlyingData5mld = isUnderlyingData5mld,
       isUnderlyingDataTaxable = isUnderlyingDataTaxable
     )
@@ -165,6 +166,7 @@ object UserAnswers {
     (__ \ "internalId").read[String] and
       (__ \ "identifier").read[String] and
       (__ \ "sessionId").read[String] and
+      (__ \ "newId").read[String] and
       (__ \ "data").read[JsObject] and
       (__ \ "isUnderlyingData5mld").readWithDefault[Boolean](false) and
       (__ \ "isUnderlyingDataTaxable").readWithDefault[Boolean](true) and
@@ -175,6 +177,7 @@ object UserAnswers {
     (__ \ "internalId").write[String] and
       (__ \ "identifier").write[String] and
       (__ \ "sessionId").write[String] and
+      (__ \ "newId").write[String] and
       (__ \ "data").write[JsObject] and
       (__ \ "isUnderlyingData5mld").write[Boolean] and
       (__ \ "isUnderlyingDataTaxable").write[Boolean] and

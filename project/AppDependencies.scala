@@ -5,7 +5,7 @@ object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
-    "org.reactivemongo" %% "play2-reactivemongo"            % "0.20.13-play28",
+    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"             % "0.73.0",
     "uk.gov.hmrc"       %% "play-frontend-hmrc"             % "3.5.0-play-28",
     "uk.gov.hmrc"       %% "play-conditional-form-mapping"  % "1.11.0-play-28",
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"     % "5.24.0",
@@ -16,7 +16,8 @@ object AppDependencies {
 
   val test: Seq[ModuleID] = Seq(
     "org.scalatest"               %% "scalatest"                % "3.2.12",
-    "org.scalatestplus.play"      %% "scalatestplus-play"       % "5.1.0",
+    "uk.gov.hmrc.mongo"           %% "hmrc-mongo-test-play-28" %"0.73.0",
+      "org.scalatestplus.play"      %% "scalatestplus-play"       % "5.1.0",
     "org.scalatestplus"           %% "scalatestplus-scalacheck" % "3.1.0.0-RC2",
     "wolfendale"                  %% "scalacheck-gen-regexp"    % "0.1.2",
     "org.jsoup"                   %  "jsoup"                    % "1.15.1",
@@ -40,6 +41,6 @@ object AppDependencies {
     "com.typesafe.akka" %% "akka-slf4j_2.12" % akkaVersion,
     "com.typesafe.akka" %% "akka-actor_2.12" % akkaVersion,
     "com.typesafe.akka" %% "akka-http-core_2.12" % akkaHttpVersion,
-    "commons-codec" % "commons-codec" % "1.12"
+    "commons-codec"     % "commons-codec"   % "1.12"
   )
 }
