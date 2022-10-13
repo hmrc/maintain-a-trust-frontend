@@ -79,7 +79,7 @@
     <logger name="connectors" level="INFO"/>
     <logger name="uk.gov.hmrc.play.bootstrap.filters.DefaultLoggingFilter" level="WARN"/>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </root>

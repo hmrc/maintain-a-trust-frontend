@@ -33,13 +33,13 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class Schedule3aExemptYesNoController @Inject()(
-                                                override val messagesApi: MessagesApi,
-                                                playbackRepository: PlaybackRepository,
-                                                actions: Actions,
-                                                formProvider: YesNoFormProvider,
-                                                val controllerComponents: MessagesControllerComponents,
-                                                view: Schedule3aExemptYesNoView,
-                                                trustsConnector: TrustConnector
+                                                 override val messagesApi: MessagesApi,
+                                                 playbackRepository: PlaybackRepository,
+                                                 actions: Actions,
+                                                 formProvider: YesNoFormProvider,
+                                                 val controllerComponents: MessagesControllerComponents,
+                                                 view: Schedule3aExemptYesNoView,
+                                                 trustsConnector: TrustConnector
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   private val form: Form[Boolean] = formProvider.withPrefix("schedule3aExemptYesNo")

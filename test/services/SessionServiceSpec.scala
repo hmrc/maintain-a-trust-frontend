@@ -23,10 +23,8 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.{verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.libs.json.Json
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
-
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
 
@@ -49,7 +47,7 @@ class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
 
             val mockPlaybackRepository = mock[PlaybackRepository]
             when(mockPlaybackRepository.set(any())).thenReturn(Future.successful(true))
-            when(mockPlaybackRepository.resetCache(any(), any(), any())).thenReturn(Future.successful(Some(Json.obj())))
+            when(mockPlaybackRepository.resetCache(any(), any(), any())).thenReturn(Future.successful(Some(true)))
 
             val mockSessionRepository = mock[ActiveSessionRepository]
             when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))

@@ -19,7 +19,6 @@ package base
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.libs.json.Json
 import repositories.PlaybackRepository
 
 import scala.concurrent.Future
@@ -30,5 +29,6 @@ trait Mocked extends MockitoSugar {
 
   when(playbackRepository.set(any())).thenReturn(Future.successful(true))
 
-  when(playbackRepository.resetCache(any(), any(), any())).thenReturn(Future.successful(Some(Json.obj())))
+  when(playbackRepository.resetCache(any(), any(), any())).thenReturn(Future.successful(Some(true)))
+
 }
