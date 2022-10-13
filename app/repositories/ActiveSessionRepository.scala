@@ -42,7 +42,7 @@ class ActiveSessionRepositoryImpl @Inject()(
     domainFormat = Format(IdentifierSession.reads,IdentifierSession.writes),
     indexes = Seq(
       IndexModel(
-        ascending("lastUpdated"),
+        ascending("updatedAt"),
         IndexOptions()
           .unique(false)
           .name("session-updated-at-index")
