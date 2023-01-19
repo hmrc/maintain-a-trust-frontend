@@ -19,7 +19,7 @@ package services
 import base.SpecBase
 import models.IdentifierSession
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -70,7 +70,7 @@ class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
 
             verify(mockPlaybackRepository).resetCache(internalId, identifier, sessionId)
 
-            val identifierSessionCaptor = ArgumentCaptor.forClass(classOf[IdentifierSession])
+            val identifierSessionCaptor: ArgumentCaptor[IdentifierSession] = ArgumentCaptor.forClass(classOf[IdentifierSession])
             verify(mockSessionRepository).set(identifierSessionCaptor.capture())
 
             identifierSessionCaptor.getValue.internalId mustBe internalId

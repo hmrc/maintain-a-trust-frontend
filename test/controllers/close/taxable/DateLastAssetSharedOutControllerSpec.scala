@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.TrustConnector
 import forms.DateFormProvider
 import models.UserAnswers
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.close.taxable.DateLastAssetSharedOutPage

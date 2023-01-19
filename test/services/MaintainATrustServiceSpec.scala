@@ -18,7 +18,7 @@ package services
 
 import base.SpecBase
 import connectors.{TrustConnector, TrustsStoreConnector}
-import org.mockito.Matchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
 import uk.gov.hmrc.http.HeaderCarrier
 

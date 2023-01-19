@@ -21,7 +21,7 @@ import connectors.TrustConnector
 import forms.YesNoFormProvider
 import models.UserAnswers
 import models.pages.WhatIsNext
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import pages.WhatIsNextPage
 import pages.makechanges.AddOrUpdateProtectorYesNoPage

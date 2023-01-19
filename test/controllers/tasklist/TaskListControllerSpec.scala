@@ -23,7 +23,7 @@ import models.MigrationTaskStatus.NothingToUpdate
 import models.pages.Tag._
 import models.pages.WhatIsNext
 import models.{CompletedMaintenanceTasks, FirstTaxYearAvailable, TaskList}
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks

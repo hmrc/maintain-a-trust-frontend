@@ -23,7 +23,6 @@ import models.requests.{ClosingTrustRequest, DataRequest}
 import pages.WhatIsNextPage
 import play.api.Logging
 import play.api.mvc.{ActionRefiner, Result, Results}
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,10 +31,6 @@ class RequireClosingTrustAnswerAction @Inject()(errorHandler: ErrorHandler)
   extends ActionRefiner[DataRequest, ClosingTrustRequest] with Logging {
 
   override protected def refine[A](request: DataRequest[A]): Future[Either[Result, ClosingTrustRequest[A]]] = {
-
-    val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
-
     Future.successful(
       request.userAnswers.get(WhatIsNextPage) match {
         case None =>

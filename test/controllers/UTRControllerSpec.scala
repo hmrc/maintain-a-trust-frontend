@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import connectors.TrustConnector
 import forms.UtrFormProvider
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.data.Form
 import play.api.inject.bind

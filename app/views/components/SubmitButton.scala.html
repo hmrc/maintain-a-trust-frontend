@@ -21,7 +21,7 @@
 @(overrideMessage: Option[String] = None, submitClass: Option[String] = None, id: String = "submit")(implicit messages: Messages)
 
 @govukButton(Button(
-    preventDoubleClick = true,
+    preventDoubleClick = Some(true),
     attributes = Map("id" -> id),
     classes = s"button ${submitClass.getOrElse("")}",
     content = if(overrideMessage.isEmpty) {

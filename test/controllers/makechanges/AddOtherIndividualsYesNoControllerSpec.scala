@@ -21,7 +21,7 @@ import connectors.{TrustConnector, TrustsStoreConnector}
 import forms.YesNoFormProvider
 import models.pages.WhatIsNext
 import models.{CompletedMaintenanceTasks, UserAnswers}
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import pages.WhatIsNextPage
 import pages.makechanges._

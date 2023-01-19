@@ -22,7 +22,7 @@ import base.SpecBase
 import connectors.TrustsObligedEntityOutputConnector
 import play.api.http.Status._
 import play.api.http.HeaderNames._
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.inject.bind
 import play.api.libs.json.JsValue

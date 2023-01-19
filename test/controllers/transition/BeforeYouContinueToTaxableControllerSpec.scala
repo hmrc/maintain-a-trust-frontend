@@ -19,7 +19,7 @@ package controllers.transition
 import base.SpecBase
 import connectors.TrustConnector
 import models.{TrustDetails, UTR}
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks

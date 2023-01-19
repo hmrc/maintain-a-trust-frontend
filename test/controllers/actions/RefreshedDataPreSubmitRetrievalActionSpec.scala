@@ -26,7 +26,7 @@ import models.http.{Processed, TrustsResponse}
 import models.pages.WhatIsNext
 import models.requests.{DataRequest, OrganisationUser, User}
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.EitherValues
@@ -164,7 +164,7 @@ class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSug
             whenReady(futureResult) { result =>
               result mustBe 'right
 
-              val uaCaptor = ArgumentCaptor.forClass(classOf[UserAnswers])
+              val uaCaptor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
               verify(playbackRepository).set(uaCaptor.capture)
 
               uaCaptor.getValue.get(WhatIsNextPage).get mustBe whatNext

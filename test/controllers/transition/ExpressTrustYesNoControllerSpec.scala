@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.TrustConnector
 import forms.YesNoFormProvider
 import models.pages.WhatIsNext.NeedsToPayTax
-import org.mockito.Matchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.WhatIsNextPage

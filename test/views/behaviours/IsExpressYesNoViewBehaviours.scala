@@ -55,7 +55,7 @@ trait IsExpressYesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
         "not render an error summary" in {
 
           val doc = asDocument(createView(form))
-          assertNotRenderedById(doc, "error-summary-title")
+          assertNotRenderedByClass(doc, "govuk-error-summary")
         }
       }
 
@@ -74,7 +74,7 @@ trait IsExpressYesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
         "show an error summary" in {
 
           val doc = asDocument(createView(form.withError(error)))
-          assertRenderedById(doc, "error-summary-title")
+          assertRenderedByClass(doc, "govuk-error-summary")
         }
 
         "show an error in the value field's label" in {
@@ -108,7 +108,7 @@ trait IsExpressYesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
     "not render an error summary" in {
 
       val doc = asDocument(createView(form.fill(answer)))
-      assertNotRenderedById(doc, "error-summary-title")
+      assertNotRenderedByClass(doc, "govuk-error-summary")
     }
   }
 }

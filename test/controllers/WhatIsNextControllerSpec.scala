@@ -23,7 +23,7 @@ import generators.ModelGenerators
 import models.Underlying4mldTrustIn5mldMode
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
-import org.mockito.Matchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.BeforeAndAfterEach

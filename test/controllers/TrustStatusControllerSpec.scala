@@ -21,7 +21,7 @@ import connectors.{TrustClaim, TrustConnector, TrustsStoreConnector}
 import mapping.{FakeFailingUserAnswerExtractor, FakeUserAnswerExtractor, UserAnswersExtractor}
 import models.{TrustDetails, UTR, UserAnswers}
 import models.http._
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import play.api.Application
