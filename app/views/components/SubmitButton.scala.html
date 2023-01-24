@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 @(overrideMessage: Option[String] = None, submitClass: Option[String] = None, id: String = "submit")(implicit messages: Messages)
 
 @govukButton(Button(
-    preventDoubleClick = true,
+    preventDoubleClick = Some(true),
     attributes = Map("id" -> id),
     classes = s"button ${submitClass.getOrElse("")}",
     content = if(overrideMessage.isEmpty) {

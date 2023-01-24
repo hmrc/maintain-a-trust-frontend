@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,6 +96,14 @@ trait ViewSpecBase extends SpecBase {
 
   def assertNotRenderedByCssSelector(doc: Document, cssSelector: String): Assertion = {
     assert(doc.select(cssSelector).isEmpty, "\n\nElement " + cssSelector + " was rendered on the page.\n")
+  }
+
+  def assertRenderedByClass(doc: Document, className: String): Assertion = {
+    assert(!doc.getElementsByClass(className).isEmpty, "Element " + className + " was not rendered on the page.")
+  }
+
+  def assertNotRenderedByClass(doc: Document, className: String): Assertion = {
+    assert(doc.getElementsByClass(className).isEmpty, "Element " + className + " was rendered on the page.")
   }
 
   def assertContainsLabel(doc: Document, forElement: String, expectedText: String, expectedHintText: Option[String] = None): Any = {

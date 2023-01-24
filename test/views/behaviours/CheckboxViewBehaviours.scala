@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ trait CheckboxViewBehaviours[A] extends ViewBehaviours {
 
       "not render an error summary" in {
         val doc = asDocument(createView(form))
-        assertNotRenderedById(doc, "error-summary-title")
+        assertNotRenderedByClass(doc, "govuk-error-summary")
       }
 
 
@@ -99,7 +99,7 @@ trait CheckboxViewBehaviours[A] extends ViewBehaviours {
 
       "show an error summary" in {
         val doc = asDocument(createView(form.withError(FormError(fieldKey, "error.invalid"))))
-        assertRenderedById(doc, "error-summary-title")
+        assertRenderedByClass(doc, "govuk-error-summary")
       }
 
       "show an error associated with the value field" in {

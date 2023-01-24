@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ class SessionTimeoutController @Inject()(val appConfig: FrontendAppConfig,
     Future.successful(Ok.withSession(request.session))
   }
 
-  val timeout: Action[AnyContent] = Action.async { implicit request =>
+  val timeout: Action[AnyContent] = Action.async {
     Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad.url).withNewSession)
   }
 }
