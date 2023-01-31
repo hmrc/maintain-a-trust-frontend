@@ -109,10 +109,10 @@ class ObligedEntityPdfControllerSpec extends SpecBase {
         application.stop()
       }
 
-      "Content-Disposition header missing" in {
+      "OK response from connector but Content-Disposition header missing" in {
 
         when(mockConnector.getPdf(any())(any()))
-          .thenReturn(Future.successful(MockResponse(INTERNAL_SERVER_ERROR, headers.filterNot(_._1 != CONTENT_DISPOSITION))))
+          .thenReturn(Future.successful(MockResponse(OK, headers.filterNot(_._1 != CONTENT_DISPOSITION))))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
           .overrides(bind[TrustsObligedEntityOutputConnector].toInstance(mockConnector))
@@ -127,10 +127,10 @@ class ObligedEntityPdfControllerSpec extends SpecBase {
         application.stop()
       }
 
-      "Content-Type header missing" in {
+      "OK response from connector but Content-Type header missing" in {
 
         when(mockConnector.getPdf(any())(any()))
-          .thenReturn(Future.successful(MockResponse(INTERNAL_SERVER_ERROR, headers.filterNot(_._1 != CONTENT_TYPE))))
+          .thenReturn(Future.successful(MockResponse(OK, headers.filterNot(_._1 != CONTENT_TYPE))))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
           .overrides(bind[TrustsObligedEntityOutputConnector].toInstance(mockConnector))
@@ -145,10 +145,10 @@ class ObligedEntityPdfControllerSpec extends SpecBase {
         application.stop()
       }
 
-      "Content-Length header missing" in {
+      "OK response from connector but Content-Length header missing" in {
 
         when(mockConnector.getPdf(any())(any()))
-          .thenReturn(Future.successful(MockResponse(INTERNAL_SERVER_ERROR, headers.filterNot(_._1 != CONTENT_LENGTH))))
+          .thenReturn(Future.successful(MockResponse(OK, headers.filterNot(_._1 != CONTENT_LENGTH))))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
           .overrides(bind[TrustsObligedEntityOutputConnector].toInstance(mockConnector))

@@ -17,15 +17,15 @@
 package repositories
 
 import models.UserAnswers
-import scala.concurrent.Future
+import utils.TrustEnvelope.TrustEnvelope
 
 
 trait PlaybackRepository {
 
-  def get(internalId: String, identifier: String, sessionId: String): Future[Option[UserAnswers]]
+  def get(internalId: String, identifier: String, sessionId: String): TrustEnvelope[Option[UserAnswers]]
 
-  def set(userAnswers: UserAnswers): Future[Boolean]
+  def set(userAnswers: UserAnswers): TrustEnvelope[Boolean]
 
-  def resetCache(internalId: String, identifier: String, sessionId: String): Future[Option[Boolean]]
+  def resetCache(internalId: String, identifier: String, sessionId: String): TrustEnvelope[Option[Boolean]]
 
 }

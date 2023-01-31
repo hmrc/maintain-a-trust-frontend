@@ -17,7 +17,8 @@
 package services
 
 import com.google.inject.Inject
-import play.api.mvc.Results.Redirect
+import handlers.ErrorHandler
+import play.api.mvc.Results.{InternalServerError, Redirect}
 import models.requests.IdentifierRequest
 import models.{IdentifierSession, UserAnswers}
 import play.api.Logging
@@ -25,17 +26,19 @@ import play.api.mvc.Result
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Session
+import utils.TrustEnvelope.TrustEnvelope
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class SessionService @Inject()(playbackRepository: PlaybackRepository,
-                               sessionRepository: ActiveSessionRepository) extends Logging {
+                               sessionRepository: ActiveSessionRepository,
+                               errorHandler: ErrorHandler) extends Logging {
 
   def initialiseUserAnswers(identifier: String,
                             internalId: String,
                             isUnderlyingData5mld: Boolean,
                             isUnderlyingDataTaxable: Boolean)
-                           (implicit ec: ExecutionContext, hc: HeaderCarrier): Future[UserAnswers] = {
+                           (implicit ec: ExecutionContext, hc: HeaderCarrier): TrustEnvelope[UserAnswers] = {
 
     val activeSession = IdentifierSession(internalId, identifier)
     val newEmptyAnswers = UserAnswers.startNewSession(internalId, identifier, Session.id(hc), isUnderlyingData5mld, isUnderlyingDataTaxable)
@@ -52,10 +55,10 @@ class SessionService @Inject()(playbackRepository: PlaybackRepository,
   def initialiseSession[A](identifier: String)
                           (implicit request: IdentifierRequest[A], ec: ExecutionContext): Future[Result] = {
     val session = IdentifierSession(request.user.internalId, identifier)
-    for {
-      _ <- sessionRepository.set(session)
-    } yield {
-      Redirect(controllers.routes.TrustStatusController.status())
+
+    sessionRepository.set(session).value.map {
+      case Right(_) => Redirect(controllers.routes.TrustStatusController.status())
+      case Left(_) => InternalServerError(errorHandler.internalServerErrorTemplate)
     }
   }
 

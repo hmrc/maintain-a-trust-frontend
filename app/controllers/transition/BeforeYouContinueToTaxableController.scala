@@ -19,6 +19,7 @@ package controllers.transition
 import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions._
+import handlers.ErrorHandler
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -33,30 +34,39 @@ class BeforeYouContinueToTaxableController @Inject()(
                                                       actions: Actions,
                                                       val controllerComponents: MessagesControllerComponents,
                                                       view: BeforeYouContinueToTaxableView,
-                                                      connector: TrustConnector
-                                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                                      connector: TrustConnector,
+                                                      errorHandler: ErrorHandler
+                                                    )(implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Logging {
+
+  private val className = getClass.getSimpleName
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
       val identifier = request.userAnswers.identifier
-      connector.getUntransformedTrustDetails(identifier) map { trustDetails =>
-        val identifierType = request.userAnswers.identifierType
-        Ok(view(identifier, identifierType, displayExpress = trustDetails.expressTrust.isEmpty))
+      val identifierType = request.userAnswers.identifierType
+
+      connector.getUntransformedTrustDetails(identifier).value.map {
+        case Right(trustDetails) => Ok(view(identifier, identifierType, displayExpress = trustDetails.expressTrust.isEmpty))
+        case Left(_) =>
+          logger.warn(s"[$className][onPageLoad][Session ID: ${utils.Session.id(hc)}] Error while retrieving trust details.")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
       }
   }
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
-      connector.getUntransformedTrustDetails(request.userAnswers.identifier) map { trustDetails =>
-        Redirect {
-          if (trustDetails.expressTrust.isEmpty) {
-            routes.ExpressTrustYesNoController.onPageLoad()
-          } else {
-            controllers.tasklist.routes.TaskListController.onPageLoad()
-          }
+      connector.getUntransformedTrustDetails(request.userAnswers.identifier).value.map {
+        case Right(trustDetails) => if (trustDetails.expressTrust.isEmpty) {
+          Redirect(routes.ExpressTrustYesNoController.onPageLoad())
+        } else {
+          Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
         }
+        case Left(_) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while retrieving trust details.")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
       }
   }
 }

@@ -17,12 +17,11 @@
 package mapping.assets
 
 import mapping.PlaybackExtractor
-import models.{Address, UserAnswers}
+import models.errors.TrustErrors
 import models.http.PropertyLandType
+import models.{Address, UserAnswers}
 import pages.QuestionPage
 import pages.assets.propertyOrLand._
-
-import scala.util.Try
 
 class PropertyOrLandAssetExtractor extends PlaybackExtractor[PropertyLandType] {
 
@@ -32,9 +31,9 @@ class PropertyOrLandAssetExtractor extends PlaybackExtractor[PropertyLandType] {
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = PropertyOrLandAddressUkYesNoPage(index)
   override def addressPage(index: Int): QuestionPage[Address] = PropertyOrLandAddressPage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: PropertyLandType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     answers
       .flatMap(_.set(PropertyOrLandDescriptionPage(index), entity.buildingLandName))
       .flatMap(answers => extractOptionalAddress(entity.address, index, answers))
@@ -42,7 +41,7 @@ class PropertyOrLandAssetExtractor extends PlaybackExtractor[PropertyLandType] {
       .flatMap(answers => extractPreviousValue(entity.valuePrevious, index, answers))
   }
 
-  private def extractPreviousValue(valuePrevious: Option[Long], index: Int, answers: UserAnswers): Try[UserAnswers] = {
+  private def extractPreviousValue(valuePrevious: Option[Long], index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     valuePrevious match {
       case Some(value) =>
         answers.set(TrustOwnAllThePropertyOrLandPage(index), false)

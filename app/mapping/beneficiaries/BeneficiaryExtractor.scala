@@ -17,9 +17,9 @@
 package mapping.beneficiaries
 
 import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
 import models.UserAnswersCombinator._
+import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.DisplayTrustBeneficiaryType
 import play.api.Logging
 
@@ -31,7 +31,7 @@ class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBenefic
                                      individualBeneficiaryExtractor: IndividualBeneficiaryExtractor,
                                      largeBeneficiaryExtractor: LargeBeneficiaryExtractor) extends Logging {
 
-  def extract(answers: UserAnswers, data: DisplayTrustBeneficiaryType): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: DisplayTrustBeneficiaryType): Either[TrustErrors, UserAnswers] = {
 
     val beneficiaries: List[UserAnswers] = List(
       individualBeneficiaryExtractor.extract(answers, data.individualDetails),

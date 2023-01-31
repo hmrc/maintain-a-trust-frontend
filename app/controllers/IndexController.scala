@@ -34,6 +34,7 @@ class IndexController @Inject()(
                                  actions: Actions,
                                  sessionService: SessionService
                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+  private val className = getClass.getSimpleName
 
   def onPageLoad(): Action[AnyContent] = actions.auth.async {
     implicit request =>
@@ -68,7 +69,7 @@ class IndexController @Inject()(
       case Some(value) =>
         sessionService.initialiseSession(value)
       case None =>
-        logger.info(s"[IndexController][initialise][Session ID: ${Session.id(hc)} user is not enrolled, starting maintain journey, redirect to ask for identifier")
+        logger.info(s"[$className][initialise][Session ID: ${Session.id(hc)} user is not enrolled, starting maintain journey, redirect to ask for identifier")
         Future.successful(redirectForIdentifier)
     }
   }

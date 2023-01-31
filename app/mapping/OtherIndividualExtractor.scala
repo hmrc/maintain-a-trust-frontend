@@ -16,13 +16,13 @@
 
 package mapping
 
+import models.errors.TrustErrors
 import models.http.{NaturalPersonType, PassportType}
 import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.individual._
 
 import java.time.LocalDate
-import scala.util.Try
 
 class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
 
@@ -53,9 +53,9 @@ class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
 
   override def metaDataPage(index: Int): QuestionPage[MetaData] = OtherIndividualMetaData(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: NaturalPersonType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(OtherIndividualNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))

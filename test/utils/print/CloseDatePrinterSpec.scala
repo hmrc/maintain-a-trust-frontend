@@ -38,7 +38,7 @@ class CloseDatePrinterSpec extends SpecBase {
       "taxable" in {
 
         val answers = emptyUserAnswersForUtr
-          .set(DateLastAssetSharedOutPage, date).success.value
+          .set(DateLastAssetSharedOutPage, date).value
 
         val result = helper.print(answers)
 
@@ -59,7 +59,7 @@ class CloseDatePrinterSpec extends SpecBase {
       "non-taxable" in {
 
         val answers = emptyUserAnswersForUrn
-          .set(DateClosedPage, date).success.value
+          .set(DateClosedPage, date).value
 
         val result = helper.print(answers)
 

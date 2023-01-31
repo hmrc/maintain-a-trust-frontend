@@ -28,13 +28,13 @@ class MakeChangesRouterSpec extends SpecBase {
       val filter = MakeChangesRouter
 
       val userAnswers = emptyUserAnswersForUtr
-        .set(UpdateTrustDetailsYesNoPage, false).success.value
-        .set(UpdateTrusteesYesNoPage, false).success.value
-        .set(UpdateBeneficiariesYesNoPage, false).success.value
-        .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddOrUpdateProtectorYesNoPage, false).success.value
-        .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
-        .set(AddOrUpdateNonEeaCompanyYesNoPage, false).success.value
+        .set(UpdateTrustDetailsYesNoPage, false).value
+        .set(UpdateTrusteesYesNoPage, false).value
+        .set(UpdateBeneficiariesYesNoPage, false).value
+        .set(UpdateSettlorsYesNoPage, false).value
+        .set(AddOrUpdateProtectorYesNoPage, false).value
+        .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
+        .set(AddOrUpdateNonEeaCompanyYesNoPage, false).value
 
       filter.decide(userAnswers) mustBe Declaration
     }
@@ -43,13 +43,13 @@ class MakeChangesRouterSpec extends SpecBase {
       val filter = MakeChangesRouter
 
       val userAnswers = emptyUserAnswersForUtr
-        .set(UpdateTrustDetailsYesNoPage, false).success.value
-        .set(UpdateTrusteesYesNoPage, true).success.value
-        .set(UpdateBeneficiariesYesNoPage, true).success.value
-        .set(UpdateSettlorsYesNoPage, false).success.value
-        .set(AddOrUpdateProtectorYesNoPage, false).success.value
-        .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
-        .set(AddOrUpdateNonEeaCompanyYesNoPage, false).success.value
+        .set(UpdateTrustDetailsYesNoPage, false).value
+        .set(UpdateTrusteesYesNoPage, true).value
+        .set(UpdateBeneficiariesYesNoPage, true).value
+        .set(UpdateSettlorsYesNoPage, false).value
+        .set(AddOrUpdateProtectorYesNoPage, false).value
+        .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
+        .set(AddOrUpdateNonEeaCompanyYesNoPage, false).value
       filter.decide(userAnswers) mustBe TaskList
     }
 

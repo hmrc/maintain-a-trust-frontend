@@ -16,8 +16,8 @@
 
 package mapping
 
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
+import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.{NonUKType, ResidentialStatusType, TrustDetailsType, UkType}
 import models.pages.NonResidentType
 import models.pages.TrusteesBased._
@@ -25,11 +25,11 @@ import pages.trustdetails._
 import play.api.Logging
 import utils.Constants.GB
 
-import scala.util.{Failure, Success, Try}
-
 class TrustDetailsExtractor extends ConditionalExtractor with Logging {
 
-  def extract(answers: UserAnswers, data: TrustDetailsType): Either[PlaybackExtractionError, UserAnswers] = {
+  private val className = getClass.getSimpleName
+
+  def extract(answers: UserAnswers, data: TrustDetailsType): Either[TrustErrors, UserAnswers] = {
     val updated = answers
       .set(WhenTrustSetupPage, data.startDate)
       .flatMap(_.set(TrustTaxableYesNoPage, data.isTaxable))
@@ -43,16 +43,16 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
       .flatMap(_.set(Schedule3aExemptYesNoPage, data.schedule3aExempt))
 
     updated match {
-      case Success(a) =>
+      case Right(a) =>
         Right(a)
-      case Failure(exception) =>
-        logger.warn(s"[TrustDetailsExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+      case Left(_) =>
+        logger.warn(s"[$className][extract][UTR/URN: ${answers.identifier}] failed to extract data.")
         Left(FailedToExtractData(TrustDetailsType.toString))
     }
   }
 
   private def extractGovernedBy(lawCountry: Option[String],
-                                answers: UserAnswers): Try[UserAnswers] = {
+                                answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       lawCountry match {
         case Some(country) => answers
@@ -65,7 +65,7 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
   }
 
   private def extractAdminBy(administrationCountry: Option[String],
-                             answers: UserAnswers): Try[UserAnswers] = {
+                             answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       administrationCountry match {
         case Some(country) if country != GB => answers
@@ -78,19 +78,19 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
   }
 
   private def extractResidentialType(details: TrustDetailsType,
-                                     answers: UserAnswers): Try[UserAnswers] = {
+                                     answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       details.residentialStatus match {
         case Some(ResidentialStatusType(Some(uk), None)) => ukTrust(uk, details.settlorsUkBased, answers)
         case Some(ResidentialStatusType(None, Some(nonUK))) => nonUKTrust(nonUK, details.settlorsUkBased, answers)
-        case _ => Success(answers)
+        case _ => Right(answers)
       }
     }
   }
 
-  private def ukTrust(uk: UkType, settlorsUkBased: Option[Boolean], answers: UserAnswers): Try[UserAnswers] = {
+  private def ukTrust(uk: UkType, settlorsUkBased: Option[Boolean], answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
 
-    def extractOffShore(answers: UserAnswers): Try[UserAnswers] = uk.preOffShore match {
+    def extractOffShore(answers: UserAnswers): Either[TrustErrors, UserAnswers] = uk.preOffShore match {
       case Some(country) => answers
         .set(TrustResidentOffshorePage, true)
         .flatMap(_.set(TrustPreviouslyResidentPage, country))
@@ -104,11 +104,11 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
       .flatMap(extractWhereTrusteesAndSettlorsBased(true, settlorsUkBased, _))
   }
 
-  private def nonUKTrust(nonUK: NonUKType, settlorsUkBased: Option[Boolean], answers: UserAnswers): Try[UserAnswers] = {
+  private def nonUKTrust(nonUK: NonUKType, settlorsUkBased: Option[Boolean], answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
 
-    def nonResidentType(answers: UserAnswers): Try[UserAnswers] = nonUK.trusteeStatus.map(NonResidentType.fromDES) match {
+    def nonResidentType(answers: UserAnswers): Either[TrustErrors, UserAnswers] = nonUK.trusteeStatus.map(NonResidentType.fromDES) match {
       case Some(value) => answers.set(NonResidentTypePage, value)
-      case _ => Success(answers)
+      case _ => Right(answers)
     }
 
     answers
@@ -119,7 +119,7 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
       .flatMap(extractWhereTrusteesAndSettlorsBased(false, settlorsUkBased, _))
   }
 
-  private def extractWhereTrusteesAndSettlorsBased(isUk: Boolean, settlorsUkBased: Option[Boolean], answers: UserAnswers): Try[UserAnswers] = {
+  private def extractWhereTrusteesAndSettlorsBased(isUk: Boolean, settlorsUkBased: Option[Boolean], answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     (isUk, settlorsUkBased) match {
       case (true, None) => answers
         .set(WhereTrusteesBasedPage, AllTrusteesUkBased)

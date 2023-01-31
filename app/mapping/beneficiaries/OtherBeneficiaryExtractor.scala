@@ -16,12 +16,11 @@
 
 package mapping.beneficiaries
 
+import models.errors.TrustErrors
 import models.http.DisplayTrustOtherType
 import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.beneficiaries.other._
-
-import scala.util.Try
 
 class OtherBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustOtherType] {
 
@@ -38,9 +37,9 @@ class OtherBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryAddressUKYesNoPage(index)
   override def addressPage(index: Int): QuestionPage[Address] = OtherBeneficiaryAddressPage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustOtherType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(OtherBeneficiaryDescriptionPage(index), entity.description))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))

@@ -16,12 +16,11 @@
 
 package mapping.beneficiaries
 
+import models.errors.TrustErrors
 import models.http.DisplayTrustCharityType
 import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.beneficiaries.charity._
-
-import scala.util.Try
 
 class CharityBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustCharityType] {
 
@@ -42,9 +41,9 @@ class CharityBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTr
 
   override def utrPage(index: Int): QuestionPage[String] = CharityBeneficiaryUtrPage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustCharityType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     updateUserAnswersForOrgBeneficiary(answers, entity, index)
   }
 }

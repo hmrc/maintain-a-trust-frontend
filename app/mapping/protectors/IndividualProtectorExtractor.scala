@@ -16,6 +16,7 @@
 
 package mapping.protectors
 
+import models.errors.TrustErrors
 import models.http.{DisplayTrustProtector, PassportType}
 import models.pages.IndividualOrBusiness
 import models.{Address, MetaData, UserAnswers}
@@ -24,7 +25,6 @@ import pages.protectors.ProtectorIndividualOrBusinessPage
 import pages.protectors.individual._
 
 import java.time.LocalDate
-import scala.util.Try
 
 class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrustProtector] {
 
@@ -53,9 +53,9 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
 
   override def metaDataPage(index: Int): QuestionPage[MetaData] = IndividualProtectorMetaData(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustProtector,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(IndividualProtectorNamePage(index), entity.name))

@@ -38,13 +38,15 @@ class ConfirmationController @Inject()(
                                         answerRequiredAction: RequireClosingTrustAnswerAction
                                       ) extends FrontendBaseController with I18nSupport with Logging {
 
+  private val className = getClass.getSimpleName
+
   def onPageLoad(): Action[AnyContent] = actions.refreshedData.andThen(answerRequiredAction) {
     implicit request =>
 
       val isAgent = request.user.affinityGroup == Agent
 
       request.userAnswers.get(TVNPage).fold {
-        logger.warn(s"[ConfirmationController][onPageLoad][UTR/URN: ${request.userAnswers.identifier}] no TVN in user answers, cannot render confirmation page")
+        logger.warn(s"[$className][onPageLoad][UTR/URN: ${request.userAnswers.identifier}] no TVN in user answers, cannot render confirmation page")
         Redirect(controllers.routes.TrustStatusController.sorryThereHasBeenAProblem())
       }{
         tvn =>

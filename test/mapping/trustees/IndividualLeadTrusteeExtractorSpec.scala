@@ -18,7 +18,7 @@ package mapping.trustees
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractionErrors.FailedToExtractData
+import models.errors.FailedToExtractData
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, MetaData}
@@ -34,7 +34,7 @@ import java.time.LocalDate
 class IndividualLeadTrusteeExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val leadTrusteeIndExtractor: IndividualLeadTrusteeExtractor =
+  private val leadTrusteeIndExtractor: IndividualLeadTrusteeExtractor =
     injector.instanceOf[IndividualLeadTrusteeExtractor]
 
   private val (year2018, year2020, num1, num2) = (2018, 2020, 1, 2)

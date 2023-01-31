@@ -35,6 +35,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import connectors.TrustConnector
 import controllers.actions.Actions
+import handlers.ErrorHandler
 import models.pages.WhatIsNext.MakeChanges
 import pages.WhatIsNextPage
 import play.api.Logging
@@ -43,9 +44,10 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.TrustEnvelope
 import views.html._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class InformationSchedule3aExemptionController @Inject()(
@@ -54,8 +56,12 @@ class InformationSchedule3aExemptionController @Inject()(
                                                           val controllerComponents: MessagesControllerComponents,
                                                           view: InformationSchedule3aExemptionView,
                                                           playbackRepository: PlaybackRepository,
-                                                          trustsConnector: TrustConnector
-                                                        )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                                          trustsConnector: TrustConnector,
+                                                          errorHandler: ErrorHandler
+                                                        )(implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Logging {
+
+  private val className = getClass.getSimpleName
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
@@ -67,11 +73,18 @@ class InformationSchedule3aExemptionController @Inject()(
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
-      for {
-        updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, MakeChanges))
+     val result = for {
+        updatedAnswers <- TrustEnvelope(request.userAnswers.set(WhatIsNextPage, MakeChanges))
         _ <- playbackRepository.set(updatedAnswers)
         _ <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
       } yield
         Redirect(controllers.transition.routes.Schedule3aExemptYesNoController.onPageLoad())
+
+      result.value.map {
+        case Right(call) => call
+        case Left(_) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
+      }
   }
 }

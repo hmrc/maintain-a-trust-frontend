@@ -17,10 +17,12 @@
 package services
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.{TrustConnector, TrustsStoreConnector}
+import models.errors.TrustErrors
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
@@ -39,12 +41,14 @@ class MaintainATrustServiceSpec extends SpecBase {
         val mockTrustsConnector = mock[TrustConnector]
         val mockTrustsStoreConnector = mock[TrustsStoreConnector]
 
-        when(mockTrustsConnector.removeTransforms(any())(any(), any())).thenReturn(Future.successful(okResponse))
-        when(mockTrustsStoreConnector.resetTasks(any())(any(), any())).thenReturn(Future.successful(okResponse))
+        when(mockTrustsConnector.removeTransforms(any())(any(), any()))
+          .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
+        when(mockTrustsStoreConnector.resetTasks(any())(any(), any()))
+          .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
         val service = new MaintainATrustService(mockTrustsConnector, mockTrustsStoreConnector)
 
-        Await.result(service.removeTransformsAndResetTaskList(identifier), Duration.Inf)
+        Await.result(service.removeTransformsAndResetTaskList(identifier).value, Duration.Inf)
 
         verify(mockTrustsConnector).removeTransforms(eqTo(identifier))(any(), any())
         verify(mockTrustsStoreConnector).resetTasks(eqTo(identifier))(any(), any())

@@ -17,12 +17,11 @@
 package mapping.beneficiaries
 
 import models.HowManyBeneficiaries.{Over1, Over1001, Over101, Over201, Over501}
+import models.errors.TrustErrors
 import models.http.DisplayTrustLargeType
 import models.{Address, Description, HowManyBeneficiaries, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.beneficiaries.large._
-
-import scala.util.Try
 
 class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustLargeType] {
 
@@ -46,9 +45,9 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
 
   override def utrPage(index: Int): QuestionPage[String] = LargeBeneficiaryUtrPage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustLargeType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(LargeBeneficiaryNamePage(index), entity.organisationName))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
@@ -59,7 +58,7 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
       .flatMap(_.set(LargeBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
   }
 
-  private def extractBeneficiaryDescription(entity: DisplayTrustLargeType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
+  private def extractBeneficiaryDescription(entity: DisplayTrustLargeType, index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
       answers.set(
         LargeBeneficiaryDescriptionPage(index),
         Description(
@@ -74,7 +73,7 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
 
   private def extractNumberOfBeneficiaries(numberOfBeneficiary: String,
                                            index: Int,
-                                           answers: UserAnswers): Try[UserAnswers] = {
+                                           answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
       val setValue = (x: HowManyBeneficiaries) => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), x)
       numberOfBeneficiary.toInt match {
         case x if 0 to 100 contains x => setValue(Over1)

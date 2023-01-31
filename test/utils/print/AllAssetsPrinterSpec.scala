@@ -52,45 +52,45 @@ class AllAssetsPrinterSpec extends SpecBase {
       "migrating from non-taxable to taxable" in {
 
         val answers = emptyUserAnswersForUtr
-          .set(WhatIsNextPage, NeedsToPayTax).success.value
+          .set(WhatIsNextPage, NeedsToPayTax).value
 
-          .set(MoneyValuePage(0), num4000).success.value
+          .set(MoneyValuePage(0), num4000).value
 
-          .set(PropertyOrLandAddressYesNoPage(0), false).success.value
-          .set(PropertyOrLandDescriptionPage(0), "Building land name").success.value
-          .set(PropertyOrLandTotalValuePage(0), num2000).success.value
-          .set(TrustOwnAllThePropertyOrLandPage(0), true).success.value
+          .set(PropertyOrLandAddressYesNoPage(0), false).value
+          .set(PropertyOrLandDescriptionPage(0), "Building land name").value
+          .set(PropertyOrLandTotalValuePage(0), num2000).value
+          .set(TrustOwnAllThePropertyOrLandPage(0), true).value
 
-          .set(PropertyOrLandAddressYesNoPage(1), true).success.value
-          .set(PropertyOrLandAddressUkYesNoPage(1), false).success.value
-          .set(PropertyOrLandAddressPage(1), address).success.value
-          .set(PropertyOrLandTotalValuePage(1), num2000).success.value
-          .set(TrustOwnAllThePropertyOrLandPage(1), false).success.value
-          .set(PropertyLandValueTrustPage(1), num1000).success.value
+          .set(PropertyOrLandAddressYesNoPage(1), true).value
+          .set(PropertyOrLandAddressUkYesNoPage(1), false).value
+          .set(PropertyOrLandAddressPage(1), address).value
+          .set(PropertyOrLandTotalValuePage(1), num2000).value
+          .set(TrustOwnAllThePropertyOrLandPage(1), false).value
+          .set(PropertyLandValueTrustPage(1), num1000).value
 
-          .set(ShareNamePage(0), "Portfolio Name").success.value
-          .set(SharesInAPortfolioPage(0),true).success.value
-          .set(ShareOnStockExchangePage(0), true).success.value
-          .set(ShareQuantityInTrustPage(0), "1000").success.value
-          .set(ShareValueInTrustPage(0), num100).success.value
+          .set(ShareNamePage(0), "Portfolio Name").value
+          .set(SharesInAPortfolioPage(0),true).value
+          .set(ShareOnStockExchangePage(0), true).value
+          .set(ShareQuantityInTrustPage(0), "1000").value
+          .set(ShareValueInTrustPage(0), num100).value
 
-          .set(ShareClassPage(1), ShareClass.Preference).success.value
-          .set(ShareNamePage(1), shareName).success.value
-          .set(SharesInAPortfolioPage(1),false).success.value
-          .set(ShareOnStockExchangePage(1), false).success.value
-          .set(ShareQuantityInTrustPage(1), "2000").success.value
-          .set(ShareValueInTrustPage(1), num200).success.value
+          .set(ShareClassPage(1), ShareClass.Preference).value
+          .set(ShareNamePage(1), shareName).value
+          .set(SharesInAPortfolioPage(1),false).value
+          .set(ShareOnStockExchangePage(1), false).value
+          .set(ShareQuantityInTrustPage(1), "2000").value
+          .set(ShareValueInTrustPage(1), num200).value
 
-          .set(BusinessNamePage(0), businessName).success.value
-          .set(BusinessDescriptionPage(0), "Business Description").success.value
-          .set(BusinessAddressPage(0), address).success.value
-          .set(BusinessValuePage(0), num101).success.value
+          .set(BusinessNamePage(0), businessName).value
+          .set(BusinessDescriptionPage(0), "Business Description").value
+          .set(BusinessAddressPage(0), address).value
+          .set(BusinessValuePage(0), num101).value
 
-          .set(PartnershipDescriptionPage(0), "Partnership Description").success.value
-          .set(PartnershipStartDatePage(0), date).success.value
+          .set(PartnershipDescriptionPage(0), "Partnership Description").value
+          .set(PartnershipStartDatePage(0), date).value
 
-          .set(OtherAssetDescriptionPage(0), "Other Description").success.value
-          .set(OtherAssetValuePage(0), num100).success.value
+          .set(OtherAssetDescriptionPage(0), "Other Description").value
+          .set(OtherAssetValuePage(0), num100).value
 
         val result = helper.entities(answers)
 
@@ -193,13 +193,13 @@ class AllAssetsPrinterSpec extends SpecBase {
       "migrating from non-taxable to taxable" in {
 
         val answers = emptyUserAnswersForUtr
-          .set(WhatIsNextPage, NeedsToPayTax).success.value
-          .set(NonEeaBusinessNamePage(0), name).success.value
-          .set(NonEeaBusinessAddressPage(0), address).success.value
-          .set(NonEeaBusinessGoverningCountryPage(0), "FR").success.value
-          .set(NonEeaBusinessNamePage(1), name).success.value
-          .set(NonEeaBusinessAddressPage(1), address).success.value
-          .set(NonEeaBusinessGoverningCountryPage(1), "FR").success.value
+          .set(WhatIsNextPage, NeedsToPayTax).value
+          .set(NonEeaBusinessNamePage(0), name).value
+          .set(NonEeaBusinessAddressPage(0), address).value
+          .set(NonEeaBusinessGoverningCountryPage(0), "FR").value
+          .set(NonEeaBusinessNamePage(1), name).value
+          .set(NonEeaBusinessAddressPage(1), address).value
+          .set(NonEeaBusinessGoverningCountryPage(1), "FR").value
 
         val result = helper.entities(answers)
 
@@ -233,12 +233,12 @@ class AllAssetsPrinterSpec extends SpecBase {
       "not migrating from non-taxable to taxable" in {
 
         val answers = emptyUserAnswersForUtr
-          .set(NonEeaBusinessNamePage(0), name).success.value
-          .set(NonEeaBusinessAddressPage(0), address).success.value
-          .set(NonEeaBusinessGoverningCountryPage(0), "FR").success.value
-          .set(NonEeaBusinessNamePage(1), name).success.value
-          .set(NonEeaBusinessAddressPage(1), address).success.value
-          .set(NonEeaBusinessGoverningCountryPage(1), "FR").success.value
+          .set(NonEeaBusinessNamePage(0), name).value
+          .set(NonEeaBusinessAddressPage(0), address).value
+          .set(NonEeaBusinessGoverningCountryPage(0), "FR").value
+          .set(NonEeaBusinessNamePage(1), name).value
+          .set(NonEeaBusinessAddressPage(1), address).value
+          .set(NonEeaBusinessGoverningCountryPage(1), "FR").value
 
         val result = helper.entities(answers)
 

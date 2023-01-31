@@ -19,18 +19,23 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.InternationalAddressFormProvider
+import handlers.ErrorHandler
 import models.InternationalAddress
+import models.errors.{FormValidationError, TrustErrors}
+import models.requests.ClosingTrustRequest
 import navigation.Navigator.agentDeclarationUrl
 import pages.declaration.AgencyRegisteredAddressInternationalPage
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.TrustEnvelope
 import utils.countryoptions.CountryOptionsNonUK
 import views.html.declaration.AgencyRegisteredAddressInternationalView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class AgencyRegisteredAddressInternationalController @Inject()(
@@ -40,9 +45,12 @@ class AgencyRegisteredAddressInternationalController @Inject()(
                                                                 formProvider: InternationalAddressFormProvider,
                                                                 countryOptions: CountryOptionsNonUK,
                                                                 val controllerComponents: MessagesControllerComponents,
-                                                                view: AgencyRegisteredAddressInternationalView
-                                                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                                                view: AgencyRegisteredAddressInternationalView,
+                                                                errorHandler: ErrorHandler
+                                                              )(implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Logging {
 
+  private val className = getClass.getSimpleName
   private val form: Form[InternationalAddress] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
@@ -59,21 +67,27 @@ class AgencyRegisteredAddressInternationalController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, countryOptions.options()))),
+      val result = for {
+        formData <- TrustEnvelope(handleFormValidation)
+        updatedAnswers <- TrustEnvelope(request.userAnswers.set(AgencyRegisteredAddressInternationalPage, formData))
+        _ <- playbackRepository.set(updatedAnswers)
+      } yield Redirect(agentDeclarationUrl(request.userAnswers.isTrustMigratingFromNonTaxableToTaxable))
 
-        value => {
-          for {
-            updatedAnswers <- Future.fromTry(
-              request.userAnswers
-                .set(AgencyRegisteredAddressInternationalPage, value)
-            )
-            _ <- playbackRepository.set(updatedAnswers)
-          } yield Redirect(agentDeclarationUrl(request.userAnswers.isTrustMigratingFromNonTaxableToTaxable))
-        }
-      )
+      result.value.map {
+        case Right(call) => call
+        case Left(FormValidationError(formBadRequest)) => formBadRequest
+        case Left(_) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
+      }
+  }
 
+  private def handleFormValidation(implicit request: ClosingTrustRequest[AnyContent]): Either[TrustErrors, InternationalAddress] = {
+    form.bindFromRequest().fold(
+      (formWithErrors: Form[_]) =>
+        Left(FormValidationError(BadRequest(view(formWithErrors, countryOptions.options())))),
+      value => Right(value)
+    )
   }
 
 }

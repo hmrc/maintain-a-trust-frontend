@@ -17,7 +17,10 @@
 package services
 
 import base.SpecBase
+import cats.data.EitherT
+import handlers.ErrorHandler
 import models.IdentifierSession
+import models.errors.TrustErrors
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{verify, when}
@@ -25,12 +28,13 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
+
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
 
 class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   private val identifier = "identifier"
   private val internalId = "internalId"
@@ -46,13 +50,18 @@ class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
           (isUnderlyingData5mld, isUnderlyingDataTaxable) =>
 
             val mockPlaybackRepository = mock[PlaybackRepository]
-            when(mockPlaybackRepository.set(any())).thenReturn(Future.successful(true))
-            when(mockPlaybackRepository.resetCache(any(), any(), any())).thenReturn(Future.successful(Some(true)))
+
+            when(mockPlaybackRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+
+            when(mockPlaybackRepository.resetCache(any(), any(), any()))
+              .thenReturn(EitherT[Future, TrustErrors, Option[Boolean]](Future.successful(Right(Some(true)))))
 
             val mockSessionRepository = mock[ActiveSessionRepository]
-            when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+            when(mockSessionRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
-            val userAnswersSetupService = new SessionService(mockPlaybackRepository, mockSessionRepository)
+            val mockErrorHandler = mock[ErrorHandler]
+
+            val userAnswersSetupService = new SessionService(mockPlaybackRepository, mockSessionRepository, mockErrorHandler)
 
             val resultF = userAnswersSetupService.initialiseUserAnswers(
               identifier = identifier,
@@ -61,7 +70,7 @@ class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
               isUnderlyingDataTaxable = isUnderlyingDataTaxable
             )
 
-            val ua = Await.result(resultF, 5.seconds)
+            val ua = Await.result(resultF.value, 5.seconds).value
 
             ua.internalId mustBe internalId
             ua.identifier mustBe identifier

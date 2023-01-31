@@ -17,8 +17,10 @@
 package controllers.transition
 
 import com.google.inject.{Inject, Singleton}
+import config.FrontendAppConfig
 import connectors.TrustConnector
 import controllers.actions._
+import handlers.ErrorHandler
 import models.pages.WhatIsNext.MakeChanges
 import navigation.Navigator.declarationUrl
 import pages.WhatIsNextPage
@@ -28,10 +30,10 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.TrustEnvelope
 import views.html.transition.ConfirmTrustTaxableView
-import config.FrontendAppConfig
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ConfirmTrustTaxableController @Inject()(
@@ -41,9 +43,12 @@ class ConfirmTrustTaxableController @Inject()(
                                                val controllerComponents: MessagesControllerComponents,
                                                view: ConfirmTrustTaxableView,
                                                trustsConnector: TrustConnector,
-                                               config: FrontendAppConfig
+                                               config: FrontendAppConfig,
+                                               errorHandler: ErrorHandler
                                              )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
+
+  private val className = getClass.getSimpleName
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
@@ -53,18 +58,25 @@ class ConfirmTrustTaxableController @Inject()(
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
-      for {
-        updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, MakeChanges))
+      val result = for {
+        updatedAnswers <- TrustEnvelope(request.userAnswers.set(WhatIsNextPage, MakeChanges))
         _ <- playbackRepository.set(updatedAnswers)
         _ <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
       } yield
         request.userAnswers.get(ExpressTrustYesNoPage) match {
-          case Some(true) if (config.schedule3aExemptEnabled) => Redirect(routes.Schedule3aExemptYesNoController.onPageLoad())
+          case Some(true) if config.schedule3aExemptEnabled => Redirect(routes.Schedule3aExemptYesNoController.onPageLoad())
           case _ => Redirect(declarationUrl(
             request.user.affinityGroup,
             isTrustMigratingFromNonTaxableToTaxable = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
           ))
         }
+
+      result.value.map {
+        case Right(call) => call
+        case Left(_) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
+      }
   }
 
 }

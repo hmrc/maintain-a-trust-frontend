@@ -35,71 +35,71 @@ class AllProtectorsPrinterSpec extends SpecBase {
   private val helper: AllProtectorsPrinter = injector.instanceOf[AllProtectorsPrinter]
 
   private val (year1947, year1996, year2020) = (1947, 1996, 2020)
-  private val (num2, num18) = (2, 18)
+  private val (num2, num3, num18) = (2, 3, 18)
 
   "AllProtectorsPrinter" must {
 
     "generate protector sections given individuals" in {
 
       val answers = emptyUserAnswersForUtr
-        .set(ProtectorIndividualOrBusinessPage(0), IndividualOrBusiness.Individual).success.value
-        .set(IndividualProtectorNamePage(0), FullName("Joe", None, "Bloggs")).success.value
-        .set(IndividualProtectorDateOfBirthYesNoPage(0), false).success.value
-        .set(IndividualProtectorCountryOfNationalityYesNoPage(0), true).success.value
-        .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0), false).success.value
-        .set(IndividualProtectorCountryOfNationalityPage(0), "FR").success.value
-        .set(IndividualProtectorNINOYesNoPage(0), true).success.value
-        .set(IndividualProtectorNINOPage(0), "JB123456C").success.value
-        .set(IndividualProtectorCountryOfResidenceYesNoPage(0), true).success.value
-        .set(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0), false).success.value
-        .set(IndividualProtectorCountryOfResidencePage(0), "FR").success.value
-        .set(IndividualProtectorMentalCapacityYesNoPage(0), true).success.value
+        .set(ProtectorIndividualOrBusinessPage(0), IndividualOrBusiness.Individual).value
+        .set(IndividualProtectorNamePage(0), FullName("Joe", None, "Bloggs")).value
+        .set(IndividualProtectorDateOfBirthYesNoPage(0), false).value
+        .set(IndividualProtectorCountryOfNationalityYesNoPage(0), true).value
+        .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0), false).value
+        .set(IndividualProtectorCountryOfNationalityPage(0), "FR").value
+        .set(IndividualProtectorNINOYesNoPage(0), true).value
+        .set(IndividualProtectorNINOPage(0), "JB123456C").value
+        .set(IndividualProtectorCountryOfResidenceYesNoPage(0), true).value
+        .set(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0), false).value
+        .set(IndividualProtectorCountryOfResidencePage(0), "FR").value
+        .set(IndividualProtectorMentalCapacityYesNoPage(0), true).value
 
-        .set(ProtectorIndividualOrBusinessPage(1), IndividualOrBusiness.Individual).success.value
-        .set(IndividualProtectorNamePage(1), FullName("John", None, "Doe")).success.value
-        .set(IndividualProtectorDateOfBirthYesNoPage(1), true).success.value
-        .set(IndividualProtectorDateOfBirthPage(1), LocalDate.of(year1996, 2, 3)).success.value
-        .set(IndividualProtectorCountryOfNationalityYesNoPage(1), true).success.value
-        .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(1), false).success.value
-        .set(IndividualProtectorCountryOfNationalityPage(1), "FR").success.value
-        .set(IndividualProtectorCountryOfResidenceYesNoPage(1), true).success.value
-        .set(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(1), false).success.value
-        .set(IndividualProtectorCountryOfResidencePage(1), "FR").success.value
-        .set(IndividualProtectorAddressYesNoPage(1), false).success.value
-        .set(IndividualProtectorMentalCapacityYesNoPage(1), true).success.value
+        .set(ProtectorIndividualOrBusinessPage(1), IndividualOrBusiness.Individual).value
+        .set(IndividualProtectorNamePage(1), FullName("John", None, "Doe")).value
+        .set(IndividualProtectorDateOfBirthYesNoPage(1), true).value
+        .set(IndividualProtectorDateOfBirthPage(1), LocalDate.of(year1996, FEBRUARY, num3)).value
+        .set(IndividualProtectorCountryOfNationalityYesNoPage(1), true).value
+        .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(1), false).value
+        .set(IndividualProtectorCountryOfNationalityPage(1), "FR").value
+        .set(IndividualProtectorCountryOfResidenceYesNoPage(1), true).value
+        .set(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(1), false).value
+        .set(IndividualProtectorCountryOfResidencePage(1), "FR").value
+        .set(IndividualProtectorAddressYesNoPage(1), false).value
+        .set(IndividualProtectorMentalCapacityYesNoPage(1), true).value
 
-        .set(ProtectorIndividualOrBusinessPage(2), IndividualOrBusiness.Individual).success.value
-        .set(IndividualProtectorNamePage(2), FullName("Michael", None, "Finnegan")).success.value
-        .set(IndividualProtectorDateOfBirthYesNoPage(2), false).success.value
-        .set(IndividualProtectorCountryOfNationalityYesNoPage(2), true).success.value
-        .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(2), false).success.value
-        .set(IndividualProtectorCountryOfNationalityPage(2), "FR").success.value
-        .set(IndividualProtectorCountryOfResidenceYesNoPage(2), true).success.value
-        .set(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(2), false).success.value
-        .set(IndividualProtectorCountryOfResidencePage(2), "FR").success.value
-        .set(IndividualProtectorAddressYesNoPage(2), true).success.value
-        .set(IndividualProtectorAddressPage(2), UKAddress("line 1", "line 2", None, None, "NE11NE")).success.value
-        .set(IndividualProtectorPassportIDCardYesNoPage(2), false).success.value
-        .set(IndividualProtectorMentalCapacityYesNoPage(2), true).success.value
+        .set(ProtectorIndividualOrBusinessPage(2), IndividualOrBusiness.Individual).value
+        .set(IndividualProtectorNamePage(2), FullName("Michael", None, "Finnegan")).value
+        .set(IndividualProtectorDateOfBirthYesNoPage(2), false).value
+        .set(IndividualProtectorCountryOfNationalityYesNoPage(2), true).value
+        .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(2), false).value
+        .set(IndividualProtectorCountryOfNationalityPage(2), "FR").value
+        .set(IndividualProtectorCountryOfResidenceYesNoPage(2), true).value
+        .set(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(2), false).value
+        .set(IndividualProtectorCountryOfResidencePage(2), "FR").value
+        .set(IndividualProtectorAddressYesNoPage(2), true).value
+        .set(IndividualProtectorAddressPage(2), UKAddress("line 1", "line 2", None, None, "NE11NE")).value
+        .set(IndividualProtectorPassportIDCardYesNoPage(2), false).value
+        .set(IndividualProtectorMentalCapacityYesNoPage(2), true).value
 
-        .set(ProtectorIndividualOrBusinessPage(3), IndividualOrBusiness.Individual).success.value
-        .set(IndividualProtectorNamePage(3), FullName("Paul", None, "Chuckle")).success.value
-        .set(IndividualProtectorDateOfBirthYesNoPage(3), true).success.value
-        .set(IndividualProtectorDateOfBirthPage(3), LocalDate.of(year1947, OCTOBER, num18)).success.value
-        .set(IndividualProtectorCountryOfNationalityYesNoPage(3), true).success.value
-        .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(3), false).success.value
-        .set(IndividualProtectorCountryOfNationalityPage(3), "FR").success.value
-        .set(IndividualProtectorCountryOfResidenceYesNoPage(3), true).success.value
-        .set(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(3), false).success.value
-        .set(IndividualProtectorCountryOfResidencePage(3), "FR").success.value
-        .set(IndividualProtectorAddressYesNoPage(3), true).success.value
-        .set(IndividualProtectorAddressPage(3), UKAddress("line 1", "line 2", None, None, "DH11DH")).success.value
-        .set(IndividualProtectorPassportIDCardYesNoPage(3), true).success.value
+        .set(ProtectorIndividualOrBusinessPage(3), IndividualOrBusiness.Individual).value
+        .set(IndividualProtectorNamePage(3), FullName("Paul", None, "Chuckle")).value
+        .set(IndividualProtectorDateOfBirthYesNoPage(3), true).value
+        .set(IndividualProtectorDateOfBirthPage(3), LocalDate.of(year1947, OCTOBER, num18)).value
+        .set(IndividualProtectorCountryOfNationalityYesNoPage(3), true).value
+        .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(3), false).value
+        .set(IndividualProtectorCountryOfNationalityPage(3), "FR").value
+        .set(IndividualProtectorCountryOfResidenceYesNoPage(3), true).value
+        .set(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(3), false).value
+        .set(IndividualProtectorCountryOfResidencePage(3), "FR").value
+        .set(IndividualProtectorAddressYesNoPage(3), true).value
+        .set(IndividualProtectorAddressPage(3), UKAddress("line 1", "line 2", None, None, "DH11DH")).value
+        .set(IndividualProtectorPassportIDCardYesNoPage(3), true).value
         .set(
           IndividualProtectorPassportIDCardPage(3),
-          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020,FEBRUARY,num2), DetailsType.Combined)
-        ).success.value
-        .set(IndividualProtectorMentalCapacityYesNoPage(3), true).success.value
+          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, FEBRUARY, num2), DetailsType.Combined)
+        ).value
+        .set(IndividualProtectorMentalCapacityYesNoPage(3), true).value
 
       val result = helper.entities(answers)
 
@@ -197,31 +197,31 @@ class AllProtectorsPrinterSpec extends SpecBase {
     "generate protector sections given businesses" in {
 
       val answers = emptyUserAnswersForUtr
-        .set(ProtectorIndividualOrBusinessPage(0), IndividualOrBusiness.Business).success.value
-        .set(BusinessProtectorNamePage(0), "Bernardos").success.value
-        .set(BusinessProtectorUtrYesNoPage(0), true).success.value
-        .set(BusinessProtectorUtrPage(0), "1234567890").success.value
-        .set(BusinessProtectorCountryOfResidenceYesNoPage(0), true).success.value
-        .set(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(0), false).success.value
-        .set(BusinessProtectorCountryOfResidencePage(0), "FR").success.value
+        .set(ProtectorIndividualOrBusinessPage(0), IndividualOrBusiness.Business).value
+        .set(BusinessProtectorNamePage(0), "Bernardos").value
+        .set(BusinessProtectorUtrYesNoPage(0), true).value
+        .set(BusinessProtectorUtrPage(0), "1234567890").value
+        .set(BusinessProtectorCountryOfResidenceYesNoPage(0), true).value
+        .set(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(0), false).value
+        .set(BusinessProtectorCountryOfResidencePage(0), "FR").value
 
-        .set(ProtectorIndividualOrBusinessPage(1), IndividualOrBusiness.Business).success.value
-        .set(BusinessProtectorNamePage(1), "Red Cross Ltd.").success.value
-        .set(BusinessProtectorUtrYesNoPage(1), false).success.value
-        .set(BusinessProtectorCountryOfResidenceYesNoPage(1), true).success.value
-        .set(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1), false).success.value
-        .set(BusinessProtectorCountryOfResidencePage(1), "FR").success.value
-        .set(BusinessProtectorAddressYesNoPage(1), true).success.value
-        .set(BusinessProtectorAddressUKYesNoPage(1), false).success.value
-        .set(BusinessProtectorAddressPage(1), InternationalAddress(s"line 1", "line 2", None, "DE")).success.value
+        .set(ProtectorIndividualOrBusinessPage(1), IndividualOrBusiness.Business).value
+        .set(BusinessProtectorNamePage(1), "Red Cross Ltd.").value
+        .set(BusinessProtectorUtrYesNoPage(1), false).value
+        .set(BusinessProtectorCountryOfResidenceYesNoPage(1), true).value
+        .set(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1), false).value
+        .set(BusinessProtectorCountryOfResidencePage(1), "FR").value
+        .set(BusinessProtectorAddressYesNoPage(1), true).value
+        .set(BusinessProtectorAddressUKYesNoPage(1), false).value
+        .set(BusinessProtectorAddressPage(1), InternationalAddress(s"line 1", "line 2", None, "DE")).value
 
-        .set(ProtectorIndividualOrBusinessPage(2), IndividualOrBusiness.Business).success.value
-        .set(BusinessProtectorNamePage(2), "Amazon").success.value
-        .set(BusinessProtectorUtrYesNoPage(2), false).success.value
-        .set(BusinessProtectorCountryOfResidenceYesNoPage(2), true).success.value
-        .set(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(2), false).success.value
-        .set(BusinessProtectorCountryOfResidencePage(2), "FR").success.value
-        .set(BusinessProtectorAddressYesNoPage(2), false).success.value
+        .set(ProtectorIndividualOrBusinessPage(2), IndividualOrBusiness.Business).value
+        .set(BusinessProtectorNamePage(2), "Amazon").value
+        .set(BusinessProtectorUtrYesNoPage(2), false).value
+        .set(BusinessProtectorCountryOfResidenceYesNoPage(2), true).value
+        .set(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(2), false).value
+        .set(BusinessProtectorCountryOfResidencePage(2), "FR").value
+        .set(BusinessProtectorAddressYesNoPage(2), false).value
 
       val result = helper.entities(answers)
 
@@ -278,32 +278,32 @@ class AllProtectorsPrinterSpec extends SpecBase {
     "generate protector sections given an individual and company" in {
 
       val answers = emptyUserAnswersForUtr
-        .set(ProtectorIndividualOrBusinessPage(0), IndividualOrBusiness.Individual).success.value
-        .set(IndividualProtectorNamePage(0), FullName("Paul", None, "Chuckle")).success.value
-        .set(IndividualProtectorDateOfBirthYesNoPage(0), true).success.value
-        .set(IndividualProtectorDateOfBirthPage(0), LocalDate.of(year1947, OCTOBER, num18)).success.value
-        .set(IndividualProtectorCountryOfNationalityYesNoPage(0), true).success.value
-        .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0), false).success.value
-        .set(IndividualProtectorCountryOfNationalityPage(0), "FR").success.value
-        .set(IndividualProtectorCountryOfResidenceYesNoPage(0), true).success.value
-        .set(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0), false).success.value
-        .set(IndividualProtectorCountryOfResidencePage(0), "FR").success.value
-        .set(IndividualProtectorAddressYesNoPage(0), true).success.value
-        .set(IndividualProtectorAddressPage(0), UKAddress("line 1", "line 2", None, None, "DH11DH")).success.value
-        .set(IndividualProtectorPassportIDCardYesNoPage(0), true).success.value
+        .set(ProtectorIndividualOrBusinessPage(0), IndividualOrBusiness.Individual).value
+        .set(IndividualProtectorNamePage(0), FullName("Paul", None, "Chuckle")).value
+        .set(IndividualProtectorDateOfBirthYesNoPage(0), true).value
+        .set(IndividualProtectorDateOfBirthPage(0), LocalDate.of(year1947, OCTOBER, num18)).value
+        .set(IndividualProtectorCountryOfNationalityYesNoPage(0), true).value
+        .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0), false).value
+        .set(IndividualProtectorCountryOfNationalityPage(0), "FR").value
+        .set(IndividualProtectorCountryOfResidenceYesNoPage(0), true).value
+        .set(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0), false).value
+        .set(IndividualProtectorCountryOfResidencePage(0), "FR").value
+        .set(IndividualProtectorAddressYesNoPage(0), true).value
+        .set(IndividualProtectorAddressPage(0), UKAddress("line 1", "line 2", None, None, "DH11DH")).value
+        .set(IndividualProtectorPassportIDCardYesNoPage(0), true).value
         .set(
           IndividualProtectorPassportIDCardPage(0),
-          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020,FEBRUARY,num2), DetailsType.Passport)
-        ).success.value
-        .set(IndividualProtectorMentalCapacityYesNoPage(0), true).success.value
+          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, FEBRUARY, num2), DetailsType.Passport)
+        ).value
+        .set(IndividualProtectorMentalCapacityYesNoPage(0), true).value
 
-        .set(ProtectorIndividualOrBusinessPage(1), IndividualOrBusiness.Business).success.value
-        .set(BusinessProtectorNamePage(1), "Bernardos").success.value
-        .set(BusinessProtectorUtrYesNoPage(1), true).success.value
-        .set(BusinessProtectorUtrPage(1), "1234567890").success.value
-        .set(BusinessProtectorCountryOfResidenceYesNoPage(1), true).success.value
-        .set(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1), false).success.value
-        .set(BusinessProtectorCountryOfResidencePage(1), "FR").success.value
+        .set(ProtectorIndividualOrBusinessPage(1), IndividualOrBusiness.Business).value
+        .set(BusinessProtectorNamePage(1), "Bernardos").value
+        .set(BusinessProtectorUtrYesNoPage(1), true).value
+        .set(BusinessProtectorUtrPage(1), "1234567890").value
+        .set(BusinessProtectorCountryOfResidenceYesNoPage(1), true).value
+        .set(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1), false).value
+        .set(BusinessProtectorCountryOfResidencePage(1), "FR").value
 
       val result = helper.entities(answers)
 

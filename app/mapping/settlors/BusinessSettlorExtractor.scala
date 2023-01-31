@@ -17,14 +17,13 @@
 package mapping.settlors
 
 import models.UserAnswers
+import models.errors.TrustErrors
 import models.http.DisplayTrustSettlorCompany
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.Completed
 import pages.QuestionPage
 import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
-
-import scala.util.Try
 
 class BusinessSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSettlorCompany] {
 
@@ -35,9 +34,9 @@ class BusinessSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSett
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfResidenceInTheUkYesNoPage(index)
   override def countryOfResidencePage(index: Int): QuestionPage[String] = SettlorCountryOfResidencePage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustSettlorCompany,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(SettlorBusinessNamePage(index), entity.name))
@@ -48,7 +47,7 @@ class BusinessSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSett
       .flatMap(_.set(LivingSettlorStatus(index), Completed))
   }
 
-  private def extractSettlorCompanyTypeAndTime(entity: DisplayTrustSettlorCompany, index: Int, answers: UserAnswers): Try[UserAnswers] = {
+  private def extractSettlorCompanyTypeAndTime(entity: DisplayTrustSettlorCompany, index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       answers.set(SettlorCompanyTypePage(index), entity.companyType)
         .flatMap(_.set(SettlorCompanyTimePage(index), entity.companyTime))

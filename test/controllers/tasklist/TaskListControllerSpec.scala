@@ -17,12 +17,14 @@
 package controllers.tasklist
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.{TrustConnector, TrustsStoreConnector}
 import generators.ModelGenerators
 import models.MigrationTaskStatus.NothingToUpdate
+import models.errors.{ServerError, TrustErrors}
 import models.pages.Tag._
 import models.pages.WhatIsNext
-import models.{CompletedMaintenanceTasks, FirstTaxYearAvailable, TaskList}
+import models.{CompletedMaintenanceTasks, FirstTaxYearAvailable, MigrationTaskStatus, TaskList}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -38,24 +40,26 @@ import scala.concurrent.Future
 
 class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaCheckPropertyChecks with ModelGenerators {
 
-  val mockTrustsStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
-  val mockTrustsConnector: TrustConnector = mock[TrustConnector]
-  val mockVariationProgress: VariationProgress = mock[VariationProgress]
+  private val mockTrustsStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
+  private val mockTrustsConnector: TrustConnector = mock[TrustConnector]
+  private val mockVariationProgress: VariationProgress = mock[VariationProgress]
 
   override def beforeEach(): Unit = {
-    reset(mockTrustsStoreConnector, mockTrustsConnector, mockVariationProgress, playbackRepository)
+    reset(mockTrustsStoreConnector, mockTrustsConnector, mockVariationProgress, mockPlaybackRepository)
 
     when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
-      .thenReturn(Future.successful(CompletedMaintenanceTasks()))
+      .thenReturn(EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks()))))
 
     when(mockTrustsConnector.getSettlorsStatus(any())(any(), any()))
-      .thenReturn(Future.successful(NothingToUpdate))
+      .thenReturn(EitherT[Future, TrustErrors, MigrationTaskStatus](Future.successful(Right(NothingToUpdate))))
 
     when(mockTrustsConnector.getBeneficiariesStatus(any())(any(), any()))
-      .thenReturn(Future.successful(NothingToUpdate))
+      .thenReturn(EitherT[Future, TrustErrors, MigrationTaskStatus](Future.successful(Right(NothingToUpdate))))
 
     when(mockTrustsConnector.getFirstTaxYearToAskFor(any())(any(), any()))
-      .thenReturn(Future.successful(FirstTaxYearAvailable(1, earlierYearsToDeclare = false)))
+      .thenReturn(EitherT[Future, TrustErrors, FirstTaxYearAvailable]
+        (Future.successful(Right(FirstTaxYearAvailable(1, earlierYearsToDeclare = false))))
+      )
 
     when(mockVariationProgress.generateTaskList(any(), any(), any()))
       .thenReturn(TaskList(Nil, Nil))
@@ -63,8 +67,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
     when(mockVariationProgress.generateTransitionTaskList(any(), any(), any(), any(), any()))
       .thenReturn(TaskList(Nil, Nil))
 
-    when(playbackRepository.set(any()))
-      .thenReturn(Future.successful(true))
+    when(mockPlaybackRepository.set(any()))
+      .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
   }
 
   "TaskListControllerController" must {
@@ -73,7 +77,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
       "migrating from non-tax to tax" in {
 
-        val answers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+        val answers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
 
         val application = applicationBuilder(userAnswers = Some(answers))
           .overrides(
@@ -102,7 +106,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
         "making changes" in {
 
-          val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+          val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).value
 
           val application = applicationBuilder(userAnswers = Some(answers))
             .overrides(
@@ -129,7 +133,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
         "closing" in {
 
-          val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
+          val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.CloseTrust).value
 
           val application = applicationBuilder(userAnswers = Some(answers))
             .overrides(
@@ -154,6 +158,28 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
           application.stop()
         }
       }
+    }
+
+    "return an Internal Server Error when a connector call fails for a GET" in {
+
+      val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
+
+      when(mockTrustsConnector.getSettlorsStatus(any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, MigrationTaskStatus](Future.successful(Left(ServerError()))))
+
+      val application = applicationBuilder(userAnswers = Some(answers))
+        .overrides(
+          bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
+        ).build()
+
+      val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
+
+      val result = route(application, request).value
+
+      status(result) mustBe INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
+
+      application.stop()
     }
 
     "redirect to Technical difficulties page when no value found for What do you want to do next" when {
@@ -189,7 +215,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
 
     "redirect to AgencyRegisteredAddressUkYesNoController for agent" in {
 
-      val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+      val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).value
 
       val application = applicationBuilder(userAnswers = Some(answers), affinityGroup = Agent).build()
 
@@ -208,7 +234,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
     "redirect to IndividualDeclarationController for individual" when {
 
       "migrating from non-tax to tax" in {
-        val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+        val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
 
         val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -225,7 +251,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
       }
 
       "not migrating from non-tax to tax" in {
-        val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+        val answers = emptyUserAnswersForUtr.set(WhatIsNextPage, WhatIsNext.MakeChanges).value
 
         val application = applicationBuilder(userAnswers = Some(answers)).build()
 

@@ -18,26 +18,22 @@ package controllers
 
 import base.SpecBase
 import forms.YesNoFormProvider
+import models.errors.ServerError
 import models.{UTR, UserAnswers}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ViewLastDeclarationYesNoPage
 import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.PlaybackRepository
 import views.html.ViewLastDeclarationYesNoView
-
-import scala.concurrent.Future
 
 class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("viewLastDeclarationYesNo")
-  val utr: String = "1234567890"
+  private val formProvider = new YesNoFormProvider()
+  private val form: Form[Boolean] = formProvider.withPrefix("viewLastDeclarationYesNo")
+  private val utr: String = "1234567890"
 
-  lazy val viewLastDeclarationYesNoRoute: String = routes.ViewLastDeclarationYesNoController.onPageLoad().url
+  private lazy val viewLastDeclarationYesNoRoute: String = routes.ViewLastDeclarationYesNoController.onPageLoad().url
 
   override val emptyUserAnswersForUtr: UserAnswers = super.emptyUserAnswersForUtr
 
@@ -63,7 +59,7 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswersForUtr.set(ViewLastDeclarationYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswersForUtr.set(ViewLastDeclarationYesNoPage, true).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -83,10 +79,6 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
 
     "redirect to the next page when YES is submitted" in {
 
-      val mockPlaybackRepository = mock[PlaybackRepository]
-
-      when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
-
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
       val request =
@@ -103,10 +95,6 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
     }
 
     "redirect to the next page when NO is submitted" in {
-
-      val mockPlaybackRepository = mock[PlaybackRepository]
-
-      when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
@@ -141,6 +129,24 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
 
       contentAsString(result) mustEqual
         view(boundForm, utr, UTR)(request, messages).toString
+
+      application.stop()
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(ServerError()))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
+
+      val request =
+        FakeRequest(POST, viewLastDeclarationYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
 
       application.stop()
     }

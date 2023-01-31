@@ -17,9 +17,11 @@
 package controllers.makechanges
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.TrustConnector
 import forms.YesNoFormProvider
 import models.UserAnswers
+import models.errors.{ServerError, TrustErrors}
 import models.pages.WhatIsNext
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -48,7 +50,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).value
 
       "return OK and the correct view for a GET" in {
 
@@ -71,7 +73,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       "populate the view correctly on a GET when the question has previously been answered" in {
 
         val userAnswers = baseAnswers
-          .set(AddOrUpdateProtectorYesNoPage, true).success.value
+          .set(AddOrUpdateProtectorYesNoPage, true).value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -101,7 +103,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
           .withFormUrlEncodedBody(("value", "true"))
 
         when(mockTrustConnector.getDoOtherIndividualsAlreadyExist(any())(any(), any()))
-          .thenReturn(Future.successful(JsBoolean(false)))
+          .thenReturn(EitherT[Future, TrustErrors, JsBoolean](Future.successful(Right(JsBoolean(false)))))
 
         val result = route(application, request).value
 
@@ -124,7 +126,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
           .withFormUrlEncodedBody(("value", "true"))
 
         when(mockTrustConnector.getDoOtherIndividualsAlreadyExist(any())(any(), any()))
-          .thenReturn(Future.successful(JsBoolean(true)))
+          .thenReturn(EitherT[Future, TrustErrors, JsBoolean](Future.successful(Right(JsBoolean(true)))))
 
         val result = route(application, request).value
 
@@ -165,7 +167,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
 
       "return OK and the correct view for a GET" in {
 
@@ -188,7 +190,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       "populate the view correctly on a GET when the question has previously been answered" in {
 
         val userAnswers = baseAnswers
-          .set(AddOrUpdateProtectorYesNoPage, true).success.value
+          .set(AddOrUpdateProtectorYesNoPage, true).value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -218,7 +220,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
           .withFormUrlEncodedBody(("value", "true"))
 
         when(mockTrustConnector.getDoOtherIndividualsAlreadyExist(any())(any(), any()))
-          .thenReturn(Future.successful(JsBoolean(false)))
+          .thenReturn(EitherT[Future, TrustErrors, JsBoolean](Future.successful(Right(JsBoolean(false)))))
 
         val result = route(application, request).value
 
@@ -241,7 +243,7 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
           .withFormUrlEncodedBody(("value", "true"))
 
         when(mockTrustConnector.getDoOtherIndividualsAlreadyExist(any())(any(), any()))
-          .thenReturn(Future.successful(JsBoolean(true)))
+          .thenReturn(EitherT[Future, TrustErrors, JsBoolean](Future.successful(Right(JsBoolean(true)))))
 
         val result = route(application, request).value
 
@@ -272,6 +274,33 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
 
         application.stop()
       }
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(ServerError()))
+
+      val userAnswers: UserAnswers = emptyUserAnswersForUtr
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+
+      val mockTrustConnector = mock[TrustConnector]
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+        .build()
+
+      val request = FakeRequest(POST, updateProtectorYesNoRoute)
+        .withFormUrlEncodedBody(("value", "true"))
+
+      when(mockTrustConnector.getDoOtherIndividualsAlreadyExist(any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, JsBoolean](Future.successful(Right(JsBoolean(false)))))
+
+      val result = route(application, request).value
+
+      status(result) mustBe INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
+
+      application.stop()
     }
   }
 }

@@ -16,23 +16,22 @@
 
 package controllers.actions
 
+import com.google.inject.Inject
+import controllers.routes
 import models.UserAnswers
-import models.requests.{IdentifierRequest, OptionalDataRequest}
+import models.requests.{DataRequest, OptionalDataRequest}
+import play.api.mvc.Result
+import play.api.mvc.Results.Redirect
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
+class FakeDataRequiredAction @Inject()(userAnswers: Option[UserAnswers])
+                                      (implicit executionContext: ExecutionContext) extends DataRequiredAction {
 
-  private val utr: String = "1234567890"
-
-  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] =
-    dataToReturn match {
-      case None =>
-        Future(OptionalDataRequest(request.request, None, request.user, utr))
-      case Some(userAnswers) =>
-        Future(OptionalDataRequest(request.request, Some(userAnswers), request.user, utr))
+  override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
+    userAnswers match {
+      case Some(answers) => Future.successful(Right(DataRequest(request.request, answers, request.user)))
+      case None => Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad)))
     }
-
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+  }
 }

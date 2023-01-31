@@ -18,8 +18,9 @@ package connectors
 
 import base.SpecBase
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock.{get, okJson, urlEqualTo, _}
+import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
+import models.errors.ServerError
 import models.pages.Tag._
 import models.{CompletedMaintenanceTasks, FeatureResponse}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -27,7 +28,7 @@ import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import pages.makechanges._
 import play.api.http.HeaderNames._
 import play.api.http.MimeTypes._
-import play.api.http.Status
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -36,7 +37,7 @@ import scala.concurrent.duration.Duration
 
 class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach with ScalaFutures with IntegrationPatience {
 
-  implicit lazy val hc: HeaderCarrier = HeaderCarrier()
+  private implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   protected val server: WireMockServer = new WireMockServer(wireMockConfig().dynamicPort())
 
@@ -89,9 +90,9 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           .willReturn(okJson(json.toString))
       )
 
-      val result = connector.getStatusOfTasks(identifier)
+      val result = connector.getStatusOfTasks(identifier).value
 
-      result.futureValue mustBe
+      result.futureValue mustBe Right(
         CompletedMaintenanceTasks(
           trustDetails = NotStarted,
           assets = NotStarted,
@@ -102,6 +103,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           protectors = NotStarted,
           other = NotStarted
         )
+      )
 
       application.stop()
     }
@@ -121,11 +123,11 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         val connector = application.injector.instanceOf[TrustsStoreConnector]
 
         val userAnswers = emptyUserAnswersForUtr
-          .set(UpdateTrusteesYesNoPage, true).success.value
-          .set(UpdateBeneficiariesYesNoPage, false).success.value
-          .set(UpdateSettlorsYesNoPage, false).success.value
-          .set(AddOrUpdateProtectorYesNoPage, false).success.value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
+          .set(UpdateTrusteesYesNoPage, true).value
+          .set(UpdateBeneficiariesYesNoPage, false).value
+          .set(UpdateSettlorsYesNoPage, false).value
+          .set(AddOrUpdateProtectorYesNoPage, false).value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
 
         val json = Json.parse(
           """
@@ -148,9 +150,9 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
             .willReturn(okJson(json.toString))
         )
 
-        val result = connector.set(identifier, userAnswers)
+        val result = connector.set(identifier, userAnswers).value
 
-        result.futureValue mustBe
+        result.futureValue mustBe Right(
           CompletedMaintenanceTasks(
             trustDetails = Completed,
             assets = Completed,
@@ -161,6 +163,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
             protectors = Completed,
             other = Completed
           )
+        )
 
         application.stop()
       }
@@ -178,13 +181,13 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         val connector = application.injector.instanceOf[TrustsStoreConnector]
 
         val userAnswers = emptyUserAnswersForUtr
-          .set(UpdateTrustDetailsYesNoPage, false).success.value
-          .set(UpdateTrusteesYesNoPage, true).success.value
-          .set(UpdateBeneficiariesYesNoPage, false).success.value
-          .set(UpdateSettlorsYesNoPage, false).success.value
-          .set(AddOrUpdateProtectorYesNoPage, false).success.value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
-          .set(AddOrUpdateNonEeaCompanyYesNoPage, false).success.value
+          .set(UpdateTrustDetailsYesNoPage, false).value
+          .set(UpdateTrusteesYesNoPage, true).value
+          .set(UpdateBeneficiariesYesNoPage, false).value
+          .set(UpdateSettlorsYesNoPage, false).value
+          .set(AddOrUpdateProtectorYesNoPage, false).value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
+          .set(AddOrUpdateNonEeaCompanyYesNoPage, false).value
 
         val json = Json.parse(
           """
@@ -207,9 +210,9 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
             .willReturn(okJson(json.toString))
         )
 
-        val result = connector.set(identifier, userAnswers)
+        val result = connector.set(identifier, userAnswers).value
 
-        result.futureValue mustBe
+        result.futureValue mustBe Right(
           CompletedMaintenanceTasks(
             trustDetails = Completed,
             assets = Completed,
@@ -220,9 +223,54 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
             protectors = Completed,
             other = Completed
           )
+        )
 
         application.stop()
       }
+    }
+
+    "return Left(ServerError) when no task status is returned for setting tasks" in {
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts-store.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsStoreConnector]
+
+      val userAnswers = emptyUserAnswersForUtr
+
+      val result = connector.set(identifier, userAnswers).value
+
+      result.futureValue mustBe Left(ServerError())
+
+      application.stop()
+    }
+
+    "return None when user is locked out of Trust IV" in {
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts-store.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustsStoreConnector]
+
+      server.stubFor(
+        get(urlEqualTo(s"/trusts-store/claim"))
+          .willReturn(
+            aResponse()
+              .withStatus(NOT_FOUND)
+          )
+      )
+
+      val result = Await.result(connector.get(identifier).value, Duration.Inf)
+      result mustBe Right(None)
     }
   }
 
@@ -242,9 +290,9 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         .willReturn(serverError())
     )
 
-    val result = connector.getStatusOfTasks(identifier)
+    val result = connector.getStatusOfTasks(identifier).value
 
-    result.futureValue mustBe
+    result.futureValue mustBe Right(
       CompletedMaintenanceTasks(
         trustDetails = NotStarted,
         assets = NotStarted,
@@ -255,6 +303,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         protectors = NotStarted,
         other = NotStarted
       )
+    )
 
     application.stop()
   }
@@ -275,12 +324,12 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         .withHeader(CONTENT_TYPE, containing(JSON))
         .withRequestBody(equalTo("true"))
         .willReturn(aResponse()
-          .withStatus(Status.OK))
+          .withStatus(OK))
     )
 
-    val result = Await.result(connector.setFeature("TestFeature", state = true), Duration.Inf)
+    val result = Await.result(connector.setFeature("TestFeature", state = true).value, Duration.Inf)
 
-    result.status mustBe Status.OK
+    result.value.status mustBe OK
 
     application.stop()
   }
@@ -300,7 +349,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       get(urlEqualTo(s"/trusts-store/features/5mld"))
         .willReturn(
           aResponse()
-            .withStatus(Status.OK)
+            .withStatus(OK)
             .withBody(
               Json.stringify(
                 Json.toJson(FeatureResponse("5mld", isEnabled = true))
@@ -309,8 +358,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         )
     )
 
-    val result = Await.result(connector.getFeature("5mld"), Duration.Inf)
-    result mustBe FeatureResponse("5mld", isEnabled = true)
+    val result = Await.result(connector.getFeature("5mld").value, Duration.Inf)
+    result mustBe Right(FeatureResponse("5mld", isEnabled = true))
   }
 
   "return a feature flag of false if 5mld is not enabled" in {
@@ -328,7 +377,7 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       get(urlEqualTo(s"/trusts-store/features/5mld"))
         .willReturn(
           aResponse()
-            .withStatus(Status.OK)
+            .withStatus(OK)
             .withBody(
               Json.stringify(
                 Json.toJson(FeatureResponse("5mld", isEnabled = false))
@@ -337,8 +386,8 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         )
     )
 
-    val result = Await.result(connector.getFeature("5mld"), Duration.Inf)
-    result mustBe FeatureResponse("5mld", isEnabled = false)
+    val result = Await.result(connector.getFeature("5mld").value, Duration.Inf)
+    result mustBe Right(FeatureResponse("5mld", isEnabled = false))
   }
 
   "return OK when resetting task list" in {
@@ -356,12 +405,12 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       delete(urlEqualTo(s"/trusts-store/maintain/tasks/$identifier"))
         .willReturn(
           aResponse()
-            .withStatus(Status.OK)
+            .withStatus(OK)
         )
     )
 
-    val result = Await.result(connector.resetTasks(identifier), Duration.Inf)
-    result.status mustBe Status.OK
+    val result = Await.result(connector.resetTasks(identifier).value, Duration.Inf)
+    result.value.status mustBe OK
   }
 
 }

@@ -45,19 +45,19 @@ class AllSettlorsPrinterSpec extends SpecBase {
       val name = "Adam Smith"
 
       val answers = emptyUserAnswersForUtr
-        .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
-        .set(SettlorDateOfDeathYesNoPage, true).success.value
-        .set(SettlorDateOfDeathPage, LocalDate.of(year2010, OCTOBER, num10)).success.value
-        .set(SettlorDateOfBirthYesNoPage, true).success.value
-        .set(SettlorDateOfBirthPage, LocalDate.of(year1991, AUGUST, num27)).success.value
-        .set(DeceasedSettlorCountryOfNationalityYesNoPage, true).success.value
-        .set(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, false).success.value
-        .set(DeceasedSettlorCountryOfNationalityPage, "FR").success.value
-        .set(SettlorNationalInsuranceYesNoPage, true).success.value
-        .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
-        .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).success.value
-        .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, false).success.value
-        .set(DeceasedSettlorCountryOfResidencePage, "FR").success.value
+        .set(SettlorNamePage, FullName("Adam", None, "Smith")).value
+        .set(SettlorDateOfDeathYesNoPage, true).value
+        .set(SettlorDateOfDeathPage, LocalDate.of(year2010, OCTOBER, num10)).value
+        .set(SettlorDateOfBirthYesNoPage, true).value
+        .set(SettlorDateOfBirthPage, LocalDate.of(year1991, AUGUST, num27)).value
+        .set(DeceasedSettlorCountryOfNationalityYesNoPage, true).value
+        .set(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, false).value
+        .set(DeceasedSettlorCountryOfNationalityPage, "FR").value
+        .set(SettlorNationalInsuranceYesNoPage, true).value
+        .set(SettlorNationalInsuranceNumberPage, "JP121212A").value
+        .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).value
+        .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, false).value
+        .set(DeceasedSettlorCountryOfResidencePage, "FR").value
 
       val result = helper.entities(answers)
 
@@ -99,13 +99,13 @@ class AllSettlorsPrinterSpec extends SpecBase {
       "nationality and residency unknown" in {
 
         val answers = emptyUserAnswersForUtr
-          .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
-          .set(SettlorDateOfDeathYesNoPage, false).success.value
-          .set(SettlorDateOfBirthYesNoPage, false).success.value
-          .set(DeceasedSettlorCountryOfNationalityYesNoPage, false).success.value
-          .set(SettlorNationalInsuranceYesNoPage, true).success.value
-          .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
-          .set(DeceasedSettlorCountryOfResidenceYesNoPage, false).success.value
+          .set(SettlorNamePage, FullName("Adam", None, "Smith")).value
+          .set(SettlorDateOfDeathYesNoPage, false).value
+          .set(SettlorDateOfBirthYesNoPage, false).value
+          .set(DeceasedSettlorCountryOfNationalityYesNoPage, false).value
+          .set(SettlorNationalInsuranceYesNoPage, true).value
+          .set(SettlorNationalInsuranceNumberPage, "JP121212A").value
+          .set(DeceasedSettlorCountryOfResidenceYesNoPage, false).value
 
         val result = helper.entities(answers)
 
@@ -128,14 +128,14 @@ class AllSettlorsPrinterSpec extends SpecBase {
       "only nationality unknown" in {
 
         val answers = emptyUserAnswersForUtr
-          .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
-          .set(SettlorDateOfDeathYesNoPage, false).success.value
-          .set(SettlorDateOfBirthYesNoPage, false).success.value
-          .set(DeceasedSettlorCountryOfNationalityYesNoPage, false).success.value
-          .set(SettlorNationalInsuranceYesNoPage, true).success.value
-          .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
-          .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).success.value
-          .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, true).success.value
+          .set(SettlorNamePage, FullName("Adam", None, "Smith")).value
+          .set(SettlorDateOfDeathYesNoPage, false).value
+          .set(SettlorDateOfBirthYesNoPage, false).value
+          .set(DeceasedSettlorCountryOfNationalityYesNoPage, false).value
+          .set(SettlorNationalInsuranceYesNoPage, true).value
+          .set(SettlorNationalInsuranceNumberPage, "JP121212A").value
+          .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).value
+          .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, true).value
 
         val result = helper.entities(answers)
 
@@ -161,14 +161,14 @@ class AllSettlorsPrinterSpec extends SpecBase {
       "only residency unknown" in {
 
         val answers = emptyUserAnswersForUtr
-          .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
-          .set(SettlorDateOfDeathYesNoPage, false).success.value
-          .set(SettlorDateOfBirthYesNoPage, false).success.value
-          .set(DeceasedSettlorCountryOfNationalityYesNoPage, true).success.value
-          .set(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, true).success.value
-          .set(SettlorNationalInsuranceYesNoPage, true).success.value
-          .set(SettlorNationalInsuranceNumberPage, "JP121212A").success.value
-          .set(DeceasedSettlorCountryOfResidenceYesNoPage, false).success.value
+          .set(SettlorNamePage, FullName("Adam", None, "Smith")).value
+          .set(SettlorDateOfDeathYesNoPage, false).value
+          .set(SettlorDateOfBirthYesNoPage, false).value
+          .set(DeceasedSettlorCountryOfNationalityYesNoPage, true).value
+          .set(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, true).value
+          .set(SettlorNationalInsuranceYesNoPage, true).value
+          .set(SettlorNationalInsuranceNumberPage, "JP121212A").value
+          .set(DeceasedSettlorCountryOfResidenceYesNoPage, false).value
 
         val result = helper.entities(answers)
 
@@ -197,27 +197,28 @@ class AllSettlorsPrinterSpec extends SpecBase {
       val name = "Adam Smith"
 
       val answers = emptyUserAnswersForUtr
-        .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
-        .set(SettlorDateOfDeathYesNoPage, false).success.value
-        .set(SettlorDateOfBirthYesNoPage, false).success.value
-        .set(DeceasedSettlorCountryOfNationalityYesNoPage, true).success.value
-        .set(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, false).success.value
-        .set(DeceasedSettlorCountryOfNationalityPage, "FR").success.value
-        .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).success.value
-        .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, false).success.value
-        .set(DeceasedSettlorCountryOfResidencePage, "FR").success.value.set(SettlorNationalInsuranceYesNoPage, false).success.value
-        .set(SettlorLastKnownAddressYesNoPage, true).success.value
-        .set(SettlorLastKnownAddressUKYesNoPage, true).success.value
+        .set(SettlorNamePage, FullName("Adam", None, "Smith")).value
+        .set(SettlorDateOfDeathYesNoPage, false).value
+        .set(SettlorDateOfBirthYesNoPage, false).value
+        .set(DeceasedSettlorCountryOfNationalityYesNoPage, true).value
+        .set(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, false).value
+        .set(DeceasedSettlorCountryOfNationalityPage, "FR").value
+        .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).value
+        .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, false).value
+        .set(DeceasedSettlorCountryOfResidencePage, "FR").value
+        .set(SettlorNationalInsuranceYesNoPage, false).value
+        .set(SettlorLastKnownAddressYesNoPage, true).value
+        .set(SettlorLastKnownAddressUKYesNoPage, true).value
         .set(SettlorLastKnownAddressPage, UKAddress(
           line1 = "line 1",
           line2 = "line 2",
           line3 = Some("line 3"),
           line4 = Some("line 4"),
           postcode = "NE981ZZ"
-        )).success.value
+        )).value
         .set(SettlorPassportIDCardPage,
-          PassportType("DE", "123456789", LocalDate.of(year2021,OCTOBER,num10), DetailsType.IdCard)
-        ).success.value
+          PassportType("DE", "123456789", LocalDate.of(year2021, OCTOBER, num10), DetailsType.IdCard)
+        ).value
 
       val result = helper.entities(answers)
 
@@ -252,7 +253,7 @@ class AllSettlorsPrinterSpec extends SpecBase {
       )
     }
 
-    def uaSet[T:Writes](settable: Settable[T], value: T)(implicit reads: Reads[T]) : UserAnswers => UserAnswers = _.set(settable, value).success.value
+    def uaSet[T:Writes](settable: Settable[T], value: T)(implicit reads: Reads[T]) : UserAnswers => UserAnswers = _.set(settable, value).value
 
     "generate Company Settlor Section" in {
       def businessSettlorBase(index: Int) = uaSet(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Business) andThen
@@ -470,29 +471,29 @@ class AllSettlorsPrinterSpec extends SpecBase {
 
       val answers = emptyUserAnswersForUtr
 
-        .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
-        .set(SettlorDateOfDeathYesNoPage, false).success.value
-        .set(SettlorDateOfBirthYesNoPage, false).success.value
-        .set(DeceasedSettlorCountryOfNationalityYesNoPage, false).success.value
-        .set(SettlorNationalInsuranceYesNoPage, false).success.value
-        .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).success.value
-        .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, true).success.value
-        .set(SettlorLastKnownAddressYesNoPage, false).success.value
+        .set(SettlorNamePage, FullName("Adam", None, "Smith")).value
+        .set(SettlorDateOfDeathYesNoPage, false).value
+        .set(SettlorDateOfBirthYesNoPage, false).value
+        .set(DeceasedSettlorCountryOfNationalityYesNoPage, false).value
+        .set(SettlorNationalInsuranceYesNoPage, false).value
+        .set(DeceasedSettlorCountryOfResidenceYesNoPage, true).value
+        .set(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, true).value
+        .set(SettlorLastKnownAddressYesNoPage, false).value
 
-        .set(SettlorIndividualOrBusinessPage(0), IndividualOrBusiness.Business).success.value
-        .set(SettlorBusinessNamePage(0), "Amazon").success.value
-        .set(SettlorUtrYesNoPage(0), false).success.value
-        .set(SettlorCountryOfResidenceYesNoPage(0), false).success.value
-        .set(SettlorAddressYesNoPage(0), false).success.value
+        .set(SettlorIndividualOrBusinessPage(0), IndividualOrBusiness.Business).value
+        .set(SettlorBusinessNamePage(0), "Amazon").value
+        .set(SettlorUtrYesNoPage(0), false).value
+        .set(SettlorCountryOfResidenceYesNoPage(0), false).value
+        .set(SettlorAddressYesNoPage(0), false).value
 
-        .set(SettlorIndividualOrBusinessPage(1), IndividualOrBusiness.Individual).success.value
-        .set(SettlorIndividualNamePage(1), FullName("Joe", None,  "Bloggs")).success.value
-        .set(SettlorIndividualDateOfBirthYesNoPage(1), false).success.value
-        .set(SettlorCountryOfNationalityYesNoPage(1), false).success.value
-        .set(SettlorIndividualNINOYesNoPage(1), false).success.value
-        .set(SettlorCountryOfResidenceYesNoPage(1), false).success.value
-        .set(SettlorAddressYesNoPage(1), false).success.value
-        .set(SettlorIndividualMentalCapacityYesNoPage(1), true).success.value
+        .set(SettlorIndividualOrBusinessPage(1), IndividualOrBusiness.Individual).value
+        .set(SettlorIndividualNamePage(1), FullName("Joe", None,  "Bloggs")).value
+        .set(SettlorIndividualDateOfBirthYesNoPage(1), false).value
+        .set(SettlorCountryOfNationalityYesNoPage(1), false).value
+        .set(SettlorIndividualNINOYesNoPage(1), false).value
+        .set(SettlorCountryOfResidenceYesNoPage(1), false).value
+        .set(SettlorAddressYesNoPage(1), false).value
+        .set(SettlorIndividualMentalCapacityYesNoPage(1), true).value
 
       val result = helper.entities(answers)
 

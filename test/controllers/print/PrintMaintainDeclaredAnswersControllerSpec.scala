@@ -33,30 +33,30 @@ import views.html.print.{PrintMaintainDeclaredAnswersView, PrintMaintainFinalDec
 
 class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
-  val fakeTvn = "XC TRN 000 000 4912"
-  val fakeAgencyName = "Agency Name"
-  val fakeTelephoneNumber = "01234567890"
-  val fakeCrn = "123456"
+  private val fakeTvn = "XC TRN 000 000 4912"
+  private val fakeAgencyName = "Agency Name"
+  private val fakeTelephoneNumber = "01234567890"
+  private val fakeCrn = "123456"
   private val (year2020, num27) = (2020, 27)
 
   "PlaybackDeclaredAnswersController Controller" must {
 
     def playbackAnswers(whatIsNext: WhatIsNext) = emptyUserAnswersForUtr
-      .set(WhatIsNextPage, whatIsNext).success.value
-      .set(TVNPage, fakeTvn).success.value
-      .set(AgentDeclarationPage, AgentDeclaration(FullName("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
-      .set(SubmissionDatePage, LocalDateTime.of(year2020, 1, num27, 0, 0)).success.value
+      .set(WhatIsNextPage, whatIsNext).value
+      .set(TVNPage, fakeTvn).value
+      .set(AgentDeclarationPage, AgentDeclaration(FullName("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).value
+      .set(SubmissionDatePage, LocalDateTime.of(year2020, 1, num27, 0, 0)).value
 
-      .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value
-      .set(CharityBeneficiaryDiscretionYesNoPage(0), true).success.value
-      .set(CharityBeneficiaryShareOfIncomePage(0), "10").success.value
-      .set(CharityBeneficiaryAddressYesNoPage(0), true).success.value
-      .set(CharityBeneficiaryAddressUKYesNoPage(0), true).success.value
-      .set(CharityBeneficiaryAddressPage(0), UKAddress("line1", "line2", None, None, "NE11NE")).success.value
+      .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").value
+      .set(CharityBeneficiaryDiscretionYesNoPage(0), true).value
+      .set(CharityBeneficiaryShareOfIncomePage(0), "10").value
+      .set(CharityBeneficiaryAddressYesNoPage(0), true).value
+      .set(CharityBeneficiaryAddressUKYesNoPage(0), true).value
+      .set(CharityBeneficiaryAddressPage(0), UKAddress("line1", "line2", None, None, "NE11NE")).value
 
-      .set(CharityBeneficiaryNamePage(1), "Charity Beneficiary 2").success.value
-      .set(CharityBeneficiaryDiscretionYesNoPage(1), false).success.value
-      .set(CharityBeneficiaryAddressYesNoPage(1), false).success.value
+      .set(CharityBeneficiaryNamePage(1), "Charity Beneficiary 2").value
+      .set(CharityBeneficiaryDiscretionYesNoPage(1), false).value
+      .set(CharityBeneficiaryAddressYesNoPage(1), false).value
 
     "return OK and the correct view for a GET" when {
       "making changes" in {
@@ -94,7 +94,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
       "closing" in {
 
         val answers = playbackAnswers(CloseTrust)
-          .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
+          .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).value
 
         val entities = injector.instanceOf[PrintPlaybackHelper].entities(answers)
 

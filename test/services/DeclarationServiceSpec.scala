@@ -15,19 +15,19 @@
  */
 
 package services
+
 import base.SpecBase
+import cats.data.EitherT
 import connectors.TrustConnector
-import models.http.{DeclarationErrorResponse, DeclarationForApi, TVNResponse}
+import models.errors.{ServerError, TrustErrors}
+import models.http.{DeclarationForApi, TVNResponse}
 import models.{AgentDeclaration, FullName, IndividualDeclaration, UKAddress}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{EitherValues, RecoverMethods}
-import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.inject.bind
 import play.api.mvc.Request
-import uk.gov.hmrc.auth.core.retrieve.AgentInformation
-import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
@@ -35,18 +35,12 @@ import scala.concurrent.Future
 
 class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValues with RecoverMethods {
 
-  val utr = "0987654321"
-  val address: UKAddress = UKAddress("Line 1", "Line 2", None, None, "NE11NE")
-  val mockTrustConnector: TrustConnector = mock[TrustConnector]
-  val date: LocalDate = LocalDate.parse("2019-02-03")
+  private val utr = "0987654321"
+  private val address: UKAddress = UKAddress("Line 1", "Line 2", None, None, "NE11NE")
+  private val mockTrustConnector: TrustConnector = mock[TrustConnector]
+  private val date: LocalDate = LocalDate.parse("2019-02-03")
 
-  val enrolments: Enrolments = Enrolments(Set(Enrolment(
-    "HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")), "Activated"
-  )))
-
-  val agentInformation: AgentInformation = AgentInformation(None, None, Some("agentFriendlyName"))
-
-  val agentDeclaration: AgentDeclaration = AgentDeclaration(
+  private val agentDeclaration: AgentDeclaration = AgentDeclaration(
     name = FullName(
       "First",
       None,
@@ -58,7 +52,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
     email = None
   )
 
-  val individualDeclaration: IndividualDeclaration = IndividualDeclaration(
+  private val individualDeclaration: IndividualDeclaration = IndividualDeclaration(
     name = FullName(
       "First",
       None,
@@ -67,8 +61,8 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
     email = None
   )
 
-  implicit val request: Request[_] = fakeRequest
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  private implicit val request: Request[_] = fakeRequest
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "Declaration service" when {
 
@@ -77,7 +71,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
       "return TVN response when no errors" in {
 
         when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
-          .thenReturn(Future.successful(TVNResponse("123456")))
+          .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Right(TVNResponse("123456")))))
 
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -85,16 +79,16 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.agentDeclaration(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName", Some(date))) {
+        whenReady(service.agentDeclaration(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName", Some(date)).value) {
           result =>
-            result mustBe TVNResponse("123456")
+            result mustBe Right(TVNResponse("123456"))
         }
       }
 
       "return InternalServerError when errors" in {
 
         when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
-          .thenReturn(Future.successful(DeclarationErrorResponse(INTERNAL_SERVER_ERROR)))
+          .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Left(ServerError()))))
 
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -102,9 +96,9 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.agentDeclaration(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName", Some(date))) {
+        whenReady(service.agentDeclaration(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName", Some(date)).value) {
           result =>
-            result mustBe DeclarationErrorResponse(INTERNAL_SERVER_ERROR)
+            result mustBe Left(ServerError())
         }
       }
 
@@ -115,7 +109,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
       "return TVN response when no errors" in {
 
         when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
-          .thenReturn(Future.successful(TVNResponse("123456")))
+          .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Right(TVNResponse("123456")))))
 
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -123,16 +117,16 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.individualDeclaration(utr, individualDeclaration, Some(date))) {
+        whenReady(service.individualDeclaration(utr, individualDeclaration, Some(date)).value) {
           result =>
-            result mustBe TVNResponse("123456")
+            result mustBe Right(TVNResponse("123456"))
         }
       }
 
       "return InternalServerError when errors" in {
 
         when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
-          .thenReturn(Future.successful(DeclarationErrorResponse(INTERNAL_SERVER_ERROR)))
+          .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Left(ServerError()))))
 
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -140,9 +134,9 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.individualDeclaration(utr, individualDeclaration, Some(date))) {
+        whenReady(service.individualDeclaration(utr, individualDeclaration, Some(date)).value) {
           result =>
-            result mustBe DeclarationErrorResponse(INTERNAL_SERVER_ERROR)
+            result mustBe Left(ServerError())
         }
       }
 

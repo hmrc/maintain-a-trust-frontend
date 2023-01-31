@@ -16,6 +16,7 @@
 
 package controllers.makechanges
 
+import cats.data.EitherT
 import connectors.{TrustConnector, TrustsStoreConnector}
 import models.UserAnswers
 import models.requests.DataRequest
@@ -26,8 +27,10 @@ import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.TrustEnvelope
+import utils.TrustEnvelope.TrustEnvelope
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 abstract class MakeChangesQuestionRouterController(
                                                     trustConnector: TrustConnector,
@@ -36,10 +39,10 @@ abstract class MakeChangesQuestionRouterController(
   extends FrontendBaseController with I18nSupport {
 
   private def redirectAndResetTaskList(updatedAnswers: UserAnswers)
-                                      (implicit request: DataRequest[AnyContent], hc: HeaderCarrier): Future[Result] = {
-    trustStoreConnector.set(request.userAnswers.identifier, updatedAnswers) map { _ =>
-      Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
-    }
+                                      (implicit request: DataRequest[AnyContent], hc: HeaderCarrier): TrustEnvelope[Result] = EitherT {
+    trustStoreConnector.set(request.userAnswers.identifier, updatedAnswers).value.map(_.map(
+      _ => Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
+    ))
   }
 
   protected def redirectToDeclaration(implicit request: DataRequest[AnyContent]): Call = {
@@ -59,14 +62,14 @@ abstract class MakeChangesQuestionRouterController(
     }
   }
 
-  protected def routeToAddOrUpdateProtectors(implicit request: DataRequest[AnyContent]): Future[Result] = {
+  protected def routeToAddOrUpdateProtectors(implicit request: DataRequest[AnyContent]): TrustEnvelope[Result] = {
     trustConnector.getDoProtectorsAlreadyExist(request.userAnswers.identifier) map {
       case JsTrue => Redirect(controllers.makechanges.routes.UpdateProtectorYesNoController.onPageLoad())
       case JsFalse => Redirect(controllers.makechanges.routes.AddProtectorYesNoController.onPageLoad())
     }
   }
 
-  protected def routeToAddOrUpdateOtherIndividuals(implicit request: DataRequest[AnyContent]): Future[Result] = {
+  protected def routeToAddOrUpdateOtherIndividuals(implicit request: DataRequest[AnyContent]): TrustEnvelope[Result] = {
     trustConnector.getDoOtherIndividualsAlreadyExist(request.userAnswers.identifier) map {
       case JsTrue => Redirect(controllers.makechanges.routes.UpdateOtherIndividualsYesNoController.onPageLoad())
       case JsFalse => Redirect(controllers.makechanges.routes.AddOtherIndividualsYesNoController.onPageLoad())
@@ -74,30 +77,30 @@ abstract class MakeChangesQuestionRouterController(
   }
 
   protected def routeToAddOrUpdateNonEeaCompany(updatedAnswers: UserAnswers, isClosingTrust: Boolean)
-                                               (implicit request: DataRequest[AnyContent]): Future[Result] = {
+                                               (implicit request: DataRequest[AnyContent]): TrustEnvelope[Result] = {
     if (is5mldTrustIn5mldMode) {
       trustConnector.getDoNonEeaCompaniesAlreadyExist(request.userAnswers.identifier) map {
         case JsTrue => Redirect(controllers.makechanges.routes.UpdateNonEeaCompanyYesNoController.onPageLoad())
         case JsFalse => Redirect(controllers.makechanges.routes.AddNonEeaCompanyYesNoController.onPageLoad())
       }
     } else {
-      Future.fromTry(updatedAnswers.set(AddOrUpdateNonEeaCompanyYesNoPage, false)) flatMap { updatedAnswers =>
+      TrustEnvelope(updatedAnswers.set(AddOrUpdateNonEeaCompanyYesNoPage, false)) flatMap { updatedAnswers =>
         routeToDeclareOrTaskList(updatedAnswers, isClosingTrust)
       }
     }
   }
 
   protected def routeToDeclareOrTaskList(updatedAnswers: UserAnswers, isClosingTrust: Boolean)
-                                        (implicit request: DataRequest[AnyContent]): Future[Result] = {
+                                        (implicit request: DataRequest[AnyContent]): TrustEnvelope[Result] = {
     MakeChangesRouter.decide(updatedAnswers) match {
       case MakeChangesRouter.Declaration if !isClosingTrust =>
-        Future.successful(Redirect(redirectToDeclaration))
+        TrustEnvelope(Redirect(redirectToDeclaration))
       case MakeChangesRouter.Declaration =>
         redirectAndResetTaskList(updatedAnswers)
       case MakeChangesRouter.TaskList =>
         redirectAndResetTaskList(updatedAnswers)
       case MakeChangesRouter.UnableToDecide =>
-        Future.successful(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
+        TrustEnvelope(Redirect(controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad()))
     }
   }
 

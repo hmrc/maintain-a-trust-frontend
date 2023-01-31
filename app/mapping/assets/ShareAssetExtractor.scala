@@ -18,25 +18,24 @@ package mapping.assets
 
 import mapping.PlaybackExtractor
 import models.UserAnswers
+import models.errors.TrustErrors
 import models.http.DisplaySharesType
 import models.pages.ShareClass
 import models.pages.ShareType.Quoted
 import pages.assets.shares._
 
-import scala.util.Try
-
 class ShareAssetExtractor extends PlaybackExtractor[DisplaySharesType] {
 
   override val optionalEntity: Boolean = true
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplaySharesType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     answers
       .flatMap(answers => extractPortfolioOrNonPortfolio(entity, index, answers))
   }
 
-  private def extractPortfolioOrNonPortfolio(entity: DisplaySharesType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
+  private def extractPortfolioOrNonPortfolio(entity: DisplaySharesType, index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     answers.set(SharesInAPortfolioPage(index), entity.isPortfolio)
       .flatMap(_.set(ShareNamePage(index), entity.orgName))
       .flatMap(_.set(ShareOnStockExchangePage(index), entity.typeOfShare.contains(Quoted)))

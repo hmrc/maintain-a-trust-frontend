@@ -19,10 +19,12 @@ package controllers
 import config.FrontendAppConfig
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
+import handlers.ErrorHandler
 import mapping.UserAnswersExtractor
-import models.{TrustDetails, Underlying4mldTrustIn5mldMode, UserAnswers}
+import models.errors.TrustErrorWithRedirect
 import models.http._
 import models.requests.{DataRequest, OptionalDataRequest}
+import models.{TrustDetails, Underlying4mldTrustIn5mldMode, UserAnswers}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -30,10 +32,10 @@ import repositories.PlaybackRepository
 import services.{AuthenticationService, SessionService}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import utils.Session
+import utils.{Session, TrustEnvelope}
 import views.html.status._
-import javax.inject.Inject
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class TrustStatusController @Inject()(
@@ -53,8 +55,11 @@ class TrustStatusController @Inject()(
                                        authenticationService: AuthenticationService,
                                        val controllerComponents: MessagesControllerComponents,
                                        sessionService: SessionService,
-                                       frontendAppConfig: FrontendAppConfig
+                                       frontendAppConfig: FrontendAppConfig,
+                                       errorHandler: ErrorHandler
                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+
+  private val className = getClass.getSimpleName
 
   def closed(): Action[AnyContent] = actions.authWithOptionalData.async {
     implicit request =>
@@ -102,50 +107,52 @@ class TrustStatusController @Inject()(
   }
 
   private def checkIfLocked(identifier: String, fromVerify: Boolean)(implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
-    trustStoreConnector.get(identifier).flatMap {
-      case Some(claim) if claim.trustLocked =>
-        logger.warn(s"[TrustStatusController][checkIfLocked][Session ID: ${Session.id(hc)}] $identifier user has failed IV 3 times, locked out for 30 minutes")
+    trustStoreConnector.get(identifier).value.flatMap {
+      case Right(Some(claim)) if claim.trustLocked =>
+        logger.warn(s"[$className][checkIfLocked][Session ID: ${Session.id(hc)}] $identifier user has failed IV 3 times, locked out for 30 minutes")
         Future.successful(Redirect(controllers.routes.TrustStatusController.locked()))
-      case _ =>
-        logger.info(s"[TrustStatusController][checkIfLocked][Session ID: ${Session.id(hc)}] $identifier user has not been locked out from IV")
+      case Right(_) =>
+        logger.info(s"[$className][checkIfLocked][Session ID: ${Session.id(hc)}] $identifier user has not been locked out from IV")
         tryToPlayback(identifier, fromVerify)
+      case Left(_) => logger.warn(s"[$className][checkIfLocked][Session ID: ${Session.id(hc)}] Errors from connector call.")
+        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
     }
   }
 
   private def tryToPlayback(identifier: String, fromVerify: Boolean)(implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
-    trustConnector.playbackFromEtmp(identifier) flatMap {
-      case Closed =>
-        logger.info(s"[TrustStatusController][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due it being closed")
+    trustConnector.playbackFromEtmp(identifier).value flatMap {
+      case Right(Closed) =>
+        logger.info(s"[$className][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due it being closed")
         Future.successful(Redirect(controllers.routes.TrustStatusController.closed()))
-      case Processing =>
-        logger.info(s"[TrustStatusController][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to trust change processing")
+      case Right(Processing) =>
+        logger.info(s"[$className][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to trust change processing")
         Future.successful(Redirect(controllers.routes.TrustStatusController.processing()))
-      case IdentifierNotFound =>
-        logger.info(s"[TrustStatusController][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to UTR/URN not found")
+      case Right(IdentifierNotFound) =>
+        logger.info(s"[$className][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to UTR/URN not found")
         Future.successful(Redirect(controllers.routes.TrustStatusController.notFound()))
-      case Processed(playback, _) =>
+      case Right(Processed(playback, _)) =>
         authenticateForIdentifierAndExtract(identifier, playback, fromVerify)
-      case SorryThereHasBeenAProblem =>
-        logger.warn(s"[TrustStatusController][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due no content returned")
+      case Right(SorryThereHasBeenAProblem) =>
+        logger.warn(s"[$className][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due no content returned")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
-      case TrustServiceUnavailable =>
-        logger.error(s"[TrustStatusController][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to the service being unavailable")
+      case Right(TrustServiceUnavailable) =>
+        logger.error(s"[$className][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to the service being unavailable")
         Future.successful(Redirect(routes.TrustStatusController.down()))
-      case ClosedRequestResponse =>
-        logger.error(s"[TrustStatusController][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to the connection timing out")
+      case Right(ClosedRequestResponse) =>
+        logger.error(s"[$className][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to the connection timing out")
         Future.successful(Redirect(routes.TrustStatusController.down()))
-      case TrustsErrorResponse(status) =>
-        logger.error(s"[TrustStatusController][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to an unexpected response $status")
+      case Right(TrustsErrorResponse(status)) =>
+        logger.error(s"[$className][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to an unexpected response $status")
         Future.successful(Redirect(routes.TrustStatusController.down()))
-      case response =>
-        logger.error(s"[TrustStatusController][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to an error $response")
+      case Left(response) =>
+        logger.error(s"[$className][tryToPlayback][Session ID: ${Session.id(hc)}] $identifier unable to retrieve trust due to an error $response")
         Future.successful(Redirect(routes.TrustStatusController.down()))
     }
   }
 
   private def authenticateForIdentifierAndExtract(identifier: String, playback: GetTrust, fromVerify: Boolean)
-                                          (implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
-    val userAnswersF = for {
+                                                 (implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
+    val expectedResult = for {
       trustDetails <- trustConnector.getUntransformedTrustDetails(identifier)
       userAnswers <- sessionService.initialiseUserAnswers(
         identifier = identifier,
@@ -153,50 +160,47 @@ class TrustStatusController @Inject()(
         isUnderlyingData5mld = trustDetails.is5mld,
         isUnderlyingDataTaxable = trustDetails.isTaxable
       )
-    } yield (userAnswers, trustDetails)
+      dataRequest = DataRequest(request.request, userAnswers, request.user)
+      _ <- TrustEnvelope.fromLeftResult(authenticationService.authenticateForIdentifier(identifier)(dataRequest, hc))
+      resultFromExtractedUserAnswer <- TrustEnvelope.fromFuture(extract(userAnswers, identifier, playback, fromVerify, trustDetails))
+    } yield resultFromExtractedUserAnswer
 
-    userAnswersF.flatMap { userAnswers =>
+    expectedResult.value.map {
+      case Right(route) => route
+      case Left(TrustErrorWithRedirect(failureResult)) =>
 
-      val dataRequest = DataRequest(request.request, userAnswers._1, request.user)
-      authenticationService.authenticateForIdentifier(identifier)(dataRequest, hc).flatMap {
-        case Left(failure) =>
-          val location = failure.header.headers.getOrElse(LOCATION, "no location header")
-          val failureStatus = failure.header.status
+        val location = failureResult.header.headers.getOrElse(LOCATION, "no location header")
+        val failureStatus = failureResult.header.status
 
-          logger.warn(s"[TrustStatusController][authenticateForIdentifierAndExtract][Session ID: ${Session.id(hc)}]" +
-            s" unable to authenticate user for $identifier, " +
-            s"due to $failureStatus status, sending user to $location")
+        logger.warn(s"[$className][authenticateForIdentifierAndExtract][Session ID: ${Session.id(hc)}]" +
+          s" unable to authenticate user for $identifier, " + s"due to $failureStatus status, sending user to $location")
 
-          Future.successful(failure)
-        case Right(_) =>
-          extract(userAnswers._1, identifier, playback, fromVerify, userAnswers._2)
-      }
-    } recoverWith {
-      case ex: Throwable =>
-        logger.error(s"[TrustStatusController][authenticateForIdentifierAndExtract][Session ID: ${Session.id(hc)}]" +
-          s"authentication and extraction failed due to ${ex.getMessage}", ex
-        )
-        Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+        failureResult
+
+      case Left(_) =>
+        logger.warn(s"[$className][authenticateForIdentifierAndExtract][Session ID: ${Session.id(hc)}]" + "authentication and extraction failed.")
+        Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())
     }
   }
+
 
   private def extract(userAnswers: UserAnswers,
                       identifier: String,
                       playback: GetTrust,
                       fromVerify: Boolean,
-                      trustDetails : TrustDetails
+                      trustDetails: TrustDetails
                      )
                      (implicit request: OptionalDataRequest[AnyContent]): Future[Result] = {
-    logger.info(s"[TrustStatusController][extract][Session ID: ${Session.id(hc)}] user authenticated for $identifier, attempting to extract to user answers")
+    logger.info(s"[$className][extract][Session ID: ${Session.id(hc)}] user authenticated for $identifier, attempting to extract to user answers")
 
-    playbackExtractor.extract(userAnswers, playback) flatMap {
+    playbackExtractor.extract(userAnswers, playback).value flatMap {
       case Right(answers) =>
-        playbackRepository.set(answers) map { _ =>
-          logger.info(s"[TrustStatusController][extract][Session ID: ${Session.id(hc)}] $identifier successfully extracted, showing information about maintaining")
+        playbackRepository.set(answers).value map { _ =>
+          logger.info(s"[$className][extract][Session ID: ${Session.id(hc)}] $identifier successfully extracted, showing information about maintaining")
           routeAfterExtraction(userAnswers, fromVerify, trustDetails)
         }
       case Left(reason) =>
-        logger.warn(s"[TrustStatusController][extract][Session ID: ${Session.id(hc)}] $identifier unable to extract user answers due to $reason")
+        logger.warn(s"[$className][extract][Session ID: ${Session.id(hc)}] $identifier unable to extract user answers due to $reason")
         Future.successful(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
     }
   }
@@ -208,13 +212,13 @@ class TrustStatusController @Inject()(
       frontendAppConfig.schedule3aExemptEnabled && !trustDetails.hasSchedule3aExemptAnswer && trustDetails.isTaxable && trustDetails.isExpress
 
     if (answers.trustMldStatus == Underlying4mldTrustIn5mldMode) {
-      logger.info(s"[TrustStatusController][routeAfterExtraction][Session ID: ${Session.id(hc)}] underlying data is 4MLD. " +
+      logger.info(s"[$className][routeAfterExtraction][Session ID: ${Session.id(hc)}] underlying data is 4MLD. " +
         s"Need to answer express-trust question.")
       Redirect(controllers.routes.MigrateTo5mldInformationController.onPageLoad())
     } else if (askSchedule3aQuestion) {
-      logger.info(s"[TrustStatusController][routeAfterExtraction][Session ID: ${Session.id(hc)}] User has not answered Schedule3a question " +
+      logger.info(s"[$className][routeAfterExtraction][Session ID: ${Session.id(hc)}] User has not answered Schedule3a question " +
         s"redirecting to question page")
-        Redirect(controllers.routes.InformationSchedule3aExemptionController.onPageLoad())
+      Redirect(controllers.routes.InformationSchedule3aExemptionController.onPageLoad())
     } else {
       (request.user.affinityGroup, fromVerify) match {
         case (AffinityGroup.Organisation, false) =>

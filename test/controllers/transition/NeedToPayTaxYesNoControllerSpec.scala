@@ -17,9 +17,11 @@
 package controllers.transition
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.TrustConnector
 import forms.YesNoFormProvider
 import models.UTR
+import models.errors.{MongoError, ServerError, TrustErrors}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -30,6 +32,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.PlaybackRepository
 import services.MaintainATrustService
+import uk.gov.hmrc.http.HttpResponse
 import utils.TestUserAnswers.utr
 import views.html.transition.NeedToPayTaxYesNoView
 
@@ -37,10 +40,10 @@ import scala.concurrent.Future
 
 class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("needToPayTaxYesNo")
+  private val formProvider = new YesNoFormProvider()
+  private val form: Form[Boolean] = formProvider.withPrefix("needToPayTaxYesNo")
 
-  lazy val needToPayTaxYesNoRoute: String = routes.NeedToPayTaxYesNoController.onPageLoad().url
+  private lazy val needToPayTaxYesNoRoute: String = routes.NeedToPayTaxYesNoController.onPageLoad().url
 
   "NeedToPayTaxYesNoController" must {
 
@@ -64,7 +67,7 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswersForUtr.set(NeedToPayTaxYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswersForUtr.set(NeedToPayTaxYesNoPage, true).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -89,13 +92,13 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
-        .thenReturn(Future.successful(true))
+        .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
-        .thenReturn(Future.successful(()))
+        .thenReturn(EitherT[Future, TrustErrors, Unit](Future.successful(Right(()))))
 
       when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
+        .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -124,16 +127,16 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
-        .thenReturn(Future.successful(true))
+        .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
-        .thenReturn(Future.successful(()))
+        .thenReturn(EitherT[Future, TrustErrors, Unit](Future.successful(Right(()))))
 
       when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
+        .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
       val userAnswers = emptyUserAnswersForUtr
-        .set(NeedToPayTaxYesNoPage, false).success.value
+        .set(NeedToPayTaxYesNoPage, false).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -162,16 +165,16 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
-        .thenReturn(Future.successful(true))
+        .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
-        .thenReturn(Future.successful(()))
+        .thenReturn(EitherT[Future, TrustErrors, Unit](Future.successful(Right(()))))
 
       when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
+        .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
       val userAnswers = emptyUserAnswersForUtr
-        .set(NeedToPayTaxYesNoPage, true).success.value
+        .set(NeedToPayTaxYesNoPage, true).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -200,13 +203,13 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
-        .thenReturn(Future.successful(true))
+        .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
-        .thenReturn(Future.successful(()))
+        .thenReturn(EitherT[Future, TrustErrors, Unit](Future.successful(Right(()))))
 
       when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
+        .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -245,6 +248,35 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       contentAsString(result) mustEqual
         view(boundForm, utr, UTR)(request, messages).toString
+
+      application.stop()
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      val mockTrustConnector = mock[TrustConnector]
+      val mockMaintainATrustService = mock[MaintainATrustService]
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
+
+      when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, Unit](Future.successful(Right(()))))
+
+      when(mockTrustConnector.setTaxableTrust(any(), any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Left(ServerError()))))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+        .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+        .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
+        .build()
+
+      val request = FakeRequest(POST, needToPayTaxYesNoRoute)
+        .withFormUrlEncodedBody(("value", "false"))
+
+      val result = route(application, request).value
+
+      status(result) mustBe INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
 
       application.stop()
     }

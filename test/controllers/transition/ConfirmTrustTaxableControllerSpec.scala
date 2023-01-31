@@ -17,8 +17,10 @@
 package controllers.transition
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.TrustConnector
 import models.UserAnswers
+import models.errors.{MongoError, TrustErrors}
 import models.pages.WhatIsNext.{MakeChanges, NeedsToPayTax}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
@@ -29,6 +31,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
+import uk.gov.hmrc.http.HttpResponse
 import utils.TestUserAnswers
 import views.html.transition.ConfirmTrustTaxableView
 
@@ -36,7 +39,7 @@ import scala.concurrent.Future
 
 class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
-  lazy val confirmTrustTaxableRoute: String = routes.ConfirmTrustTaxableController.onPageLoad().url
+  private lazy val confirmTrustTaxableRoute: String = routes.ConfirmTrustTaxableController.onPageLoad().url
 
   "ConfirmTrustTaxableController" when {
 
@@ -68,14 +71,15 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
           "agent" in {
 
-            reset(playbackRepository)
+            reset(mockPlaybackRepository)
 
-            when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+            when(mockPlaybackRepository.set(any()))
+              .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
             val mockTrustsConnector = mock[TrustConnector]
 
             when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
-              .thenReturn(Future.successful(okResponse))
+              .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
             val userAnswers = TestUserAnswers.emptyUserAnswersForUtr
 
@@ -93,7 +97,7 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
               controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
 
             val uaCaptor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
-            verify(playbackRepository).set(uaCaptor.capture)
+            verify(mockPlaybackRepository).set(uaCaptor.capture)
             uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
 
             application.stop()
@@ -101,14 +105,14 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
           "non-agent" in {
 
-            reset(playbackRepository)
+            reset(mockPlaybackRepository)
 
-            when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+            when(mockPlaybackRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
             val mockTrustsConnector = mock[TrustConnector]
 
             when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
-              .thenReturn(Future.successful(okResponse))
+              .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
             val userAnswers = TestUserAnswers.emptyUserAnswersForUtr
 
@@ -126,7 +130,7 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
               controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
             val uaCaptor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
-            verify(playbackRepository).set(uaCaptor.capture)
+            verify(mockPlaybackRepository).set(uaCaptor.capture)
             uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
 
             application.stop()
@@ -137,17 +141,17 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
           "agent" in {
 
-            reset(playbackRepository)
+            reset(mockPlaybackRepository)
 
-            when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+            when(mockPlaybackRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
             val mockTrustsConnector = mock[TrustConnector]
 
             when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
-              .thenReturn(Future.successful(okResponse))
+              .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
             val userAnswers = TestUserAnswers.emptyUserAnswersForUrn
-              .set(WhatIsNextPage, NeedsToPayTax).success.value
+              .set(WhatIsNextPage, NeedsToPayTax).value
 
             val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
               .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -163,7 +167,7 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
               controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
 
             val uaCaptor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
-            verify(playbackRepository).set(uaCaptor.capture)
+            verify(mockPlaybackRepository).set(uaCaptor.capture)
             uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
 
             application.stop()
@@ -171,17 +175,17 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
           "non-agent" in {
 
-            reset(playbackRepository)
+            reset(mockPlaybackRepository)
 
-            when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+            when(mockPlaybackRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
             val mockTrustsConnector = mock[TrustConnector]
 
             when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
-              .thenReturn(Future.successful(okResponse))
+              .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
             val userAnswers = TestUserAnswers.emptyUserAnswersForUrn
-              .set(WhatIsNextPage, NeedsToPayTax).success.value
+              .set(WhatIsNextPage, NeedsToPayTax).value
 
             val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Organisation)
               .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -197,13 +201,38 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
               controllers.transition.declaration.routes.IndividualDeclarationController.onPageLoad().url
 
             val uaCaptor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
-            verify(playbackRepository).set(uaCaptor.capture)
+            verify(mockPlaybackRepository).set(uaCaptor.capture)
             uaCaptor.getValue.get(WhatIsNextPage).get mustBe MakeChanges
 
             application.stop()
           }
         }
 
+      }
+
+      "return an Internal Server Error when setting the user answers goes wrong" in {
+        reset(mockPlaybackRepository)
+        mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
+
+        val mockTrustsConnector = mock[TrustConnector]
+
+        when(mockTrustsConnector.setTaxableTrust(any(), any())(any(), any()))
+          .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
+
+        val userAnswers = TestUserAnswers.emptyUserAnswersForUtr
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Organisation)
+          .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+          .build()
+
+        val request = FakeRequest(POST, confirmTrustTaxableRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustBe INTERNAL_SERVER_ERROR
+        contentType(result) mustBe Some("text/html")
+
+        application.stop()
       }
     }
   }

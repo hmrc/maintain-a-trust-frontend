@@ -31,70 +31,70 @@ class OtherIndividualPrinterSpec extends SpecBase {
 
   private val helper: OtherIndividualsPrinter = injector.instanceOf[OtherIndividualsPrinter]
 
-  private val (year1947, year1996, num3, num18) = (1947, 1996, 3, 18)
+  private val (year1947, year1996, year2020, num2, num3, num18) = (1947, 1996, 2020, 2, 3, 18)
 
   "OtherIndividualPrinter" must {
 
     "generate other individuals sections given individuals" in {
 
       val answers = emptyUserAnswersForUtr
-        .set(OtherIndividualNamePage(0), FullName("Joe", None, "Bloggs")).success.value
-        .set(OtherIndividualDateOfBirthYesNoPage(0), false).success.value
-        .set(OtherIndividualCountryOfNationalityYesNoPage(0), true).success.value
-        .set(OtherIndividualCountryOfNationalityInTheUkYesNoPage(0), false).success.value
-        .set(OtherIndividualCountryOfNationalityPage(0), "FR").success.value
-        .set(OtherIndividualNationalInsuranceYesNoPage(0), true).success.value
-        .set(OtherIndividualNationalInsuranceNumberPage(0), "JB123456C").success.value
-        .set(OtherIndividualCountryOfResidenceYesNoPage(0), true).success.value
-        .set(OtherIndividualCountryOfResidenceInTheUkYesNoPage(0), false).success.value
-        .set(OtherIndividualCountryOfResidencePage(0), "FR").success.value
-        .set(OtherIndividualMentalCapacityYesNoPage(0), true).success.value
+        .set(OtherIndividualNamePage(0), FullName("Joe", None, "Bloggs")).value
+        .set(OtherIndividualDateOfBirthYesNoPage(0), false).value
+        .set(OtherIndividualCountryOfNationalityYesNoPage(0), true).value
+        .set(OtherIndividualCountryOfNationalityInTheUkYesNoPage(0), false).value
+        .set(OtherIndividualCountryOfNationalityPage(0), "FR").value
+        .set(OtherIndividualNationalInsuranceYesNoPage(0), true).value
+        .set(OtherIndividualNationalInsuranceNumberPage(0), "JB123456C").value
+        .set(OtherIndividualCountryOfResidenceYesNoPage(0), true).value
+        .set(OtherIndividualCountryOfResidenceInTheUkYesNoPage(0), false).value
+        .set(OtherIndividualCountryOfResidencePage(0), "FR").value
+        .set(OtherIndividualMentalCapacityYesNoPage(0), true).value
 
-        .set(OtherIndividualNamePage(1), FullName("John", None, "Doe")).success.value
-        .set(OtherIndividualDateOfBirthYesNoPage(1), true).success.value
-        .set(OtherIndividualDateOfBirthPage(1), LocalDate.of(year1996, FEBRUARY, num3)).success.value
-        .set(OtherIndividualCountryOfNationalityYesNoPage(1), true).success.value
-        .set(OtherIndividualCountryOfNationalityInTheUkYesNoPage(1), false).success.value
-        .set(OtherIndividualCountryOfNationalityPage(1), "FR").success.value
-        .set(OtherIndividualCountryOfResidenceYesNoPage(1), true).success.value
-        .set(OtherIndividualCountryOfResidenceInTheUkYesNoPage(1), false).success.value
-        .set(OtherIndividualCountryOfResidencePage(1), "FR").success.value
-        .set(OtherIndividualAddressYesNoPage(1), false).success.value
-        .set(OtherIndividualMentalCapacityYesNoPage(1), true).success.value
+        .set(OtherIndividualNamePage(1), FullName("John", None, "Doe")).value
+        .set(OtherIndividualDateOfBirthYesNoPage(1), true).value
+        .set(OtherIndividualDateOfBirthPage(1), LocalDate.of(year1996, FEBRUARY, num3)).value
+        .set(OtherIndividualCountryOfNationalityYesNoPage(1), true).value
+        .set(OtherIndividualCountryOfNationalityInTheUkYesNoPage(1), false).value
+        .set(OtherIndividualCountryOfNationalityPage(1), "FR").value
+        .set(OtherIndividualCountryOfResidenceYesNoPage(1), true).value
+        .set(OtherIndividualCountryOfResidenceInTheUkYesNoPage(1), false).value
+        .set(OtherIndividualCountryOfResidencePage(1), "FR").value
+        .set(OtherIndividualAddressYesNoPage(1), false).value
+        .set(OtherIndividualMentalCapacityYesNoPage(1), true).value
 
-        .set(OtherIndividualNamePage(2), FullName("Michael", None, "Finnegan")).success.value
-        .set(OtherIndividualDateOfBirthYesNoPage(2), false).success.value
-        .set(OtherIndividualCountryOfNationalityYesNoPage(2), true).success.value
-        .set(OtherIndividualCountryOfNationalityInTheUkYesNoPage(2), false).success.value
-        .set(OtherIndividualCountryOfNationalityPage(2), "FR").success.value
-        .set(OtherIndividualCountryOfResidenceYesNoPage(2), true).success.value
-        .set(OtherIndividualCountryOfResidenceInTheUkYesNoPage(2), false).success.value
-        .set(OtherIndividualCountryOfResidencePage(2), "FR").success.value
-        .set(OtherIndividualAddressYesNoPage(2), true).success.value
-        .set(OtherIndividualAddressUKYesNoPage(2), true).success.value
-        .set(OtherIndividualAddressPage(2), UKAddress("line 1", "line 2", None, None, "NE11NE")).success.value
-        .set(OtherIndividualPassportIDCardYesNoPage(2), false).success.value
-        .set(OtherIndividualMentalCapacityYesNoPage(2), true).success.value
+        .set(OtherIndividualNamePage(2), FullName("Michael", None, "Finnegan")).value
+        .set(OtherIndividualDateOfBirthYesNoPage(2), false).value
+        .set(OtherIndividualCountryOfNationalityYesNoPage(2), true).value
+        .set(OtherIndividualCountryOfNationalityInTheUkYesNoPage(2), false).value
+        .set(OtherIndividualCountryOfNationalityPage(2), "FR").value
+        .set(OtherIndividualCountryOfResidenceYesNoPage(2), true).value
+        .set(OtherIndividualCountryOfResidenceInTheUkYesNoPage(2), false).value
+        .set(OtherIndividualCountryOfResidencePage(2), "FR").value
+        .set(OtherIndividualAddressYesNoPage(2), true).value
+        .set(OtherIndividualAddressUKYesNoPage(2), true).value
+        .set(OtherIndividualAddressPage(2), UKAddress("line 1", "line 2", None, None, "NE11NE")).value
+        .set(OtherIndividualPassportIDCardYesNoPage(2), false).value
+        .set(OtherIndividualMentalCapacityYesNoPage(2), true).value
 
-        .set(OtherIndividualNamePage(3), FullName("Paul", None, "Chuckle")).success.value
-        .set(OtherIndividualDateOfBirthYesNoPage(3), true).success.value
-        .set(OtherIndividualDateOfBirthPage(3), LocalDate.of(year1947, OCTOBER, num18)).success.value
-        .set(OtherIndividualCountryOfNationalityYesNoPage(3), true).success.value
-        .set(OtherIndividualCountryOfNationalityInTheUkYesNoPage(3), false).success.value
-        .set(OtherIndividualCountryOfNationalityPage(3), "FR").success.value
-        .set(OtherIndividualCountryOfResidenceYesNoPage(3), true).success.value
-        .set(OtherIndividualCountryOfResidenceInTheUkYesNoPage(3), false).success.value
-        .set(OtherIndividualCountryOfResidencePage(3), "FR").success.value
-        .set(OtherIndividualAddressYesNoPage(3), true).success.value
-        .set(OtherIndividualAddressUKYesNoPage(3), false).success.value
-        .set(OtherIndividualAddressPage(3), InternationalAddress("line 1", "line 2", None, "FR")).success.value
-        .set(OtherIndividualPassportIDCardYesNoPage(3), true).success.value
+        .set(OtherIndividualNamePage(3), FullName("Paul", None, "Chuckle")).value
+        .set(OtherIndividualDateOfBirthYesNoPage(3), true).value
+        .set(OtherIndividualDateOfBirthPage(3), LocalDate.of(year1947, OCTOBER, num18)).value
+        .set(OtherIndividualCountryOfNationalityYesNoPage(3), true).value
+        .set(OtherIndividualCountryOfNationalityInTheUkYesNoPage(3), false).value
+        .set(OtherIndividualCountryOfNationalityPage(3), "FR").value
+        .set(OtherIndividualCountryOfResidenceYesNoPage(3), true).value
+        .set(OtherIndividualCountryOfResidenceInTheUkYesNoPage(3), false).value
+        .set(OtherIndividualCountryOfResidencePage(3), "FR").value
+        .set(OtherIndividualAddressYesNoPage(3), true).value
+        .set(OtherIndividualAddressUKYesNoPage(3), false).value
+        .set(OtherIndividualAddressPage(3), InternationalAddress("line 1", "line 2", None, "FR")).value
+        .set(OtherIndividualPassportIDCardYesNoPage(3), true).value
         .set(
           OtherIndividualPassportIDCardPage(3),
-          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), DetailsType.Combined)
-        ).success.value
-        .set(OtherIndividualMentalCapacityYesNoPage(3), true).success.value
-
+          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, FEBRUARY, num2), DetailsType.Combined)
+        ).value
+        .set(OtherIndividualMentalCapacityYesNoPage(3), true).value
+      
       val result = helper.entities(answers)
 
       val name1 = "Joe Bloggs"

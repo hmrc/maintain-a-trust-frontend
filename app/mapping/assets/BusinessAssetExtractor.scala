@@ -19,18 +19,17 @@ package mapping.assets
 import mapping.PlaybackExtractor
 import mapping.PlaybackImplicits.AddressOptionConverter
 import models.UserAnswers
+import models.errors.TrustErrors
 import models.http.DisplayBusinessAssetType
 import pages.assets.business._
-
-import scala.util.Try
 
 class BusinessAssetExtractor extends PlaybackExtractor[DisplayBusinessAssetType] {
 
   override val optionalEntity: Boolean = true
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayBusinessAssetType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     answers
       .flatMap(_.set(BusinessNamePage(index), entity.orgName))
       .flatMap(_.set(BusinessDescriptionPage(index), entity.businessDescription))

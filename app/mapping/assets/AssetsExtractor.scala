@@ -17,9 +17,9 @@
 package mapping.assets
 
 import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
 import models.UserAnswersCombinator._
+import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.DisplayTrustAssets
 
 class AssetsExtractor @Inject()(moneyAssetExtractor: MoneyAssetExtractor,
@@ -30,7 +30,7 @@ class AssetsExtractor @Inject()(moneyAssetExtractor: MoneyAssetExtractor,
                                 otherAssetExtractor: OtherAssetExtractor,
                                 nonEeaBusinessAssetExtractor: NonEeaBusinessAssetExtractor) {
 
-  def extract(answers: UserAnswers, data: Option[DisplayTrustAssets]): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: Option[DisplayTrustAssets]): Either[TrustErrors, UserAnswers] = {
 
     data match {
 

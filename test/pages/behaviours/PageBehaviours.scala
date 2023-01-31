@@ -20,14 +20,14 @@ import generators.Generators
 import models.UserAnswers
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
-import org.scalatest.{OptionValues, TryValues}
+import org.scalatest.{EitherValues, OptionValues, TryValues}
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.QuestionPage
 import play.api.libs.json._
 
-trait PageBehaviours extends AnyWordSpec with Matchers with ScalaCheckPropertyChecks with Generators with OptionValues with TryValues {
+trait PageBehaviours extends AnyWordSpec with Matchers with ScalaCheckPropertyChecks with Generators with OptionValues with TryValues with EitherValues {
 
   class BeRetrievable[A] {
     def apply[P <: QuestionPage[A]](genP: Gen[P])(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit = {
@@ -41,7 +41,7 @@ trait PageBehaviours extends AnyWordSpec with Matchers with ScalaCheckPropertyCh
             val gen = for {
               page <- genP
               userAnswers <- arbitrary[UserAnswers]
-            } yield (page, userAnswers.remove(page).success.value)
+            } yield (page, userAnswers.remove(page).value)
 
             forAll(gen) {
               case (page, userAnswers) =>
@@ -62,7 +62,7 @@ trait PageBehaviours extends AnyWordSpec with Matchers with ScalaCheckPropertyCh
               page <- genP
               savedValue <- arbitrary[A]
               userAnswers <- arbitrary[UserAnswers]
-            } yield (page, savedValue, userAnswers.set(page, savedValue).success.value)
+            } yield (page, savedValue, userAnswers.set(page, savedValue).value)
 
             forAll(gen) {
               case (page, savedValue, userAnswers) =>
@@ -89,7 +89,7 @@ trait PageBehaviours extends AnyWordSpec with Matchers with ScalaCheckPropertyCh
         forAll(gen) {
           case (page, newValue, userAnswers) =>
 
-            val updatedAnswers = userAnswers.set(page, newValue).success.value
+            val updatedAnswers = userAnswers.set(page, newValue).value
             updatedAnswers.get(page).value mustEqual newValue
         }
       }
@@ -105,12 +105,12 @@ trait PageBehaviours extends AnyWordSpec with Matchers with ScalaCheckPropertyCh
           page <- genP
           savedValue <- arbitrary[A]
           userAnswers <- arbitrary[UserAnswers]
-        } yield (page, userAnswers.set(page, savedValue).success.value)
+        } yield (page, userAnswers.set(page, savedValue).value)
 
         forAll(gen) {
           case (page, userAnswers) =>
 
-            val updatedAnswers = userAnswers.remove(page).success.value
+            val updatedAnswers = userAnswers.remove(page).value
             updatedAnswers.get(page) must be(empty)
         }
       }

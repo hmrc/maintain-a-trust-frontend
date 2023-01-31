@@ -17,8 +17,9 @@
 package controllers
 
 import base.SpecBase
-import connectors.TrustConnector
+import cats.data.EitherT
 import forms.UtrFormProvider
+import models.errors.TrustErrors
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.data.Form
@@ -31,25 +32,20 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import views.html.UTRView
 
-import java.time.LocalDate
 import scala.concurrent.Future
 
 class UTRControllerSpec extends SpecBase {
 
-  val formProvider = new UtrFormProvider()
-  val form: Form[String] = formProvider()
+  private val formProvider = new UtrFormProvider()
+  private val form: Form[String] = formProvider()
 
-  lazy val trustUTRRoute: String = routes.UTRController.onPageLoad().url
+  private lazy val trustUTRRoute: String = routes.UTRController.onPageLoad().url
 
-  val mockTrustsConnector: TrustConnector = mock[TrustConnector]
+  private val utr = "0987654321"
 
-  val utr = "0987654321"
-
-  val enrolments: Enrolments = Enrolments(Set(Enrolment(
+  private val enrolments: Enrolments = Enrolments(Set(Enrolment(
     "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
   )))
-
-  val startDate: LocalDate = LocalDate.parse("2000-01-01")
 
   "UTR Controller" must {
 
@@ -93,7 +89,7 @@ class UTRControllerSpec extends SpecBase {
 
       val mockRepository = mock[ActiveSessionRepository]
 
-      when(mockRepository.set(any())).thenReturn(Future.successful(true))
+      when(mockRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       val application =
         applicationBuilder(userAnswers = None, affinityGroup = Organisation, enrolments = enrolments)
@@ -116,7 +112,7 @@ class UTRControllerSpec extends SpecBase {
 
       val mockRepository = mock[ActiveSessionRepository]
 
-      when(mockRepository.set(any())).thenReturn(Future.successful(true))
+      when(mockRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       val application =
         applicationBuilder(

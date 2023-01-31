@@ -19,24 +19,20 @@ package controllers.close.taxable
 import base.SpecBase
 import forms.YesNoFormProvider
 import models.UserAnswers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import models.errors.MongoError
 import org.scalatestplus.mockito.MockitoSugar
 import pages.close.taxable.DateLastAssetSharedOutYesNoPage
 import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.PlaybackRepository
 import views.html.close.taxable.DateLastAssetSharedOutYesNoView
-
-import scala.concurrent.Future
 
 class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("dateLastAssetSharedOutYesNo")
-  val utr: String = "1234567890"
-  lazy val dateLastAssetSharedOutYesNoRoute: String = routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
+  private val formProvider = new YesNoFormProvider()
+  private val form: Form[Boolean] = formProvider.withPrefix("dateLastAssetSharedOutYesNo")
+  private val utr: String = "1234567890"
+  private lazy val dateLastAssetSharedOutYesNoRoute: String = routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
 
   override val emptyUserAnswersForUtr: UserAnswers = super.emptyUserAnswersForUtr
 
@@ -62,7 +58,7 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswersForUtr.set(DateLastAssetSharedOutYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswersForUtr.set(DateLastAssetSharedOutYesNoPage, true).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -82,9 +78,7 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
 
     "redirect to the next page when YES is submitted" in {
 
-      val mockPlaybackRepository = mock[PlaybackRepository]
-
-      when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
@@ -103,9 +97,7 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
 
     "redirect to the next page when NO is submitted" in {
 
-      val mockPlaybackRepository = mock[PlaybackRepository]
-
-      when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
@@ -142,6 +134,24 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
         view(boundForm, utr)(request, messages).toString
 
       application.stop()
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
+
+      val request =
+        FakeRequest(POST, dateLastAssetSharedOutYesNoRoute)
+          .withFormUrlEncodedBody(("value", "true"))
+
+      val result = route(application, request).value
+
+        status(result) mustEqual INTERNAL_SERVER_ERROR
+        contentType(result) mustBe Some("text/html")
+
+        application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {

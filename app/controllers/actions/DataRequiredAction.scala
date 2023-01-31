@@ -25,9 +25,14 @@ import play.api.mvc.{ActionRefiner, Result}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.Session
 
+import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
-class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionContext) extends DataRequiredAction with Logging {
+@Singleton
+class DataRequiredAction @Inject()(implicit val executionContext: ExecutionContext)
+  extends ActionRefiner[OptionalDataRequest, DataRequest] with Logging {
+
+  private val className = getClass.getSimpleName
 
   override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
@@ -35,13 +40,11 @@ class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionC
 
     request.userAnswers match {
       case None =>
-        logger.warn(s"[DataRequiredActionImpl][refine] [Session ID: ${Session.id(hc)}] no user answers for session in mongo, cannot continue with session")
+        logger.warn(s"[$className][refine] [Session ID: ${Session.id(hc)}] no user answers for session in mongo, cannot continue with session")
         Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad)))
       case Some(data) =>
-        logger.info(s"[DataRequiredActionImpl][refine] [Session ID: ${Session.id(hc)}][UTR/URN: ${data.identifier}] user answers in request, continuing with journey")
+        logger.info(s"[$className][refine] [Session ID: ${Session.id(hc)}][UTR/URN: ${data.identifier}] user answers in request, continuing with journey")
         Future.successful(Right(DataRequest(request.request, data, request.user)))
     }
   }
 }
-
-trait DataRequiredAction extends ActionRefiner[OptionalDataRequest, DataRequest]
