@@ -84,7 +84,13 @@ class AgentDeclarationControllerSpec extends SpecBase {
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("agencyName", "Agency Name"), ("telephoneNumber", "01234567890"), ("crn", "123456"))
+        .withFormUrlEncodedBody(
+          ("firstName", "John"),
+          ("lastName", "Smith"),
+          ("agencyName", "Agency Name"),
+          ("telephoneNumber", "01234567890"),
+          ("crn", "123456")
+        )
 
       val result = route(application, request).value
 
@@ -136,7 +142,13 @@ class AgentDeclarationControllerSpec extends SpecBase {
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("agencyName", "Agency Name"), ("telephoneNumber", "01234567890"), ("crn", "123456"))
+        .withFormUrlEncodedBody(
+          ("firstName", "John"),
+          ("lastName", "Smith"),
+          ("agencyName", "Agency Name"),
+          ("telephoneNumber", "01234567890"),
+          ("crn", "123456")
+        )
 
       val result = route(application, request).value
 

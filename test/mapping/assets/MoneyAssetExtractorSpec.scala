@@ -40,8 +40,8 @@ class MoneyAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, assets)
 
-        extraction mustBe 'right
-        extraction.right.value.data mustBe ua.data
+        extraction mustBe Symbol("right")
+        extraction.value.data mustBe ua.data
 
       }
     }
@@ -59,7 +59,7 @@ class MoneyAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, businessAssets)
 
-        extraction.right.value.get(MoneyValuePage(0)).get mustBe value
+        extraction.value.get(MoneyValuePage(0)).get mustBe value
       }
     }
   }

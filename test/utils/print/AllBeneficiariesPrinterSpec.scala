@@ -31,12 +31,15 @@ import pages.beneficiaries.trust._
 import play.twirl.api.Html
 import utils.print.sections.beneficiaries.AllBeneficiariesPrinter
 import viewmodels.{AnswerRow, AnswerSection}
+import java.time.Month._
 
 import java.time.LocalDate
 
 class AllBeneficiariesPrinterSpec extends SpecBase {
 
   private val helper: AllBeneficiariesPrinter = injector.instanceOf[AllBeneficiariesPrinter]
+
+  private val (year1996, year2020, num2, num3) = (1996, 2020, 2, 3)
 
   "AllBeneficiariesPrinter" must {
 
@@ -82,12 +85,24 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("charityBeneficiaryName.checkYourAnswersLabel"), answer = Html("Red Cross Ltd."), changeUrl = None),
             AnswerRow(label = messages("charityBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel", charityBen1Name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("charityBeneficiaryShareOfIncome.checkYourAnswersLabel", charityBen1Name), answer = Html("98%"), changeUrl = None),
-            AnswerRow(label = messages("charityBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", charityBen1Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("charityBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", charityBen1Name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("charityBeneficiaryCountryOfResidence.checkYourAnswersLabel", charityBen1Name), answer = Html("France"), changeUrl = None),
+            AnswerRow(
+              label = messages("charityBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", charityBen1Name),
+              answer = Html("Yes"), changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("charityBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", charityBen1Name),
+              answer = Html("No"), changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("charityBeneficiaryCountryOfResidence.checkYourAnswersLabel", charityBen1Name),
+              answer = Html("France"), changeUrl = None
+            ),
             AnswerRow(label = messages("charityBeneficiaryAddressYesNo.checkYourAnswersLabel", charityBen1Name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("charityBeneficiaryAddressUKYesNo.checkYourAnswersLabel", charityBen1Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("charityBeneficiaryAddress.checkYourAnswersLabel", charityBen1Name), answer = Html("line1<br />line2<br />line3<br />line4<br />NE981ZZ"), changeUrl = None)
+            AnswerRow(
+              label = messages("charityBeneficiaryAddress.checkYourAnswersLabel", charityBen1Name),
+              answer = Html("line1<br />line2<br />line3<br />line4<br />NE981ZZ"), changeUrl = None
+            )
           ),
           sectionKey = None
         ),
@@ -96,9 +111,18 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
           rows = Seq(
             AnswerRow(label = messages("charityBeneficiaryName.checkYourAnswersLabel"), answer = Html("Bernardos"), changeUrl = None),
             AnswerRow(label = messages("charityBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel", charityBen2Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("charityBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", charityBen2Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("charityBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", charityBen2Name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("charityBeneficiaryCountryOfResidence.checkYourAnswersLabel", charityBen2Name), answer = Html("France"), changeUrl = None),
+            AnswerRow(
+              label = messages("charityBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", charityBen2Name),
+              answer = Html("Yes"), changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("charityBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", charityBen2Name),
+              answer = Html("No"), changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("charityBeneficiaryCountryOfResidence.checkYourAnswersLabel", charityBen2Name),
+              answer = Html("France"), changeUrl = None
+            ),
             AnswerRow(label = messages("charityBeneficiaryAddressYesNo.checkYourAnswersLabel", charityBen2Name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("charityBeneficiaryUtr.checkYourAnswersLabel", charityBen2Name), answer = Html("1234567890"), changeUrl = None)
           ),
@@ -114,7 +138,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
         .set(IndividualBeneficiaryRoleInCompanyPage(0), RoleInCompany.Director).success.value
         .set(IndividualBeneficiaryNamePage(0), FullName("Michael", None, "Finnegan")).success.value
         .set(IndividualBeneficiaryDateOfBirthYesNoPage(0), true).success.value
-        .set(IndividualBeneficiaryDateOfBirthPage(0), LocalDate.of(1996, 2, 3)).success.value
+        .set(IndividualBeneficiaryDateOfBirthPage(0), LocalDate.of(year1996, FEBRUARY, num3)).success.value
         .set(IndividualBeneficiaryIncomeYesNoPage(0), true).success.value
         .set(IndividualBeneficiaryIncomePage(0), "98").success.value
         .set(IndividualBeneficiaryCountryOfNationalityYesNoPage(0), true).success.value
@@ -158,7 +182,10 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
         .set(IndividualBeneficiaryAddressUKYesNoPage(2), true).success.value
         .set(IndividualBeneficiaryAddressPage(2), UKAddress("line 1", "line 2", None, None, "NE11NE")).success.value
         .set(IndividualBeneficiaryPassportIDCardYesNoPage(2), true).success.value
-        .set(IndividualBeneficiaryPassportIDCardPage(2), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), DetailsType.Combined)).success.value
+        .set(
+          IndividualBeneficiaryPassportIDCardPage(2),
+          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020,FEBRUARY,num2), DetailsType.Combined)
+        ).success.value
         .set(IndividualBeneficiaryVulnerableYesNoPage(2), false).success.value
         .set(IndividualBeneficiaryMentalCapacityYesNoPage(2), true).success.value
 
@@ -183,7 +210,10 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualBeneficiaryCountryOfNationalityUkYesNo.checkYourAnswersLabel", name1), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryCountryOfNationality.checkYourAnswersLabel", name1), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryNationalInsuranceYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryNationalInsuranceNumber.checkYourAnswersLabel", name1), answer = Html("JB 12 34 56 C"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualBeneficiaryNationalInsuranceNumber.checkYourAnswersLabel", name1),
+              answer = Html("JB 12 34 56 C"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", name1), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryCountryOfResidence.checkYourAnswersLabel", name1), answer = Html("France"), changeUrl = None),
@@ -216,7 +246,10 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
           headingKey = Some("Individual beneficiary 3"),
           rows = Seq(
             AnswerRow(label = messages("individualBeneficiaryName.checkYourAnswersLabel"), answer = Html(name3), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryRoleInCompany.checkYourAnswersLabel", name3), answer = Html("Not a director or employee"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualBeneficiaryRoleInCompany.checkYourAnswersLabel", name3),
+              answer = Html("Not a director or employee"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryIncomeYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryCountryOfNationalityYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
@@ -228,9 +261,15 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualBeneficiaryCountryOfResidence.checkYourAnswersLabel", name3), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryAddressYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryAddressUKYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryAddressUK.checkYourAnswersLabel", name3), answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualBeneficiaryAddressUK.checkYourAnswersLabel", name3),
+              answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualBeneficiaryPassportIDCardYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryPassportIDCard.checkYourAnswersLabel", name3), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualBeneficiaryPassportIDCard.checkYourAnswersLabel", name3),
+              answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryMentalCapacityYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None)
           ),
@@ -246,7 +285,7 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
         .set(IndividualBeneficiaryRoleInCompanyPage(0), RoleInCompany.Director).success.value
         .set(IndividualBeneficiaryNamePage(0), FullName("Michael", None, "Finnegan")).success.value
         .set(IndividualBeneficiaryDateOfBirthYesNoPage(0), true).success.value
-        .set(IndividualBeneficiaryDateOfBirthPage(0), LocalDate.of(1996, 2, 3)).success.value
+        .set(IndividualBeneficiaryDateOfBirthPage(0), LocalDate.of(year1996, FEBRUARY, num3)).success.value
         .set(IndividualBeneficiaryIncomeYesNoPage(0), true).success.value
         .set(IndividualBeneficiaryIncomePage(0), "98").success.value
         .set(IndividualBeneficiaryCountryOfNationalityYesNoPage(0), true).success.value
@@ -290,7 +329,10 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
         .set(IndividualBeneficiaryAddressUKYesNoPage(2), true).success.value
         .set(IndividualBeneficiaryAddressPage(2), UKAddress("line 1", "line 2", None, None, "NE11NE")).success.value
         .set(IndividualBeneficiaryPassportIDCardYesNoPage(2), true).success.value
-        .set(IndividualBeneficiaryPassportIDCardPage(2), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), DetailsType.Passport)).success.value
+        .set(
+          IndividualBeneficiaryPassportIDCardPage(2),
+          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020,FEBRUARY,num2), DetailsType.Passport)
+        ).success.value
         .set(IndividualBeneficiaryVulnerableYesNoPage(2), false).success.value
         .set(IndividualBeneficiaryMentalCapacityYesNoPage(2), true).success.value
 
@@ -315,7 +357,9 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualBeneficiaryCountryOfNationalityUkYesNo.checkYourAnswersLabel", name1), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryCountryOfNationality.checkYourAnswersLabel", name1), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryNationalInsuranceYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryNationalInsuranceNumber.checkYourAnswersLabel", name1), answer = Html("JB123456"), changeUrl = None),
+            AnswerRow(label = messages(
+              "individualBeneficiaryNationalInsuranceNumber.checkYourAnswersLabel", name1
+            ), answer = Html("JB123456"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", name1), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryCountryOfResidence.checkYourAnswersLabel", name1), answer = Html("France"), changeUrl = None),
@@ -348,7 +392,10 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
           headingKey = Some("Individual beneficiary 3"),
           rows = Seq(
             AnswerRow(label = messages("individualBeneficiaryName.checkYourAnswersLabel"), answer = Html(name3), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryRoleInCompany.checkYourAnswersLabel", name3), answer = Html("Not a director or employee"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualBeneficiaryRoleInCompany.checkYourAnswersLabel", name3),
+              answer = Html("Not a director or employee"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualBeneficiaryDateOfBirthYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryIncomeYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryCountryOfNationalityYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
@@ -360,9 +407,15 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualBeneficiaryCountryOfResidence.checkYourAnswersLabel", name3), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryAddressYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryAddressUKYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryAddressUK.checkYourAnswersLabel", name3), answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualBeneficiaryAddressUK.checkYourAnswersLabel", name3),
+              answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualBeneficiaryPassportIDCardYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualBeneficiaryPassportIDCard.checkYourAnswersLabel", name3), answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualBeneficiaryPassportIDCard.checkYourAnswersLabel", name3),
+              answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualBeneficiaryVulnerableYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualBeneficiaryMentalCapacityYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None)
           ),
@@ -414,12 +467,24 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("companyBeneficiaryName.checkYourAnswersLabel"), answer = Html("Amazon"), changeUrl = None),
             AnswerRow(label = messages("companyBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel", companyBen1Name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("companyBeneficiaryShareOfIncome.checkYourAnswersLabel", companyBen1Name), answer = Html("98%"), changeUrl = None),
-            AnswerRow(label = messages("companyBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", companyBen1Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("companyBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", companyBen1Name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("companyBeneficiaryCountryOfResidence.checkYourAnswersLabel", companyBen1Name), answer = Html("France"), changeUrl = None),
+            AnswerRow(
+              label = messages("companyBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", companyBen1Name),
+              answer = Html("Yes"), changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("companyBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", companyBen1Name),
+              answer = Html("No"), changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("companyBeneficiaryCountryOfResidence.checkYourAnswersLabel", companyBen1Name),
+              answer = Html("France"), changeUrl = None
+            ),
             AnswerRow(label = messages("companyBeneficiaryAddressYesNo.checkYourAnswersLabel", companyBen1Name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("companyBeneficiaryAddressUKYesNo.checkYourAnswersLabel", companyBen1Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("companyBeneficiaryAddress.checkYourAnswersLabel", companyBen1Name), answer = Html("line1<br />line2<br />line3<br />line4<br />NE981ZZ"), changeUrl = None)
+            AnswerRow(
+              label = messages("companyBeneficiaryAddress.checkYourAnswersLabel", companyBen1Name),
+              answer = Html("line1<br />line2<br />line3<br />line4<br />NE981ZZ"), changeUrl = None
+            )
           ),
           sectionKey = None
         ),
@@ -428,9 +493,18 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
           rows = Seq(
             AnswerRow(label = messages("companyBeneficiaryName.checkYourAnswersLabel", companyBen2Name), answer = Html("Apple"), changeUrl = None),
             AnswerRow(label = messages("companyBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel", companyBen2Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("companyBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", companyBen2Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("companyBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", companyBen2Name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("companyBeneficiaryCountryOfResidence.checkYourAnswersLabel", companyBen2Name), answer = Html("France"), changeUrl = None),
+            AnswerRow(
+              label = messages("companyBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", companyBen2Name),
+              answer = Html("Yes"), changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("companyBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", companyBen2Name),
+              answer = Html("No"), changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("companyBeneficiaryCountryOfResidence.checkYourAnswersLabel", companyBen2Name),
+              answer = Html("France"), changeUrl = None
+            ),
             AnswerRow(label = messages("companyBeneficiaryAddressYesNo.checkYourAnswersLabel", companyBen2Name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("companyBeneficiaryUtr.checkYourAnswersLabel", companyBen2Name), answer = Html("1234567890"), changeUrl = None)
           ),
@@ -483,11 +557,17 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("trustBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel", trustBen1Name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("trustBeneficiaryShareOfIncome.checkYourAnswersLabel",trustBen1Name), answer = Html("98%"), changeUrl = None),
             AnswerRow(label = messages("trustBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", trustBen1Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("trustBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", trustBen1Name), answer = Html("No"), changeUrl = None),
+            AnswerRow(
+              label = messages("trustBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", trustBen1Name),
+              answer = Html("No"), changeUrl = None
+            ),
             AnswerRow(label = messages("trustBeneficiaryCountryOfResidence.checkYourAnswersLabel", trustBen1Name), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("trustBeneficiaryAddressYesNo.checkYourAnswersLabel",trustBen1Name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("trustBeneficiaryAddressUKYesNo.checkYourAnswersLabel",trustBen1Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("trustBeneficiaryAddress.checkYourAnswersLabel",trustBen1Name), answer = Html("line1<br />line2<br />line3<br />line4<br />NE981ZZ"), changeUrl = None)
+            AnswerRow(
+              label = messages("trustBeneficiaryAddress.checkYourAnswersLabel",trustBen1Name),
+              answer = Html("line1<br />line2<br />line3<br />line4<br />NE981ZZ"), changeUrl = None
+            )
           ),
           sectionKey = None
         ),
@@ -497,7 +577,10 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("trustBeneficiaryName.checkYourAnswersLabel"), answer = Html("Grandchildren of Adam"), changeUrl = None),
             AnswerRow(label = messages("trustBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel",trustBen2Name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("trustBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", trustBen2Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("trustBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", trustBen2Name), answer = Html("No"), changeUrl = None),
+            AnswerRow(
+              label = messages("trustBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", trustBen2Name),
+              answer = Html("No"), changeUrl = None
+            ),
             AnswerRow(label = messages("trustBeneficiaryCountryOfResidence.checkYourAnswersLabel", trustBen2Name), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("trustBeneficiaryAddressYesNo.checkYourAnswersLabel",trustBen2Name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("trustBeneficiaryUtr.checkYourAnswersLabel",trustBen2Name), answer = Html("1234567890"), changeUrl = None)
@@ -553,13 +636,22 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
           rows = Seq(
             AnswerRow(label = messages("largeBeneficiaryName.checkYourAnswersLabel"), answer = Html("Amazon"), changeUrl = None),
             AnswerRow(label = messages("trustBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", largeBen1Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("trustBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", largeBen1Name), answer = Html("No"), changeUrl = None),
+            AnswerRow(
+              label = messages("trustBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", largeBen1Name),
+              answer = Html("No"), changeUrl = None
+            ),
             AnswerRow(label = messages("trustBeneficiaryCountryOfResidence.checkYourAnswersLabel", largeBen1Name), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("largeBeneficiaryAddressYesNo.checkYourAnswersLabel", largeBen1Name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("largeBeneficiaryAddressUKYesNo.checkYourAnswersLabel", largeBen1Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("largeBeneficiaryAddress.checkYourAnswersLabel", largeBen1Name), answer = Html("line1<br />line2<br />line3<br />line4<br />NE981ZZ"), changeUrl = None),
+            AnswerRow(
+              label = messages("largeBeneficiaryAddress.checkYourAnswersLabel", largeBen1Name),
+              answer = Html("line1<br />line2<br />line3<br />line4<br />NE981ZZ"), changeUrl = None
+            ),
             AnswerRow(label = messages("largeBeneficiaryDescription.checkYourAnswersLabel", largeBen1Name), answer = Html("Description"), changeUrl = None),
-            AnswerRow(label = messages("largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel", largeBen1Name), answer = Html("1 to 100"), changeUrl = None)
+            AnswerRow(
+              label = messages("largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel", largeBen1Name),
+              answer = Html("1 to 100"), changeUrl = None
+            )
           ),
           sectionKey = None
         ),
@@ -568,12 +660,18 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
           rows = Seq(
             AnswerRow(label = messages("largeBeneficiaryName.checkYourAnswersLabel", largeBen2Name), answer = Html("Apple"), changeUrl = None),
             AnswerRow(label = messages("trustBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", largeBen2Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("trustBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", largeBen2Name), answer = Html("No"), changeUrl = None),
+            AnswerRow(
+              label = messages("trustBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", largeBen2Name),
+              answer = Html("No"), changeUrl = None
+            ),
             AnswerRow(label = messages("trustBeneficiaryCountryOfResidence.checkYourAnswersLabel", largeBen2Name), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("largeBeneficiaryAddressYesNo.checkYourAnswersLabel", largeBen2Name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("largeBeneficiaryUtr.checkYourAnswersLabel", largeBen2Name), answer = Html("1234567890"), changeUrl = None),
             AnswerRow(label = messages("largeBeneficiaryDescription.checkYourAnswersLabel", largeBen2Name), answer = Html("Description"), changeUrl = None),
-            AnswerRow(label = messages("largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel", largeBen2Name), answer = Html("1 to 100"), changeUrl = None)
+            AnswerRow(
+              label = messages("largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel", largeBen2Name),
+              answer = Html("1 to 100"), changeUrl = None
+            )
           ),
           sectionKey = None
         )
@@ -623,11 +721,17 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("otherBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel", otherBen1Name), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("otherBeneficiaryShareOfIncome.checkYourAnswersLabel",otherBen1Name), answer = Html("98%"), changeUrl = None),
             AnswerRow(label = messages("otherBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", otherBen1Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", otherBen1Name), answer = Html("No"), changeUrl = None),
+            AnswerRow(
+              label = messages("otherBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", otherBen1Name),
+              answer = Html("No"), changeUrl = None
+            ),
             AnswerRow(label = messages("otherBeneficiaryCountryOfResidence.checkYourAnswersLabel", otherBen1Name), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("otherBeneficiaryAddressYesNo.checkYourAnswersLabel",otherBen1Name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("otherBeneficiaryAddressUKYesNo.checkYourAnswersLabel",otherBen1Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherBeneficiaryAddress.checkYourAnswersLabel",otherBen1Name), answer = Html("line1<br />line2<br />line3<br />line4<br />NE981ZZ"), changeUrl = None)
+            AnswerRow(
+              label = messages("otherBeneficiaryAddress.checkYourAnswersLabel",otherBen1Name),
+              answer = Html("line1<br />line2<br />line3<br />line4<br />NE981ZZ"), changeUrl = None
+            )
           ),
           sectionKey = None
         ),
@@ -637,7 +741,10 @@ class AllBeneficiariesPrinterSpec extends SpecBase {
             AnswerRow(label = messages("otherBeneficiaryDescription.checkYourAnswersLabel"), answer = Html("Cat"), changeUrl = None),
             AnswerRow(label = messages("otherBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel",otherBen2Name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("otherBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel", otherBen2Name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", otherBen2Name), answer = Html("No"), changeUrl = None),
+            AnswerRow(
+              label = messages("otherBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel", otherBen2Name),
+              answer = Html("No"), changeUrl = None
+            ),
             AnswerRow(label = messages("otherBeneficiaryCountryOfResidence.checkYourAnswersLabel", otherBen2Name), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("otherBeneficiaryAddressYesNo.checkYourAnswersLabel",otherBen2Name), answer = Html("No"), changeUrl = None)
           ),

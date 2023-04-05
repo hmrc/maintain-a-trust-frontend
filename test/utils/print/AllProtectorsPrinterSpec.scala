@@ -26,12 +26,16 @@ import pages.protectors.individual._
 import play.twirl.api.Html
 import utils.print.sections.protectors.AllProtectorsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
+import java.time.Month._
 
 import java.time.LocalDate
 
 class AllProtectorsPrinterSpec extends SpecBase {
 
   private val helper: AllProtectorsPrinter = injector.instanceOf[AllProtectorsPrinter]
+
+  private val (year1947, year1996, year2020) = (1947, 1996, 2020)
+  private val (num2, num18) = (2, 18)
 
   "AllProtectorsPrinter" must {
 
@@ -54,7 +58,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(ProtectorIndividualOrBusinessPage(1), IndividualOrBusiness.Individual).success.value
         .set(IndividualProtectorNamePage(1), FullName("John", None, "Doe")).success.value
         .set(IndividualProtectorDateOfBirthYesNoPage(1), true).success.value
-        .set(IndividualProtectorDateOfBirthPage(1), LocalDate.of(1996, 2, 3)).success.value
+        .set(IndividualProtectorDateOfBirthPage(1), LocalDate.of(year1996, 2, 3)).success.value
         .set(IndividualProtectorCountryOfNationalityYesNoPage(1), true).success.value
         .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(1), false).success.value
         .set(IndividualProtectorCountryOfNationalityPage(1), "FR").success.value
@@ -81,7 +85,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(ProtectorIndividualOrBusinessPage(3), IndividualOrBusiness.Individual).success.value
         .set(IndividualProtectorNamePage(3), FullName("Paul", None, "Chuckle")).success.value
         .set(IndividualProtectorDateOfBirthYesNoPage(3), true).success.value
-        .set(IndividualProtectorDateOfBirthPage(3), LocalDate.of(1947, 10, 18)).success.value
+        .set(IndividualProtectorDateOfBirthPage(3), LocalDate.of(year1947, OCTOBER, num18)).success.value
         .set(IndividualProtectorCountryOfNationalityYesNoPage(3), true).success.value
         .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(3), false).success.value
         .set(IndividualProtectorCountryOfNationalityPage(3), "FR").success.value
@@ -91,7 +95,10 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(IndividualProtectorAddressYesNoPage(3), true).success.value
         .set(IndividualProtectorAddressPage(3), UKAddress("line 1", "line 2", None, None, "DH11DH")).success.value
         .set(IndividualProtectorPassportIDCardYesNoPage(3), true).success.value
-        .set(IndividualProtectorPassportIDCardPage(3), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), DetailsType.Combined)).success.value
+        .set(
+          IndividualProtectorPassportIDCardPage(3),
+          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020,FEBRUARY,num2), DetailsType.Combined)
+        ).success.value
         .set(IndividualProtectorMentalCapacityYesNoPage(3), true).success.value
 
       val result = helper.entities(answers)
@@ -149,7 +156,10 @@ class AllProtectorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualProtectorCountryOfResidenceUkYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorCountryOfResidence.checkYourAnswersLabel", name3), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorAddressYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualProtectorAddress.checkYourAnswersLabel", name3), answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualProtectorAddress.checkYourAnswersLabel", name3),
+              answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualProtectorPassportIDCardYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorMentalCapacityYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None)
           ),
@@ -168,9 +178,15 @@ class AllProtectorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualProtectorCountryOfResidenceUkYesNo.checkYourAnswersLabel", name4), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorCountryOfResidence.checkYourAnswersLabel", name4), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorAddressYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualProtectorAddress.checkYourAnswersLabel", name4), answer = Html("line 1<br />line 2<br />DH11DH"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualProtectorAddress.checkYourAnswersLabel", name4),
+              answer = Html("line 1<br />line 2<br />DH11DH"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualProtectorPassportIDCardYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualProtectorPassportIDCard.checkYourAnswersLabel", name4), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualProtectorPassportIDCard.checkYourAnswersLabel", name4),
+              answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualProtectorMentalCapacityYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None)
           ),
           sectionKey = None
@@ -188,7 +204,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(BusinessProtectorCountryOfResidenceYesNoPage(0), true).success.value
         .set(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(0), false).success.value
         .set(BusinessProtectorCountryOfResidencePage(0), "FR").success.value
-        
+
         .set(ProtectorIndividualOrBusinessPage(1), IndividualOrBusiness.Business).success.value
         .set(BusinessProtectorNamePage(1), "Red Cross Ltd.").success.value
         .set(BusinessProtectorUtrYesNoPage(1), false).success.value
@@ -237,7 +253,10 @@ class AllProtectorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("companyProtectorCountryOfResidence.checkYourAnswersLabel", company2), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("companyProtectorAddressYesNo.checkYourAnswersLabel", company2), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("companyProtectorAddressUkYesNo.checkYourAnswersLabel", company2), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("companyProtectorAddress.checkYourAnswersLabel", company2), answer = Html("line 1<br />line 2<br />Germany"), changeUrl = None)
+            AnswerRow(
+              label = messages("companyProtectorAddress.checkYourAnswersLabel", company2),
+              answer = Html("line 1<br />line 2<br />Germany"), changeUrl = None
+            )
           ),
           sectionKey = None
         ),
@@ -262,7 +281,7 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(ProtectorIndividualOrBusinessPage(0), IndividualOrBusiness.Individual).success.value
         .set(IndividualProtectorNamePage(0), FullName("Paul", None, "Chuckle")).success.value
         .set(IndividualProtectorDateOfBirthYesNoPage(0), true).success.value
-        .set(IndividualProtectorDateOfBirthPage(0), LocalDate.of(1947, 10, 18)).success.value
+        .set(IndividualProtectorDateOfBirthPage(0), LocalDate.of(year1947, OCTOBER, num18)).success.value
         .set(IndividualProtectorCountryOfNationalityYesNoPage(0), true).success.value
         .set(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0), false).success.value
         .set(IndividualProtectorCountryOfNationalityPage(0), "FR").success.value
@@ -272,7 +291,10 @@ class AllProtectorsPrinterSpec extends SpecBase {
         .set(IndividualProtectorAddressYesNoPage(0), true).success.value
         .set(IndividualProtectorAddressPage(0), UKAddress("line 1", "line 2", None, None, "DH11DH")).success.value
         .set(IndividualProtectorPassportIDCardYesNoPage(0), true).success.value
-        .set(IndividualProtectorPassportIDCardPage(0), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2), DetailsType.Passport)).success.value
+        .set(
+          IndividualProtectorPassportIDCardPage(0),
+          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020,FEBRUARY,num2), DetailsType.Passport)
+        ).success.value
         .set(IndividualProtectorMentalCapacityYesNoPage(0), true).success.value
 
         .set(ProtectorIndividualOrBusinessPage(1), IndividualOrBusiness.Business).success.value
@@ -303,9 +325,15 @@ class AllProtectorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("individualProtectorCountryOfResidenceUkYesNo.checkYourAnswersLabel", name1), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorCountryOfResidence.checkYourAnswersLabel", name1), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("individualProtectorAddressYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualProtectorAddress.checkYourAnswersLabel", name1), answer = Html("line 1<br />line 2<br />DH11DH"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualProtectorAddress.checkYourAnswersLabel", name1),
+              answer = Html("line 1<br />line 2<br />DH11DH"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualProtectorPassportIDCardYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("individualProtectorPassportIDCard.checkYourAnswersLabel", name1), answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(
+              label = messages("individualProtectorPassportIDCard.checkYourAnswersLabel", name1),
+              answer = Html("Germany<br />KSJDFKSDHF6456545147852369QWER<br />2 February 2020"), changeUrl = None
+            ),
             AnswerRow(label = messages("individualProtectorMentalCapacityYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None)
           ),
           sectionKey = None

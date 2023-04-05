@@ -373,7 +373,11 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(Future.successful(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(Future.successful(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = Some(false))))
+                .thenReturn(
+                  Future.successful(
+                    TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = Some(false))
+                  )
+                )
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
                 .thenReturn(Future.successful(Processed(getTrust, "9873459837459837")))

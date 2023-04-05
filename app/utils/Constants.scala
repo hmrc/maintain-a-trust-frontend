@@ -18,4 +18,5 @@ package utils
 
 object Constants {
   final val GB = "GB"
+  final val DE = "DE"
 }

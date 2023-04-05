@@ -47,8 +47,8 @@ class OtherAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, assets)
 
-        extraction mustBe 'right
-        extraction.right.value.data mustBe ua.data
+        extraction mustBe Symbol("right")
+        extraction.value.data mustBe ua.data
 
       }
 
@@ -69,8 +69,8 @@ class OtherAssetExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = assetExtractor.extract(ua, businessAssets)
 
-          extraction.right.value.get(OtherAssetDescriptionPage(0)).get mustBe "Other 1"
-          extraction.right.value.get(OtherAssetValuePage(0)).get mustBe 100
+          extraction.value.get(OtherAssetDescriptionPage(0)).get mustBe "Other 1"
+          extraction.value.get(OtherAssetValuePage(0)).get mustBe 100
         }
 
         "with full data must return user answers updated" in {
@@ -80,16 +80,16 @@ class OtherAssetExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = assetExtractor.extract(ua, otherAssets)
 
-          extraction mustBe 'right
+          extraction mustBe Symbol("right")
 
-          extraction.right.value.get(OtherAssetDescriptionPage(0)).get mustBe "Other 0"
-          extraction.right.value.get(OtherAssetValuePage(0)).get mustBe 100
+          extraction.value.get(OtherAssetDescriptionPage(0)).get mustBe "Other 0"
+          extraction.value.get(OtherAssetValuePage(0)).get mustBe 100
 
-          extraction.right.value.get(OtherAssetDescriptionPage(1)).get mustBe "Other 1"
-          extraction.right.value.get(OtherAssetValuePage(1)).get mustBe 100
+          extraction.value.get(OtherAssetDescriptionPage(1)).get mustBe "Other 1"
+          extraction.value.get(OtherAssetValuePage(1)).get mustBe 100
 
-          extraction.right.value.get(OtherAssetDescriptionPage(2)).get mustBe "Other 2"
-          extraction.right.value.get(OtherAssetValuePage(2)).get mustBe 100
+          extraction.value.get(OtherAssetDescriptionPage(2)).get mustBe "Other 2"
+          extraction.value.get(OtherAssetValuePage(2)).get mustBe 100
         }
       }
 

@@ -31,7 +31,6 @@ import scala.language.implicitConversions
 trait UserAnswersWriting extends TryValues with ModelGenerators {
   class SettableWriterOps[T : Writes](s: Settable[T])(implicit reads: Reads[T]) {
     def is(value: T): State[UserAnswers, Unit] = writeUA(s, value)
-    def :=(value: T): State[UserAnswers, Unit] = is(value)
     def withArbitraryValue(implicit arb: Arbitrary[T]): State[UserAnswers, Unit] = writeArbUA(s)
     def isRemoved: State[UserAnswers, Unit] = remove(s)
   }

@@ -47,7 +47,7 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
   lazy val onPageLoad: String = routes.WhatIsNextController.onPageLoad().url
 
   lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
-  
+
   val mockTrustsConnector: TrustConnector = mock[TrustConnector]
   val mockMaintainATrustService: MaintainATrustService = mock[MaintainATrustService]
 

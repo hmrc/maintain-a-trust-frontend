@@ -32,6 +32,7 @@ import pages.assets.other._
 import pages.assets.partnership.{PartnershipDescriptionPage, PartnershipStartDatePage}
 import pages.assets.propertyOrLand._
 import pages.assets.shares._
+import java.time.Month.NOVEMBER
 
 import java.time.LocalDate
 
@@ -39,6 +40,8 @@ class AssetsExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
   val assetExtractor: AssetsExtractor = injector.instanceOf[AssetsExtractor]
+
+  private val (num26, num100, num101, num1000, num2000, num4000, year2019) = (26, 100L, 101, 1000L, 2000L, 4000L, 2019)
 
   "Asset Extractor" - {
 
@@ -51,8 +54,8 @@ class AssetsExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, Some(assets))
 
-        extraction mustBe 'right
-        extraction.right.value.data mustBe ua.data
+        extraction mustBe Symbol("right")
+        extraction.value.data mustBe ua.data
 
       }
     }
@@ -62,18 +65,18 @@ class AssetsExtractorSpec extends AnyFreeSpec with Matchers
 
         val assets = DisplayTrustAssets(
           monetary = List(AssetMonetaryAmount(
-            assetMonetaryAmount = 4000L
+            assetMonetaryAmount = num4000
           )),
           propertyOrLand = List(PropertyLandType(
             buildingLandName = None,
             address = Some(AddressType(s"line1", "line2", None, None, Some("NE1 1AA"), "GB")),
-            valueFull = 2000L,
-            valuePrevious = Some(1000L)
+            valueFull = num2000,
+            valuePrevious = Some(num1000)
           ),
             PropertyLandType(
               buildingLandName = Some(s"building land name 1"),
               address = None,
-              valueFull = 2000L,
+              valueFull = num2000,
               valuePrevious = None
             )
           ),
@@ -83,7 +86,7 @@ class AssetsExtractorSpec extends AnyFreeSpec with Matchers
             utr = None,
             shareClassDisplay = Some(Other),
             typeOfShare = Some(Quoted),
-            value = Some(100L),
+            value = Some(num100),
             isPortfolio = Some(true)
           ),
             DisplaySharesType(
@@ -92,7 +95,7 @@ class AssetsExtractorSpec extends AnyFreeSpec with Matchers
               utr = None,
               shareClassDisplay = Some(Ordinary),
               typeOfShare = Some(Quoted),
-              value = Some(100L),
+              value = Some(num100),
               isPortfolio = Some(false)
             )
           ),
@@ -101,7 +104,7 @@ class AssetsExtractorSpec extends AnyFreeSpec with Matchers
             utr = None,
             businessDescription = "Business Asset Description",
             address = Some(AddressType(s"line1", "line2", None, None, None, "FR")),
-            businessValue = Some(101)
+            businessValue = Some(num101)
           )),
           partnerShip = List(DisplayTrustPartnershipType(
             utr = None,
@@ -110,7 +113,7 @@ class AssetsExtractorSpec extends AnyFreeSpec with Matchers
           )),
           other = List(DisplayOtherAssetType(
             description = "Other 1",
-            value = Some(100L)
+            value = Some(num100)
           )),
           nonEEABusiness = List(DisplayNonEEABusinessType(
             lineNo = Some("1"),
@@ -126,54 +129,54 @@ class AssetsExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, Some(assets))
 
-        extraction.right.value.get(MoneyValuePage(0)).get mustBe 4000L
+        extraction.value.get(MoneyValuePage(0)).get mustBe 4000L
 
-        extraction.right.value.get(PropertyOrLandDescriptionPage(0)) mustNot be(defined)
-        extraction.right.value.get(PropertyOrLandAddressYesNoPage(0)).get mustBe true
-        extraction.right.value.get(PropertyOrLandAddressUkYesNoPage(0)).get mustBe true
-        extraction.right.value.get(PropertyOrLandAddressPage(0)).get mustBe UKAddress("line1", "line2", None, None, "NE1 1AA")
-        extraction.right.value.get(PropertyOrLandTotalValuePage(0)).get mustBe 2000L
-        extraction.right.value.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe false
-        extraction.right.value.get(PropertyLandValueTrustPage(0)).get mustBe 1000L
+        extraction.value.get(PropertyOrLandDescriptionPage(0)) mustNot be(defined)
+        extraction.value.get(PropertyOrLandAddressYesNoPage(0)).get mustBe true
+        extraction.value.get(PropertyOrLandAddressUkYesNoPage(0)).get mustBe true
+        extraction.value.get(PropertyOrLandAddressPage(0)).get mustBe UKAddress("line1", "line2", None, None, "NE1 1AA")
+        extraction.value.get(PropertyOrLandTotalValuePage(0)).get mustBe 2000L
+        extraction.value.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe false
+        extraction.value.get(PropertyLandValueTrustPage(0)).get mustBe 1000L
 
-        extraction.right.value.get(PropertyOrLandDescriptionPage(1)).get mustBe "building land name 1"
-        extraction.right.value.get(PropertyOrLandAddressYesNoPage(1)).get mustBe false
-        extraction.right.value.get(PropertyOrLandAddressPage(1)) mustNot be(defined)
-        extraction.right.value.get(PropertyOrLandTotalValuePage(1)).get mustBe 2000L
-        extraction.right.value.get(TrustOwnAllThePropertyOrLandPage(1)).get mustBe true
-        extraction.right.value.get(PropertyLandValueTrustPage(1)) mustNot be(defined)
+        extraction.value.get(PropertyOrLandDescriptionPage(1)).get mustBe "building land name 1"
+        extraction.value.get(PropertyOrLandAddressYesNoPage(1)).get mustBe false
+        extraction.value.get(PropertyOrLandAddressPage(1)) mustNot be(defined)
+        extraction.value.get(PropertyOrLandTotalValuePage(1)).get mustBe 2000L
+        extraction.value.get(TrustOwnAllThePropertyOrLandPage(1)).get mustBe true
+        extraction.value.get(PropertyLandValueTrustPage(1)) mustNot be(defined)
 
-        extraction.right.value.get(SharesInAPortfolioPage(0)).get mustBe true
-        extraction.right.value.get(ShareNamePage(0)).get mustBe "Portfolio Name"
-        extraction.right.value.get(ShareOnStockExchangePage(0)).get mustBe true
-        extraction.right.value.get(ShareQuantityInTrustPage(0)).get mustBe "1000"
-        extraction.right.value.get(ShareValueInTrustPage(0)).get mustBe 100L
-        extraction.right.value.get(ShareClassPage(0)) mustNot be(defined)
+        extraction.value.get(SharesInAPortfolioPage(0)).get mustBe true
+        extraction.value.get(ShareNamePage(0)).get mustBe "Portfolio Name"
+        extraction.value.get(ShareOnStockExchangePage(0)).get mustBe true
+        extraction.value.get(ShareQuantityInTrustPage(0)).get mustBe "1000"
+        extraction.value.get(ShareValueInTrustPage(0)).get mustBe 100L
+        extraction.value.get(ShareClassPage(0)) mustNot be(defined)
 
-        extraction.right.value.get(SharesInAPortfolioPage(1)).get mustBe false
-        extraction.right.value.get(ShareNamePage(1)).get mustBe "Share Name"
-        extraction.right.value.get(ShareOnStockExchangePage(1)).get mustBe true
-        extraction.right.value.get(ShareClassPage(1)).get mustBe Ordinary
-        extraction.right.value.get(ShareQuantityInTrustPage(1)).get mustBe "1000"
-        extraction.right.value.get(ShareValueInTrustPage(1)).get mustBe 100L
+        extraction.value.get(SharesInAPortfolioPage(1)).get mustBe false
+        extraction.value.get(ShareNamePage(1)).get mustBe "Share Name"
+        extraction.value.get(ShareOnStockExchangePage(1)).get mustBe true
+        extraction.value.get(ShareClassPage(1)).get mustBe Ordinary
+        extraction.value.get(ShareQuantityInTrustPage(1)).get mustBe "1000"
+        extraction.value.get(ShareValueInTrustPage(1)).get mustBe 100L
 
-        extraction.right.value.get(BusinessNamePage(0)).get mustBe "Business 1"
-        extraction.right.value.get(BusinessDescriptionPage(0)).get mustBe "Business Asset Description"
-        extraction.right.value.get(BusinessAddressPage(0)).get mustBe InternationalAddress("line1", "line2", None, "FR")
-        extraction.right.value.get(BusinessValuePage(0)).get mustBe 101
+        extraction.value.get(BusinessNamePage(0)).get mustBe "Business 1"
+        extraction.value.get(BusinessDescriptionPage(0)).get mustBe "Business Asset Description"
+        extraction.value.get(BusinessAddressPage(0)).get mustBe InternationalAddress("line1", "line2", None, "FR")
+        extraction.value.get(BusinessValuePage(0)).get mustBe 101
 
-        extraction.right.value.get(PartnershipDescriptionPage(0)).get mustBe "Partnership 1"
-        extraction.right.value.get(PartnershipStartDatePage(0)).get mustBe LocalDate.of(2019, 11, 26)
+        extraction.value.get(PartnershipDescriptionPage(0)).get mustBe "Partnership 1"
+        extraction.value.get(PartnershipStartDatePage(0)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
 
-        extraction.right.value.get(OtherAssetDescriptionPage(0)).get mustBe "Other 1"
-        extraction.right.value.get(OtherAssetValuePage(0)).get mustBe 100
+        extraction.value.get(OtherAssetDescriptionPage(0)).get mustBe "Other 1"
+        extraction.value.get(OtherAssetValuePage(0)).get mustBe 100
 
-        extraction.right.value.get(NonEeaBusinessLineNoPage(0)).get mustBe "1"
-        extraction.right.value.get(NonEeaBusinessNamePage(0)).get mustBe "Non EEA Business 1"
-        extraction.right.value.get(NonEeaBusinessAddressPage(0)).get mustBe InternationalAddress("line 1", "line2", None, "FR")
-        extraction.right.value.get(NonEeaBusinessGoverningCountryPage(0)).get mustBe "FR"
-        extraction.right.value.get(NonEeaBusinessStartDatePage(0)).get mustBe LocalDate.of(2019, 11, 26)
-        extraction.right.value.get(NonEeaBusinessEndDatePage(0)) mustNot be(defined)
+        extraction.value.get(NonEeaBusinessLineNoPage(0)).get mustBe "1"
+        extraction.value.get(NonEeaBusinessNamePage(0)).get mustBe "Non EEA Business 1"
+        extraction.value.get(NonEeaBusinessAddressPage(0)).get mustBe InternationalAddress("line 1", "line2", None, "FR")
+        extraction.value.get(NonEeaBusinessGoverningCountryPage(0)).get mustBe "FR"
+        extraction.value.get(NonEeaBusinessStartDatePage(0)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
+        extraction.value.get(NonEeaBusinessEndDatePage(0)) mustNot be(defined)
 
       }
     }

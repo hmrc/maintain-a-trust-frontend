@@ -28,6 +28,7 @@ import pages.protectors._
 import pages.protectors.business._
 import pages.protectors.individual._
 import utils.Constants.GB
+import java.time.Month.FEBRUARY
 
 import java.time.LocalDate
 
@@ -36,6 +37,8 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
   val protectorExtractor : ProtectorExtractor =
     injector.instanceOf[ProtectorExtractor]
+
+  private val (year1970, year1980) = (1970, 1980)
 
   "Protector Extractor" - {
 
@@ -49,8 +52,8 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = protectorExtractor.extract(ua, Some(protector))
 
-        extraction mustBe 'right
-        extraction.right.value.data mustBe ua.data
+        extraction mustBe Symbol("right")
+        extraction.value.data mustBe ua.data
       }
 
       "must return right given no protector" in {
@@ -59,8 +62,8 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = protectorExtractor.extract(ua, None)
 
-        extraction mustBe 'right
-        extraction.right.value.data mustBe ua.data
+        extraction mustBe Symbol("right")
+        extraction.value.data mustBe ua.data
       }
     }
 
@@ -115,45 +118,45 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-          extraction.right.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(IndividualProtectorDateOfBirthYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorDateOfBirthPage(0)).get mustBe LocalDate.of(1970, 2, 1)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfResidencePage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorNINOYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorNINOPage(0)).get mustBe "1234567890"
-          extraction.right.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(IndividualProtectorDateOfBirthYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorDateOfBirthPage(0)).get mustBe LocalDate.of(year1970, FEBRUARY, 1)
+          extraction.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfNationalityPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMentalCapacityYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorNINOYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorNINOPage(0)).get mustBe "1234567890"
+          extraction.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Individual
-          extraction.right.value.get(IndividualProtectorNamePage(1)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(IndividualProtectorDateOfBirthYesNoPage(1)).get mustBe true
-          extraction.right.value.get(IndividualProtectorDateOfBirthPage(1)).get mustBe LocalDate.of(1980, 2, 1)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfResidencePage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorNINOYesNoPage(1)).get mustBe true
-          extraction.right.value.get(IndividualProtectorNINOPage(1)).get mustBe "0987654321"
-          extraction.right.value.get(IndividualProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
-          extraction.right.value.get(IndividualProtectorPassportIDCardYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorPassportIDCardPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressUKYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Individual
+          extraction.value.get(IndividualProtectorNamePage(1)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(IndividualProtectorDateOfBirthYesNoPage(1)).get mustBe true
+          extraction.value.get(IndividualProtectorDateOfBirthPage(1)).get mustBe LocalDate.of(year1980, FEBRUARY, 1)
+          extraction.value.get(IndividualProtectorCountryOfNationalityYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfNationalityPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfResidenceYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfResidencePage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMentalCapacityYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorNINOYesNoPage(1)).get mustBe true
+          extraction.value.get(IndividualProtectorNINOPage(1)).get mustBe "0987654321"
+          extraction.value.get(IndividualProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
+          extraction.value.get(IndividualProtectorPassportIDCardYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorPassportIDCardPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
         }
       }
 
@@ -198,31 +201,31 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
-          extraction.right.value.get(BusinessProtectorNamePage(0)).get mustBe "Business 1"
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorCountryOfResidencePage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(BusinessProtectorUtrYesNoPage(0)).get mustBe true
-          extraction.right.value.get(BusinessProtectorUtrPage(0)).get mustBe "1234567890"
-          extraction.right.value.get(BusinessProtectorAddressYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
+          extraction.value.get(BusinessProtectorNamePage(0)).get mustBe "Business 1"
+          extraction.value.get(BusinessProtectorCountryOfResidenceYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(BusinessProtectorUtrYesNoPage(0)).get mustBe true
+          extraction.value.get(BusinessProtectorUtrPage(0)).get mustBe "1234567890"
+          extraction.value.get(BusinessProtectorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
-          extraction.right.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 2"
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorCountryOfResidencePage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
-          extraction.right.value.get(BusinessProtectorUtrYesNoPage(1)).get mustBe true
-          extraction.right.value.get(BusinessProtectorUtrPage(1)).get mustBe "0987654321"
-          extraction.right.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
+          extraction.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 2"
+          extraction.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorCountryOfResidencePage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
+          extraction.value.get(BusinessProtectorUtrYesNoPage(1)).get mustBe true
+          extraction.value.get(BusinessProtectorUtrPage(1)).get mustBe "0987654321"
+          extraction.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
         }
       }
 
@@ -272,36 +275,36 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-          extraction.right.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfResidencePage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorNINOYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorNINOPage(0)).get mustBe "1234567890"
-          extraction.right.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfNationalityPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfResidencePage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMentalCapacityYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorNINOYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorNINOPage(0)).get mustBe "1234567890"
+          extraction.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
-          extraction.right.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 1"
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorCountryOfResidencePage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(BusinessProtectorUtrYesNoPage(1)).get mustBe true
-          extraction.right.value.get(BusinessProtectorUtrPage(1)).get mustBe "1234567890"
-          extraction.right.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
+          extraction.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 1"
+          extraction.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorCountryOfResidencePage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(BusinessProtectorUtrYesNoPage(1)).get mustBe true
+          extraction.value.get(BusinessProtectorUtrPage(1)).get mustBe "1234567890"
+          extraction.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
         }
       }
     }
@@ -357,45 +360,45 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-          extraction.right.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(IndividualProtectorDateOfBirthYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorDateOfBirthPage(0)).get mustBe LocalDate.of(1970, 2, 1)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityPage(0)).get mustBe GB
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
-          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorNINOYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorNINOPage(0)).get mustBe "1234567890"
-          extraction.right.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(IndividualProtectorDateOfBirthYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorDateOfBirthPage(0)).get mustBe LocalDate.of(year1970, FEBRUARY, 1)
+          extraction.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfNationalityPage(0)).get mustBe GB
+          extraction.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
+          extraction.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorNINOYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorNINOPage(0)).get mustBe "1234567890"
+          extraction.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Individual
-          extraction.right.value.get(IndividualProtectorNamePage(1)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(IndividualProtectorDateOfBirthYesNoPage(1)).get mustBe true
-          extraction.right.value.get(IndividualProtectorDateOfBirthPage(1)).get mustBe LocalDate.of(1980, 2, 1)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityYesNoPage(1)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(1)).get mustBe false
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityPage(1)).get mustBe "DE"
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(1)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
-          extraction.right.value.get(IndividualProtectorCountryOfResidencePage(1)).get mustBe "DE"
-          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(1)).get mustBe false
-          extraction.right.value.get(IndividualProtectorNINOYesNoPage(1)).get mustBe true
-          extraction.right.value.get(IndividualProtectorNINOPage(1)).get mustBe "0987654321"
-          extraction.right.value.get(IndividualProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
-          extraction.right.value.get(IndividualProtectorPassportIDCardYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorPassportIDCardPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressUKYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Individual
+          extraction.value.get(IndividualProtectorNamePage(1)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(IndividualProtectorDateOfBirthYesNoPage(1)).get mustBe true
+          extraction.value.get(IndividualProtectorDateOfBirthPage(1)).get mustBe LocalDate.of(year1980, FEBRUARY, 1)
+          extraction.value.get(IndividualProtectorCountryOfNationalityYesNoPage(1)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(1)).get mustBe false
+          extraction.value.get(IndividualProtectorCountryOfNationalityPage(1)).get mustBe "DE"
+          extraction.value.get(IndividualProtectorCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.value.get(IndividualProtectorCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.value.get(IndividualProtectorMentalCapacityYesNoPage(1)).get mustBe false
+          extraction.value.get(IndividualProtectorNINOYesNoPage(1)).get mustBe true
+          extraction.value.get(IndividualProtectorNINOPage(1)).get mustBe "0987654321"
+          extraction.value.get(IndividualProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
+          extraction.value.get(IndividualProtectorPassportIDCardYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorPassportIDCardPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
         }
       }
 
@@ -440,31 +443,31 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
-          extraction.right.value.get(BusinessProtectorNamePage(0)).get mustBe "Business 1"
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-          extraction.right.value.get(BusinessProtectorCountryOfResidencePage(0)).get mustBe GB
-          extraction.right.value.get(BusinessProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(BusinessProtectorUtrYesNoPage(0)).get mustBe true
-          extraction.right.value.get(BusinessProtectorUtrPage(0)).get mustBe "1234567890"
-          extraction.right.value.get(BusinessProtectorAddressYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
+          extraction.value.get(BusinessProtectorNamePage(0)).get mustBe "Business 1"
+          extraction.value.get(BusinessProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.value.get(BusinessProtectorCountryOfResidencePage(0)).get mustBe GB
+          extraction.value.get(BusinessProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(BusinessProtectorUtrYesNoPage(0)).get mustBe true
+          extraction.value.get(BusinessProtectorUtrPage(0)).get mustBe "1234567890"
+          extraction.value.get(BusinessProtectorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
-          extraction.right.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 2"
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)).get mustBe true
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
-          extraction.right.value.get(BusinessProtectorCountryOfResidencePage(1)).get mustBe "DE"
-          extraction.right.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
-          extraction.right.value.get(BusinessProtectorUtrYesNoPage(1)).get mustBe true
-          extraction.right.value.get(BusinessProtectorUtrPage(1)).get mustBe "0987654321"
-          extraction.right.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
+          extraction.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 2"
+          extraction.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.value.get(BusinessProtectorCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
+          extraction.value.get(BusinessProtectorUtrYesNoPage(1)).get mustBe true
+          extraction.value.get(BusinessProtectorUtrPage(1)).get mustBe "0987654321"
+          extraction.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
         }
       }
 
@@ -514,36 +517,36 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-          extraction.right.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)).get mustBe false
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
-          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorNINOYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorNINOPage(0)).get mustBe "1234567890"
-          extraction.right.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)).get mustBe false
+          extraction.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfNationalityPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
+          extraction.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorNINOYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorNINOPage(0)).get mustBe "1234567890"
+          extraction.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
-          extraction.right.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 1"
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)).get mustBe false
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorCountryOfResidencePage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(BusinessProtectorUtrYesNoPage(1)).get mustBe true
-          extraction.right.value.get(BusinessProtectorUtrPage(1)).get mustBe "1234567890"
-          extraction.right.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
+          extraction.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 1"
+          extraction.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)).get mustBe false
+          extraction.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorCountryOfResidencePage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(BusinessProtectorUtrYesNoPage(1)).get mustBe true
+          extraction.value.get(BusinessProtectorUtrPage(1)).get mustBe "1234567890"
+          extraction.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
         }
       }
     }
@@ -599,45 +602,45 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-          extraction.right.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(IndividualProtectorDateOfBirthYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorDateOfBirthPage(0)).get mustBe LocalDate.of(1970, 2, 1)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityPage(0)).get mustBe GB
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
-          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorNINOYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorNINOPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(IndividualProtectorDateOfBirthYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorDateOfBirthPage(0)).get mustBe LocalDate.of(year1970, FEBRUARY, 1)
+          extraction.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfNationalityPage(0)).get mustBe GB
+          extraction.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
+          extraction.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorNINOYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorNINOPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Individual
-          extraction.right.value.get(IndividualProtectorNamePage(1)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(IndividualProtectorDateOfBirthYesNoPage(1)).get mustBe true
-          extraction.right.value.get(IndividualProtectorDateOfBirthPage(1)).get mustBe LocalDate.of(1980, 2, 1)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityYesNoPage(1)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(1)).get mustBe false
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityPage(1)).get mustBe "DE"
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(1)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
-          extraction.right.value.get(IndividualProtectorCountryOfResidencePage(1)).get mustBe "DE"
-          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(1)).get mustBe false
-          extraction.right.value.get(IndividualProtectorNINOYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorNINOPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
-          extraction.right.value.get(IndividualProtectorPassportIDCardYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorPassportIDCardPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressUKYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Individual
+          extraction.value.get(IndividualProtectorNamePage(1)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(IndividualProtectorDateOfBirthYesNoPage(1)).get mustBe true
+          extraction.value.get(IndividualProtectorDateOfBirthPage(1)).get mustBe LocalDate.of(year1980, FEBRUARY, 1)
+          extraction.value.get(IndividualProtectorCountryOfNationalityYesNoPage(1)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(1)).get mustBe false
+          extraction.value.get(IndividualProtectorCountryOfNationalityPage(1)).get mustBe "DE"
+          extraction.value.get(IndividualProtectorCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.value.get(IndividualProtectorCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.value.get(IndividualProtectorMentalCapacityYesNoPage(1)).get mustBe false
+          extraction.value.get(IndividualProtectorNINOYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorNINOPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
+          extraction.value.get(IndividualProtectorPassportIDCardYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorPassportIDCardPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
         }
       }
 
@@ -682,31 +685,31 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
-          extraction.right.value.get(BusinessProtectorNamePage(0)).get mustBe "Business 1"
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-          extraction.right.value.get(BusinessProtectorCountryOfResidencePage(0)).get mustBe GB
-          extraction.right.value.get(BusinessProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(BusinessProtectorUtrYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorUtrPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressPage(0)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
+          extraction.value.get(BusinessProtectorNamePage(0)).get mustBe "Business 1"
+          extraction.value.get(BusinessProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.value.get(BusinessProtectorCountryOfResidencePage(0)).get mustBe GB
+          extraction.value.get(BusinessProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(BusinessProtectorUtrYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorUtrPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressPage(0)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
-          extraction.right.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 2"
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)).get mustBe true
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
-          extraction.right.value.get(BusinessProtectorCountryOfResidencePage(1)).get mustBe "DE"
-          extraction.right.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
-          extraction.right.value.get(BusinessProtectorUtrYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorUtrPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
+          extraction.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 2"
+          extraction.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
+          extraction.value.get(BusinessProtectorCountryOfResidencePage(1)).get mustBe "DE"
+          extraction.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "1234567-12345678-12345678"
+          extraction.value.get(BusinessProtectorUtrYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorUtrPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("2", Some("02"), "2019-11-27")
         }
       }
 
@@ -756,36 +759,36 @@ class ProtectorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = protectorExtractor.extract(ua, Some(protectors))
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
-          extraction.right.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)).get mustBe false
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfNationalityPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
-          extraction.right.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
-          extraction.right.value.get(IndividualProtectorNINOYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorNINOPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
-          extraction.right.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Individual
+          extraction.value.get(IndividualProtectorNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(IndividualProtectorCountryOfNationalityYesNoPage(0)).get mustBe false
+          extraction.value.get(IndividualProtectorCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfNationalityPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorCountryOfResidencePage(0)).get mustBe GB
+          extraction.value.get(IndividualProtectorMentalCapacityYesNoPage(0)).get mustBe true
+          extraction.value.get(IndividualProtectorNINOYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorNINOPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(IndividualProtectorPassportIDCardYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorPassportIDCardPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorAddressUKYesNoPage(0)) mustNot be(defined)
+          extraction.value.get(IndividualProtectorMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
-          extraction.right.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
-          extraction.right.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 1"
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)).get mustBe false
-          extraction.right.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorCountryOfResidencePage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
-          extraction.right.value.get(BusinessProtectorUtrYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorUtrPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
-          extraction.right.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(ProtectorIndividualOrBusinessPage(1)).get mustBe IndividualOrBusiness.Business
+          extraction.value.get(BusinessProtectorNamePage(1)).get mustBe "Business 1"
+          extraction.value.get(BusinessProtectorCountryOfResidenceYesNoPage(1)).get mustBe false
+          extraction.value.get(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorCountryOfResidencePage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(BusinessProtectorUtrYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorUtrPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressUKYesNoPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorAddressPage(1)) mustNot be(defined)
+          extraction.value.get(BusinessProtectorMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
         }
       }
     }

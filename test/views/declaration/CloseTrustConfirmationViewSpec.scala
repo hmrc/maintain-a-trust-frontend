@@ -36,7 +36,8 @@ class CloseTrustConfirmationViewSpec extends ViewBehaviours {
       assertContainsText(doc, s"$fakeTvn")
       assertContainsText(doc, "Print or save a declared copy of the trust’s registration")
       assertContainsText(doc, "What happens next")
-      assertContainsText(doc, "Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.")
+      assertContainsText(doc, "Keep a note of your reference in case you need to contact HMRC. " +
+        "If there is a problem with the declaration, we will contact the lead trustee.")
       assertContainsText(doc, "Your request to close this trust will be processed and access to its online register will now be removed.")
     }
 

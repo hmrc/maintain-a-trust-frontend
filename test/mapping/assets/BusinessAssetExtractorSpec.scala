@@ -55,8 +55,8 @@ class BusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, assets)
 
-        extraction mustBe 'right
-        extraction.right.value.data mustBe ua.data
+        extraction mustBe Symbol("right")
+        extraction.value.data mustBe ua.data
 
       }
 
@@ -80,10 +80,10 @@ class BusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = assetExtractor.extract(ua, businessAssets)
 
-          extraction.right.value.get(BusinessNamePage(0)).get mustBe "Business 1"
-          extraction.right.value.get(BusinessDescriptionPage(0)).get mustBe "Business Asset Description"
-          extraction.right.value.get(BusinessAddressPage(0)).get mustBe InternationalAddress("line1", "line2", None, "FR")
-          extraction.right.value.get(BusinessValuePage(0)).get mustBe 101
+          extraction.value.get(BusinessNamePage(0)).get mustBe "Business 1"
+          extraction.value.get(BusinessDescriptionPage(0)).get mustBe "Business Asset Description"
+          extraction.value.get(BusinessAddressPage(0)).get mustBe InternationalAddress("line1", "line2", None, "FR")
+          extraction.value.get(BusinessValuePage(0)).get mustBe 101
         }
 
         "with full data must return user answers updated" in {
@@ -93,22 +93,22 @@ class BusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = assetExtractor.extract(ua, businessAssets)
 
-          extraction mustBe 'right
+          extraction mustBe Symbol("right")
 
-          extraction.right.value.get(BusinessNamePage(0)).get mustBe "Business 0"
-          extraction.right.value.get(BusinessDescriptionPage(0)).get mustBe "Business Asset Description 0"
-          extraction.right.value.get(BusinessAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "FR")
-          extraction.right.value.get(BusinessValuePage(0)).get mustBe 101
+          extraction.value.get(BusinessNamePage(0)).get mustBe "Business 0"
+          extraction.value.get(BusinessDescriptionPage(0)).get mustBe "Business Asset Description 0"
+          extraction.value.get(BusinessAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "FR")
+          extraction.value.get(BusinessValuePage(0)).get mustBe 101
 
-          extraction.right.value.get(BusinessNamePage(1)).get mustBe "Business 1"
-          extraction.right.value.get(BusinessDescriptionPage(1)).get mustBe "Business Asset Description 1"
-          extraction.right.value.get(BusinessAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
-          extraction.right.value.get(BusinessValuePage(1)).get mustBe 101
+          extraction.value.get(BusinessNamePage(1)).get mustBe "Business 1"
+          extraction.value.get(BusinessDescriptionPage(1)).get mustBe "Business Asset Description 1"
+          extraction.value.get(BusinessAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
+          extraction.value.get(BusinessValuePage(1)).get mustBe 101
 
-          extraction.right.value.get(BusinessNamePage(2)).get mustBe "Business 2"
-          extraction.right.value.get(BusinessDescriptionPage(2)).get mustBe "Business Asset Description 2"
-          extraction.right.value.get(BusinessAddressPage(2)).get mustBe InternationalAddress("line 2", "line2", None, "ES")
-          extraction.right.value.get(BusinessValuePage(2)).get mustBe 101
+          extraction.value.get(BusinessNamePage(2)).get mustBe "Business 2"
+          extraction.value.get(BusinessDescriptionPage(2)).get mustBe "Business Asset Description 2"
+          extraction.value.get(BusinessAddressPage(2)).get mustBe InternationalAddress("line 2", "line2", None, "ES")
+          extraction.value.get(BusinessValuePage(2)).get mustBe 101
         }
       }
 

@@ -102,8 +102,9 @@ class MessagesSpec extends SpecBase {
       }
       mismatchedArgSequences foreach {
         case (key, engArgSeq, welshArgSeq) =>
-          println(
-            s"key which has different arguments or order of arguments between English and Welsh: $key -- English arg seq=$engArgSeq and Welsh arg seq=$welshArgSeq")
+          println(s"key which has different arguments or order of arguments between English and Welsh: $key -- " +
+              s"English arg seq=$engArgSeq and Welsh arg seq=$welshArgSeq"
+          )
       }
       mismatchedArgSequences.size mustBe 0
     }

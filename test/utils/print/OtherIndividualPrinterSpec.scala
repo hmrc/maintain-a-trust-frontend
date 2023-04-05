@@ -23,12 +23,15 @@ import pages.individual._
 import play.twirl.api.Html
 import utils.print.sections.otherindividuals.OtherIndividualsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
+import java.time.Month._
 
 import java.time.LocalDate
 
 class OtherIndividualPrinterSpec extends SpecBase {
 
   private val helper: OtherIndividualsPrinter = injector.instanceOf[OtherIndividualsPrinter]
+
+  private val (year1947, year1996, num3, num18) = (1947, 1996, 3, 18)
 
   "OtherIndividualPrinter" must {
 
@@ -49,7 +52,7 @@ class OtherIndividualPrinterSpec extends SpecBase {
 
         .set(OtherIndividualNamePage(1), FullName("John", None, "Doe")).success.value
         .set(OtherIndividualDateOfBirthYesNoPage(1), true).success.value
-        .set(OtherIndividualDateOfBirthPage(1), LocalDate.of(1996, 2, 3)).success.value
+        .set(OtherIndividualDateOfBirthPage(1), LocalDate.of(year1996, FEBRUARY, num3)).success.value
         .set(OtherIndividualCountryOfNationalityYesNoPage(1), true).success.value
         .set(OtherIndividualCountryOfNationalityInTheUkYesNoPage(1), false).success.value
         .set(OtherIndividualCountryOfNationalityPage(1), "FR").success.value
@@ -72,10 +75,10 @@ class OtherIndividualPrinterSpec extends SpecBase {
         .set(OtherIndividualAddressPage(2), UKAddress("line 1", "line 2", None, None, "NE11NE")).success.value
         .set(OtherIndividualPassportIDCardYesNoPage(2), false).success.value
         .set(OtherIndividualMentalCapacityYesNoPage(2), true).success.value
-        
+
         .set(OtherIndividualNamePage(3), FullName("Paul", None, "Chuckle")).success.value
         .set(OtherIndividualDateOfBirthYesNoPage(3), true).success.value
-        .set(OtherIndividualDateOfBirthPage(3), LocalDate.of(1947, 10, 18)).success.value
+        .set(OtherIndividualDateOfBirthPage(3), LocalDate.of(year1947, OCTOBER, num18)).success.value
         .set(OtherIndividualCountryOfNationalityYesNoPage(3), true).success.value
         .set(OtherIndividualCountryOfNationalityInTheUkYesNoPage(3), false).success.value
         .set(OtherIndividualCountryOfNationalityPage(3), "FR").success.value
@@ -86,9 +89,12 @@ class OtherIndividualPrinterSpec extends SpecBase {
         .set(OtherIndividualAddressUKYesNoPage(3), false).success.value
         .set(OtherIndividualAddressPage(3), InternationalAddress("line 1", "line 2", None, "FR")).success.value
         .set(OtherIndividualPassportIDCardYesNoPage(3), true).success.value
-        .set(OtherIndividualPassportIDCardPage(3), PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), DetailsType.Combined)).success.value
+        .set(
+          OtherIndividualPassportIDCardPage(3),
+          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), DetailsType.Combined)
+        ).success.value
         .set(OtherIndividualMentalCapacityYesNoPage(3), true).success.value
-      
+
       val result = helper.entities(answers)
 
       val name1 = "Joe Bloggs"
@@ -145,7 +151,9 @@ class OtherIndividualPrinterSpec extends SpecBase {
             AnswerRow(label = messages("otherIndividualCountryOfResidence.checkYourAnswersLabel", name3), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualAddressYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualAddressUKYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualAddress.checkYourAnswersLabel", name3), answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None),
+            AnswerRow(label = messages(
+              "otherIndividualAddress.checkYourAnswersLabel", name3
+            ), answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualPassportIDCardYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None)
           ),
@@ -164,10 +172,16 @@ class OtherIndividualPrinterSpec extends SpecBase {
             AnswerRow(label = messages("otherIndividualCountryOfResidenceUkYesNo.checkYourAnswersLabel", name4), answer = Html("No"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualCountryOfResidence.checkYourAnswersLabel", name4), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualAddressYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualAddressUKYesNo.checkYourAnswersLabel", name4), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualAddress.checkYourAnswersLabel", name4), answer = Html("line 1<br />line 2<br />France"), changeUrl = None),
+            AnswerRow(label = messages(
+              "otherIndividualAddressUKYesNo.checkYourAnswersLabel", name4), answer = Html("No"), changeUrl = None
+            ),
+            AnswerRow(label = messages(
+              "otherIndividualAddress.checkYourAnswersLabel", name4
+            ), answer = Html("line 1<br />line 2<br />France"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualPassportIDCardYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualPassportIDCard.checkYourAnswersLabel", name4), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
+            AnswerRow(label = messages(
+              "otherIndividualPassportIDCard.checkYourAnswersLabel", name4
+            ), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
             AnswerRow(label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None)
           ),
           sectionKey = None

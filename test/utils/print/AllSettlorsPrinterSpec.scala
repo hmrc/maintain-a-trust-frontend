@@ -28,12 +28,15 @@ import play.twirl.api.Html
 import queries.Settable
 import utils.print.sections.settlors.AllSettlorsPrinter
 import viewmodels.{AnswerRow, AnswerSection}
+import java.time.Month._
 
 import java.time.LocalDate
 
 class AllSettlorsPrinterSpec extends SpecBase {
 
   private val helper: AllSettlorsPrinter = injector.instanceOf[AllSettlorsPrinter]
+
+  private val (year1991, year2010, year2020, year2021, num1, num4, num10, num27) = (1991, 2010, 2020, 2021, 1, 4, 10, 27)
 
   "AllSettlorsPrinter" must {
 
@@ -44,9 +47,9 @@ class AllSettlorsPrinterSpec extends SpecBase {
       val answers = emptyUserAnswersForUtr
         .set(SettlorNamePage, FullName("Adam", None, "Smith")).success.value
         .set(SettlorDateOfDeathYesNoPage, true).success.value
-        .set(SettlorDateOfDeathPage, LocalDate.of(2010, 10, 10)).success.value
+        .set(SettlorDateOfDeathPage, LocalDate.of(year2010, OCTOBER, num10)).success.value
         .set(SettlorDateOfBirthYesNoPage, true).success.value
-        .set(SettlorDateOfBirthPage, LocalDate.of(1991, 8, 27)).success.value
+        .set(SettlorDateOfBirthPage, LocalDate.of(year1991, AUGUST, num27)).success.value
         .set(DeceasedSettlorCountryOfNationalityYesNoPage, true).success.value
         .set(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, false).success.value
         .set(DeceasedSettlorCountryOfNationalityPage, "FR").success.value
@@ -213,7 +216,7 @@ class AllSettlorsPrinterSpec extends SpecBase {
           postcode = "NE981ZZ"
         )).success.value
         .set(SettlorPassportIDCardPage,
-          PassportType("DE", "123456789", LocalDate.of(2021,10,10), DetailsType.IdCard)
+          PassportType("DE", "123456789", LocalDate.of(year2021,OCTOBER,num10), DetailsType.IdCard)
         ).success.value
 
       val result = helper.entities(answers)
@@ -235,8 +238,14 @@ class AllSettlorsPrinterSpec extends SpecBase {
             AnswerRow(label = messages("settlorCountryOfResidence.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None),
             AnswerRow(label = messages("settlorLastKnownAddressYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(label = messages("settlorLastKnownAddressUKYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorUKAddress.checkYourAnswersLabel", name), answer = Html("line 1<br />line 2<br />line 3<br />line 4<br />NE981ZZ"), changeUrl = None),
-            AnswerRow(label = messages("settlorPassportOrIdCard.checkYourAnswersLabel", name), answer = Html("Germany<br />123456789<br />10 October 2021"), changeUrl = None)
+            AnswerRow(
+              label = messages("settlorUKAddress.checkYourAnswersLabel", name),
+              answer = Html("line 1<br />line 2<br />line 3<br />line 4<br />NE981ZZ"), changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("settlorPassportOrIdCard.checkYourAnswersLabel", name),
+              answer = Html("Germany<br />123456789<br />10 October 2021"), changeUrl = None
+            )
           ),
           sectionKey = None
         )
@@ -280,7 +289,7 @@ class AllSettlorsPrinterSpec extends SpecBase {
         businessSettlorWithUKAddress(1) andThen
         businessSettlorWithNonUKAddress(2) andThen
         businessSettlorWithNoIdentification(3) andThen
-        businessSettlorInEmployeeRelatedTrust(4)
+        businessSettlorInEmployeeRelatedTrust(num4)
 
       val result = helper.entities(answers.apply(emptyUserAnswersForUtr))
 
@@ -371,7 +380,10 @@ class AllSettlorsPrinterSpec extends SpecBase {
         uaSet(SettlorAddressUKYesNoPage(index), false) andThen
         uaSet(SettlorAddressPage(index), InternationalAddress("Line1", "Line2", Some("Line3"), "DE")) andThen
         uaSet(SettlorIndividualPassportIDCardYesNoPage(index), true) andThen
-        uaSet(SettlorIndividualPassportIDCardPage(index), PassportType("DE", "1234567890", LocalDate.of(2020, 1, 1), DetailsType.Combined))
+        uaSet(
+          SettlorIndividualPassportIDCardPage(index),
+          PassportType("DE", "1234567890", LocalDate.of(year2020, JANUARY, num1), DetailsType.Combined)
+        )
 
       def individualSettlorWithNoId(index: Int) = baseIndividualSettlor(index) andThen
         uaSet(SettlorIndividualNINOYesNoPage(index), false) andThen

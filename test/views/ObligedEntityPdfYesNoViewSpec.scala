@@ -29,7 +29,7 @@ class ObligedEntityPdfYesNoViewSpec extends YesNoViewBehaviours {
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
   val identifier = "1234567890"
-  
+
   "ObligedEntityPdfYesNo view" must {
 
     val view = viewFor[ObligedEntityPdfYesNoView](Some(emptyUserAnswersForUtr))

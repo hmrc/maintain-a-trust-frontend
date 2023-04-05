@@ -26,10 +26,12 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
 
   implicit val dontShrink: Shrink[String] = Shrink.shrinkAny
 
+  private val (num10, num100) = (10, 100)
+
   def genIntersperseString(gen: Gen[String],
                            value: String,
                            frequencyV: Int = 1,
-                           frequencyN: Int = 10): Gen[String] = {
+                           frequencyN: Int = num10): Gen[String] = {
 
     val genValue: Gen[Option[String]] = Gen.frequency(frequencyN -> None, frequencyV -> Gen.const(Some(value)))
 
@@ -58,7 +60,7 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     arbitrary[BigInt] suchThat (x => x < Int.MinValue)
 
   def nonNumerics: Gen[String] =
-    alphaStr suchThat (_.size > 0)
+    alphaStr suchThat (_.nonEmpty)
 
   def decimals: Gen[String] =
     arbitrary[BigDecimal]
@@ -97,7 +99,7 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     } yield chars.mkString
 
   def stringsLongerThan(minLength: Int): Gen[String] = for {
-    maxLength <- (minLength * 2).max(100)
+    maxLength <- (minLength * 2).max(num100)
     length    <- Gen.chooseNum(minLength + 1, maxLength)
     chars     <- listOfN(length, arbitrary[Char]).suchThat (!_.endsWith(" "))
   } yield chars.mkString
