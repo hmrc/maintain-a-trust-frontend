@@ -23,8 +23,9 @@ import play.api.data.FormError
 
 class DateFormProviderSpec extends DateBehaviours {
 
+  private val year2020 = 2020
   private val max = LocalDate.now(ZoneOffset.UTC)
-  private val trustStartDate = LocalDate.of(2020, 1, 1)
+  private val trustStartDate = LocalDate.of(year2020, java.time.Month.JANUARY, 1)
   private val prefix: String = "dateLastAssetSharedOut"
   private val form = new DateFormProvider().withPrefixAndTrustStartDate(prefix, trustStartDate)
 
@@ -48,6 +49,5 @@ class DateFormProviderSpec extends DateBehaviours {
       min = trustStartDate,
       FormError("value", s"$prefix.error.past", List("day", "month", "year"))
     )
-
   }
 }

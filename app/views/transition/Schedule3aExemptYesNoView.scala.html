@@ -34,7 +34,7 @@
     showBackLink = true
     ) {
 
-    @formHelper(action = Schedule3aExemptYesNoController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = Schedule3aExemptYesNoController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors, isYesNo = true)
 

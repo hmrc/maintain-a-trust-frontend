@@ -44,7 +44,7 @@
         @messages("unavailableSections.p2", futureSections)
     </p>
 
-    @formHelper(action = controllers.routes.LogoutController.logout(), 'autoComplete -> "off") {
+    @formHelper(action = controllers.routes.LogoutController.logout(), Symbol("autoComplete") -> "off") {
         @submitButton(Some(messages("site.sign_out")))
     }
 

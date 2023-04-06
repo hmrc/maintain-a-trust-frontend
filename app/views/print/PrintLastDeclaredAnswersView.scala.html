@@ -45,7 +45,7 @@
 
 
     <div class="govuk-button-group">
-        @formHelper(action = controllers.print.routes.PrintLastDeclaredAnswersController.onSubmit(), 'autoComplete -> "off") {
+        @formHelper(action = controllers.print.routes.PrintLastDeclaredAnswersController.onSubmit(), Symbol("autoComplete") -> "off") {
             @submitButton(Some(messages("site.button.continue.maintaining")))
         }
         @button(messageKey = "site.print-or-save", isPrintButton = true)

@@ -24,12 +24,14 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.EitherValues
 import pages.individual._
-import utils.Constants.GB
+import utils.Constants.{DE, GB}
 
 import java.time.LocalDate
 
 class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
+
+  private val (year1970, year2020) = (1970, 2020)
 
   def generateIndividual(index: Int) = NaturalPersonType(
     lineNo = Some(s"$index"),
@@ -39,22 +41,26 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
       case 0 => Some(LocalDate.parse("1970-02-01"))
       case _ => None
     },
-    nationality = index match {
-      case 0 => Some(GB)
-      case 1 => Some("DE")
-      case _ => None
-    },
-    countryOfResidence = index match {
-      case 0 => Some(GB)
-      case 1 => Some("DE")
-      case _ => None
-    },
+    nationality = populateCountry(index),
+    countryOfResidence = populateCountry(index),
     legallyIncapable = index match {
       case 0 => Some(false)
       case 1 => Some(true)
       case _ => None
     },
-    identification = Some(
+    identification = populateIdentification(index),
+    entityStart = "2019-11-26"
+  )
+
+  private def populateCountry(index: Int): Option[String] =
+    index match {
+      case 0 => Some(GB)
+      case 1 => Some(DE)
+      case _ => None
+    }
+
+  private def populateIdentification(index: Int): Option[DisplayTrustIdentificationType] =
+    Some(
       DisplayTrustIdentificationType(
         safeId = Some("8947584-94759745-84758745"),
         nino = index match {
@@ -62,7 +68,7 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
           case _ => None
         },
         passport = index match {
-          case 2 => Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2)))
+          case 2 => Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020,2,2)))
           case _ => None
         },
         address = index match {
@@ -71,9 +77,7 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
           case _ => None
         }
       )
-    ),
-    entityStart = "2019-11-26"
-  )
+    )
 
   val individualExtractor : OtherIndividualExtractor =
     injector.instanceOf[OtherIndividualExtractor]
@@ -200,7 +204,7 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(OtherIndividualDateOfBirthYesNoPage(1)).get mustBe false
           extraction.value.get(OtherIndividualDateOfBirthYesNoPage(2)).get mustBe false
 
-          extraction.value.get(OtherIndividualDateOfBirthPage(0)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.value.get(OtherIndividualDateOfBirthPage(0)).get mustBe LocalDate.of(year1970, 2, 1)
           extraction.value.get(OtherIndividualDateOfBirthPage(1)) mustNot be(defined)
           extraction.value.get(OtherIndividualDateOfBirthPage(2)) mustNot be(defined)
 
@@ -327,7 +331,7 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(OtherIndividualDateOfBirthYesNoPage(1)).get mustBe false
           extraction.value.get(OtherIndividualDateOfBirthYesNoPage(2)).get mustBe false
 
-          extraction.value.get(OtherIndividualDateOfBirthPage(0)).get mustBe LocalDate.of(1970, 2, 1)
+          extraction.value.get(OtherIndividualDateOfBirthPage(0)).get mustBe LocalDate.of(year1970, 2, 1)
           extraction.value.get(OtherIndividualDateOfBirthPage(1)) mustNot be(defined)
           extraction.value.get(OtherIndividualDateOfBirthPage(2)) mustNot be(defined)
 
@@ -388,11 +392,8 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(OtherIndividualSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
           extraction.value.get(OtherIndividualSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
           extraction.value.get(OtherIndividualSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
-
         }
       }
     }
-
   }
-
 }

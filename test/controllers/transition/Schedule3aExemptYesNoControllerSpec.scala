@@ -35,7 +35,7 @@ class Schedule3aExemptYesNoControllerSpec extends SpecBase {
 
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix("schedule3aExemptYesNo")
 
-  lazy val schedule3aExemptYesNoRoute: String = routes.Schedule3aExemptYesNoController.onPageLoad.url
+  lazy val schedule3aExemptYesNoRoute: String = routes.Schedule3aExemptYesNoController.onPageLoad().url
 
   "Schedule3aExemptYesNoController" must {
 

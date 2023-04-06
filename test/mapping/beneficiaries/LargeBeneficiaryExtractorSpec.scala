@@ -25,7 +25,7 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.EitherValues
 import pages.beneficiaries.large._
-import utils.Constants.GB
+import utils.Constants.{DE, GB}
 
 class LargeBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
@@ -34,11 +34,7 @@ class LargeBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
     lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     organisationName = s"Large $index",
-    countryOfResidence = index match {
-      case 0 => Some(GB)
-      case 1 => Some("DE")
-      case _ => None
-    },
+    countryOfResidence = populateCountry(index),
     description = s"Description $index",
     description1 = None,
     description2 = None,
@@ -49,20 +45,7 @@ class LargeBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
       case 1 => "500"
       case _ => "1000"
     },
-    identification = Some(
-      DisplayTrustIdentificationOrgType(
-        safeId = Some("8947584-94759745-84758745"),
-        utr = index match {
-          case 1 => Some(s"${index}234567890")
-          case _ => None
-        },
-        address = index match {
-          case 0 => Some(AddressType(s"line $index", "line2", None, None, None, "DE"))
-          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
-          case _ => None
-        }
-      )
-    ),
+    identification = populateIdentification(index),
     beneficiaryDiscretion = index match {
       case 0 => Some(false)
       case _ => None
@@ -73,6 +56,29 @@ class LargeBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
     },
     entityStart = "2019-11-26"
   )
+
+  private def populateCountry(index: Int): Option[String] =
+    index match {
+      case 0 => Some(GB)
+      case 1 => Some(DE)
+      case _ => None
+    }
+
+  private def populateIdentification(index: Int): Option[DisplayTrustIdentificationOrgType] =
+    Some(
+      DisplayTrustIdentificationOrgType(
+        safeId = Some("8947584-94759745-84758745"),
+        utr = index match {
+          case 1 => Some(s"${index}234567890")
+          case _ => None
+        },
+        address = index match {
+          case 0 => Some(AddressType(s"line $index", "line2", None, None, None, DE))
+          case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
+          case _ => None
+        }
+      )
+    )
 
   val largeBeneficiaryExtractor : LargeBeneficiaryExtractor =
     injector.instanceOf[LargeBeneficiaryExtractor]
@@ -353,10 +359,7 @@ class LargeBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(LargeBeneficiarySafeIdPage(2)).get mustBe "8947584-94759745-84758745"
           extraction.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(2)).get mustBe Over1001
         }
-
       }
     }
-
   }
-
 }

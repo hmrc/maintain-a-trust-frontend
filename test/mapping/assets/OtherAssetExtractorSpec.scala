@@ -27,9 +27,10 @@ import pages.assets.other._
 class OtherAssetExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
+  private val num100 = 100
   def generateOther(index: Int) = DisplayOtherAssetType(
     description = s"Other $index",
-    value = Some(100)
+    value = Some(num100)
   )
 
   val assetExtractor : OtherAssetExtractor =
@@ -62,7 +63,7 @@ class OtherAssetExtractorSpec extends AnyFreeSpec with Matchers
 
           val businessAssets = List(DisplayOtherAssetType(
             description = "Other 1",
-            value = Some(100L)
+            value = Some(num100.toLong)
           ))
 
           val ua = emptyUserAnswersForUtr

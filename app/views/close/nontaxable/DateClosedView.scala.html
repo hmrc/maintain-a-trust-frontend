@@ -33,7 +33,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = DateClosedController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = DateClosedController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors)
 

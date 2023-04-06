@@ -52,7 +52,7 @@
 
    <p>@messages("informationMaintainingThisTrust.paragraph4")</p>
 
-    @formHelper(action = controllers.routes.InformationMaintainingThisTrustController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = controllers.routes.InformationMaintainingThisTrustController.onSubmit(), Symbol("autoComplete") -> "off") {
         @submitButton(Some(messages("site.startMaintaining")))
     }
 }

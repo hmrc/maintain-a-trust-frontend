@@ -26,20 +26,16 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.EitherValues
 import pages.settlors.living_settlor._
-import utils.Constants.GB
+import utils.Constants.{DE, GB}
 
 class BusinessSettlorExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  def generateSettlorCompany(index: Int) = DisplayTrustSettlorCompany(
+  def generateSettlorCompany(index: Int): DisplayTrustSettlorCompany = DisplayTrustSettlorCompany(
     lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     name = s"Company Settlor $index",
-    countryOfResidence = index match {
-      case 0 => Some(GB)
-      case 1 => Some("DE")
-      case _ => None
-    },
+    countryOfResidence = populateCountry(index),
     companyType = index match {
       case 0 => Some(KindOfBusiness.Trading)
       case 1 => Some(KindOfBusiness.Investment)
@@ -50,7 +46,19 @@ class BusinessSettlorExtractorSpec extends AnyFreeSpec with Matchers
       case 1 => Some(true)
       case _ => None
     },
-    identification = Some(
+    identification = populateIdentification(index),
+    entityStart = "2019-11-26"
+  )
+
+  private def populateCountry(index: Int): Option[String] =
+    index match {
+      case 0 => Some(GB)
+      case 1 => Some(DE)
+      case _ => None
+    }
+
+  private def populateIdentification(index: Int): Option[DisplayTrustIdentificationOrgType] =
+    Some(
       DisplayTrustIdentificationOrgType(
         safeId = Some("8947584-94759745-84758745"),
         utr = index match {
@@ -58,14 +66,12 @@ class BusinessSettlorExtractorSpec extends AnyFreeSpec with Matchers
           case _ => None
         },
         address = index match {
-          case 0 => Some(AddressType(s"line $index", "line2", None, None, None, "DE"))
+          case 0 => Some(AddressType(s"line $index", "line2", None, None, None, DE))
           case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
           case _ => None
         }
       )
-    ),
-    entityStart = "2019-11-26"
-  )
+    )
 
   val businessSettlorExtractor: BusinessSettlorExtractor =
     injector.instanceOf[BusinessSettlorExtractor]
@@ -298,7 +304,6 @@ class BusinessSettlorExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(SettlorAddressPage(2)) mustNot be(defined)
           extraction.value.get(SettlorAddressUKYesNoPage(2)) mustNot be(defined)
         }
-
       }
     }
   }

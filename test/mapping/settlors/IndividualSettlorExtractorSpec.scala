@@ -26,37 +26,41 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.EitherValues
 import pages.settlors.living_settlor._
-import utils.Constants.GB
-import java.time.Month.FEBRUARY
+import utils.Constants.{DE, GB}
 
+import java.time.Month.FEBRUARY
 import java.time.LocalDate
 
 class IndividualSettlorExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  private val (year1970) = (1970)
+  private val (year1970, year2020) = (1970, 2020)
 
   def generateSettlorIndividual(index: Int): DisplayTrustSettlor = DisplayTrustSettlor(
     lineNo = Some(s"$index"),
     bpMatchStatus = Some("01"),
     name = FullName(s"First Name $index", None, s"Last Name $index"),
     dateOfBirth = Some(LocalDate.parse("1970-02-01")),
-    nationality = index match {
-      case 0 => Some(GB)
-      case 1 => Some("DE")
-      case _ => None
-    },
-    countryOfResidence = index match {
-      case 0 => Some(GB)
-      case 1 => Some("DE")
-      case _ => None
-    },
+    nationality = populateCountry(index),
+    countryOfResidence = populateCountry(index),
     legallyIncapable = index match {
       case 0 => Some(false)
       case 1 => Some(true)
       case _ => None
     },
-    identification = Some(
+    identification = populateIdentification(index),
+    entityStart = "2019-11-26"
+  )
+
+  private def populateCountry(index: Int): Option[String] =
+    index match {
+      case 0 => Some(GB)
+      case 1 => Some(DE)
+      case _ => None
+    }
+
+  private def populateIdentification(index: Int): Option[DisplayTrustIdentificationType] =
+    Some(
       DisplayTrustIdentificationType(
         safeId = Some("8947584-94759745-84758745"),
         nino = index match {
@@ -64,18 +68,16 @@ class IndividualSettlorExtractorSpec extends AnyFreeSpec with Matchers
           case _ => None
         },
         passport = index match {
-          case 2 => Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020,2,2)))
+          case 2 => Some(PassportType(DE, "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, java.time.Month.FEBRUARY,2)))
           case _ => None
         },
         address = index match {
-          case 1 => Some(AddressType(s"line $index", "line2", None, None, None, "DE"))
+          case 1 => Some(AddressType(s"line $index", "line2", None, None, None, DE))
           case 2 => Some(AddressType(s"line $index", "line2", None, None, Some("NE11NE"), GB))
           case _ => None
         }
       )
-    ),
-    entityStart = "2019-11-26"
-  )
+    )
 
   val individualSettlorExtractor: IndividualSettlorExtractor =
     injector.instanceOf[IndividualSettlorExtractor]

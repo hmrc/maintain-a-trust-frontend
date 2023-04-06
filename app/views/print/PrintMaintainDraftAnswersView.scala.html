@@ -52,7 +52,7 @@
 
     <p>@messages("playbackDraftAnswers.p4")</p>
 
-    @formHelper(action = controllers.print.routes.PrintMaintainDraftAnswersController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = controllers.print.routes.PrintMaintainDraftAnswersController.onSubmit(), Symbol("autoComplete") -> "off") {
        @submit(overrideMessage = Some("site.button.continue.maintain"))
     }
 

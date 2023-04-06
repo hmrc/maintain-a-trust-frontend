@@ -31,7 +31,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = BeforeClosingController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = BeforeClosingController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @headingComp("beforeClosing.heading")
 

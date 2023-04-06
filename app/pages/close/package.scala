@@ -19,5 +19,5 @@ package pages
 import play.api.libs.json.JsPath
 
 package object close {
-  val basePath: JsPath = JsPath \ 'close
+  val basePath: JsPath = JsPath \ Symbol("close")
 }

@@ -29,6 +29,8 @@ import play.api.data.{Form, FormError}
 class DateMappingsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with Generators with OptionValues
   with Mappings {
 
+  private val (year2000, year3000) = (2000, 3000)
+
   val form = Form(
     "value" -> localDate(
       requiredKey = "error.required",
@@ -39,8 +41,8 @@ class DateMappingsSpec extends AnyFreeSpec with Matchers with ScalaCheckProperty
   )
 
   val validData = datesBetween(
-    min = LocalDate.of(2000, 1, 1),
-    max = LocalDate.of(3000, 1, 1)
+    min = LocalDate.of(year2000, 1, 1),
+    max = LocalDate.of(year3000, 1, 1)
   )
 
   val invalidField: Gen[String] = Gen.alphaStr.suchThat(_.nonEmpty)

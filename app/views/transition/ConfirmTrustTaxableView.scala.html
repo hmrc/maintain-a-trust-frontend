@@ -31,7 +31,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = ConfirmTrustTaxableController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = ConfirmTrustTaxableController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @headingComp("confirmTrustTaxable.heading")
 
