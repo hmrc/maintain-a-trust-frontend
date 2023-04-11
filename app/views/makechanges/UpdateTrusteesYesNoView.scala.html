@@ -39,7 +39,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = UpdateTrusteesYesNoController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = UpdateTrusteesYesNoController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors, isYesNo = true)
 

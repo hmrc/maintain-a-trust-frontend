@@ -51,7 +51,7 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- TrusteeEmailYesNoPage(0) is true
           _ <- TrusteeEmailPage(0) is "aa@aabb.com"
           _ <- IsThisLeadTrusteePage(0) is true
-        } yield Unit).run(emptyUserAnswersForUtr).value
+        } yield ()).run(emptyUserAnswersForUtr).value
 
         val result = helper.entities(answers)
 
@@ -78,6 +78,7 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
 
     "when the lead trustee is a non-UK individual" must {
       "generate a lead trustee section" in {
+        val year2020 = 2020
 
         val (answers, _) = (for {
           _ <- individualUKTrustee(0)
@@ -96,9 +97,9 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- TrusteeEmailYesNoPage(0) is true
           _ <- TrusteeEmailPage(0) is "aa@aabb.com"
           _ <- IsThisLeadTrusteePage(0) is true
-          _ <- TrusteePassportIDCardPage(0) is PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2), DetailsType.Combined)
+          _ <- TrusteePassportIDCardPage(0) is PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, 2, 2), DetailsType.Combined)
           _ <- TrusteePassportIDCardYesNoPage(0) is true
-        } yield Unit).run(emptyUserAnswersForUtr).value
+        } yield ()).run(emptyUserAnswersForUtr).value
 
         val result = helper.entities(answers)
 
@@ -146,7 +147,7 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- TrusteeEmailYesNoPage(0) is true
           _ <- TrusteeEmailPage(0) is "aa@aabb.com"
           _ <- IsThisLeadTrusteePage(0) is true
-        } yield Unit).run(emptyUserAnswersForUtr).value
+        } yield ()).run(emptyUserAnswersForUtr).value
 
         val result = helper.entities(answers)
 
@@ -187,7 +188,7 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- TrusteeEmailYesNoPage(0) is false
           _ <- TrusteeTelephoneNumberPage(0) is "67676767676"
           _ <- IsThisLeadTrusteePage(0) is true
-        } yield Unit).run(emptyUserAnswersForUtr).value
+        } yield ()).run(emptyUserAnswersForUtr).value
 
         val result = helper.entities(answers)
 
@@ -227,7 +228,7 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- TrusteeEmailPage(0) is "aa@aabb.com"
           _ <- TrusteeTelephoneNumberPage(0) is "67676767676"
           _ <- IsThisLeadTrusteePage(0) is true
-        } yield Unit).run(emptyUserAnswersForUtr).value
+        } yield ()).run(emptyUserAnswersForUtr).value
 
         val result = helper.entities(answers)
 
@@ -290,7 +291,7 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- TrusteeCountryOfResidencePage(2) is "FR"
           _ <- TrusteeMentalCapacityYesNoPage(2) is true
           _ <- IsThisLeadTrusteePage(2) is false
-        } yield Unit).run(emptyUserAnswersForUtr).value
+        } yield ()).run(emptyUserAnswersForUtr).value
 
         val result = helper.entities(answers)
 
@@ -373,7 +374,7 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- TrusteeCountryOfResidencePage(2) is "FR"
           _ <- TrusteeMentalCapacityYesNoPage(2) is true
           _ <- IsThisLeadTrusteePage(2) is false
-        } yield Unit).run(emptyUserAnswersForUtr).value
+        } yield ()).run(emptyUserAnswersForUtr).value
 
         val result = helper.entities(answers)
 

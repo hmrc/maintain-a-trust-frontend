@@ -24,24 +24,26 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.data.validation.{Invalid, Valid}
+import java.time.Month._
 
 class ConstraintsSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChecks with Generators with Constraints {
 
+  private val (year2000, year3000, num10) = (2000, 3000, 10)
 
   "firstError" must {
 
     "return Valid when all constraints pass" in {
-      val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""", "error.regexp"))("foo")
+      val result = firstError(maxLength(num10, "error.length"), regexp("""^\w+$""", "error.regexp"))("foo")
       result mustEqual Valid
     }
 
     "return Invalid when the first constraint fails" in {
-      val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""", "error.regexp"))("a" * 11)
-      result mustEqual Invalid("error.length", 10)
+      val result = firstError(maxLength(num10, "error.length"), regexp("""^\w+$""", "error.regexp"))("a" * 11)
+      result mustEqual Invalid("error.length", num10)
     }
 
     "return Invalid when the second constraint fails" in {
-      val result = firstError(maxLength(10, "error.length"), regexp("""^\w+$""", "error.regexp"))("")
+      val result = firstError(maxLength(num10, "error.length"), regexp("""^\w+$""", "error.regexp"))("")
       result mustEqual Invalid("error.regexp", """^\w+$""")
     }
 
@@ -103,23 +105,23 @@ class ConstraintsSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
   "maxLength" must {
 
     "return Valid for a string shorter than the allowed length" in {
-      val result = maxLength(10, "error.length")("a" * 9)
+      val result = maxLength(num10, "error.length")("a" * 9)
       result mustEqual Valid
     }
 
     "return Valid for an empty string" in {
-      val result = maxLength(10, "error.length")("")
+      val result = maxLength(num10, "error.length")("")
       result mustEqual Valid
     }
 
     "return Valid for a string equal to the allowed length" in {
-      val result = maxLength(10, "error.length")("a" * 10)
+      val result = maxLength(num10, "error.length")("a" * 10)
       result mustEqual Valid
     }
 
     "return Invalid for a string longer than the allowed length" in {
-      val result = maxLength(10, "error.length")("a" * 11)
-      result mustEqual Invalid("error.length", 10)
+      val result = maxLength(num10, "error.length")("a" * 11)
+      result mustEqual Invalid("error.length", num10)
     }
   }
 
@@ -128,8 +130,8 @@ class ConstraintsSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
     "return Valid for a date before or equal to the maximum" in {
 
       val gen: Gen[(LocalDate, LocalDate)] = for {
-        max <- datesBetween(LocalDate.of(2000, 1, 1), LocalDate.of(3000, 1, 1))
-        date <- datesBetween(LocalDate.of(2000, 1, 1), max)
+        max <- datesBetween(LocalDate.of(year2000, JANUARY, 1), LocalDate.of(year3000, JANUARY, 1))
+        date <- datesBetween(LocalDate.of(year2000, JANUARY, 1), max)
       } yield (max, date)
 
       forAll(gen) {
@@ -143,8 +145,8 @@ class ConstraintsSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
     "return Invalid for a date after the maximum" in {
 
       val gen: Gen[(LocalDate, LocalDate)] = for {
-        max <- datesBetween(LocalDate.of(2000, 1, 1), LocalDate.of(3000, 1, 1))
-        date <- datesBetween(max.plusDays(1), LocalDate.of(3000, 1, 2))
+        max <- datesBetween(LocalDate.of(year2000, JANUARY, 1), LocalDate.of(year3000, JANUARY, 1))
+        date <- datesBetween(max.plusDays(1), LocalDate.of(year3000, JANUARY, 2))
       } yield (max, date)
 
       forAll(gen) {
@@ -161,8 +163,8 @@ class ConstraintsSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
     "return Valid for a date after or equal to the minimum" in {
 
       val gen: Gen[(LocalDate, LocalDate)] = for {
-        min <- datesBetween(LocalDate.of(2000, 1, 1), LocalDate.of(3000, 1, 1))
-        date <- datesBetween(min, LocalDate.of(3000, 1, 1))
+        min <- datesBetween(LocalDate.of(year2000, JANUARY, 1), LocalDate.of(year3000, JANUARY, 1))
+        date <- datesBetween(min, LocalDate.of(year3000, JANUARY, 1))
       } yield (min, date)
 
       forAll(gen) {
@@ -176,8 +178,8 @@ class ConstraintsSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
     "return Invalid for a date before the minimum" in {
 
       val gen: Gen[(LocalDate, LocalDate)] = for {
-        min <- datesBetween(LocalDate.of(2000, 1, 2), LocalDate.of(3000, 1, 1))
-        date <- datesBetween(LocalDate.of(2000, 1, 1), min.minusDays(1))
+        min <- datesBetween(LocalDate.of(year2000, JANUARY, 2), LocalDate.of(year3000, JANUARY, 1))
+        date <- datesBetween(LocalDate.of(year2000, JANUARY, 1), min.minusDays(1))
       } yield (min, date)
 
       forAll(gen) {

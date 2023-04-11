@@ -3,7 +3,7 @@ import sbt._
 object AppDependencies {
   import play.core.PlayVersion
 
-  val bootstrapVersion = "5.25.0"
+  val bootstrapVersion = "7.15.0"
 
   val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
@@ -12,7 +12,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-conditional-form-mapping"  % "1.12.0-play-28",
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"     % bootstrapVersion,
     "uk.gov.hmrc"       %% "domain"                         % "8.1.0-play-28",
-    "com.typesafe.play" %% "play-json-joda"                 % "2.9.3",
+    "com.typesafe.play" %% "play-json-joda"                 % "2.9.4",
     "org.typelevel"     %% "cats-core"                      % "2.9.0"
   )
 
@@ -23,13 +23,13 @@ object AppDependencies {
     "org.scalatestplus.play"      %% "scalatestplus-play"       % "5.1.0",
     "org.scalatestplus"           %% "scalacheck-1-17"          % "3.2.15.0",
     "wolfendale"                  %% "scalacheck-gen-regexp"    % "0.1.2",
-    "org.jsoup"                   %  "jsoup"                    % "1.15.3",
+    "org.jsoup"                   %  "jsoup"                    % "1.15.4",
     "com.typesafe.play"           %% "play-test"                % PlayVersion.current,
     "org.mockito"                 %  "mockito-core"             % "4.6.1",
     "org.scalatestplus"           %% "mockito-4-6"              % "3.2.15.0",
     "org.scalacheck"              %% "scalacheck"               % "1.17.0",
     "com.github.tomakehurst"      %  "wiremock-standalone"      % "2.27.2",
-    "com.vladsch.flexmark"        %  "flexmark-all"             % "0.62.2"
+    "com.vladsch.flexmark"        %  "flexmark-all"             % "0.64.0"
   ).map(_ % "it, test")
 
   def apply(): Seq[ModuleID] = compile ++ test

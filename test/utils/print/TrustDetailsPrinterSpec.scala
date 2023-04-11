@@ -152,10 +152,11 @@ class TrustDetailsPrinterSpec extends SpecBase {
     "not migrating from non-taxable to taxable" must {
 
       "generate an answer section with trust name, created date and utr" in {
+        val year2019 = 2019
 
         val answers = emptyUserAnswersForUtr
           .set(TrustNamePage, "Trust Ltd.").success.value
-          .set(WhenTrustSetupPage, LocalDate.of(2019, 6, 1)).success.value
+          .set(WhenTrustSetupPage, LocalDate.of(year2019, java.time.Month.JUNE, 1)).success.value
           .set(TrustUkPropertyYesNoPage, true).success.value
           .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
           .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value

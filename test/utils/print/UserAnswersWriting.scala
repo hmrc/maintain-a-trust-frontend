@@ -31,7 +31,6 @@ import scala.language.implicitConversions
 trait UserAnswersWriting extends TryValues with ModelGenerators {
   class SettableWriterOps[T : Writes](s: Settable[T])(implicit reads: Reads[T]) {
     def is(value: T): State[UserAnswers, Unit] = writeUA(s, value)
-    def :=(value: T): State[UserAnswers, Unit] = is(value)
     def withArbitraryValue(implicit arb: Arbitrary[T]): State[UserAnswers, Unit] = writeArbUA(s)
     def isRemoved: State[UserAnswers, Unit] = remove(s)
   }
@@ -39,7 +38,7 @@ trait UserAnswersWriting extends TryValues with ModelGenerators {
   implicit def settableStuff[T:Writes](s: Settable[T])(implicit reads: Reads[T]) : SettableWriterOps[T] = new SettableWriterOps[T](s)
 
   def writeUA[T](s: Settable[T], value: T)(implicit writes: Writes[T], reads: Reads[T]): State[UserAnswers, Unit] = {
-    State(_.set(s, value).success.value -> Unit)
+    State(_.set(s, value).success.value -> ())
   }
 
   def writeArbUA[T](s: Settable[T])(implicit writes: Writes[T], reads: Reads[T], arb: Arbitrary[T]): State[UserAnswers, Unit] = {
@@ -49,7 +48,7 @@ trait UserAnswersWriting extends TryValues with ModelGenerators {
   }
 
   def remove(s: Settable[_]): State[UserAnswers, Unit] = {
-    State(_.remove(s).success.value -> Unit)
+    State(_.remove(s).success.value -> ())
   }
 
   def individualUKTrustee(index: Int): State[UserAnswers, Unit] = for {
@@ -66,12 +65,12 @@ trait UserAnswersWriting extends TryValues with ModelGenerators {
     _ <- TrusteeUkAddressPage(index).withArbitraryValue
     _ <- TrusteeTelephoneNumberPage(index).withArbitraryValue
     _ <- TrusteeEmailPage(index).withArbitraryValue
-  } yield Unit
+  } yield ()
 
   def individualNonUkTrustee(index: Int): State[UserAnswers, Unit] = for {
     _ <- individualUKTrustee(index)
     _ <- moveIndividualOutOfUK(index)
-  } yield Unit
+  } yield ()
 
   def moveIndividualOutOfUK(index: Int): State[UserAnswers, Unit] = for {
     _ <- TrusteeNinoYesNoPage(index) is false
@@ -82,7 +81,7 @@ trait UserAnswersWriting extends TryValues with ModelGenerators {
     _ <- TrusteeInternationalAddressPage(index).withArbitraryValue
     _ <- TrusteeNinoPage(index).isRemoved
     _ <- TrusteeUkAddressPage(index).isRemoved
-  } yield Unit
+  } yield ()
 
   def ukCompanyTrustee(index: Int): State[UserAnswers, Unit] = for {
   _ <- TrusteeIndividualOrBusinessPage(index) is IndividualOrBusiness.Business
@@ -90,5 +89,5 @@ trait UserAnswersWriting extends TryValues with ModelGenerators {
   _ <- TrusteeOrgNamePage(index).withArbitraryValue
   _ <- TrusteeUtrYesNoPage(index).withArbitraryValue
   _ <- TrusteeUtrPage(index).withArbitraryValue
-  } yield Unit
+  } yield ()
 }

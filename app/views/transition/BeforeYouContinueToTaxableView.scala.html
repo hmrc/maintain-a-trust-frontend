@@ -37,7 +37,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = BeforeYouContinueToTaxableController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = BeforeYouContinueToTaxableController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @headingWithCaption(
             headingPrefix = "beforeYouContinueToTaxable",

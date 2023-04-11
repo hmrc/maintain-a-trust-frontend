@@ -36,7 +36,7 @@
     showBackLink = true
 ) {
 
-   @formHelper(action = MigrateTo5mldInformationController.onSubmit(), 'autoComplete -> "off") {
+   @formHelper(action = MigrateTo5mldInformationController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @headingWithCaption(
             headingPrefix = "migrateTo5mldInformation",

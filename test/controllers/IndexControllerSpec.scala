@@ -19,7 +19,7 @@ package controllers
 import base.SpecBase
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
+import org.scalatest.BeforeAndAfterEach
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, route, status, _}
@@ -28,7 +28,14 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, EnrolmentIdentifier, Enr
 
 import scala.concurrent.Future
 
-class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach {
+class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
+
+  private val mockSessionRepository = mock[ActiveSessionRepository]
+
+  override def beforeEach(): Unit = {
+    reset(mockSessionRepository)
+    when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+  }
 
   private lazy val onPageLoad: String = routes.IndexController.onPageLoad.url
   private lazy val startUtr: String = routes.IndexController.startUtr.url
@@ -50,13 +57,6 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
       state = "Activated"
     )
   ))
-
-  private val mockSessionRepository = mock[ActiveSessionRepository]
-
-  override def beforeEach(): Unit = {
-    reset(mockSessionRepository)
-    when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-  }
 
   "Index Controller" when {
 
@@ -90,7 +90,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterAll with BeforeAnd
         userAnswers = Some(emptyUserAnswersForUtr),
         affinityGroup = AffinityGroup.Agent
       ).overrides(
-        bind[ActiveSessionRepository].toInstance(mockSessionRepository),
+        bind[ActiveSessionRepository].toInstance(mockSessionRepository)
       ).build()
 
       val request = FakeRequest(GET, onPageLoadRoute)

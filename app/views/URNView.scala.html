@@ -39,7 +39,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = URNController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = URNController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors)
 

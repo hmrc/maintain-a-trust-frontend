@@ -38,14 +38,20 @@ class ConfirmationViewSpec extends ViewBehaviours {
 
       assertContainsText(doc, "What happens next")
 
-      assertContainsText(doc, "Keep a note of your reference in case you need to contact HMRC. If there is a problem with the declaration, we will contact the lead trustee.")
+      assertContainsText(doc, "Keep a note of your reference in case you need to contact HMRC. " +
+        "If there is a problem with the declaration, we will contact the lead trustee.")
 
-      assertContainsText(doc, "If any of the settlor, trustee or beneficiary details change (before you make your next declaration) you will need to update them using the online service.")
+      assertContainsText(doc, "If any of the settlor, trustee or beneficiary details change (before you make your " +
+        "next declaration) you will need to update them using the online service.")
 
       if (isTrustTaxable) {
         assertContainsText(doc, "Declaring the trust is up to date")
-        
-        assertContainsText(doc, "You need to declare every year the details we have are up to date. This needs to be done through the Trust Registration Service and Self Assessment online or the Trust and Estate Tax Return form (SA900).")
+
+        assertContainsText(
+          doc,
+          "You need to declare every year the details we have are up to date. " +
+            "This needs to be done through the Trust Registration Service and Self Assessment online or the " +
+            "Trust and Estate Tax Return form (SA900).")
       } else {
         assertNotRenderedById(doc, "taxable-message")
       }

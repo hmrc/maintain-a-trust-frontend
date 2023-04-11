@@ -34,7 +34,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = WhatIsNextController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = WhatIsNextController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors, WhatIsNext.options(trustMldStatus).map(_._1))
 

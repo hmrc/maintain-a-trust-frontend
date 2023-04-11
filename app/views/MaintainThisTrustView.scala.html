@@ -49,7 +49,7 @@
 
     <p>@messages("maintainThisTrust.p4") @link(config.helplineUrl, "help-link", "maintainThisTrust.p4.a", true).</p>
 
-    @formHelper(action = continueUrl, 'autoComplete -> "off") {
+    @formHelper(action = continueUrl, Symbol("autoComplete") -> "off") {
         @submitButton()
     }
 

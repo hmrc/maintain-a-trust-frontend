@@ -35,7 +35,7 @@ class CorrespondenceExtractorSpec extends AnyFreeSpec with Matchers with EitherV
   "Correspondence Extractor" - {
 
     "when there is correspondence" in {
-      
+
       val correspondence = Correspondence(
         abroadIndicator = false,
         name = "Trust Ltd",
@@ -50,11 +50,11 @@ class CorrespondenceExtractorSpec extends AnyFreeSpec with Matchers with EitherV
 
       val extraction = correspondenceExtractor.extract(ua, correspondence)
 
-      extraction.right.value.get(CorrespondenceAbroadIndicatorPage).get mustBe false
-      extraction.right.value.get(TrustNamePage).get mustBe "Trust Ltd"
-      extraction.right.value.get(CorrespondenceAddressPage).get mustBe UKAddress("line1", "line2", None, None, "NE991NE")
-      extraction.right.value.get(CorrespondenceBpMatchStatusPage) mustNot be(defined)
-      extraction.right.value.get(CorrespondencePhoneNumberPage).get mustBe "1225645"
+      extraction.value.get(CorrespondenceAbroadIndicatorPage).get mustBe false
+      extraction.value.get(TrustNamePage).get mustBe "Trust Ltd"
+      extraction.value.get(CorrespondenceAddressPage).get mustBe UKAddress("line1", "line2", None, None, "NE991NE")
+      extraction.value.get(CorrespondenceBpMatchStatusPage) mustNot be(defined)
+      extraction.value.get(CorrespondencePhoneNumberPage).get mustBe "1225645"
 
     }
 

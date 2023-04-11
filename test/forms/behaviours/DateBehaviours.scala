@@ -24,6 +24,8 @@ import play.api.data.{Form, FormError}
 
 class DateBehaviours extends FieldBehaviours {
 
+  private val num10 = 10
+
   def dateField(form: Form[_], key: String, validData: Gen[LocalDate]): Unit = {
 
     "bind valid data" in {
@@ -48,7 +50,7 @@ class DateBehaviours extends FieldBehaviours {
 
     s"fail to bind a date greater than ${max.format(DateTimeFormatter.ISO_LOCAL_DATE)}" in {
 
-      val generator = datesBetween(max.plusDays(1), max.plusYears(10))
+      val generator = datesBetween(max.plusDays(1), max.plusYears(num10))
 
       forAll(generator -> "invalid dates") {
         date =>
@@ -70,7 +72,7 @@ class DateBehaviours extends FieldBehaviours {
 
     s"fail to bind a date earlier than ${min.format(DateTimeFormatter.ISO_LOCAL_DATE)}" in {
 
-      val generator = datesBetween(min.minusYears(10), min.minusDays(1))
+      val generator = datesBetween(min.minusYears(num10), min.minusDays(1))
 
       forAll(generator -> "invalid dates") {
         date =>

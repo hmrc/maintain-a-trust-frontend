@@ -26,12 +26,13 @@ class PdfHeadersSpec extends SpecBase {
   private val languageUtils: LanguageUtils = injector.instanceOf[LanguageUtils]
 
   "Pdf headers" must {
+    val number10 = 10L
 
     "parse header and modify filename in english" in {
       val headers = PdfHeaders(
         contentDisposition = "inline; filename=1234567890-2020-10-10.pdf",
         contentType = "application/pdf",
-        contentLength = 10L
+        contentLength = number10
       )
 
       val fileName = headers.fileNameWithServiceName(fakeRequest, languageUtils, messagesApi)
@@ -43,7 +44,7 @@ class PdfHeadersSpec extends SpecBase {
       val headers = PdfHeaders(
         contentDisposition = "inline; filename=1234567890-2020-10-10.pdf",
         contentType = "application/pdf",
-        contentLength = 10L
+        contentLength = number10
       )
 
       val fakeRequestInWelsh = FakeRequest()

@@ -40,6 +40,7 @@ class AllAssetsPrinterSpec extends SpecBase {
 
   private val address = InternationalAddress("Line 1", "Line 2", None, "DE")
   private val date: LocalDate = LocalDate.parse("2019-06-01")
+  private val (num100, num101, num200, num1000, num2000, num4000) = (100L, 101L, 200L, 1000L, 2000L, 4000L)
 
   "AllAssetsPrinter" must {
 
@@ -53,43 +54,43 @@ class AllAssetsPrinterSpec extends SpecBase {
         val answers = emptyUserAnswersForUtr
           .set(WhatIsNextPage, NeedsToPayTax).success.value
 
-          .set(MoneyValuePage(0), 4000L).success.value
+          .set(MoneyValuePage(0), num4000).success.value
 
           .set(PropertyOrLandAddressYesNoPage(0), false).success.value
           .set(PropertyOrLandDescriptionPage(0), "Building land name").success.value
-          .set(PropertyOrLandTotalValuePage(0), 2000L).success.value
+          .set(PropertyOrLandTotalValuePage(0), num2000).success.value
           .set(TrustOwnAllThePropertyOrLandPage(0), true).success.value
 
           .set(PropertyOrLandAddressYesNoPage(1), true).success.value
           .set(PropertyOrLandAddressUkYesNoPage(1), false).success.value
           .set(PropertyOrLandAddressPage(1), address).success.value
-          .set(PropertyOrLandTotalValuePage(1), 2000L).success.value
+          .set(PropertyOrLandTotalValuePage(1), num2000).success.value
           .set(TrustOwnAllThePropertyOrLandPage(1), false).success.value
-          .set(PropertyLandValueTrustPage(1), 1000L).success.value
+          .set(PropertyLandValueTrustPage(1), num1000).success.value
 
           .set(ShareNamePage(0), "Portfolio Name").success.value
           .set(SharesInAPortfolioPage(0),true).success.value
           .set(ShareOnStockExchangePage(0), true).success.value
           .set(ShareQuantityInTrustPage(0), "1000").success.value
-          .set(ShareValueInTrustPage(0), 100L).success.value
+          .set(ShareValueInTrustPage(0), num100).success.value
 
           .set(ShareClassPage(1), ShareClass.Preference).success.value
           .set(ShareNamePage(1), shareName).success.value
           .set(SharesInAPortfolioPage(1),false).success.value
           .set(ShareOnStockExchangePage(1), false).success.value
           .set(ShareQuantityInTrustPage(1), "2000").success.value
-          .set(ShareValueInTrustPage(1), 200L).success.value
+          .set(ShareValueInTrustPage(1), num200).success.value
 
           .set(BusinessNamePage(0), businessName).success.value
           .set(BusinessDescriptionPage(0), "Business Description").success.value
           .set(BusinessAddressPage(0), address).success.value
-          .set(BusinessValuePage(0), 101L).success.value
+          .set(BusinessValuePage(0), num101).success.value
 
           .set(PartnershipDescriptionPage(0), "Partnership Description").success.value
           .set(PartnershipStartDatePage(0), date).success.value
 
           .set(OtherAssetDescriptionPage(0), "Other Description").success.value
-          .set(OtherAssetValuePage(0), 100L).success.value
+          .set(OtherAssetValuePage(0), num100).success.value
 
         val result = helper.entities(answers)
 
@@ -117,7 +118,9 @@ class AllAssetsPrinterSpec extends SpecBase {
             rows = Seq(
               AnswerRow(label = messages("asset.propertyOrLand.addressYesNo.checkYourAnswersLabel"), answer = Html("Yes"), changeUrl = None),
               AnswerRow(label = messages("asset.propertyOrLand.addressUkYesNo.checkYourAnswersLabel"), answer = Html("No"), changeUrl = None),
-              AnswerRow(label = messages("asset.propertyOrLand.address.checkYourAnswersLabel"), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
+              AnswerRow(label = messages(
+                "asset.propertyOrLand.address.checkYourAnswersLabel"
+              ), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
               AnswerRow(label = messages("asset.propertyOrLand.totalValue.checkYourAnswersLabel"), answer = Html("£2000"), changeUrl = None),
               AnswerRow(label = messages("asset.propertyOrLand.trustOwnAllYesNo.checkYourAnswersLabel"), answer = Html("No"), changeUrl = None),
               AnswerRow(label = messages("asset.propertyOrLand.valueInTrust.checkYourAnswersLabel"), answer = Html("£1000"), changeUrl = None)
@@ -151,8 +154,12 @@ class AllAssetsPrinterSpec extends SpecBase {
             headingKey = Some("Business 1"),
             rows = Seq(
               AnswerRow(label = messages("asset.business.name.checkYourAnswersLabel"), answer = Html(businessName), changeUrl = None),
-              AnswerRow(label = messages("asset.business.description.checkYourAnswersLabel", businessName), answer = Html("Business Description"), changeUrl = None),
-              AnswerRow(label = messages("asset.business.address.checkYourAnswersLabel", businessName), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
+              AnswerRow(label = messages(
+                "asset.business.description.checkYourAnswersLabel", businessName
+              ), answer = Html("Business Description"), changeUrl = None),
+              AnswerRow(label = messages(
+                "asset.business.address.checkYourAnswersLabel", businessName
+              ), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
               AnswerRow(label = messages("asset.business.value.checkYourAnswersLabel", businessName), answer = Html("£101"), changeUrl = None)
             ),
             sectionKey = None
@@ -202,7 +209,9 @@ class AllAssetsPrinterSpec extends SpecBase {
             headingKey = Some("Non-EEA Company 1"),
             rows = Seq(
               AnswerRow(label = messages("nonEeaBusiness.name.checkYourAnswersLabel"), answer = Html(name), changeUrl = None),
-              AnswerRow(label = messages("nonEeaBusiness.internationalAddress.checkYourAnswersLabel", name), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
+              AnswerRow(label = messages(
+                "nonEeaBusiness.internationalAddress.checkYourAnswersLabel", name
+              ), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
               AnswerRow(label = messages("nonEeaBusiness.governingCountry.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None)
             ),
             sectionKey = None
@@ -211,7 +220,9 @@ class AllAssetsPrinterSpec extends SpecBase {
             headingKey = Some("Non-EEA Company 2"),
             rows = Seq(
               AnswerRow(label = messages("nonEeaBusiness.name.checkYourAnswersLabel"), answer = Html(name), changeUrl = None),
-              AnswerRow(label = messages("nonEeaBusiness.internationalAddress.checkYourAnswersLabel", name), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
+              AnswerRow(label = messages(
+                "nonEeaBusiness.internationalAddress.checkYourAnswersLabel", name
+              ), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
               AnswerRow(label = messages("nonEeaBusiness.governingCountry.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None)
             ),
             sectionKey = None
@@ -237,7 +248,9 @@ class AllAssetsPrinterSpec extends SpecBase {
             headingKey = Some("Non-EEA Company 1"),
             rows = Seq(
               AnswerRow(label = messages("nonEeaBusiness.name.checkYourAnswersLabel"), answer = Html(name), changeUrl = None),
-              AnswerRow(label = messages("nonEeaBusiness.internationalAddress.checkYourAnswersLabel", name), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
+              AnswerRow(label = messages(
+                "nonEeaBusiness.internationalAddress.checkYourAnswersLabel", name
+              ), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
               AnswerRow(label = messages("nonEeaBusiness.governingCountry.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None)
             ),
             sectionKey = None
@@ -246,7 +259,9 @@ class AllAssetsPrinterSpec extends SpecBase {
             headingKey = Some("Non-EEA Company 2"),
             rows = Seq(
               AnswerRow(label = messages("nonEeaBusiness.name.checkYourAnswersLabel"), answer = Html(name), changeUrl = None),
-              AnswerRow(label = messages("nonEeaBusiness.internationalAddress.checkYourAnswersLabel", name), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
+              AnswerRow(label = messages(
+                "nonEeaBusiness.internationalAddress.checkYourAnswersLabel", name
+              ), answer = Html("Line 1<br />Line 2<br />Germany"), changeUrl = None),
               AnswerRow(label = messages("nonEeaBusiness.governingCountry.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None)
             ),
             sectionKey = None

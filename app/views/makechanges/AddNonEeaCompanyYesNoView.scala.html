@@ -60,7 +60,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = AddNonEeaCompanyYesNoController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = AddNonEeaCompanyYesNoController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors, isYesNo = true)
 

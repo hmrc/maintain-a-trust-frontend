@@ -61,7 +61,7 @@ class ClassOfBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = classOfBeneficiaryExtractor.extract(ua, classesOfBeneficiaries)
 
-        extraction mustBe 'left
+        extraction mustBe Symbol("left")
 
       }
 
@@ -83,10 +83,10 @@ class ClassOfBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = classOfBeneficiaryExtractor.extract(ua, classOfBeneficiary)
 
-        extraction.right.value.get(ClassOfBeneficiaryDescriptionPage(0)).get mustBe "Class Of Beneficiary 1"
-        extraction.right.value.get(ClassOfBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(ClassOfBeneficiaryDiscretionYesNoPage(0)).get mustBe true
-        extraction.right.value.get(ClassOfBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
+        extraction.value.get(ClassOfBeneficiaryDescriptionPage(0)).get mustBe "Class Of Beneficiary 1"
+        extraction.value.get(ClassOfBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.value.get(ClassOfBeneficiaryDiscretionYesNoPage(0)).get mustBe true
+        extraction.value.get(ClassOfBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
       }
 
       "with full data must return user answers updated" in {
@@ -96,23 +96,23 @@ class ClassOfBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = classOfBeneficiaryExtractor.extract(ua, charities)
 
-        extraction mustBe 'right
+        extraction mustBe Symbol("right")
 
-        extraction.right.value.get(ClassOfBeneficiaryDescriptionPage(0)).get mustBe "Class Of Beneficiary 0"
-        extraction.right.value.get(ClassOfBeneficiaryDescriptionPage(1)).get mustBe "Class Of Beneficiary 1"
-        extraction.right.value.get(ClassOfBeneficiaryDescriptionPage(2)).get mustBe "Class Of Beneficiary 2"
+        extraction.value.get(ClassOfBeneficiaryDescriptionPage(0)).get mustBe "Class Of Beneficiary 0"
+        extraction.value.get(ClassOfBeneficiaryDescriptionPage(1)).get mustBe "Class Of Beneficiary 1"
+        extraction.value.get(ClassOfBeneficiaryDescriptionPage(2)).get mustBe "Class Of Beneficiary 2"
 
-        extraction.right.value.get(ClassOfBeneficiaryMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
-        extraction.right.value.get(ClassOfBeneficiaryMetaData(1)).get mustBe MetaData("1", Some("98"), "2019-11-26")
-        extraction.right.value.get(ClassOfBeneficiaryMetaData(2)).get mustBe MetaData("2", Some("98"), "2019-11-26")
+        extraction.value.get(ClassOfBeneficiaryMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
+        extraction.value.get(ClassOfBeneficiaryMetaData(1)).get mustBe MetaData("1", Some("98"), "2019-11-26")
+        extraction.value.get(ClassOfBeneficiaryMetaData(2)).get mustBe MetaData("2", Some("98"), "2019-11-26")
 
-        extraction.right.value.get(ClassOfBeneficiaryDiscretionYesNoPage(0)).get mustBe false
-        extraction.right.value.get(ClassOfBeneficiaryDiscretionYesNoPage(1)).get mustBe true
-        extraction.right.value.get(ClassOfBeneficiaryDiscretionYesNoPage(2)).get mustBe true
+        extraction.value.get(ClassOfBeneficiaryDiscretionYesNoPage(0)).get mustBe false
+        extraction.value.get(ClassOfBeneficiaryDiscretionYesNoPage(1)).get mustBe true
+        extraction.value.get(ClassOfBeneficiaryDiscretionYesNoPage(2)).get mustBe true
 
-        extraction.right.value.get(ClassOfBeneficiaryShareOfIncomePage(0)).get mustBe "98"
-        extraction.right.value.get(ClassOfBeneficiaryShareOfIncomePage(1)) mustNot be(defined)
-        extraction.right.value.get(ClassOfBeneficiaryShareOfIncomePage(2)) mustNot be(defined)
+        extraction.value.get(ClassOfBeneficiaryShareOfIncomePage(0)).get mustBe "98"
+        extraction.value.get(ClassOfBeneficiaryShareOfIncomePage(1)) mustNot be(defined)
+        extraction.value.get(ClassOfBeneficiaryShareOfIncomePage(2)) mustNot be(defined)
       }
 
     }

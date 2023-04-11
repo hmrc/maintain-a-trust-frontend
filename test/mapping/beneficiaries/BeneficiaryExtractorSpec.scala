@@ -52,7 +52,7 @@ class BeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = beneficiaryExtractor.extract(ua, beneficiary)
 
-        extraction.right.value mustBe ua
+        extraction.value mustBe ua
       }
     }
 
@@ -183,99 +183,99 @@ class BeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = beneficiaryExtractor.extract(ua, beneficiary)
 
-        extraction.right.value.get(CompanyBeneficiaryNamePage(0)).get mustBe "Company 1"
-        extraction.right.value.get(CompanyBeneficiaryDiscretionYesNoPage(0)).get mustBe false
-        extraction.right.value.get(CompanyBeneficiaryShareOfIncomePage(0)).get mustBe "10"
-        extraction.right.value.get(CompanyBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
-        extraction.right.value.get(CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-        extraction.right.value.get(CompanyBeneficiaryCountryOfResidencePage(0)).get mustBe GB
-        extraction.right.value.get(CompanyBeneficiaryAddressYesNoPage(0)).get mustBe true
-        extraction.right.value.get(CompanyBeneficiaryAddressUKYesNoPage(0)).get mustBe true
-        extraction.right.value.get(CompanyBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
-        extraction.right.value.get(CompanyBeneficiaryUtrPage(0)) mustNot be(defined)
-        extraction.right.value.get(CompanyBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(CompanyBeneficiarySafeIdPage(0)) must be(defined)
+        extraction.value.get(CompanyBeneficiaryNamePage(0)).get mustBe "Company 1"
+        extraction.value.get(CompanyBeneficiaryDiscretionYesNoPage(0)).get mustBe false
+        extraction.value.get(CompanyBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+        extraction.value.get(CompanyBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.value.get(CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.value.get(CompanyBeneficiaryCountryOfResidencePage(0)).get mustBe GB
+        extraction.value.get(CompanyBeneficiaryAddressYesNoPage(0)).get mustBe true
+        extraction.value.get(CompanyBeneficiaryAddressUKYesNoPage(0)).get mustBe true
+        extraction.value.get(CompanyBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
+        extraction.value.get(CompanyBeneficiaryUtrPage(0)) mustNot be(defined)
+        extraction.value.get(CompanyBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.value.get(CompanyBeneficiarySafeIdPage(0)) must be(defined)
 
-        extraction.right.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 1"
-        extraction.right.value.get(TrustBeneficiaryDiscretionYesNoPage(0)).get mustBe false
-        extraction.right.value.get(TrustBeneficiaryShareOfIncomePage(0)).get mustBe "10"
-        extraction.right.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
-        extraction.right.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-        extraction.right.value.get(TrustBeneficiaryCountryOfResidencePage(0)).get mustBe GB
-        extraction.right.value.get(TrustBeneficiaryAddressYesNoPage(0)).get mustBe true
-        extraction.right.value.get(TrustBeneficiaryAddressUKYesNoPage(0)).get mustBe true
-        extraction.right.value.get(TrustBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
-        extraction.right.value.get(TrustBeneficiaryUtrPage(0)) mustNot be(defined)
-        extraction.right.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(TrustBeneficiarySafeIdPage(0)) must be(defined)
+        extraction.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 1"
+        extraction.value.get(TrustBeneficiaryDiscretionYesNoPage(0)).get mustBe false
+        extraction.value.get(TrustBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+        extraction.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.value.get(TrustBeneficiaryCountryOfResidencePage(0)).get mustBe GB
+        extraction.value.get(TrustBeneficiaryAddressYesNoPage(0)).get mustBe true
+        extraction.value.get(TrustBeneficiaryAddressUKYesNoPage(0)).get mustBe true
+        extraction.value.get(TrustBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
+        extraction.value.get(TrustBeneficiaryUtrPage(0)) mustNot be(defined)
+        extraction.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.value.get(TrustBeneficiarySafeIdPage(0)) must be(defined)
 
-        extraction.right.value.get(CharityBeneficiaryNamePage(0)).get mustBe "Charity 1"
-        extraction.right.value.get(CharityBeneficiaryDiscretionYesNoPage(0)).get mustBe false
-        extraction.right.value.get(CharityBeneficiaryShareOfIncomePage(0)).get mustBe "10"
-        extraction.right.value.get(CharityBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
-        extraction.right.value.get(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-        extraction.right.value.get(CharityBeneficiaryCountryOfResidencePage(0)).get mustBe GB
-        extraction.right.value.get(CharityBeneficiaryAddressYesNoPage(0)).get mustBe true
-        extraction.right.value.get(CharityBeneficiaryAddressUKYesNoPage(0)).get mustBe true
-        extraction.right.value.get(CharityBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
-        extraction.right.value.get(CharityBeneficiaryUtrPage(0)) mustNot be(defined)
-        extraction.right.value.get(CharityBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(CharityBeneficiarySafeIdPage(0)) must be(defined)
+        extraction.value.get(CharityBeneficiaryNamePage(0)).get mustBe "Charity 1"
+        extraction.value.get(CharityBeneficiaryDiscretionYesNoPage(0)).get mustBe false
+        extraction.value.get(CharityBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+        extraction.value.get(CharityBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.value.get(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.value.get(CharityBeneficiaryCountryOfResidencePage(0)).get mustBe GB
+        extraction.value.get(CharityBeneficiaryAddressYesNoPage(0)).get mustBe true
+        extraction.value.get(CharityBeneficiaryAddressUKYesNoPage(0)).get mustBe true
+        extraction.value.get(CharityBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
+        extraction.value.get(CharityBeneficiaryUtrPage(0)) mustNot be(defined)
+        extraction.value.get(CharityBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.value.get(CharityBeneficiarySafeIdPage(0)) must be(defined)
 
-        extraction.right.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
-        extraction.right.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get mustBe false
-        extraction.right.value.get(OtherBeneficiaryShareOfIncomePage(0)).get mustBe "10"
-        extraction.right.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
-        extraction.right.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-        extraction.right.value.get(OtherBeneficiaryCountryOfResidencePage(0)).get mustBe GB
-        extraction.right.value.get(OtherBeneficiaryAddressYesNoPage(0)).get mustBe true
-        extraction.right.value.get(OtherBeneficiaryAddressUKYesNoPage(0)).get mustBe true
-        extraction.right.value.get(OtherBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
-        extraction.right.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
+        extraction.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get mustBe false
+        extraction.value.get(OtherBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+        extraction.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.value.get(OtherBeneficiaryCountryOfResidencePage(0)).get mustBe GB
+        extraction.value.get(OtherBeneficiaryAddressYesNoPage(0)).get mustBe true
+        extraction.value.get(OtherBeneficiaryAddressUKYesNoPage(0)).get mustBe true
+        extraction.value.get(OtherBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
+        extraction.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
-        extraction.right.value.get(ClassOfBeneficiaryDescriptionPage(0)).get mustBe "Class Of Beneficiary 1"
-        extraction.right.value.get(ClassOfBeneficiaryDiscretionYesNoPage(0)).get mustBe false
-        extraction.right.value.get(ClassOfBeneficiaryShareOfIncomePage(0)).get mustBe "10"
-        extraction.right.value.get(ClassOfBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.value.get(ClassOfBeneficiaryDescriptionPage(0)).get mustBe "Class Of Beneficiary 1"
+        extraction.value.get(ClassOfBeneficiaryDiscretionYesNoPage(0)).get mustBe false
+        extraction.value.get(ClassOfBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+        extraction.value.get(ClassOfBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
-        extraction.right.value.get(IndividualBeneficiaryNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-        extraction.right.value.get(IndividualBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(IndividualBeneficiaryRoleInCompanyPage(0)) mustNot be(defined)
-        extraction.right.value.get(IndividualBeneficiaryVulnerableYesNoPage(0)).get mustBe false
-        extraction.right.value.get(IndividualBeneficiaryDateOfBirthYesNoPage(0)).get mustBe false
-        extraction.right.value.get(IndividualBeneficiaryDateOfBirthPage(0)) mustNot be(defined)
-        extraction.right.value.get(IndividualBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
-        extraction.right.value.get(IndividualBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-        extraction.right.value.get(IndividualBeneficiaryCountryOfResidencePage(0)).get mustBe GB
-        extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityYesNoPage(0)).get mustBe true
-        extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
-        extraction.right.value.get(IndividualBeneficiaryCountryOfNationalityPage(0)).get mustBe GB
-        extraction.right.value.get(IndividualBeneficiaryMentalCapacityYesNoPage(0)).get mustBe true
-        extraction.right.value.get(IndividualBeneficiaryIncomeYesNoPage(0)).get mustBe true
-        extraction.right.value.get(IndividualBeneficiaryIncomePage(0)) mustNot be(defined)
-        extraction.right.value.get(IndividualBeneficiaryNationalInsuranceYesNoPage(0)).get mustBe false
-        extraction.right.value.get(IndividualBeneficiaryNationalInsuranceNumberPage(0)) mustNot be(defined)
-        extraction.right.value.get(IndividualBeneficiaryAddressYesNoPage(0)).get mustBe false
-        extraction.right.value.get(IndividualBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(IndividualBeneficiaryAddressPage(0)) mustNot be(defined)
-        extraction.right.value.get(IndividualBeneficiaryPassportIDCardYesNoPage(0)) mustNot be(defined)
-        extraction.right.value.get(IndividualBeneficiaryPassportIDCardPage(0)) mustNot be(defined)
-        extraction.right.value.get(IndividualBeneficiarySafeIdPage(0)) mustNot be(defined)
+        extraction.value.get(IndividualBeneficiaryNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
+        extraction.value.get(IndividualBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.value.get(IndividualBeneficiaryRoleInCompanyPage(0)) mustNot be(defined)
+        extraction.value.get(IndividualBeneficiaryVulnerableYesNoPage(0)).get mustBe false
+        extraction.value.get(IndividualBeneficiaryDateOfBirthYesNoPage(0)).get mustBe false
+        extraction.value.get(IndividualBeneficiaryDateOfBirthPage(0)) mustNot be(defined)
+        extraction.value.get(IndividualBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.value.get(IndividualBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.value.get(IndividualBeneficiaryCountryOfResidencePage(0)).get mustBe GB
+        extraction.value.get(IndividualBeneficiaryCountryOfNationalityYesNoPage(0)).get mustBe true
+        extraction.value.get(IndividualBeneficiaryCountryOfNationalityInTheUkYesNoPage(0)).get mustBe true
+        extraction.value.get(IndividualBeneficiaryCountryOfNationalityPage(0)).get mustBe GB
+        extraction.value.get(IndividualBeneficiaryMentalCapacityYesNoPage(0)).get mustBe true
+        extraction.value.get(IndividualBeneficiaryIncomeYesNoPage(0)).get mustBe true
+        extraction.value.get(IndividualBeneficiaryIncomePage(0)) mustNot be(defined)
+        extraction.value.get(IndividualBeneficiaryNationalInsuranceYesNoPage(0)).get mustBe false
+        extraction.value.get(IndividualBeneficiaryNationalInsuranceNumberPage(0)) mustNot be(defined)
+        extraction.value.get(IndividualBeneficiaryAddressYesNoPage(0)).get mustBe false
+        extraction.value.get(IndividualBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
+        extraction.value.get(IndividualBeneficiaryAddressPage(0)) mustNot be(defined)
+        extraction.value.get(IndividualBeneficiaryPassportIDCardYesNoPage(0)) mustNot be(defined)
+        extraction.value.get(IndividualBeneficiaryPassportIDCardPage(0)) mustNot be(defined)
+        extraction.value.get(IndividualBeneficiarySafeIdPage(0)) mustNot be(defined)
 
-        extraction.right.value.get(LargeBeneficiaryNamePage(0)).get mustBe "Large 1"
-        extraction.right.value.get(LargeBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
-        extraction.right.value.get(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-        extraction.right.value.get(LargeBeneficiaryCountryOfResidencePage(0)).get mustBe GB
-        extraction.right.value.get(LargeBeneficiaryDescriptionPage(0)).get mustBe Description("Description", Some("Description 1"), None, None, None)
-        extraction.right.value.get(LargeBeneficiaryDiscretionYesNoPage(0)).get mustBe false
-        extraction.right.value.get(LargeBeneficiaryShareOfIncomePage(0)).get mustBe "10"
-        extraction.right.value.get(LargeBeneficiaryAddressYesNoPage(0)).get mustBe true
-        extraction.right.value.get(LargeBeneficiaryAddressUKYesNoPage(0)).get mustBe true
-        extraction.right.value.get(LargeBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
-        extraction.right.value.get(LargeBeneficiaryUtrPage(0)) mustNot be(defined)
-        extraction.right.value.get(LargeBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-        extraction.right.value.get(LargeBeneficiarySafeIdPage(0)) must be(defined)
-        extraction.right.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe Over1
+        extraction.value.get(LargeBeneficiaryNamePage(0)).get mustBe "Large 1"
+        extraction.value.get(LargeBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe true
+        extraction.value.get(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
+        extraction.value.get(LargeBeneficiaryCountryOfResidencePage(0)).get mustBe GB
+        extraction.value.get(LargeBeneficiaryDescriptionPage(0)).get mustBe Description("Description", Some("Description 1"), None, None, None)
+        extraction.value.get(LargeBeneficiaryDiscretionYesNoPage(0)).get mustBe false
+        extraction.value.get(LargeBeneficiaryShareOfIncomePage(0)).get mustBe "10"
+        extraction.value.get(LargeBeneficiaryAddressYesNoPage(0)).get mustBe true
+        extraction.value.get(LargeBeneficiaryAddressUKYesNoPage(0)).get mustBe true
+        extraction.value.get(LargeBeneficiaryAddressPage(0)).get mustBe UKAddress("line 1", "line 2", None, None, "NE11NE")
+        extraction.value.get(LargeBeneficiaryUtrPage(0)) mustNot be(defined)
+        extraction.value.get(LargeBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.value.get(LargeBeneficiarySafeIdPage(0)) must be(defined)
+        extraction.value.get(LargeBeneficiaryNumberOfBeneficiariesPage(0)).get mustBe Over1
 
       }
 

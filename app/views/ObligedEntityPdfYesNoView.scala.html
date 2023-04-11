@@ -97,7 +97,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = ObligedEntityPdfYesNoController.onSubmit(), 'autoComplete -> "off", 'id -> "download-pdf", Symbol("data-identifier") -> identifier) {
+    @formHelper(action = ObligedEntityPdfYesNoController.onSubmit(), Symbol("autoComplete") -> "off", Symbol("id") -> "download-pdf", Symbol("data-identifier") -> identifier) {
 
         @errorSummary(form.errors, isYesNo = true)
 

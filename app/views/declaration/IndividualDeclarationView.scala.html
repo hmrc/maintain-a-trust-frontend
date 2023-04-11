@@ -46,7 +46,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = IndividualDeclarationController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = IndividualDeclarationController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors)
 

@@ -23,6 +23,7 @@ import models.{DetailsType, FullName, InternationalAddress, MigrationTaskStatus,
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 import play.api.http.Status.INTERNAL_SERVER_ERROR
+import java.time.Month._
 
 import java.time.LocalDate
 
@@ -71,9 +72,11 @@ trait ModelGenerators {
       } yield UKAddress(line1, line2, Some(line3), Some(line4), postcode)
     }
 
+  private val (year2010, num10) = (2010, 10)
+
   implicit lazy val arbitraryDate: Arbitrary[LocalDate] =
     Arbitrary {
-      Gen.const(LocalDate.of(2010, 10, 10))
+      Gen.const(LocalDate.of(year2010, OCTOBER, num10))
     }
 
   implicit lazy val arbitraryWhatIsNext: Arbitrary[WhatIsNext] =

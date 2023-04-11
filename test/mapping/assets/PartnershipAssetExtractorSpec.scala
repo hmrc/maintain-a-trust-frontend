@@ -25,11 +25,14 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.EitherValues
 import pages.assets.partnership._
+import java.time.Month.NOVEMBER
 
 class PartnershipAssetExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  def generatePartnership(index: Int) = DisplayTrustPartnershipType(
+  private val (year2019, num26) = (2019, 26)
+
+  def generatePartnership(index: Int): DisplayTrustPartnershipType = DisplayTrustPartnershipType(
     utr = None,
     description = s"Partnership $index",
     partnershipStart = Some(LocalDate.parse("2019-11-26"))
@@ -50,8 +53,8 @@ class PartnershipAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, assets)
 
-        extraction mustBe 'right
-        extraction.right.value.data mustBe ua.data
+        extraction mustBe Symbol("right")
+        extraction.value.data mustBe ua.data
 
       }
 
@@ -73,8 +76,8 @@ class PartnershipAssetExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = assetExtractor.extract(ua, businessAssets)
 
-          extraction.right.value.get(PartnershipDescriptionPage(0)).get mustBe "Partnership 1"
-          extraction.right.value.get(PartnershipStartDatePage(0)).get mustBe LocalDate.of(2019, 11, 26)
+          extraction.value.get(PartnershipDescriptionPage(0)).get mustBe "Partnership 1"
+          extraction.value.get(PartnershipStartDatePage(0)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
         }
 
         "with full data must return user answers updated" in {
@@ -84,16 +87,16 @@ class PartnershipAssetExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = assetExtractor.extract(ua, businessAssets)
 
-          extraction mustBe 'right
+          extraction mustBe Symbol("right")
 
-          extraction.right.value.get(PartnershipDescriptionPage(0)).get mustBe "Partnership 0"
-          extraction.right.value.get(PartnershipStartDatePage(0)).get mustBe LocalDate.of(2019, 11, 26)
+          extraction.value.get(PartnershipDescriptionPage(0)).get mustBe "Partnership 0"
+          extraction.value.get(PartnershipStartDatePage(0)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
 
-          extraction.right.value.get(PartnershipDescriptionPage(1)).get mustBe "Partnership 1"
-          extraction.right.value.get(PartnershipStartDatePage(1)).get mustBe LocalDate.of(2019, 11, 26)
+          extraction.value.get(PartnershipDescriptionPage(1)).get mustBe "Partnership 1"
+          extraction.value.get(PartnershipStartDatePage(1)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
 
-          extraction.right.value.get(PartnershipDescriptionPage(2)).get mustBe "Partnership 2"
-          extraction.right.value.get(PartnershipStartDatePage(2)).get mustBe LocalDate.of(2019, 11, 26)
+          extraction.value.get(PartnershipDescriptionPage(2)).get mustBe "Partnership 2"
+          extraction.value.get(PartnershipStartDatePage(2)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
         }
       }
 

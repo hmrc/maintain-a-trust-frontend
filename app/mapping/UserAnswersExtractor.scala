@@ -64,15 +64,15 @@ class UserAnswersExtractorImpl @Inject()(
       )
 
       def answersCombined: Either[PlaybackExtractionError, Option[UserAnswers]] = for {
-        correspondence <- correspondenceExtractor.extract(updatedAnswers, data.correspondence).right
-        beneficiaries <- beneficiariesExtractor.extract(updatedAnswers, data.trust.entities.beneficiary).right
-        settlors <- settlorsExtractor.extract(updatedAnswers, data.trust.entities).right
-        assets <- assetsExtractor.extract(updatedAnswers, data.trust.assets).right
-        trustType <- trustTypeExtractor.extract(updatedAnswers, data.trust).right
-        protectors <- protectorsExtractor.extract(updatedAnswers, data.trust.entities.protectors).right
-        otherIndividuals <- otherIndividualsExtractor.extract(updatedAnswers, data.trust.entities.naturalPerson.getOrElse(Nil)).right
-        trustees <- trusteesExtractor.extract(updatedAnswers, data.trust.entities).right
-        trustDetails <- trustDetailsExtractor.extract(updatedAnswers, data.trust.details).right
+        correspondence <- correspondenceExtractor.extract(updatedAnswers, data.correspondence)
+        beneficiaries <- beneficiariesExtractor.extract(updatedAnswers, data.trust.entities.beneficiary)
+        settlors <- settlorsExtractor.extract(updatedAnswers, data.trust.entities)
+        assets <- assetsExtractor.extract(updatedAnswers, data.trust.assets)
+        trustType <- trustTypeExtractor.extract(updatedAnswers, data.trust)
+        protectors <- protectorsExtractor.extract(updatedAnswers, data.trust.entities.protectors)
+        otherIndividuals <- otherIndividualsExtractor.extract(updatedAnswers, data.trust.entities.naturalPerson.getOrElse(Nil))
+        trustees <- trusteesExtractor.extract(updatedAnswers, data.trust.entities)
+        trustDetails <- trustDetailsExtractor.extract(updatedAnswers, data.trust.details)
       } yield {
         List(correspondence, beneficiaries, settlors, assets, trustType, protectors, otherIndividuals, trustees, trustDetails).combine
       }

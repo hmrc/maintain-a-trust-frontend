@@ -36,7 +36,7 @@ title = messages("migrateTo5mldInformation.title"),
 showBackLink = true
 ) {
 
-@formHelper(action = InformationSchedule3aExemptionController.onSubmit(), 'autoComplete -> "off") {
+@formHelper(action = InformationSchedule3aExemptionController.onSubmit(), Symbol("autoComplete") -> "off") {
 
 @headingWithCaption(
 headingPrefix = "migrateTo5mldInformation",

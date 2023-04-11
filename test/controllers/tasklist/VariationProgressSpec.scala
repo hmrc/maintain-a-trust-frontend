@@ -134,7 +134,8 @@ class VariationProgressSpec extends SpecBase {
               )
             }
 
-            // needs to be CannotStartYet as we don't know for certain if it's a NoActionNeeded until we know the trust type (i.e. when trust details is completed)
+            // needs to be CannotStartYet as we don't know for certain if it's a NoActionNeeded
+            // until we know the trust type (i.e. when trust details is completed)
             "settlors and beneficiaries are NothingToUpdate" in {
               val tasks = CompletedMaintenanceTasks()
 
@@ -155,7 +156,8 @@ class VariationProgressSpec extends SpecBase {
               )
             }
 
-            // needs to be CannotStartYet as we don't know for certain if it's a NoActionNeeded until we know the trust type (i.e. when trust details is completed)
+            // needs to be CannotStartYet as we don't know for certain if it's a NoActionNeeded
+            // until we know the trust type (i.e. when trust details is completed)
             "settlors and beneficiaries are Updated" in {
               val tasks = CompletedMaintenanceTasks()
 

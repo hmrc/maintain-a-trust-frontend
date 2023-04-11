@@ -37,6 +37,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
   val fakeAgencyName = "Agency Name"
   val fakeTelephoneNumber = "01234567890"
   val fakeCrn = "123456"
+  private val (year2020, num27) = (2020, 27)
 
   "PlaybackDeclaredAnswersController Controller" must {
 
@@ -44,7 +45,7 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
       .set(WhatIsNextPage, whatIsNext).success.value
       .set(TVNPage, fakeTvn).success.value
       .set(AgentDeclarationPage, AgentDeclaration(FullName("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
-      .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value
+      .set(SubmissionDatePage, LocalDateTime.of(year2020, 1, num27, 0, 0)).success.value
 
       .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value
       .set(CharityBeneficiaryDiscretionYesNoPage(0), true).success.value
@@ -124,9 +125,6 @@ class PrintMaintainDeclaredAnswersControllerSpec extends SpecBase {
 
         application.stop()
       }
-
     }
-
   }
-
 }

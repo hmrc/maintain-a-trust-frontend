@@ -37,6 +37,7 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
   val fakeAgencyName = "Agency Name"
   val fakeTelephoneNumber = "01234567890"
   val fakeCrn = "123456"
+  private val (year2020, num27) = (2020, 27)
 
   "PlaybackDraftAnswersController Controller" must {
 
@@ -44,7 +45,7 @@ class PrintMaintainDraftAnswersControllerSpec extends SpecBase {
       .set(WhatIsNextPage, CloseTrust).success.value
       .set(TVNPage, fakeTvn).success.value
       .set(AgentDeclarationPage, AgentDeclaration(FullName("John", None, "Smith"), fakeAgencyName, fakeTelephoneNumber, fakeCrn, None)).success.value
-      .set(SubmissionDatePage, LocalDateTime.of(2020, 1, 27, 0, 0)).success.value
+      .set(SubmissionDatePage, LocalDateTime.of(year2020, 1, num27, 0, 0)).success.value
       .set(DateLastAssetSharedOutPage, LocalDate.parse("2019-02-03")).success.value
 
       .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").success.value

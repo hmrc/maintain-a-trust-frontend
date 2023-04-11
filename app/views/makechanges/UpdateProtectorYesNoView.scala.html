@@ -39,7 +39,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = UpdateProtectorYesNoController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = UpdateProtectorYesNoController.onSubmit(), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors, isYesNo = true)
 

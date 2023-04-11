@@ -25,6 +25,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.EitherValues
 import pages.settlors.deceased_settlor._
 import utils.Constants.GB
+import java.time.Month._
 
 import java.time.LocalDate
 
@@ -33,6 +34,8 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
   val deceasedSettlorExtractor: DeceasedSettlorExtractor =
     injector.instanceOf[DeceasedSettlorExtractor]
+
+  private val (year1970, year2019, year2020, num15) = (1970, 2019, 2020, 15)
 
   "Deceased Settlor Extractor" - {
 
@@ -46,7 +49,7 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = deceasedSettlorExtractor.extract(ua, deceasedSettlor)
 
-        extraction mustBe 'left
+        extraction mustBe Symbol("left")
 
       }
 
@@ -74,22 +77,22 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
       }
 
@@ -113,22 +116,22 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
 
 
@@ -157,23 +160,23 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorDateOfDeathPage).get mustBe LocalDate.of(2019, 2, 1)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage).get mustBe GB
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage).get mustBe GB
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorSafeIdPage).get mustBe "34234234-34234-234234"
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
+          extraction.value.get(SettlorDateOfDeathPage).get mustBe LocalDate.of(year2019, FEBRUARY, 1)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage).get mustBe GB
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage).get mustBe GB
+          extraction.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorSafeIdPage).get mustBe "34234234-34234-234234"
         }
 
         "with name and nino, must return user answers updated" in {
@@ -201,22 +204,22 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage).get mustBe "DE"
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage).get mustBe "DE"
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage).get mustBe "NA1111111A"
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage).get mustBe "DE"
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage).get mustBe "DE"
+          extraction.value.get(SettlorNationalInsuranceYesNoPage).get mustBe true
+          extraction.value.get(SettlorNationalInsuranceNumberPage).get mustBe "NA1111111A"
+          extraction.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
 
         "with name and UK address, must return user answers updated" in {
@@ -244,23 +247,23 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorLastKnownAddressPage).get mustBe UKAddress("line 1", "line2", None, None, "NE11NE")
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
+          extraction.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe true
+          extraction.value.get(SettlorLastKnownAddressPage).get mustBe UKAddress("line 1", "line2", None, None, "NE11NE")
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
 
         "with name and International address, must return user answers updated" in {
@@ -288,23 +291,23 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorLastKnownAddressPage).get mustBe InternationalAddress("Int line 1", "Int line2", None, "DE")
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
+          extraction.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe false
+          extraction.value.get(SettlorLastKnownAddressPage).get mustBe InternationalAddress("Int line 1", "Int line2", None, "DE")
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
 
         "with name and passport/ID Card, must return user answers updated" in {
@@ -321,7 +324,7 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
               DisplayTrustIdentificationType(
                 safeId = None,
                 nino = None,
-                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, FEBRUARY, 2))),
                 address = None
               )
             ),
@@ -332,24 +335,24 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) must be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage).get.countryOfIssue mustBe "DE"
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage).get mustBe false
+          extraction.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) must be(defined)
+          extraction.value.get(SettlorPassportIDCardPage).get.countryOfIssue mustBe "DE"
         }
 
         "with name, date of death, date of birth and nino, must return user answers updated" in {
@@ -377,22 +380,22 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorDateOfDeathPage).get mustBe LocalDate.of(2019, 2, 1)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorDateOfBirthPage).get mustBe LocalDate.of(1970, 10, 15)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage).get mustBe "NA1111111A"
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
+          extraction.value.get(SettlorDateOfDeathPage).get mustBe LocalDate.of(year2019, FEBRUARY, 1)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe true
+          extraction.value.get(SettlorDateOfBirthPage).get mustBe LocalDate.of(year1970, OCTOBER, num15)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage).get mustBe true
+          extraction.value.get(SettlorNationalInsuranceNumberPage).get mustBe "NA1111111A"
+          extraction.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
 
         "with name, UK Address, passport/ID Card, metaData and safeId, must return user answers updated" in {
@@ -409,7 +412,7 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
               DisplayTrustIdentificationType(
                 safeId = Some("XK0000100152366"),
                 nino = None,
-                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, FEBRUARY, 2))),
                 address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
               )
             ),
@@ -420,26 +423,26 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorLastKnownAddressPage) must be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) must be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage).get.countryOfIssue mustBe "DE"
-          extraction.right.value.get(DeceasedSettlorSafeIdPage).get mustBe "XK0000100152366"
-          extraction.right.value.get(DeceasedSettlorMetaData).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage).get mustBe false
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage).get mustBe true
+          extraction.value.get(SettlorLastKnownAddressUKYesNoPage).get mustBe true
+          extraction.value.get(SettlorLastKnownAddressPage) must be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) must be(defined)
+          extraction.value.get(SettlorPassportIDCardPage).get.countryOfIssue mustBe "DE"
+          extraction.value.get(DeceasedSettlorSafeIdPage).get mustBe "XK0000100152366"
+          extraction.value.get(DeceasedSettlorMetaData).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
         }
 
@@ -465,22 +468,22 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
 
 
@@ -509,23 +512,23 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorDateOfDeathPage).get mustBe LocalDate.of(2019, 2, 1)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage).get mustBe GB
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage).get mustBe GB
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorSafeIdPage).get mustBe "34234234-34234-234234"
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
+          extraction.value.get(SettlorDateOfDeathPage).get mustBe LocalDate.of(year2019, FEBRUARY, 1)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage).get mustBe GB
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage).get mustBe GB
+          extraction.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorSafeIdPage).get mustBe "34234234-34234-234234"
         }
 
         "with name and nino, must return user answers updated" in {
@@ -553,22 +556,22 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage).get mustBe "DE"
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe true
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage).get mustBe "DE"
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage).get mustBe "DE"
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe true
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage).get mustBe "DE"
+          extraction.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
 
         "with name and UK address, must return user answers updated" in {
@@ -596,23 +599,23 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
 
         "with name and International address, must return user answers updated" in {
@@ -640,23 +643,23 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
 
         "with name and passport/ID Card, must return user answers updated" in {
@@ -673,7 +676,7 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
               DisplayTrustIdentificationType(
                 safeId = None,
                 nino = None,
-                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, FEBRUARY, 2))),
                 address = None
               )
             ),
@@ -684,23 +687,23 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
 
         "with name, date of death, date of birth and nino, must return user answers updated" in {
@@ -728,22 +731,22 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorDateOfDeathPage).get mustBe LocalDate.of(2019, 2, 1)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe true
-          extraction.right.value.get(SettlorDateOfBirthPage).get mustBe LocalDate.of(1970, 10, 15)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe true
+          extraction.value.get(SettlorDateOfDeathPage).get mustBe LocalDate.of(year2019, FEBRUARY, 1)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe true
+          extraction.value.get(SettlorDateOfBirthPage).get mustBe LocalDate.of(year1970, OCTOBER, num15)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
         }
 
         "with name, UK Address, passport/ID Card, metaData and safeId, must return user answers updated" in {
@@ -760,7 +763,7 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
               DisplayTrustIdentificationType(
                 safeId = Some("XK0000100152366"),
                 nino = None,
-                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(2020, 2, 2))),
+                passport = Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, FEBRUARY, 2))),
                 address = Some(AddressType("line 1", "line2", None, None, Some("NE11NE"), GB))
               )
             ),
@@ -771,25 +774,25 @@ class DeceasedSettlorExtractorSpec extends AnyFreeSpec with Matchers
 
           val extraction = deceasedSettlorExtractor.extract(ua, List(deceasedSettlor))
 
-          extraction.right.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
-          extraction.right.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfDeathPage) mustNot be(defined)
-          extraction.right.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
-          extraction.right.value.get(SettlorDateOfBirthPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
-          extraction.right.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
-          extraction.right.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
-          extraction.right.value.get(SettlorPassportIDCardPage) mustNot be(defined)
-          extraction.right.value.get(DeceasedSettlorSafeIdPage).get mustBe "XK0000100152366"
-          extraction.right.value.get(DeceasedSettlorMetaData).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(SettlorNamePage).get mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(SettlorDateOfDeathYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfDeathPage) mustNot be(defined)
+          extraction.value.get(SettlorDateOfBirthYesNoPage).get mustBe false
+          extraction.value.get(SettlorDateOfBirthPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfNationalityPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidenceYesNoPage).get mustBe false
+          extraction.value.get(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorCountryOfResidencePage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorNationalInsuranceNumberPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressUKYesNoPage) mustNot be(defined)
+          extraction.value.get(SettlorLastKnownAddressPage) mustNot be(defined)
+          extraction.value.get(SettlorPassportIDCardPage) mustNot be(defined)
+          extraction.value.get(DeceasedSettlorSafeIdPage).get mustBe "XK0000100152366"
+          extraction.value.get(DeceasedSettlorMetaData).get mustBe MetaData("1", Some("01"), "2019-11-26")
 
         }
 
