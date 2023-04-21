@@ -26,6 +26,8 @@ import play.api.data.{Form, Forms}
 
 class UKAddressFormProvider @Inject() extends Mappings {
 
+  private val maximumLength = 35
+
   def apply(): Form[UKAddress] = Form(
     mapping(
       "line1" ->
@@ -33,7 +35,7 @@ class UKAddressFormProvider @Inject() extends Mappings {
           .verifying(
             firstError(
               isNotEmpty("line1", "ukAddress.error.line1.required"),
-              maxLength(35, "ukAddress.error.line1.length"),
+              maxLength(maximumLength, "ukAddress.error.line1.length"),
               regexp(Validation.addressLineRegex, "ukAddress.error.line1.invalidCharacters")
             )),
       "line2" ->
@@ -41,7 +43,7 @@ class UKAddressFormProvider @Inject() extends Mappings {
           .verifying(
             firstError(
               isNotEmpty("line2", "ukAddress.error.line2.required"),
-              maxLength(35, "ukAddress.error.line2.length"),
+              maxLength(maximumLength, "ukAddress.error.line2.length"),
               regexp(Validation.addressLineRegex, "ukAddress.error.line2.invalidCharacters")
             )),
       "line3" ->
@@ -49,7 +51,7 @@ class UKAddressFormProvider @Inject() extends Mappings {
           .transform(trimWhitespace, identity[String])
           .verifying(
             firstError(
-              maxLength(35, "ukAddress.error.line3.length"),
+              maxLength(maximumLength, "ukAddress.error.line3.length"),
               regexp(Validation.addressLineRegex, "ukAddress.error.line3.invalidCharacters")
             ))).transform(emptyToNone, identity[Option[String]]),
       "line4" ->
@@ -57,7 +59,7 @@ class UKAddressFormProvider @Inject() extends Mappings {
           .transform(trimWhitespace, identity[String])
           .verifying(
             firstError(
-              maxLength(35, "ukAddress.error.line4.length"),
+              maxLength(maximumLength, "ukAddress.error.line4.length"),
               regexp(Validation.addressLineRegex, "ukAddress.error.line4.invalidCharacters")
             ))).transform(emptyToNone, identity[Option[String]]),
 

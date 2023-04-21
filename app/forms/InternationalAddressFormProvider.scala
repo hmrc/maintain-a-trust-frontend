@@ -26,6 +26,8 @@ import play.api.data.{Form, Forms}
 
 class InternationalAddressFormProvider @Inject() extends Mappings {
 
+  private val maximumLength = 35
+
   def apply(): Form[InternationalAddress] = Form(
     mapping(
       "line1" ->
@@ -33,7 +35,7 @@ class InternationalAddressFormProvider @Inject() extends Mappings {
           .verifying(
             firstError(
               isNotEmpty("line1", "internationalAddress.error.line1.required"),
-              maxLength(35, "internationalAddress.error.line1.length"),
+              maxLength(maximumLength, "internationalAddress.error.line1.length"),
               regexp(Validation.addressLineRegex, "internationalAddress.error.line1.invalidCharacters")
             )),
       "line2" ->
@@ -41,7 +43,7 @@ class InternationalAddressFormProvider @Inject() extends Mappings {
           .verifying(
             firstError(
               isNotEmpty("line2", "internationalAddress.error.line2.required"),
-              maxLength(35, "internationalAddress.error.line2.length"),
+              maxLength(maximumLength, "internationalAddress.error.line2.length"),
               regexp(Validation.addressLineRegex, "internationalAddress.error.line2.invalidCharacters")
             )),
       "line3" ->
@@ -49,14 +51,14 @@ class InternationalAddressFormProvider @Inject() extends Mappings {
           .transform(trimWhitespace, identity[String])
           .verifying(
             firstError(
-              maxLength(35, "internationalAddress.error.line3.length"),
+              maxLength(maximumLength, "internationalAddress.error.line3.length"),
               regexp(Validation.addressLineRegex, "internationalAddress.error.line3.invalidCharacters")
             ))).transform(emptyToNone, identity[Option[String]]),
       "country" ->
         text("internationalAddress.error.country.required")
           .verifying(
             firstError(
-              maxLength(35, "internationalAddress.error.country.length"),
+              maxLength(maximumLength, "internationalAddress.error.country.length"),
               isNotEmpty("country", "internationalAddress.error.country.required")
             ))
     )(InternationalAddress.apply)(InternationalAddress.unapply)
