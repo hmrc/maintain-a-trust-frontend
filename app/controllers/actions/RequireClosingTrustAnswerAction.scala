@@ -30,11 +30,13 @@ class RequireClosingTrustAnswerAction @Inject()(errorHandler: ErrorHandler)
                                                (implicit val executionContext: ExecutionContext)
   extends ActionRefiner[DataRequest, ClosingTrustRequest] with Logging {
 
+  private val className = getClass.getSimpleName
+
   override protected def refine[A](request: DataRequest[A]): Future[Either[Result, ClosingTrustRequest[A]]] = {
     Future.successful(
       request.userAnswers.get(WhatIsNextPage) match {
         case None =>
-          logger.warn(s"[RequireClosingTrustAnswerAction][refine] [UTR/URN: ${request.userAnswers.identifier}] " +
+          logger.warn(s"[$className][refine] [UTR/URN: ${request.userAnswers.identifier}] " +
             s"no answer for 'What next' found in user answers, cannot determine if user is closing the trust, cannot continue with journey")
           Left(
             Results.InternalServerError(errorHandler.internalServerErrorTemplate(request.request))

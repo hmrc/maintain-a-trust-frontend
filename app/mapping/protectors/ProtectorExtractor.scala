@@ -17,16 +17,16 @@
 package mapping.protectors
 
 import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
 import models.UserAnswersCombinator._
+import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.DisplayTrustProtectorsType
 import sections.Protectors
 
 class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProtectorExtractor,
                                    businessProtectorExtractor: BusinessProtectorExtractor) {
 
-  def extract(answers: UserAnswers, data: Option[DisplayTrustProtectorsType]): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: Option[DisplayTrustProtectorsType]): Either[TrustErrors, UserAnswers] = {
 
     data match {
       case Some(p) =>

@@ -17,7 +17,9 @@
 package controllers
 
 import base.SpecBase
+import cats.data.EitherT
 import forms.URNFormProvider
+import models.errors.TrustErrors
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.data.Form
@@ -34,14 +36,14 @@ import scala.concurrent.Future
 
 class URNControllerSpec extends SpecBase {
 
-  val formProvider = new URNFormProvider()
-  val form: Form[String] = formProvider()
+  private val formProvider = new URNFormProvider()
+  private val form: Form[String] = formProvider()
 
-  lazy val trustURNRoute: String = routes.URNController.onPageLoad().url
+  private lazy val trustURNRoute: String = routes.URNController.onPageLoad().url
 
-  val urn = "abtrust12345678"
+  private val urn = "abtrust12345678"
 
-  val enrolments: Enrolments = Enrolments(Set(Enrolment(
+  private val enrolments: Enrolments = Enrolments(Set(Enrolment(
     "HMRC-TERSNT-ORG", Seq(EnrolmentIdentifier("URN", urn)), "Activated"
   )))
 
@@ -87,7 +89,7 @@ class URNControllerSpec extends SpecBase {
 
       val mockRepository = mock[ActiveSessionRepository]
 
-      when(mockRepository.set(any())).thenReturn(Future.successful(true))
+      when(mockRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       val application = applicationBuilder(userAnswers = None).overrides(
         bind[ActiveSessionRepository].toInstance(mockRepository)
@@ -109,7 +111,7 @@ class URNControllerSpec extends SpecBase {
 
       val mockRepository = mock[ActiveSessionRepository]
 
-      when(mockRepository.set(any())).thenReturn(Future.successful(true))
+      when(mockRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       val application =
         applicationBuilder(

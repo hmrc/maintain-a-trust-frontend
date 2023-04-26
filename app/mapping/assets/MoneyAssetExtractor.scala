@@ -18,18 +18,17 @@ package mapping.assets
 
 import mapping.PlaybackExtractor
 import models.UserAnswers
+import models.errors.TrustErrors
 import models.http.AssetMonetaryAmount
 import pages.assets.money.MoneyValuePage
-
-import scala.util.Try
 
 class MoneyAssetExtractor extends PlaybackExtractor[AssetMonetaryAmount] {
 
   override val optionalEntity: Boolean = true
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: AssetMonetaryAmount,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     answers
       .flatMap(_.set(MoneyValuePage(index), entity.assetMonetaryAmount))
   }

@@ -22,7 +22,9 @@ import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
 import controllers.makechanges.MakeChangesQuestionRouterController
 import forms.WhatIsNextFormProvider
+import handlers.ErrorHandler
 import models.UserAnswers
+import models.errors.{FormValidationError, TrustErrors}
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
 import models.requests.DataRequest
@@ -30,14 +32,14 @@ import pages.WhatIsNextPage
 import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc._
 import repositories.PlaybackRepository
 import services.MaintainATrustService
-import utils.Session
+import utils.TrustEnvelope.TrustEnvelope
+import utils.{Session, TrustEnvelope}
 import views.html.WhatIsNextView
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Success
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class WhatIsNextController @Inject()(
@@ -50,11 +52,13 @@ class WhatIsNextController @Inject()(
                                       trustConnector: TrustConnector,
                                       trustsStoreConnector: TrustsStoreConnector,
                                       maintainATrustService: MaintainATrustService,
-                                      appConfig: FrontendAppConfig
+                                      appConfig: FrontendAppConfig,
+                                      errorHandler: ErrorHandler
                                     )(implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) with Logging {
 
-  val form: Form[WhatIsNext] = formProvider()
+  private val className = getClass.getSimpleName
+  private val form: Form[WhatIsNext] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
@@ -70,25 +74,27 @@ class WhatIsNextController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.trustMldStatus))),
+      val result = for {
+        formData <- TrustEnvelope(handleFormValidation)
+        hasAnswerChanged <- TrustEnvelope(!request.userAnswers.get(WhatIsNextPage).contains(formData))
+        updatedAnswers <- TrustEnvelope(request.userAnswers.set(WhatIsNextPage, formData))
+        _ <- playbackRepository.set(updatedAnswers)
+        redirectRoute <- updateMigrationStatusAndRedirect(updatedAnswers, formData, hasAnswerChanged)
+      } yield {
+        redirectRoute
+      }
 
-        value => {
-          for {
-            hasAnswerChanged <- Future.fromTry(Success(!request.userAnswers.get(WhatIsNextPage).contains(value)))
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(WhatIsNextPage, value))
-            _ <- playbackRepository.set(updatedAnswers)
-            result <- updateMigrationStatusAndRedirect(updatedAnswers, value, hasAnswerChanged)
-          } yield {
-            result
-          }
-        }
-      )
+      result.value.map {
+        case Right(call) => call
+        case Left(FormValidationError(formBadRequest)) => formBadRequest
+        case Left(_) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${Session.id(hc)}] Error while storing user answers")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
+      }
   }
 
   private def updateMigrationStatusAndRedirect(userAnswers: UserAnswers, newAnswer: WhatIsNext, hasAnswerChanged: Boolean)
-                                              (implicit request: DataRequest[AnyContent]): Future[Result] = {
+                                              (implicit request: DataRequest[AnyContent]): TrustEnvelope[Result] = {
 
     def redirect: Result = Redirect {
       newAnswer match {
@@ -96,10 +102,8 @@ class WhatIsNextController @Inject()(
           redirectToDeclaration
         case MakeChanges =>
           redirectToFirstUpdateQuestion
-        case CloseTrust if userAnswers.isTrustTaxable =>
-          controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
         case CloseTrust =>
-          controllers.close.nontaxable.routes.DateClosedController.onPageLoad()
+          redirectsForClosedTrust(userAnswers)
         case NoLongerTaxable =>
           controllers.routes.NoTaxLiabilityInfoController.onPageLoad()
         case NeedsToPayTax if appConfig.migrateATrustEnabled =>
@@ -114,21 +118,37 @@ class WhatIsNextController @Inject()(
 
     if (newAnswer != GeneratePdf) {
       for {
-        _ <- removeTransformsIfAnswerHasChanged(hasAnswerChanged)
+        _ <- TrustEnvelope(removeTransformsIfAnswerHasChanged(hasAnswerChanged))
         _ <- trustConnector.setTaxableMigrationFlag(request.userAnswers.identifier, newAnswer == NeedsToPayTax)
       } yield redirect
     } else {
-      Future.successful(redirect)
+      TrustEnvelope(redirect)
     }
   }
 
   private def removeTransformsIfAnswerHasChanged(hasAnswerChanged: Boolean)
-                                                (implicit request: DataRequest[AnyContent]): Future[Unit] = {
+                                                (implicit request: DataRequest[AnyContent]): TrustEnvelope[Unit] = {
     if (hasAnswerChanged) {
-      logger.info(s"[WhatIsNextController][removeTransformsIfAnswerHasChanged][Session ID: ${Session.id(hc)}] Answer has changed. Removing transforms and resetting tasks.")
+      logger.info(s"[$className][removeTransformsIfAnswerHasChanged][Session ID: ${Session.id(hc)}] Answer has changed. Removing transforms and resetting tasks.")
       maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     } else {
-      Future.successful(())
+      TrustEnvelope(())
+    }
+  }
+
+  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, WhatIsNext] = {
+    form.bindFromRequest().fold(
+      (formWithErrors: Form[_]) =>
+        Left(FormValidationError(BadRequest(view(formWithErrors, request.userAnswers.trustMldStatus)))),
+      value => Right(value)
+    )
+  }
+
+  protected def redirectsForClosedTrust(userAnswers: UserAnswers): Call = {
+    if(userAnswers.isTrustTaxable) {
+      controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
+    } else {
+      controllers.close.nontaxable.routes.DateClosedController.onPageLoad()
     }
   }
 

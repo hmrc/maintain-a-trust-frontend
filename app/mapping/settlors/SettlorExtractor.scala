@@ -17,9 +17,9 @@
 package mapping.settlors
 
 import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
 import models.UserAnswersCombinator._
+import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.DisplayTrustEntitiesType
 import sections.settlors.LivingSettlors
 
@@ -27,7 +27,7 @@ class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtrac
                                  individualSettlorExtractor: IndividualSettlorExtractor,
                                  businessSettlorExtractor: BusinessSettlorExtractor) {
 
-  def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[TrustErrors, UserAnswers] = {
 
     val settlors: List[UserAnswers] = List(
       deceasedSettlorExtractor.extract(answers, data.deceased.toList),

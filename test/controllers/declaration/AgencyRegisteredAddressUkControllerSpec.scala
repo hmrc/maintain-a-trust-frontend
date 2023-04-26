@@ -18,6 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.UKAddressFormProvider
+import models.errors.MongoError
 import models.pages.WhatIsNext.{MakeChanges, NeedsToPayTax}
 import models.{UKAddress, UserAnswers}
 import pages.WhatIsNextPage
@@ -28,12 +29,12 @@ import views.html.declaration.AgencyRegisteredAddressUkView
 
 class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
-  val formProvider = new UKAddressFormProvider()
-  val form = formProvider()
-  lazy val agencyRegisteredAddressUkRoute = routes.AgencyRegisteredAddressUkController.onPageLoad().url
+  private val formProvider = new UKAddressFormProvider()
+  private val form = formProvider()
+  private lazy val agencyRegisteredAddressUkRoute = routes.AgencyRegisteredAddressUkController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, MakeChanges).success.value
+  private val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+    .set(WhatIsNextPage, MakeChanges).value
 
   "AgencyRegisteredAddressUk Controller" must {
 
@@ -58,7 +59,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = baseAnswers
-        .set(AgencyRegisteredAddressUkPage, UKAddress("line 1", "line 2", Some("line 3"), Some("line 4"),"line 5")).success.value
+        .set(AgencyRegisteredAddressUkPage, UKAddress("line 1", "line 2", Some("line 3"), Some("line 4"),"line 5")).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -80,7 +81,7 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
       "migrating from non-taxable to taxable" in {
 
-        val answers = baseAnswers.set(WhatIsNextPage, NeedsToPayTax).success.value
+        val answers = baseAnswers.set(WhatIsNextPage, NeedsToPayTax).value
 
         val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -131,6 +132,25 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
       contentAsString(result) mustEqual
         view(boundForm)(request, messages).toString
+
+      application.stop()
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
+
+      val answers = baseAnswers.set(WhatIsNextPage, NeedsToPayTax).value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(POST, agencyRegisteredAddressUkRoute)
+        .withFormUrlEncodedBody(("line1", "value 1"), ("line2", "value 2"), ("postcode", "NE1 1ZZ"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
 
       application.stop()
     }

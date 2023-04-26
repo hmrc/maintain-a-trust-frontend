@@ -16,19 +16,17 @@
 
 package mapping.trustees
 
-import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import models.UserAnswers
+import models.errors.{InvalidExtractorState, TrustErrors}
 import models.http.{DisplayTrustIdentificationType, DisplayTrustLeadTrusteeIndType}
 import models.pages.IndividualOrBusiness
 import pages.trustees._
 
-import scala.util.{Failure, Try}
-
 class IndividualLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrustLeadTrusteeIndType] {
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustLeadTrusteeIndType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
@@ -45,7 +43,7 @@ class IndividualLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTru
 
   private def extractIdentification(identification: DisplayTrustIdentificationType,
                                     index: Int,
-                                    answers: UserAnswers): Try[UserAnswers] = {
+                                    answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     identification match {
       case DisplayTrustIdentificationType(_, Some(nino), None, Some(address)) =>
         answers.set(TrusteeAUKCitizenPage(index), true)
@@ -57,16 +55,16 @@ class IndividualLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTru
           .flatMap(answers => extractAddress(address, index, answers))
       case DisplayTrustIdentificationType(_, None, Some(_), None) =>
         logger.error(s"[IndividualLeadTrusteeExtractor][extractIdentification][UTR/URN: ${answers.identifier}] only passport identification for lead trustee individual returned in DisplayTrustOrEstate api")
-        Failure(InvalidExtractorState)
+        Left(InvalidExtractorState)
       case DisplayTrustIdentificationType(_, Some(nino), None, None) =>
         answers.set(TrusteeAUKCitizenPage(index), true)
           .flatMap(_.set(TrusteeNinoPage(index), nino))
       case DisplayTrustIdentificationType(_, None, None, Some(_)) =>
         logger.error(s"[IndividualLeadTrusteeExtractor][extractIdentification][UTR/URN: ${answers.identifier}] only address identification for lead trustee individual returned in DisplayTrustOrEstate api")
-        Failure(InvalidExtractorState)
+        Left(InvalidExtractorState)
       case DisplayTrustIdentificationType(_, _, _, _) =>
         logger.error(s"[IndividualLeadTrusteeExtractor][extractIdentification][UTR/URN: ${answers.identifier}] no identification for lead trustee individual returned in DisplayTrustOrEstate api")
-        Failure(InvalidExtractorState)
+        Left(InvalidExtractorState)
     }
   }
 }

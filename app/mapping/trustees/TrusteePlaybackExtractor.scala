@@ -17,13 +17,13 @@
 package mapping.trustees
 
 import mapping.PlaybackExtractor
+import models.errors.TrustErrors
 import models.http.{PassportType, TrusteeType}
 import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.trustees._
 
 import java.time.LocalDate
-import scala.util.Try
 
 trait TrusteePlaybackExtractor[T <: TrusteeType] extends PlaybackExtractor[T] {
 
@@ -57,7 +57,7 @@ trait TrusteePlaybackExtractor[T <: TrusteeType] extends PlaybackExtractor[T] {
 
   def extractEmail(email: Option[String],
                    index: Int,
-                   answers: UserAnswers): Try[UserAnswers] = {
+                   answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     email match {
       case Some(value) =>
         answers.set(TrusteeEmailYesNoPage(index), true)

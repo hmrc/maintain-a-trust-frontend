@@ -117,7 +117,7 @@ class VariationProgressSpec extends SpecBase {
             "settlors and beneficiaries need updating" in {
               val tasks = CompletedMaintenanceTasks()
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, identifier)
@@ -139,7 +139,7 @@ class VariationProgressSpec extends SpecBase {
             "settlors and beneficiaries are NothingToUpdate" in {
               val tasks = CompletedMaintenanceTasks()
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, identifier)
@@ -161,7 +161,7 @@ class VariationProgressSpec extends SpecBase {
             "settlors and beneficiaries are Updated" in {
               val tasks = CompletedMaintenanceTasks()
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, Updated, Updated, 0, identifier)
@@ -193,7 +193,7 @@ class VariationProgressSpec extends SpecBase {
                 other = NotStarted
               )
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, identifier)
@@ -222,7 +222,7 @@ class VariationProgressSpec extends SpecBase {
                 other = NotStarted
               )
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, identifier)
@@ -251,7 +251,7 @@ class VariationProgressSpec extends SpecBase {
                 other = NotStarted
               )
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 0, identifier)
@@ -280,7 +280,7 @@ class VariationProgressSpec extends SpecBase {
                 other = NotStarted
               )
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, Updated, Updated, 0, identifier)
@@ -310,7 +310,7 @@ class VariationProgressSpec extends SpecBase {
                 other = NotStarted
               )
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 0, identifier)
@@ -339,7 +339,7 @@ class VariationProgressSpec extends SpecBase {
                 other = NotStarted
               )
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, NothingToUpdate, NothingToUpdate, 1, identifier)
@@ -368,7 +368,7 @@ class VariationProgressSpec extends SpecBase {
                 other = NotStarted
               )
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 1, identifier)
@@ -397,7 +397,7 @@ class VariationProgressSpec extends SpecBase {
                 other = NotStarted
               )
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, NeedsUpdating, NeedsUpdating, 1, identifier)
@@ -426,7 +426,7 @@ class VariationProgressSpec extends SpecBase {
                 other = NotStarted
               )
 
-              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).success.value
+              val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, WhatIsNext.NeedsToPayTax).value
               val identifier = userAnswers.identifier
 
               val result = variationProgress.generateTransitionTaskList(tasks, Updated, Updated, 1, identifier)

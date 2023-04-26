@@ -19,6 +19,9 @@ package controllers.transition
 import connectors.TrustConnector
 import controllers.actions.Actions
 import forms.YesNoFormProvider
+import handlers.ErrorHandler
+import models.errors.{FormValidationError, TrustErrors}
+import models.requests.DataRequest
 import navigation.Navigator.declarationUrl
 import pages.trustdetails.Schedule3aExemptYesNoPage
 import play.api.Logging
@@ -27,10 +30,11 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.TrustEnvelope
 import views.html.transition.Schedule3aExemptYesNoView
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class Schedule3aExemptYesNoController @Inject()(
                                                  override val messagesApi: MessagesApi,
@@ -39,9 +43,11 @@ class Schedule3aExemptYesNoController @Inject()(
                                                  formProvider: YesNoFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: Schedule3aExemptYesNoView,
-                                                 trustsConnector: TrustConnector
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                                 trustsConnector: TrustConnector,
+                                                 errorHandler: ErrorHandler
+                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
+  private val className = getClass.getSimpleName
   private val form: Form[Boolean] = formProvider.withPrefix("schedule3aExemptYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
@@ -58,20 +64,30 @@ class Schedule3aExemptYesNoController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+      val result = for {
+        formData <- TrustEnvelope(handleFormValidation)
+        updatedAnswers <- TrustEnvelope(request.userAnswers.set(Schedule3aExemptYesNoPage, formData))
+        _ <- playbackRepository.set(updatedAnswers)
+        _ <- trustsConnector.setSchedule3aExempt(request.userAnswers.identifier, formData)
+      } yield Redirect(declarationUrl(
+        request.user.affinityGroup,
+        isTrustMigratingFromNonTaxableToTaxable = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
+      ))
 
-        value => {
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(Schedule3aExemptYesNoPage, value))
-            _ <- playbackRepository.set(updatedAnswers)
-            _ <- trustsConnector.setSchedule3aExempt(request.userAnswers.identifier, value)
-          } yield Redirect(declarationUrl(
-            request.user.affinityGroup,
-            isTrustMigratingFromNonTaxableToTaxable = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
-          ))
-        }
-      )
+      result.value.map {
+        case Right(call) => call
+        case Left(FormValidationError(formBadRequest)) => formBadRequest
+        case Left(_) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
+      }
+  }
+
+  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, Boolean] = {
+    form.bindFromRequest().fold(
+      (formWithErrors: Form[_]) =>
+        Left(FormValidationError(BadRequest(view(formWithErrors)))),
+      value => Right(value)
+    )
   }
 }

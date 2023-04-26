@@ -17,6 +17,7 @@
 package pages
 
 import models.UserAnswers
+import models.errors.TrustErrors
 import models.pages.WhatIsNext
 import pages.declaration._
 import pages.makechanges._
@@ -24,15 +25,13 @@ import pages.transition.NeedToPayTaxYesNoPage
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.libs.json.JsPath
 
-import scala.util.Try
-
 case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "whatIsNext"
 
-  override def cleanup(value: Option[WhatIsNext], userAnswers: UserAnswers): Try[UserAnswers] = {
+  override def cleanup(value: Option[WhatIsNext], userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     value match {
       case _ =>
         removeDeclarationData(userAnswers)
@@ -42,7 +41,7 @@ case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
     }
   }
 
-  private def removeDeclarationData(userAnswers: UserAnswers): Try[UserAnswers] = {
+  private def removeDeclarationData(userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     userAnswers.remove(AgencyRegisteredAddressUkYesNoPage)
       .flatMap(_.remove(AgencyRegisteredAddressUkPage))
       .flatMap(_.remove(AgencyRegisteredAddressInternationalPage))
@@ -50,7 +49,7 @@ case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
       .flatMap(_.remove(IndividualDeclarationPage))
   }
 
-  private def removeMakeChangesData(userAnswers: UserAnswers): Try[UserAnswers] = {
+  private def removeMakeChangesData(userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     userAnswers.remove(UpdateTrustDetailsYesNoPage)
       .flatMap(_.remove(UpdateTrusteesYesNoPage))
       .flatMap(_.remove(UpdateBeneficiariesYesNoPage))
@@ -60,11 +59,11 @@ case object WhatIsNextPage extends QuestionPage[WhatIsNext] {
       .flatMap(_.remove(AddOrUpdateNonEeaCompanyYesNoPage))
   }
 
-  private def removeCloseTrustData(userAnswers: UserAnswers): Try[UserAnswers] = {
+  private def removeCloseTrustData(userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     userAnswers.deleteAtPath(pages.close.basePath)
   }
 
-  private def removeTransitionData(userAnswers: UserAnswers): Try[UserAnswers] = {
+  private def removeTransitionData(userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     userAnswers.remove(NeedToPayTaxYesNoPage)
       .flatMap(_.remove(ExpressTrustYesNoPage))
   }

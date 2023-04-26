@@ -94,7 +94,7 @@ class TestWizardController @Inject()(
 
   private def setMode(mode: FourOrFiveMLD)(implicit req: Request[AnyContent]): Future[Unit] = {
     val state = mode == FiveMLD
-    trustStoreConnector.setFeature("5mld", state).map(_ => ())
+    trustStoreConnector.setFeature("5mld", state).value.map(_ => ())
   }
 
 }

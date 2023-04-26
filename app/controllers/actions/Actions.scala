@@ -22,7 +22,7 @@ import play.api.mvc.{ActionBuilder, AnyContent}
 
 class Actions @Inject()(
                          identify: IdentifierAction,
-                         getData: DataRetrievalAction,
+                         getData: DataRetrievalRefinerAction,
                          requireData: DataRequiredAction,
                          playbackIdentifier: PlaybackIdentifierAction,
                          refreshedDataRetrieval: RefreshedDataRetrievalAction,
@@ -33,10 +33,10 @@ class Actions @Inject()(
   def auth : ActionBuilder[IdentifierRequest, AnyContent] = identify
 
   def authWithOptionalData: ActionBuilder[OptionalDataRequest, AnyContent] =
-    auth andThen getData
+    identify andThen getData
 
   def authWithData: ActionBuilder[DataRequest, AnyContent] =
-    authWithOptionalData andThen requireData
+    identify andThen getData andThen requireData
 
   def verifiedForIdentifier: ActionBuilder[DataRequest, AnyContent] =
     authWithData andThen playbackIdentifier

@@ -16,20 +16,23 @@
 
 package repositories
 
+import cats.data.EitherT
 import com.google.inject.ImplementedBy
-import models.IdentifierSession
-import play.api.libs.json._
-import play.api.Logging
-import java.util.concurrent.TimeUnit
 import config.FrontendAppConfig
-import javax.inject.{Inject, Singleton}
-import org.mongodb.scala.model.{FindOneAndUpdateOptions, IndexModel, IndexOptions, ReplaceOptions, Updates}
+import models.IdentifierSession
+import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Indexes.ascending
+import org.mongodb.scala.model._
+import play.api.Logging
+import play.api.libs.json._
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
-import org.mongodb.scala.model.Filters.equal
+import utils.TrustEnvelope.TrustEnvelope
+
 import java.time.LocalDateTime
-import scala.concurrent.{ExecutionContext, Future}
+import java.util.concurrent.TimeUnit
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ActiveSessionRepositoryImpl @Inject()(
@@ -39,7 +42,7 @@ class ActiveSessionRepositoryImpl @Inject()(
   extends PlayMongoRepository[IdentifierSession](
     collectionName = "session",
     mongoComponent = mongoComponent,
-    domainFormat = Format(IdentifierSession.reads,IdentifierSession.writes),
+    domainFormat = Format(IdentifierSession.reads, IdentifierSession.writes),
     indexes = Seq(
       IndexModel(
         ascending("updatedAt"),
@@ -53,37 +56,54 @@ class ActiveSessionRepositoryImpl @Inject()(
           .unique(false)
           .name("identifier-index")
       )
-      ), replaceIndexes = config.dropIndexes
+    ), replaceIndexes = config.dropIndexes
 
-    ) with Logging with ActiveSessionRepository {
+  ) with Logging with ActiveSessionRepository with RepositoryHelper {
 
+  private val className = getClass.getSimpleName
 
-  def get(internalId: String): Future[Option[IdentifierSession]] = {
+  def get(internalId: String): TrustEnvelope[Option[IdentifierSession]] = EitherT {
 
     val selector = equal("internalId", internalId)
-
     val modifier = Updates.set("updatedAt", LocalDateTime.now())
-
     val updateOption = new FindOneAndUpdateOptions().upsert(false)
 
-    collection.findOneAndUpdate(selector, modifier, updateOption).toFutureOption()
-
+    collection.findOneAndUpdate(selector, modifier, updateOption)
+      .toFutureOption()
+      .map(Right(_))
+      .recover {
+        mongoRecover(
+          repository = className,
+          method = "get",
+          sessionId = internalId,
+          message = s"operation failed due to exception from Mongo"
+        )
+      }
   }
 
-    def set(session: IdentifierSession): Future[Boolean] = {
+  def set(session: IdentifierSession): TrustEnvelope[Boolean] = EitherT {
 
-      val selector = equal("internalId", session.internalId)
+    val selector = equal("internalId", session.internalId)
 
-      collection.replaceOne(selector, session.copy(updatedAt = LocalDateTime.now), ReplaceOptions().upsert(true))
-        .head().map(_.wasAcknowledged())
+    collection.replaceOne(selector, session.copy(updatedAt = LocalDateTime.now), ReplaceOptions().upsert(true))
+      .head()
+      .map(updateResult => Right(updateResult.wasAcknowledged()))
+      .recover {
+        mongoRecover(
+          repository = className,
+          method = "set",
+          sessionId = session.internalId,
+          message = s"operation failed due to exception from Mongo"
+        )
     }
+  }
+
 }
 
-  @ImplementedBy(classOf[ActiveSessionRepositoryImpl])
-  trait ActiveSessionRepository {
+@ImplementedBy(classOf[ActiveSessionRepositoryImpl])
+trait ActiveSessionRepository {
 
-    def get(internalId: String): Future[Option[IdentifierSession]]
+  def get(internalId: String): TrustEnvelope[Option[IdentifierSession]]
 
-    def set(session: IdentifierSession): Future[Boolean]
-
-  }
+  def set(session: IdentifierSession): TrustEnvelope[Boolean]
+}

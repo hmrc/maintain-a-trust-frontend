@@ -19,23 +19,25 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.AgentDeclarationFormProvider
-import models.http.{DeclarationErrorResponse, TVNResponse}
-import models.requests.{AgentUser, DataRequest}
+import handlers.ErrorHandler
+import models.errors._
+import models.requests.{AgentUser, ClosingTrustRequest}
 import models.{Address, AgentDeclaration, UserAnswers}
 import pages._
 import pages.declaration.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
 import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.DeclarationService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustClosureDate.getClosureDate
+import utils.TrustEnvelope
 import views.html.declaration.AgentDeclarationView
 
-import java.time.{LocalDate, LocalDateTime}
-import scala.concurrent.{ExecutionContext, Future}
+import java.time.LocalDateTime
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class AgentDeclarationController @Inject()(
@@ -45,10 +47,12 @@ class AgentDeclarationController @Inject()(
                                             formProvider: AgentDeclarationFormProvider,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: AgentDeclarationView,
-                                            service: DeclarationService
+                                            service: DeclarationService,
+                                            errorHandler: ErrorHandler
                                           )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
-  val form: Form[AgentDeclaration] = formProvider()
+  private val className = getClass.getSimpleName
+  private val form: Form[AgentDeclaration] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
@@ -64,73 +68,65 @@ class AgentDeclarationController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.closingTrust))),
-
-        declaration => {
-          request.user match {
-            case agentUser: AgentUser =>
-              (for {
-                agencyAddress <- getAgencyRegisteredAddress(request.userAnswers)
-              } yield {
-                submitDeclaration(
-                  declaration,
-                  agentUser,
-                  request.userAnswers.identifier,
-                  agencyAddress,
-                  getClosureDate(request.userAnswers)
-                )(request.request)
-              }).getOrElse(handleError(s"[AgentDeclarationController][onSubmit] Failed to get agency address"))
-            case _ =>
-              handleError("[AgentDeclarationController][onSubmit] User was not an agent", isError = false)
-          }
-        }
-      )
-  }
-
-  private def submitDeclaration(declaration: AgentDeclaration,
-                                agentUser: AgentUser,
-                                utr: String,
-                                agencyAddress: Address,
-                                endDate: Option[LocalDate]
-                               )(implicit request: DataRequest[AnyContent]): Future[Result] = {
-
-    service.agentDeclaration(utr,
-      declaration,
-      agentUser.agentReferenceNumber,
-      agencyAddress,
-      declaration.agencyName,
-      endDate
-    ) flatMap {
-      case TVNResponse(tvn) =>
-        for {
-          updatedAnswers <- Future.fromTry(
-            request.userAnswers
-              .set(AgentDeclarationPage, declaration)
-              .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-              .flatMap(_.set(TVNPage, tvn))
-          )
-          _ <- playbackRepository.set(updatedAnswers)
-        } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-      case DeclarationErrorResponse(status) =>
-        handleError(s"[AgentDeclarationController][onSubmit] problem declaring trust, received a non successful status code: $status", isError = status >= 499)
-    }
-  }
-
-  private def handleError(message: String, isError: Boolean = true): Future[Result] = {
-    if(isError) {
-      logger.error(message)
-    } else {
-      logger.warn(message)
-    }
-    Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
+      val result = for {
+        declaration <- TrustEnvelope(handleFormValidation)
+        agentUser <- TrustEnvelope(isUserAgent)
+        agencyAddress <- TrustEnvelope.fromOption(getAgencyRegisteredAddress(request.userAnswers))
+        tvnResponse <- service.agentDeclaration(
+          request.userAnswers.identifier,
+          declaration,
+          agentUser.agentReferenceNumber,
+          agencyAddress,
+          declaration.agencyName,
+          getClosureDate(request.userAnswers)
+        )
+        updatedAnswers <- TrustEnvelope(
+          request.userAnswers
+            .set(AgentDeclarationPage, declaration)
+            .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+            .flatMap(_.set(TVNPage, tvnResponse.tvn))
+        )
+        _ <- playbackRepository.set(updatedAnswers)
+      } yield {
+        Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
+      }
+      result.value.map {
+        case Right(call) => call
+        case Left(FormValidationError(formBadRequest)) => formBadRequest
+        case Left(WrongUserType()) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] User was not an agent.")
+          Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())
+        case Left(DeclarationError()) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] problem declaring trust.")
+          Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())
+        case Left(NoData) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Failed to get agency address")
+          Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())
+        case Left(_) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
+      }
   }
 
   private def getAgencyRegisteredAddress(userAnswers: UserAnswers): Option[Address] = {
     userAnswers.get(AgencyRegisteredAddressUkYesNoPage) flatMap {
       case true => userAnswers.get(AgencyRegisteredAddressUkPage)
       case false => userAnswers.get(AgencyRegisteredAddressInternationalPage)
+    }
+  }
+
+  private def handleFormValidation(implicit request: ClosingTrustRequest[AnyContent]): Either[TrustErrors, AgentDeclaration] = {
+    form.bindFromRequest().fold(
+      (formWithErrors: Form[_]) =>
+        Left(FormValidationError(BadRequest(view(formWithErrors, request.closingTrust)))),
+      declaration => Right(declaration)
+    )
+  }
+
+  private def isUserAgent(implicit request: ClosingTrustRequest[AnyContent]): Either[TrustErrors, AgentUser] = {
+    request.user match {
+      case user: AgentUser => Right(user)
+      case _ => Left(WrongUserType())
     }
   }
 

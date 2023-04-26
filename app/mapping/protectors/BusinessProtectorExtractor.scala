@@ -16,14 +16,13 @@
 
 package mapping.protectors
 
+import models.errors.TrustErrors
 import models.http.DisplayTrustProtectorBusiness
 import models.pages.IndividualOrBusiness
 import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.protectors._
 import pages.protectors.business._
-
-import scala.util.Try
 
 class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrustProtectorBusiness] {
 
@@ -40,9 +39,9 @@ class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrust
 
   override def metaDataPage(index: Int): QuestionPage[MetaData] = BusinessProtectorMetaData(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustProtectorBusiness,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(BusinessProtectorNamePage(index), entity.name))

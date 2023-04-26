@@ -19,6 +19,9 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
+import handlers.ErrorHandler
+import models.errors.{FormValidationError, TrustErrors}
+import models.requests.DataRequest
 import pages.ObligedEntityPdfYesNoPage
 import play.api.Logging
 import play.api.data.Form
@@ -26,9 +29,10 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.TrustEnvelope
 import views.html.ObligedEntityPdfYesNoView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ObligedEntityPdfYesNoController @Inject()(
@@ -37,10 +41,12 @@ class ObligedEntityPdfYesNoController @Inject()(
                                                  actions: Actions,
                                                  yesNoFormProvider: YesNoFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
-                                                 view: ObligedEntityPdfYesNoView
-                                           )(implicit ec: ExecutionContext)
+                                                 view: ObligedEntityPdfYesNoView,
+                                                 errorHandler: ErrorHandler
+                                               )(implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
+  private val className = getClass.getSimpleName
   private val form: Form[Boolean] = yesNoFormProvider.withPrefix("obligedEntityPdfYesNo")
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
@@ -57,26 +63,36 @@ class ObligedEntityPdfYesNoController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
 
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.userAnswers.identifier))),
-
-        value => {
-          for {
-            updatedAnswers <- Future.fromTry(
-              request.userAnswers
-                .set(ObligedEntityPdfYesNoPage, value)
-            )
-            _ <- playbackRepository.set(updatedAnswers)
-          } yield {
-            if (value) {
-              Redirect(controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier))
-            } else {
-              Redirect(routes.WhatIsNextController.onPageLoad())
-            }
-          }
+      val result = for {
+        formData <- TrustEnvelope(handleFormValidation)
+        updatedAnswers <- TrustEnvelope(
+          request.userAnswers
+            .set(ObligedEntityPdfYesNoPage, formData)
+        )
+        _ <- playbackRepository.set(updatedAnswers)
+      } yield {
+        if (formData) {
+          Redirect(controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier))
+        } else {
+          Redirect(routes.WhatIsNextController.onPageLoad())
         }
-      )
+      }
+
+      result.value.map {
+        case Right(call) => call
+        case Left(FormValidationError(formBadRequest)) => formBadRequest
+        case Left(_) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
+      }
+  }
+
+  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, Boolean] = {
+    form.bindFromRequest().fold(
+      (formWithErrors: Form[_]) =>
+        Left(FormValidationError(BadRequest(view(formWithErrors, request.userAnswers.identifier)))),
+      value => Right(value)
+    )
   }
 
 }

@@ -21,14 +21,14 @@ import generators.ModelGenerators
 import models.UserAnswers
 import models.pages.IndividualOrBusiness
 import org.scalacheck.Arbitrary
-import org.scalatest.TryValues
+import org.scalatest.EitherValues
 import pages.trustees._
 import play.api.libs.json.{Reads, Writes}
 import queries.Settable
 
 import scala.language.implicitConversions
 
-trait UserAnswersWriting extends TryValues with ModelGenerators {
+trait UserAnswersWriting extends ModelGenerators with EitherValues {
   class SettableWriterOps[T : Writes](s: Settable[T])(implicit reads: Reads[T]) {
     def is(value: T): State[UserAnswers, Unit] = writeUA(s, value)
     def withArbitraryValue(implicit arb: Arbitrary[T]): State[UserAnswers, Unit] = writeArbUA(s)
@@ -38,7 +38,7 @@ trait UserAnswersWriting extends TryValues with ModelGenerators {
   implicit def settableStuff[T:Writes](s: Settable[T])(implicit reads: Reads[T]) : SettableWriterOps[T] = new SettableWriterOps[T](s)
 
   def writeUA[T](s: Settable[T], value: T)(implicit writes: Writes[T], reads: Reads[T]): State[UserAnswers, Unit] = {
-    State(_.set(s, value).success.value -> ())
+    State(_.set(s, value).value -> ())
   }
 
   def writeArbUA[T](s: Settable[T])(implicit writes: Writes[T], reads: Reads[T], arb: Arbitrary[T]): State[UserAnswers, Unit] = {
@@ -48,7 +48,7 @@ trait UserAnswersWriting extends TryValues with ModelGenerators {
   }
 
   def remove(s: Settable[_]): State[UserAnswers, Unit] = {
-    State(_.remove(s).success.value -> ())
+    State(_.remove(s).value -> ())
   }
 
   def individualUKTrustee(index: Int): State[UserAnswers, Unit] = for {

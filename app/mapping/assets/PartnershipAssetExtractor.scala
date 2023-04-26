@@ -18,18 +18,17 @@ package mapping.assets
 
 import mapping.PlaybackExtractor
 import models.UserAnswers
+import models.errors.TrustErrors
 import models.http.DisplayTrustPartnershipType
 import pages.assets.partnership._
-
-import scala.util.Try
 
 class PartnershipAssetExtractor extends PlaybackExtractor[DisplayTrustPartnershipType] {
 
   override val optionalEntity: Boolean = true
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustPartnershipType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
 
     answers
       .flatMap(_.set(PartnershipDescriptionPage(index), entity.description))

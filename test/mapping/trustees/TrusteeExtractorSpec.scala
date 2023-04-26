@@ -18,7 +18,7 @@ package mapping.trustees
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractionErrors.FailedToExtractData
+import models.errors.FailedToExtractData
 import models.http._
 import models.pages.IndividualOrBusiness
 import models.{FullName, MetaData}
@@ -31,7 +31,7 @@ import utils.Constants.GB
 class TrusteeExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val trusteeExtractor: TrusteeExtractor =
+  private val trusteeExtractor: TrusteeExtractor =
     injector.instanceOf[TrusteeExtractor]
 
   "Trustee Extractor" - {

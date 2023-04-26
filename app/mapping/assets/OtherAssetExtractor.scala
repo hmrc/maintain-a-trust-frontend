@@ -18,18 +18,17 @@ package mapping.assets
 
 import mapping.PlaybackExtractor
 import models.UserAnswers
+import models.errors.TrustErrors
 import models.http.DisplayOtherAssetType
 import pages.assets.other._
-
-import scala.util.Try
 
 class OtherAssetExtractor extends PlaybackExtractor[DisplayOtherAssetType] {
 
   override val optionalEntity: Boolean = true
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                      entity: DisplayOtherAssetType,
-                     index: Int): Try[UserAnswers] = {
+                     index: Int): Either[TrustErrors, UserAnswers] = {
 
     answers
       .flatMap(_.set(OtherAssetDescriptionPage(index), entity.description))

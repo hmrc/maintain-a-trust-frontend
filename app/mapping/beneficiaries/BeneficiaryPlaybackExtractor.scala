@@ -16,13 +16,11 @@
 
 package mapping.beneficiaries
 
-import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import mapping.PlaybackExtractor
 import models.UserAnswers
+import models.errors.{InvalidExtractorState, TrustErrors}
 import models.http.{BeneficiaryType, DisplayTrustIdentificationOrgType, OrgBeneficiaryType}
 import pages.{EmptyPage, QuestionPage}
-
-import scala.util.{Failure, Try}
 
 trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtractor[T] {
 
@@ -33,7 +31,7 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
 
   def extractShareOfIncome(shareOfIncome: Option[String],
                            index: Int,
-                           answers: UserAnswers): Try[UserAnswers] = {
+                           answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       shareOfIncome match {
         case Some(income) =>
@@ -47,7 +45,7 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
 
   override def extractOrgIdentification(identification: Option[DisplayTrustIdentificationOrgType],
                                         index: Int,
-                                        answers: UserAnswers): Try[UserAnswers] = {
+                                        answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       identification map {
         case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
@@ -57,16 +55,16 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
           extractAddress(address, index, answers)
         case _ =>
           logger.error(s"[BeneficiaryPlaybackExtractor][extractOrgIdentification][UTR/URN: ${answers.identifier}] both utr/urn and address parsed")
-          Failure(InvalidExtractorState)
+          Left(InvalidExtractorState)
       } getOrElse {
         answers.set(addressYesNoPage(index), false)
       }
     }
   }
 
-  def updateUserAnswersForOrgBeneficiary(answers: Try[UserAnswers],
+  def updateUserAnswersForOrgBeneficiary(answers: Either[TrustErrors, UserAnswers],
                                          entity: OrgBeneficiaryType,
-                                         index: Int): Try[UserAnswers] = {
+                                         index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity.asInstanceOf[T], index)
       .flatMap(_.set(namePage(index), entity.organisationName))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))

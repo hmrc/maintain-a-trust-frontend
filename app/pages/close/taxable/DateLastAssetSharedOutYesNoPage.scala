@@ -17,12 +17,11 @@
 package pages.close.taxable
 
 import models.UserAnswers
+import models.errors.TrustErrors
 import pages.QuestionPage
 import pages.close.basePath
 import pages.makechanges._
 import play.api.libs.json.JsPath
-
-import scala.util.Try
 
 case object DateLastAssetSharedOutYesNoPage extends QuestionPage[Boolean] {
 
@@ -30,7 +29,7 @@ case object DateLastAssetSharedOutYesNoPage extends QuestionPage[Boolean] {
 
   override def toString: String = "dateLastAssetSharedOutYesNo"
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     value match {
       case Some(false) =>
         userAnswers.remove(DateLastAssetSharedOutPage)

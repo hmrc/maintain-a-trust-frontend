@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package mapping
+package connectors
 
-object PlaybackExtractionErrors {
 
-  sealed trait PlaybackExtractionError
+import models.errors.{ServerError, TrustErrors}
+import play.api.Logging
 
-  case class FailedToExtractData(reason: String) extends PlaybackExtractionError
-  case object FailedToCombineAnswers extends RuntimeException with PlaybackExtractionError
-  case object InvalidExtractorState extends RuntimeException with PlaybackExtractionError
+trait ConnectorErrorResponseHandler extends Logging  {
+
+  val className: String
+
+  def handleError(statusCode: Int, methodName: String): TrustErrors = {
+    logger.error(s"[$className][$methodName] Error with status: $statusCode")
+    ServerError()
+  }
+
+  def handleError(ex: Throwable, methodName: String): TrustErrors = {
+    logger.error(s"[$className][$methodName] Exception thrown with message ${ex.getMessage}")
+    ServerError()
+  }
 
 }

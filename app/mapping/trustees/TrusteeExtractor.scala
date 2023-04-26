@@ -17,9 +17,9 @@
 package mapping.trustees
 
 import com.google.inject.Inject
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
 import models.UserAnswersCombinator._
+import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.DisplayTrustEntitiesType
 import sections.Trustees
 
@@ -28,7 +28,7 @@ class TrusteeExtractor @Inject()(individualLeadTrusteeExtractor: IndividualLeadT
                                  individualTrusteeExtractor: IndividualTrusteeExtractor,
                                  organisationTrusteeExtractor: OrganisationTrusteeExtractor) {
 
-  def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[TrustErrors, UserAnswers] = {
 
     val trustees: List[UserAnswers] = List(
       individualLeadTrusteeExtractor.extract(answers, data.leadTrustee.leadTrusteeInd.toList),
@@ -36,7 +36,7 @@ class TrusteeExtractor @Inject()(individualLeadTrusteeExtractor: IndividualLeadT
       individualTrusteeExtractor.extract(answers, data.trustees.getOrElse(Nil).flatMap(_.trusteeInd)),
       organisationTrusteeExtractor.extract(answers, data.trustees.getOrElse(Nil).flatMap(_.trusteeOrg))
     ).collect {
-      case Right(z) => z
+      case Right(userAnswers) => userAnswers
     }
 
     val noLeadTrustee: Boolean = data.leadTrustee.leadTrusteeInd.isEmpty && data.leadTrustee.leadTrusteeOrg.isEmpty

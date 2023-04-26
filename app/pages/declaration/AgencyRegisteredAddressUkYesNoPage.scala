@@ -17,10 +17,9 @@
 package pages.declaration
 
 import models.UserAnswers
+import models.errors.TrustErrors
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-
-import scala.util.Try
 
 case object AgencyRegisteredAddressUkYesNoPage extends QuestionPage[Boolean] {
 
@@ -28,7 +27,7 @@ case object AgencyRegisteredAddressUkYesNoPage extends QuestionPage[Boolean] {
 
   override def toString: String = "agencyRegisteredAddressInUkYesNo"
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] = {
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     value match {
       case Some(false) =>
         userAnswers.remove(AgencyRegisteredAddressUkPage)

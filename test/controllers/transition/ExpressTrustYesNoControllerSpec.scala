@@ -17,8 +17,10 @@
 package controllers.transition
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.TrustConnector
 import forms.YesNoFormProvider
+import models.errors.{MongoError, ServerError, TrustErrors}
 import models.pages.WhatIsNext.NeedsToPayTax
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify, when}
@@ -31,17 +33,18 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.PlaybackRepository
 import services.MaintainATrustService
+import uk.gov.hmrc.http.HttpResponse
 import views.html.transition.ExpressTrustYesNoView
 
 import scala.concurrent.Future
 
 class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("expressTrustYesNo")
+  private val formProvider = new YesNoFormProvider()
+  private val form: Form[Boolean] = formProvider.withPrefix("expressTrustYesNo")
 
-  lazy val expressTrustYesNoRoute: String = routes.ExpressTrustYesNoController.onPageLoad().url
-  val validAnswer = true
+  private lazy val expressTrustYesNoRoute: String = routes.ExpressTrustYesNoController.onPageLoad().url
+  private val validAnswer = true
 
   "ExpressTrustYesNoController" must {
 
@@ -65,7 +68,7 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswersForUtr.set(ExpressTrustYesNoPage, validAnswer).success.value
+      val userAnswers = emptyUserAnswersForUtr.set(ExpressTrustYesNoPage, validAnswer).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -90,13 +93,13 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
-        .thenReturn(Future.successful(true))
+        .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
-        .thenReturn(Future.successful(()))
+        .thenReturn(EitherT[Future, TrustErrors, Unit](Future.successful(Right(()))))
 
       when(mockTrustsConnector.setExpressTrust(any(), any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
+        .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -125,15 +128,15 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
-        .thenReturn(Future.successful(true))
+        .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
-        .thenReturn(Future.successful(()))
+        .thenReturn(EitherT[Future, TrustErrors, Unit](Future.successful(Right(()))))
 
       when(mockTrustsConnector.setExpressTrust(any(), any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
+        .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr.set(WhatIsNextPage, NeedsToPayTax).success.value))
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr.set(WhatIsNextPage, NeedsToPayTax).value))
         .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
         .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
         .build()
@@ -170,6 +173,35 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       contentAsString(result) mustEqual
         view(boundForm)(request, messages).toString
+
+      application.stop()
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      val mockTrustsConnector = mock[TrustConnector]
+      val mockMaintainATrustService = mock[MaintainATrustService]
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
+
+      when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, Unit](Future.successful(Left(ServerError()))))
+
+      when(mockTrustsConnector.setExpressTrust(any(), any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+        .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+        .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
+        .build()
+
+      val request = FakeRequest(POST, expressTrustYesNoRoute)
+        .withFormUrlEncodedBody(("value", validAnswer.toString))
+
+      val result = route(application, request).value
+
+      status(result) mustBe INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
 
       application.stop()
     }

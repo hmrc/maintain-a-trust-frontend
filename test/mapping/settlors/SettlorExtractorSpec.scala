@@ -18,7 +18,7 @@ package mapping.settlors
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractionErrors.FailedToExtractData
+import models.errors.FailedToExtractData
 import models.http._
 import models.pages.KindOfBusiness.Trading
 import models.pages.{IndividualOrBusiness, KindOfBusiness}
@@ -33,7 +33,7 @@ import utils.Constants.GB
 class SettlorExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val settlorExtractor: SettlorExtractor =
+  private val settlorExtractor: SettlorExtractor =
     injector.instanceOf[SettlorExtractor]
 
   "Settlor Extractor" - {

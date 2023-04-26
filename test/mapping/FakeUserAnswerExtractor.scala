@@ -16,21 +16,17 @@
 
 package mapping
 
-import mapping.PlaybackExtractionErrors.FailedToExtractData
+import cats.data.EitherT
 import models.UserAnswers
+import models.errors.TrustErrors
 import models.http.GetTrust
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.TrustEnvelope.TrustEnvelope
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeUserAnswerExtractor(userAnswers: UserAnswers) extends UserAnswersExtractor {
+class FakeUserAnswerExtractor(mockResult: Either[TrustErrors, UserAnswers]) extends UserAnswersExtractor {
   override def extract(answers: UserAnswers, data: GetTrust)
-                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[PlaybackExtractionErrors.PlaybackExtractionError, UserAnswers]] =
-    Future.successful(Right(userAnswers))
-}
-
-class FakeFailingUserAnswerExtractor extends UserAnswersExtractor {
-  override def extract(answers: UserAnswers, data: GetTrust)
-                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[PlaybackExtractionErrors.PlaybackExtractionError, UserAnswers]] =
-    Future.successful(Left(FailedToExtractData("No beneficiaries")))
+                      (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[UserAnswers] =
+    EitherT[Future, TrustErrors, UserAnswers](Future.successful(mockResult))
 }

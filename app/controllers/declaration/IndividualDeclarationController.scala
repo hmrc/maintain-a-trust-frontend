@@ -19,8 +19,10 @@ package controllers.declaration
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
+import handlers.ErrorHandler
 import models.IndividualDeclaration
-import models.http.{DeclarationErrorResponse, TVNResponse}
+import models.errors.{DeclarationError, FormValidationError, TrustErrors}
+import models.requests.ClosingTrustRequest
 import pages.declaration.IndividualDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
 import play.api.Logging
@@ -31,10 +33,11 @@ import repositories.PlaybackRepository
 import services.DeclarationService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustClosureDate.getClosureDate
+import utils.TrustEnvelope
 import views.html.declaration.IndividualDeclarationView
 
 import java.time.LocalDateTime
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class IndividualDeclarationController @Inject()(
@@ -44,10 +47,12 @@ class IndividualDeclarationController @Inject()(
                                                  formProvider: IndividualDeclarationFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: IndividualDeclarationView,
-                                                 service: DeclarationService
+                                                 service: DeclarationService,
+                                                 errorHandler: ErrorHandler
                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
-  val form: Form[IndividualDeclaration] = formProvider()
+  private val className = getClass.getSimpleName
+  private val form: Form[IndividualDeclaration] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
@@ -63,34 +68,36 @@ class IndividualDeclarationController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, request.closingTrust))),
+      val result = for {
+        declaration <- TrustEnvelope(handleFormValidation)
+        tvnResponse <- service.individualDeclaration(request.userAnswers.identifier, declaration, getClosureDate(request.userAnswers))
+        updatedAnswers <- TrustEnvelope(
+          request.userAnswers
+            .set(IndividualDeclarationPage, declaration)
+            .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+            .flatMap(_.set(TVNPage, tvnResponse.tvn))
+        )
+        _ <- playbackRepository.set(updatedAnswers)
+      } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
 
-        declaration =>
-          service.individualDeclaration(
-            request.userAnswers.identifier,
-            declaration,
-            getClosureDate(request.userAnswers)
-          ) flatMap {
-            case TVNResponse(tvn) =>
-              for {
-                updatedAnswers <- Future.fromTry(
-                  request.userAnswers
-                    .set(IndividualDeclarationPage, declaration)
-                    .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                    .flatMap(_.set(TVNPage, tvn))
-                )
-                _ <- playbackRepository.set(updatedAnswers)
-              } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
-            case DeclarationErrorResponse(status) =>
-              if (status<499) {
-                logger.warn(s"[IndividualDeclarationController][onSubmit] problem declaring trust, received a non successful status code: $status")
-              } else {
-                logger.error(s"[IndividualDeclarationController][onSubmit] problem declaring trust, received a non successful status code: $status")
-              }
-              Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-          }
-      )
+      result.value.map {
+        case Right(call) => call
+        case Left(FormValidationError(formBadRequest)) => formBadRequest
+        case Left(DeclarationError()) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] problem declaring trust")
+          Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())
+        case Left(_) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
+      }
+
+  }
+
+  private def handleFormValidation(implicit request: ClosingTrustRequest[AnyContent]): Either[TrustErrors, IndividualDeclaration] = {
+    form.bindFromRequest().fold(
+      (formWithErrors: Form[_]) =>
+        Left(FormValidationError(BadRequest(view(formWithErrors, request.closingTrust)))),
+      declaration => Right(declaration)
+    )
   }
 }

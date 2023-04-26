@@ -17,9 +17,11 @@
 package controllers.close.taxable
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.TrustConnector
 import forms.DateFormProvider
 import models.UserAnswers
+import models.errors.{ServerError, TrustErrors}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -36,22 +38,22 @@ import scala.concurrent.Future
 
 class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new DateFormProvider()
+  private val formProvider = new DateFormProvider()
 
-  val trustStartDate: LocalDate = LocalDate.parse("2019-02-03")
+  private val trustStartDate: LocalDate = LocalDate.parse("2019-02-03")
 
   private def form: Form[LocalDate] = formProvider.withPrefixAndTrustStartDate("dateLastAssetSharedOut", trustStartDate)
 
-  val fakeConnector: TrustConnector = mock[TrustConnector]
+  private val fakeConnector: TrustConnector = mock[TrustConnector]
 
-  val validAnswer: LocalDate = LocalDate.parse("2019-02-04")
+  private val validAnswer: LocalDate = LocalDate.parse("2019-02-04")
 
-  lazy val dateLastAssetSharedOutRoute: String = routes.DateLastAssetSharedOutController.onPageLoad().url
+  private lazy val dateLastAssetSharedOutRoute: String = routes.DateLastAssetSharedOutController.onPageLoad().url
 
-  def getRequest: FakeRequest[AnyContentAsEmpty.type] =
+  private def getRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, dateLastAssetSharedOutRoute)
 
-  def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
+  private def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, dateLastAssetSharedOutRoute)
       .withFormUrlEncodedBody(
         "value.day" -> validAnswer.getDayOfMonth.toString,
@@ -63,7 +65,8 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
     "return OK and the correct view for a GET" in {
 
-      when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+      when(fakeConnector.getStartDate(any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, LocalDate](Future.successful(Right(trustStartDate))))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(bind[TrustConnector].toInstance(fakeConnector))
@@ -83,10 +86,11 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+      when(fakeConnector.getStartDate(any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, LocalDate](Future.successful(Right(trustStartDate))))
 
       val userAnswers = emptyUserAnswersForUtr
-        .set(DateLastAssetSharedOutPage, validAnswer).success.value
+        .set(DateLastAssetSharedOutPage, validAnswer).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[TrustConnector].toInstance(fakeConnector))
@@ -108,7 +112,8 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
 
-      when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+      when(fakeConnector.getStartDate(any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, LocalDate](Future.successful(Right(trustStartDate))))
 
       val application = applicationBuilder(userAnswers = Some(baseAnswers))
         .overrides(bind[TrustConnector].toInstance(fakeConnector))
@@ -125,7 +130,8 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      when(fakeConnector.getStartDate(any())(any(), any())).thenReturn(Future.successful(trustStartDate))
+      when(fakeConnector.getStartDate(any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, LocalDate](Future.successful(Right(trustStartDate))))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .overrides(bind[TrustConnector].toInstance(fakeConnector))
@@ -146,6 +152,44 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
         view(boundForm)(request, messages).toString
 
       application.stop()
+    }
+
+    "return an Internal Server Error" when {
+      "there is an error while retrieving the start date for /GET" in {
+
+        when(fakeConnector.getStartDate(any())(any(), any()))
+          .thenReturn(EitherT[Future, TrustErrors, LocalDate](Future.successful(Left(ServerError()))))
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+          .overrides(bind[TrustConnector].toInstance(fakeConnector))
+          .build()
+
+        val result = route(application, getRequest).value
+
+        status(result) mustEqual INTERNAL_SERVER_ERROR
+        contentType(result) mustBe Some("text/html")
+
+        application.stop()
+      }
+
+      "setting the user answers goes wrong for /POST" in {
+
+        when(fakeConnector.getStartDate(any())(any(), any()))
+          .thenReturn(EitherT[Future, TrustErrors, LocalDate](Future.successful(Right(trustStartDate))))
+
+        mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(ServerError()))
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUrn))
+          .overrides(bind[TrustConnector].toInstance(fakeConnector))
+          .build()
+
+        val result = route(application, postRequest()).value
+
+        status(result) mustEqual INTERNAL_SERVER_ERROR
+        contentType(result) mustBe Some("text/html")
+
+        application.stop()
+      }
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {

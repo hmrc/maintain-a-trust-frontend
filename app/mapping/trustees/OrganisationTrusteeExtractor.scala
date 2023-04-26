@@ -17,19 +17,18 @@
 package mapping.trustees
 
 import models.UserAnswers
+import models.errors.TrustErrors
 import models.http.DisplayTrustTrusteeOrgType
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.Completed
 import pages.entitystatus.TrusteeStatus
 import pages.trustees._
 
-import scala.util.Try
-
 class OrganisationTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrustTrusteeOrgType] {
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustTrusteeOrgType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(IsThisLeadTrusteePage(index), false))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
@@ -43,7 +42,7 @@ class OrganisationTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrust
 
   private def extractTelephoneAndEmail(entity: DisplayTrustTrusteeOrgType,
                                index: Int,
-                               answers: UserAnswers): Try[UserAnswers] = {
+                               answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       answers.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber)
         .flatMap(_.set(TrusteeEmailPage(index), entity.email))

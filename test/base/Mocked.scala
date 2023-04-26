@@ -16,19 +16,49 @@
 
 package base
 
+import cats.data.EitherT
+import handlers.ErrorHandler
+import models.UserAnswers
+import models.errors.TrustErrors
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatestplus.mockito.MockitoSugar
-import repositories.PlaybackRepository
+import play.twirl.api.Html
+import repositories.{ActiveSessionRepository, PlaybackRepository}
+import utils.TrustEnvelope.TrustEnvelope
 
 import scala.concurrent.Future
 
 trait Mocked extends MockitoSugar {
 
-  val playbackRepository: PlaybackRepository = mock[PlaybackRepository]
+  val mockErrorHandler: ErrorHandler = mock[ErrorHandler]
 
-  when(playbackRepository.set(any())).thenReturn(Future.successful(true))
+  when(mockErrorHandler.internalServerErrorTemplate(any()))
+    .thenReturn(Html(""))
 
-  when(playbackRepository.resetCache(any(), any(), any())).thenReturn(Future.successful(Some(true)))
+  val mockPlaybackRepository: PlaybackRepository = mock[PlaybackRepository]
+
+  when(mockPlaybackRepository.set(any()))
+    .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+
+  val mockActiveSessionRepository: ActiveSessionRepository = mock[ActiveSessionRepository]
+
+
+  def mockPlaybackRepositoryBuilder(playbackRepository: PlaybackRepository,
+                                    getResult: Either[TrustErrors, Option[UserAnswers]] = Right(None),
+                                    setResult: Either[TrustErrors, Boolean] = Right(true),
+                                    resetCacheResult: Either[TrustErrors, Option[Boolean]] = Right(Some(true))
+                                   ): OngoingStubbing[TrustEnvelope[Option[Boolean]]] = {
+
+    when(playbackRepository.get(any(), any(), any()))
+      .thenReturn(EitherT[Future, TrustErrors, Option[UserAnswers]](Future.successful(getResult)))
+
+    when(playbackRepository.set(any()))
+      .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(setResult)))
+
+    when(playbackRepository.resetCache(any(), any(), any()))
+      .thenReturn(EitherT[Future, TrustErrors, Option[Boolean]](Future.successful(resetCacheResult)))
+  }
 
 }

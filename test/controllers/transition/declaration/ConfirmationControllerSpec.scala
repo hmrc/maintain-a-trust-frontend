@@ -36,8 +36,8 @@ class ConfirmationControllerSpec extends SpecBase {
       "return OK and the correct view for a onPageLoad when TVN is available" in {
 
         val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
-          .set(WhatIsNextPage, NeedsToPayTax).success.value
-          .set(TVNPage, fakeTvn).success.value
+          .set(WhatIsNextPage, NeedsToPayTax).value
+          .set(TVNPage, fakeTvn).value
 
         val application = applicationBuilder(userAnswers = Some(playbackAnswers), affinityGroup = Agent).build()
 
@@ -61,8 +61,8 @@ class ConfirmationControllerSpec extends SpecBase {
       "return OK and the correct view for a onPageLoad when TVN is available" in {
 
         val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
-          .set(WhatIsNextPage, NeedsToPayTax).success.value
-          .set(TVNPage, fakeTvn).success.value
+          .set(WhatIsNextPage, NeedsToPayTax).value
+          .set(TVNPage, fakeTvn).value
 
         val application = applicationBuilder(userAnswers = Some(playbackAnswers)).build()
 

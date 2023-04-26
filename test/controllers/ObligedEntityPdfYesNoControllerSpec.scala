@@ -17,8 +17,10 @@
 package controllers
 
 import base.SpecBase
+import cats.data.EitherT
 import forms.YesNoFormProvider
 import models.UserAnswers
+import models.errors.{MongoError, TrustErrors}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -33,12 +35,12 @@ import scala.concurrent.Future
 
 class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new YesNoFormProvider()
-  val form: Form[Boolean] = formProvider.withPrefix("obligedEntityPdfYesNo")
+  private val formProvider = new YesNoFormProvider()
+  private val form: Form[Boolean] = formProvider.withPrefix("obligedEntityPdfYesNo")
 
-  val identifier = "1234567890"
+  private val identifier = "1234567890"
 
-  lazy val obligedEntityPdfYesNoControllerRoute: String = routes.ObligedEntityPdfYesNoController.onPageLoad().url
+  private lazy val obligedEntityPdfYesNoControllerRoute: String = routes.ObligedEntityPdfYesNoController.onPageLoad().url
 
   override val emptyUserAnswersForUtr: UserAnswers = super.emptyUserAnswersForUtr
 
@@ -64,7 +66,7 @@ class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswersForUtr.set(ObligedEntityPdfYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswersForUtr.set(ObligedEntityPdfYesNoPage, true).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -86,7 +88,7 @@ class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       val mockPlaybackRepository = mock[PlaybackRepository]
 
-      when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
+      when(mockPlaybackRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
@@ -105,9 +107,7 @@ class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when NO is submitted" in {
 
-      val mockPlaybackRepository = mock[PlaybackRepository]
-
-      when(mockPlaybackRepository.set(any())) thenReturn Future.successful(true)
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
@@ -142,6 +142,24 @@ class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       contentAsString(result) mustEqual
         view(boundForm, identifier)(request, messages).toString
+
+      application.stop()
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
+
+      val request =
+        FakeRequest(POST, obligedEntityPdfYesNoControllerRoute)
+          .withFormUrlEncodedBody(("value", "false"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
 
       application.stop()
     }

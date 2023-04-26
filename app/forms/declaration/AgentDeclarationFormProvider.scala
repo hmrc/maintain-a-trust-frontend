@@ -24,13 +24,15 @@ import play.api.data.Forms.{mapping, optional}
 
 class AgentDeclarationFormProvider extends DeclarationFormProvider {
 
+  private val maximumLength = 56
+
   def apply(): Form[AgentDeclaration] =
     Form(
       mapping(
         "" -> fullName,
         "agencyName" -> text("declaration.error.agencyName.required").verifying(
           firstError(
-            maxLength(56, "declaration.error.agencyName.length"),
+            maxLength(maximumLength, "declaration.error.agencyName.length"),
             isNotEmpty("agencyName", "declaration.error.agencyName.required"),
             regexp(Validation.clientRefRegex, "declaration.error.agencyName.invalid")
           )
@@ -43,7 +45,7 @@ class AgentDeclarationFormProvider extends DeclarationFormProvider {
         ),
         "crn" -> text("declaration.error.crn.required").verifying(
           firstError(
-            maxLength(56, "declaration.error.crn.length"),
+            maxLength(maximumLength, "declaration.error.crn.length"),
             isNotEmpty("crn", "declaration.error.crn.required"),
             regexp(Validation.clientRefRegex, "declaration.error.crn.invalid")
           )

@@ -18,8 +18,8 @@ package mapping.trustees
 
 import base.SpecBaseHelpers
 import generators.Generators
-import mapping.PlaybackExtractionErrors.FailedToExtractData
 import models.MetaData
+import models.errors.FailedToExtractData
 import models.http.{AddressType, DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType}
 import models.pages.IndividualOrBusiness
 import org.scalatest.matchers.must.Matchers
@@ -31,7 +31,7 @@ import utils.Constants.GB
 class OrganisationLeadTrusteeExtractorSpec extends AnyFreeSpec with Matchers
   with EitherValues with Generators with SpecBaseHelpers {
 
-  val leadTrusteeOrgExtractor : OrganisationLeadTrusteeExtractor =
+  private val leadTrusteeOrgExtractor : OrganisationLeadTrusteeExtractor =
     injector.instanceOf[OrganisationLeadTrusteeExtractor]
 
   "Lead Trustee Organisation Extractor" - {

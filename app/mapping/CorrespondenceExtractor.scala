@@ -16,19 +16,18 @@
 
 package mapping
 
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
+
 import mapping.PlaybackImplicits._
+import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.Correspondence
 import models.{Address, InternationalAddress, UKAddress, UserAnswers}
 import pages.correspondence._
 import pages.trustdetails.TrustNamePage
 import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
-
 class CorrespondenceExtractor extends Logging {
 
-  def extract(answers: UserAnswers, data: Correspondence): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: Correspondence): Either[TrustErrors, UserAnswers] = {
     val updated = answers
       .set(CorrespondenceAbroadIndicatorPage, data.abroadIndicator)
       .flatMap(_.set(TrustNamePage, data.name))
@@ -37,15 +36,15 @@ class CorrespondenceExtractor extends Logging {
       .flatMap(_.set(CorrespondencePhoneNumberPage, data.phoneNumber))
 
     updated match {
-      case Success(a) =>
+      case Right(a) =>
         Right(a)
-      case Failure(exception) =>
-        logger.error(s"[CorrespondenceExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+      case Left(_) =>
+        logger.error(s"[CorrespondenceExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data.")
         Left(FailedToExtractData(Correspondence.toString))
     }
   }
 
-  private def extractAddress(address: Address, answers: UserAnswers): Try[UserAnswers] = address match {
+  private def extractAddress(address: Address, answers: UserAnswers): Either[TrustErrors, UserAnswers] = address match {
     case uk: UKAddress => answers
       .set(CorrespondenceAddressInTheUKPage, true)
       .flatMap(_.set(CorrespondenceAddressPage, uk))

@@ -16,19 +16,17 @@
 
 package mapping.trustees
 
-import mapping.PlaybackExtractionErrors.InvalidExtractorState
 import models.UserAnswers
+import models.errors.{InvalidExtractorState, TrustErrors}
 import models.http.{DisplayTrustIdentificationOrgType, DisplayTrustLeadTrusteeOrgType}
 import models.pages.IndividualOrBusiness
 import pages.trustees._
 
-import scala.util.{Failure, Try}
-
 class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrustLeadTrusteeOrgType] {
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustLeadTrusteeOrgType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
@@ -42,7 +40,7 @@ class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayT
 
   private def extractIdentification(identification: DisplayTrustIdentificationOrgType,
                                     index: Int,
-                                    answers: UserAnswers): Try[UserAnswers] = {
+                                    answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     identification match {
       case DisplayTrustIdentificationOrgType(_, Some(utr), Some(address)) =>
         answers.set(TrusteeUtrYesNoPage(index), true)
@@ -59,7 +57,7 @@ class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayT
 
       case DisplayTrustIdentificationOrgType(_, _, _) =>
         logger.error(s"[OrganisationLeadTrusteeExtractor][extractIdentification][UTR/URN: ${answers.identifier}] no identification for lead trustee company returned in DisplayTrustOrEstate api")
-        Failure(InvalidExtractorState)
+        Left(InvalidExtractorState)
     }
   }
 

@@ -17,22 +17,26 @@
 package repositories
 
 import models.IdentifierSession
+import models.errors.MongoError
+import org.mongodb.scala.{MongoException, MongoTimeoutException}
 import org.mongodb.scala.bson.BsonDocument
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatest.matchers.must.Matchers
-import scala.concurrent.ExecutionContext.Implicits.global
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues}
+import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.mongo.test.MongoSupport
-import scala.concurrent.Await
+
+import scala.concurrent.{Await, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 class ActiveSessionRepositorySpec extends AnyWordSpec with Matchers
-  with ScalaFutures with OptionValues with MongoSupport with MongoSuite with BeforeAndAfterEach {
+  with ScalaFutures with OptionValues with MongoSupport with MongoSuite with BeforeAndAfterEach with EitherValues {
 
   override def beforeEach(): Unit = Await.result(repository.collection.deleteMany(BsonDocument()).toFuture(),Duration.Inf)
 
-  lazy val repository: ActiveSessionRepositoryImpl = new ActiveSessionRepositoryImpl(mongoComponent, config)
+  private lazy val repository: ActiveSessionRepositoryImpl = new ActiveSessionRepositoryImpl(mongoComponent, config)
 
   "a session repository" should {
 
@@ -40,7 +44,7 @@ class ActiveSessionRepositorySpec extends AnyWordSpec with Matchers
 
         val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
 
-        repository.get(internalId).futureValue mustBe None
+        repository.get(internalId).value.futureValue mustBe Right(None)
     }
 
     "must return a UtrSession when one exists" in {
@@ -49,11 +53,11 @@ class ActiveSessionRepositorySpec extends AnyWordSpec with Matchers
 
         val session = IdentifierSession(internalId, "utr")
 
-        val initial = repository.set(session).futureValue
+        val initial = repository.set(session).value.futureValue
 
-        initial mustBe true
+        initial mustBe Right(true)
 
-        repository.get(internalId).futureValue.value.identifier mustBe "utr"
+        repository.get(internalId).value.futureValue.value.map(_.identifier) mustBe Some("utr")
     }
 
     "must override an existing session for an internalId" in {
@@ -62,19 +66,29 @@ class ActiveSessionRepositorySpec extends AnyWordSpec with Matchers
 
         val session = IdentifierSession(internalId, "utr")
 
-        repository.set(session).futureValue
+        repository.set(session).value.futureValue
 
-        repository.get(internalId).futureValue.value.identifier mustBe "utr"
-        repository.get(internalId).futureValue.value.internalId mustBe internalId
+        repository.get(internalId).value.futureValue.value.map(_.identifier) mustBe Some("utr")
+        repository.get(internalId).value.futureValue.value.map(_.internalId) mustBe Some(internalId)
 
         // update
 
         val session2 = IdentifierSession(internalId, "utr2")
 
-        repository.set(session2).futureValue
+        repository.set(session2).value.futureValue
 
-        repository.get(internalId).futureValue.value.identifier mustBe "utr2"
-        repository.get(internalId).futureValue.value.internalId mustBe internalId
+        repository.get(internalId).value.futureValue.value.map(_.identifier) mustBe Some("utr2")
+        repository.get(internalId).value.futureValue.value.map(_.internalId) mustBe Some(internalId)
+    }
+
+    Seq(new MongoTimeoutException("test message"), new MongoException("test message"), new Exception, new RuntimeException("test message"),
+      new NullPointerException("test message"), new NoSuchElementException("test message"), new IndexOutOfBoundsException("test message")).foreach { exception =>
+      s"return a Left(MongoError) when there's an exception from Mongo ($exception)" in {
+        val result = Future.failed(exception)
+          .recover(repository.mongoRecover("test repository", "test method","test message", "test sessionId"))
+
+        await(result) mustBe Left(MongoError)
+      }
     }
   }
 }

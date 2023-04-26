@@ -18,6 +18,7 @@ package controllers.declaration
 
 import base.SpecBase
 import forms.InternationalAddressFormProvider
+import models.errors.ServerError
 import models.pages.WhatIsNext.{MakeChanges, NeedsToPayTax}
 import models.{InternationalAddress, UserAnswers}
 import pages.WhatIsNextPage
@@ -29,12 +30,12 @@ import views.html.declaration.AgencyRegisteredAddressInternationalView
 
 class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
-  val formProvider = new InternationalAddressFormProvider()
-  val form = formProvider()
-  lazy val agencyRegisteredAddressInternationalRoute = routes.AgencyRegisteredAddressInternationalController.onPageLoad().url
+  private val formProvider = new InternationalAddressFormProvider()
+  private val form = formProvider()
+  private lazy val agencyRegisteredAddressInternationalRoute = routes.AgencyRegisteredAddressInternationalController.onPageLoad().url
 
-  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, MakeChanges).success.value
+  private val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+    .set(WhatIsNextPage, MakeChanges).value
 
   "AgencyRegisteredAddressInternational Controller" must {
 
@@ -60,7 +61,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = baseAnswers
-        .set(AgencyRegisteredAddressInternationalPage, InternationalAddress("line 1", "line 2", Some("line 3"), "country")).success.value
+        .set(AgencyRegisteredAddressInternationalPage, InternationalAddress("line 1", "line 2", Some("line 3"), "country")).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -83,9 +84,11 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
       "migrating from non-taxable to taxable" in {
 
-        val answers = baseAnswers.set(WhatIsNextPage, NeedsToPayTax).success.value
+        val answers = baseAnswers.set(WhatIsNextPage, NeedsToPayTax).value
 
         val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+        mockPlaybackRepositoryBuilder(mockPlaybackRepository)
 
         val request = FakeRequest(POST, agencyRegisteredAddressInternationalRoute)
           .withFormUrlEncodedBody(("line1", "value 1"), ("line2", "value 2"), ("country", "DE"))
@@ -135,6 +138,25 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
       contentAsString(result) mustEqual
         view(boundForm, countryOptions)(request, messages).toString
+
+      application.stop()
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(ServerError()))
+
+      val answers = baseAnswers.set(WhatIsNextPage, NeedsToPayTax).value
+
+      val application = applicationBuilder(userAnswers = Some(answers)).build()
+
+      val request = FakeRequest(POST, agencyRegisteredAddressInternationalRoute)
+        .withFormUrlEncodedBody(("line1", "value 1"), ("line2", "value 2"), ("country", "DE"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
 
       application.stop()
     }

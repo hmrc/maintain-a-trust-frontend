@@ -19,21 +19,21 @@ package connectors
 import base.SpecBaseHelpers
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.Generators
+import models.errors.{DeclarationError, ServerError}
 import models.http._
 import models.pages.ShareClass.Ordinary
 import models.{FirstTaxYearAvailable, FullName, MigrationTaskStatus, TrustDetails}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.OptionValues
-import org.scalatest.Inside
-import org.scalatest.matchers.must.Matchers
 import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.{EitherValues, Inside, OptionValues}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.http.Status
 import play.api.http.Status._
 import play.api.libs.json.{JsBoolean, Json}
 import play.api.mvc.Request
-import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.WireMockHelper
 
 import java.time.LocalDate
@@ -42,20 +42,22 @@ import scala.concurrent.duration.Duration
 import scala.io.Source
 
 class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues with Generators
-  with SpecBaseHelpers with WireMockHelper with ScalaFutures with Inside with ScalaCheckPropertyChecks {
+  with SpecBaseHelpers with WireMockHelper with ScalaFutures with Inside with ScalaCheckPropertyChecks with EitherValues {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   private def playbackUrl(identifier: String) : String = s"/trusts/$identifier/transformed"
+  private def refreshUrl(identifier: String) : String = s"/trusts/$identifier/refresh"
   private def declareUrl(identifier: String) : String = s"/trusts/declare/$identifier"
 
   private val identifier = "1000000008"
 
   "TrustConnector" - {
 
-    "get trusts details" in {
+    "get trusts details and start date" in {
 
       val startDate = "1920-03-28"
+      val startDateAsLocalDate = LocalDate.parse(startDate)
       val express: Boolean = false
       val taxable: Boolean = true
       val schedule3aExempt: Boolean = true
@@ -96,9 +98,13 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .willReturn(okJson(json.toString))
       )
 
-      val result = Await.result(connector.getUntransformedTrustDetails(identifier), Duration.Inf)
-      result mustBe TrustDetails(startDate = LocalDate.parse(startDate),
-        trustTaxable = Some(taxable), expressTrust = Some(express), schedule3aExempt = Some(schedule3aExempt))
+      val result = Await.result(connector.getUntransformedTrustDetails(identifier).value, Duration.Inf)
+      val startDateResult = Await.result(connector.getStartDate(identifier).value, Duration.Inf)
+
+      result mustBe Right(TrustDetails(startDate = startDateAsLocalDate,
+        trustTaxable = Some(taxable), expressTrust = Some(express), schedule3aExempt = Some(schedule3aExempt)))
+
+      startDateResult mustBe Right(startDateAsLocalDate)
 
       application.stop()
     }
@@ -132,8 +138,8 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(okJson(json.toString))
         )
 
-        val result = Await.result(connector.playback(identifier), Duration.Inf)
-        result mustBe Processing
+        val result = Await.result(connector.playback(identifier).value, Duration.Inf)
+        result mustBe Right(Processing)
 
         application.stop()
       }
@@ -156,8 +162,8 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
               aResponse()
                 .withStatus(Status.NO_CONTENT)))
 
-        val result = Await.result(connector.playback(identifier), Duration.Inf)
-        result mustBe SorryThereHasBeenAProblem
+        val result = Await.result(connector.playback(identifier).value, Duration.Inf)
+        result mustBe Right(SorryThereHasBeenAProblem)
 
         application.stop()
       }
@@ -180,8 +186,8 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
               aResponse()
                 .withStatus(Status.NOT_FOUND)))
 
-        val result = Await.result(connector.playback(identifier), Duration.Inf)
-        result mustBe IdentifierNotFound
+        val result = Await.result(connector.playback(identifier).value, Duration.Inf)
+        result mustBe Right(IdentifierNotFound)
 
         application.stop()
       }
@@ -204,8 +210,8 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
               aResponse()
                 .withStatus(Status.SERVICE_UNAVAILABLE)))
 
-        val result = Await.result(connector.playback(identifier), Duration.Inf)
-        result mustBe TrustServiceUnavailable
+        val result = Await.result(connector.playback(identifier).value, Duration.Inf)
+        result mustBe Right(TrustServiceUnavailable)
 
         application.stop()
       }
@@ -232,7 +238,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(okJson(payload))
         )
 
-        val processed = Await.result(connector.playback(utr), Duration.Inf)
+        val processed = Await.result(connector.playback(utr).value, Duration.Inf).value
 
         inside(processed) {
           case Processed(data, bundleNumber) =>
@@ -288,7 +294,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(okJson(payload))
         )
 
-        val processed = Await.result(connector.playback(utr), Duration.Inf)
+        val processed = Await.result(connector.playback(utr).value, Duration.Inf).value
 
         inside(processed) {
           case Processed(data, _) =>
@@ -322,7 +328,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(okJson(payload))
         )
 
-        val processed = Await.result(connector.playback(utr), Duration.Inf)
+        val processed = Await.result(connector.playback(utr).value, Duration.Inf).value
 
         inside(processed) {
           case Processed(data, bundleNumber) =>
@@ -380,7 +386,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(okJson(payload))
         )
 
-        val processed = Await.result(connector.playback(urn), Duration.Inf)
+        val processed = Await.result(connector.playback(urn).value, Duration.Inf).value
 
         inside(processed) {
           case Processed(data, bundleNumber) =>
@@ -394,6 +400,39 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
         application.stop()
       }
     }
+
+    "playback data from ETMP must return TrustFound response" in {
+
+        val json = Json.parse(
+          """
+            |{
+            |  "responseHeader": {
+            |    "status": "In Processing",
+            |    "formBundleNo": "1"
+            |  }
+            |}
+            |""".stripMargin)
+
+        val application = applicationBuilder()
+          .configure(
+            Seq(
+              "microservice.services.trusts.port" -> server.port(),
+              "auditing.enabled" -> false
+            ): _*
+          ).build()
+
+        val connector = application.injector.instanceOf[TrustConnector]
+
+        server.stubFor(
+          get(urlEqualTo(refreshUrl(identifier)))
+            .willReturn(okJson(json.toString))
+        )
+
+        val result = Await.result(connector.playbackFromEtmp(identifier).value, Duration.Inf)
+        result mustBe Right(Processing)
+
+        application.stop()
+      }
 
     "declare no change must" - {
 
@@ -431,9 +470,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         implicit val request: Request[_] = fakeRequest
 
-        val result = Await.result(connector.declare(identifier, payload), Duration.Inf)
+        val result = Await.result(connector.declare(identifier, payload).value, Duration.Inf)
 
-        result mustEqual TVNResponse(tvn)
+        result mustBe Right(TVNResponse(tvn))
 
         application.stop()
       }
@@ -456,9 +495,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         implicit val request: Request[_] = fakeRequest
 
-        val result = Await.result(connector.declare(identifier, payload), Duration.Inf)
+        val result = Await.result(connector.declare(identifier, payload).value, Duration.Inf)
 
-        result mustEqual DeclarationErrorResponse(SERVICE_UNAVAILABLE)
+        result mustBe Left(DeclarationError())
 
         application.stop()
       }
@@ -485,14 +524,14 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(okJson(json.toString))
         )
 
-        val processed = Await.result(connector.getDoProtectorsAlreadyExist(identifier), Duration.Inf)
+        val processed = Await.result(connector.getDoProtectorsAlreadyExist(identifier).value, Duration.Inf)
 
-        processed.value mustBe true
+        processed mustBe Right(JsBoolean(true))
 
         application.stop()
       }
 
-      "throw UpstreamException when returned a 404 NotFound for the cached trust" in {
+      "return ServerError() (models.TrustErrors) when a 404 NotFound is returned for the cached trust" in {
 
         val application = applicationBuilder()
           .configure(
@@ -509,9 +548,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(notFound())
         )
 
-        a[UpstreamErrorResponse] mustBe thrownBy {
-          Await.result(connector.getDoProtectorsAlreadyExist(identifier), Duration.Inf)
-        }
+        val result = Await.result(connector.getDoProtectorsAlreadyExist(identifier).value, Duration.Inf)
+
+        result mustBe Left(ServerError())
 
         application.stop()
       }
@@ -538,14 +577,14 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(okJson(json.toString))
         )
 
-        val processed = Await.result(connector.getDoOtherIndividualsAlreadyExist(identifier), Duration.Inf)
+        val processed = Await.result(connector.getDoOtherIndividualsAlreadyExist(identifier).value, Duration.Inf)
 
-        processed.value mustBe true
+        processed mustBe Right(JsBoolean(true))
 
         application.stop()
       }
 
-      "throw UpstreamException when returned a 404 NotFound for the cached trust" in {
+      "return ServerError() (models.TrustErrors) when a 404 NotFound is returned for the cached trust" in {
 
         val application = applicationBuilder()
           .configure(
@@ -562,9 +601,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(notFound())
         )
 
-        a[UpstreamErrorResponse] mustBe thrownBy {
-          Await.result(connector.getDoOtherIndividualsAlreadyExist(identifier), Duration.Inf)
-        }
+        val result = Await.result(connector.getDoProtectorsAlreadyExist(identifier).value, Duration.Inf)
+
+        result mustBe Left(ServerError())
 
         application.stop()
       }
@@ -591,14 +630,14 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(okJson(json.toString))
         )
 
-        val processed = Await.result(connector.getDoNonEeaCompaniesAlreadyExist(identifier), Duration.Inf)
+        val processed = Await.result(connector.getDoNonEeaCompaniesAlreadyExist(identifier).value, Duration.Inf)
 
-        processed.value mustBe true
+        processed mustBe Right(JsBoolean(true))
 
         application.stop()
       }
 
-      "throw UpstreamException when returned a 404 NotFound for the cached trust" in {
+      "return ServerError() (models.TrustErrors) when a 404 NotFound is returned for the cached trust" in {
 
         val application = applicationBuilder()
           .configure(
@@ -615,9 +654,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(notFound())
         )
 
-        a[UpstreamErrorResponse] mustBe thrownBy {
-          Await.result(connector.getDoNonEeaCompaniesAlreadyExist(identifier), Duration.Inf)
-        }
+        val result = Await.result(connector.getDoProtectorsAlreadyExist(identifier).value, Duration.Inf)
+
+        result mustBe Left(ServerError())
 
         application.stop()
       }
@@ -643,9 +682,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(ok)
         )
 
-        val processed = Await.result(connector.setTaxableMigrationFlag(identifier, value = true), Duration.Inf)
+        val processed = Await.result(connector.setTaxableMigrationFlag(identifier, value = true).value, Duration.Inf)
 
-        processed.status mustBe OK
+        processed.value.status mustBe OK
 
         application.stop()
       }
@@ -667,9 +706,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(aResponse().withStatus(BAD_REQUEST))
         )
 
-        val processed = Await.result(connector.setTaxableMigrationFlag(identifier, value = true), Duration.Inf)
+        val processed = Await.result(connector.setTaxableMigrationFlag(identifier, value = true).value, Duration.Inf)
 
-        processed.status mustBe BAD_REQUEST
+        processed.value.status mustBe BAD_REQUEST
 
         application.stop()
       }
@@ -692,9 +731,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
         )
 
-        val processed = Await.result(connector.setTaxableMigrationFlag(identifier, value = true), Duration.Inf)
+        val processed = Await.result(connector.setTaxableMigrationFlag(identifier, value = true).value, Duration.Inf)
 
-        processed.status mustBe INTERNAL_SERVER_ERROR
+        processed.value.status mustBe INTERNAL_SERVER_ERROR
 
         application.stop()
       }
@@ -719,7 +758,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(ok)
         )
 
-        val processed = Await.result(connector.removeTransforms(identifier), Duration.Inf)
+        val processed = Await.result(connector.removeTransforms(identifier).value, Duration.Inf).value
 
         processed.status mustBe OK
 
@@ -743,7 +782,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
         )
 
-        val processed = Await.result(connector.removeTransforms(identifier), Duration.Inf)
+        val processed = Await.result(connector.removeTransforms(identifier).value, Duration.Inf).value
 
         processed.status mustBe INTERNAL_SERVER_ERROR
 
@@ -769,7 +808,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(ok)
         )
 
-        val result = Await.result(connector.setExpressTrust(identifier, value = true), Duration.Inf)
+        val result = Await.result(connector.setExpressTrust(identifier, value = true).value, Duration.Inf).value
 
         result.status mustBe OK
 
@@ -795,7 +834,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(ok)
         )
 
-        val result = Await.result(connector.setTaxableTrust(identifier, value = true), Duration.Inf)
+        val result = Await.result(connector.setTaxableTrust(identifier, value = true).value, Duration.Inf).value
 
         result.status mustBe OK
 
@@ -826,7 +865,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
                 .willReturn(okJson(json.toString))
             )
 
-            val result = Await.result(connector.getSettlorsStatus(identifier), Duration.Inf)
+            val result = Await.result(connector.getSettlorsStatus(identifier).value, Duration.Inf).value
 
             result mustBe migrationStatus
 
@@ -858,7 +897,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
                 .willReturn(okJson(json.toString))
             )
 
-            val result = Await.result(connector.getBeneficiariesStatus(identifier), Duration.Inf)
+            val result = Await.result(connector.getBeneficiariesStatus(identifier).value, Duration.Inf).value
 
             result mustBe migrationStatus
 
@@ -893,14 +932,14 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(okJson(json.toString))
         )
 
-        val processed = connector.getFirstTaxYearToAskFor(identifier)
+        val processed = connector.getFirstTaxYearToAskFor(identifier).value
 
         whenReady(processed) {
           r =>
-            r mustBe FirstTaxYearAvailable(
+            r mustBe Right(FirstTaxYearAvailable(
               yearsAgo = 1,
               earlierYearsToDeclare = false
-            )
+            ))
         }
       }
     }

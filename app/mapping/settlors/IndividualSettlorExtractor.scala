@@ -17,6 +17,7 @@
 package mapping.settlors
 
 import models.UserAnswers
+import models.errors.TrustErrors
 import models.http.{DisplayTrustSettlor, PassportType}
 import models.pages.IndividualOrBusiness
 import models.pages.Tag.Completed
@@ -25,7 +26,6 @@ import pages.entitystatus.LivingSettlorStatus
 import pages.settlors.living_settlor._
 
 import java.time.LocalDate
-import scala.util.Try
 
 class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSettlor] {
 
@@ -48,9 +48,9 @@ class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSe
 
   override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualMentalCapacityYesNoPage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustSettlor,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(SettlorIndividualNamePage(index), entity.name))

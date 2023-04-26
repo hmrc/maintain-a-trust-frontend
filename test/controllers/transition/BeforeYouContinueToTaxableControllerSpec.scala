@@ -17,7 +17,9 @@
 package controllers.transition
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.TrustConnector
+import models.errors.{ServerError, TrustErrors}
 import models.{TrustDetails, UTR}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -34,11 +36,9 @@ import scala.concurrent.Future
 
 class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckPropertyChecks {
 
-  lazy val beforeYouContinueToTaxableRoute: String = routes.BeforeYouContinueToTaxableController.onPageLoad().url
-
-  val startDate: LocalDate = LocalDate.parse("2000-01-01")
-
-  val mockTrustsConnector: TrustConnector = mock[TrustConnector]
+  private lazy val beforeYouContinueToTaxableRoute: String = routes.BeforeYouContinueToTaxableController.onPageLoad().url
+  private val startDate: LocalDate = LocalDate.parse("2000-01-01")
+  private val mockTrustsConnector: TrustConnector = mock[TrustConnector]
 
   "BeforeYouContinueToTaxableController" when {
 
@@ -51,7 +51,9 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
           forAll(arbitrary[Boolean]) { bool =>
 
             when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-              .thenReturn(Future.successful(TrustDetails(startDate, Some(false), Some(bool), None)))
+              .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
+                (Future.successful(Right(TrustDetails(startDate, Some(false), Some(bool), None))))
+              )
 
             val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
               .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -75,7 +77,9 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
         "express not answered at registration" in {
 
           when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-            .thenReturn(Future.successful(TrustDetails(startDate, Some(false), None, None)))
+            .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
+              (Future.successful(Right(TrustDetails(startDate, Some(false), None, None))))
+            )
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
             .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -95,6 +99,27 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
           application.stop()
         }
       }
+
+      "return an Internal Server Error when the connector call returns an error for /GET" in {
+
+        when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+          .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
+            (Future.successful(Left(ServerError())))
+          )
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+          .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+          .build()
+
+        val request = FakeRequest(GET, beforeYouContinueToTaxableRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustBe INTERNAL_SERVER_ERROR
+        contentType(result) mustBe Some("text/html")
+
+        application.stop()
+      }
     }
 
     ".onSubmit" when {
@@ -105,7 +130,9 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
           forAll(arbitrary[Boolean]) { bool =>
 
             when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-              .thenReturn(Future.successful(TrustDetails(startDate, Some(false), Some(bool), None)))
+              .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
+                (Future.successful(Right(TrustDetails(startDate, Some(false), Some(bool), None))))
+              )
 
             val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
               .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -129,7 +156,9 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
         "redirect to express trust yes no" in {
 
           when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-            .thenReturn(Future.successful(TrustDetails(startDate, Some(false), None, None)))
+            .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
+              (Future.successful(Right(TrustDetails(startDate, Some(false), None, None))))
+            )
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
             .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -146,6 +175,27 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
 
           application.stop()
         }
+      }
+
+      "return an Internal Server Error when the connector call returns an error for /POST" in {
+
+        when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
+          .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
+            (Future.successful(Left(ServerError())))
+          )
+
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
+          .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+          .build()
+
+        val request = FakeRequest(POST, beforeYouContinueToTaxableRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustBe INTERNAL_SERVER_ERROR
+        contentType(result) mustBe Some("text/html")
+
+        application.stop()
       }
     }
   }

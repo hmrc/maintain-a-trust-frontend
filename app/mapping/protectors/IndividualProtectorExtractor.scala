@@ -16,6 +16,7 @@
 
 package mapping.protectors
 
+import models.errors.TrustErrors
 import models.http.{DisplayTrustProtector, PassportType}
 import models.pages.IndividualOrBusiness
 import models.{Address, MetaData, UserAnswers}
@@ -24,7 +25,6 @@ import pages.protectors.ProtectorIndividualOrBusinessPage
 import pages.protectors.individual._
 
 import java.time.LocalDate
-import scala.util.Try
 
 class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrustProtector] {
 
@@ -44,7 +44,7 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
   override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfNationalityYesNoPage(index)
   override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfNationalityInTheUkYesNoPage(index)
   override def countryOfNationalityPage(index: Int): QuestionPage[String] = IndividualProtectorCountryOfNationalityPage(index)
-  
+
   override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfResidenceYesNoPage(index)
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfResidenceInTheUkYesNoPage(index)
   override def countryOfResidencePage(index: Int): QuestionPage[String] = IndividualProtectorCountryOfResidencePage(index)
@@ -53,9 +53,9 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
 
   override def metaDataPage(index: Int): QuestionPage[MetaData] = IndividualProtectorMetaData(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustProtector,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(IndividualProtectorNamePage(index), entity.name))

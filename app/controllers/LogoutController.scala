@@ -18,13 +18,13 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import config.FrontendAppConfig
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import controllers.actions.Actions
 import play.api.Logging
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.Session
 
 import scala.concurrent.ExecutionContext
@@ -33,17 +33,15 @@ import scala.concurrent.ExecutionContext
 class LogoutController @Inject()(
                                   appConfig: FrontendAppConfig,
                                   val controllerComponents: MessagesControllerComponents,
-                                  identify: IdentifierAction,
-                                  getData: DataRetrievalAction,
-                                  requireData: DataRequiredAction,
+                                  actions: Actions,
                                   auditConnector: AuditConnector)(implicit val ec: ExecutionContext) extends FrontendBaseController with Logging {
 
-  def logout: Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def logout: Action[AnyContent] = actions.authWithData {
     request =>
 
-     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-      
-      if(appConfig.logoutAudit) {
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
+      if (appConfig.logoutAudit) {
 
         val identifierKey: String = request.userAnswers.identifierType.toString.toLowerCase
 

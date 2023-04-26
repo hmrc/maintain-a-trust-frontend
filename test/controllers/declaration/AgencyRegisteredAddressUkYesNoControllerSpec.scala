@@ -19,6 +19,7 @@ package controllers.declaration
 import base.SpecBase
 import forms.YesNoFormProvider
 import models.UserAnswers
+import models.errors.ServerError
 import models.pages.WhatIsNext.MakeChanges
 import pages.WhatIsNextPage
 import pages.declaration.AgencyRegisteredAddressUkYesNoPage
@@ -29,13 +30,13 @@ import views.html.declaration.AgencyRegisteredAddressUkYesNoView
 
 class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
-  val formProvider = new YesNoFormProvider()
-  val form = formProvider.withPrefix("agencyRegisteredAddressUkYesNo")
-  lazy val agencyRegisteredAddressUkYesNoRoute = routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
-  lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit()
+  private val formProvider = new YesNoFormProvider()
+  private val form = formProvider.withPrefix("agencyRegisteredAddressUkYesNo")
+  private lazy val agencyRegisteredAddressUkYesNoRoute = routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+  private lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit()
 
-  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, MakeChanges).success.value
+  private val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+    .set(WhatIsNextPage, MakeChanges).value
 
   "AgencyRegisteredAddressUkYesNo Controller" must {
 
@@ -59,7 +60,7 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = baseAnswers.set(AgencyRegisteredAddressUkYesNoPage, true).success.value
+      val userAnswers = baseAnswers.set(AgencyRegisteredAddressUkYesNoPage, true).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -129,6 +130,24 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
       contentAsString(result) mustEqual
         view(boundForm, onSubmit)(request, messages).toString
+
+      application.stop()
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(ServerError()))
+
+      val application = applicationBuilder(userAnswers = Some(baseAnswers)).build()
+
+      val request =
+        FakeRequest(POST, agencyRegisteredAddressUkYesNoRoute)
+          .withFormUrlEncodedBody(("value", "false"))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
 
       application.stop()
     }

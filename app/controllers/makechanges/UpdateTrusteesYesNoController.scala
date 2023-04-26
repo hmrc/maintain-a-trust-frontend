@@ -19,15 +19,20 @@ package controllers.makechanges
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.YesNoFormProvider
+import handlers.ErrorHandler
+import models.errors.{FormValidationError, TrustErrors}
+import models.requests.ClosingTrustRequest
 import pages.makechanges.UpdateTrusteesYesNoPage
+import play.api.Logging
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.TrustEnvelope
 import views.html.makechanges.UpdateTrusteesYesNoView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class UpdateTrusteesYesNoController @Inject()(
@@ -36,8 +41,12 @@ class UpdateTrusteesYesNoController @Inject()(
                                                actions: Actions,
                                                yesNoFormProvider: YesNoFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
-                                               view: UpdateTrusteesYesNoView
-                                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                               view: UpdateTrusteesYesNoView,
+                                               errorHandler: ErrorHandler
+                                             )(implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Logging {
+
+  private val className = getClass.getSimpleName
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
@@ -55,29 +64,35 @@ class UpdateTrusteesYesNoController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
+      val result = for {
+        formData <- TrustEnvelope(handleFormValidation)
+        updatedAnswers <- TrustEnvelope(request.userAnswers.set(UpdateTrusteesYesNoPage, formData))
+        _ <- playbackRepository.set(updatedAnswers)
+      } yield {
+        Redirect(controllers.makechanges.routes.UpdateBeneficiariesYesNoController.onPageLoad())
+      }
 
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors, prefix, request.closingTrust))),
-
-        value => {
-          for {
-            updatedAnswers <- Future.fromTry(
-              request.userAnswers
-                .set(UpdateTrusteesYesNoPage, value)
-            )
-            _ <- playbackRepository.set(updatedAnswers)
-          } yield {
-            Redirect(controllers.makechanges.routes.UpdateBeneficiariesYesNoController.onPageLoad())
-          }
-        }
-      )
-
+      result.value.map {
+        case Right(call) => call
+        case Left(FormValidationError(formBadRequest)) => formBadRequest
+        case Left(_) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
+      }
   }
 
   private def prefix(closingTrust: Boolean): String = {
     if (closingTrust) "updateTrusteesClosing" else "updateTrustees"
+  }
+
+  private def handleFormValidation(implicit request: ClosingTrustRequest[AnyContent]): Either[TrustErrors, Boolean] = {
+    val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
+
+    form.bindFromRequest().fold(
+      (formWithErrors: Form[_]) =>
+        Left(FormValidationError(BadRequest(view(formWithErrors, prefix, request.closingTrust)))),
+      value => Right(value)
+    )
   }
 
 }

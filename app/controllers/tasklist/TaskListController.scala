@@ -20,9 +20,11 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.{TrustConnector, TrustsStoreConnector}
 import controllers.actions.Actions
+import handlers.ErrorHandler
 import models.Enumerable
 import models.requests.ClosingTrustRequest
 import navigation.Navigator.declarationUrl
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -39,15 +41,18 @@ class TaskListController @Inject()(
                                     val config: FrontendAppConfig,
                                     storeConnector: TrustsStoreConnector,
                                     trustsConnector: TrustConnector,
-                                    variationProgress: VariationProgress
-                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Enumerable.Implicits {
+                                    variationProgress: VariationProgress,
+                                    errorHandler: ErrorHandler
+                                  )(implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Enumerable.Implicits with Logging {
 
   private def identifier(implicit request: ClosingTrustRequest[AnyContent]): String = request.userAnswers.identifier
 
+  private val className = getClass.getSimpleName
   def onPageLoad(): Action[AnyContent] = actions.refreshAndRequireIsClosingAnswer.async {
     implicit request =>
 
-      for {
+      val result = for {
         tasks <- storeConnector.getStatusOfTasks(identifier)
         settlorsStatus <- trustsConnector.getSettlorsStatus(identifier)
         beneficiariesStatus <- trustsConnector.getBeneficiariesStatus(identifier)
@@ -87,6 +92,13 @@ class TaskListController @Inject()(
             closingTrust = request.closingTrust
           ))
         }
+      }
+
+      result.value.map {
+        case Right(call) => call
+        case Left(_) =>
+          logger.warn(s"[$className][onPageLoad][Session ID: ${utils.Session.id(hc)}] Failed to render view.")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
       }
   }
 

@@ -17,13 +17,13 @@
 package mapping.settlors
 
 import mapping.PlaybackExtractor
+import models.errors.TrustErrors
 import models.http.{DisplayTrustIdentificationType, DisplayTrustWillType, PassportType}
 import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.settlors.deceased_settlor._
 
 import java.time.LocalDate
-import scala.util.Try
 
 class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
 
@@ -49,9 +49,9 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
 
   override def metaDataPage(index: Int): QuestionPage[MetaData] = DeceasedSettlorMetaData
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustWillType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(SettlorNamePage, entity.name))
       .flatMap(answers => extractDateOfDeath(entity.dateOfDeath, answers))
@@ -63,7 +63,7 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
   }
 
   private def extractDateOfDeath(dateOfDeath: Option[LocalDate],
-                                 answers: UserAnswers): Try[UserAnswers] = {
+                                 answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     dateOfDeath match {
       case Some(value) =>
         answers.set(SettlorDateOfDeathYesNoPage, true)
@@ -75,7 +75,7 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
 
   override def extractIndIdentification(identification: Option[DisplayTrustIdentificationType],
                                         index: Int,
-                                        answers: UserAnswers): Try[UserAnswers] = {
+                                        answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       identification match {
         case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
@@ -101,7 +101,7 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
 
   override def extractPassportIdCard(passport: PassportType,
                                      index: Int,
-                                     answers: UserAnswers): Try[UserAnswers] = {
+                                     answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     answers.set(SettlorPassportIDCardPage, passport)
   }
 

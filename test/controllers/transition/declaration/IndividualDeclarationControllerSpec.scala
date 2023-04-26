@@ -17,10 +17,16 @@
 package controllers.transition.declaration
 
 import base.SpecBase
+import cats.data.EitherT
 import forms.declaration.IndividualDeclarationFormProvider
+import models.errors.{DeclarationError, ServerError, TrustErrors}
+import models.http.TVNResponse
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext.MakeChanges
 import models.{IndividualDeclaration, UKAddress, UserAnswers}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.mockito.stubbing.OngoingStubbing
 import pages.WhatIsNextPage
 import pages.correspondence.CorrespondenceAddressPage
 import pages.trustees.{IsThisLeadTrusteePage, TrusteeAddressPage}
@@ -29,21 +35,32 @@ import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{DeclarationService, FakeDeclarationService, FakeFailingDeclarationService}
+import services.DeclarationService
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
+import utils.TrustEnvelope.TrustEnvelope
 import views.html.transition.declaration.IndividualDeclarationView
+
+import scala.concurrent.Future
 
 class IndividualDeclarationControllerSpec extends SpecBase {
 
-  val formProvider = new IndividualDeclarationFormProvider()
-  val form: Form[IndividualDeclaration] = formProvider()
-  val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
-  lazy val onSubmit: Call = routes.IndividualDeclarationController.onSubmit()
+  private val formProvider = new IndividualDeclarationFormProvider()
+  private val form: Form[IndividualDeclaration] = formProvider()
+  private val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
+  private lazy val onSubmit: Call = routes.IndividualDeclarationController.onSubmit()
 
-  val whatIsNext: WhatIsNext = MakeChanges
-  val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, whatIsNext).success.value
+  private val whatIsNext: WhatIsNext = MakeChanges
+  private val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+    .set(WhatIsNextPage, whatIsNext).value
+
+  private def mockDeclarationServiceResult(declarationService: DeclarationService,
+                                           result: Either[TrustErrors, TVNResponse] = Right(TVNResponse("123456"))
+                                          ): OngoingStubbing[TrustEnvelope[TVNResponse]] = {
+
+    when(declarationService.individualDeclaration(any(), any(), any())(any(), any(), any()))
+      .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(result)))
+  }
 
   "Individual Declaration Controller" must {
 
@@ -74,8 +91,11 @@ class IndividualDeclarationControllerSpec extends SpecBase {
       )))
 
       val userAnswers = baseAnswers
-        .set(IsThisLeadTrusteePage(0), true).success.value
-        .set(TrusteeAddressPage(0), address).success.value
+        .set(IsThisLeadTrusteePage(0), true).value
+        .set(TrusteeAddressPage(0), address).value
+
+      val mockDeclarationService: DeclarationService = mock[DeclarationService]
+      mockDeclarationServiceResult(mockDeclarationService)
 
       val application =
         applicationBuilder(
@@ -83,7 +103,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
           affinityGroup = Organisation,
           enrolments = enrolments
         ).overrides(
-          bind[DeclarationService].to(new FakeDeclarationService())
+          bind[DeclarationService].toInstance(mockDeclarationService)
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -106,8 +126,11 @@ class IndividualDeclarationControllerSpec extends SpecBase {
       )))
 
       val userAnswers = baseAnswers
-        .set(IsThisLeadTrusteePage(0), true).success.value
-        .set(CorrespondenceAddressPage, address).success.value
+        .set(IsThisLeadTrusteePage(0), true).value
+        .set(CorrespondenceAddressPage, address).value
+
+      val mockDeclarationService: DeclarationService = mock[DeclarationService]
+      mockDeclarationServiceResult(mockDeclarationService)
 
       val application =
         applicationBuilder(
@@ -115,7 +138,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
           affinityGroup = Organisation,
           enrolments = enrolments
         ).overrides(
-          bind[DeclarationService].to(new FakeDeclarationService())
+          bind[DeclarationService].toInstance(mockDeclarationService)
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -160,8 +183,11 @@ class IndividualDeclarationControllerSpec extends SpecBase {
       )))
 
       val userAnswers = baseAnswers
-        .set(IsThisLeadTrusteePage(0), true).success.value
-        .set(TrusteeAddressPage(0), address).success.value
+        .set(IsThisLeadTrusteePage(0), true).value
+        .set(TrusteeAddressPage(0), address).value
+
+      val mockDeclarationService: DeclarationService = mock[DeclarationService]
+      mockDeclarationServiceResult(mockDeclarationService, Left(DeclarationError()))
 
       val application =
         applicationBuilder(
@@ -169,7 +195,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
           affinityGroup = Organisation,
           enrolments = enrolments
         ).overrides(
-          bind[DeclarationService].to(new FakeFailingDeclarationService())
+          bind[DeclarationService].toInstance(mockDeclarationService)
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
@@ -177,9 +203,40 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      redirectLocation(result).value mustBe controllers.declaration.routes.ProblemDeclaringController.onPageLoad().url
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.declaration.routes.ProblemDeclaringController.onPageLoad().url)
 
       application.stop()
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      val enrolments = Enrolments(Set(Enrolment(
+        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", "0987654321")), "Activated"
+      )))
+
+      val userAnswers = baseAnswers
+        .set(IsThisLeadTrusteePage(0), true).value
+        .set(CorrespondenceAddressPage, address).value
+
+      val mockDeclarationService: DeclarationService = mock[DeclarationService]
+      mockDeclarationServiceResult(mockDeclarationService)
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(ServerError()))
+
+      val application =
+        applicationBuilder(
+          userAnswers = Some(userAnswers),
+          affinityGroup = Organisation,
+          enrolments = enrolments
+        ).overrides(
+          bind[DeclarationService].toInstance(mockDeclarationService)
+        ).build()
+
+      implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"))
+
+      val result = route(application, request).value
     }
   }
 

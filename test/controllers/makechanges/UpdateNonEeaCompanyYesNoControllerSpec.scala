@@ -17,8 +17,10 @@
 package controllers.makechanges
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.TrustsStoreConnector
 import forms.YesNoFormProvider
+import models.errors.{MongoError, TrustErrors}
 import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
 import models.{CompletedMaintenanceTasks, UserAnswers}
 import org.mockito.ArgumentMatchers.any
@@ -47,7 +49,7 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
-        .set(WhatIsNextPage, MakeChanges).success.value
+        .set(WhatIsNextPage, MakeChanges).value
 
       "return OK and the correct view for a GET" in {
 
@@ -69,7 +71,7 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
       "populate the view correctly on a GET when the question has previously been answered" in {
 
-        val userAnswers = baseAnswers.set(AddOrUpdateNonEeaCompanyYesNoPage, true).success.value
+        val userAnswers = baseAnswers.set(AddOrUpdateNonEeaCompanyYesNoPage, true).value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -90,12 +92,12 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
       "redirect to individual declaration when valid data is submitted and no has been selected for all the questions" in {
 
         val userAnswers = baseAnswers
-          .set(UpdateTrustDetailsYesNoPage, false).success.value
-          .set(UpdateTrusteesYesNoPage, false).success.value
-          .set(UpdateBeneficiariesYesNoPage, false).success.value
-          .set(UpdateSettlorsYesNoPage, false).success.value
-          .set(AddOrUpdateProtectorYesNoPage, false).success.value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
+          .set(UpdateTrustDetailsYesNoPage, false).value
+          .set(UpdateTrusteesYesNoPage, false).value
+          .set(UpdateBeneficiariesYesNoPage, false).value
+          .set(UpdateSettlorsYesNoPage, false).value
+          .set(AddOrUpdateProtectorYesNoPage, false).value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -114,12 +116,12 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
       "redirect to overview when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
 
         val userAnswers = baseAnswers
-          .set(UpdateTrustDetailsYesNoPage, false).success.value
-          .set(UpdateTrusteesYesNoPage, true).success.value
-          .set(UpdateBeneficiariesYesNoPage, false).success.value
-          .set(UpdateSettlorsYesNoPage, false).success.value
-          .set(AddOrUpdateProtectorYesNoPage, false).success.value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
+          .set(UpdateTrustDetailsYesNoPage, false).value
+          .set(UpdateTrusteesYesNoPage, true).value
+          .set(UpdateBeneficiariesYesNoPage, false).value
+          .set(UpdateSettlorsYesNoPage, false).value
+          .set(AddOrUpdateProtectorYesNoPage, false).value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
@@ -128,7 +130,8 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
         val request = FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
           .withFormUrlEncodedBody(("value", "false"))
 
-        when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+        when(mockConnector.set(any(), any())(any(), any()))
+          .thenReturn(EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks()))))
 
         val result = route(application, request).value
 
@@ -169,7 +172,7 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
-        .set(WhatIsNextPage, CloseTrust).success.value
+        .set(WhatIsNextPage, CloseTrust).value
 
       "return OK and the correct view for a GET" in {
 
@@ -191,7 +194,7 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
       "populate the view correctly on a GET when the question has previously been answered" in {
 
-        val userAnswers = baseAnswers.set(AddOrUpdateNonEeaCompanyYesNoPage, true).success.value
+        val userAnswers = baseAnswers.set(AddOrUpdateNonEeaCompanyYesNoPage, true).value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -214,12 +217,12 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
         val updateNonEeaCompanyYesNoRoute = routes.UpdateNonEeaCompanyYesNoController.onPageLoad().url
 
         val userAnswers = baseAnswers
-          .set(UpdateTrustDetailsYesNoPage, false).success.value
-          .set(UpdateTrusteesYesNoPage, false).success.value
-          .set(UpdateBeneficiariesYesNoPage, false).success.value
-          .set(UpdateSettlorsYesNoPage, false).success.value
-          .set(AddOrUpdateProtectorYesNoPage, false).success.value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).success.value
+          .set(UpdateTrustDetailsYesNoPage, false).value
+          .set(UpdateTrusteesYesNoPage, false).value
+          .set(UpdateBeneficiariesYesNoPage, false).value
+          .set(UpdateSettlorsYesNoPage, false).value
+          .set(AddOrUpdateProtectorYesNoPage, false).value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
@@ -228,7 +231,8 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
         val request = FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
           .withFormUrlEncodedBody(("value", "false"))
 
-        when(mockConnector.set(any(), any())(any(), any())).thenReturn(Future.successful(CompletedMaintenanceTasks()))
+        when(mockConnector.set(any(), any())(any(), any()))
+          .thenReturn(EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks()))))
 
         val result = route(application, request).value
 
@@ -261,6 +265,37 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
         application.stop()
       }
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
+
+      val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
+        .set(WhatIsNextPage, MakeChanges).value
+        .set(UpdateTrustDetailsYesNoPage, false).value
+        .set(UpdateTrusteesYesNoPage, true).value
+        .set(UpdateBeneficiariesYesNoPage, false).value
+        .set(UpdateSettlorsYesNoPage, false).value
+        .set(AddOrUpdateProtectorYesNoPage, false).value
+        .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
+        .build()
+
+      val request = FakeRequest(POST, updateNonEeaCompanyYesNoRoute)
+        .withFormUrlEncodedBody(("value", "false"))
+
+      when(mockConnector.set(any(), any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks()))))
+
+      val result = route(application, request).value
+
+      status(result) mustBe INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
+
+      application.stop()
     }
   }
 }

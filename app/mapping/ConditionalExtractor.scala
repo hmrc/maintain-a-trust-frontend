@@ -17,32 +17,31 @@
 package mapping
 
 import models.UserAnswers
-
-import scala.util.{Success, Try}
+import models.errors.TrustErrors
 
 trait ConditionalExtractor {
 
-  def extractIfTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
+  def extractIfTaxable(answers: UserAnswers)(block: Either[TrustErrors, UserAnswers]): Either[TrustErrors, UserAnswers] = {
     if (answers.isTrustTaxable) {
       block
     } else {
-      Success(answers)
+      Right(answers)
     }
   }
 
-  def extractIfTaxableOrMigratingToTaxable(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
+  def extractIfTaxableOrMigratingToTaxable(answers: UserAnswers)(block: Either[TrustErrors, UserAnswers]): Either[TrustErrors, UserAnswers] = {
     if (answers.isTrustTaxableOrMigratingToTaxable) {
       block
     } else {
-      Success(answers)
+      Right(answers)
     }
   }
 
-  def extractIf5mldTrustIn5mldMode(answers: UserAnswers)(block: Try[UserAnswers]): Try[UserAnswers] = {
+  def extractIf5mldTrustIn5mldMode(answers: UserAnswers)(block: Either[TrustErrors, UserAnswers]): Either[TrustErrors, UserAnswers] = {
     if (answers.is5mldTrustIn5mldMode) {
       block
     } else {
-      Success(answers)
+      Right(answers)
     }
   }
 }

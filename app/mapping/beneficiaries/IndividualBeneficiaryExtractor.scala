@@ -16,14 +16,13 @@
 
 package mapping.beneficiaries
 
-import mapping.PlaybackExtractionErrors.InvalidExtractorState
+import models.errors.{InvalidExtractorState, TrustErrors}
 import models.http.{DisplayTrustIndividualDetailsType, PassportType}
 import models.{Address, MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.beneficiaries.individual._
 
 import java.time.LocalDate
-import scala.util.{Failure, Try}
 
 class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustIndividualDetailsType] {
 
@@ -55,9 +54,9 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = IndividualBeneficiaryDateOfBirthPage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustIndividualDetailsType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(IndividualBeneficiaryNamePage(index), entity.name))
       .flatMap(answers => extractRoleInCompany(entity, index, answers))
@@ -71,13 +70,13 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
       .flatMap(_.set(IndividualBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
   }
 
-  private def extractRoleInCompany(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Try[UserAnswers] = {
+  private def extractRoleInCompany(individualBeneficiary: DisplayTrustIndividualDetailsType, index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       answers.set(IndividualBeneficiaryRoleInCompanyPage(index), individualBeneficiary.beneficiaryType)
     }
   }
 
-  private def extractVulnerability(vulnerable: Option[Boolean], index: Int, answers: UserAnswers): Try[UserAnswers] = {
+  private def extractVulnerability(vulnerable: Option[Boolean], index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       vulnerable match {
         case Some(value) => answers.set(IndividualBeneficiaryVulnerableYesNoPage(index), value)
@@ -87,7 +86,7 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
           } else {
             logger.warn(s"[IndividualBeneficiaryExtractor][extractVulnerability][UTR/URN: ${answers.identifier}] Individual beneficiary vulnerability must be answered for taxable trust.")
           }
-          Failure(InvalidExtractorState)
+          Left(InvalidExtractorState)
       }
     }
   }

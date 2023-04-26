@@ -19,6 +19,7 @@ package controllers.makechanges
 import base.SpecBase
 import forms.YesNoFormProvider
 import models.UserAnswers
+import models.errors.ServerError
 import models.pages.WhatIsNext
 import pages.WhatIsNextPage
 import pages.makechanges.UpdateTrustDetailsYesNoPage
@@ -43,7 +44,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).success.value
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges).value
 
       "return OK and the correct view for a GET" in {
 
@@ -65,7 +66,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
       "populate the view correctly on a GET when the question has previously been answered" in {
 
-        val userAnswers = baseAnswers.set(UpdateTrustDetailsYesNoPage, validAnswer).success.value
+        val userAnswers = baseAnswers.set(UpdateTrustDetailsYesNoPage, validAnswer).value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -129,7 +130,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.CloseTrust).success.value
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
 
       "return OK and the correct view for a GET" in {
 
@@ -151,7 +152,7 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
       "populate the view correctly on a GET when the question has previously been answered" in {
 
-        val userAnswers = baseAnswers.set(UpdateTrustDetailsYesNoPage, validAnswer).success.value
+        val userAnswers = baseAnswers.set(UpdateTrustDetailsYesNoPage, validAnswer).value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -205,6 +206,26 @@ class UpdateTrustDetailsYesNoControllerSpec extends SpecBase {
 
         application.stop()
       }
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(ServerError()))
+
+      val userAnswers: UserAnswers = emptyUserAnswersForUtr
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      val request = FakeRequest(POST, updateTrustDetailsRoute)
+        .withFormUrlEncodedBody(("value", validAnswer.toString))
+
+      val result = route(application, request).value
+
+      status(result) mustBe INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
+
+      application.stop()
     }
   }
 }

@@ -19,7 +19,7 @@ package base
 import play.api.http.Status.OK
 import controllers.actions._
 import models.UserAnswers
-import org.scalatest.{BeforeAndAfter, TestSuite, TryValues}
+import org.scalatest.{BeforeAndAfter, EitherValues, TestSuite, TryValues}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice._
 import play.api.inject.bind
@@ -49,11 +49,11 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
       .overrides(
         bind[IdentifierAction].toInstance(new FakeIdentifierAction(bodyParsers, affinityGroup, enrolments)),
         bind[PlaybackIdentifierAction].toInstance(new FakePlaybackIdentifierAction()),
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
+        bind[DataRetrievalRefinerAction].toInstance(new FakeDataRetrievalRefinerAction(userAnswers, mockActiveSessionRepository, mockPlaybackRepository, mockErrorHandler)),
         bind[RefreshedDataRetrievalAction].toInstance(new FakeRefreshedDataRetrievalAction),
         bind[RefreshedDataPreSubmitRetrievalAction].toInstance(new FakeRefreshedDataPreSubmitRetrievalAction),
-        bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[PlaybackRepository].toInstance(playbackRepository)
+        bind[DataRequiredAction].toInstance(new FakeDataRequiredAction(userAnswers)),
+        bind[PlaybackRepository].toInstance(mockPlaybackRepository)
       )
   }
 
@@ -61,4 +61,4 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
 
 }
 
-trait SpecBase extends PlaySpec with SpecBaseHelpers
+trait SpecBase extends PlaySpec with SpecBaseHelpers with EitherValues

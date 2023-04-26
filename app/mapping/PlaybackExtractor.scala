@@ -16,8 +16,8 @@
 
 package mapping
 
-import mapping.PlaybackExtractionErrors._
 import mapping.PlaybackImplicits._
+import models.errors._
 import models.http._
 import models.{InternationalAddress, MetaData, UKAddress, UserAnswers}
 import pages.QuestionPage
@@ -26,47 +26,46 @@ import utils.Constants.GB
 
 import java.time.LocalDate
 import scala.reflect.{ClassTag, classTag}
-import scala.util.{Failure, Success, Try}
 
 abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with ConditionalExtractor with Logging {
 
   val optionalEntity: Boolean = false
 
-  def extract(answers: UserAnswers, data: List[T]): Either[PlaybackExtractionError, UserAnswers] = {
+  def extract(answers: UserAnswers, data: List[T]): Either[TrustErrors, UserAnswers] = {
     data match {
       case Nil if optionalEntity => Right(answers)
       case Nil => Left(FailedToExtractData(s"No entities of type ${classTag[T].runtimeClass.getSimpleName}"))
       case entities =>
 
-        val updated = entities.zipWithIndex.foldLeft[Try[UserAnswers]](Success(answers)){
+        val updated = entities.zipWithIndex.foldLeft[Either[TrustErrors, UserAnswers]](Right(answers)) {
           case (answers, (entity, index)) =>
             updateUserAnswers(answers, entity, index)
         }
 
         updated match {
-          case Success(a) =>
+          case Right(a) =>
             Right(a)
-          case Failure(exception) =>
-            logger.warn(s"[PlaybackExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data due to ${exception.getMessage}")
+          case Left(_) =>
+            logger.warn(s"[PlaybackExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data.}")
             Left(FailedToExtractData(classTag[T].runtimeClass.getSimpleName))
         }
     }
   }
 
-  def updateUserAnswers(answers: Try[UserAnswers], entity: T, index: Int): Try[UserAnswers] = {
+  def updateUserAnswers(answers: Either[TrustErrors, UserAnswers], entity: T, index: Int): Either[TrustErrors, UserAnswers] = {
     answers.flatMap(answers => extractMetaData(entity, index, answers))
   }
 
-  def extractMentalCapacity(legallyIncapable: Option[Boolean], index: Int, answers: UserAnswers): Try[UserAnswers] = {
+  def extractMentalCapacity(legallyIncapable: Option[Boolean], index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     legallyIncapable match {
       case Some(value) => answers.set(mentalCapacityYesNoPage(index), !value)
-      case None => Success(answers)
+      case None => Right(answers)
     }
   }
 
   def extractCountryOfResidence(countryOfResidence: Option[String],
                                 index: Int,
-                                answers: UserAnswers): Try[UserAnswers] = {
+                                answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractCountryOfResidenceOrNationality(
       country = countryOfResidence,
       answers = answers,
@@ -78,7 +77,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
 
   def extractCountryOfNationality(countryOfNationality: Option[String],
                                   index: Int,
-                                  answers: UserAnswers): Try[UserAnswers] = {
+                                  answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractCountryOfResidenceOrNationality(
       country = countryOfNationality,
       answers = answers,
@@ -92,7 +91,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
                                                      answers: UserAnswers,
                                                      yesNoPage: QuestionPage[Boolean],
                                                      ukYesNoPage: QuestionPage[Boolean],
-                                                     page: QuestionPage[String]): Try[UserAnswers] = {
+                                                     page: QuestionPage[String]): Either[TrustErrors, UserAnswers] = {
     extractIf5mldTrustIn5mldMode(answers) {
       country match {
         case Some(GB) =>
@@ -111,22 +110,22 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
 
   def extractAddress(address: AddressType,
                      index: Int,
-                     answers: UserAnswers): Try[UserAnswers] = {
-      address.convert match {
-        case uk: UKAddress =>
-          answers.set(addressYesNoPage(index), true)
-            .flatMap(_.set(ukAddressYesNoPage(index), true))
-            .flatMap(_.set(addressPage(index), uk))
-        case nonUk: InternationalAddress =>
-          answers.set(addressYesNoPage(index), true)
-            .flatMap(_.set(ukAddressYesNoPage(index), false))
-            .flatMap(_.set(addressPage(index), nonUk))
-      }
+                     answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+    address.convert match {
+      case uk: UKAddress =>
+        answers.set(addressYesNoPage(index), true)
+          .flatMap(_.set(ukAddressYesNoPage(index), true))
+          .flatMap(_.set(addressPage(index), uk))
+      case nonUk: InternationalAddress =>
+        answers.set(addressYesNoPage(index), true)
+          .flatMap(_.set(ukAddressYesNoPage(index), false))
+          .flatMap(_.set(addressPage(index), nonUk))
+    }
   }
 
   def extractOptionalAddress(optionalAddress: Option[AddressType],
                              index: Int,
-                             answers: UserAnswers): Try[UserAnswers] = {
+                             answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       optionalAddress match {
         case Some(address) =>
@@ -139,7 +138,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
 
   def extractIndIdentification(identification: Option[DisplayTrustIdentificationType],
                                index: Int,
-                               answers: UserAnswers): Try[UserAnswers] = {
+                               answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       identification match {
         case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
@@ -155,7 +154,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
             .flatMap(answers => extractPassportIdCard(passport, index, answers))
         case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
           logger.error(s"[PlaybackExtractor][extractIndIdentification][UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustIdentificationType")
-          Failure(InvalidExtractorState)
+          Left(InvalidExtractorState)
         case _ =>
           answers.set(ninoYesNoPage(index), false)
             .flatMap(_.set(addressYesNoPage(index), false))
@@ -165,14 +164,14 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
 
   def extractPassportIdCard(passport: PassportType,
                             index: Int,
-                            answers: UserAnswers): Try[UserAnswers] = {
+                            answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     answers.set(passportOrIdCardYesNoPage(index), true)
       .flatMap(_.set(passportOrIdCardPage(index), passport))
   }
 
   def extractOrgIdentification(identification: Option[DisplayTrustIdentificationOrgType],
                                index: Int,
-                               answers: UserAnswers): Try[UserAnswers] = {
+                               answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       identification match {
         case Some(DisplayTrustIdentificationOrgType(_, Some(utr), None)) =>
@@ -190,7 +189,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
 
   def extractDateOfBirth(dateOfBirth: Option[LocalDate],
                          index: Int,
-                         answers: UserAnswers): Try[UserAnswers] = {
+                         answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     dateOfBirth match {
       case Some(dateOfBirth) =>
         answers.set(dateOfBirthYesNoPage(index), true)
@@ -202,7 +201,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
 
   def extractMetaData(entity: T,
                       index: Int,
-                      answers: UserAnswers): Try[UserAnswers] = {
+                      answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     val metaData = MetaData(
       lineNo = entity.lineNo.getOrElse(""),
       bpMatchStatus = bpMatchStatus(entity),

@@ -70,7 +70,7 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
         }
 
         "migrating from non-taxable to taxable" in {
-          val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, NeedsToPayTax).success.value
+          val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, NeedsToPayTax).value
 
           userAnswers.trustTaxability mustBe MigratingFromNonTaxableToTaxable
           userAnswers.isTrustTaxable mustBe false
@@ -79,7 +79,7 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
         }
 
         "migrating from taxable to non-taxable" in {
-          val userAnswers = emptyUserAnswersForUtr.set(WhatIsNextPage, NoLongerTaxable).success.value
+          val userAnswers = emptyUserAnswersForUtr.set(WhatIsNextPage, NoLongerTaxable).value
 
           userAnswers.trustTaxability mustBe MigratingFromTaxableToNonTaxable
           userAnswers.isTrustTaxable mustBe false
@@ -121,10 +121,10 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
         "individual" in {
 
           val userAnswers = emptyUserAnswersForUtr
-            .set(trustees.IsThisLeadTrusteePage(0), false).success.value
-            .set(trustees.TrusteeNamePage(0), FullName("Joe", None, "Bloggs")).success.value
-            .set(trustees.IsThisLeadTrusteePage(1), true).success.value
-            .set(trustees.TrusteeNamePage(1), FullName("John", None, "Doe")).success.value
+            .set(trustees.IsThisLeadTrusteePage(0), false).value
+            .set(trustees.TrusteeNamePage(0), FullName("Joe", None, "Bloggs")).value
+            .set(trustees.IsThisLeadTrusteePage(1), true).value
+            .set(trustees.TrusteeNamePage(1), FullName("John", None, "Doe")).value
 
           userAnswers.leadTrusteeName mustBe "John Doe"
         }
@@ -132,10 +132,10 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
         "organisation" in {
 
           val userAnswers = emptyUserAnswersForUtr
-            .set(trustees.IsThisLeadTrusteePage(0), false).success.value
-            .set(trustees.TrusteeOrgNamePage(0), "Amazon").success.value
-            .set(trustees.IsThisLeadTrusteePage(1), true).success.value
-            .set(trustees.TrusteeOrgNamePage(1), "Google").success.value
+            .set(trustees.IsThisLeadTrusteePage(0), false).value
+            .set(trustees.TrusteeOrgNamePage(0), "Amazon").value
+            .set(trustees.IsThisLeadTrusteePage(1), true).value
+            .set(trustees.TrusteeOrgNamePage(1), "Google").value
 
           userAnswers.leadTrusteeName mustBe "Google"
         }
@@ -160,7 +160,7 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
       "clear answers" in {
 
         val previousAnswers = emptyUserAnswersForUtr
-          .set(ViewLastDeclarationYesNoPage, false).success.value
+          .set(ViewLastDeclarationYesNoPage, false).value
 
         val result = previousAnswers.clearData
 

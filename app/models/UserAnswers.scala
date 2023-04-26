@@ -18,6 +18,7 @@ package models
 
 import _root_.pages.WhatIsNextPage
 import _root_.pages.trustees._
+import models.errors.{ServerError, TrustErrors}
 import models.pages.WhatIsNext.{NeedsToPayTax, NoLongerTaxable}
 import play.api.Logging
 import play.api.i18n.Messages
@@ -25,8 +26,8 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import queries.{Gettable, Settable}
 import sections.Trustees
+
 import java.time.LocalDateTime
-import scala.util.{Failure, Success, Try}
 
 final case class UserAnswers(internalId: String,
                              identifier: String,
@@ -89,7 +90,7 @@ final case class UserAnswers(internalId: String,
     get(page).orElse(Some(default))
   }
 
-  def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A], reads: Reads[A]): Try[UserAnswers] = {
+  def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A], reads: Reads[A]): Either[TrustErrors, UserAnswers] = {
     value match {
       case Some(v) => setValue(page, v)
       case None =>
@@ -98,34 +99,33 @@ final case class UserAnswers(internalId: String,
     }
   }
 
-  def set[A](page: Settable[A], value: A)(implicit writes: Writes[A], reads: Reads[A]): Try[UserAnswers] = setValue(page, value)
+  def set[A](page: Settable[A], value: A)(implicit writes: Writes[A], reads: Reads[A]): Either[TrustErrors, UserAnswers] = setValue(page, value)
 
-  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A], reads: Reads[A]): Try[UserAnswers] = {
+  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A], reads: Reads[A]): Either[TrustErrors, UserAnswers] = {
     val hasValueChanged: Boolean = !getAtPath(page.path).contains(value)
 
     val updatedData = data.setObject(page.path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
-        Success(jsValue)
-      case JsError(errors) =>
-        val errorPaths = errors.collectFirst { case (path, e) => s"$path $e" }
-        logger.warn(s"[UserAnswers][setValue] Unable to set path ${page.path} due to errors $errorPaths")
-        Failure(JsResultException(errors))
+        Right(jsValue)
+      case JsError(_) =>
+        logger.error(s"[UserAnswers][setValue] Unable to set path ${page.path} due to errors")
+        Left(ServerError())
     }
 
     updatedData.flatMap {
       d =>
         val updatedAnswers = copy(data = d)
-        if (hasValueChanged) page.cleanup(Some(value), updatedAnswers) else Success(updatedAnswers)
+        if (hasValueChanged) page.cleanup(Some(value), updatedAnswers) else Right(updatedAnswers)
     }
   }
 
-  def remove[A](query: Settable[A]): Try[UserAnswers] = {
+  def remove[A](query: Settable[A]): Either[TrustErrors, UserAnswers] = {
 
     val updatedData = data.removeObject(query.path) match {
       case JsSuccess(jsValue, _) =>
-        Success(jsValue)
+        Right(jsValue)
       case JsError(_) =>
-        Success(data)
+        Right(data)
     }
 
     updatedData.flatMap {
@@ -135,10 +135,10 @@ final case class UserAnswers(internalId: String,
     }
   }
 
-  def deleteAtPath(path: JsPath): Try[UserAnswers] = {
+  def deleteAtPath(path: JsPath): Either[TrustErrors, UserAnswers] = {
     data.removeObject(path).map(obj => copy(data = obj)).fold(
-      _ => Success(this),
-      result => Success(result)
+      _ => Right(this),
+      result => Right(result)
     )
   }
 

@@ -35,13 +35,13 @@ class TestTrustsStoreController @Inject()(
   def set4Mld: Action[AnyContent] = Action.async {
     implicit request =>
       logger.info(s"[TestTrustsStoreController][set4Mld][Session ID: ${Session.id(hc)}] set 4MLD mode")
-      connector.setFeature("5mld", state = false).map(_ => Ok)
+      connector.setFeature("5mld", state = false).value.map(_ => Ok)
   }
 
   def set5Mld: Action[AnyContent] = Action.async {
     implicit request =>
       logger.info(s"[TestTrustsStoreController][set5Mld][Session ID: ${Session.id(hc)}] set 5MLD mode")
-      connector.setFeature("5mld", state = true).map(_ => Ok)
+      connector.setFeature("5mld", state = true).value.map(_ => Ok)
   }
 
   /**
@@ -54,7 +54,7 @@ class TestTrustsStoreController @Inject()(
       request.body.asJson match {
         case Some(JsBoolean(value)) =>
           logger.info(s"[TestTrustsStoreController][setFeature][Session ID: ${Session.id(hc)}] setting $feature to $value")
-          connector.setFeature(feature, value).map(_ => Ok).recover {
+          connector.setFeature(feature, value).value.map(_ => Ok).recover {
             case ex =>
               logger.error(s"[TestTrustsStoreController][setFeature][Session ID: ${Session.id(hc)}] error setting feature: ${ex.getMessage}", ex)
               InternalServerError

@@ -17,8 +17,10 @@
 package controllers.transition
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.TrustConnector
 import forms.YesNoFormProvider
+import models.errors.{ServerError, TrustErrors}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import pages.trustdetails.Schedule3aExemptYesNoPage
@@ -27,15 +29,16 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
+import uk.gov.hmrc.http.HttpResponse
 import views.html.transition.Schedule3aExemptYesNoView
 
 import scala.concurrent.Future
 
 class Schedule3aExemptYesNoControllerSpec extends SpecBase {
 
-  val form: Form[Boolean] = new YesNoFormProvider().withPrefix("schedule3aExemptYesNo")
+  private val form: Form[Boolean] = new YesNoFormProvider().withPrefix("schedule3aExemptYesNo")
 
-  lazy val schedule3aExemptYesNoRoute: String = routes.Schedule3aExemptYesNoController.onPageLoad().url
+  private lazy val schedule3aExemptYesNoRoute: String = routes.Schedule3aExemptYesNoController.onPageLoad().url
 
   "Schedule3aExemptYesNoController" must {
 
@@ -59,7 +62,7 @@ class Schedule3aExemptYesNoControllerSpec extends SpecBase {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = emptyUserAnswersForUtr.set(Schedule3aExemptYesNoPage, true).success.value
+      val userAnswers = emptyUserAnswersForUtr.set(Schedule3aExemptYesNoPage, true).value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -82,7 +85,7 @@ class Schedule3aExemptYesNoControllerSpec extends SpecBase {
       val mockTrustsConnector = mock[TrustConnector]
 
       when(mockTrustsConnector.setSchedule3aExempt(any(), any())(any(), any()))
-        .thenReturn(Future.successful(okResponse))
+        .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), affinityGroup = Organisation)
         .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -97,6 +100,29 @@ class Schedule3aExemptYesNoControllerSpec extends SpecBase {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+
+      application.stop()
+    }
+
+    "return an Internal Server Error when setting the user answers goes wrong" in {
+
+      val mockTrustsConnector = mock[TrustConnector]
+
+      when(mockTrustsConnector.setSchedule3aExempt(any(), any())(any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Left(ServerError()))))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr), affinityGroup = Organisation)
+        .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+        .build()
+
+      val request =
+        FakeRequest(POST, schedule3aExemptYesNoRoute)
+          .withFormUrlEncodedBody(("value", "true"))
+
+      val result = route(application, request).value
+
+      status(result) mustBe INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
 
       application.stop()
     }

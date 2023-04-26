@@ -17,6 +17,8 @@
 package controllers
 
 import base.SpecBase
+import cats.data.EitherT
+import models.errors.TrustErrors
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
@@ -34,7 +36,8 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
 
   override def beforeEach(): Unit = {
     reset(mockSessionRepository)
-    when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+    when(mockSessionRepository.set(any()))
+      .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
   }
 
   private lazy val onPageLoad: String = routes.IndexController.onPageLoad.url

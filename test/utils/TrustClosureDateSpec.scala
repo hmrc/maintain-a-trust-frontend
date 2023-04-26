@@ -23,7 +23,6 @@ import pages.close.taxable.DateLastAssetSharedOutPage
 import utils.TrustClosureDate.{getClosureDate, setClosureDate}
 
 import java.time.LocalDate
-import scala.util.Try
 
 class TrustClosureDateSpec extends SpecBase {
 
@@ -58,7 +57,7 @@ class TrustClosureDateSpec extends SpecBase {
           "taxable" in {
 
             val userAnswers = emptyUserAnswersForUtr
-              .set(DateLastAssetSharedOutPage, date).success.value
+              .set(DateLastAssetSharedOutPage, date).value
 
             val result: Option[LocalDate] = getClosureDate(userAnswers)
 
@@ -68,7 +67,7 @@ class TrustClosureDateSpec extends SpecBase {
           "non-taxable" in {
 
             val userAnswers = emptyUserAnswersForUrn
-              .set(DateClosedPage, date).success.value
+              .set(DateClosedPage, date).value
 
             val result: Option[LocalDate] = getClosureDate(userAnswers)
 
@@ -85,9 +84,9 @@ class TrustClosureDateSpec extends SpecBase {
 
           val userAnswers = emptyUserAnswersForUtr
 
-          val result: Try[UserAnswers] = setClosureDate(userAnswers, None)
+          val result: UserAnswers = setClosureDate(userAnswers, None).value
 
-          result.get mustBe userAnswers
+          result mustBe userAnswers
         }
       }
 
@@ -100,22 +99,22 @@ class TrustClosureDateSpec extends SpecBase {
 
             val userAnswers = emptyUserAnswersForUtr
 
-            val result: Try[UserAnswers] = setClosureDate(userAnswers, Some(date))
+            val result: UserAnswers = setClosureDate(userAnswers, Some(date)).value
 
-            result.get mustNot be(userAnswers)
-            result.get.get(DateLastAssetSharedOutPage).get mustBe date
-            result.get.get(DateClosedPage) mustBe None
+            result mustNot be(userAnswers)
+            result.get(DateLastAssetSharedOutPage).get mustBe date
+            result.get(DateClosedPage) mustBe None
           }
 
           "non-taxable" in {
 
             val userAnswers = emptyUserAnswersForUrn
 
-            val result: Try[UserAnswers] = setClosureDate(userAnswers, Some(date))
+            val result: UserAnswers = setClosureDate(userAnswers, Some(date)).value
 
-            result.get mustNot be(userAnswers)
-            result.get.get(DateLastAssetSharedOutPage) mustBe None
-            result.get.get(DateClosedPage).get mustBe date
+            result mustNot be(userAnswers)
+            result.get(DateLastAssetSharedOutPage) mustBe None
+            result.get(DateClosedPage).get mustBe date
           }
         }
       }

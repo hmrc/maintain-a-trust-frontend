@@ -17,16 +17,18 @@
 package controllers
 
 import base.SpecBase
+import cats.data.EitherT
 import connectors.TrustConnector
 import forms.WhatIsNextFormProvider
 import generators.ModelGenerators
 import models.Underlying4mldTrustIn5mldMode
+import models.errors.TrustErrors
 import models.pages.WhatIsNext
 import models.pages.WhatIsNext._
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{never, reset, verify, when}
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalatest.BeforeAndAfterEach
+import org.scalatest.{BeforeAndAfterEach, EitherValues}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.WhatIsNextPage
 import play.api.data.Form
@@ -36,30 +38,31 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.MaintainATrustService
 import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.http.HttpResponse
 import views.html.WhatIsNextView
 
 import scala.concurrent.Future
 
-class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators with BeforeAndAfterEach {
+class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators with BeforeAndAfterEach with EitherValues {
 
-  val form: Form[WhatIsNext] = new WhatIsNextFormProvider()()
+  private val form: Form[WhatIsNext] = new WhatIsNextFormProvider()()
 
-  lazy val onPageLoad: String = routes.WhatIsNextController.onPageLoad().url
+  private lazy val onPageLoad: String = routes.WhatIsNextController.onPageLoad().url
 
-  lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
+  private lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
 
-  val mockTrustsConnector: TrustConnector = mock[TrustConnector]
-  val mockMaintainATrustService: MaintainATrustService = mock[MaintainATrustService]
+  private val mockTrustsConnector: TrustConnector = mock[TrustConnector]
+  private val mockMaintainATrustService: MaintainATrustService = mock[MaintainATrustService]
 
   override def beforeEach(): Unit = {
     reset(mockTrustsConnector)
     reset(mockMaintainATrustService)
 
     when(mockTrustsConnector.setTaxableMigrationFlag(any(), any())(any(), any()))
-      .thenReturn(Future.successful(okResponse))
+      .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
     when(mockMaintainATrustService.removeTransformsAndResetTaskList(any())(any(), any()))
-      .thenReturn(Future.successful(()))
+      .thenReturn(EitherT[Future, TrustErrors, Unit](Future.successful(Right(()))))
   }
 
   "WhatIsNext Controller" must {
@@ -216,7 +219,7 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
               beforeEach()
 
               val userAnswers = emptyUserAnswersForUtr
-                .set(WhatIsNextPage, previousAnswer).success.value
+                .set(WhatIsNextPage, previousAnswer).value
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -246,7 +249,7 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
               beforeEach()
 
               val userAnswers = emptyUserAnswersForUrn
-                .set(WhatIsNextPage, previousAnswer).success.value
+                .set(WhatIsNextPage, previousAnswer).value
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -402,7 +405,7 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
             beforeEach()
 
             val userAnswers = emptyUserAnswersForUtr
-              .set(WhatIsNextPage, previousAnswer).success.value
+              .set(WhatIsNextPage, previousAnswer).value
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
               .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -434,7 +437,7 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
           beforeEach()
 
           val userAnswers = emptyUserAnswersForUtr
-            .set(WhatIsNextPage, previousAnswer).success.value
+            .set(WhatIsNextPage, previousAnswer).value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))

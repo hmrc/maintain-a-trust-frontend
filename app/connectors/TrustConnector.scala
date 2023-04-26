@@ -16,124 +16,171 @@
 
 package connectors
 
+import cats.data.EitherT
 import config.FrontendAppConfig
-import models.http.{DeclarationForApi, DeclarationResponse, TrustsResponse}
+import models.errors.DeclarationError
+import models.http.{DeclarationForApi, TVNResponse, TrustsResponse}
 import models.{FirstTaxYearAvailable, MigrationTaskStatus, TrustDetails}
-import play.api.Logging
 import play.api.http.HeaderNames
+import play.api.http.Status.OK
 import play.api.libs.json.{JsBoolean, Writes}
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import utils.TrustEnvelope.TrustEnvelope
 
 import java.time.LocalDate
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
-class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) extends Logging {
+class TrustConnector @Inject()(http: HttpClient, config: FrontendAppConfig) extends ConnectorErrorResponseHandler {
+
+  override val className: String = getClass.getSimpleName
 
   private lazy val baseUrl: String = s"${config.trustsUrl}/trusts"
 
   def getUntransformedTrustDetails(identifier: String)
-                                  (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[TrustDetails] = {
+                                  (implicit hc: HeaderCarrier, ex: ExecutionContext): TrustEnvelope[TrustDetails] = EitherT {
     val url: String = s"$baseUrl/trust-details/$identifier/untransformed"
-    http.GET[TrustDetails](url)
+    http.GET[TrustDetails](url).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "getUntransformedTrustDetails"))
+    }
   }
 
   def getStartDate(identifier: String)
-                  (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[LocalDate] = {
+                  (implicit hc: HeaderCarrier, ex: ExecutionContext): TrustEnvelope[LocalDate] = {
     getUntransformedTrustDetails(identifier) map { trustDetails =>
       trustDetails.startDate
     }
   }
 
   def playback(identifier: String)
-              (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
+              (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TrustsResponse] = EitherT {
     val url: String = s"$baseUrl/$identifier/transformed"
-    http.GET[TrustsResponse](url)
+    http.GET[TrustsResponse](url).map(Right(_)).recover {
+      case ex =>
+        Left(handleError(ex, "playback"))
+    }
   }
 
   def playbackFromEtmp(identifier: String)
-                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustsResponse] = {
+                      (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TrustsResponse] = EitherT {
     val url: String = s"$baseUrl/$identifier/refresh"
-    http.GET[TrustsResponse](url)
+    http.GET[TrustsResponse](url).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "playbackFromEtmp"))
+    }
   }
 
   def getDoProtectorsAlreadyExist(identifier: String)
-                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
+                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[JsBoolean] = EitherT {
     val url: String = s"$baseUrl/$identifier/transformed/protectors-already-exist"
-    http.GET[JsBoolean](url)
+    http.GET[JsBoolean](url).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "getDoProtectorsAlreadyExist"))
+    }
   }
 
   def getDoOtherIndividualsAlreadyExist(identifier: String)
-                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
+                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[JsBoolean] = EitherT {
     val url: String = s"$baseUrl/$identifier/transformed/other-individuals-already-exist"
-    http.GET[JsBoolean](url)
+    http.GET[JsBoolean](url).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "getDoProtectorsAlreadyExist"))
+    }
   }
 
   def getDoNonEeaCompaniesAlreadyExist(identifier: String)
-                                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[JsBoolean] = {
+                                      (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[JsBoolean] = EitherT {
     val url: String = s"$baseUrl/$identifier/transformed/non-eea-companies-already-exist"
-    http.GET[JsBoolean](url)
+    http.GET[JsBoolean](url).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "getDoNonEeaCompaniesAlreadyExist"))
+    }
   }
 
   def declare(identifier: String, payload: DeclarationForApi)
-             (implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[DeclarationResponse] = {
+             (implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = EitherT {
 
+    val httpReads = HttpReads.Implicits.readRaw
     val trueUserAgent = "True-User-Agent"
 
     val newHc: HeaderCarrier = hc.withExtraHeaders(
       trueUserAgent -> request.headers.get(HeaderNames.USER_AGENT).getOrElse("No user agent provided")
     )
     val url: String = s"$baseUrl/declare/$identifier"
-    http.POST[DeclarationForApi, DeclarationResponse](url, payload)(implicitly[Writes[DeclarationForApi]], DeclarationResponse.httpReads, newHc, ec)
+    http.POST[DeclarationForApi, HttpResponse](url, payload)(implicitly[Writes[DeclarationForApi]], httpReads, newHc, ec)
+      .map { response =>
+        response.status match {
+          case OK => Right(response.json.as[TVNResponse])
+          case status =>
+            logger.error(s"[$className][declare] problem declaring trust, received a non successful status code: $status")
+            Left(DeclarationError())
+        }
+      }.recover {
+      case ex => Left(handleError(ex, "declare"))
+    }
   }
 
   def setTaxableMigrationFlag(identifier: String, value: Boolean)
-                             (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+                             (implicit hc: HeaderCarrier, ex: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
     val url: String = s"$baseUrl/$identifier/taxable-migration/migrating-to-taxable"
-    http.POST[Boolean, HttpResponse](url, value)
+    http.POST[Boolean, HttpResponse](url, value).map(Right(_)).recover {
+      case ex =>
+        Left(handleError(ex, "setTaxableMigrationFlag"))
+    }
   }
 
   def removeTransforms(identifier: String)
-                      (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+                      (implicit hc: HeaderCarrier, ex: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
     val url: String = s"$baseUrl/$identifier/transforms"
-    http.DELETE[HttpResponse](url)
+    http.DELETE[HttpResponse](url).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "removeTransforms"))
+    }
   }
 
   def setExpressTrust(identifier: String, value: Boolean)
-                     (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+                     (implicit hc: HeaderCarrier, ex: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
     val url: String = s"$baseUrl/trust-details/$identifier/express"
-    http.PUT[Boolean, HttpResponse](url, value)
+    http.PUT[Boolean, HttpResponse](url, value).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "setExpressTrust"))
+    }
   }
 
   def setTaxableTrust(identifier: String, value: Boolean)
-                     (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+                     (implicit hc: HeaderCarrier, ex: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
     val url: String = s"$baseUrl/trust-details/$identifier/taxable"
-    http.PUT[Boolean, HttpResponse](url, value)
+    http.PUT[Boolean, HttpResponse](url, value).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "setTaxableTrust"))
+    }
   }
 
   def setSchedule3aExempt(identifier: String, value: Boolean)
-                     (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+                         (implicit hc: HeaderCarrier, ex: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
     val url: String = s"$baseUrl/trust-details/$identifier/schedule-3a-exempt"
-    http.PUT[Boolean, HttpResponse](url, value)
+    http.PUT[Boolean, HttpResponse](url, value).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "setSchedule3aExempt"))
+    }
   }
 
   def getSettlorsStatus(identifier: String)
-                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[MigrationTaskStatus] = {
+                       (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[MigrationTaskStatus] = EitherT {
     val url: String = s"$baseUrl/settlors/$identifier/complete-for-migration"
-    http.GET[MigrationTaskStatus](url)
+    http.GET[MigrationTaskStatus](url).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "getSettlorsStatus"))
+    }
   }
 
   def getBeneficiariesStatus(identifier: String)
-                            (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[MigrationTaskStatus] = {
+                            (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[MigrationTaskStatus] = EitherT {
     val url: String = s"$baseUrl/beneficiaries/$identifier/complete-for-migration"
-    http.GET[MigrationTaskStatus](url)
+    http.GET[MigrationTaskStatus](url).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "getBeneficiariesStatus"))
+    }
   }
 
-  def getFirstTaxYearToAskFor(identifier: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[FirstTaxYearAvailable] = {
+  def getFirstTaxYearToAskFor(identifier: String)
+                             (implicit hc: HeaderCarrier, ex: ExecutionContext): TrustEnvelope[FirstTaxYearAvailable] = EitherT {
     val url = s"$baseUrl/tax-liability/$identifier/first-year-to-ask-for"
-    http.GET[FirstTaxYearAvailable](url)
+    http.GET[FirstTaxYearAvailable](url).map(Right(_)).recover {
+      case ex => Left(handleError(ex, "getFirstTaxYearToAskFor"))
+    }
   }
 
 }

@@ -44,7 +44,7 @@ object CompletedMaintenanceTasks {
     protectors = NotStarted,
     other = NotStarted
   )
-  
+
   private def tagForDecision(needToAmend: Boolean): Tag = if (needToAmend) NotStarted else Completed
 
   def from(userAnswers: UserAnswers): Option[CompletedMaintenanceTasks] = for {

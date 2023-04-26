@@ -16,12 +16,11 @@
 
 package mapping.beneficiaries
 
+import models.errors.TrustErrors
 import models.http.DisplayTrustUnidentifiedType
 import models.{MetaData, UserAnswers}
 import pages.QuestionPage
 import pages.beneficiaries.classOfBeneficiary._
-
-import scala.util.Try
 
 class ClassOfBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustUnidentifiedType] {
 
@@ -30,9 +29,9 @@ class ClassOfBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTr
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = ClassOfBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String] = ClassOfBeneficiaryShareOfIncomePage(index)
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayTrustUnidentifiedType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     super.updateUserAnswers(answers, entity, index)
       .flatMap(_.set(ClassOfBeneficiaryDescriptionPage(index), entity.description))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))

@@ -67,7 +67,7 @@ case class PropertyLandType(buildingLandName: Option[String],
   override val bpMatchStatus: Option[String] = None
   override val lineNo: Option[String] = None
   override val entityStart: String = LocalDate.now.toString
-  
+
 }
 
 object PropertyLandType {

@@ -17,8 +17,8 @@
 package mapping.settlors
 
 import mapping.ConditionalExtractor
-import mapping.PlaybackExtractionErrors.{FailedToExtractData, PlaybackExtractionError}
 import models.UserAnswers
+import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.{DisplayTrust, DisplayTrustWillType, TrustDetailsType}
 import models.pages.DeedOfVariation.AdditionToWill
 import models.pages.{DeedOfVariation, KindOfTrust, TypeOfTrust}
@@ -26,20 +26,20 @@ import pages.settlors.living_settlor.trust_type._
 import pages.trustdetails.SetUpAfterSettlorDiedYesNoPage
 import play.api.Logging
 
-import scala.util.{Failure, Success, Try}
-
 class TrustTypeExtractor extends ConditionalExtractor with Logging {
 
-  def extract(answers: UserAnswers, data: DisplayTrust): Either[PlaybackExtractionError, UserAnswers] = {
+  private val className = getClass.getSimpleName
+
+  def extract(answers: UserAnswers, data: DisplayTrust): Either[TrustErrors, UserAnswers] = {
     extractTrustType(data.details, answers) match {
-      case Success(a) =>
+      case Right(a) =>
         Right(a)
-      case Failure(_) =>
+      case Left(_) =>
         Left(FailedToExtractData(DisplayTrustWillType.toString))
     }
   }
 
-  private def extractTrustType(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] = {
+  private def extractTrustType(details: TrustDetailsType, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     extractIfTaxableOrMigratingToTaxable(answers) {
       (details.typeOfTrust, details.deedOfVariation) match {
         case (Some(TypeOfTrust.DeedOfVariation), _) | (_, Some(AdditionToWill)) => answers
@@ -69,16 +69,16 @@ class TrustTypeExtractor extends ConditionalExtractor with Logging {
           .set(SetUpAfterSettlorDiedYesNoPage, true)
 
         case (None, _) if answers.isTrustMigratingFromNonTaxableToTaxable =>
-          Success(answers)
+          Right(answers)
 
         case (None, _) =>
-          logger.warn(s"[TrustTypeExtractor][extractTrustType][UTR/URN: ${answers.identifier}] failed to extract data due to No trust type for taxable trust")
-          Failure(new Throwable())
+          logger.warn(s"[$className][extractTrustType][UTR/URN: ${answers.identifier}] failed to extract data due to No trust type for taxable trust")
+          Left(FailedToExtractData("No trust type for taxable trust."))
       }
     }
   }
 
-  private def extractDeedOfVariation(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] = {
+  private def extractDeedOfVariation(details: TrustDetailsType, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     details.deedOfVariation match {
       case Some(DeedOfVariation.AdditionToWill) =>
         answers.set(SetUpInAdditionToWillTrustYesNoPage, true)
@@ -86,11 +86,11 @@ class TrustTypeExtractor extends ConditionalExtractor with Logging {
         answers.set(SetUpInAdditionToWillTrustYesNoPage, false)
           .flatMap(_.set(HowDeedOfVariationCreatedPage, details.deedOfVariation))
       case _ =>
-        Success(answers)
+        Right(answers)
     }
   }
 
-  private def extractEfrbs(details: TrustDetailsType, answers: UserAnswers): Try[UserAnswers] = {
+  private def extractEfrbs(details: TrustDetailsType, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     details.efrbsStartDate match {
       case Some(date) =>
         answers.set(EfrbsYesNoPage, true)

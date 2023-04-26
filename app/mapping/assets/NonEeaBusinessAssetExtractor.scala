@@ -19,18 +19,17 @@ package mapping.assets
 import mapping.PlaybackExtractor
 import mapping.PlaybackImplicits.AddressConverter
 import models.UserAnswers
+import models.errors.TrustErrors
 import models.http.DisplayNonEEABusinessType
 import pages.assets.nonEeaBusiness._
-
-import scala.util.Try
 
 class NonEeaBusinessAssetExtractor extends PlaybackExtractor[DisplayNonEEABusinessType] {
 
   override val optionalEntity: Boolean = true
 
-  override def updateUserAnswers(answers: Try[UserAnswers],
+  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
                                  entity: DisplayNonEEABusinessType,
-                                 index: Int): Try[UserAnswers] = {
+                                 index: Int): Either[TrustErrors, UserAnswers] = {
     answers
       .flatMap(_.set(NonEeaBusinessLineNoPage(index), entity.lineNo))
       .flatMap(_.set(NonEeaBusinessNamePage(index), entity.orgName))

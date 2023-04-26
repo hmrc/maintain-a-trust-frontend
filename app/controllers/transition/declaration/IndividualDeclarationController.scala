@@ -16,13 +16,13 @@
 
 package controllers.transition.declaration
 
-import java.time.LocalDateTime
-
 import com.google.inject.{Inject, Singleton}
 import controllers.actions._
 import forms.declaration.IndividualDeclarationFormProvider
+import handlers.ErrorHandler
 import models.IndividualDeclaration
-import models.http.TVNResponse
+import models.errors.{DeclarationError, FormValidationError, TrustErrors}
+import models.requests.ClosingTrustRequest
 import pages.declaration.IndividualDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
 import play.api.Logging
@@ -32,11 +32,12 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.DeclarationService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import utils.Session
 import utils.TrustClosureDate.getClosureDate
+import utils.{Session, TrustEnvelope}
 import views.html.transition.declaration.IndividualDeclarationView
 
-import scala.concurrent.{ExecutionContext, Future}
+import java.time.LocalDateTime
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class IndividualDeclarationController @Inject()(
@@ -46,10 +47,12 @@ class IndividualDeclarationController @Inject()(
                                                  formProvider: IndividualDeclarationFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: IndividualDeclarationView,
-                                                 service: DeclarationService
+                                                 service: DeclarationService,
+                                                 errorHandler: ErrorHandler
                                                )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
-  val form: Form[IndividualDeclaration] = formProvider()
+  private val className = getClass.getSimpleName
+  private val form: Form[IndividualDeclaration] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
     implicit request =>
@@ -65,30 +68,36 @@ class IndividualDeclarationController @Inject()(
   def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
     implicit request =>
 
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
+      val result = for {
+        declaration <- TrustEnvelope(handleFormValidation)
+        tvnResponse <- service.individualDeclaration(request.userAnswers.identifier, declaration, getClosureDate(request.userAnswers))
+        updatedAnswers <- TrustEnvelope(
+          request.userAnswers
+            .set(IndividualDeclarationPage, declaration)
+            .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
+            .flatMap(_.set(TVNPage, tvnResponse.tvn))
+        )
+        _ <- playbackRepository.set(updatedAnswers)
+      } yield Redirect(controllers.transition.declaration.routes.ConfirmationController.onPageLoad())
 
-        declaration =>
-          service.individualDeclaration(
-            request.userAnswers.identifier,
-            declaration,
-            getClosureDate(request.userAnswers)
-          ) flatMap {
-            case TVNResponse(tvn) =>
-              for {
-                updatedAnswers <- Future.fromTry(
-                  request.userAnswers
-                    .set(IndividualDeclarationPage, declaration)
-                    .flatMap(_.set(SubmissionDatePage, LocalDateTime.now))
-                    .flatMap(_.set(TVNPage, tvn))
-                )
-                _ <- playbackRepository.set(updatedAnswers)
-              } yield Redirect(controllers.transition.declaration.routes.ConfirmationController.onPageLoad())
-            case _ =>
-              logger.error(s"[IndividualDeclarationController][onSubmit][Session ID: ${Session.id(hc)}] Failed to declare")
-              Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-          }
-      )
+      result.value.map {
+        case Right(call) => call
+        case Left(FormValidationError(formBadRequest)) => formBadRequest
+        case Left(DeclarationError()) =>
+          logger.warn(s"[IndividualDeclarationController][onSubmit][Session ID: ${Session.id(hc)}] Failed to declare")
+          Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())
+        case Left(_) =>
+          logger.warn(s"[$className][onSubmit][Session ID: ${Session.id(hc)}] Error while storing user answers")
+          InternalServerError(errorHandler.internalServerErrorTemplate)
+      }
   }
+
+  private def handleFormValidation(implicit request: ClosingTrustRequest[AnyContent]): Either[TrustErrors, IndividualDeclaration] = {
+    form.bindFromRequest().fold(
+      (formWithErrors: Form[_]) =>
+        Left(FormValidationError(BadRequest(view(formWithErrors)))),
+      value => Right(value)
+    )
+  }
+
 }

@@ -16,31 +16,11 @@
 
 package models.http
 
-import play.api.Logging
-import play.api.http.Status._
 import play.api.libs.json._
-import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-sealed trait DeclarationResponse
-
-final case class TVNResponse(tvn: String) extends DeclarationResponse
+final case class TVNResponse(tvn: String)
 
 object TVNResponse {
   implicit val format: Format[TVNResponse] = Json.format[TVNResponse]
 }
 
-final case class DeclarationErrorResponse(status: Int) extends DeclarationResponse
-
-
-object DeclarationResponse extends Logging {
-
-  implicit lazy val httpReads: HttpReads[DeclarationResponse] = (_: String, _: String, response: HttpResponse) => {
-    response.status match {
-      case OK =>
-        response.json.as[TVNResponse]
-      case _ =>
-        DeclarationErrorResponse(response.status)
-    }
-  }
-
-}

@@ -40,33 +40,33 @@ class TrustDetailsPrinterSpec extends SpecBase {
     "migrating from non-taxable to taxable" must {
 
       val baseAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, NeedsToPayTax).success.value
-        .set(TrustNamePage, "Trust Ltd.").success.value
-        .set(WhenTrustSetupPage, date).success.value
-        .set(GovernedInsideTheUKPage, false).success.value
-        .set(CountryGoverningTrustPage, "FR").success.value
-        .set(AdministrationInsideUKPage, false).success.value
-        .set(CountryAdministeringTrustPage, "DE").success.value
-        .set(SetUpAfterSettlorDiedYesNoPage, false).success.value
-        .set(KindOfTrustPage, KindOfTrust.Deed).success.value
-        .set(HowDeedOfVariationCreatedPage, DeedOfVariation.ReplacedWill).success.value
-        .set(HoldoverReliefYesNoPage, true).success.value
-        .set(EfrbsYesNoPage, true).success.value
-        .set(EfrbsStartDatePage, date).success.value
-        .set(TrustUkPropertyYesNoPage, true).success.value
-        .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
-        .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).success.value
+        .set(WhatIsNextPage, NeedsToPayTax).value
+        .set(TrustNamePage, "Trust Ltd.").value
+        .set(WhenTrustSetupPage, date).value
+        .set(GovernedInsideTheUKPage, false).value
+        .set(CountryGoverningTrustPage, "FR").value
+        .set(AdministrationInsideUKPage, false).value
+        .set(CountryAdministeringTrustPage, "DE").value
+        .set(SetUpAfterSettlorDiedYesNoPage, false).value
+        .set(KindOfTrustPage, KindOfTrust.Deed).value
+        .set(HowDeedOfVariationCreatedPage, DeedOfVariation.ReplacedWill).value
+        .set(HoldoverReliefYesNoPage, true).value
+        .set(EfrbsYesNoPage, true).value
+        .set(EfrbsStartDatePage, date).value
+        .set(TrustUkPropertyYesNoPage, true).value
+        .set(TrustRecordedOnAnotherRegisterYesNoPage, false).value
+        .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees).value
 
       "generate an answer section" when {
 
         "uk based" in {
 
           val answers = baseAnswers
-            .set(SettlorsUkBasedPage, true).success.value
-            .set(EstablishedUnderScotsLawPage, true).success.value
-            .set(TrustResidentOffshorePage, true).success.value
-            .set(TrustPreviouslyResidentPage, "US").success.value
-            .set(Schedule3aExemptYesNoPage, true).success.value
+            .set(SettlorsUkBasedPage, true).value
+            .set(EstablishedUnderScotsLawPage, true).value
+            .set(TrustResidentOffshorePage, true).value
+            .set(TrustPreviouslyResidentPage, "US").value
+            .set(Schedule3aExemptYesNoPage, true).value
 
           val actualSection = helper.print(answers)
 
@@ -105,12 +105,12 @@ class TrustDetailsPrinterSpec extends SpecBase {
         "non-uk based" in {
 
           val answers = baseAnswers
-            .set(SettlorsUkBasedPage, false).success.value
-            .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value
-            .set(RegisteringTrustFor5APage, false).success.value
-            .set(InheritanceTaxActPage, true).success.value
-            .set(AgentOtherThanBarristerPage, true).success.value
-            .set(Schedule3aExemptYesNoPage, false).success.value
+            .set(SettlorsUkBasedPage, false).value
+            .set(TrustHasBusinessRelationshipInUkYesNoPage, true).value
+            .set(RegisteringTrustFor5APage, false).value
+            .set(InheritanceTaxActPage, true).value
+            .set(AgentOtherThanBarristerPage, true).value
+            .set(Schedule3aExemptYesNoPage, false).value
 
           val actualSection = helper.print(answers)
 
@@ -155,11 +155,11 @@ class TrustDetailsPrinterSpec extends SpecBase {
         val year2019 = 2019
 
         val answers = emptyUserAnswersForUtr
-          .set(TrustNamePage, "Trust Ltd.").success.value
-          .set(WhenTrustSetupPage, LocalDate.of(year2019, java.time.Month.JUNE, 1)).success.value
-          .set(TrustUkPropertyYesNoPage, true).success.value
-          .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
-          .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value
+          .set(TrustNamePage, "Trust Ltd.").value
+          .set(WhenTrustSetupPage, LocalDate.of(year2019, java.time.Month.JUNE, 1)).value
+          .set(TrustUkPropertyYesNoPage, true).value
+          .set(TrustRecordedOnAnotherRegisterYesNoPage, false).value
+          .set(TrustHasBusinessRelationshipInUkYesNoPage, true).value
 
         val actualSection = helper.print(answers)
 
@@ -183,11 +183,11 @@ class TrustDetailsPrinterSpec extends SpecBase {
       "generate an answer section with trust name, created date and urn" in {
 
         val answers = emptyUserAnswersForUrn
-          .set(TrustNamePage, "Trust Ltd.").success.value
-          .set(WhenTrustSetupPage, date).success.value
-          .set(TrustUkPropertyYesNoPage, true).success.value
-          .set(TrustRecordedOnAnotherRegisterYesNoPage, false).success.value
-          .set(TrustHasBusinessRelationshipInUkYesNoPage, true).success.value
+          .set(TrustNamePage, "Trust Ltd.").value
+          .set(WhenTrustSetupPage, date).value
+          .set(TrustUkPropertyYesNoPage, true).value
+          .set(TrustRecordedOnAnotherRegisterYesNoPage, false).value
+          .set(TrustHasBusinessRelationshipInUkYesNoPage, true).value
 
         val actualSection = helper.print(answers)
 
