@@ -74,7 +74,7 @@ class ExpressTrustYesNoController @Inject()(
         formData <- TrustEnvelope(handleFormValidation)
         updatedAnswers <- TrustEnvelope(request.userAnswers.set(ExpressTrustYesNoPage, formData))
         _ <- playbackRepository.set(updatedAnswers)
-        _ <- TrustEnvelope(removeTransformsIfNotMigrating(isTrustMigrating))
+        _ <- removeTransformsIfNotMigrating(isTrustMigrating)
         _ <- trustsConnector.setExpressTrust(request.userAnswers.identifier, formData)
       } yield {
         if (isTrustMigrating) {

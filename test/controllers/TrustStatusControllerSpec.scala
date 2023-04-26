@@ -424,8 +424,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val getTrust: GetTrust = json.as[GetTrustDesResponse].getTrust.value
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]] //TODO - check if managedByAgent should be true
-                  (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+                .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
+                  (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = true)))))
                 )
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))

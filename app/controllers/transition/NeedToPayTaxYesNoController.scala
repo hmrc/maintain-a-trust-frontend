@@ -76,7 +76,7 @@ class NeedToPayTaxYesNoController @Inject()(
         hasAnswerChanged <- TrustEnvelope(!request.userAnswers.get(NeedToPayTaxYesNoPage).contains(needsToPayTax))
         updatedAnswers <- TrustEnvelope(request.userAnswers.set(NeedToPayTaxYesNoPage, needsToPayTax))
         _ <- playbackRepository.set(updatedAnswers)
-        _ <- TrustEnvelope(updateTransforms(hasAnswerChanged, needsToPayTax))
+        _ <- updateTransforms(hasAnswerChanged, needsToPayTax)
       } yield {
         if (needsToPayTax) {
           Redirect(routes.BeforeYouContinueToTaxableController.onPageLoad())

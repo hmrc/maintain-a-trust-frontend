@@ -18,7 +18,7 @@ package connectors
 
 import cats.data.EitherT
 import config.FrontendAppConfig
-import models.errors.{ServerError, TrustErrors}
+import models.errors.ServerError
 import models.{CompletedMaintenanceTasks, FeatureResponse, UserAnswers}
 import play.api.http.Status.OK
 import play.api.libs.json.{JsBoolean, JsValue, Json}
@@ -47,7 +47,7 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config: FrontendAppConfig
   }
 
   def set(identifier: String, userAnswers: UserAnswers)
-         (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[CompletedMaintenanceTasks] = EitherT[Future, TrustErrors, CompletedMaintenanceTasks] {
+         (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[CompletedMaintenanceTasks] = EitherT {
     CompletedMaintenanceTasks.from(userAnswers) match {
       case Some(taskStatusTag) =>
         http.POST[JsValue, CompletedMaintenanceTasks](maintainTasksUrl(identifier), Json.toJson(taskStatusTag)).map(_ => Right(taskStatusTag))
