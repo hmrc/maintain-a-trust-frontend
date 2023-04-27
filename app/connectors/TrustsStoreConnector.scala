@@ -20,7 +20,6 @@ import cats.data.EitherT
 import config.FrontendAppConfig
 import models.errors.ServerError
 import models.{CompletedMaintenanceTasks, FeatureResponse, UserAnswers}
-import play.api.http.Status.OK
 import play.api.libs.json.{JsBoolean, JsValue, Json}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
@@ -82,12 +81,7 @@ class TrustsStoreConnector @Inject()(http: HttpClient, config: FrontendAppConfig
   }
 
   def setFeature(feature: String, state: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
-    http.PUT[JsValue, HttpResponse](featuresUrl(feature), JsBoolean(state)).map(response =>
-     response.status match {
-       case OK => Right(response)
-       case status => Left(handleError(status, "setFeature"))
-     }
-    ).recover {
+    http.PUT[JsValue, HttpResponse](featuresUrl(feature), JsBoolean(state)).map(Right(_)).recover {
       case ex =>
         Left(handleError(ex, "setFeature"))
     }

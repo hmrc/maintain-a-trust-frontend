@@ -46,7 +46,7 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
           case Right(a) =>
             Right(a)
           case Left(_) =>
-            logger.warn(s"[PlaybackExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data.}")
+            logger.warn(s"[PlaybackExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data.")
             Left(FailedToExtractData(classTag[T].runtimeClass.getSimpleName))
         }
     }
