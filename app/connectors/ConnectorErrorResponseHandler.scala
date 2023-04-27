@@ -24,11 +24,6 @@ trait ConnectorErrorResponseHandler extends Logging  {
 
   val className: String
 
-  def handleError(statusCode: Int, methodName: String): TrustErrors = {
-    logger.error(s"[$className][$methodName] Error with status: $statusCode")
-    ServerError()
-  }
-
   def handleError(ex: Throwable, methodName: String): TrustErrors = {
     logger.error(s"[$className][$methodName] Exception thrown with message ${ex.getMessage}")
     ServerError()
