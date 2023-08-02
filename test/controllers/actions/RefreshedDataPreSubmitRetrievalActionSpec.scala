@@ -22,10 +22,10 @@ import connectors.TrustConnector
 import generators.ModelGenerators
 import mapping.UserAnswersExtractor
 import models.errors.{FailedToExtractData, MongoError, ServerError, TrustErrors}
-import models.{AgentDeclaration, FullName, UserAnswers}
 import models.http.{Processed, TrustsResponse}
 import models.pages.WhatIsNext
 import models.requests.{DataRequest, OrganisationUser, User}
+import models.{AgentDeclaration, FullName, UserAnswers}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
@@ -53,7 +53,7 @@ class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSug
                 trustConnector: TrustConnector,
                 playbackExtractor: UserAnswersExtractor)
     extends RefreshedDataPreSubmitRetrievalActionImpl(bodyParsers, playbackRepository, trustConnector, playbackExtractor) {
-      def callRefine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = refine(request)
+    def callRefine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = refine(request)
   }
 
   private val user: User = OrganisationUser("id", Enrolments(Set()))
@@ -72,12 +72,9 @@ class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSug
 
         val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
 
-        val futureResult = action.callRefine(DataRequest(fakeRequest, userAnswers, user))
+        val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-        whenReady(futureResult) { result =>
-          result mustBe 'left
-          redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
-        }
+        redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
       }
 
       "trust is not in processed state" in {
@@ -97,12 +94,9 @@ class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSug
 
             val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
 
-            val futureResult = action.callRefine(DataRequest(fakeRequest, userAnswers, user))
+            val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-            whenReady(futureResult) { result =>
-              result mustBe 'left
-              redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
-            }
+            redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
         }
       }
 
@@ -125,12 +119,9 @@ class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSug
 
             val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
 
-            val futureResult = action.callRefine(DataRequest(fakeRequest, userAnswers, user))
+            val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-            whenReady(futureResult) { result =>
-              result mustBe 'left
-              redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
-            }
+            redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
         }
       }
 
@@ -155,12 +146,9 @@ class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSug
 
             val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
 
-            val futureResult = action.callRefine(DataRequest(fakeRequest, userAnswers, user))
+            val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-            whenReady(futureResult) { result =>
-              result mustBe 'left
-              redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
-            }
+            redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
         }
       }
 
@@ -192,12 +180,9 @@ class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSug
 
             val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
 
-            val futureResult = action.callRefine(DataRequest(fakeRequest, userAnswers, user))
+            val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-            whenReady(futureResult) { result =>
-              result mustBe 'left
-              redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
-            }
+            redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
         }
       }
     }
@@ -230,19 +215,15 @@ class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSug
 
             val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
 
-            val futureResult = action.callRefine(DataRequest(fakeRequest, userAnswers, user))
+            action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-            whenReady(futureResult) { result =>
-              result mustBe 'right
+            val uaCaptor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
+            verify(playbackRepository).set(uaCaptor.capture)
 
-              val uaCaptor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
-              verify(playbackRepository).set(uaCaptor.capture)
-
-              uaCaptor.getValue.get(WhatIsNextPage).get mustBe whatNext
-              uaCaptor.getValue.get(AgentDeclarationPage).get mustBe agentDeclaration
-              uaCaptor.getValue.get(DateLastAssetSharedOutPage).get mustBe closeDate
-              uaCaptor.getValue.get(DateClosedPage) mustBe None
-            }
+            uaCaptor.getValue.get(WhatIsNextPage).get mustBe whatNext
+            uaCaptor.getValue.get(AgentDeclarationPage).get mustBe agentDeclaration
+            uaCaptor.getValue.get(DateLastAssetSharedOutPage).get mustBe closeDate
+            uaCaptor.getValue.get(DateClosedPage) mustBe None
         }
       }
     }

@@ -45,7 +45,7 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
   private val mockVariationProgress: VariationProgress = mock[VariationProgress]
 
   override def beforeEach(): Unit = {
-    reset(mockTrustsStoreConnector, mockTrustsConnector, mockVariationProgress, mockPlaybackRepository)
+    reset[Any](mockTrustsStoreConnector, mockTrustsConnector, mockVariationProgress, mockPlaybackRepository)
 
     when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
       .thenReturn(EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks()))))

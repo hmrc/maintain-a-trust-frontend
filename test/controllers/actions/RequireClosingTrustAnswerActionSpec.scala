@@ -52,12 +52,10 @@ class RequireClosingTrustAnswerActionSpec extends SpecBase with ScalaFutures {
             emptyUserAnswersForUtr,
             user
           )
-        )
+        ).futureValue
 
-        whenReady(futureResult) { r =>
-          val result = Future.successful(r.left.get)
-          status(result) mustEqual INTERNAL_SERVER_ERROR
-        }
+        val result = Future.successful(futureResult.left.value)
+        status(result) mustEqual INTERNAL_SERVER_ERROR
       }
     }
 
@@ -69,17 +67,15 @@ class RequireClosingTrustAnswerActionSpec extends SpecBase with ScalaFutures {
 
         val userAnswers = emptyUserAnswersForUtr.set(WhatIsNextPage, CloseTrust).value
 
-        val futureResult = action.callRefine(
+        val result = action.callRefine(
           DataRequest(
             fakeRequest,
             userAnswers,
             user
           )
-        )
+        ).futureValue
 
-        whenReady(futureResult) { result =>
-          result.right.get.closingTrust must be(true)
-        }
+        result.value.closingTrust must be(true)
       }
     }
 
@@ -91,17 +87,15 @@ class RequireClosingTrustAnswerActionSpec extends SpecBase with ScalaFutures {
 
         val userAnswers = emptyUserAnswersForUtr.set(WhatIsNextPage, MakeChanges).value
 
-        val futureResult = action.callRefine(
+        val result = action.callRefine(
           DataRequest(
             fakeRequest,
             userAnswers,
             user
           )
-        )
+        ).futureValue
 
-        whenReady(futureResult) { result =>
-          result.right.get.closingTrust must be(false)
-        }
+        result.value.closingTrust must be(false)
       }
     }
   }

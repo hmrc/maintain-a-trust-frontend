@@ -46,7 +46,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       val request = FakeRequest(GET, agencyRegisteredAddressInternationalRoute)
 
       val view = application.injector.instanceOf[AgencyRegisteredAddressInternationalView]
-      val countryOptions = application.injector.instanceOf[CountryOptionsNonUK].options
+      val countryOptions = application.injector.instanceOf[CountryOptionsNonUK].options()
 
       val result = route(application, request).value
 
@@ -68,7 +68,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       val request = FakeRequest(GET, agencyRegisteredAddressInternationalRoute)
 
       val view = application.injector.instanceOf[AgencyRegisteredAddressInternationalView]
-      val countryOptions = application.injector.instanceOf[CountryOptionsNonUK].options
+      val countryOptions = application.injector.instanceOf[CountryOptionsNonUK].options()
 
       val result = route(application, request).value
 
@@ -130,7 +130,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
       val view = application.injector.instanceOf[AgencyRegisteredAddressInternationalView]
-      val countryOptions = application.injector.instanceOf[CountryOptionsNonUK].options
+      val countryOptions = application.injector.instanceOf[CountryOptionsNonUK].options()
 
       val result = route(application, request).value
 
