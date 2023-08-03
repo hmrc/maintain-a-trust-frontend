@@ -237,6 +237,9 @@ class IndividualDeclarationControllerSpec extends SpecBase {
         .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"))
 
       val result = route(application, request).value
+
+      status(result) mustBe INTERNAL_SERVER_ERROR
+
     }
   }
 
