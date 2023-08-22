@@ -17,13 +17,13 @@
 package forms.testOnlyDoNotUseInAppConf
 
 import controllers.testOnlyDoNotUseInAppConf.FourOrFiveMLD
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class TestWizardForm(mode: FourOrFiveMLD, flushTestUsers: Boolean, testUser: Option[String])
 
 object TestWizardForm {
 
-  implicit val formats = Json.format[TestWizardForm]
+  implicit val formats: OFormat[TestWizardForm] = Json.format[TestWizardForm]
 }
 
 
