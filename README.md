@@ -5,7 +5,7 @@ This service is responsible for navigating the user to maintain various aspects 
 To run locally using the micro-service provided by the service manager:
 
 ```
-sm2 --start TRUSTS_ALL
+sm2 --start MAINTAIN_TRUST_ALL
 ```
 
 Or
