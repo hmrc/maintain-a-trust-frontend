@@ -43,8 +43,8 @@ class SettlorIndividualPrinter @Inject()(converter: AnswerRowConverter) extends 
     converter.yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorIndividualAddressYesNo", name),
     converter.yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorIndividualAddressUKYesNo", name),
     converter.addressQuestion(SettlorAddressPage(index), userAnswers, "settlorIndividualAddressUK", name),
-    converter.yesNoQuestion(SettlorIndividualPassportIDCardYesNoPage(index), userAnswers, "settlorPassportOrIdCardYesNo", name),
-    converter.passportOrIdCardQuestion(SettlorIndividualPassportIDCardPage(index), userAnswers, "settlorPassportOrIdCard", name),
+    converter.yesNoQuestion(SettlorIndividualPassportIDCardYesNoPage(index), userAnswers, "settlorIndividualPassportOrIdCardYesNo", name),
+    converter.passportOrIdCardQuestion(SettlorIndividualPassportIDCardPage(index), userAnswers, "settlorIndividualPassportOrIdCard", name),
     converter.yesNoDontKnowQuestion(SettlorIndividualMentalCapacityYesNoPage(index), userAnswers, "settlorIndividualMentalCapacityYesNo", name)
   )
 

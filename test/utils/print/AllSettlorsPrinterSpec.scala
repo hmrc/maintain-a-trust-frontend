@@ -66,19 +66,19 @@ class AllSettlorsPrinterSpec extends SpecBase {
         AnswerSection(
           headingKey = None,
           rows = Seq(
-            AnswerRow(label = messages("settlorName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
-            AnswerRow(label = messages("settlorDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorDateOfDeath.checkYourAnswersLabel", name), answer = Html("10 October 2010"), changeUrl = None),
-            AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorDateOfBirth.checkYourAnswersLabel", name), answer = Html("27 August 1991"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfNationalityUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfNationality.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None),
-            AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfResidence.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None)
+            AnswerRow(label = messages("settlorDeceasedName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedDateOfDeath.checkYourAnswersLabel", name), answer = Html("10 October 2010"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedDateOfBirth.checkYourAnswersLabel", name), answer = Html("27 August 1991"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfNationalityUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfNationality.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfResidence.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None)
           ),
           sectionKey = None
         )
@@ -114,11 +114,11 @@ class AllSettlorsPrinterSpec extends SpecBase {
           AnswerSection(
             headingKey = None,
             rows = Seq(
-              AnswerRow(label = messages("settlorName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
-              AnswerRow(label = messages("settlorDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-              AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-              AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-              AnswerRow(label = messages("settlorNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None)
+              AnswerRow(label = messages("settlorDeceasedName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None)
             ),
             sectionKey = None
           )
@@ -144,14 +144,14 @@ class AllSettlorsPrinterSpec extends SpecBase {
           AnswerSection(
             headingKey = None,
             rows = Seq(
-              AnswerRow(label = messages("settlorName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
-              AnswerRow(label = messages("settlorDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-              AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-              AnswerRow(label = messages("settlorCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-              AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-              AnswerRow(label = messages("settlorNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None),
-              AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-              AnswerRow(label = messages("settlorCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None)
+              AnswerRow(label = messages("settlorDeceasedName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None)
             ),
             sectionKey = None
           )
@@ -177,14 +177,14 @@ class AllSettlorsPrinterSpec extends SpecBase {
           AnswerSection(
             headingKey = None,
             rows = Seq(
-              AnswerRow(label = messages("settlorName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
-              AnswerRow(label = messages("settlorDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-              AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-              AnswerRow(label = messages("settlorCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-              AnswerRow(label = messages("settlorCountryOfNationalityUkYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-              AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-              AnswerRow(label = messages("settlorNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None),
-              AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None)
+              AnswerRow(label = messages("settlorDeceasedName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedCountryOfNationalityUkYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedNationalInsuranceNumber.checkYourAnswersLabel", name), answer = Html("JP 12 12 12 A"), changeUrl = None),
+              AnswerRow(label = messages("settlorDeceasedCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None)
             ),
             sectionKey = None
           )
@@ -227,24 +227,24 @@ class AllSettlorsPrinterSpec extends SpecBase {
         AnswerSection(
           headingKey = None,
           rows = Seq(
-            AnswerRow(label = messages("settlorName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
-            AnswerRow(label = messages("settlorDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfNationalityUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfNationality.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None),
-            AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfResidence.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None),
-            AnswerRow(label = messages("settlorLastKnownAddressYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorLastKnownAddressUKYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfNationalityUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfNationality.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfResidence.checkYourAnswersLabel", name), answer = Html("France"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedLastKnownAddressYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedLastKnownAddressUKYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
             AnswerRow(
-              label = messages("settlorUKAddress.checkYourAnswersLabel", name),
+              label = messages("settlorDeceasedUKAddress.checkYourAnswersLabel", name),
               answer = Html("line 1<br />line 2<br />line 3<br />line 4<br />NE981ZZ"), changeUrl = None
             ),
             AnswerRow(
-              label = messages("settlorPassportOrIdCard.checkYourAnswersLabel", name),
+              label = messages("settlorDeceasedPassportOrIdCard.checkYourAnswersLabel", name),
               answer = Html("Germany<br />123456789<br />10 October 2021"), changeUrl = None
             )
           ),
@@ -502,14 +502,14 @@ class AllSettlorsPrinterSpec extends SpecBase {
         AnswerSection(
           headingKey = None,
           rows = Seq(
-            AnswerRow(label = messages("settlorName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
-            AnswerRow(label = messages("settlorDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("settlorLastKnownAddressYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None)
+            AnswerRow(label = messages("settlorDeceasedName.checkYourAnswersLabel"), answer = Html("Adam Smith"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedDateOfDeathYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedDateOfBirthYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfNationalityYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedNationalInsuranceYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfResidenceYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedCountryOfResidenceUkYesNo.checkYourAnswersLabel", name), answer = Html("Yes"), changeUrl = None),
+            AnswerRow(label = messages("settlorDeceasedLastKnownAddressYesNo.checkYourAnswersLabel", name), answer = Html("No"), changeUrl = None)
           ),
           sectionKey = None
         ),

@@ -996,25 +996,23 @@ companyProtectorAddress.checkYourAnswersLabel = What is {0}’s address?
 # Settlors
 
 ## Deceased
-settlorName.checkYourAnswersLabel = What is the settlor’s name?
-settlorDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
-settlorDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
-settlorCountryOfNationalityYesNo.checkYourAnswersLabel = Do you know {0}’s country of nationality?
-settlorCountryOfNationalityUkYesNo.checkYourAnswersLabel = Does {0} have UK nationality?
-settlorCountryOfNationality.checkYourAnswersLabel = What is {0}’s country of nationality?
-settlorNationalInsuranceYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
-settlorNationalInsuranceNumber.checkYourAnswersLabel = What is {0}’s National Insurance number?
-settlorCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
-settlorCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
-settlorCountryOfResidence.checkYourAnswersLabel = What is {0}’s country of residence?
-settlorPassportOrIdCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
-settlorPassportOrIdCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
-settlorDateOfDeathYesNo.checkYourAnswersLabel = Do you know {0}’s date of death?
-settlorDateOfDeath.checkYourAnswersLabel = What is {0}’s date of death?
-settlorLastKnownAddressYesNo.checkYourAnswersLabel = Do you know {0}’s last known address?
-settlorLastKnownAddressUKYesNo.checkYourAnswersLabel = Was {0}’s last known address in the UK?
-settlorUKAddress.checkYourAnswersLabel = What is {0}’s last known address?
-settlorInternationalAddress.checkYourAnswersLabel = What is {0}’s last known address?
+settlorDeceasedName.checkYourAnswersLabel = What is the settlor’s name?
+settlorDeceasedDateOfDeathYesNo.checkYourAnswersLabel = Do you know {0}’s date of death?
+settlorDeceasedDateOfDeath.checkYourAnswersLabel = What is {0}’s date of death?
+settlorDeceasedDateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+settlorDeceasedDateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+settlorDeceasedCountryOfNationalityYesNo.checkYourAnswersLabel = Do you know {0}’s country of nationality?
+settlorDeceasedCountryOfNationalityUkYesNo.checkYourAnswersLabel = Did {0} have UK nationality?
+settlorDeceasedCountryOfNationality.checkYourAnswersLabel = What was {0}’s country of nationality?
+settlorDeceasedNationalInsuranceYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+settlorDeceasedNationalInsuranceNumber.checkYourAnswersLabel = What is {0}’s National Insurance number?
+settlorDeceasedCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s last known country of residence?
+settlorDeceasedCountryOfResidenceUkYesNo.checkYourAnswersLabel = Was {0} a UK resident?
+settlorDeceasedCountryOfResidence.checkYourAnswersLabel = What was {0}’s country of residence?
+settlorDeceasedLastKnownAddressYesNo.checkYourAnswersLabel = Do you know {0}’s last known address?
+settlorDeceasedLastKnownAddressUKYesNo.checkYourAnswersLabel = Was {0}’s last known address in the UK?
+settlorDeceasedUKAddress.checkYourAnswersLabel = What is {0}’s last known address?
+settlorDeceasedInternationalAddress.checkYourAnswersLabel = What is {0}’s last known address?
 
 ## Living
 settlorIndividualOrBusiness.checkYourAnswersLabel = Is the settlor an individual or a business?
@@ -1051,6 +1049,8 @@ settlorIndividualAddressYesNo.checkYourAnswersLabel = Do you know {0}’s addres
 settlorIndividualAddressUKYesNo.checkYourAnswersLabel = Does {0} live in the UK?
 settlorIndividualAddressUK.checkYourAnswersLabel = What is {0}’s address?
 settlorIndividualAddressInternational.checkYourAnswersLabel = What is {0}’s address?
+settlorIndividualPassportOrIdCardYesNo.checkYourAnswersLabel = Do you know {0}’s passport or ID card details?
+settlorIndividualPassportOrIdCard.checkYourAnswersLabel = What are {0}’s passport or ID card details?
 settlorIndividualPassportYesNo.checkYourAnswersLabel = Do you know {0}’s passport details?
 settlorIndividualPassport.checkYourAnswersLabel = What are {0}’s passport details?
 settlorIndividualIDCardYesNo.checkYourAnswersLabel = Do you know {0}’s ID card details?
