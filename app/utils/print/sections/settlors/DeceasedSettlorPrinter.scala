@@ -66,23 +66,23 @@ class DeceasedSettlorPrinter @Inject()(converter: AnswerRowConverter) extends En
     }
 
     Seq(
-      converter.fullNameQuestion(SettlorNamePage, userAnswers, "settlorName"),
-      converter.yesNoQuestion(SettlorDateOfDeathYesNoPage, userAnswers, "settlorDateOfDeathYesNo", name),
-      converter.dateQuestion(SettlorDateOfDeathPage, userAnswers, "settlorDateOfDeath", name),
-      converter.yesNoQuestion(SettlorDateOfBirthYesNoPage, userAnswers, "settlorDateOfBirthYesNo", name),
-      converter.dateQuestion(SettlorDateOfBirthPage, userAnswers, "settlorDateOfBirth", name),
-      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfNationalityYesNoPage, userAnswers, "settlorCountryOfNationalityYesNo", name)),
-      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, userAnswers, "settlorCountryOfNationalityUkYesNo", name)),
-      displayRow(converter.countryQuestion(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, DeceasedSettlorCountryOfNationalityPage, userAnswers, "settlorCountryOfNationality", name)),
-      converter.yesNoQuestion(SettlorNationalInsuranceYesNoPage, userAnswers, "settlorNationalInsuranceYesNo", name),
-      converter.ninoQuestion(SettlorNationalInsuranceNumberPage, userAnswers, "settlorNationalInsuranceNumber", name),
-      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfResidenceYesNoPage, userAnswers, "settlorCountryOfResidenceYesNo", name)),
-      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, userAnswers, "settlorCountryOfResidenceUkYesNo", name)),
-      displayRow(converter.countryQuestion(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, DeceasedSettlorCountryOfResidencePage, userAnswers, "settlorCountryOfResidence", name)),
-      converter.yesNoQuestion(SettlorLastKnownAddressYesNoPage, userAnswers, "settlorLastKnownAddressYesNo", name),
-      converter.yesNoQuestion(SettlorLastKnownAddressUKYesNoPage, userAnswers, "settlorLastKnownAddressUKYesNo", name),
-      converter.addressQuestion(SettlorLastKnownAddressPage, userAnswers, "settlorUKAddress", name),
-      converter.passportOrIdCardQuestion(SettlorPassportIDCardPage, userAnswers, "settlorPassportOrIdCard", name)
+      converter.fullNameQuestion(SettlorNamePage, userAnswers, "settlorDeceasedName"),
+      converter.yesNoQuestion(SettlorDateOfDeathYesNoPage, userAnswers, "settlorDeceasedDateOfDeathYesNo", name),
+      converter.dateQuestion(SettlorDateOfDeathPage, userAnswers, "settlorDeceasedDateOfDeath", name),
+      converter.yesNoQuestion(SettlorDateOfBirthYesNoPage, userAnswers, "settlorDeceasedDateOfBirthYesNo", name),
+      converter.dateQuestion(SettlorDateOfBirthPage, userAnswers, "settlorDeceasedDateOfBirth", name),
+      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfNationalityYesNoPage, userAnswers, "settlorDeceasedCountryOfNationalityYesNo", name)),
+      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, userAnswers, "settlorDeceasedCountryOfNationalityUkYesNo", name)),
+      displayRow(converter.countryQuestion(DeceasedSettlorCountryOfNationalityInTheUkYesNoPage, DeceasedSettlorCountryOfNationalityPage, userAnswers, "settlorDeceasedCountryOfNationality", name)),
+      converter.yesNoQuestion(SettlorNationalInsuranceYesNoPage, userAnswers, "settlorDeceasedNationalInsuranceYesNo", name),
+      converter.ninoQuestion(SettlorNationalInsuranceNumberPage, userAnswers, "settlorDeceasedNationalInsuranceNumber", name),
+      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfResidenceYesNoPage, userAnswers, "settlorDeceasedCountryOfResidenceYesNo", name)),
+      displayRow(converter.yesNoQuestion(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, userAnswers, "settlorDeceasedCountryOfResidenceUkYesNo", name)),
+      displayRow(converter.countryQuestion(DeceasedSettlorCountryOfResidenceInTheUkYesNoPage, DeceasedSettlorCountryOfResidencePage, userAnswers, "settlorDeceasedCountryOfResidence", name)),
+      converter.yesNoQuestion(SettlorLastKnownAddressYesNoPage, userAnswers, "settlorDeceasedLastKnownAddressYesNo", name),
+      converter.yesNoQuestion(SettlorLastKnownAddressUKYesNoPage, userAnswers, "settlorDeceasedLastKnownAddressUKYesNo", name),
+      converter.addressQuestion(SettlorLastKnownAddressPage, userAnswers, "settlorDeceasedUKAddress", name),
+      converter.passportOrIdCardQuestion(SettlorPassportIDCardPage, userAnswers, "settlorDeceasedPassportOrIdCard", name)
     )
   }
 
