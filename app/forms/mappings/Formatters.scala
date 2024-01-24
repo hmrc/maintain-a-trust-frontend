@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ trait Formatters {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {
         case None | Some("") => Left(Seq(FormError(key, errorKey)))
-        case Some(s) => Right(s.trim().replace(" ", "").toUpperCase())
+        case Some(s) => Right(s.replace(" ", "").toUpperCase())
       }
 
     override def unbind(key: String, value: String): Map[String, String] =
@@ -43,8 +43,7 @@ trait Formatters {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {
         case None | Some("") => Left(Seq(FormError(key, errorKey)))
-        case Some(s) =>
-          Right(s.trim)
+        case Some(s) => Right(s.trim.replace("‘", "'").replace("’", "'"))
       }
 
     override def unbind(key: String, value: String): Map[String, String] =
