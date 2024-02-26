@@ -18,11 +18,11 @@ package forms
 
 import forms.helpers.WhitespaceHelper._
 import forms.mappings.Mappings
+import models.InternationalAddress
+import play.api.data.Form
+import play.api.data.Forms._
 
 import javax.inject.Inject
-import models.InternationalAddress
-import play.api.data.Forms._
-import play.api.data.{Form, Forms}
 
 class InternationalAddressFormProvider @Inject() extends Mappings {
 
