@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package repositories
+package test.repositories
 
 import config.FrontendAppConfig
 import org.scalatest.concurrent.ScalaFutures

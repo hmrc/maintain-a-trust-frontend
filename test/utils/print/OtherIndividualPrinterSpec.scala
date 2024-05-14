@@ -91,10 +91,16 @@ class OtherIndividualPrinterSpec extends SpecBase {
         .set(OtherIndividualPassportIDCardYesNoPage(3), true).value
         .set(
           OtherIndividualPassportIDCardPage(3),
-          PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, FEBRUARY, num2), DetailsType.Combined)
-        ).value
+          PassportType(
+            "DE",
+            "KSJDFKSDHF6456545147852369QWER",
+            LocalDate.of(year2020, FEBRUARY, num2),
+            DetailsType.Combined
+          )
+        )
+        .value
         .set(OtherIndividualMentalCapacityYesNoPage(3), true).value
-      
+
       val result = helper.entities(answers)
 
       val name1 = "Joe Bloggs"
@@ -107,82 +113,283 @@ class OtherIndividualPrinterSpec extends SpecBase {
         AnswerSection(
           headingKey = Some("Other individual 1"),
           rows = Seq(
-            AnswerRow(label = messages("otherIndividualName.checkYourAnswersLabel"), answer = Html(name1), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualDateOfBirthYesNo.checkYourAnswersLabel", name1), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationalityYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationalityUkYesNo.checkYourAnswersLabel", name1), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationality.checkYourAnswersLabel", name1), answer = Html("France"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualNINOYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualNINO.checkYourAnswersLabel", name1), answer = Html("JB 12 34 56 C"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidenceYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidenceUkYesNo.checkYourAnswersLabel", name1), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidence.checkYourAnswersLabel", name1), answer = Html("France"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name1), answer = Html("Yes"), changeUrl = None)
+            AnswerRow(
+              label = messages("otherIndividualName.checkYourAnswersLabel"),
+              answer = Html(name1),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualDateOfBirthYesNo.checkYourAnswersLabel", name1),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationalityYesNo.checkYourAnswersLabel", name1),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationalityUkYesNo.checkYourAnswersLabel", name1),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationality.checkYourAnswersLabel", name1),
+              answer = Html("France"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualNINOYesNo.checkYourAnswersLabel", name1),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualNINO.checkYourAnswersLabel", name1),
+              answer = Html("JB 12 34 56 C"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidenceYesNo.checkYourAnswersLabel", name1),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidenceUkYesNo.checkYourAnswersLabel", name1),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidence.checkYourAnswersLabel", name1),
+              answer = Html("France"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name1),
+              answer = Html("Yes"),
+              changeUrl = None
+            )
           ),
           sectionKey = None
         ),
         AnswerSection(
           headingKey = Some("Other individual 2"),
           rows = Seq(
-            AnswerRow(label = messages("otherIndividualName.checkYourAnswersLabel"), answer = Html(name2), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualDateOfBirthYesNo.checkYourAnswersLabel", name2), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualDateOfBirth.checkYourAnswersLabel", name2), answer = Html("3 February 1996"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationalityYesNo.checkYourAnswersLabel", name2), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationalityUkYesNo.checkYourAnswersLabel", name2), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationality.checkYourAnswersLabel", name2), answer = Html("France"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidenceYesNo.checkYourAnswersLabel", name2), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidenceUkYesNo.checkYourAnswersLabel", name2), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidence.checkYourAnswersLabel", name2), answer = Html("France"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualAddressYesNo.checkYourAnswersLabel", name2), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name2), answer = Html("Yes"), changeUrl = None)
+            AnswerRow(
+              label = messages("otherIndividualName.checkYourAnswersLabel"),
+              answer = Html(name2),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualDateOfBirthYesNo.checkYourAnswersLabel", name2),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualDateOfBirth.checkYourAnswersLabel", name2),
+              answer = Html("3 February 1996"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationalityYesNo.checkYourAnswersLabel", name2),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationalityUkYesNo.checkYourAnswersLabel", name2),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationality.checkYourAnswersLabel", name2),
+              answer = Html("France"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidenceYesNo.checkYourAnswersLabel", name2),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidenceUkYesNo.checkYourAnswersLabel", name2),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidence.checkYourAnswersLabel", name2),
+              answer = Html("France"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualAddressYesNo.checkYourAnswersLabel", name2),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name2),
+              answer = Html("Yes"),
+              changeUrl = None
+            )
           ),
           sectionKey = None
         ),
         AnswerSection(
           headingKey = Some("Other individual 3"),
           rows = Seq(
-            AnswerRow(label = messages("otherIndividualName.checkYourAnswersLabel"), answer = Html(name3), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualDateOfBirthYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationalityYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationalityUkYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationality.checkYourAnswersLabel", name3), answer = Html("France"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidenceYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidenceUkYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidence.checkYourAnswersLabel", name3), answer = Html("France"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualAddressYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualAddressUKYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages(
-              "otherIndividualAddress.checkYourAnswersLabel", name3
-            ), answer = Html("line 1<br />line 2<br />NE11NE"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualPassportIDCardYesNo.checkYourAnswersLabel", name3), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name3), answer = Html("Yes"), changeUrl = None)
+            AnswerRow(
+              label = messages("otherIndividualName.checkYourAnswersLabel"),
+              answer = Html(name3),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualDateOfBirthYesNo.checkYourAnswersLabel", name3),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationalityYesNo.checkYourAnswersLabel", name3),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationalityUkYesNo.checkYourAnswersLabel", name3),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationality.checkYourAnswersLabel", name3),
+              answer = Html("France"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidenceYesNo.checkYourAnswersLabel", name3),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidenceUkYesNo.checkYourAnswersLabel", name3),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidence.checkYourAnswersLabel", name3),
+              answer = Html("France"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualAddressYesNo.checkYourAnswersLabel", name3),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualAddressUKYesNo.checkYourAnswersLabel", name3),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages(
+                "otherIndividualAddress.checkYourAnswersLabel",
+                name3
+              ),
+              answer = Html("line 1<br />line 2<br />NE11NE"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualPassportIDCardYesNo.checkYourAnswersLabel", name3),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name3),
+              answer = Html("Yes"),
+              changeUrl = None
+            )
           ),
           sectionKey = None
         ),
         AnswerSection(
           headingKey = Some("Other individual 4"),
           rows = Seq(
-            AnswerRow(label = messages("otherIndividualName.checkYourAnswersLabel"), answer = Html(name4), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualDateOfBirthYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualDateOfBirth.checkYourAnswersLabel", name4), answer = Html("18 October 1947"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationalityYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationalityUkYesNo.checkYourAnswersLabel", name4), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfNationality.checkYourAnswersLabel", name4), answer = Html("France"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidenceYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidenceUkYesNo.checkYourAnswersLabel", name4), answer = Html("No"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualCountryOfResidence.checkYourAnswersLabel", name4), answer = Html("France"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualAddressYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages(
-              "otherIndividualAddressUKYesNo.checkYourAnswersLabel", name4), answer = Html("No"), changeUrl = None
+            AnswerRow(
+              label = messages("otherIndividualName.checkYourAnswersLabel"),
+              answer = Html(name4),
+              changeUrl = None
             ),
-            AnswerRow(label = messages(
-              "otherIndividualAddress.checkYourAnswersLabel", name4
-            ), answer = Html("line 1<br />line 2<br />France"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualPassportIDCardYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None),
-            AnswerRow(label = messages(
-              "otherIndividualPassportIDCard.checkYourAnswersLabel", name4
-            ), answer = Html("Germany<br />Number ending QWER<br />2 February 2020"), changeUrl = None),
-            AnswerRow(label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name4), answer = Html("Yes"), changeUrl = None)
+            AnswerRow(
+              label = messages("otherIndividualDateOfBirthYesNo.checkYourAnswersLabel", name4),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualDateOfBirth.checkYourAnswersLabel", name4),
+              answer = Html("18 October 1947"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationalityYesNo.checkYourAnswersLabel", name4),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationalityUkYesNo.checkYourAnswersLabel", name4),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfNationality.checkYourAnswersLabel", name4),
+              answer = Html("France"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidenceYesNo.checkYourAnswersLabel", name4),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidenceUkYesNo.checkYourAnswersLabel", name4),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualCountryOfResidence.checkYourAnswersLabel", name4),
+              answer = Html("France"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualAddressYesNo.checkYourAnswersLabel", name4),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualAddressUKYesNo.checkYourAnswersLabel", name4),
+              answer = Html("No"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages(
+                "otherIndividualAddress.checkYourAnswersLabel",
+                name4
+              ),
+              answer = Html("line 1<br />line 2<br />France"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualPassportIDCardYesNo.checkYourAnswersLabel", name4),
+              answer = Html("Yes"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages(
+                "otherIndividualPassportIDCard.checkYourAnswersLabel",
+                name4
+              ),
+              answer = Html("Germany<br />Number ending QWER<br />2 February 2020"),
+              changeUrl = None
+            ),
+            AnswerRow(
+              label = messages("otherIndividualMentalCapacityYesNo.checkYourAnswersLabel", name4),
+              answer = Html("Yes"),
+              changeUrl = None
+            )
           ),
           sectionKey = None
         )

@@ -2,7 +2,7 @@
 <configuration>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/new_service.log</file>
+        <file>logs/maintain-a-trust-frontend.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%date{ISO8601} level=[%level] logger=[%logger] thread=[%thread] message=[%message] %replace(exception=[%xException]){'^exception=\[\]$',''}%n</pattern>
         </encoder>
@@ -51,9 +51,8 @@
 
     <logger name="uk.gov" level="INFO"/>
 
-    <logger name="reactivemongo" level="WARN"/>
-
-    <logger name="akka" level="INFO"/>
+    <logger name="org.mongodb.driver" level="INFO"/>
+    <logger name="org.apache.pekko" level="INFO"/>
     <logger name="play" level="INFO"/>
     <logger name="org.jose4j" level="INFO"/>
     <logger name="class org.jose4j" level="INFO"/>
@@ -71,15 +70,17 @@
     <logger name="io.netty" level="INFO"/>
     <logger name="sun.net.www.protocol.http" level="INFO"/>
 
-    <logger name="controllers" level="INFO"/>
-    <logger name="mapping" level="INFO"/>
-    <logger name="services" level="INFO"/>
-    <logger name="models" level="INFO"/>
-    <logger name="repositories" level="INFO"/>
-    <logger name="connectors" level="INFO"/>
+    <logger name="controllers" level="DEBUG"/>
+    <logger name="mapping" level="DEBUG"/>
+    <logger name="services" level="DEBUG"/>
+    <logger name="models" level="DEBUG"/>
+    <logger name="repositories" level="DEBUG"/>
+    <logger name="connector" level="TRACE">
+        <appender-ref ref="STDOUT"/>
+    </logger>
     <logger name="uk.gov.hmrc.play.bootstrap.filters.DefaultLoggingFilter" level="WARN"/>
 
-    <root level="INFO">
+    <root level="WARN">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </root>

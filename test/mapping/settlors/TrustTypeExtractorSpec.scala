@@ -33,7 +33,7 @@ import java.time.LocalDate
 class TrustTypeExtractorSpec extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   private val trustTypeExtractor: TrustTypeExtractor = injector.instanceOf[TrustTypeExtractor]
-  
+
   "Trust Type Extractor" - {
 
     "when no trust type" - {
@@ -156,7 +156,8 @@ class TrustTypeExtractorSpec extends AnyFreeSpec with Matchers with EitherValues
         "must return user answers" in {
 
           val ua = emptyUserAnswersForUrn
-            .set(WhatIsNextPage, NeedsToPayTax).value
+            .set(WhatIsNextPage, NeedsToPayTax)
+            .value
 
           val extraction = trustTypeExtractor.extract(ua, trust)
 

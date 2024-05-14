@@ -196,7 +196,7 @@ trait ViewBehaviours extends ViewSpecBase {
           doc,
           "submit",
           expectedTextKey match {
-            case Some(key) => messages(key)
+            case Some(messageKey) => messages(messageKey)
             case None => "Continue"
           }
         )

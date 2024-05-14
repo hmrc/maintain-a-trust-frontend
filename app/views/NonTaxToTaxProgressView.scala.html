@@ -76,7 +76,7 @@
         <p>@messages("transitionProgress.p4")</p>
         @bulletList("transitionProgress", Seq("p4.bullet1", "p4.bullet2"))
 
-        <p>@messages("transitionProgress.p5") @link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", true)@messages("transitionProgress.p5b")</p>
+        <p>@messages("transitionProgress.p5") @link(controllers.print.routes.PrintMaintainDraftAnswersController.onPageLoad().url, "print-and-save", "transitionProgress.printsave.link", openInNewWindow = true)@messages("transitionProgress.p5b")</p>
         <p>@messages("transitionProgress.p6") @link(appConfig.loginContinueUrl, "return-to-service", "transitionProgress.p6.link").</p>
 
         @formHelper(action = TaskListController.onSubmit(), Symbol("autoComplete") -> "off") {

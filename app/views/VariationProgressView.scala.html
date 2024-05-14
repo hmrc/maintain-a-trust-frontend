@@ -82,7 +82,7 @@
 
         <h2>@messages("variationProgress.subHeading.5")</h2>
 
-        <p>@messages("variationProgress.p5") @link(appConfig.sa900Link, "sa-900", "variationProgress.sa900.link", true).</p>
+        <p>@messages("variationProgress.p5") @link(appConfig.sa900Link, "sa-900", "variationProgress.sa900.link", openInNewWindow = true).</p>
 
         @formHelper(action = TaskListController.onSubmit(), Symbol("autoComplete") -> "off") {
             @submitButton(Some(messages("taskList.summary.continue")))

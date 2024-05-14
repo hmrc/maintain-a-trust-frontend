@@ -51,7 +51,7 @@
 
     <p>@messages("closeTrustConfirmation.paragraph2")</p>
 
-    <p>@messages("closeTrustConfirmation.paragraph3.beforeLink") @link(config.helplineUrl, "help-link", "closeTrustConfirmation.paragraph3.link", true) @messages("closeTrustConfirmation.paragraph3.afterLink")</p>
+    <p>@messages("closeTrustConfirmation.paragraph3.beforeLink") @link(config.helplineUrl, "help-link", "closeTrustConfirmation.paragraph3.link", openInNewWindow = true) @messages("closeTrustConfirmation.paragraph3.afterLink")</p>
 
     @if(isAgent: Boolean) {
 <p>@messages("closeTrustConfirmation.agent.you.can") @link(agentOverviewUrl, "agent-overview", "closeTrustConfirmation.agent.link")</p>
