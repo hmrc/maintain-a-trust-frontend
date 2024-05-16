@@ -47,7 +47,7 @@
 
     <p>@messages("maintainThisTrust.p3")</p>
 
-    <p>@messages("maintainThisTrust.p4") @link(config.helplineUrl, "help-link", "maintainThisTrust.p4.a", true).</p>
+    <p>@messages("maintainThisTrust.p4") @link(config.helplineUrl, "help-link", "maintainThisTrust.p4.a", openInNewWindow = true).</p>
 
     @formHelper(action = continueUrl, Symbol("autoComplete") -> "off") {
         @submitButton()

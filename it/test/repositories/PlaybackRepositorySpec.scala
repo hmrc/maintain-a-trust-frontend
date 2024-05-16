@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package repositories
+package test.repositories
 
 import models.UserAnswers
 import models.errors.MongoError
-import org.mongodb.scala.{MongoException, MongoTimeoutException}
 import org.mongodb.scala.bson.BsonDocument
-import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues}
+import org.mongodb.scala.{MongoException, MongoTimeoutException}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues}
 import play.api.libs.json.Json
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
+import repositories.PlaybackRepositoryImpl
 import uk.gov.hmrc.mongo.test.MongoSupport
 
 import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 class PlaybackRepositorySpec extends AnyWordSpec with Matchers
   with ScalaFutures with OptionValues with MongoSupport with MongoSuite with BeforeAndAfterEach with EitherValues {

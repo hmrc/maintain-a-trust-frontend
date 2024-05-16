@@ -44,7 +44,7 @@ class InformationSchedule3aExemptionControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(userAnswers.identifier, UTR, false)(request, messages).toString
+          view(userAnswers.identifier, UTR, isAgent = false)(request, messages).toString
 
         application.stop()
       }
@@ -64,7 +64,7 @@ class InformationSchedule3aExemptionControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(userAnswers.identifier, UTR, true)(request, messages).toString
+          view(userAnswers.identifier, UTR, isAgent = true)(request, messages).toString
 
         application.stop()
 

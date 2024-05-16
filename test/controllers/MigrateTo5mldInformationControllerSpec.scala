@@ -44,7 +44,7 @@ class MigrateTo5mldInformationControllerSpec extends SpecBase {
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(utr, UTR, false)(request, messages).toString
+          view(utr, UTR, isAgent = false)(request, messages).toString
 
         application.stop()
 

@@ -16,14 +16,14 @@
 
 package controllers
 
-import akka.stream.scaladsl.Source
-import akka.util.ByteString
 import base.SpecBase
 import connectors.TrustsObligedEntityOutputConnector
-import play.api.http.Status._
-import play.api.http.HeaderNames._
+import org.apache.pekko.stream.scaladsl.Source
+import org.apache.pekko.util.ByteString
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import play.api.http.HeaderNames._
+import play.api.http.Status._
 import play.api.inject.bind
 import play.api.libs.json.JsValue
 import play.api.libs.ws

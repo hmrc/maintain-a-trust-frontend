@@ -29,7 +29,7 @@ class MigrateTo5mldInformationViewSpec extends ViewBehaviours {
 
     val view = viewFor[MigrateTo5mldInformationView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(utr, UTR, false)(fakeRequest, messages)
+    val applyView = view.apply(utr, UTR, isAgent = false)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "migrateTo5mldInformation",
@@ -64,7 +64,7 @@ class MigrateTo5mldInformationViewSpec extends ViewBehaviours {
 
     val view = viewFor[MigrateTo5mldInformationView](Some(emptyUserAnswersForUtr))
 
-    val applyView = view.apply(utr, UTR, true)(fakeRequest, messages)
+    val applyView = view.apply(utr, UTR, isAgent = true)(fakeRequest, messages)
 
     behave like normalPageTitleWithCaption(applyView,
       "migrateTo5mldInformation",
