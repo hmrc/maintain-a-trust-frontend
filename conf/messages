@@ -906,7 +906,7 @@ largeBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address
 largeBeneficiaryAddressUKYesNo.checkYourAnswersLabel = Is {0}’s address in the UK?
 largeBeneficiaryAddress.checkYourAnswersLabel = What is {0}’s address?
 largeBeneficiaryUtr.checkYourAnswersLabel = What is {0}’s Unique Taxpayer Reference (UTR) number?
-largeBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
+largeBeneficiaryDescription.checkYourAnswersLabel = Give a description of each beneficiary group
 largeBeneficiaryNumberOfBeneficiaries.checkYourAnswersLabel = How many people are in this employment related beneficiary?
 largeBeneficiaryCountryOfResidenceYesNo.checkYourAnswersLabel = Do you know {0}’s country of residence?
 largeBeneficiaryCountryOfResidenceUkYesNo.checkYourAnswersLabel = Does {0} have UK residency?
@@ -919,7 +919,7 @@ numberOfBeneficiaries.over501 = 501 to 1,000
 numberOfBeneficiaries.over1001 = Over 1,001
 
 ### Other
-otherBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
+otherBeneficiaryDescription.checkYourAnswersLabel = Give a description of each beneficiary group
 otherBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
 otherBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s income is {0} entitled to?
 otherBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
