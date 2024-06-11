@@ -919,7 +919,7 @@ numberOfBeneficiaries.over501 = 501 to 1,000
 numberOfBeneficiaries.over1001 = Over 1,001
 
 ### Other
-otherBeneficiaryDescription.checkYourAnswersLabel = Give a description of each beneficiary group
+otherBeneficiaryDescription.checkYourAnswersLabel = What is the description of the beneficiary?
 otherBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel = Do the trustees have discretion over how much income {0} may get?
 otherBeneficiaryShareOfIncome.checkYourAnswersLabel = What percentage of the trust’s income is {0} entitled to?
 otherBeneficiaryAddressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
