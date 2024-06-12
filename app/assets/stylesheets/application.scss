@@ -1,9 +1,9 @@
 $govuk-include-default-font-face: false;
 
-@import "lib/govuk-frontend/govuk/base";
-@import "lib/govuk-frontend/govuk/core/typography";
+@import "lib/govuk-frontend/dist/govuk/base";
+@import "lib/govuk-frontend/dist/govuk/core/typography";
 @import "location-autocomplete.min";
-@import "lib/govuk-frontend/govuk/core/links";
+@import "lib/govuk-frontend/dist/govuk/core/links";
 @import "characterCount";
 
 $govuk-global-styles: true;
