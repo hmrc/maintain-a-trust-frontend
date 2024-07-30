@@ -151,11 +151,12 @@
             },
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content = if (Some(messages("obligedEntityPdfYesNo.caption")).isDefined) {
-                            HtmlContent(
-                            s"""<span class="govuk-caption-l">${Some(messages("obligedEntityPdfYesNo.caption")).get}</span>
-                            |${messages("obligedEntityPdfYesNo.heading")}""".stripMargin)
-                    } else Text(messages("obligedEntityPdfYesNo.heading")),
+                    content =  {
+                        HtmlContent(
+                            s"""<span class="govuk-caption-l">${messages("obligedEntityPdfYesNo.caption")}</span>
+                            |${messages("obligedEntityPdfYesNo.heading")}""".stripMargin
+                        )
+                    },
                     isPageHeading = false,
                     classes = Some("govuk-visually-hidden").getOrElse("govuk-fieldset__legend--l")
                 ))
@@ -174,6 +175,7 @@
                     content = Text(messages("No, I want to make changes to the trust record first"))
                 )
             )
+        ))
 
         @submitButton()
     }
