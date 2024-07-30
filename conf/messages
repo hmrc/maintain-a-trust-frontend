@@ -298,19 +298,31 @@ site.address.international.line3 = Address line 3 (optional)
 site.address.international.country = Country
 site.address.international.country.select = Select a country
 
-obligedEntityPdfYesNo.caption = Trust details PDF
-obligedEntityPdfYesNo.title = Do you want to view evidence of the trust’s registration?
-obligedEntityPdfYesNo.heading = Do you want to view evidence of the trust’s registration?
+obligedEntityPdfYesNo.caption = Proof of registration
+obligedEntityPdfYesNo.title = Get proof of the trust’s registration
+obligedEntityPdfYesNo.heading = Get proof of the trust’s registration
 obligedEntityPdfYesNo.p1 = You can download and view a PDF document that:
-obligedEntityPdfYesNo.bullet1 = shows the trust’s registration
+obligedEntityPdfYesNo.bullet1 = can be used as proof of the trust’s registration
 obligedEntityPdfYesNo.bullet2 = shows the people and businesses listed within the trust
+
 obligedEntityPdfYesNo.p2 = You can share this document outside of HMRC with any relevant person.
-obligedEntityPdfYesNo.p3 = The document also shows the information held by HMRC about the trust’s:
-obligedEntityPdfYesNo.bullet3 = beneficiaries
-obligedEntityPdfYesNo.bullet4 = lead trustee
-obligedEntityPdfYesNo.bullet5 = settlors
-obligedEntityPdfYesNo.bullet6 = trustees
-obligedEntityPdfYesNo.p4 = Once you view the PDF of the trust’s last declared details, you will not be able to view it again for another minute.
+
+obligedEntityPdfYesNo.subheading1 = What is included in the trust’s proof of registration
+obligedEntityPdfYesNo.p3 = The trust’s proof of registration includes details such as the trust’s:
+obligedEntityPdfYesNo.bullet3 = name
+obligedEntityPdfYesNo.bullet4 = trust’s Unique Tax Reference or Unique Reference Number
+obligedEntityPdfYesNo.bullet5 = start date
+obligedEntityPdfYesNo.bullet6 = date it was last updated
+obligedEntityPdfYesNo.p4 = If any settlors, trustees or beneficiaries are individuals, it will include their:
+obligedEntityPdfYesNo.bullet7 = full name
+obligedEntityPdfYesNo.bullet8 = month and year of birth
+obligedEntityPdfYesNo.bullet9 = country of residence
+obligedEntityPdfYesNo.bullet10 = nationality
+obligedEntityPdfYesNo.p5 = If any settlors, trustees or beneficiaries are companies (or other legal entities), it will include the company’s:
+obligedEntityPdfYesNo.bullet11 = full name
+obligedEntityPdfYesNo.bullet12 = office address
+obligedEntityPdfYesNo.bullet13 = role in the trust
+
 obligedEntityPdfYesNo.details.relevant.persons = Who are relevant persons?
 obligedEntityPdfYesNo.details.p1 = Relevant persons are financial bodies or institutions overseen by Money Laundering Regulations, including:
 obligedEntityPdfYesNo.details.bullet1 = credit institutions
@@ -329,14 +341,16 @@ obligedEntityPdfYesNo.details.bullet13 = art market participators
 obligedEntityPdfYesNo.details.bullet14 = cryptoasset exchange providers
 obligedEntityPdfYesNo.details.bullet15 = custodian wallet providers
 
-obligedEntityPdfYesNo.subheading = Before you continue
-obligedEntityPdfYesNo.p5 = If you need to make changes to the trust record, you need to do so before viewing the PDF.
-obligedEntityPdfYesNo.p6 = The PDF of the trust’s details will not be updated with any changes made until you:
-obligedEntityPdfYesNo.bullet7 = submit and declare the changes
-obligedEntityPdfYesNo.bullet8 = log out of the service, and then log back in
-obligedEntityPdfYesNo.yes = Yes, I want to download and view a PDF that shows the trust’s registration
-obligedEntityPdfYesNo.no = No, I need to make changes to the trust’s record
-obligedEntityPdfYesNo.error.required = Select yes to view a PDF that shows the trust’s registration
+obligedEntityPdfYesNo.subheading2 = If you need to make changes to the trust
+obligedEntityPdfYesNo.p6 = If you need to make changes to the trust record, you should do this before you get proof of the trust’s registration.
+obligedEntityPdfYesNo.p7 = The proof of registration will not show changes that you make to the trust until you:
+obligedEntityPdfYesNo.bullet14 = submit and declare the changes
+obligedEntityPdfYesNo.bullet15 = sign out of the service, and then sign back in
+obligedEntityPdfYesNo.p8 = Once you get the PDF of the trust’s last declared details, you will not be able to view it again for another minute.
+obligedEntityPdfYesNo.question = Do you want to get proof of the trust’s registration?
+obligedEntityPdfYesNo.yes = Yes, I want to get the proof of registration now
+obligedEntityPdfYesNo.no = No, I want to make changes to the trust record first
+obligedEntityPdfYesNo.error.required = Select yes if you want to get the proof of registration now
 
 trustAlreadyClaimed.title = You cannot access this trust
 trustAlreadyClaimed.heading = You cannot access this trust
@@ -684,7 +698,7 @@ declarationWhatNext5mld.no-longer-taxable.hint = Tell us if the trust no longer 
 declarationWhatNext5mld.needs-to-pay-tax = Tell HMRC if the trust needs to pay tax
 declarationWhatNext5mld.needs-to-pay-tax.hint = Tell HMRC if the trust needs to pay tax or submit tax returns.
 declarationWhatNext5mld.generate-pdf = Get evidence of the trust’s registration
-declarationWhatNext5mld.generate-pdf.hint = Create a digitally signed PDF, which shows the people and companies within the trust, that can be shared with any relevant persons.
+declarationWhatNext5mld.generate-pdf.hint = Get a digitally signed PDF, which shows the people and companies within the trust, that can be shared with any relevant persons.
 
 noTaxLiabilityInfo.title = You must contact HMRC
 noTaxLiabilityInfo.heading = You must contact HMRC
