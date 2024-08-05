@@ -112,7 +112,7 @@
 
     <p>@messages("obligedEntityPdfYesNo.p8")</p>
 
-    <h2>@messages("obligedEntityPdfYesNo.question")</h2>
+    <h2 class="govuk-heading-l">@messages("obligedEntityPdfYesNo.question")</h2>
 
 }
 
@@ -125,21 +125,14 @@
 
         @errorSummary(form.errors, isYesNo = true)
 
-        @headingWithCaption(
-            headingPrefix = "obligedEntityPdfYesNo",
-            captionPrefix = "obligedEntityPdfYesNo",
-            hiddenText = false
-        )
+        <h1 class="govuk-heading-xl">
+            <span class="govuk-caption-l">
+                @messages("obligedEntityPdfYesNo.caption")
+            </span>
+            @messages("obligedEntityPdfYesNo.heading")
+        </h1>
 
         @content
-
-        @inputYesNo(
-            field = form("value"),
-            label = messages("obligedEntityPdfYesNo.heading"),
-            legendAsHeading = false,
-            legendClass = Some("govuk-visually-hidden"),
-            caption = Some(messages("obligedEntityPdfYesNo.caption"))
-        )
 
         @govukRadios(Radios(
             idPrefix = Some("yes-no"),
@@ -166,13 +159,13 @@
                 id = Some(form("value").id + "-yes"),
                 value = Some("true"),
                 checked = form("value").value.contains("true"),
-                content = Text(messages("Yes, I want proof of the registration now"))
+                content = Text(messages("obligedEntityPdfYesNo.yes"))
                 ),
                 RadioItem(
                     id = Some(form("value").id + "-no"),
                     value = Some("false"),
                     checked = form("value").value.contains("false"),
-                    content = Text(messages("No, I want to make changes to the trust record first"))
+                    content = Text(messages("obligedEntityPdfYesNo.no"))
                 )
             )
         ))
