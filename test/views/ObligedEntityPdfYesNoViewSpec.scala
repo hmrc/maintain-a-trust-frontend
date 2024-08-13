@@ -37,10 +37,11 @@ class ObligedEntityPdfYesNoViewSpec extends YesNoViewBehaviours {
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, identifier)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView(form),
-      messageKeyPrefix,
-      "obligedEntityPdfYesNo",
-      "",
+    behave like normalPageTitleWithCaption(
+      view = applyView(form),
+      messageKeyPrefix = messageKeyPrefix,
+      captionKey = "obligedEntityPdfYesNo",
+      captionParam = "",
       "p1",
       "bullet1",
       "bullet2",
@@ -83,8 +84,9 @@ class ObligedEntityPdfYesNoViewSpec extends YesNoViewBehaviours {
       "bullet14",
       "bullet15",
       "p8",
-      "question"
-
+      "question",
+      "yes",
+      "no"
     )
 
     behave like pageWithBackLink(applyView(form))
