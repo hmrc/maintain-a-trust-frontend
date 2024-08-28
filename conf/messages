@@ -1274,3 +1274,15 @@ individualConfirmation.warning = If you try to make changes using the trust’s 
 individualConfirmation.paragraph9 = If any of the trust details change before you get the UTR, keep a record of the changes and make them online once you have the UTR.
 
 leadTrustee.default = the lead trustee
+
+########## DDCE-5603 Error pages ##########
+customError.heading = There is a problem
+customError.paragraph1 = We need to speak to you to help you to get the proof of registration for the trust.
+customError.subheading = Contact the trusts helpline
+customError.paragraph2 = Telephone:
+customError.paragraph2.telePhne = 0300 123 1072
+customError.paragraph3 = Outside UK:
+customError.paragraph3.mobile = +44 304 123 1472
+customError.paragraph4 = Opening times:
+customError.paragraph4.text1 = Monday to Friday: 9am to 5 pm
+customError.paragraph4.text2 = Closed weekends and bank holidays.

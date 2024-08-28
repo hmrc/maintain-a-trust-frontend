@@ -29,7 +29,7 @@ import play.api.libs.json.JsValue
 import play.api.libs.ws
 import play.api.libs.ws.WSResponse
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, defaultAwaitTimeout, route, status, writeableOf_AnyContentAsEmpty}
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, status, writeableOf_AnyContentAsEmpty}
 
 import java.net.URI
 import scala.concurrent.Future
@@ -105,6 +105,10 @@ class ObligedEntityPdfControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual INTERNAL_SERVER_ERROR
+        // added for testing the DDCE-5603 for custom error template
+        contentAsString(result) contains "There is a problem"
+        contentAsString(result) contains "Contact the trusts helpline"
+        contentAsString(result) contains "0300 123 1072"
 
         application.stop()
       }

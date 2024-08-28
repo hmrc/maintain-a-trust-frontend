@@ -53,7 +53,7 @@ class ObligedEntityPdfController @Inject()(
           case OK => handleSuccessfulGetPdfResponse(identifier, response)
           case _ =>
             logger.error(s"[$className][getPdf][Session ID: ${Session.id(hc)}][Identifier: $identifier] Error retrieving pdf: $response.")
-            InternalServerError(errorHandler.internalServerErrorTemplate)
+            InternalServerError(errorHandler.customErrorPage("Error", "Error"))
         }
       } recover {
         case e =>
