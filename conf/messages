@@ -1283,5 +1283,5 @@ customError.paragraph2.telePhone = 0300 123 1072
 customError.paragraph3 = Outside UK:
 customError.paragraph3.mobile = +44 304 123 1472
 customError.paragraph4 = Opening times:
-customError.paragraph4.text1 = Monday to Friday: 9am to 5 pm
+customError.paragraph4.text1 = Monday to Friday: 9am to 5pm
 customError.paragraph4.text2 = Closed weekends and bank holidays.
