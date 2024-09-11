@@ -1134,12 +1134,11 @@ nonEeaBusiness.governingCountry.checkYourAnswersLabel = Cyfreithiau pa wlad sy�
 leadTrustee.default = y prif ymddiriedolwr
 
 
-########## DDCE-5603 Error pages ##########
 customError.heading = Mae problem wedi codi
 customError.paragraph1 = Mae angen i ni siarad â chi i’ch helpu i gael tystiolaeth o gofrestru’r ymddiriedolaeth.
 customError.subheading = Cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF
 customError.paragraph2 = Ffôn:
-customError.paragraph2.telePhne = 0300 200 1900
+customError.paragraph2.telePhone = 0300 200 1900
 customError.paragraph3 = O’r tu allan i’r DU:
 customError.paragraph3.mobile = +44 300 200 1900
 customError.paragraph4 = Oriau agor:

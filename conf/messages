@@ -1275,12 +1275,11 @@ individualConfirmation.paragraph9 = If any of the trust details change before yo
 
 leadTrustee.default = the lead trustee
 
-########## DDCE-5603 Error pages ##########
 customError.heading = There is a problem
 customError.paragraph1 = We need to speak to you to help you to get the proof of registration for the trust.
 customError.subheading = Contact the trusts helpline
 customError.paragraph2 = Telephone:
-customError.paragraph2.telePhne = 0300 123 1072
+customError.paragraph2.telePhone = 0300 123 1072
 customError.paragraph3 = Outside UK:
 customError.paragraph3.mobile = +44 304 123 1472
 customError.paragraph4 = Opening times:
