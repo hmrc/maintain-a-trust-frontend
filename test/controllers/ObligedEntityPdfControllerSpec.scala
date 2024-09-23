@@ -105,7 +105,6 @@ class ObligedEntityPdfControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual INTERNAL_SERVER_ERROR
-        // added for testing the DDCE-5603 for custom error template
         contentAsString(result) contains "There is a problem"
         contentAsString(result) contains "Contact the trusts helpline"
         contentAsString(result) contains "0300 123 1072"
