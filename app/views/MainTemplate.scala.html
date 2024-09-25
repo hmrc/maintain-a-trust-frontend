@@ -41,7 +41,8 @@
   scriptElem: Option[Html] = None,
   timeoutEnabled: Boolean = true,
   canSignOut: Boolean = true,
-  showBackLink: Boolean = false
+  showBackLink: Boolean = false,
+  showFooter: Boolean = true
 )(mainContent: Html)(implicit request: Request[_], messages: Messages)
 
 @headScripts = {
@@ -71,9 +72,11 @@
 
 @mainContentWithGetHelp = {
     @mainContent
-    <div class="govuk-!-margin-top-6">
-        @hmrcReportTechnicalIssueHelper()
-    </div>
+    @if(showFooter){
+        <div class="govuk-!-margin-top-6">
+            @hmrcReportTechnicalIssueHelper()
+        </div>
+    }
 }
 
 @govukLayout(

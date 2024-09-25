@@ -21,13 +21,14 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import views.html.{ErrorTemplate, PageNotFoundView}
+import views.html.{CustomErrorTemplate, ErrorTemplate, PageNotFoundView}
 
 @Singleton
 class ErrorHandler @Inject()(
                               val messagesApi: MessagesApi,
                               view: ErrorTemplate,
-                              notFoundView: PageNotFoundView
+                              notFoundView: PageNotFoundView,
+                              customError: CustomErrorTemplate
                             ) extends FrontendErrorHandler with I18nSupport {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
@@ -35,4 +36,7 @@ class ErrorHandler @Inject()(
 
   override def notFoundTemplate(implicit request: Request[_]): Html =
     notFoundView()
+
+  def customErrorPage(pageTitle: String, heading: String)(implicit rh: Request[_]): Html =
+    customError(pageTitle, heading)
 }
