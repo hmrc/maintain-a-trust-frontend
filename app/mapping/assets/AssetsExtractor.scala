@@ -38,7 +38,7 @@ class AssetsExtractor @Inject()(moneyAssetExtractor: MoneyAssetExtractor,
 
         val assets: List[UserAnswers] = List(
           moneyAssetExtractor.extract(answers, a.monetary),
-          propertyOrLandAssetExtractor.extract(answers, a.propertyOrLand),
+          propertyOrLandAssetExtractor.extract(answers, a.propertyOrLand), // property or land not being extracted here
           shareAssetExtractor.extract(answers, a.shares),
           businessAssetExtractor.extract(answers, a.business),
           partnershipAssetExtractor.extract(answers, a.partnerShip),

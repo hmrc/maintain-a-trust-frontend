@@ -48,7 +48,6 @@ class TaskListController @Inject()(
 
   private def identifier(implicit request: ClosingTrustRequest[AnyContent]): String = request.userAnswers.identifier
 
-  private val className = getClass.getSimpleName
   def onPageLoad(): Action[AnyContent] = actions.refreshAndRequireIsClosingAnswer.async {
     implicit request =>
 
@@ -97,6 +96,7 @@ class TaskListController @Inject()(
       result.value.map {
         case Right(call) => call
         case Left(_) =>
+          val className = getClass.getSimpleName
           logger.warn(s"[$className][onPageLoad][Session ID: ${utils.Session.id(hc)}] Failed to render view.")
           InternalServerError(errorHandler.internalServerErrorTemplate)
       }
