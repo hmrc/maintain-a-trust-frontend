@@ -23,7 +23,6 @@ import models.{InternationalAddress, UKAddress}
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.EitherValues
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import pages.assets.propertyOrLand._
 
 class PropertyOrLandAssetExtractorSpec extends AnyFreeSpec with Matchers
