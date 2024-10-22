@@ -38,26 +38,19 @@ class PropertyOrLandAssetExtractor extends PlaybackExtractor[PropertyLandType] {
       .flatMap(_.set(PropertyOrLandDescriptionPage(index), entity.buildingLandName))
       .flatMap(answers => extractOptionalAddress(entity.address, index, answers))
       .flatMap(_.set(PropertyOrLandTotalValuePage(index), entity.valueFull))
-      .flatMap(answers => extractPreviousValue(entity.valuePrevious, entity.valueFull, index, answers))
+      .flatMap(answers => extractOptionalPreviousValue(entity.valuePrevious, entity.valueFull, index, answers))
   }
 
-  /** TODO
-   * This method is confusing.
-   * valueFull is always set by the question 'What is the current total value of the property or land?'
-   * valuePrevious is set both by the above question, and if the user answers no to the question
-   * 'Does the trust own all of the property or land?'
-   * it is also set by the question 'What is the value of the property or land owned by the trust?'
-   */
-  private def extractPreviousValue(valuePrevious: Option[Long],
-                                   valueFull: Long,
-                                   index: Int,
-                                   answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  private def extractOptionalPreviousValue(valuePrevious: Option[Long],
+                                           valueFull: Long,
+                                           index: Int,
+                                           answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     valuePrevious match {
-      // case for if a trust owns part of a property or land
-      case Some(previousValue) if previousValue < valueFull =>
+      // if a trust owns part of a property or land
+      case Some(valuePrevious) if valuePrevious < valueFull =>
         answers
           .set(TrustOwnAllThePropertyOrLandPage(index), false)
-          .flatMap(_.set(PropertyLandValueTrustPage(index), previousValue))
+          .flatMap(_.set(PropertyLandValueTrustPage(index), valuePrevious))
       case _ =>
         answers.set(TrustOwnAllThePropertyOrLandPage(index), true)
     }

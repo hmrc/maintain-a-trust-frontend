@@ -31,9 +31,7 @@ import utils.TrustEnvelope.TrustEnvelope
 
 import java.time.LocalDate
 import javax.inject.Inject
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext}
-import scala.util.Try
+import scala.concurrent.ExecutionContext
 
 class TrustConnector @Inject() (http: HttpClient, config: FrontendAppConfig) extends ConnectorErrorResponseHandler {
 
@@ -58,7 +56,6 @@ class TrustConnector @Inject() (http: HttpClient, config: FrontendAppConfig) ext
   def playback(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TrustsResponse] =
     EitherT {
       val url: String = s"$baseUrl/$identifier/transformed"
-//      val k = Try(Await.result(http.GET(url)(readRaw, hc, ec), Duration.Inf))
       http.GET[TrustsResponse](url).map(Right(_)).recover { case ex =>
         Left(handleError(ex, "playback"))
       }

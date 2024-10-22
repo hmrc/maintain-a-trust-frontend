@@ -76,7 +76,6 @@ class RefreshedDataPreSubmitRetrievalActionImpl @Inject()(
     }
   }
 
-  // in this method there is no ownsAllPropertyOrLand data on trustsResponse or the request
   private def handlePlaybackResponse[A](trustsResponse: TrustsResponse, submissionData: SubmissionData)
                                     (implicit request: DataRequest[A], hc: HeaderCarrier): TrustEnvelope[DataRequest[A]] = {
     trustsResponse match {
