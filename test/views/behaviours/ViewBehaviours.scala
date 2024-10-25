@@ -33,8 +33,6 @@ trait ViewBehaviours extends ViewSpecBase {
       "rendered" must {
 
         "have the correct banner title" in {
-
-          val doc = asDocument(view)
           findBannerTitle(view) mustBe messages("service.name")
         }
 
@@ -76,8 +74,6 @@ trait ViewBehaviours extends ViewSpecBase {
       "rendered" must {
 
         "have the correct banner title" in {
-
-          val doc = asDocument(view)
           findBannerTitle(view) mustBe messages("service.name")
         }
 
@@ -123,8 +119,6 @@ trait ViewBehaviours extends ViewSpecBase {
       "rendered" must {
 
         "have the correct banner title" in {
-
-          val doc = asDocument(view)
           findBannerTitle(view) mustBe messages("service.name")
         }
 

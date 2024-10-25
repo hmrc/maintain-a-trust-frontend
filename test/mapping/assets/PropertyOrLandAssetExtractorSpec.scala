@@ -203,6 +203,36 @@ class PropertyOrLandAssetExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(PropertyLandValueTrustPage(2)).get mustBe 1000L
 
         }
+
+        ".updateUserAnswers" - {
+
+          val partOwnedProperty = PropertyLandType(
+            buildingLandName = None,
+            address = Some(AddressType(s"line1", "line2", None, None, None, "FR")),
+            valueFull = num2000,
+            valuePrevious = Some(num1000)
+          )
+
+          val fullyOwnedProperty = partOwnedProperty.copy(valuePrevious = None)
+
+          val emptyUserAnswers = Right(emptyUserAnswersForUtr)
+
+          "sets part ownership correctly" in {
+            val userAnswers = assetExtractor.updateUserAnswers(emptyUserAnswers, partOwnedProperty, 0).value
+
+            userAnswers.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe false
+            userAnswers.get(PropertyLandValueTrustPage(0)).get mustBe num1000
+            userAnswers.get(PropertyOrLandTotalValuePage(0)).get mustBe num2000
+          }
+
+          "sets full ownership correctly" in {
+            val userAnswers = assetExtractor.updateUserAnswers(emptyUserAnswers, fullyOwnedProperty, 0).value
+
+            userAnswers.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe true
+            userAnswers.get(PropertyLandValueTrustPage(0)) mustBe None
+            userAnswers.get(PropertyOrLandTotalValuePage(0)).get mustBe num2000
+          }
+        }
       }
 
     }
