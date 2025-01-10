@@ -29,7 +29,7 @@
     submitButton: SubmitButton
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages, flash: Flash)
+@(form: Form[_])(implicit request: RequestHeader, messages: Messages, flash: Flash)
 
 @main_template(
     title = s"${errorPrefix(form)} Trust Wizard"

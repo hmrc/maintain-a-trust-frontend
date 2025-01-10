@@ -27,7 +27,7 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_], onSubmit: Call)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], onSubmit: Call)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)}${messages("agencyRegisteredAddressUkYesNo.title")}",

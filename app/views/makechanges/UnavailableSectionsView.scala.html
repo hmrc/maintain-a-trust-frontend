@@ -27,7 +27,7 @@
     config: FrontendAppConfig
 )
 
-@(availableSections: String, unavailableSections: String, futureSections: String)(implicit request: Request[_], messages: Messages)
+@(availableSections: String, unavailableSections: String, futureSections: String)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = messages("unavailableSections.title", availableSections),

@@ -25,7 +25,7 @@
     formHelper: FormWithCSRF
 )
 
-@(identifier: String, identifierType: IdentifierType, displayExpress: Boolean)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType, displayExpress: Boolean)(implicit request: RequestHeader, messages: Messages)
 
 @bulletPoints = @{
     val defaults = List("bullet2", "bullet3", "bullet4")

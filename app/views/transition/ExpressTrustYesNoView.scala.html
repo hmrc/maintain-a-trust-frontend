@@ -26,7 +26,7 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: RequestHeader, messages: Messages)
 
 @content = {
     <h2>@messages("expressTrustYesNo.subheading1")</h2>

@@ -28,7 +28,7 @@
     config: FrontendAppConfig
 )
 
-@(identifier: String, identifierType: IdentifierType, availableSections: String, continueUrl: Call)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType, availableSections: String, continueUrl: Call)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = messages("maintainThisTrust.title"),

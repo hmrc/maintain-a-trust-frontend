@@ -24,7 +24,7 @@
     link: Link
 )
 
-@(tvn: String, isAgent: Boolean, isTrustTaxable: Boolean, agentOverviewUrl: String)(implicit request: Request[_], messages: Messages)
+@(tvn: String, isAgent: Boolean, isTrustTaxable: Boolean, agentOverviewUrl: String)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = s"${messages("confirmationPage.title", tvn)}"

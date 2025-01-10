@@ -27,7 +27,7 @@
     govukRadios: GovukRadios
 )
 
-@(form: Form[_], identifier: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], identifier: String)(implicit request: RequestHeader, messages: Messages)
 
 @helper.javascriptRouter("jsRoutes")(
     routes.javascript.ObligedEntityPdfController.getPdf,

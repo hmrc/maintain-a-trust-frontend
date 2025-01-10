@@ -29,7 +29,7 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_], determinePrefix: Boolean => String, closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], determinePrefix: Boolean => String, closingTrust: Boolean)(implicit request: RequestHeader, messages: Messages)
 
 @prefix = {@determinePrefix(closingTrust)}
 

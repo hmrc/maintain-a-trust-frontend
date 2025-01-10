@@ -32,7 +32,7 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_], closingTrust: Boolean)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], closingTrust: Boolean)(implicit request: RequestHeader, messages: Messages)
 
 @warningContent = {
     @if(closingTrust) {

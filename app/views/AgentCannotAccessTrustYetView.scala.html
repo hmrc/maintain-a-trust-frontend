@@ -21,7 +21,7 @@
     headingWithCaption: HeadingWithCaption
 )
 
-@(identifier: String, identifierType: IdentifierType)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = messages("agentCannotAccessTrustYet.title"),

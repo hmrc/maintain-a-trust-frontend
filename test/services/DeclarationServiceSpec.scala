@@ -27,7 +27,7 @@ import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{EitherValues, RecoverMethods}
 import play.api.inject.bind
-import play.api.mvc.Request
+import play.api.mvc.{Request, RequestHeader}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
@@ -61,7 +61,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
     email = None
   )
 
-  private implicit val request: Request[_] = fakeRequest
+  private implicit val request: RequestHeader = fakeRequest
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "Declaration service" when {

@@ -42,7 +42,7 @@
     affinityGroup: AffinityGroup,
     isAbleToDeclare: Boolean,
     closingTrust: Boolean
-)(implicit request: Request[_], messages: Messages)
+)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = messages("variationProgress.title"),
