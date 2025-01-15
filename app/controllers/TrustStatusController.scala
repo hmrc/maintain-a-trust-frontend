@@ -26,8 +26,10 @@ import models.http._
 import models.requests.{DataRequest, OptionalDataRequest}
 import models.{TrustDetails, Underlying4mldTrustIn5mldMode, UserAnswers}
 import play.api.Logging
+import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.twirl.api.Html
 import repositories.PlaybackRepository
 import services.{AuthenticationService, SessionService}
 import uk.gov.hmrc.auth.core.AffinityGroup
@@ -57,7 +59,8 @@ class TrustStatusController @Inject()(
                                        sessionService: SessionService,
                                        frontendAppConfig: FrontendAppConfig,
                                        errorHandler: ErrorHandler
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                     ) (implicit ec: ExecutionContext, writeableFutureHtml: Writeable[Future[Html]])
+  extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
 

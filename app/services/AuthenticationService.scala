@@ -22,8 +22,10 @@ import handlers.ErrorHandler
 import models.requests.DataRequest
 import models.{TrustAuthAgentAllowed, TrustAuthAllowed, TrustAuthDenied}
 import play.api.Logging
+import play.api.http.Writeable
 import play.api.mvc.Results._
 import play.api.mvc._
+import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Session
 
@@ -31,7 +33,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AuthenticationServiceImpl @Inject()(errorHandler: ErrorHandler,
                                          trustAuthConnector: TrustAuthConnector)
-                                         (implicit ec: ExecutionContext) extends AuthenticationService with Logging {
+                                         (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
+  extends AuthenticationService with Logging {
 
   override def authenticateAgent[A]()
                                    (implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]] = {

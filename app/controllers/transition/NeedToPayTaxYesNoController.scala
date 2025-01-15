@@ -26,8 +26,10 @@ import models.requests.DataRequest
 import pages.transition.NeedToPayTaxYesNoPage
 import play.api.Logging
 import play.api.data.Form
+import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.Html
 import repositories.PlaybackRepository
 import services.MaintainATrustService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -35,7 +37,7 @@ import utils.TrustEnvelope.TrustEnvelope
 import utils.{Session, TrustEnvelope}
 import views.html.transition.NeedToPayTaxYesNoView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class NeedToPayTaxYesNoController @Inject()(
@@ -48,7 +50,7 @@ class NeedToPayTaxYesNoController @Inject()(
                                              trustConnector: TrustConnector,
                                              maintainATrustService: MaintainATrustService,
                                              errorHandler: ErrorHandler
-                                           )(implicit ec: ExecutionContext)
+                                           ) (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName

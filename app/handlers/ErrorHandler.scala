@@ -17,7 +17,6 @@
 package handlers
 
 import com.google.inject.{Inject, Singleton}
-import play.api.i18n.Messages.implicitMessagesProviderToMessages
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html

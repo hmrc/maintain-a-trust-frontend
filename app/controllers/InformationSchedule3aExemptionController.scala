@@ -23,15 +23,16 @@ import handlers.ErrorHandler
 import models.pages.WhatIsNext.MakeChanges
 import pages.WhatIsNextPage
 import play.api.Logging
+import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.Html
 import repositories.PlaybackRepository
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustEnvelope
 import views.html._
-
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class InformationSchedule3aExemptionController @Inject()(
@@ -42,7 +43,7 @@ class InformationSchedule3aExemptionController @Inject()(
                                                           playbackRepository: PlaybackRepository,
                                                           trustsConnector: TrustConnector,
                                                           errorHandler: ErrorHandler
-                                                        )(implicit ec: ExecutionContext)
+                                                        )(implicit ec: ExecutionContext, writeableFutureHtml: Writeable[Future[Html]])
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
@@ -57,7 +58,7 @@ class InformationSchedule3aExemptionController @Inject()(
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
-     val result = for {
+      val result = for {
         updatedAnswers <- TrustEnvelope(request.userAnswers.set(WhatIsNextPage, MakeChanges))
         _ <- playbackRepository.set(updatedAnswers)
         _ <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)

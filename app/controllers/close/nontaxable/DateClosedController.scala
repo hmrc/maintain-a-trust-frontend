@@ -24,8 +24,10 @@ import models.errors.{FormValidationError, TrustErrors}
 import models.requests.DataRequest
 import pages.close.nontaxable.DateClosedPage
 import play.api.Logging
+import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.Html
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.{Session, TrustEnvelope}
@@ -33,7 +35,7 @@ import views.html.close.nontaxable.DateClosedView
 
 import java.time.LocalDate
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class DateClosedController @Inject()(
                                       override val messagesApi: MessagesApi,
@@ -44,7 +46,8 @@ class DateClosedController @Inject()(
                                       view: DateClosedView,
                                       trustConnector: TrustConnector,
                                       errorHandler: ErrorHandler
-                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                    ) (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
+  extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
   private val prefix: String = "dateClosed"

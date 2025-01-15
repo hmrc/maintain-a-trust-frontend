@@ -26,13 +26,15 @@ import models.requests.ClosingTrustRequest
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.Logging
 import play.api.data.Form
+import play.api.http.Writeable
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.Html
 import repositories.PlaybackRepository
 import utils.TrustEnvelope
 import views.html.makechanges.UpdateProtectorYesNoView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UpdateProtectorYesNoController @Inject()(
@@ -45,7 +47,7 @@ class UpdateProtectorYesNoController @Inject()(
                                                 trustConnector: TrustConnector,
                                                 trustStoreConnector: TrustsStoreConnector,
                                                 errorHandler: ErrorHandler
-                                              )(implicit ec: ExecutionContext)
+                                              ) (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with Logging {
 
   private val className = getClass.getSimpleName

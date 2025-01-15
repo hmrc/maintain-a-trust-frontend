@@ -27,14 +27,16 @@ import navigation.Navigator.agentDeclarationUrl
 import pages.declaration.AgencyRegisteredAddressUkPage
 import play.api.Logging
 import play.api.data.Form
+import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.Html
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustEnvelope
 import views.html.declaration.AgencyRegisteredAddressUkView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AgencyRegisteredAddressUkController @Inject()(
@@ -45,7 +47,7 @@ class AgencyRegisteredAddressUkController @Inject()(
                                                      val controllerComponents: MessagesControllerComponents,
                                                      view: AgencyRegisteredAddressUkView,
                                                      errorHandler: ErrorHandler
-                                                   )(implicit ec: ExecutionContext)
+                                                   ) (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName

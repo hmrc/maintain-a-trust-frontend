@@ -31,15 +31,17 @@ import models.requests.DataRequest
 import pages.WhatIsNextPage
 import play.api.Logging
 import play.api.data.Form
+import play.api.http.Writeable
 import play.api.i18n.MessagesApi
 import play.api.mvc._
+import play.twirl.api.Html
 import repositories.PlaybackRepository
 import services.MaintainATrustService
 import utils.TrustEnvelope.TrustEnvelope
 import utils.{Session, TrustEnvelope}
 import views.html.WhatIsNextView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class WhatIsNextController @Inject()(
@@ -54,7 +56,7 @@ class WhatIsNextController @Inject()(
                                       maintainATrustService: MaintainATrustService,
                                       appConfig: FrontendAppConfig,
                                       errorHandler: ErrorHandler
-                                    )(implicit ec: ExecutionContext)
+                                    ) (implicit ec: ExecutionContext, writeableFutureHtml: Writeable[Future[Html]])
   extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) with Logging {
 
   private val className = getClass.getSimpleName

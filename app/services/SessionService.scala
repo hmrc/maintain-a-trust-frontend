@@ -22,7 +22,9 @@ import play.api.mvc.Results.{InternalServerError, Redirect}
 import models.requests.IdentifierRequest
 import models.{IdentifierSession, UserAnswers}
 import play.api.Logging
+import play.api.http.Writeable
 import play.api.mvc.Result
+import play.twirl.api.Html
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Session
@@ -32,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class SessionService @Inject()(playbackRepository: PlaybackRepository,
                                sessionRepository: ActiveSessionRepository,
-                               errorHandler: ErrorHandler) extends Logging {
+                               errorHandler: ErrorHandler) (implicit writeableFutureHtml: Writeable[Future[Html]]) extends Logging {
 
   def initialiseUserAnswers(identifier: String,
                             internalId: String,

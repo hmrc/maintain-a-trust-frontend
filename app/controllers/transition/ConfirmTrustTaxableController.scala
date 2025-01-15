@@ -26,14 +26,16 @@ import navigation.Navigator.declarationUrl
 import pages.WhatIsNextPage
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.Logging
+import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.Html
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustEnvelope
 import views.html.transition.ConfirmTrustTaxableView
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ConfirmTrustTaxableController @Inject()(
@@ -45,7 +47,7 @@ class ConfirmTrustTaxableController @Inject()(
                                                trustsConnector: TrustConnector,
                                                config: FrontendAppConfig,
                                                errorHandler: ErrorHandler
-                                             )(implicit ec: ExecutionContext)
+                                             ) (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName

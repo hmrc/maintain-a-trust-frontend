@@ -25,12 +25,14 @@ import models.Enumerable
 import models.requests.ClosingTrustRequest
 import navigation.Navigator.declarationUrl
 import play.api.Logging
+import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class TaskListController @Inject()(
                                     override val messagesApi: MessagesApi,
@@ -43,12 +45,12 @@ class TaskListController @Inject()(
                                     trustsConnector: TrustConnector,
                                     variationProgress: VariationProgress,
                                     errorHandler: ErrorHandler
-                                  )(implicit ec: ExecutionContext)
+                                  ) (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
   extends FrontendBaseController with I18nSupport with Enumerable.Implicits with Logging {
 
   private def identifier(implicit request: ClosingTrustRequest[AnyContent]): String = request.userAnswers.identifier
 
-  def onPageLoad(): Action[AnyContent] = actions.refreshAndRequireIsClosingAnswer.async {
+  def onPageLoad(): Action[AnyContent]= actions.refreshAndRequireIsClosingAnswer.async {
     implicit request =>
 
       val result = for {
