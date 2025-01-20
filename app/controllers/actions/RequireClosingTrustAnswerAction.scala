@@ -22,12 +22,14 @@ import models.pages.WhatIsNext.CloseTrust
 import models.requests.{ClosingTrustRequest, DataRequest}
 import pages.WhatIsNextPage
 import play.api.Logging
+import play.api.http.Writeable
 import play.api.mvc.{ActionRefiner, Result, Results}
+import play.twirl.api.Html
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class RequireClosingTrustAnswerAction @Inject()(errorHandler: ErrorHandler)
-                                               (implicit val executionContext: ExecutionContext)
+                                               (implicit val executionContext: ExecutionContext, writeableFutureHtml: Writeable[Future[Html]])
   extends ActionRefiner[DataRequest, ClosingTrustRequest] with Logging {
 
   private val className = getClass.getSimpleName

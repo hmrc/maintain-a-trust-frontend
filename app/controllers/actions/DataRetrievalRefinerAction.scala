@@ -21,8 +21,10 @@ import handlers.ErrorHandler
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import models.{IdentifierSession, UserAnswers}
 import play.api.Logging
+import play.api.http.Writeable
 import play.api.mvc.Results.InternalServerError
 import play.api.mvc.{ActionRefiner, Result}
+import play.twirl.api.Html
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -35,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DataRetrievalRefinerAction @Inject()(activeSessionRepository: ActiveSessionRepository,
                                            val playbackRepository: PlaybackRepository,
                                            errorHandler: ErrorHandler
-                                          )(implicit val executionContext: ExecutionContext)
+                                          )(implicit val executionContext: ExecutionContext, writeableFutureHtml: Writeable[Future[Html]])
   extends ActionRefiner[IdentifierRequest, OptionalDataRequest] with Logging {
 
   private val className = getClass.getSimpleName

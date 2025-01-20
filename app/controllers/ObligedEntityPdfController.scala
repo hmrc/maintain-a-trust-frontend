@@ -24,14 +24,15 @@ import javax.inject.Inject
 import models.headers.PdfHeaders
 import models.requests.IdentifierRequest
 import play.api.Logging
-import play.api.http.HttpEntity
+import play.api.http.{HttpEntity, Writeable}
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.language.LanguageUtils
 import utils.Session
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class ObligedEntityPdfController @Inject()(
                                             actions: Actions,
@@ -40,7 +41,8 @@ class ObligedEntityPdfController @Inject()(
                                             errorHandler: ErrorHandler
                                           )(
                                             implicit ec: ExecutionContext,
-                                            lang: LanguageUtils
+                                            lang: LanguageUtils,
+                                            writeableFutureHtml: Writeable[Future[Html]]
                                           ) extends FrontendBaseController with Logging {
 
   private val className = getClass.getSimpleName
