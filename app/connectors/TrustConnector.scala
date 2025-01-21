@@ -21,13 +21,11 @@ import config.FrontendAppConfig
 import models.errors.DeclarationError
 import models.http.{DeclarationForApi, TVNResponse, TrustsResponse}
 import models.{FirstTaxYearAvailable, MigrationTaskStatus, TrustDetails}
-import play.api.http.HeaderNames
 import play.api.http.Status.OK
 import play.api.libs.json.{JsBoolean, Json}
-import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import utils.TrustEnvelope.TrustEnvelope
 import java.time.LocalDate
 import javax.inject.Inject
@@ -122,17 +120,9 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
   }
 
   def declare(identifier: String, payload: DeclarationForApi)(implicit
-                                                              request: RequestHeader,
                                                               hc: HeaderCarrier,
                                                               ec: ExecutionContext
   ): TrustEnvelope[TVNResponse] = EitherT {
-
-    val httpReads     = HttpReads.Implicits.readRaw
-    val trueUserAgent = "True-User-Agent"
-
-    val newHc: HeaderCarrier = hc.withExtraHeaders(
-      trueUserAgent -> request.headers.get(HeaderNames.USER_AGENT).getOrElse("No user agent provided")
-    )
     val url: String          = s"$baseUrl/declare/$identifier"
     http
       .post(url"$url")

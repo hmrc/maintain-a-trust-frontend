@@ -57,7 +57,7 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
   }
 
   private def declare(name: FullName, utr: String, agentDetails: Option[AgentDetails], endDate: Option[LocalDate])
-                     (implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
+                     (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
 
     val payload = DeclarationForApi(
       declaration = Declaration(name),
