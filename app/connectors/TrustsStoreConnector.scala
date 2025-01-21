@@ -25,7 +25,6 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import utils.TrustEnvelope.TrustEnvelope
-
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,11 +39,6 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
   private def featuresUrl(feature: String) = s"${config.trustsStoreUrl}/features/$feature"
 
   def get(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[Option[TrustClaim]] = EitherT {
-//    http.GET[Option[TrustClaim]](trustLockedUrl)(TrustClaim.httpReads(identifier), hc, ec).map(Right(_)).recover {
-//      case ex =>
-//        Left(handleError(ex, "get"))
-//    }
-
     http
       .get(url"$trustLockedUrl")
       .execute[Option[TrustClaim]]
@@ -58,11 +52,6 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
          (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[CompletedMaintenanceTasks] = EitherT {
     CompletedMaintenanceTasks.from(userAnswers) match {
       case Some(taskStatusTag) =>
-//        http.POST[JsValue, CompletedMaintenanceTasks](maintainTasksUrl(identifier), Json.toJson(taskStatusTag)).map(_ => Right(taskStatusTag))
-//          .recover {
-//            case ex => Left(handleError(ex, "set"))
-//          }
-
         val maintainUrl = maintainTasksUrl(identifier)
         http
           .post(url"$maintainUrl")
@@ -79,11 +68,6 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
   }
 
   def getStatusOfTasks(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[CompletedMaintenanceTasks] = EitherT {
-//    http.GET[CompletedMaintenanceTasks](maintainTasksUrl(identifier)).map(Right(_))
-//      .recover {
-//        case _ => Right(CompletedMaintenanceTasks())
-//      }
-
     val maintainUrl = maintainTasksUrl(identifier)
     http
       .get(url"$maintainUrl")
@@ -95,11 +79,6 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
   }
 
   def resetTasks(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
-//    http.DELETE[HttpResponse](maintainTasksUrl(identifier)).map(Right(_)).recover {
-//      case ex =>
-//        Left(handleError(ex, "resetTasks"))
-//    }
-
     val maintainUrl = maintainTasksUrl(identifier)
     http
       .get(url"$maintainUrl")
@@ -112,11 +91,6 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
   }
 
   def getFeature(feature: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[FeatureResponse] = EitherT {
-//    http.GET[FeatureResponse](featuresUrl(feature)).map(Right(_)).recover {
-//      case ex =>
-//        Left(handleError(ex, "getFeature"))
-//    }
-
     val featureVal = featuresUrl(feature)
     http
       .get(url"$featureVal")
@@ -129,10 +103,6 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
   }
 
   def setFeature(feature: String, state: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
-    //    http.PUT[JsValue, HttpResponse](featuresUrl(feature), JsBoolean(state)).map(Right(_)).recover {
-    //      case ex =>
-    //        Left(handleError(ex, "setFeature"))
-    //    }
     val featureVal = featuresUrl(feature)
     http
       .get(url"$featureVal")
@@ -143,5 +113,4 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
           Left(handleError(ex, "setFeature"))
       }
   }
-
 }

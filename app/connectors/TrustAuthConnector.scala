@@ -18,7 +18,6 @@ package connectors
 
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-
 import javax.inject.Inject
 import models.{TrustAuthInternalServerError, TrustAuthResponse}
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
@@ -40,10 +39,6 @@ class TrustAuthConnectorImpl @Inject()(http: HttpClientV2, config: FrontendAppCo
 
   override def agentIsAuthorised()
                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
-//    http.GET[TrustAuthResponse](s"$baseUrl/agent-authorised").recoverWith {
-//      case _ => Future.successful(TrustAuthInternalServerError)
-//    }
-
     http
       .get(url"$baseUrl/agent-authorised")
       .execute[TrustAuthResponse]
@@ -54,10 +49,6 @@ class TrustAuthConnectorImpl @Inject()(http: HttpClientV2, config: FrontendAppCo
 
   override def authorisedForIdentifier(identifier: String)
                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
-//    http.GET[TrustAuthResponse](s"$baseUrl/authorised/$identifier").recoverWith {
-//      case _ => Future.successful(TrustAuthInternalServerError)
-//    }
-
     http
       .get(url"$baseUrl/agent-authorised")
       .execute[TrustAuthResponse]

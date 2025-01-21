@@ -29,7 +29,6 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 import utils.TrustEnvelope.TrustEnvelope
-
 import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -44,10 +43,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     identifier: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TrustDetails] = EitherT {
     val url: String = s"$baseUrl/trust-details/$identifier/untransformed"
-//    http.GET[TrustDetails](url).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "getUntransformedTrustDetails"))
-//    }
-
     http
       .get(url"$url")
       .execute[TrustDetails]
@@ -65,10 +60,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
   def playback(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TrustsResponse] =
     EitherT {
       val url: String = s"$baseUrl/$identifier/transformed"
-//      http.GET[TrustsResponse](url).map(Right(_)).recover { case ex =>
-//        Left(handleError(ex, "playback"))
-//      }
-
       http
         .get(url"$url")
         .execute[TrustsResponse]
@@ -82,10 +73,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     identifier: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TrustsResponse] = EitherT {
     val url: String = s"$baseUrl/$identifier/refresh"
-//    http.GET[TrustsResponse](url).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "playbackFromEtmp"))
-//    }
-
     http
       .get(url"$url")
       .execute[TrustsResponse]
@@ -99,10 +86,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     identifier: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[JsBoolean] = EitherT {
     val url: String = s"$baseUrl/$identifier/transformed/protectors-already-exist"
-//    http.GET[JsBoolean](url).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "getDoProtectorsAlreadyExist"))
-//    }
-
     http
       .get(url"$url")
       .execute[JsBoolean]
@@ -116,10 +99,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     identifier: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[JsBoolean] = EitherT {
     val url: String = s"$baseUrl/$identifier/transformed/other-individuals-already-exist"
-//    http.GET[JsBoolean](url).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "getDoProtectorsAlreadyExist"))
-//    }
-
     http
       .get(url"$url")
       .execute[JsBoolean]
@@ -133,10 +112,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     identifier: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[JsBoolean] = EitherT {
     val url: String = s"$baseUrl/$identifier/transformed/non-eea-companies-already-exist"
-//    http.GET[JsBoolean](url).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "getDoNonEeaCompaniesAlreadyExist"))
-//    }
-
     http
       .get(url"$url")
       .execute[JsBoolean]
@@ -159,22 +134,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
       trueUserAgent -> request.headers.get(HeaderNames.USER_AGENT).getOrElse("No user agent provided")
     )
     val url: String          = s"$baseUrl/declare/$identifier"
-//    http
-//      .POST[DeclarationForApi, HttpResponse](url, payload)(implicitly[Writes[DeclarationForApi]], httpReads, newHc, ec)
-//      .map { response =>
-//        response.status match {
-//          case OK     => Right(response.json.as[TVNResponse])
-//          case status =>
-//            logger.error(
-//              s"[$className][declare] problem declaring trust, received a non successful status code: $status"
-//            )
-//            Left(DeclarationError())
-//        }
-//      }
-//      .recover { case ex =>
-//        Left(handleError(ex, "declare"))
-//      }
-
     http
       .post(url"$url")
       .withBody(Json.toJson(payload))
@@ -199,10 +158,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     ec: ExecutionContext
   ): TrustEnvelope[HttpResponse] = EitherT {
     val url: String = s"$baseUrl/$identifier/taxable-migration/migrating-to-taxable"
-//    http.POST[Boolean, HttpResponse](url, value).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "setTaxableMigrationFlag"))
-//    }
-
     http
       .post(url"$url")
       .withBody(Json.toJson(value))
@@ -217,10 +172,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     identifier: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
     val url: String = s"$baseUrl/$identifier/transforms"
-//    http.DELETE[HttpResponse](url).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "removeTransforms"))
-//    }
-
     http
       .delete(url"$url")
       .execute[HttpResponse]
@@ -235,10 +186,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     ec: ExecutionContext
   ): TrustEnvelope[HttpResponse] = EitherT {
     val url: String = s"$baseUrl/trust-details/$identifier/express"
-//    http.PUT[Boolean, HttpResponse](url, value).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "setExpressTrust"))
-//    }
-
     http
       .put(url"$url")
       .withBody(Json.toJson(value))
@@ -254,10 +201,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     ec: ExecutionContext
   ): TrustEnvelope[HttpResponse] = EitherT {
     val url: String = s"$baseUrl/trust-details/$identifier/taxable"
-//    http.PUT[Boolean, HttpResponse](url, value).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "setTaxableTrust"))
-//    }
-
     http
       .put(url"$url")
       .execute[HttpResponse]
@@ -272,10 +215,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     ec: ExecutionContext
   ): TrustEnvelope[HttpResponse] = EitherT {
     val url: String = s"$baseUrl/trust-details/$identifier/schedule-3a-exempt"
-//    http.PUT[Boolean, HttpResponse](url, value).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "setSchedule3aExempt"))
-//    }
-
     http
       .put(url"$url")
       .execute[HttpResponse]
@@ -289,10 +228,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     identifier: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[MigrationTaskStatus] = EitherT {
     val url: String = s"$baseUrl/settlors/$identifier/complete-for-migration"
-//    http.GET[MigrationTaskStatus](url).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "getSettlorsStatus"))
-//    }
-
     http
       .get(url"$url")
       .execute[MigrationTaskStatus]
@@ -306,10 +241,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     identifier: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[MigrationTaskStatus] = EitherT {
     val url: String = s"$baseUrl/beneficiaries/$identifier/complete-for-migration"
-//    http.GET[MigrationTaskStatus](url).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "getBeneficiariesStatus"))
-//    }
-
     http
       .get(url"$url")
       .execute[MigrationTaskStatus]
@@ -323,10 +254,6 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     identifier: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[FirstTaxYearAvailable] = EitherT {
     val url = s"$baseUrl/tax-liability/$identifier/first-year-to-ask-for"
-//    http.GET[FirstTaxYearAvailable](url).map(Right(_)).recover { case ex =>
-//      Left(handleError(ex, "getFirstTaxYearToAskFor"))
-//    }
-
     http
       .get(url"$url")
       .execute[FirstTaxYearAvailable]
