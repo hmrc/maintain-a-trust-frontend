@@ -56,7 +56,7 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
           .thenReturn(EitherT[Future, TrustErrors, Option[IdentifierSession]](Future.successful(Right(None))))
 
         when(mockErrorHandler.internalServerErrorTemplate(any()))
-          .thenReturn(Html(""))
+          .thenReturn(Future.successful(Html("")))
 
         val action = new Harness
 
@@ -71,13 +71,13 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
           .thenReturn(EitherT[Future, TrustErrors, Option[IdentifierSession]](Future.successful(Left(MongoError))))
 
         when(mockErrorHandler.internalServerErrorTemplate(any()))
-          .thenReturn(Html(""))
+          .thenReturn(Future.successful(Html("")))
 
         val action = new Harness
 
         val futureResult = action.callRefine(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
-        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(fakeRequest)))
+        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(Future.successful(fakeRequest)))
       }
     }
 
@@ -109,7 +109,7 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
           .thenReturn(EitherT[Future, TrustErrors, Option[UserAnswers]](Future.successful(Left(MongoError))))
 
         when(mockErrorHandler.internalServerErrorTemplate(any()))
-          .thenReturn(Html(""))
+          .thenReturn(Future.successful(Html("")))
 
         val action = new Harness
 

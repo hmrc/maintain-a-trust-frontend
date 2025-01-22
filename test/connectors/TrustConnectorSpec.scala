@@ -493,7 +493,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           post(urlEqualTo(declareUrl(identifier)))
             .willReturn(serviceUnavailable()))
 
-        implicit val request: Request[_] = fakeRequest
+        implicit val request: RequestHeader = fakeRequest
 
         val result = Await.result(connector.declare(identifier, payload).value, Duration.Inf)
 
