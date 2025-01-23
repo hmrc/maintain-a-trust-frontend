@@ -43,8 +43,6 @@ trait FakeTrustsApp extends GuiceOneAppPerSuite {
 
   implicit def executionContext: ExecutionContext = injector.instanceOf[ExecutionContext]
 
-  implicit def writeableFutureHtml: Writeable[Future[Html]] = injector.instanceOf[Writeable[Future[Html]]]
-
   implicit def messages: Messages = messagesApi.preferred(fakeRequest)
 
 }

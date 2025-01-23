@@ -25,6 +25,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.http.Writeable
 import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError
 import play.twirl.api.Html
@@ -38,6 +39,7 @@ import scala.concurrent.Future
 class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
   private val mockSessionRepository = mock[ActiveSessionRepository]
+  implicit val writeableFutureHtml: Writeable[Future[Html]] = mock[Writeable[Future[Html]]]
 
   class Harness() extends DataRetrievalRefinerAction(mockSessionRepository, mockPlaybackRepository, mockErrorHandler)(executionContext, writeableFutureHtml) {
       def callRefine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = refine(request)
@@ -77,7 +79,7 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
 
         val futureResult = action.callRefine(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
-        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(Future.successful(fakeRequest))))
+        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(fakeRequest)))
       }
     }
 

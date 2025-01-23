@@ -44,7 +44,6 @@ trait Mocked extends MockitoSugar {
 
   val mockActiveSessionRepository: ActiveSessionRepository = mock[ActiveSessionRepository]
 
-
   def mockPlaybackRepositoryBuilder(playbackRepository: PlaybackRepository,
                                     getResult: Either[TrustErrors, Option[UserAnswers]] = Right(None),
                                     setResult: Either[TrustErrors, Boolean] = Right(true),
