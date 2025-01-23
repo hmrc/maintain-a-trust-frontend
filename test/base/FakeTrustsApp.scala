@@ -19,12 +19,14 @@ package base
 import config.FrontendAppConfig
 import org.scalatest.TestSuite
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.http.Writeable
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.Injector
 import play.api.mvc.{AnyContentAsEmpty, BodyParsers}
 import play.api.test.FakeRequest
+import play.twirl.api.Html
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 trait FakeTrustsApp extends GuiceOneAppPerSuite {
   this: TestSuite =>
@@ -40,6 +42,8 @@ trait FakeTrustsApp extends GuiceOneAppPerSuite {
   def injectedParsers: BodyParsers.Default = injector.instanceOf[BodyParsers.Default]
 
   implicit def executionContext: ExecutionContext = injector.instanceOf[ExecutionContext]
+
+  implicit def writeableFutureHtml: Writeable[Future[Html]] = injector.instanceOf[Writeable[Future[Html]]]
 
   implicit def messages: Messages = messagesApi.preferred(fakeRequest)
 

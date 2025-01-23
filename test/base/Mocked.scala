@@ -35,7 +35,7 @@ trait Mocked extends MockitoSugar {
   val mockErrorHandler: ErrorHandler = mock[ErrorHandler]
 
   when(mockErrorHandler.internalServerErrorTemplate(any()))
-    .thenReturn(Html(""))
+    .thenReturn(Future.successful(Html("")))
 
   val mockPlaybackRepository: PlaybackRepository = mock[PlaybackRepository]
 
