@@ -22,9 +22,7 @@ import play.api.mvc.Results.{InternalServerError, Redirect}
 import models.requests.IdentifierRequest
 import models.{IdentifierSession, UserAnswers}
 import play.api.Logging
-import play.api.http.Writeable
 import play.api.mvc.Result
-import play.twirl.api.Html
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Session
@@ -34,7 +32,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class SessionService @Inject()(playbackRepository: PlaybackRepository,
                                sessionRepository: ActiveSessionRepository,
-                               errorHandler: ErrorHandler) (implicit writeableFutureHtml: Writeable[Future[Html]]) extends Logging {
+                               errorHandler: ErrorHandler)
+  extends Logging {
 
   def initialiseUserAnswers(identifier: String,
                             internalId: String,
@@ -58,9 +57,10 @@ class SessionService @Inject()(playbackRepository: PlaybackRepository,
                           (implicit request: IdentifierRequest[A], ec: ExecutionContext): Future[Result] = {
     val session = IdentifierSession(request.user.internalId, identifier)
 
-    sessionRepository.set(session).value.map {
-      case Right(_) => Redirect(controllers.routes.TrustStatusController.status())
-      case Left(_) => InternalServerError(errorHandler.internalServerErrorTemplate)
+    sessionRepository.set(session).value.flatMap {
+      case Right(_) => Future.successful(Redirect(controllers.routes.TrustStatusController.status()))
+//      case Left(_) => InternalServerError(errorHandler.internalServerErrorTemplate)
+      case Left(_) => errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
     }
   }
 

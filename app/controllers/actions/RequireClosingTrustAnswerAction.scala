@@ -22,35 +22,34 @@ import models.pages.WhatIsNext.CloseTrust
 import models.requests.{ClosingTrustRequest, DataRequest}
 import pages.WhatIsNextPage
 import play.api.Logging
-import play.api.http.Writeable
 import play.api.mvc.{ActionRefiner, Result, Results}
-import play.twirl.api.Html
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class RequireClosingTrustAnswerAction @Inject()(errorHandler: ErrorHandler)
-                                               (implicit val executionContext: ExecutionContext, writeableFutureHtml: Writeable[Future[Html]])
+                                               (implicit val executionContext: ExecutionContext)
   extends ActionRefiner[DataRequest, ClosingTrustRequest] with Logging {
 
   private val className = getClass.getSimpleName
 
   override protected def refine[A](request: DataRequest[A]): Future[Either[Result, ClosingTrustRequest[A]]] = {
-    Future.successful(
-      request.userAnswers.get(WhatIsNextPage) match {
-        case None =>
-          logger.warn(s"[$className][refine] [UTR/URN: ${request.userAnswers.identifier}] " +
-            s"no answer for 'What next' found in user answers, cannot determine if user is closing the trust, cannot continue with journey")
-          Left(
-            Results.InternalServerError(errorHandler.internalServerErrorTemplate(request.request))
-          )
-        case Some(value) =>
-          Right(
-            ClosingTrustRequest(
-              request,
-              value == CloseTrust
-            )
-          )
-      }
-    )
+    request.userAnswers.get(WhatIsNextPage) match {
+      case None =>
+        logger.warn(s"[$className][refine] [UTR/URN: ${request.userAnswers.identifier}] " +
+          s"no answer for 'What next' found in user answers, cannot determine if user is closing the trust, cannot continue with journey")
+
+        errorHandler.internalServerErrorTemplate(request.request).map { html =>
+          Left(Results.InternalServerError(html))
+        }.recover {
+          case ex: Throwable =>
+            // Log the error and provide a fallback
+            logger.error(s"[$className][refine] Failed to render internal server error template", ex)
+            Left(Results.InternalServerError("An unexpected error occurred"))
+        }
+
+      case Some(value) =>
+        Future.successful(Right(ClosingTrustRequest(request, value == CloseTrust)))
+    }
   }
+
 }

@@ -27,10 +27,8 @@ import pages.declaration.IndividualDeclarationPage
 import pages.{SubmissionDatePage, TVNPage}
 import play.api.Logging
 import play.api.data.Form
-import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.Html
 import repositories.PlaybackRepository
 import services.DeclarationService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -50,8 +48,8 @@ class IndividualDeclarationController @Inject()(
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: IndividualDeclarationView,
                                                  service: DeclarationService,
-                                                 errorHandler: ErrorHandler
-                                               ) (implicit ec: ExecutionContext, writeableFutureHtml: Writeable[Future[Html]])
+                                                 errorHandler: ErrorHandler,
+                                               ) (implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
@@ -83,15 +81,16 @@ class IndividualDeclarationController @Inject()(
         _ <- playbackRepository.set(updatedAnswers)
       } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
 
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(DeclarationError()) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] problem declaring trust")
-          Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())
+          Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+//          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
 
   }

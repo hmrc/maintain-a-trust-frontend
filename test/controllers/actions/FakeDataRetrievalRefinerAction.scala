@@ -19,9 +19,7 @@ package controllers.actions
 import handlers.ErrorHandler
 import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
-import play.api.http.Writeable
 import play.api.mvc.Result
-import play.twirl.api.Html
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,7 +28,7 @@ class FakeDataRetrievalRefinerAction(dataToReturn: Option[UserAnswers],
                                      activeSessionRepository: ActiveSessionRepository,
                                      playbackRepository: PlaybackRepository,
                                      errorHandler: ErrorHandler
-                                    )(implicit ec: ExecutionContext, writeableFutureHtml: Writeable[Future[Html]])
+                                    )(implicit ec: ExecutionContext)
   extends DataRetrievalRefinerAction(activeSessionRepository, playbackRepository, errorHandler) {
 
   private val utr: String = "1234567890"

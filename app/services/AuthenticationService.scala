@@ -22,49 +22,52 @@ import handlers.ErrorHandler
 import models.requests.DataRequest
 import models.{TrustAuthAgentAllowed, TrustAuthAllowed, TrustAuthDenied}
 import play.api.Logging
-import play.api.http.Writeable
 import play.api.mvc.Results._
 import play.api.mvc._
-import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Session
-
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthenticationServiceImpl @Inject()(errorHandler: ErrorHandler,
                                          trustAuthConnector: TrustAuthConnector)
-                                         (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
+                                         (implicit ec: ExecutionContext)
   extends AuthenticationService with Logging {
 
   override def authenticateAgent[A]()
                                    (implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]] = {
-    trustAuthConnector.agentIsAuthorised().map {
+    trustAuthConnector.agentIsAuthorised().flatMap {
       case TrustAuthAgentAllowed(arn) =>
-        Right(arn)
+        Future.successful(Right(arn))
       case TrustAuthDenied(redirectUrl) =>
-        Left(Redirect(redirectUrl))
+        Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
         logger.warn(s"[AuthenticationServiceImpl][authenticateAgent][Session ID: ${Session.id(hc)}] Unable to authenticate agent with trusts-auth")
-        Left(InternalServerError(errorHandler.internalServerErrorTemplate))
+        errorHandler.internalServerErrorTemplate.map { html =>
+          Left(InternalServerError(html))
+        }
     }
   }
+
 
   override def authenticateForIdentifier[A](identifier: String)
                                            (implicit request: DataRequest[A],
                                             hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] = {
-    trustAuthConnector.authorisedForIdentifier(identifier).map {
+    trustAuthConnector.authorisedForIdentifier(identifier).flatMap {
       case _: TrustAuthAllowed =>
-        Right(request)
+        Future.successful(Right(request))
       case TrustAuthDenied(redirectUrl) =>
-        Left(Redirect(redirectUrl))
+        Future.successful(Left(Redirect(redirectUrl)))
       case _ =>
         logger.warn(
           s"[AuthenticationServiceImpl][authenticateForIdentifier]" +
-          s"[Session ID: ${Session.id(hc)}][UTR/URN: $identifier] Unable to authenticate organisation with trusts-auth"
+            s"[Session ID: ${Session.id(hc)}][UTR/URN: $identifier] Unable to authenticate organisation with trusts-auth"
         )
-        Left(InternalServerError(errorHandler.internalServerErrorTemplate))
+        errorHandler.internalServerErrorTemplate.map { html =>
+          Left(InternalServerError(html))
+        }
     }
   }
+
 
 }
 

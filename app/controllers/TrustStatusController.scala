@@ -26,10 +26,8 @@ import models.http._
 import models.requests.{DataRequest, OptionalDataRequest}
 import models.{TrustDetails, Underlying4mldTrustIn5mldMode, UserAnswers}
 import play.api.Logging
-import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import play.twirl.api.Html
 import repositories.PlaybackRepository
 import services.{AuthenticationService, SessionService}
 import uk.gov.hmrc.auth.core.AffinityGroup
@@ -59,7 +57,7 @@ class TrustStatusController @Inject()(
                                        sessionService: SessionService,
                                        frontendAppConfig: FrontendAppConfig,
                                        errorHandler: ErrorHandler
-                                     ) (implicit ec: ExecutionContext, writeableFutureHtml: Writeable[Future[Html]])
+                                     ) (implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
@@ -118,7 +116,8 @@ class TrustStatusController @Inject()(
         logger.info(s"[$className][checkIfLocked][Session ID: ${Session.id(hc)}] $identifier user has not been locked out from IV")
         tryToPlayback(identifier, fromVerify)
       case Left(_) => logger.warn(s"[$className][checkIfLocked][Session ID: ${Session.id(hc)}] Errors from connector call.")
-        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+//        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
     }
   }
 

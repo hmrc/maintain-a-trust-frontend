@@ -27,10 +27,8 @@ import pages._
 import pages.declaration.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage, AgentDeclarationPage}
 import play.api.Logging
 import play.api.data.Form
-import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.Html
 import repositories.PlaybackRepository
 import services.DeclarationService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -51,7 +49,7 @@ class AgentDeclarationController @Inject()(
                                             view: AgentDeclarationView,
                                             service: DeclarationService,
                                             errorHandler: ErrorHandler
-                                          ) (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]]) extends FrontendBaseController with I18nSupport with Logging {
+                                          ) (implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
   private val form: Form[AgentDeclaration] = formProvider()
@@ -92,21 +90,22 @@ class AgentDeclarationController @Inject()(
       } yield {
         Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
       }
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(WrongUserType()) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] User was not an agent.")
-          Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())
+          Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
         case Left(DeclarationError()) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] problem declaring trust.")
-          Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())
+          Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
         case Left(NoData) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Failed to get agency address")
-          Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())
+          Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+//          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 

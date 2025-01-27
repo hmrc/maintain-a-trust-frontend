@@ -30,7 +30,7 @@ import uk.gov.hmrc.auth.core.Enrolments
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RequireClosingTrustAnswerActionSpec (implicit ec: ExecutionContext, writeableFutureHtml: Writeable[Future[Html]]) extends SpecBase with ScalaFutures {
+class RequireClosingTrustAnswerActionSpec (implicit ec: ExecutionContext) extends SpecBase with ScalaFutures {
 
   private val handler = injector.instanceOf[ErrorHandler]
 

@@ -25,15 +25,12 @@ import models.requests.ClosingTrustRequest
 import pages.makechanges.UpdateBeneficiariesYesNoPage
 import play.api.Logging
 import play.api.data.Form
-import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.Html
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustEnvelope
 import views.html.makechanges.UpdateBeneficiariesYesNoView
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -45,7 +42,7 @@ class UpdateBeneficiariesYesNoController @Inject()(
                                                     val controllerComponents: MessagesControllerComponents,
                                                     view: UpdateBeneficiariesYesNoView,
                                                     errorHandler: ErrorHandler
-                                                  ) (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
+                                                  ) (implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
@@ -74,12 +71,13 @@ class UpdateBeneficiariesYesNoController @Inject()(
         Redirect(controllers.makechanges.routes.UpdateSettlorsYesNoController.onPageLoad())
       }
 
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+//          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 

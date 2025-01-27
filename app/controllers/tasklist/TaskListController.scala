@@ -25,13 +25,10 @@ import models.Enumerable
 import models.requests.ClosingTrustRequest
 import navigation.Navigator.declarationUrl
 import play.api.Logging
-import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{NonTaxToTaxProgressView, VariationProgressView}
-
 import scala.concurrent.{ExecutionContext, Future}
 
 class TaskListController @Inject()(
@@ -45,7 +42,7 @@ class TaskListController @Inject()(
                                     trustsConnector: TrustConnector,
                                     variationProgress: VariationProgress,
                                     errorHandler: ErrorHandler
-                                  ) (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
+                                  ) (implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Enumerable.Implicits with Logging {
 
   private def identifier(implicit request: ClosingTrustRequest[AnyContent]): String = request.userAnswers.identifier
@@ -95,12 +92,13 @@ class TaskListController @Inject()(
         }
       }
 
-      result.value.map {
-        case Right(call) => call
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
         case Left(_) =>
           val className = getClass.getSimpleName
           logger.warn(s"[$className][onPageLoad][Session ID: ${utils.Session.id(hc)}] Failed to render view.")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+//          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 

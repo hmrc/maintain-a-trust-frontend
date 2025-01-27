@@ -26,14 +26,11 @@ import models.requests.ClosingTrustRequest
 import pages.makechanges.AddOrUpdateProtectorYesNoPage
 import play.api.Logging
 import play.api.data.Form
-import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.Html
 import repositories.PlaybackRepository
 import utils.TrustEnvelope
 import views.html.makechanges.AddProtectorYesNoView
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -47,7 +44,7 @@ class AddProtectorYesNoController @Inject()(
                                              trustConnector: TrustConnector,
                                              trustStoreConnector: TrustsStoreConnector,
                                              errorHandler: ErrorHandler
-                                           ) (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
+                                           ) (implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
@@ -81,12 +78,13 @@ class AddProtectorYesNoController @Inject()(
         nextRoute
       }
 
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+//          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 

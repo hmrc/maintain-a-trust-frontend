@@ -34,7 +34,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, Future}
 
-class SessionServiceSpec (implicit ec: ExecutionContext, writeableFutureHtml: Writeable[Future[Html]]) extends SpecBase with ScalaCheckPropertyChecks {
+class SessionServiceSpec (implicit ec: ExecutionContext) extends SpecBase with ScalaCheckPropertyChecks {
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 

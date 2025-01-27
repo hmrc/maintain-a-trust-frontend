@@ -26,15 +26,12 @@ import navigation.Navigator.declarationUrl
 import pages.WhatIsNextPage
 import pages.trustdetails.ExpressTrustYesNoPage
 import play.api.Logging
-import play.api.http.Writeable
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.twirl.api.Html
 import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustEnvelope
 import views.html.transition.ConfirmTrustTaxableView
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -47,14 +44,13 @@ class ConfirmTrustTaxableController @Inject()(
                                                trustsConnector: TrustConnector,
                                                config: FrontendAppConfig,
                                                errorHandler: ErrorHandler
-                                             ) (implicit ec: ExecutionContext,writeableFutureHtml: Writeable[Future[Html]])
+                                             ) (implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
     implicit request =>
-
       Ok(view())
   }
 
@@ -73,11 +69,12 @@ class ConfirmTrustTaxableController @Inject()(
           ))
         }
 
-      result.value.map {
-        case Right(call) => call
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+//          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 

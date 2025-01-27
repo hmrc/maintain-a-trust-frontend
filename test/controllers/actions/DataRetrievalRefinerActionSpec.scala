@@ -25,7 +25,6 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.http.Writeable
 import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError
 import play.twirl.api.Html
@@ -39,9 +38,9 @@ import scala.concurrent.Future
 class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
   private val mockSessionRepository = mock[ActiveSessionRepository]
-  implicit val writeableFutureHtml: Writeable[Future[Html]] = mock[Writeable[Future[Html]]]
+//  implicit val writeableFutureHtml: Writeable[Future[Html]] = mock[Writeable[Future[Html]]]
 
-  class Harness() extends DataRetrievalRefinerAction(mockSessionRepository, mockPlaybackRepository, mockErrorHandler)(executionContext, writeableFutureHtml) {
+  class Harness() extends DataRetrievalRefinerAction(mockSessionRepository, mockPlaybackRepository, mockErrorHandler)(executionContext) {
       def callRefine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = refine(request)
   }
 
@@ -64,7 +63,10 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
 
         val futureResult = action.callRefine(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
-        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(fakeRequest)))
+//        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(fakeRequest)))
+        val renderedHtml = mockErrorHandler.internalServerErrorTemplate(fakeRequest).futureValue
+        futureResult.futureValue mustBe Left(InternalServerError(renderedHtml))
+
       }
 
       "return an Internal Server Error when there is a problem when calling ActiveSessionRepository" in {
@@ -79,7 +81,10 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
 
         val futureResult = action.callRefine(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
-        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(fakeRequest)))
+//        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(fakeRequest)))
+        val renderedHtml = mockErrorHandler.internalServerErrorTemplate(fakeRequest).futureValue
+        futureResult.futureValue mustBe Left(InternalServerError(renderedHtml))
+
       }
     }
 
@@ -117,7 +122,10 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
 
         val futureResult = action.callRefine(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
-        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(fakeRequest)))
+//        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(fakeRequest)))
+        val renderedHtml = mockErrorHandler.internalServerErrorTemplate(fakeRequest).futureValue
+        futureResult.futureValue mustBe Left(InternalServerError(renderedHtml))
+
       }
     }
 
