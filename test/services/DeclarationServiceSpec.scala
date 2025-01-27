@@ -71,7 +71,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
       "return TVN response when no errors" in {
 
-        when(mockTrustConnector.declare(any[String], any[DeclarationForApi]))
+        when(mockTrustConnector.declare(any(), any()) (any(), any()))
           .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Right(TVNResponse("123456")))))
 
 
@@ -89,7 +89,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
       "return InternalServerError when errors" in {
 
-        when(mockTrustConnector.declare(any[String], any[DeclarationForApi]))
+        when(mockTrustConnector.declare(any(), any()) (any(), any()))
           .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Left(ServerError()))))
 
         val app = applicationBuilder()
@@ -110,7 +110,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
       "return TVN response when no errors" in {
 
-        when(mockTrustConnector.declare(any[String], any[DeclarationForApi]))
+        when(mockTrustConnector.declare(any(), any()) (any(), any()))
           .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Right(TVNResponse("123456")))))
 
         val app = applicationBuilder()
@@ -127,7 +127,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
       "return InternalServerError when errors" in {
 
-        when(mockTrustConnector.declare(any[String], any[DeclarationForApi]))
+        when(mockTrustConnector.declare(any(), any()) (any(), any()))
           .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Left(ServerError()))))
 
         val app = applicationBuilder()

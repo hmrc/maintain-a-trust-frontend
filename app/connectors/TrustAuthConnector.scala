@@ -39,6 +39,7 @@ class TrustAuthConnectorImpl @Inject()(http: HttpClientV2, config: FrontendAppCo
 
   override def agentIsAuthorised()
                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
+    println("agentIsAuthorised ", baseUrl)
     http
       .get(url"$baseUrl/agent-authorised")
       .execute[TrustAuthResponse]
@@ -49,8 +50,9 @@ class TrustAuthConnectorImpl @Inject()(http: HttpClientV2, config: FrontendAppCo
 
   override def authorisedForIdentifier(identifier: String)
                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
+    println("authorisedForIdentifier", baseUrl)
     http
-      .get(url"$baseUrl/agent-authorised")
+      .get(url"$baseUrl/authorised/$identifier")
       .execute[TrustAuthResponse]
       .recoverWith {
         case _ => Future.successful(TrustAuthInternalServerError)

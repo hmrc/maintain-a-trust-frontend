@@ -48,8 +48,7 @@ class IndividualDeclarationController @Inject()(
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: IndividualDeclarationView,
                                                  service: DeclarationService,
-                                                 errorHandler: ErrorHandler,
-                                               ) (implicit ec: ExecutionContext)
+                                                 errorHandler: ErrorHandler) (implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName

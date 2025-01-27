@@ -20,11 +20,12 @@ import cats.data.EitherT
 import config.FrontendAppConfig
 import models.errors.ServerError
 import models.{CompletedMaintenanceTasks, FeatureResponse, UserAnswers}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsBoolean, Json}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import utils.TrustEnvelope.TrustEnvelope
+
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -81,7 +82,7 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
   def resetTasks(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
     val maintainUrl = maintainTasksUrl(identifier)
     http
-      .get(url"$maintainUrl")
+      .delete(url"$maintainUrl")
       .execute[HttpResponse]
       .map(Right(_))
       .recover {
@@ -105,7 +106,8 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
   def setFeature(feature: String, state: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
     val featureVal = featuresUrl(feature)
     http
-      .get(url"$featureVal")
+      .put(url"$featureVal")
+      .withBody(JsBoolean(state))
       .execute[HttpResponse]
       .map(Right(_))
       .recover {
