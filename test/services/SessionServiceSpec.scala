@@ -26,11 +26,8 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import play.api.http.Writeable
-import play.twirl.api.Html
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
-
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, Future}
 

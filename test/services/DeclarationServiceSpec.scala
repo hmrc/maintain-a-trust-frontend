@@ -20,14 +20,14 @@ import base.SpecBase
 import cats.data.EitherT
 import connectors.TrustConnector
 import models.errors.{ServerError, TrustErrors}
-import models.http.{DeclarationForApi, TVNResponse}
+import models.http.TVNResponse
 import models.{AgentDeclaration, FullName, IndividualDeclaration, UKAddress}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{EitherValues, RecoverMethods}
 import play.api.inject.bind
-import play.api.mvc.{AnyContent, Request, RequestHeader}
+import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 

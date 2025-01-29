@@ -55,7 +55,6 @@ class ViewLastDeclarationYesNoController @Inject()(
         case None => form
         case Some(value) => form.fill(value)
       }
-
       Ok(view(preparedForm, request.userAnswers.identifier, request.userAnswers.identifierType))
   }
 

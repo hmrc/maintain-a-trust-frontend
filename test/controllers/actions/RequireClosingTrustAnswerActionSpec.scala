@@ -22,10 +22,8 @@ import models.pages.WhatIsNext.{CloseTrust, MakeChanges}
 import models.requests.{ClosingTrustRequest, DataRequest, OrganisationUser, User}
 import org.scalatest.concurrent.ScalaFutures
 import pages.WhatIsNextPage
-import play.api.http.Writeable
 import play.api.mvc.Result
 import play.api.test.Helpers._
-import play.twirl.api.Html
 import uk.gov.hmrc.auth.core.Enrolments
 
 import scala.concurrent.{ExecutionContext, Future}

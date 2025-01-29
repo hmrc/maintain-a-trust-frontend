@@ -25,7 +25,6 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import utils.TrustEnvelope.TrustEnvelope
-
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,15 +41,14 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
   def get(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[Option[TrustClaim]] = EitherT {
     http
       .get(url"$trustLockedUrl")
-      .execute[Option[TrustClaim]]
+      .execute[Option[TrustClaim]](TrustClaim.httpReads(identifier), ec)
       .map(Right(_)).recover {
       case ex =>
         Left(handleError(ex, "get"))
     }
   }
 
-  def set(identifier: String, userAnswers: UserAnswers)
-         (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[CompletedMaintenanceTasks] = EitherT {
+  def set(identifier: String, userAnswers: UserAnswers)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[CompletedMaintenanceTasks] = EitherT {
     CompletedMaintenanceTasks.from(userAnswers) match {
       case Some(taskStatusTag) =>
         val maintainUrl = maintainTasksUrl(identifier)

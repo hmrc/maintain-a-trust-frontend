@@ -37,8 +37,7 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
 
   private lazy val baseUrl: String = s"${config.trustsUrl}/trusts"
 
-  def getUntransformedTrustDetails(
-    identifier: String
+  def getUntransformedTrustDetails(identifier: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TrustDetails] = EitherT {
     val url: String = s"$baseUrl/trust-details/$identifier/untransformed"
     http

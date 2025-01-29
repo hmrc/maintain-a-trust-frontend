@@ -32,13 +32,11 @@ import repositories.ActiveSessionRepository
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TestUserAnswers
-
 import scala.concurrent.Future
 
 class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
   private val mockSessionRepository = mock[ActiveSessionRepository]
-//  implicit val writeableFutureHtml: Writeable[Future[Html]] = mock[Writeable[Future[Html]]]
 
   class Harness() extends DataRetrievalRefinerAction(mockSessionRepository, mockPlaybackRepository, mockErrorHandler)(executionContext) {
       def callRefine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = refine(request)
@@ -62,8 +60,6 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
         val action = new Harness
 
         val futureResult = action.callRefine(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
-
-//        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(fakeRequest)))
         val renderedHtml = mockErrorHandler.internalServerErrorTemplate(fakeRequest).futureValue
         futureResult.futureValue mustBe Left(InternalServerError(renderedHtml))
 
@@ -80,8 +76,6 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
         val action = new Harness
 
         val futureResult = action.callRefine(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
-
-//        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(fakeRequest)))
         val renderedHtml = mockErrorHandler.internalServerErrorTemplate(fakeRequest).futureValue
         futureResult.futureValue mustBe Left(InternalServerError(renderedHtml))
 
@@ -121,8 +115,6 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
         val action = new Harness
 
         val futureResult = action.callRefine(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
-
-//        futureResult.futureValue mustBe Left(InternalServerError(mockErrorHandler.internalServerErrorTemplate(fakeRequest)))
         val renderedHtml = mockErrorHandler.internalServerErrorTemplate(fakeRequest).futureValue
         futureResult.futureValue mustBe Left(InternalServerError(renderedHtml))
 

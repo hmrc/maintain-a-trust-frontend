@@ -69,7 +69,6 @@ class MaintainThisTrustController @Inject()(
       val continueUrl: Call = routes.MaintainThisTrustController.onSubmit(needsIv)
 
       Ok(view(identifier, identifierType, availableSections, continueUrl))
-
   }
 
   def onSubmit(needsIv: Boolean): Action[AnyContent] = actions.authWithData {
@@ -81,5 +80,4 @@ class MaintainThisTrustController @Inject()(
         Redirect(routes.InformationMaintainingThisTrustController.onPageLoad())
       }
   }
-
 }

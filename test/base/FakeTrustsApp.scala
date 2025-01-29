@@ -19,12 +19,10 @@ package base
 import config.FrontendAppConfig
 import org.scalatest.TestSuite
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.http.Writeable
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.Injector
 import play.api.mvc.{AnyContentAsEmpty, BodyParsers}
 import play.api.test.FakeRequest
-import play.twirl.api.Html
 
 import scala.concurrent.{ExecutionContext, Future}
 

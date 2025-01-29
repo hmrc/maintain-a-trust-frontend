@@ -59,7 +59,6 @@ class SessionService @Inject()(playbackRepository: PlaybackRepository,
 
     sessionRepository.set(session).value.flatMap {
       case Right(_) => Future.successful(Redirect(controllers.routes.TrustStatusController.status()))
-//      case Left(_) => InternalServerError(errorHandler.internalServerErrorTemplate)
       case Left(_) => errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
     }
   }

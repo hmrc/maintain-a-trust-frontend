@@ -82,7 +82,6 @@ class AddNonEeaCompanyYesNoController @Inject()(
         case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-//          InternalServerError(errorHandler.internalServerErrorTemplate)
           errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }

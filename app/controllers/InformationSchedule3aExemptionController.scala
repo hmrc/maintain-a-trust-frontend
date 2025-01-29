@@ -67,7 +67,6 @@ class InformationSchedule3aExemptionController @Inject()(
         case Right(call) => Future.successful(call)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-//          InternalServerError(errorHandler.internalServerErrorTemplate)
           errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }

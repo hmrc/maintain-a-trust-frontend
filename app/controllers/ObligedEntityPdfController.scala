@@ -19,7 +19,6 @@ package controllers
 import connectors.TrustsObligedEntityOutputConnector
 import controllers.actions.Actions
 import handlers.ErrorHandler
-
 import javax.inject.Inject
 import models.headers.PdfHeaders
 import models.requests.IdentifierRequest
@@ -30,7 +29,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import uk.gov.hmrc.play.language.LanguageUtils
 import utils.Session
-
 import scala.concurrent.{ExecutionContext, Future}
 
 class ObligedEntityPdfController @Inject()(actions: Actions,

@@ -50,7 +50,6 @@ class BeforeYouContinueToTaxableController @Inject()(
         case Right(trustDetails) => Future.successful(Ok(view(identifier, identifierType, displayExpress = trustDetails.expressTrust.isEmpty)))
         case Left(_) =>
           logger.warn(s"[$className][onPageLoad][Session ID: ${utils.Session.id(hc)}] Error while retrieving trust details.")
-//          InternalServerError(errorHandler.internalServerErrorTemplate)
           errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }

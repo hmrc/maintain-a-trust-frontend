@@ -62,7 +62,6 @@ class IndividualDeclarationController @Inject()(
         case None => form
         case Some(value) => form.fill(value)
       }
-
       Ok(view(preparedForm))
   }
 
@@ -89,8 +88,6 @@ class IndividualDeclarationController @Inject()(
           Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${Session.id(hc)}] Error while storing user answers")
-//          InternalServerError(errorHandler.internalServerErrorTemplate)
-//          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
           errorHandler.internalServerErrorTemplate.map { html =>
             InternalServerError(html)
           }

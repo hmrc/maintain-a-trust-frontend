@@ -23,7 +23,6 @@ import models.{TrustAuthInternalServerError, TrustAuthResponse}
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.HttpReads.Implicits.readFromJson
 import uk.gov.hmrc.http.client.HttpClientV2
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[TrustAuthConnectorImpl])
@@ -32,27 +31,24 @@ trait TrustAuthConnector {
   def authorisedForIdentifier(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse]
 }
 
-class TrustAuthConnectorImpl @Inject()(http: HttpClientV2, config: FrontendAppConfig)
-  extends TrustAuthConnector {
+class TrustAuthConnectorImpl @Inject()(http: HttpClientV2, config: FrontendAppConfig) extends TrustAuthConnector {
 
   val baseUrl: String = config.trustAuthUrl + "/trusts-auth"
 
-  override def agentIsAuthorised()
-                                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
-    println("agentIsAuthorised ", baseUrl)
+  override def agentIsAuthorised()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
+    val url: String = s"$baseUrl/agent-authorised"
     http
-      .get(url"$baseUrl/agent-authorised")
+      .get(url"$url")
       .execute[TrustAuthResponse]
       .recoverWith {
         case _ => Future.successful(TrustAuthInternalServerError)
       }
   }
 
-  override def authorisedForIdentifier(identifier: String)
-                                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
-    println("authorisedForIdentifier", baseUrl)
+  override def authorisedForIdentifier(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[TrustAuthResponse] = {
+    val url: String = s"$baseUrl/authorised/$identifier"
     http
-      .get(url"$baseUrl/authorised/$identifier")
+      .get(url"$url")
       .execute[TrustAuthResponse]
       .recoverWith {
         case _ => Future.successful(TrustAuthInternalServerError)

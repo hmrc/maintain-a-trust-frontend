@@ -35,7 +35,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustClosureDate.getClosureDate
 import utils.TrustEnvelope
 import views.html.declaration.IndividualDeclarationView
-
 import java.time.LocalDateTime
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -88,10 +87,8 @@ class IndividualDeclarationController @Inject()(
           Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-//          InternalServerError(errorHandler.internalServerErrorTemplate)
           errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
-
   }
 
   private def handleFormValidation(implicit request: ClosingTrustRequest[AnyContent]): Either[TrustErrors, IndividualDeclaration] = {

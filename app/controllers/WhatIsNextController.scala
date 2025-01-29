@@ -66,7 +66,6 @@ class WhatIsNextController @Inject()(
         case None => form
         case Some(value) => form.fill(value)
       }
-
       Ok(view(preparedForm, request.userAnswers.trustMldStatus))
   }
 
@@ -88,7 +87,6 @@ class WhatIsNextController @Inject()(
         case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${Session.id(hc)}] Error while storing user answers")
-//          InternalServerError(errorHandler.internalServerErrorTemplate)
           errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }

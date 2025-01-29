@@ -83,7 +83,6 @@ class ObligedEntityPdfYesNoController @Inject()(
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
           errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-//          InternalServerError(errorHandler.internalServerErrorTemplate)
       }
   }
 

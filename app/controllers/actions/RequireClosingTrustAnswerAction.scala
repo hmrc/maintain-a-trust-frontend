@@ -42,7 +42,6 @@ class RequireClosingTrustAnswerAction @Inject()(errorHandler: ErrorHandler)
           Left(Results.InternalServerError(html))
         }.recover {
           case ex: Throwable =>
-            // Log the error and provide a fallback
             logger.error(s"[$className][refine] Failed to render internal server error template", ex)
             Left(Results.InternalServerError("An unexpected error occurred"))
         }

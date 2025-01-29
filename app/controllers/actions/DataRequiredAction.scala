@@ -24,7 +24,6 @@ import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.Session
-
 import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 

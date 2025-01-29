@@ -27,7 +27,6 @@ import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.Session
-
 import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -45,10 +44,6 @@ class DataRetrievalRefinerAction @Inject()(activeSessionRepository: ActiveSessio
                                             identifier: String): OptionalDataRequest[A] =
     OptionalDataRequest(request.request, userAnswers, request.user, identifier)
 
-//  def example(number: Html): Integer = {
-//    number + 1
-//  }
-
   override protected def refine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
@@ -57,18 +52,11 @@ class DataRetrievalRefinerAction @Inject()(activeSessionRepository: ActiveSessio
       case Right(Some(session)) => handlePlaybackRepositoryResponse(request, session)
       case Right(None) =>
         logger.warn(s"[$className][refine] no active UTR/URN present in the session data")
-        // Future[Either[Result, X]]
-        // Future[Either[Future[Result], X]]
-        // Future[Either[Future[Result], Future[X]]
-//        Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate(request.request))))
         errorHandler.internalServerErrorTemplate(request.request).map {
           html => Left(InternalServerError(html))
         }
-//        errorHandler.internalServerErrorTemplate(request.request).map(example(1))
-        // Future[Either[Result, X]
       case Left(_) =>
         logger.warn(s"[$className][refine] Error while retrieving data from active session repository")
-//        Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate(request.request))))
         errorHandler.internalServerErrorTemplate(request.request).map {
           html => Left(InternalServerError(html))
         }
@@ -87,12 +75,9 @@ class DataRetrievalRefinerAction @Inject()(activeSessionRepository: ActiveSessio
         Future.successful(Right(createdOptionalDataRequest(request, Some(userAnswers), session.identifier)))
       case Left(_) =>
         logger.warn(s"[$className][handlePlaybackRepositoryResponse] Error while retrieving data from playback repository")
-//        Left(InternalServerError(errorHandler.internalServerErrorTemplate(request.request)))
         errorHandler.internalServerErrorTemplate(request.request).map {
           html => Left(InternalServerError(html))
         }
-
     }
   }
-
 }

@@ -69,7 +69,6 @@ class DateClosedController @Inject()(
         case Right(renderPage) => Future.successful(renderPage)
         case Left(_) =>
           logger.warn(s"[$className][onPageLoad][Session ID: ${Session.id(hc)}] Error while retrieving start date")
-//          InternalServerError(errorHandler.internalServerErrorTemplate)
           errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
@@ -91,7 +90,6 @@ class DateClosedController @Inject()(
         case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${Session.id(hc)}] Error while storing user answers")
-//          InternalServerError(errorHandler.internalServerErrorTemplate)
           errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
