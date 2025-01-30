@@ -97,7 +97,6 @@ class TaskListController @Inject()(
         case Left(_) =>
           val className = getClass.getSimpleName
           logger.warn(s"[$className][onPageLoad][Session ID: ${utils.Session.id(hc)}] Failed to render view.")
-//          InternalServerError(errorHandler.internalServerErrorTemplate)
           errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }

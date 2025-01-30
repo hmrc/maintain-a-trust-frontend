@@ -65,7 +65,6 @@ class BeforeYouContinueToTaxableController @Inject()(
         }
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while retrieving trust details.")
-//          InternalServerError(errorHandler.internalServerErrorTemplate)
           errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }

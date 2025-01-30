@@ -47,7 +47,7 @@ class ObligedEntityPdfController @Inject()(actions: Actions,
       connector.getPdf(identifier).flatMap { response =>
         response.status match {
           case OK =>
-            handleSuccessfulGetPdfResponse(identifier, response) // No Future.successful here
+            handleSuccessfulGetPdfResponse(identifier, response)
           case _ =>
             logger.error(s"[$className][getPdf][Session ID: ${Session.id(hc)}][Identifier: $identifier] Error retrieving pdf: $response.")
             errorHandler.customErrorPage("Error", "Error").map { html =>
