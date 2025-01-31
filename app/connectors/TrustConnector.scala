@@ -192,6 +192,7 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     val url: String = s"$baseUrl/trust-details/$identifier/taxable"
     http
       .put(url"$url")
+      .withBody(Json.toJson(value))
       .execute[HttpResponse]
       .map(Right(_))
       .recover { case ex =>
@@ -206,6 +207,7 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     val url: String = s"$baseUrl/trust-details/$identifier/schedule-3a-exempt"
     http
       .put(url"$url")
+      .withBody(Json.toJson(value))
       .execute[HttpResponse]
       .map(Right(_))
       .recover { case ex =>
@@ -251,5 +253,4 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
         Left(handleError(ex, "getFirstTaxYearToAskFor"))
       }
   }
-
 }
