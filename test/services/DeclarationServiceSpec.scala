@@ -20,7 +20,7 @@ import base.SpecBase
 import cats.data.EitherT
 import connectors.TrustConnector
 import models.errors.{ServerError, TrustErrors}
-import models.http.TVNResponse
+import models.http.{DeclarationForApi, TVNResponse}
 import models.{AgentDeclaration, FullName, IndividualDeclaration, UKAddress}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -71,7 +71,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
       "return TVN response when no errors" in {
 
-        when(mockTrustConnector.declare(any(), any()) (any(), any()))
+        when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
           .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Right(TVNResponse("123456")))))
 
 
@@ -89,7 +89,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
       "return InternalServerError when errors" in {
 
-        when(mockTrustConnector.declare(any(), any()) (any(), any()))
+        when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
           .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Left(ServerError()))))
 
         val app = applicationBuilder()
@@ -110,7 +110,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
       "return TVN response when no errors" in {
 
-        when(mockTrustConnector.declare(any(), any()) (any(), any()))
+        when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
           .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Right(TVNResponse("123456")))))
 
         val app = applicationBuilder()
@@ -127,7 +127,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
       "return InternalServerError when errors" in {
 
-        when(mockTrustConnector.declare(any(), any()) (any(), any()))
+        when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
           .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Left(ServerError()))))
 
         val app = applicationBuilder()

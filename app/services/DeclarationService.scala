@@ -21,7 +21,7 @@ import connectors.TrustConnector
 import mapping.PlaybackImplicits._
 import models.http.{AgentDetails, Declaration, DeclarationForApi, TVNResponse}
 import models.{Address, AgentDeclaration, FullName, IndividualDeclaration}
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TrustEnvelope.TrustEnvelope
 
@@ -37,7 +37,7 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
                                  agencyAddress: Address,
                                  agentFriendlyName: String,
                                  endDate: Option[LocalDate]
-                               )(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
+                               )(implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
 
     val agentDetails = AgentDetails(
       arn,
@@ -51,13 +51,13 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
   }
 
   override def individualDeclaration(utr: String, declaration: IndividualDeclaration, endDate: Option[LocalDate])
-                                    (implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
+                                    (implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
 
     declare(declaration.name, utr, None, endDate)
   }
 
   private def declare(name: FullName, utr: String, agentDetails: Option[AgentDetails], endDate: Option[LocalDate])
-                     (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
+                     (implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
 
     val payload = DeclarationForApi(
       declaration = Declaration(name),
@@ -79,9 +79,9 @@ trait DeclarationService {
                         agencyAddress: Address,
                         agentFriendlyName: String,
                         endDate: Option[LocalDate]
-                      )(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse]
+                      )(implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse]
 
   def individualDeclaration(utr: String, declaration: IndividualDeclaration, endDate: Option[LocalDate])
-                           (implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse]
+                           (implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse]
 
 }
