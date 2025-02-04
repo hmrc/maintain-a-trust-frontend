@@ -29,7 +29,6 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 import utils.TrustEnvelope.TrustEnvelope
-
 import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
