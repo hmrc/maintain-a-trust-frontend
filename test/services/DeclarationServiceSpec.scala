@@ -27,7 +27,8 @@ import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{EitherValues, RecoverMethods}
 import play.api.inject.bind
-import play.api.mvc.Request
+import play.api.mvc.{AnyContent, Request}
+import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
@@ -61,7 +62,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
     email = None
   )
 
-  private implicit val request: Request[_] = fakeRequest
+  implicit val request: Request[AnyContent] = FakeRequest()
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "Declaration service" when {
@@ -72,6 +73,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
           .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Right(TVNResponse("123456")))))
+
 
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))

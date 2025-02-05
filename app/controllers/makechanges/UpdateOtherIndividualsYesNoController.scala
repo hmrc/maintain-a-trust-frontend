@@ -31,8 +31,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import utils.TrustEnvelope
 import views.html.makechanges.UpdateOtherIndividualsYesNoView
-
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UpdateOtherIndividualsYesNoController @Inject()(
@@ -45,7 +44,7 @@ class UpdateOtherIndividualsYesNoController @Inject()(
                                                        trustConnector: TrustConnector,
                                                        trustStoreConnector: TrustsStoreConnector,
                                                        errorHandler: ErrorHandler
-                                                     )(implicit ec: ExecutionContext)
+                                                     ) (implicit ec: ExecutionContext)
   extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
@@ -63,7 +62,6 @@ class UpdateOtherIndividualsYesNoController @Inject()(
         case None => form
         case Some(value) => form.fill(value)
       }
-
       Ok(view(preparedForm, prefix, request.closingTrust))
   }
 
@@ -77,12 +75,12 @@ class UpdateOtherIndividualsYesNoController @Inject()(
         route <- routeToAddOrUpdateNonEeaCompany(updatedAnswers, request.closingTrust)(request.request)
       } yield route
 
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 

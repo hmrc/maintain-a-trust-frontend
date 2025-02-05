@@ -37,7 +37,7 @@ import utils.{Session, TrustEnvelope}
 import views.html.transition.declaration.IndividualDeclarationView
 
 import java.time.LocalDateTime
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class IndividualDeclarationController @Inject()(
@@ -49,7 +49,8 @@ class IndividualDeclarationController @Inject()(
                                                  view: IndividualDeclarationView,
                                                  service: DeclarationService,
                                                  errorHandler: ErrorHandler
-                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                               ) (implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
   private val form: Form[IndividualDeclaration] = formProvider()
@@ -61,7 +62,6 @@ class IndividualDeclarationController @Inject()(
         case None => form
         case Some(value) => form.fill(value)
       }
-
       Ok(view(preparedForm))
   }
 
@@ -80,15 +80,17 @@ class IndividualDeclarationController @Inject()(
         _ <- playbackRepository.set(updatedAnswers)
       } yield Redirect(controllers.transition.declaration.routes.ConfirmationController.onPageLoad())
 
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(DeclarationError()) =>
           logger.warn(s"[IndividualDeclarationController][onSubmit][Session ID: ${Session.id(hc)}] Failed to declare")
-          Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())
+          Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map { html =>
+            InternalServerError(html)
+          }
       }
   }
 

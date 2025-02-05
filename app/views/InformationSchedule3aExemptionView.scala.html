@@ -28,7 +28,7 @@ bulletList: BulletList,
 formHelper: FormWithCSRF
 )
 
-@(identifier: String, identifierType: IdentifierType, isAgent: Boolean)(implicit request: Request[_], messages: Messages)
+@(identifier: String, identifierType: IdentifierType, isAgent: Boolean)(implicit request: RequestHeader, messages: Messages)
 
 
 @main_template(

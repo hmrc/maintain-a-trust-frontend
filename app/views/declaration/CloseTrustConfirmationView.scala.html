@@ -25,7 +25,7 @@
     config: FrontendAppConfig
 )
 
-@(fakeTvn: String, isAgent: Boolean, agentOverviewUrl: String)(implicit request: Request[_], messages: Messages)
+@(fakeTvn: String, isAgent: Boolean, agentOverviewUrl: String)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = s"${messages("closeTrustConfirmation.title", fakeTvn)}"

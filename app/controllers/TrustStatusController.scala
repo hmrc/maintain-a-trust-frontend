@@ -34,7 +34,6 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.{Session, TrustEnvelope}
 import views.html.status._
-
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -57,7 +56,8 @@ class TrustStatusController @Inject()(
                                        sessionService: SessionService,
                                        frontendAppConfig: FrontendAppConfig,
                                        errorHandler: ErrorHandler
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                     ) (implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
 
@@ -115,7 +115,7 @@ class TrustStatusController @Inject()(
         logger.info(s"[$className][checkIfLocked][Session ID: ${Session.id(hc)}] $identifier user has not been locked out from IV")
         tryToPlayback(identifier, fromVerify)
       case Left(_) => logger.warn(s"[$className][checkIfLocked][Session ID: ${Session.id(hc)}] Errors from connector call.")
-        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
     }
   }
 

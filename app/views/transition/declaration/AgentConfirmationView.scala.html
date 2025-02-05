@@ -27,7 +27,7 @@
     config: FrontendAppConfig
 )
 
-@(tvn: String, leadTrustee: String)(implicit request: Request[_], messages: Messages)
+@(tvn: String, leadTrustee: String)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = s"${messages("agentConfirmation.title", tvn)}"

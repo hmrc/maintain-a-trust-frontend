@@ -21,17 +21,17 @@ import controllers.actions.Actions
 import play.api.Logging
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.StringContextOps
 import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class TestLeadTrusteeMatchingController @Inject()(actions: Actions,
                                                   val controllerComponents: MessagesControllerComponents,
-                                                  http: HttpClient,
+                                                  http: HttpClientV2,
                                                   config: FrontendAppConfig
                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
 
@@ -48,15 +48,20 @@ class TestLeadTrusteeMatchingController @Inject()(actions: Actions,
     implicit request =>
 
       val url = s"${config.trustsIndividualCheck}/trusts-individual-check/individual-check"
-
       val payload = IdMatchRequest(UUID.randomUUID().toString, nino, surname.capitalize, forename.capitalize, dob)
-
       logger.info(s"[TestLeadTrusteeMatchingController][matchLeadTrustee] sending payload to trusts-individual-check service $payload")
 
-      // Implicitly passes through the current header carrier
-      http.POST[IdMatchRequest, JsValue](url, payload, Seq(
+      val headers = Seq(
         CONTENT_TYPE -> "application/json"
-      )).map(Ok(_))
+      )
+      http
+        .post(url"$url")
+        .withBody(Json.toJson(payload))
+        .setHeader(headers: _*)
+        .execute[JsValue]
+        .map {
+        Ok(_)
+      }
   }
 
 }

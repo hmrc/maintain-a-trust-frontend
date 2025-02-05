@@ -34,8 +34,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustEnvelope
 import utils.countryoptions.CountryOptionsNonUK
 import views.html.declaration.AgencyRegisteredAddressInternationalView
-
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AgencyRegisteredAddressInternationalController @Inject()(
@@ -47,7 +46,7 @@ class AgencyRegisteredAddressInternationalController @Inject()(
                                                                 val controllerComponents: MessagesControllerComponents,
                                                                 view: AgencyRegisteredAddressInternationalView,
                                                                 errorHandler: ErrorHandler
-                                                              )(implicit ec: ExecutionContext)
+                                                              ) (implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
@@ -60,7 +59,6 @@ class AgencyRegisteredAddressInternationalController @Inject()(
         case None => form
         case Some(value) => form.fill(value)
       }
-
       Ok(view(preparedForm, countryOptions.options()))
   }
 
@@ -73,12 +71,12 @@ class AgencyRegisteredAddressInternationalController @Inject()(
         _ <- playbackRepository.set(updatedAnswers)
       } yield Redirect(agentDeclarationUrl(request.userAnswers.isTrustMigratingFromNonTaxableToTaxable))
 
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 

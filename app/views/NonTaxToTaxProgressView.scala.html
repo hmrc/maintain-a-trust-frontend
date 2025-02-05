@@ -42,7 +42,7 @@
     additional: List[Task],
     affinityGroup: AffinityGroup,
     isAbleToDeclare: Boolean
-)(implicit request: Request[_], messages: Messages)
+)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = messages("transitionProgress.title"),

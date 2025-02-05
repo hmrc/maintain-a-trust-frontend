@@ -26,9 +26,9 @@ import play.api.mvc.Result
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.Enrolments
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class RequireClosingTrustAnswerActionSpec extends SpecBase with ScalaFutures {
+class RequireClosingTrustAnswerActionSpec (implicit ec: ExecutionContext) extends SpecBase with ScalaFutures {
 
   private val handler = injector.instanceOf[ErrorHandler]
 

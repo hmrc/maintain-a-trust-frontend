@@ -31,8 +31,7 @@ import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustEnvelope
 import views.html.makechanges.UpdateBeneficiariesYesNoView
-
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UpdateBeneficiariesYesNoController @Inject()(
@@ -43,7 +42,7 @@ class UpdateBeneficiariesYesNoController @Inject()(
                                                     val controllerComponents: MessagesControllerComponents,
                                                     view: UpdateBeneficiariesYesNoView,
                                                     errorHandler: ErrorHandler
-                                                  )(implicit ec: ExecutionContext)
+                                                  ) (implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
@@ -57,7 +56,6 @@ class UpdateBeneficiariesYesNoController @Inject()(
         case None => form
         case Some(value) => form.fill(value)
       }
-
       Ok(view(preparedForm, prefix, request.closingTrust))
   }
 
@@ -72,12 +70,12 @@ class UpdateBeneficiariesYesNoController @Inject()(
         Redirect(controllers.makechanges.routes.UpdateSettlorsYesNoController.onPageLoad())
       }
 
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 

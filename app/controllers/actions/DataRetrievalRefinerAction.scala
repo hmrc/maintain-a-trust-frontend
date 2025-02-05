@@ -27,7 +27,6 @@ import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.Session
-
 import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -53,27 +52,32 @@ class DataRetrievalRefinerAction @Inject()(activeSessionRepository: ActiveSessio
       case Right(Some(session)) => handlePlaybackRepositoryResponse(request, session)
       case Right(None) =>
         logger.warn(s"[$className][refine] no active UTR/URN present in the session data")
-        Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate(request.request))))
+        errorHandler.internalServerErrorTemplate(request.request).map {
+          html => Left(InternalServerError(html))
+        }
       case Left(_) =>
         logger.warn(s"[$className][refine] Error while retrieving data from active session repository")
-        Future.successful(Left(InternalServerError(errorHandler.internalServerErrorTemplate(request.request))))
+        errorHandler.internalServerErrorTemplate(request.request).map {
+          html => Left(InternalServerError(html))
+        }
     }
   }
 
   private def handlePlaybackRepositoryResponse[A](request: IdentifierRequest[A],
                                                   session: IdentifierSession
                                                  )(implicit hc: HeaderCarrier): Future[Either[Result, OptionalDataRequest[A]]] = {
-    playbackRepository.get(request.user.internalId, session.identifier, Session.id(hc)).value.map {
+    playbackRepository.get(request.user.internalId, session.identifier, Session.id(hc)).value.flatMap {
       case Right(None) =>
         logger.info(s"[$className][handlePlaybackRepositoryResponse] no user answers in session for UTR/URN ${session.identifier}")
-        Right(createdOptionalDataRequest(request, None, session.identifier))
+        Future.successful(Right(createdOptionalDataRequest(request, None, session.identifier)))
       case Right(Some(userAnswers)) =>
         logger.info(s"[$className][handlePlaybackRepositoryResponse] user answers found in session for UTR/URN ${session.identifier}")
-        Right(createdOptionalDataRequest(request, Some(userAnswers), session.identifier))
+        Future.successful(Right(createdOptionalDataRequest(request, Some(userAnswers), session.identifier)))
       case Left(_) =>
         logger.warn(s"[$className][handlePlaybackRepositoryResponse] Error while retrieving data from playback repository")
-        Left(InternalServerError(errorHandler.internalServerErrorTemplate(request.request)))
+        errorHandler.internalServerErrorTemplate(request.request).map {
+          html => Left(InternalServerError(html))
+        }
     }
   }
-
 }

@@ -29,7 +29,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustEnvelope
 import utils.TrustEnvelope.TrustEnvelope
-
 import scala.concurrent.ExecutionContext
 
 abstract class MakeChangesQuestionRouterController(

@@ -28,11 +28,10 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
-
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
-class SessionServiceSpec extends SpecBase with ScalaCheckPropertyChecks {
+class SessionServiceSpec (implicit ec: ExecutionContext) extends SpecBase with ScalaCheckPropertyChecks {
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 

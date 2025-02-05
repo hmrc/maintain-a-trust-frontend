@@ -30,10 +30,9 @@ import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustEnvelope
 import views.html.close.taxable.DateLastAssetSharedOutView
-
 import java.time.LocalDate
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class DateLastAssetSharedOutController @Inject()(
                                                   override val messagesApi: MessagesApi,
@@ -44,7 +43,7 @@ class DateLastAssetSharedOutController @Inject()(
                                                   view: DateLastAssetSharedOutView,
                                                   trustConnector: TrustConnector,
                                                   errorHandler: ErrorHandler
-                                                )(implicit ec: ExecutionContext)
+                                                ) (implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
@@ -62,15 +61,14 @@ class DateLastAssetSharedOutController @Inject()(
           case None => form
           case Some(value) => form.fill(value)
         }
-
         Ok(view(preparedForm))
       }
 
-      result.value.map {
-        case Right(renderPage) => renderPage
+      result.value.flatMap {
+        case Right(renderPage) => Future.successful(renderPage)
         case Left(_) =>
           logger.warn(s"[$className][onPageLoad][Session ID: ${utils.Session.id(hc)}] Error while retrieving start date.")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 
@@ -84,12 +82,12 @@ class DateLastAssetSharedOutController @Inject()(
         _ <- playbackRepository.set(updatedAnswers)
       } yield Redirect(controllers.close.routes.BeforeClosingController.onPageLoad())
 
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
 
   }

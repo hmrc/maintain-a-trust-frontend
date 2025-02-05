@@ -32,10 +32,9 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.http.Status
 import play.api.http.Status._
 import play.api.libs.json.{JsBoolean, Json}
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.WireMockHelper
-
 import java.time.LocalDate
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -468,7 +467,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             .willReturn(okJson(Json.stringify(response)))
         )
 
-        implicit val request: Request[_] = fakeRequest
+        implicit val request: RequestHeader = fakeRequest
 
         val result = Await.result(connector.declare(identifier, payload).value, Duration.Inf)
 
@@ -493,7 +492,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           post(urlEqualTo(declareUrl(identifier)))
             .willReturn(serviceUnavailable()))
 
-        implicit val request: Request[_] = fakeRequest
+        implicit val request: RequestHeader = fakeRequest
 
         val result = Await.result(connector.declare(identifier, payload).value, Duration.Inf)
 

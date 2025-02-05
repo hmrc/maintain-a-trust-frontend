@@ -35,9 +35,8 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustClosureDate.getClosureDate
 import utils.TrustEnvelope
 import views.html.declaration.IndividualDeclarationView
-
 import java.time.LocalDateTime
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class IndividualDeclarationController @Inject()(
@@ -48,8 +47,8 @@ class IndividualDeclarationController @Inject()(
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: IndividualDeclarationView,
                                                  service: DeclarationService,
-                                                 errorHandler: ErrorHandler
-                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                                 errorHandler: ErrorHandler) (implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
   private val form: Form[IndividualDeclaration] = formProvider()
@@ -80,17 +79,16 @@ class IndividualDeclarationController @Inject()(
         _ <- playbackRepository.set(updatedAnswers)
       } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
 
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(DeclarationError()) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] problem declaring trust")
-          Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad())
+          Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
-
   }
 
   private def handleFormValidation(implicit request: ClosingTrustRequest[AnyContent]): Either[TrustErrors, IndividualDeclaration] = {

@@ -34,7 +34,7 @@ import utils.TrustEnvelope
 import views.html.transition.Schedule3aExemptYesNoView
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class Schedule3aExemptYesNoController @Inject()(
                                                  override val messagesApi: MessagesApi,
@@ -45,7 +45,8 @@ class Schedule3aExemptYesNoController @Inject()(
                                                  view: Schedule3aExemptYesNoView,
                                                  trustsConnector: TrustConnector,
                                                  errorHandler: ErrorHandler
-                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                               ) (implicit ec: ExecutionContext)
+  extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
   private val form: Form[Boolean] = formProvider.withPrefix("schedule3aExemptYesNo")
@@ -57,7 +58,6 @@ class Schedule3aExemptYesNoController @Inject()(
         case None => form
         case Some(value) => form.fill(value)
       }
-
       Ok(view(preparedForm))
   }
 
@@ -74,12 +74,12 @@ class Schedule3aExemptYesNoController @Inject()(
         isTrustMigratingFromNonTaxableToTaxable = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
       ))
 
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 

@@ -33,8 +33,7 @@ import repositories.PlaybackRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustEnvelope
 import views.html.declaration.AgencyRegisteredAddressUkView
-
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AgencyRegisteredAddressUkController @Inject()(
@@ -45,7 +44,7 @@ class AgencyRegisteredAddressUkController @Inject()(
                                                      val controllerComponents: MessagesControllerComponents,
                                                      view: AgencyRegisteredAddressUkView,
                                                      errorHandler: ErrorHandler
-                                                   )(implicit ec: ExecutionContext)
+                                                   ) (implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
@@ -58,7 +57,6 @@ class AgencyRegisteredAddressUkController @Inject()(
         case None => form
         case Some(value) => form.fill(value)
       }
-
       Ok(view(preparedForm))
   }
 
@@ -71,12 +69,12 @@ class AgencyRegisteredAddressUkController @Inject()(
         _ <- playbackRepository.set(updatedAnswers)
       } yield Redirect(agentDeclarationUrl(request.userAnswers.isTrustMigratingFromNonTaxableToTaxable))
 
-      result.value.map {
-        case Right(call) => call
-        case Left(FormValidationError(formBadRequest)) => formBadRequest
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
+        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 

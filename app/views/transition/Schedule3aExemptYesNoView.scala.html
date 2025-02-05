@@ -27,7 +27,7 @@
         submitButton: SubmitButton
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: RequestHeader, messages: Messages)
 
 @mainTemplate(
     title = s"${errorPrefix(form)}${messages("schedule3aExemptYesNo.title")}",

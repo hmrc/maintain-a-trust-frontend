@@ -57,7 +57,6 @@ class LogoutController @Inject()(
           "trusts",
           auditData
         )
-
       }
 
       Redirect(appConfig.logoutUrl).withSession(session = ("feedbackId", Session.id(hc)))

@@ -29,8 +29,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{NonTaxToTaxProgressView, VariationProgressView}
-
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class TaskListController @Inject()(
                                     override val messagesApi: MessagesApi,
@@ -43,12 +42,12 @@ class TaskListController @Inject()(
                                     trustsConnector: TrustConnector,
                                     variationProgress: VariationProgress,
                                     errorHandler: ErrorHandler
-                                  )(implicit ec: ExecutionContext)
+                                  ) (implicit ec: ExecutionContext)
   extends FrontendBaseController with I18nSupport with Enumerable.Implicits with Logging {
 
   private def identifier(implicit request: ClosingTrustRequest[AnyContent]): String = request.userAnswers.identifier
 
-  def onPageLoad(): Action[AnyContent] = actions.refreshAndRequireIsClosingAnswer.async {
+  def onPageLoad(): Action[AnyContent]= actions.refreshAndRequireIsClosingAnswer.async {
     implicit request =>
 
       val result = for {
@@ -93,12 +92,12 @@ class TaskListController @Inject()(
         }
       }
 
-      result.value.map {
-        case Right(call) => call
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
         case Left(_) =>
           val className = getClass.getSimpleName
           logger.warn(s"[$className][onPageLoad][Session ID: ${utils.Session.id(hc)}] Failed to render view.")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 

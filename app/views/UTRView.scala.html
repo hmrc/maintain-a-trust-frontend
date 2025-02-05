@@ -26,7 +26,7 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages)
+@(form: Form[_])(implicit request: RequestHeader, messages: Messages)
 
 @content = {
     <p>@messages("utr.linkMessage") <a href="https://www.gov.uk/find-lost-utr-number" target="_blank" rel="noopener noreferrer">@messages("utr.linkText")</a>.</p>

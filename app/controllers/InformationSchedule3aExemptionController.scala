@@ -30,8 +30,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.TrustEnvelope
 import views.html._
-
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class InformationSchedule3aExemptionController @Inject()(
@@ -57,18 +56,18 @@ class InformationSchedule3aExemptionController @Inject()(
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
     implicit request =>
-     val result = for {
+      val result = for {
         updatedAnswers <- TrustEnvelope(request.userAnswers.set(WhatIsNextPage, MakeChanges))
         _ <- playbackRepository.set(updatedAnswers)
         _ <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
       } yield
         Redirect(controllers.transition.routes.Schedule3aExemptYesNoController.onPageLoad())
 
-      result.value.map {
-        case Right(call) => call
+      result.value.flatMap {
+        case Right(call) => Future.successful(call)
         case Left(_) =>
           logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          InternalServerError(errorHandler.internalServerErrorTemplate)
+          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
       }
   }
 }

@@ -18,10 +18,11 @@ package handlers
 
 import com.google.inject.{Inject, Singleton}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import views.html.{CustomErrorTemplate, ErrorTemplate, PageNotFoundView}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ErrorHandler @Inject()(
@@ -29,14 +30,17 @@ class ErrorHandler @Inject()(
                               view: ErrorTemplate,
                               notFoundView: PageNotFoundView,
                               customError: CustomErrorTemplate
-                            ) extends FrontendErrorHandler with I18nSupport {
+                            ) (implicit val ec : ExecutionContext) extends FrontendErrorHandler with I18nSupport {
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: RequestHeader): Future[Html] = Future.successful {
     view(pageTitle, heading, message)
+  }
 
-  override def notFoundTemplate(implicit request: Request[_]): Html =
+  override def notFoundTemplate(implicit request: RequestHeader): Future[Html] = Future.successful {
     notFoundView()
+  }
 
-  def customErrorPage(pageTitle: String, heading: String)(implicit rh: Request[_]): Html =
+  def customErrorPage(pageTitle: String, heading: String)(implicit rh: RequestHeader): Future[Html] = Future.successful {
     customError(pageTitle, heading)
+  }
 }

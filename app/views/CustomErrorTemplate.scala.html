@@ -23,7 +23,7 @@ mainTemplate: MainTemplate,
 headingComp: Heading
 )
 
-@(pageTitle: String, heading: String, headingSize: String = "govuk-heading-xl")(implicit request: Request[_], messages: Messages)
+@(pageTitle: String, heading: String, headingSize: String = "govuk-heading-xl")(implicit request: RequestHeader, messages: Messages)
 
     @contentHeader = {
         @headingComp(heading)

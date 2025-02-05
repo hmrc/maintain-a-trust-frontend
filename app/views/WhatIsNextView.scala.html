@@ -27,7 +27,7 @@
     formHelper: FormWithCSRF
 )
 
-@(form: Form[_], trustMldStatus: TrustMldStatus)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], trustMldStatus: TrustMldStatus)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)}${messages("declarationWhatNext.title")}",
