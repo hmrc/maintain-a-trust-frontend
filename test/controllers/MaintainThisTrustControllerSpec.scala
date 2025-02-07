@@ -25,7 +25,7 @@ import config.FrontendAppConfig
 
 class MaintainThisTrustControllerSpec extends SpecBase {
 
-  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
+
 
   "MaintainThisTrust Controller" must {
 

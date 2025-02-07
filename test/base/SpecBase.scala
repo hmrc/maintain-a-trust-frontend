@@ -16,6 +16,7 @@
 
 package base
 
+import config.FrontendAppConfig
 import controllers.actions._
 import models.UserAnswers
 import org.scalatest.{BeforeAndAfter, EitherValues, TestSuite, TryValues}
@@ -38,7 +39,7 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
 
   def emptyUserAnswersForUtr: UserAnswers = TestUserAnswers.emptyUserAnswersForUtr
   def emptyUserAnswersForUrn: UserAnswers = TestUserAnswers.emptyUserAnswersForUrn
-
+  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
   val bodyParsers: BodyParsers.Default = injector.instanceOf[BodyParsers.Default]
 
   protected def applicationBuilder(
@@ -55,7 +56,8 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
             userAnswers,
             mockActiveSessionRepository,
             mockPlaybackRepository,
-            mockErrorHandler
+            mockErrorHandler,
+            appConfig
           )
         ),
         bind[RefreshedDataRetrievalAction].toInstance(new FakeRefreshedDataRetrievalAction),
