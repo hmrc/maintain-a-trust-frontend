@@ -25,7 +25,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.Result
+import play.api.mvc.{Result, Results}
 import play.api.mvc.Results.InternalServerError
 import play.twirl.api.Html
 import repositories.ActiveSessionRepository
@@ -38,7 +38,7 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
 
   private val mockSessionRepository = mock[ActiveSessionRepository]
 
-  class Harness() extends DataRetrievalRefinerAction(mockSessionRepository, mockPlaybackRepository, mockErrorHandler)(executionContext) {
+  class Harness() extends DataRetrievalRefinerAction(mockSessionRepository, mockPlaybackRepository, mockErrorHandler, appConfig)(executionContext) {
       def callRefine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = refine(request)
   }
 
@@ -60,9 +60,10 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
         val action = new Harness
 
         val futureResult = action.callRefine(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
-        val renderedHtml = mockErrorHandler.internalServerErrorTemplate(fakeRequest).futureValue
-        futureResult.futureValue mustBe Left(InternalServerError(renderedHtml))
 
+               futureResult.map { result =>
+          assert(result == Results.Redirect(appConfig.logoutUrl))
+        }
       }
 
       "return an Internal Server Error when there is a problem when calling ActiveSessionRepository" in {

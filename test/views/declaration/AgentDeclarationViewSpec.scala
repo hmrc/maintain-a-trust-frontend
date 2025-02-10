@@ -30,7 +30,6 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
 
   val form = new AgentDeclarationFormProvider()()
 
-  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 
   "DeclarationView view for agent" must {
 

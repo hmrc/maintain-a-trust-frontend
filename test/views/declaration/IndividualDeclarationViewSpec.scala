@@ -30,7 +30,7 @@ class IndividualDeclarationViewSpec extends QuestionViewBehaviours[IndividualDec
 
   val form = new IndividualDeclarationFormProvider()()
 
-  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
+
 
   "DeclarationView view for individual or organisation" must {
 
