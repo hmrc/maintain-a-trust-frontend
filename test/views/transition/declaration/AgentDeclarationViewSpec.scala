@@ -16,7 +16,7 @@
 
 package views.transition.declaration
 
-import config.FrontendAppConfig
+
 import forms.declaration.AgentDeclarationFormProvider
 import models.AgentDeclaration
 import play.api.data.Form

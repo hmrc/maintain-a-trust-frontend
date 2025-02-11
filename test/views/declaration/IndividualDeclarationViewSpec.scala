@@ -16,7 +16,7 @@
 
 package views.declaration
 
-import config.FrontendAppConfig
+
 import forms.declaration.IndividualDeclarationFormProvider
 import models.IndividualDeclaration
 import play.api.data.Form

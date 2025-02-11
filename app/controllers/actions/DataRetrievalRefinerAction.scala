@@ -54,9 +54,7 @@ class DataRetrievalRefinerAction @Inject()(activeSessionRepository: ActiveSessio
       case Right(Some(session)) => handlePlaybackRepositoryResponse(request, session)
       case Right(None) =>
         logger.warn(s"[$className][refine] no active UTR/URN present in the session data")
-        errorHandler.internalServerErrorTemplate(request.request).map {
-          html => Left(InternalServerError(html))
-        }
+
         Future.successful(Left(
           Results.Redirect(appConfig.logoutUrl)
         ))

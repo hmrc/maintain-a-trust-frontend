@@ -17,7 +17,6 @@
 package controllers.actions
 
 import base.SpecBase
-import config.FrontendAppConfig
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.Application
