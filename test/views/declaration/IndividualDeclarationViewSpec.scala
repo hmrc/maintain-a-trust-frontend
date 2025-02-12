@@ -16,7 +16,7 @@
 
 package views.declaration
 
-import config.FrontendAppConfig
+
 import forms.declaration.IndividualDeclarationFormProvider
 import models.IndividualDeclaration
 import play.api.data.Form
@@ -30,7 +30,7 @@ class IndividualDeclarationViewSpec extends QuestionViewBehaviours[IndividualDec
 
   val form = new IndividualDeclarationFormProvider()()
 
-  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
+
 
   "DeclarationView view for individual or organisation" must {
 

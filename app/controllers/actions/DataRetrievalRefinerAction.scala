@@ -17,12 +17,13 @@
 package controllers.actions
 
 import com.google.inject.Inject
+import config.FrontendAppConfig
 import handlers.ErrorHandler
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import models.{IdentifierSession, UserAnswers}
 import play.api.Logging
 import play.api.mvc.Results.InternalServerError
-import play.api.mvc.{ActionRefiner, Result}
+import play.api.mvc.{ActionRefiner, Result, Results}
 import repositories.{ActiveSessionRepository, PlaybackRepository}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -33,7 +34,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DataRetrievalRefinerAction @Inject()(activeSessionRepository: ActiveSessionRepository,
                                            val playbackRepository: PlaybackRepository,
-                                           errorHandler: ErrorHandler
+                                           errorHandler: ErrorHandler,
+                                           appConfig: FrontendAppConfig
                                           )(implicit val executionContext: ExecutionContext)
   extends ActionRefiner[IdentifierRequest, OptionalDataRequest] with Logging {
 
@@ -52,9 +54,10 @@ class DataRetrievalRefinerAction @Inject()(activeSessionRepository: ActiveSessio
       case Right(Some(session)) => handlePlaybackRepositoryResponse(request, session)
       case Right(None) =>
         logger.warn(s"[$className][refine] no active UTR/URN present in the session data")
-        errorHandler.internalServerErrorTemplate(request.request).map {
-          html => Left(InternalServerError(html))
-        }
+
+        Future.successful(Left(
+          Results.Redirect(appConfig.logoutUrl)
+        ))
       case Left(_) =>
         logger.warn(s"[$className][refine] Error while retrieving data from active session repository")
         errorHandler.internalServerErrorTemplate(request.request).map {

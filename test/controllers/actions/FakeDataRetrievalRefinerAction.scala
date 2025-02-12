@@ -15,7 +15,7 @@
  */
 
 package controllers.actions
-
+import config.FrontendAppConfig
 import handlers.ErrorHandler
 import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
@@ -27,9 +27,10 @@ import scala.concurrent.{ExecutionContext, Future}
 class FakeDataRetrievalRefinerAction(dataToReturn: Option[UserAnswers],
                                      activeSessionRepository: ActiveSessionRepository,
                                      playbackRepository: PlaybackRepository,
-                                     errorHandler: ErrorHandler
+                                     errorHandler: ErrorHandler,
+                                     appConfig: FrontendAppConfig
                                     )(implicit ec: ExecutionContext)
-  extends DataRetrievalRefinerAction(activeSessionRepository, playbackRepository, errorHandler) {
+  extends DataRetrievalRefinerAction(activeSessionRepository, playbackRepository, errorHandler, appConfig) {
 
   private val utr: String = "1234567890"
 

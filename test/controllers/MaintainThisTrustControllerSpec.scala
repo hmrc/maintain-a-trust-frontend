@@ -21,11 +21,10 @@ import models.{URN, UTR}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.MaintainThisTrustView
-import config.FrontendAppConfig
+
 
 class MaintainThisTrustControllerSpec extends SpecBase {
 
-  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 
   "MaintainThisTrust Controller" must {
 

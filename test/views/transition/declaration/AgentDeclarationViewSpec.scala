@@ -16,7 +16,7 @@
 
 package views.transition.declaration
 
-import config.FrontendAppConfig
+
 import forms.declaration.AgentDeclarationFormProvider
 import models.AgentDeclaration
 import play.api.data.Form
@@ -30,7 +30,7 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
 
   val form = new AgentDeclarationFormProvider()()
 
-  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
+
 
   "DeclarationView view for agent" must {
 
