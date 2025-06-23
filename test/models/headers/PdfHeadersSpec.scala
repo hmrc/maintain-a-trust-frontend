@@ -37,7 +37,7 @@ class PdfHeadersSpec extends SpecBase {
 
       val fileName = headers.fileNameWithServiceName(fakeRequest, languageUtils, messagesApi)
 
-      fileName mustBe "inline; filename=1234567890-2020-10-10 - Manage a Trust - GOV.UK.pdf"
+      fileName mustBe "inline; filename=1234567890-2020-10-10 - Manage a trust - GOV.UK.pdf"
     }
 
     "parse header and modify filename in welsh" in {
