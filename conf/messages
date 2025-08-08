@@ -558,7 +558,8 @@ updateNonEeaCompany.bullet8 = the trustees can exercise significant influence or
 updateNonEeaCompany.question = Do you need to update the details of a controlling interest in a company registered outside the UK and EEA?
 updateNonEeaCompany.error.required = Select yes if you need to update details for a controlling interest in a Non-EEA company
 
-updateNonEeaCompanyClosing.title = Do you need to update a controlling interest in a Non-EEA company before closing the trust?
+updateNonEeaCompanyClosing.title = Companies registered outside the UK and EEA (European Economic Area)
+updateNonEeaCompanyClosing.heading = Companies registered outside the UK and EEA (European Economic Area)
 updateNonEeaCompanyClosing.paragraph1 = A non-EEA company is a company registered outside the following countries:
 updateNonEeaCompanyClosing.bullet1 = all countries within the European Union (EU)
 updateNonEeaCompanyClosing.bullet2 = Iceland

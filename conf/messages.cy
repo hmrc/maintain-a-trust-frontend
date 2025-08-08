@@ -175,7 +175,9 @@ updateNonEeaCompany.bullet7=mae gan yr ymddiriedolwyr yr hawl i benodi neu dynnu
 updateNonEeaCompany.bullet8=gall yr ymddiriedolwyr arfer dylanwad neu reolaeth sylweddol dros y cwmni
 updateNonEeaCompany.question = A ydych am ddiweddaru’r manylion ynghylch cyfran reolaethol sydd gennych mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE?
 updateNonEeaCompany.error.required=Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru manylion ar gyfer cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE
-updateNonEeaCompanyClosing.title=A oes angen i chi ddiweddaru cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE cyn cau’r ymddiriedolaeth?
+
+updateNonEeaCompanyClosing.heading=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
+updateNonEeaCompanyClosing.title=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
 updateNonEeaCompanyClosing.paragraph1=Mae cwmni nad yw’n rhan o’r AEE yn gwmni sydd wedi’i gofrestru y tu allan i’r gwledydd canlynol:
 updateNonEeaCompanyClosing.bullet1=yr holl wledydd yn yr Undeb Ewropeaidd (UE)
 updateNonEeaCompanyClosing.bullet2=Gwlad yr Iâ
@@ -186,8 +188,9 @@ updateNonEeaCompanyClosing.bullet5=mae gan yr ymddiriedolwyr fwy na 50 y cant o�
 updateNonEeaCompanyClosing.bullet6=mae gan yr ymddiriedolwyr fwy na 50 y cant o’r hawliau pleidleisio yn y cwmni
 updateNonEeaCompanyClosing.bullet7=mae gan yr ymddiriedolwyr yr hawl i benodi neu dynnu mwyafrif bwrdd cyfarwyddwyr y cwmni
 updateNonEeaCompanyClosing.bullet8=gall yr ymddiriedolwyr arfer dylanwad neu reolaeth sylweddol dros y cwmni
-updateNonEeaCompanyClosing.heading=A oes angen i chi ddiweddaru cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE cyn cau’r ymddiriedolaeth?
+updateNonEeaCompanyClosing.question=A ydych am ddiweddaru’r manylion ynghylch cyfran reolaethol sydd gennych mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth?
 updateNonEeaCompanyClosing.error.required=Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru manylion ar gyfer cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE cyn cau’r ymddiriedolaeth
+
 urn.title=Beth yw’r Cyfeirnod Unigryw (URN) ar gyfer yr ymddiriedolaeth?
 urn.heading=Beth yw’r Cyfeirnod Unigryw (URN) ar gyfer yr ymddiriedolaeth?
 urn.hint=Mae hwn yn cynnwys 15 rhif a chymeriad, er enghraifft ABTRUST12345670.
