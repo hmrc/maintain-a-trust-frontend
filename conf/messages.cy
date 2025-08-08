@@ -894,14 +894,14 @@ answerPage.section.otherIndividual.subheading=Unigolyn arall {0}
 answerPage.section.trustsDetails.heading=Manylion yr ymddiriedolaeth
 
 answerPage.section.assets.heading=Asedion
-answerPage.section.nonEeaBusinesses.heading=Cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE
+answerPage.section.nonEeaBusinesses.heading=Perchnogaeth neu gyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE
 answerPage.section.asset.money.subheading=Arian
 answerPage.section.asset.propertyOrLand.subheading=Eiddo neu dir {0}
 answerPage.section.asset.share.subheading=Cyfranddaliad {0}
 answerPage.section.asset.business.subheading=Busnes {0}
 answerPage.section.asset.partnership.subheading=Partneriaeth {0}
 answerPage.section.asset.other.subheading=Arall {0}
-answerPage.section.nonEeaBusiness.subheading=Cwmni nad yw’n rhan o’r AEE {0}
+answerPage.section.nonEeaBusiness.subheading=Cwmni {0}
 
 charityBeneficiaryName.checkYourAnswersLabel=Beth yw enw’r elusen?
 charityBeneficiaryShareOfIncomeYesNo.checkYourAnswersLabel=A oes gan yr ymddiriedolwyr ddisgresiwn dros faint o incwm y gall {0} ei gael?
