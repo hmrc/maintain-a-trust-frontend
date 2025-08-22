@@ -521,7 +521,7 @@ addNonEeaCompany.bullet5 = the trustees hold more than 50 percent of the shares 
 addNonEeaCompany.bullet6 = the trustees hold more than 50 percent of the voting rights in the company
 addNonEeaCompany.bullet7 = the trustees hold the right to appoint or remove a majority of the board of directors of the company
 addNonEeaCompany.bullet8 = the trustees can exercise significant influence or control over the company
-addNonEeaCompany.question = Do you need to add a controlling interest in a company outside the UK and EEA?
+addNonEeaCompany.question = Do you need to add a controlling interest in a company outside the UK and EEA before closing the trust?
 addNonEeaCompany.error.required = Select yes if you need to add a controlling interest in a Non-EEA company
 
 addNonEeaCompanyClosing.title = Companies registered outside the UK and EEA (European Economic Area)
