@@ -57,4 +57,3 @@ lazy val it = project
   .dependsOn(microservice % "test->test")
   .settings(DefaultBuildSettings.itSettings())
 
-addCommandAlias("scalastyleAll", "all scalastyle Test/scalastyle it/Test/scalastyle")
