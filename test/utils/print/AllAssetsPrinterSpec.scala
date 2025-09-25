@@ -206,7 +206,7 @@ class AllAssetsPrinterSpec extends SpecBase {
         result mustBe Seq(
           AnswerSection(None, Nil, Some(messages("answerPage.section.assets.heading"))),
           AnswerSection(
-            headingKey = Some("Non-EEA Company 1"),
+            headingKey = Some("Company 1"),
             rows = Seq(
               AnswerRow(label = messages("nonEeaBusiness.name.checkYourAnswersLabel"), answer = Html(name), changeUrl = None),
               AnswerRow(label = messages(
@@ -217,7 +217,7 @@ class AllAssetsPrinterSpec extends SpecBase {
             sectionKey = None
           ),
           AnswerSection(
-            headingKey = Some("Non-EEA Company 2"),
+            headingKey = Some("Company 2"),
             rows = Seq(
               AnswerRow(label = messages("nonEeaBusiness.name.checkYourAnswersLabel"), answer = Html(name), changeUrl = None),
               AnswerRow(label = messages(
@@ -245,7 +245,7 @@ class AllAssetsPrinterSpec extends SpecBase {
         result mustBe Seq(
           AnswerSection(None, Nil, Some(messages("answerPage.section.nonEeaBusinesses.heading"))),
           AnswerSection(
-            headingKey = Some("Non-EEA Company 1"),
+            headingKey = Some("Company 1"),
             rows = Seq(
               AnswerRow(label = messages("nonEeaBusiness.name.checkYourAnswersLabel"), answer = Html(name), changeUrl = None),
               AnswerRow(label = messages(
@@ -256,7 +256,7 @@ class AllAssetsPrinterSpec extends SpecBase {
             sectionKey = None
           ),
           AnswerSection(
-            headingKey = Some("Non-EEA Company 2"),
+            headingKey = Some("Company 2"),
             rows = Seq(
               AnswerRow(label = messages("nonEeaBusiness.name.checkYourAnswersLabel"), answer = Html(name), changeUrl = None),
               AnswerRow(label = messages(

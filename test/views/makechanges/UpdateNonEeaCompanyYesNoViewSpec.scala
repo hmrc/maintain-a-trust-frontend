@@ -24,46 +24,48 @@ import views.html.makechanges.AddNonEeaCompanyYesNoView
 
 class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
+  def behaveTestsForUpdateNonEeaCompanyYesNoView(messageKeyPrefix: String): Unit = {
+
+    val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+
+    val view = viewFor[AddNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
+
+    def applyView(form: Form[_]): HtmlFormat.Appendable =
+      view.apply(form, messageKeyPrefix)(fakeRequest, messages)
+
+    behave like normalPage(
+      applyView(form),
+      messageKeyPrefix,
+      expectedGuidanceKeys =
+        "paragraph1",
+        "lead_in",
+        "bullet1",
+        "bullet2",
+        "bullet3",
+        "bullet4",
+        "bullet5",
+        "paragraph2",
+        "bullet6",
+        "bullet7",
+        "bullet8"
+    )
+
+    behave like pageWithBackLink(applyView(form))
+
+    behave like yesNoPage(form, applyView, messageKeyPrefix)
+
+    behave like pageWithASubmitButton(applyView(form))
+
+  }
+
   "UpdateNonEeaCompanyYesNoView" when {
 
     "making changes" must {
-
-      val messageKeyPrefix = "updateNonEeaCompany"
-      val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-
-      val view = viewFor[AddNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
-
-      def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, messageKeyPrefix)(fakeRequest, messages)
-
-      behave like normalPage(applyView(form), messageKeyPrefix, expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
-        "paragraph2", "bullet6", "bullet7", "bullet8")
-
-      behave like pageWithBackLink(applyView(form))
-
-      behave like yesNoPage(form, applyView, messageKeyPrefix)
-
-      behave like pageWithASubmitButton(applyView(form))
+      behaveTestsForUpdateNonEeaCompanyYesNoView(messageKeyPrefix = "updateNonEeaCompany")
     }
 
     "closing" must {
-
-      val messageKeyPrefix = "updateNonEeaCompanyClosing"
-      val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-
-      val view = viewFor[AddNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
-
-      def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, messageKeyPrefix)(fakeRequest, messages)
-
-      behave like normalPage(applyView(form), messageKeyPrefix, expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
-        "paragraph2", "bullet6", "bullet7", "bullet8")
-
-      behave like pageWithBackLink(applyView(form))
-
-      behave like yesNoPage(form, applyView, messageKeyPrefix)
-
-      behave like pageWithASubmitButton(applyView(form))
+      behaveTestsForUpdateNonEeaCompanyYesNoView(messageKeyPrefix = "addNonEeaCompanyClosing")
     }
   }
 }
