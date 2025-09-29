@@ -137,8 +137,8 @@ POST       /update-other-individuals                    controllers.makechanges.
 GET        /non-eea-details                             controllers.makechanges.AddNonEeaCompanyYesNoController.onPageLoad()
 POST       /non-eea-details                             controllers.makechanges.AddNonEeaCompanyYesNoController.onSubmit()
 
-GET        /update-non-eea-company                      controllers.makechanges.UpdateNonEeaCompanyYesNoController.onPageLoad()
-POST       /update-non-eea-company                      controllers.makechanges.UpdateNonEeaCompanyYesNoController.onSubmit()
+GET        /trust-non-eea                               controllers.makechanges.UpdateNonEeaCompanyYesNoController.onPageLoad()
+POST       /trust-non-eea                               controllers.makechanges.UpdateNonEeaCompanyYesNoController.onSubmit()
 
 GET        /know-date-last-asset-shared-out             controllers.close.taxable.DateLastAssetSharedOutYesNoController.onPageLoad()
 POST       /know-date-last-asset-shared-out             controllers.close.taxable.DateLastAssetSharedOutYesNoController.onSubmit()
