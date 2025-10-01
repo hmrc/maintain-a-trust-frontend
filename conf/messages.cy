@@ -141,7 +141,7 @@ addNonEeaCompany.bullet6=mae gan yr ymddiriedolwyr fwy na 50 y cant o’r hawlia
 addNonEeaCompany.bullet7=mae gan yr ymddiriedolwyr yr hawl i benodi neu dynnu mwyafrif bwrdd cyfarwyddwyr y cwmni
 addNonEeaCompany.bullet8=gall yr ymddiriedolwyr arfer dylanwad neu reolaeth sylweddol dros y cwmni
 addNonEeaCompany.question = A oes gan yr ymddiriedolaeth berchnogaeth neu gyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU a’r AEE?
-addNonEeaCompany.error.required=Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE
+addNonEeaCompany.error.required=Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth
 
 addNonEeaCompanyClosing.title=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
 addNonEeaCompanyClosing.heading=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
