@@ -116,7 +116,7 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
         application.stop()
       }
 
-      "redirect to overview when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
+      "redirect to task-list when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
 
         mockPlaybackRepositoryBuilder(mockPlaybackRepository)
 
@@ -143,7 +143,7 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value must include(
-          s"/maintain-a-trust/overview"
+          s"/maintain-a-trust/task-list"
         )
 
         application.stop()
@@ -217,7 +217,7 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
         application.stop()
       }
 
-      "redirect to overview when valid data is submitted and no has been selected for all questions" in {
+      "redirect to task-list when valid data is submitted and no has been selected for all questions" in {
 
         mockPlaybackRepositoryBuilder(mockPlaybackRepository)
 
@@ -246,7 +246,7 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value must include(
-          s"/maintain-a-trust/overview"
+          s"/maintain-a-trust/task-list"
         )
 
         application.stop()
