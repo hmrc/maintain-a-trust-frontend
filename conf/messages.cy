@@ -140,8 +140,8 @@ addNonEeaCompany.bullet5=mae gan yr ymddiriedolwyr fwy na 50 y cant o’r cyfran
 addNonEeaCompany.bullet6=mae gan yr ymddiriedolwyr fwy na 50 y cant o’r hawliau pleidleisio yn y cwmni
 addNonEeaCompany.bullet7=mae gan yr ymddiriedolwyr yr hawl i benodi neu dynnu mwyafrif bwrdd cyfarwyddwyr y cwmni
 addNonEeaCompany.bullet8=gall yr ymddiriedolwyr arfer dylanwad neu reolaeth sylweddol dros y cwmni
-addNonEeaCompany.question = A oes gan yr ymddiriedolaeth berchnogaeth neu gyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU a’r AEE?
-addNonEeaCompany.error.required=Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth
+addNonEeaCompany.question = A oes angen i chi ddiweddaru cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU neu’r AEE?
+addNonEeaCompany.error.required=Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU a’r AEE
 
 addNonEeaCompanyClosing.title=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
 addNonEeaCompanyClosing.heading=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
@@ -158,7 +158,7 @@ addNonEeaCompanyClosing.bullet6=mae gan yr ymddiriedolwyr fwy na 50 y cant o’r
 addNonEeaCompanyClosing.bullet7=mae gan yr ymddiriedolwyr yr hawl i benodi neu dynnu mwyafrif bwrdd cyfarwyddwyr y cwmni
 addNonEeaCompanyClosing.bullet8=gall yr ymddiriedolwyr arfer dylanwad neu reolaeth sylweddol dros y cwmni
 addNonEeaCompanyClosing.question = A ydych am ddiweddaru’r manylion ynghylch cyfran reolaethol sydd gennych mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth?
-addNonEeaCompanyClosing.error.required=Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE cyn cau’r ymddiriedolaeth
+addNonEeaCompanyClosing.error.required=Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth
 
 updateNonEeaCompany.title=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
 updateNonEeaCompany.heading=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
@@ -175,7 +175,7 @@ updateNonEeaCompany.bullet6=mae gan yr ymddiriedolwyr fwy na 50 y cant o’r haw
 updateNonEeaCompany.bullet7=mae gan yr ymddiriedolwyr yr hawl i benodi neu dynnu mwyafrif bwrdd cyfarwyddwyr y cwmni
 updateNonEeaCompany.bullet8=gall yr ymddiriedolwyr arfer dylanwad neu reolaeth sylweddol dros y cwmni
 updateNonEeaCompany.question = A ydych am ddiweddaru’r manylion ynghylch cyfran reolaethol sydd gennych mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE?
-updateNonEeaCompany.error.required=Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru manylion ar gyfer cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE
+updateNonEeaCompany.error.required=Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru manylion ar gyfer cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU neu’r AEE
 
 updateNonEeaCompanyClosing.heading=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
 updateNonEeaCompanyClosing.title=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
@@ -189,8 +189,8 @@ updateNonEeaCompanyClosing.bullet5=mae gan yr ymddiriedolwyr fwy na 50 y cant o�
 updateNonEeaCompanyClosing.bullet6=mae gan yr ymddiriedolwyr fwy na 50 y cant o’r hawliau pleidleisio yn y cwmni
 updateNonEeaCompanyClosing.bullet7=mae gan yr ymddiriedolwyr yr hawl i benodi neu dynnu mwyafrif bwrdd cyfarwyddwyr y cwmni
 updateNonEeaCompanyClosing.bullet8=gall yr ymddiriedolwyr arfer dylanwad neu reolaeth sylweddol dros y cwmni
-updateNonEeaCompanyClosing.question=A ydych am ddiweddaru’r manylion ynghylch cyfran reolaethol sydd gennych mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth?
-updateNonEeaCompanyClosing.error.required=Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru manylion ar gyfer cyfran reolaethol mewn cwmni nad yw’n rhan o’r AEE cyn cau’r ymddiriedolaeth
+updateNonEeaCompanyClosing.question=A oes angen i chi ddiweddaru cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU neu’r AEE cyn cau’r ymddiriedolaeth?
+updateNonEeaCompanyClosing.error.required=Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth
 
 urn.title=Beth yw’r Cyfeirnod Unigryw (URN) ar gyfer yr ymddiriedolaeth?
 urn.heading=Beth yw’r Cyfeirnod Unigryw (URN) ar gyfer yr ymddiriedolaeth?
