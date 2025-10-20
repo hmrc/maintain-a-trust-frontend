@@ -134,11 +134,11 @@ POST       /add-other-individuals                       controllers.makechanges.
 GET        /update-other-individuals                    controllers.makechanges.UpdateOtherIndividualsYesNoController.onPageLoad()
 POST       /update-other-individuals                    controllers.makechanges.UpdateOtherIndividualsYesNoController.onSubmit()
 
-GET        /non-eea-details                             controllers.makechanges.AddNonEeaCompanyYesNoController.onPageLoad()
-POST       /non-eea-details                             controllers.makechanges.AddNonEeaCompanyYesNoController.onSubmit()
+GET        /add-non-eea-company                         controllers.makechanges.AddNonEeaCompanyYesNoController.onPageLoad()
+POST       /add-non-eea-company                         controllers.makechanges.AddNonEeaCompanyYesNoController.onSubmit()
 
-GET        /trust-non-eea                               controllers.makechanges.UpdateNonEeaCompanyYesNoController.onPageLoad()
-POST       /trust-non-eea                               controllers.makechanges.UpdateNonEeaCompanyYesNoController.onSubmit()
+GET        /update-non-eea-company                      controllers.makechanges.UpdateNonEeaCompanyYesNoController.onPageLoad()
+POST       /update-non-eea-company                      controllers.makechanges.UpdateNonEeaCompanyYesNoController.onSubmit()
 
 GET        /know-date-last-asset-shared-out             controllers.close.taxable.DateLastAssetSharedOutYesNoController.onPageLoad()
 POST       /know-date-last-asset-shared-out             controllers.close.taxable.DateLastAssetSharedOutYesNoController.onSubmit()
@@ -156,8 +156,8 @@ POST       /before-closing                              controllers.close.Before
 
 GET        /unavailable-sections                        controllers.makechanges.UnavailableSectionsController.onPageLoad()
 
-GET        /task-list                                   controllers.tasklist.TaskListController.onPageLoad()
-POST       /task-list                                   controllers.tasklist.TaskListController.onSubmit()
+GET        /overview                                    controllers.tasklist.TaskListController.onPageLoad()
+POST       /overview                                    controllers.tasklist.TaskListController.onSubmit()
 
 GET        /view-evidence                               controllers.ObligedEntityPdfYesNoController.onPageLoad()
 POST       /view-evidence                               controllers.ObligedEntityPdfYesNoController.onSubmit()
