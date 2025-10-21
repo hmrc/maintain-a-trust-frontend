@@ -113,7 +113,7 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
         application.stop()
       }
 
-      "redirect to task-list when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
+      "redirect to overview when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
 
         val userAnswers = baseAnswers
           .set(UpdateTrustDetailsYesNoPage, false).value
@@ -212,7 +212,7 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
         application.stop()
       }
 
-      "redirect to task-list when valid data is submitted and no has been selected for all questions" in {
+      "redirect to overview when valid data is submitted and no has been selected for all questions" in {
 
         val updateNonEeaCompanyYesNoRoute = routes.UpdateNonEeaCompanyYesNoController.onPageLoad().url
 

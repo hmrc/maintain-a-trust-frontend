@@ -364,7 +364,7 @@ class AddOtherIndividualsYesNoControllerSpec extends SpecBase {
           application.stop()
         }
 
-        "redirect to task-list when valid data is submitted and no has been selected for all questions" in {
+        "redirect to overview when valid data is submitted and no has been selected for all questions" in {
 
           mockPlaybackRepositoryBuilder(mockPlaybackRepository)
 
