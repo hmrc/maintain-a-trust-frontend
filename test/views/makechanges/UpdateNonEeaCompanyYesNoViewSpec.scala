@@ -24,7 +24,7 @@ import views.html.makechanges.AddNonEeaCompanyYesNoView
 
 class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
-  def behaveTestsForUpdateNonEeaCompanyYesNoView(messageKeyPrefix: String): Unit = {
+  def displayExpectedContent(messageKeyPrefix: String): Unit = {
 
     val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
@@ -61,11 +61,11 @@ class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
   "UpdateNonEeaCompanyYesNoView" when {
 
     "making changes" must {
-      behaveTestsForUpdateNonEeaCompanyYesNoView(messageKeyPrefix = "updateNonEeaCompany")
+      displayExpectedContent(messageKeyPrefix = "updateNonEeaCompany")
     }
 
     "closing" must {
-      behaveTestsForUpdateNonEeaCompanyYesNoView(messageKeyPrefix = "addNonEeaCompanyClosing")
+      displayExpectedContent(messageKeyPrefix = "addNonEeaCompanyClosing")
     }
   }
 }
