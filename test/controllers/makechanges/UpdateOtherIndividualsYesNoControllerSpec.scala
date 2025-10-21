@@ -141,7 +141,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
           status(result) mustEqual SEE_OTHER
 
           redirectLocation(result).value must include(
-            s"/maintain-a-trust/task-list"
+            "/maintain-a-trust/overview"
           )
 
           application.stop()
@@ -365,7 +365,7 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
           status(result) mustEqual SEE_OTHER
 
           redirectLocation(result).value must include(
-            s"/maintain-a-trust/task-list"
+            "/maintain-a-trust/overview"
           )
 
           application.stop()
