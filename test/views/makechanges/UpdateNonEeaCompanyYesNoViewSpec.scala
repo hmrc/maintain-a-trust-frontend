@@ -35,7 +35,7 @@ class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
     behave like normalPage(
       applyView(form),
-      messageKeyPrefix,
+      "nonEeaCompany",
       expectedGuidanceKeys =
         "paragraph1",
         "lead_in",
@@ -52,7 +52,7 @@ class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix)
+    behave like yesNoPage(form, applyView, messageKeyPrefix, Some("nonEeaCompany"))
 
     behave like pageWithASubmitButton(applyView(form))
 

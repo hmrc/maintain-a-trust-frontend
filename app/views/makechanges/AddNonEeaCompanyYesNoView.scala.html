@@ -16,6 +16,7 @@
 
 @import controllers.makechanges.routes._
 @import views.html.components.{Heading, SubmitButton, ErrorSummary, InputYesNo, BulletList}
+@import views.html.makechanges.NonEeaCompanyCommonContent
 
 @this(
     main_template: MainTemplate,
@@ -24,48 +25,15 @@
     inputYesNo: InputYesNo,
     submitButton: SubmitButton,
     bulletList: BulletList,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    nonEeaCompanyCommonContent: NonEeaCompanyCommonContent
 )
 
 @(form: Form[_], prefix: String)(implicit request: RequestHeader, messages: Messages)
 
-@content = {
-    <p>@messages("addNonEeaCompany.paragraph1")</p>
-
-    <p>@messages("addNonEeaCompany.lead_in")</p>
-
-    @bulletList(
-        "addNonEeaCompany",
-        List(
-            "bullet1",
-            "bullet2",
-            "bullet3",
-            "bullet4"
-        )
-    )
-
-    <h2>@messages(s"$prefix.heading2")</h2>
-
-    <p>@messages("addNonEeaCompany.paragraph2")</p>
-
-    @bulletList(
-        "addNonEeaCompany",
-        List(
-            "bullet5",
-            "bullet6",
-            "bullet7",
-            "bullet8"
-        )
-    )
-
-    <p>
-        <h2>@messages(s"$prefix.question")</h2>
-    </p>
-
-}
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages(s"$prefix.title")}",
+    title = s"${errorPrefix(form)}${messages("nonEeaCompany.title")}",
     showBackLink = true
 ) {
 
@@ -73,13 +41,13 @@
 
         @errorSummary(form.errors, isYesNo = true)
 
-        @headingComp(s"$prefix.heading")
+        @nonEeaCompanyCommonContent()
 
-        @content
+        <h2>@messages(s"$prefix.question")</h2>
 
         @inputYesNo(
             field = form("value"),
-            label = messages(s"$prefix.heading"),
+            label = messages(s"$prefix.question"),
             legendClass = Some("govuk-visually-hidden"),
             legendAsHeading = false
         )
