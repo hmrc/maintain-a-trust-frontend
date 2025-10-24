@@ -22,9 +22,11 @@ import views.ViewUtils
 
 trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
 
+  //scalastyle:off
   def yesNoPage(form: Form[Boolean],
                 createView: Form[Boolean] => HtmlFormat.Appendable,
-                messageKeyPrefix: String): Unit = {
+                messageKeyPrefix: String,
+                headingAndTitleKey: Option[String] = None): Unit = {
 
     "behave like a page with a Yes/No question" when {
 
@@ -32,10 +34,16 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
 
         "contain a legend for the question" in {
 
+          val expectedLegendText = if (headingAndTitleKey.isDefined) {
+            s"$messageKeyPrefix.question"
+          } else {
+            s"$messageKeyPrefix.heading"
+          }
+
           val doc = asDocument(createView(form))
           val legends = doc.getElementsByTag("legend")
           legends.size mustBe 1
-          legends.first.text must include(messages(s"$messageKeyPrefix.heading"))
+          legends.first.text must include(messages(expectedLegendText))
         }
 
         "contain an input for the value" in {
@@ -86,8 +94,10 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
 
         "show an error prefix in the browser title" in {
 
+          val title = headingAndTitleKey.getOrElse(messageKeyPrefix)
+
           val doc = asDocument(createView(form.withError(error)))
-          assertEqualsValue(doc, "title", ViewUtils.breadcrumbTitle(s"""${messages("error.browser.title.prefix")} ${messages(s"$messageKeyPrefix.title")}"""))
+          assertEqualsValue(doc, "title", ViewUtils.breadcrumbTitle(s"""${messages("error.browser.title.prefix")} ${messages(s"$title.title")}"""))
         }
       }
     }
@@ -99,14 +109,12 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
                         answer: Boolean): Unit = {
 
     "have only the correct value checked" in {
-
       val doc = asDocument(createView(form.fill(answer)))
       assert(doc.getElementById("value-yes").hasAttr("checked") == answer)
       assert(doc.getElementById("value-no").hasAttr("checked") != answer)
     }
 
     "not render an error summary" in {
-
       val doc = asDocument(createView(form.fill(answer)))
       assertNotRenderedByClass(doc, "govuk-error-summary")
     }

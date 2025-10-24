@@ -38,14 +38,14 @@ class AddNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
       behave like normalPage(
         view = applyView(form),
-        messageKeyPrefix = messageKeyPrefix,
+        messageKeyPrefix = "nonEeaCompany",
         expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
         "paragraph2", "bullet6", "bullet7", "bullet8"
       )
 
       behave like pageWithBackLink(applyView(form))
 
-      behave like yesNoPage(form, applyView, messageKeyPrefix)
+      behave like yesNoPage(form, applyView, messageKeyPrefix, Some("nonEeaCompany"))
 
       behave like pageWithASubmitButton(applyView(form))
     }
@@ -62,14 +62,14 @@ class AddNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
       behave like normalPage(
         view = applyView(form),
-        messageKeyPrefix = messageKeyPrefix,
+        messageKeyPrefix = "nonEeaCompany",
         expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
         "paragraph2", "bullet6", "bullet7", "bullet8"
       )
 
       behave like pageWithBackLink(applyView(form))
 
-      behave like yesNoPage(form, applyView, messageKeyPrefix)
+      behave like yesNoPage(form, applyView, messageKeyPrefix, Some("nonEeaCompany"))
 
       behave like pageWithASubmitButton(applyView(form))
     }
