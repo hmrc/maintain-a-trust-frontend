@@ -24,7 +24,8 @@ import views.html.makechanges.AddNonEeaCompanyYesNoView
 
 class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
-  def displayExpectedContent(messageKeyPrefix: String): Unit = {
+  def displayExpectedContent(messageKeyPrefix: String, expectedQuestionText: String): Unit = {
+    val commonContentPrefix = "nonEeaCompany"
 
     val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
@@ -35,7 +36,7 @@ class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
     behave like normalPage(
       applyView(form),
-      "nonEeaCompany",
+      commonContentPrefix,
       expectedGuidanceKeys =
         "paragraph1",
         "lead_in",
@@ -52,20 +53,28 @@ class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix, Some("nonEeaCompany"))
+    behave like yesNoPage(form, applyView, messageKeyPrefix, Some(commonContentPrefix))
 
     behave like pageWithASubmitButton(applyView(form))
+
+    behave like pageWithQuestionSubHeading(applyView(form), s"$messageKeyPrefix.question", expectedQuestionText)
 
   }
 
   "UpdateNonEeaCompanyYesNoView" when {
 
     "making changes" must {
-      displayExpectedContent(messageKeyPrefix = "updateNonEeaCompany")
+      displayExpectedContent(
+        messageKeyPrefix = "updateNonEeaCompany",
+        expectedQuestionText = "Do you need to update the details of a controlling interest in a company registered outside the UK and EEA?"
+      )
     }
 
     "closing" must {
-      displayExpectedContent(messageKeyPrefix = "addNonEeaCompanyClosing")
+      displayExpectedContent(
+        messageKeyPrefix = "updateNonEeaCompanyClosing",
+        expectedQuestionText = "Do you need to update a controlling interest in a company outside the UK or EEA before closing the trust?"
+      )
     }
   }
 }

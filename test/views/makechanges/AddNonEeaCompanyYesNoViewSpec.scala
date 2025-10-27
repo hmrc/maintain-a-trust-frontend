@@ -24,54 +24,48 @@ import views.html.makechanges.AddNonEeaCompanyYesNoView
 
 class AddNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
+
+  def displayExpectedContent(messageKeyPrefix: String, expectedQuestionText: String): Unit = {
+    val commonContentPrefix = "nonEeaCompany"
+
+    val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+
+    val view = viewFor[AddNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
+
+    def applyView(form: Form[_]): HtmlFormat.Appendable =
+      view.apply(form, messageKeyPrefix)(fakeRequest, messages)
+
+    behave like normalPage(
+      view = applyView(form),
+      messageKeyPrefix = commonContentPrefix,
+      expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
+      "paragraph2", "bullet6", "bullet7", "bullet8"
+    )
+
+    behave like pageWithBackLink(applyView(form))
+
+    behave like yesNoPage(form, applyView, messageKeyPrefix, Some(commonContentPrefix))
+
+    behave like pageWithASubmitButton(applyView(form))
+
+    behave like pageWithQuestionSubHeading(applyView(form), s"$messageKeyPrefix.question", expectedQuestionText)
+
+  }
+
   "AddNonEeaCompanyYesNoView" when {
 
     "making changes" must {
-
-      val messageKeyPrefix = "addNonEeaCompany"
-      val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-
-      val view = viewFor[AddNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
-
-      def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, messageKeyPrefix)(fakeRequest, messages)
-
-      behave like normalPage(
-        view = applyView(form),
-        messageKeyPrefix = "nonEeaCompany",
-        expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
-        "paragraph2", "bullet6", "bullet7", "bullet8"
+      displayExpectedContent(
+        messageKeyPrefix = "addNonEeaCompany",
+        expectedQuestionText = "Do you need to add a controlling interest in a company outside the UK and EEA?"
       )
-
-      behave like pageWithBackLink(applyView(form))
-
-      behave like yesNoPage(form, applyView, messageKeyPrefix, Some("nonEeaCompany"))
-
-      behave like pageWithASubmitButton(applyView(form))
     }
 
     "closing" must {
-
-      val messageKeyPrefix = "addNonEeaCompanyClosing"
-      val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
-
-      val view = viewFor[AddNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
-
-      def applyView(form: Form[_]): HtmlFormat.Appendable =
-        view.apply(form, messageKeyPrefix)(fakeRequest, messages)
-
-      behave like normalPage(
-        view = applyView(form),
-        messageKeyPrefix = "nonEeaCompany",
-        expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
-        "paragraph2", "bullet6", "bullet7", "bullet8"
+      displayExpectedContent(
+        messageKeyPrefix = "addNonEeaCompanyClosing",
+        expectedQuestionText = "Do you need to add a controlling interest in a company outside the UK and EEA before closing the trust?"
       )
-
-      behave like pageWithBackLink(applyView(form))
-
-      behave like yesNoPage(form, applyView, messageKeyPrefix, Some("nonEeaCompany"))
-
-      behave like pageWithASubmitButton(applyView(form))
     }
   }
 }

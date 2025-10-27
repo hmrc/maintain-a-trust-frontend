@@ -119,4 +119,18 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
       assertNotRenderedByClass(doc, "govuk-error-summary")
     }
   }
+
+  def pageWithQuestionSubHeading(view: HtmlFormat.Appendable, expectedQuestionSubHeadingKey: String, expectedText: String) : Unit = {
+
+    "have the expected question sub heading" in {
+
+      val doc = asDocument(view)
+
+      val subHeadingText = doc.getElementsByClass("govuk-heading-m").first().text()
+
+      assert(subHeadingText == messages(expectedQuestionSubHeadingKey))
+      assert(subHeadingText == expectedText)
+
+    }
+  }
 }

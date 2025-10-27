@@ -23,7 +23,7 @@
 @this(
     appConfig: FrontendAppConfig,
     main_template: MainTemplate,
-    headingComp: Heading,
+    headingComponent: Heading,
     errorSummary: ErrorSummary,
     inputYesNo: InputYesNo,
     submitButton: SubmitButton,
@@ -46,7 +46,7 @@
 
         @nonEeaCompanyCommonContent()
 
-        <h2>@messages(s"$prefix.question")</h2>
+        <h2 class="govuk-heading-m">@messages(s"$prefix.question")</h2>
 
         @inputYesNo(
             field = form("value"),
