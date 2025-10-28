@@ -507,59 +507,32 @@ updateOtherIndividualsClosing.heading = Do you need to update details for the ot
 updateOtherIndividualsClosing.error.required = Select yes if you need to update details for the other individuals before closing the trust
 updateOtherIndividualsClosing.additionalContent1 = You need to tell HMRC if you need to add, remove, or change the details of any other individuals.
 
-addNonEeaCompany.title = Do you need to add a controlling interest in a Non-EEA company?
-addNonEeaCompany.heading = Do you need to add a controlling interest in a Non-EEA company?
-addNonEeaCompany.paragraph1 = A non-EEA company is a company registered outside the following countries:
-addNonEeaCompany.bullet1 = all countries within the European Union (EU)
-addNonEeaCompany.bullet2 = Iceland
-addNonEeaCompany.bullet3 = Lichtenstein
-addNonEeaCompany.bullet4 = Norway
-addNonEeaCompany.paragraph2 = The trust will have a controlling interest in a non-EEA company if any of the following apply:
-addNonEeaCompany.bullet5 = the trustees hold more than 50 percent of the shares in the company
-addNonEeaCompany.bullet6 = the trustees hold more than 50 percent of the voting rights in the company
-addNonEeaCompany.bullet7 = the trustees hold the right to appoint or remove a majority of the board of directors of the company
-addNonEeaCompany.bullet8 = the trustees can exercise significant influence or control over the company
-addNonEeaCompany.error.required = Select yes if you need to add a controlling interest in a Non-EEA company
-addNonEeaCompanyClosing.title = Do you need to add a controlling interest in a Non-EEA company before closing the trust?
-addNonEeaCompanyClosing.heading = Do you need to add a controlling interest in a Non-EEA company before closing the trust?
-addNonEeaCompanyClosing.paragraph1 = A non-EEA company is a company registered outside the following countries:
-addNonEeaCompanyClosing.bullet1 = all countries within the European Union (EU)
-addNonEeaCompanyClosing.bullet2 = Iceland
-addNonEeaCompanyClosing.bullet3 = Lichtenstein
-addNonEeaCompanyClosing.bullet4 = Norway
-addNonEeaCompanyClosing.paragraph2 = The trust will have a controlling interest in a non-EEA company if any of the following apply:
-addNonEeaCompanyClosing.bullet5 = the trustees hold more than 50 percent of the shares in the company
-addNonEeaCompanyClosing.bullet6 = the trustees hold more than 50 percent of the voting rights in the company
-addNonEeaCompanyClosing.bullet7 = the trustees hold the right to appoint or remove a majority of the board of directors of the company
-addNonEeaCompanyClosing.bullet8 = the trustees can exercise significant influence or control over the company
-addNonEeaCompanyClosing.error.required = Select yes if you need to add a controlling interest in a Non-EEA company before closing the trust
+nonEeaCompany.title = Companies registered outside the UK and EEA (European Economic Area)
+nonEeaCompany.heading = Companies registered outside the UK and EEA (European Economic Area)
+nonEeaCompany.paragraph1 = You need to tell HMRC if the trust has ownership of or a controlling interest in a company outside the UK or EEA.
+nonEeaCompany.lead_in = The EEA includes:
+nonEeaCompany.bullet1 = all countries within the European Union (EU)
+nonEeaCompany.bullet2 = Iceland
+nonEeaCompany.bullet3 = Liechtenstein
+nonEeaCompany.bullet4 = Norway
+nonEeaCompany.heading2 = When does a trust have controlling interest
+nonEeaCompany.paragraph2 = The trust will have a controlling interest in a company if any of the following apply:
+nonEeaCompany.bullet5 = the trustees hold more than 50 percent of the shares in the company
+nonEeaCompany.bullet6 = the trustees hold more than 50 percent of the voting rights in the company
+nonEeaCompany.bullet7 = the trustees hold the right to appoint or remove a majority of the board of directors of the company
+nonEeaCompany.bullet8 = the trustees can exercise significant influence or control over the company
 
-updateNonEeaCompany.title = Do you need to update a controlling interest in a Non-EEA company?
-updateNonEeaCompany.heading = Do you need to update a controlling interest in a Non-EEA company?
-updateNonEeaCompany.paragraph1 = A non-EEA company is a company registered outside the following countries:
-updateNonEeaCompany.bullet1 = all countries within the European Union (EU)
-updateNonEeaCompany.bullet2 = Iceland
-updateNonEeaCompany.bullet3 = Lichtenstein
-updateNonEeaCompany.bullet4 = Norway
-updateNonEeaCompany.paragraph2 = The trust will have a controlling interest in a non-EEA company if any of the following apply:
-updateNonEeaCompany.bullet5 = the trustees hold more than 50 percent of the shares in the company
-updateNonEeaCompany.bullet6 = the trustees hold more than 50 percent of the voting rights in the company
-updateNonEeaCompany.bullet7 = the trustees hold the right to appoint or remove a majority of the board of directors of the company
-updateNonEeaCompany.bullet8 = the trustees can exercise significant influence or control over the company
-updateNonEeaCompany.error.required = Select yes if you need to update details for a controlling interest in a Non-EEA company
-updateNonEeaCompanyClosing.title = Do you need to update a controlling interest in a Non-EEA company before closing the trust?
-updateNonEeaCompanyClosing.paragraph1 = A non-EEA company is a company registered outside the following countries:
-updateNonEeaCompanyClosing.bullet1 = all countries within the European Union (EU)
-updateNonEeaCompanyClosing.bullet2 = Iceland
-updateNonEeaCompanyClosing.bullet3 = Lichtenstein
-updateNonEeaCompanyClosing.bullet4 = Norway
-updateNonEeaCompanyClosing.paragraph2 = The trust will have a controlling interest in a non-EEA company if any of the following apply:
-updateNonEeaCompanyClosing.bullet5 = the trustees hold more than 50 percent of the shares in the company
-updateNonEeaCompanyClosing.bullet6 = the trustees hold more than 50 percent of the voting rights in the company
-updateNonEeaCompanyClosing.bullet7 = the trustees hold the right to appoint or remove a majority of the board of directors of the company
-updateNonEeaCompanyClosing.bullet8 = the trustees can exercise significant influence or control over the company
-updateNonEeaCompanyClosing.heading = Do you need to update a controlling interest in a Non-EEA company before closing the trust?
-updateNonEeaCompanyClosing.error.required = Select yes if you need to update details for a controlling interest in a Non-EEA company before closing the trust
+addNonEeaCompany.question = Do you need to add a controlling interest in a company outside the UK and EEA?
+addNonEeaCompany.error.required = Select yes if you need to add a controlling interest in a company outside the UK and EEA
+
+addNonEeaCompanyClosing.question = Do you need to add a controlling interest in a company outside the UK and EEA before closing the trust?
+addNonEeaCompanyClosing.error.required = Select yes if you need to add a controlling interest in a company outside the UK and EEA before closing the trust
+
+updateNonEeaCompany.question = Do you need to update the details of a controlling interest in a company registered outside the UK and EEA?
+updateNonEeaCompany.error.required = Select yes if you need to update a controlling interest in a company outside the UK and EEA
+
+updateNonEeaCompanyClosing.question = Do you need to update a controlling interest in a company outside the UK or EEA before closing the trust?
+updateNonEeaCompanyClosing.error.required = Select yes if you need to update a controlling interest in a company outside the UK and EEA before closing the trust
 
 unavailableSections.title = You can only update {0} online at the moment
 unavailableSections.heading = You can only update {0} online at the moment
@@ -753,7 +726,7 @@ taskList.protectors.label = Protectors
 taskList.trustees.label = Trustees
 taskList.beneficiaries.label = Beneficiaries
 taskList.otherIndividuals.label = Other individuals
-taskList.companyOwnershipOrControllingInterest.label = Ownership or controlling interest of a Non-EEA company
+taskList.companyOwnershipOrControllingInterest.label = Ownership or controlling interest of a company registered outside UK and EEA
 taskList.summary.continue = Continue to declaration
 
 featureNotAvailable.title = This part of the online service is not available yet
@@ -841,14 +814,14 @@ answerPage.section.trustsDetails.heading = Trust details
 
 ## Assets
 answerPage.section.assets.heading = Assets
-answerPage.section.nonEeaBusinesses.heading = Ownership or controlling interest of a Non-EEA company
+answerPage.section.nonEeaBusinesses.heading = Ownership or controlling interest of a company registered outside UK and EEA
 answerPage.section.asset.money.subheading = Money
 answerPage.section.asset.propertyOrLand.subheading = Property or land {0}
 answerPage.section.asset.share.subheading = Share {0}
 answerPage.section.asset.business.subheading = Business {0}
 answerPage.section.asset.partnership.subheading = Partnership {0}
 answerPage.section.asset.other.subheading = Other {0}
-answerPage.section.nonEeaBusiness.subheading = Non-EEA Company {0}
+answerPage.section.nonEeaBusiness.subheading = Company {0}
 
 # CHECK YOUR ANSWERS LABELS
 
