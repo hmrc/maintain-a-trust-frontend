@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,11 @@ import play.api.Configuration
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.Call
 import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class FrontendAppConfig @Inject()(val configuration: Configuration,
-                                  contactFrontendConfig: ContactFrontendConfig) {
+                                  contactFrontendConfig: ContactFrontendConfig, servicesConfig : ServicesConfig) {
 
   final val ENGLISH = "en"
   final val WELSH = "cy"
@@ -61,9 +62,9 @@ class FrontendAppConfig @Inject()(val configuration: Configuration,
 
   lazy val declarationEmailEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.declaration.email.enabled")
 
-  lazy val trustsIndividualCheck: String = configuration.get[Service]("microservice.services.trusts-individual-check").baseUrl
+  lazy val trustsIndividualCheck: String = servicesConfig.baseUrl("trusts-individual-check")
 
-  lazy val authUrl: String = configuration.get[Service]("auth").baseUrl
+  lazy val authUrl: String = servicesConfig.baseUrl("auth")
   lazy val loginUrl: String = configuration.get[String]("urls.login")
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
   lazy val logoutUrl: String = loadConfig("urls.logout")
@@ -73,18 +74,18 @@ class FrontendAppConfig @Inject()(val configuration: Configuration,
   lazy val logoutAudit: Boolean =
     configuration.get[Boolean]("microservice.services.features.auditing.logout")
 
-  lazy val trustsUrl: String = configuration.get[Service]("microservice.services.trusts").baseUrl
-  lazy val trustsStoreUrl: String = configuration.get[Service]("microservice.services.trusts-store").baseUrl + "/trusts-store"
-  lazy val trustAuthUrl: String = configuration.get[Service]("microservice.services.trusts-auth").baseUrl
+  lazy val trustsUrl: String = servicesConfig.baseUrl("trusts")
+  lazy val trustsStoreUrl: String = servicesConfig.baseUrl("trusts-store")+ "/trusts-store"
+  lazy val trustAuthUrl: String = servicesConfig.baseUrl("trusts-auth")
 
-  lazy val trustsObligedEntityOutputUrl: String = configuration.get[Service]("microservice.services.trusts-obliged-entity-output").baseUrl
+  lazy val trustsObligedEntityOutputUrl: String = servicesConfig.baseUrl("trusts-obliged-entity-output")
 
   lazy val agentOverviewUrl: String = configuration.get[String]("urls.agentOverview")
   lazy val serviceDownContactUrl: String = "/contact/problem_reports_nonjs?service=trusts"
 
   lazy val schedule3aExemptEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.schedule3aExempt.enabled")
 
-  lazy val enrolmentStoreProxyUrl: String = configuration.get[Service]("microservice.services.enrolment-store-proxy").baseUrl
+  lazy val enrolmentStoreProxyUrl: String = servicesConfig.baseUrl("enrolment-store-proxy")
 
   lazy val locationCanonicalList: String = loadConfig("location.canonical.list.all")
   lazy val locationCanonicalListCY: String = loadConfig("location.canonical.list.allCY")
