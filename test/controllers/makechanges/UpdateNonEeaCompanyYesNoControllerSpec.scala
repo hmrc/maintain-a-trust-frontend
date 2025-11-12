@@ -138,7 +138,7 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value must include(
-          s"/maintain-a-trust/overview"
+          "/maintain-a-trust/overview"
         )
 
         application.stop()
@@ -239,7 +239,7 @@ class UpdateNonEeaCompanyYesNoControllerSpec extends SpecBase {
         status(result) mustEqual SEE_OTHER
 
         redirectLocation(result).value must include(
-          s"/maintain-a-trust/overview"
+          "/maintain-a-trust/overview"
         )
 
         application.stop()
