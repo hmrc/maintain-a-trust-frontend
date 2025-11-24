@@ -26,7 +26,7 @@ import sections._
 import sections.assets.Assets
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import viewmodels.{Link, Task}
+import viewmodels.{Link, Task, Width}
 
 import javax.inject.Inject
 
@@ -124,7 +124,9 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     val optionalTasks = List(
       Task(
         Link(CompanyOwnershipOrControllingInterest, companyOwnershipOrControllingInterestRoute(identifier)),
-        Tag.tagFor(tasks.assets)
+        Tag.tagFor(tasks.assets),
+        Some(Width("80%").toString),
+        Some(Width("80%").toString)
       ),
       Task(
         Link(Protectors, protectorsRoute(identifier)),

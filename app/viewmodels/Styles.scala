@@ -16,9 +16,13 @@
 
 package viewmodels
 
-import models.pages.Tag
+trait Styles {
+  val attr: String
+  val value: String
 
-case class Task(link: Link,
-                tag: Tag,
-                appTaskStyles: Option[String] = None,
-                taskTagTextStyles: Option[String] = None)
+  override def toString = s"$attr: $value"
+}
+
+case class Width(val value: String) extends Styles {
+  val attr = "width"
+}
