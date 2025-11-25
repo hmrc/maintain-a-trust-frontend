@@ -509,7 +509,7 @@ updateOtherIndividualsClosing.additionalContent1 = You need to tell HMRC if you 
 
 nonEeaCompany.title = Companies registered outside the UK and EEA (European Economic Area)
 nonEeaCompany.heading = Companies registered outside the UK and EEA (European Economic Area)
-nonEeaCompany.paragraph1 = You need to tell HMRC if the trust has ownership of or a controlling interest in a company outside the UK or EEA.
+nonEeaCompany.paragraph1 = You need to tell HMRC if the trust has ownership of or a controlling interest in a company registered outside the UK or EEA.
 nonEeaCompany.lead_in = The EEA includes:
 nonEeaCompany.bullet1 = all countries within the European Union (EU)
 nonEeaCompany.bullet2 = Iceland
@@ -522,17 +522,17 @@ nonEeaCompany.bullet6 = the trustees hold more than 50 percent of the voting rig
 nonEeaCompany.bullet7 = the trustees hold the right to appoint or remove a majority of the board of directors of the company
 nonEeaCompany.bullet8 = the trustees can exercise significant influence or control over the company
 
-addNonEeaCompany.question = Do you need to add a controlling interest in a company outside the UK and EEA?
-addNonEeaCompany.error.required = Select yes if you need to add a controlling interest in a company outside the UK and EEA
+addNonEeaCompany.question = Do you need to add a controlling interest in a company registered outside the UK and EEA?
+addNonEeaCompany.error.required = Select yes if you need to add a controlling interest in a company registered outside the UK and EEA
 
-addNonEeaCompanyClosing.question = Do you need to add a controlling interest in a company outside the UK and EEA before closing the trust?
-addNonEeaCompanyClosing.error.required = Select yes if you need to add a controlling interest in a company outside the UK and EEA before closing the trust
+addNonEeaCompanyClosing.question = Do you need to add a controlling interest in a company registered outside the UK and EEA before closing the trust?
+addNonEeaCompanyClosing.error.required = Select yes if you need to add a controlling interest in a company registered outside the UK and EEA before closing the trust
 
 updateNonEeaCompany.question = Do you need to update the details of a controlling interest in a company registered outside the UK and EEA?
-updateNonEeaCompany.error.required = Select yes if you need to update a controlling interest in a company outside the UK and EEA
+updateNonEeaCompany.error.required = Select yes if you need to update a controlling interest in a company registered outside the UK and EEA
 
-updateNonEeaCompanyClosing.question = Do you need to update a controlling interest in a company outside the UK or EEA before closing the trust?
-updateNonEeaCompanyClosing.error.required = Select yes if you need to update a controlling interest in a company outside the UK and EEA before closing the trust
+updateNonEeaCompanyClosing.question = Do you need to update a controlling interest in a company registered outside the UK or EEA before closing the trust?
+updateNonEeaCompanyClosing.error.required = Select yes if you need to update a controlling interest in a company registered outside the UK and EEA before closing the trust
 
 unavailableSections.title = You can only update {0} online at the moment
 unavailableSections.heading = You can only update {0} online at the moment
