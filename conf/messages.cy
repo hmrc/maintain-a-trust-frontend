@@ -269,7 +269,7 @@ transitionProgress.p6.link=ddychwelyd i’r gwasanaeth a diweddaru cofnod yr ymd
 taskList.trustDetails.label=Manylion yr Ymddiriedolaeth
 taskList.assets.label=Asedion
 taskList.taxLiability.label=Blynyddoedd Rhwymedigaeth Treth
-taskList.companyOwnershipOrControllingInterest.label = Perchnogaeth neu gyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE
+taskList.companyOwnershipOrControllingInterest.label=Perchnogaeth neu gyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE
 featureNotAvailable.title=Nid yw’r rhan hon o’r gwasanaeth ar-lein ar gael eto
 featureNotAvailable.heading=Nid yw’r rhan hon o’r gwasanaeth ar-lein ar gael eto
 dateClosed.title=Pryd gwnaethoch gau’r ymddiriedolaeth?
@@ -860,7 +860,7 @@ answerPage.section.otherIndividual.subheading=Unigolyn arall {0}
 answerPage.section.trustsDetails.heading=Manylion yr ymddiriedolaeth
 
 answerPage.section.assets.heading=Asedion
-answerPage.section.nonEeaBusinesses.heading = Perchnogaeth neu gyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE
+answerPage.section.nonEeaBusinesses.heading=Perchnogaeth neu gyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE
 answerPage.section.asset.money.subheading=Arian
 answerPage.section.asset.propertyOrLand.subheading=Eiddo neu dir {0}
 answerPage.section.asset.share.subheading=Cyfranddaliad {0}
