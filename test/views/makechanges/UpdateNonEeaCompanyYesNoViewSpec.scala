@@ -73,7 +73,7 @@ class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
     "closing" must {
       displayExpectedContent(
         messageKeyPrefix = "updateNonEeaCompanyClosing",
-        expectedQuestionText = "Do you need to update a controlling interest in a company outside the UK or EEA before closing the trust?"
+        expectedQuestionText = "Do you need to update a controlling interest in a company registered outside the UK or EEA before closing the trust?"
       )
     }
   }

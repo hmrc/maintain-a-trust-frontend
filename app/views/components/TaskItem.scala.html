@@ -25,7 +25,8 @@
 
 <li class="app-task-list__item" id="task-list__item--@{task.link.text}">
 
-    <span class="app-task">
+    <span class="app-task" style="@task.appTaskStyles.getOrElse("")">
+
         @task.tag match {
             case CannotStartYet | NoActionNeeded => {
                 <span class="app-task-list__task-name"
@@ -36,6 +37,7 @@
             }
             case _ => {
                 <a class="app-task-list__task-name"
+                   style="@task.taskTagTextStyles.getOrElse("")"
                    id="task-list__task-link--@{task.link.text}"
                    href="@{task.link.url}"
                    aria-describedby="task-list__task--@{task.link.text}__tag">

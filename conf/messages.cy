@@ -129,7 +129,7 @@ updateOtherIndividualsClosing.additionalContent1=Mae’n rhaid i chi roi gwybod 
 
 nonEeaCompany.title=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
 nonEeaCompany.heading=Cwmnïau sydd wedi’u cofrestru y tu allan i’r DU neu’r AEE (Ardal Economaidd Ewropeaidd)
-nonEeaCompany.paragraph1=Mae angen i chi roi gwybod i CThEF a oes gan yr ymddiriedolaeth berchnogaeth neu gyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU neu’r AEE.
+nonEeaCompany.paragraph1 = Mae angen i chi roi gwybod i CThEF a oes gan yr ymddiriedolaeth berchnogaeth neu gyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU neu’r AEE.
 nonEeaCompany.lead_in = Mae’r AEE yn cynnwys:
 nonEeaCompany.bullet1=yr holl wledydd o fewn yr Undeb Ewropeaidd (UE)
 nonEeaCompany.bullet2=Gwlad yr Iâ
@@ -142,17 +142,17 @@ nonEeaCompany.bullet6=mae gan yr ymddiriedolwyr fwy na 50 y cant o’r hawliau p
 nonEeaCompany.bullet7=mae gan yr ymddiriedolwyr yr hawl i benodi neu dynnu mwyafrif bwrdd cyfarwyddwyr y cwmni
 nonEeaCompany.bullet8=gall yr ymddiriedolwyr arfer dylanwad neu reolaeth sylweddol dros y cwmni
 
-addNonEeaCompany.question = A oes angen i chi ddiweddaru cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU neu’r AEE?
-addNonEeaCompany.error.required=Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU a’r AEE
+addNonEeaCompany.question = A oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE?
+addNonEeaCompany.error.required = Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE
 
-addNonEeaCompanyClosing.question = A ydych am ddiweddaru’r manylion ynghylch cyfran reolaethol sydd gennych mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth?
-addNonEeaCompanyClosing.error.required=Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth
+addNonEeaCompanyClosing.question = A oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU neu’r AEE cyn cau’r ymddiriedolaeth?
+addNonEeaCompanyClosing.error.required = Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth
 
-updateNonEeaCompany.question = A ydych am ddiweddaru’r manylion ynghylch cyfran reolaethol sydd gennych mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE?
-updateNonEeaCompany.error.required=Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru manylion ar gyfer cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU neu’r AEE
+updateNonEeaCompany.question = A oes angen i chi ddiweddaru’r manylion ynghylch cyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE?
+updateNonEeaCompany.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru cyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU neu’r AEE
 
-updateNonEeaCompanyClosing.question=A oes angen i chi ddiweddaru cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU neu’r AEE cyn cau’r ymddiriedolaeth?
-updateNonEeaCompanyClosing.error.required=Dewiswch ‘Iawn’ os oes angen i chi ychwanegu cyfran reolaethol mewn cwmni sydd wedi’i leoli y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth
+updateNonEeaCompanyClosing.question = A oes angen i chi ddiweddaru cyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU neu’r AEE cyn cau’r ymddiriedolaeth?
+updateNonEeaCompanyClosing.error.required = Dewiswch ‘Iawn’ os oes angen i chi ddiweddaru cyfran reolaethol mewn cwmni sydd wedi’i gofrestru y tu allan i’r DU a’r AEE cyn cau’r ymddiriedolaeth
 
 urn.title=Beth yw’r Cyfeirnod Unigryw (URN) ar gyfer yr ymddiriedolaeth?
 urn.heading=Beth yw’r Cyfeirnod Unigryw (URN) ar gyfer yr ymddiriedolaeth?

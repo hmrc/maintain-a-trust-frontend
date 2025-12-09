@@ -26,7 +26,7 @@ import sections._
 import sections.assets.Assets
 import sections.beneficiaries.Beneficiaries
 import sections.settlors.Settlors
-import viewmodels.{Link, Task}
+import viewmodels.{Link, Task, Width}
 
 class VariationProgressSpec extends SpecBase {
 
@@ -76,7 +76,11 @@ class VariationProgressSpec extends SpecBase {
               )
 
               result.other mustBe List(
-                Task(Link(CompanyOwnershipOrControllingInterest, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(
+                  Link(CompanyOwnershipOrControllingInterest, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"),
+                  NotStarted,
+                  Some(Width("80%").toString),
+                  Some(Width("80%").toString)),
                 Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), NotStarted),
                 Task(Link(OtherIndividuals, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
               )
@@ -98,7 +102,12 @@ class VariationProgressSpec extends SpecBase {
               )
 
               result.other mustBe List(
-                Task(Link(CompanyOwnershipOrControllingInterest, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"), NotStarted),
+                Task(
+                  Link(CompanyOwnershipOrControllingInterest, s"http://localhost:9800/maintain-a-trust/trust-assets/$identifier"),
+                  NotStarted,
+                  Some(Width("80%").toString),
+                  Some(Width("80%").toString)
+                ),
                 Task(Link(Protectors, s"http://localhost:9796/maintain-a-trust/protectors/$identifier"), NotStarted),
                 Task(Link(OtherIndividuals, s"http://localhost:9799/maintain-a-trust/other-individuals/$identifier"), NotStarted)
               )

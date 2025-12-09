@@ -57,14 +57,14 @@ class AddNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
     "making changes" must {
       displayExpectedContent(
         messageKeyPrefix = "addNonEeaCompany",
-        expectedQuestionText = "Do you need to add a controlling interest in a company outside the UK and EEA?"
+        expectedQuestionText = "Do you need to add a controlling interest in a company registered outside the UK and EEA?"
       )
     }
 
     "closing" must {
       displayExpectedContent(
         messageKeyPrefix = "addNonEeaCompanyClosing",
-        expectedQuestionText = "Do you need to add a controlling interest in a company outside the UK and EEA before closing the trust?"
+        expectedQuestionText = "Do you need to add a controlling interest in a company registered outside the UK and EEA before closing the trust?"
       )
     }
   }
