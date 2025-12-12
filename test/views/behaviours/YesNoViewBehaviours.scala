@@ -120,17 +120,26 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
     }
   }
 
-  def pageWithQuestionSubHeading(view: HtmlFormat.Appendable, expectedQuestionSubHeadingKey: String, expectedText: String) : Unit = {
+  def pageWithQuestionSubHeading(view: HtmlFormat.Appendable, expectedQuestionSubHeadingKey: String, expectedText: String): Unit = {
 
     "have the expected question sub heading" in {
 
       val doc = asDocument(view)
 
-      val subHeadingText = doc.getElementsByClass("govuk-heading-m").first().text()
+      val mediumHeadingElements = doc.getElementsByClass("govuk-heading-m")
+      val legendElements = doc.getElementsByClass("govuk-fieldset__legend--m")
+
+      val subHeadingText =
+        if (!mediumHeadingElements.isEmpty) {
+          mediumHeadingElements.first().text()
+        } else if (!legendElements.isEmpty) {
+          legendElements.first().text()
+        } else {
+          throw new NoSuchElementException("Cannot find a govuk subheading or legend on the page")
+        }
 
       assert(subHeadingText == messages(expectedQuestionSubHeadingKey))
       assert(subHeadingText == expectedText)
-
     }
   }
 }

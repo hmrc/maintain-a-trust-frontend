@@ -23,6 +23,6 @@ trait Styles {
   override def toString = s"$attr: $value"
 }
 
-case class Width(val value: String) extends Styles {
+case class Width(value: String) extends Styles {
   val attr = "width"
 }
