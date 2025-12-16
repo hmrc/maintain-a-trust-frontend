@@ -43,12 +43,10 @@
 
         @nonEeaCompanyCommonContent()
 
-        <h2 class="govuk-heading-m">@messages(s"$prefix.question")</h2>
-
         @inputYesNo(
             field = form("value"),
             label = messages(s"$prefix.question"),
-            legendClass = Some("govuk-visually-hidden"),
+            legendClass = Some("govuk-fieldset__legend--m"),
             legendAsHeading = false
         )
 

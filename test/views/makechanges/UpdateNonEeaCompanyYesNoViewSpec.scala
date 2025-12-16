@@ -20,7 +20,7 @@ import forms.YesNoFormProvider
 import play.api.data.Form
 import play.twirl.api.HtmlFormat
 import views.behaviours.YesNoViewBehaviours
-import views.html.makechanges.AddNonEeaCompanyYesNoView
+import views.html.makechanges.UpdateNonEeaCompanyYesNoView
 
 class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
@@ -29,7 +29,7 @@ class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
     val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
-    val view = viewFor[AddNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
+    val view = viewFor[UpdateNonEeaCompanyYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, messageKeyPrefix)(fakeRequest, messages)
@@ -39,16 +39,16 @@ class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
       commonContentPrefix,
       expectedGuidanceKeys =
         "paragraph1",
-        "lead_in",
-        "bullet1",
-        "bullet2",
-        "bullet3",
-        "bullet4",
-        "bullet5",
-        "paragraph2",
-        "bullet6",
-        "bullet7",
-        "bullet8"
+      "lead_in",
+      "bullet1",
+      "bullet2",
+      "bullet3",
+      "bullet4",
+      "bullet5",
+      "paragraph2",
+      "bullet6",
+      "bullet7",
+      "bullet8"
     )
 
     behave like pageWithBackLink(applyView(form))
