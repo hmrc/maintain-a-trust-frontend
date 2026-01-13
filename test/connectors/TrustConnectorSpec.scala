@@ -219,7 +219,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val utr = "1000000007"
 
-        val source = Source.fromFile(getClass.getResource("/display-trust.json").getPath)
+        val source = Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json"))
         val payload = source.mkString
 
         val application = applicationBuilder()
@@ -275,7 +275,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val utr = "2134514321"
 
-        val source = Source.fromFile(getClass.getResource("/display-trust-shares-asset.json").getPath)
+        val source = Source.fromInputStream(getClass.getResourceAsStream("/display-trust-shares-asset.json"))
         val payload = source.mkString
 
         val application = applicationBuilder()
@@ -309,7 +309,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val utr = "1000000007"
 
-        val source = Source.fromFile(getClass.getResource("/display-trust-property-or-land-no-previous.json").getPath)
+        val source = Source.fromInputStream(getClass.getResourceAsStream("/display-trust-property-or-land-no-previous.json"))
         val payload = source.mkString
 
         val application = applicationBuilder()
@@ -367,7 +367,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val urn = "NTTRUST00000001"
 
-        val source = Source.fromFile(getClass.getResource("/display-trust-non-taxable.json").getPath)
+        val source = Source.fromInputStream(getClass.getResourceAsStream("/display-trust-non-taxable.json"))
         val payload = source.mkString
 
         val application = applicationBuilder()
