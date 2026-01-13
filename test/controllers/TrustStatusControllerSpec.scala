@@ -330,7 +330,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
               val payload: String =
-                Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+                Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
 
               val json: JsValue = Json.parse(payload)
 
@@ -373,7 +373,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
               val payload: String =
-                Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+                Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
 
               val json: JsValue = Json.parse(payload)
 
@@ -417,7 +417,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
               val payload: String =
-                Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+                Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
 
               val json: JsValue = Json.parse(payload)
 
@@ -462,7 +462,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
 
               val payload: String =
-                Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+                Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
 
               val json: JsValue = Json.parse(payload)
 
@@ -527,7 +527,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               ).build()
 
               val payload: String =
-                Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+                Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
 
               val json: JsValue = Json.parse(payload)
 
@@ -590,7 +590,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
             ).build()
 
             val payload: String =
-              Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+              Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
 
             val json: JsValue = Json.parse(payload)
 
@@ -646,7 +646,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.statusAfterVerify().url)
 
               val payload: String =
-                Source.fromFile(getClass.getResource("/display-trust.json").getPath).mkString
+                Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
 
               val json: JsValue = Json.parse(payload)
 
