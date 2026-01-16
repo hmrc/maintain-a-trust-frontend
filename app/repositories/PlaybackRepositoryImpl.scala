@@ -55,6 +55,24 @@ class PlaybackRepositoryImpl @Inject()(
         IndexOptions()
           .unique(false)
           .name("internal-id-and-utr-and-sessionId-compound-index")
+      ),
+      IndexModel(
+        ascending("internalId"),
+        IndexOptions()
+          .unique(false)
+          .name("internal-id-index")
+      ),
+      IndexModel(
+        ascending("identifier"),
+        IndexOptions()
+          .unique(false)
+          .name("identifier-index")
+      ),
+      IndexModel(
+        ascending("sessionId"),
+        IndexOptions()
+          .unique(false)
+          .name("session-id-index")
       )
     ), replaceIndexes = config.dropIndexes
 

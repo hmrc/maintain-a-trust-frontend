@@ -43,6 +43,18 @@ class PlaybackRepositorySpec extends AnyWordSpec with Matchers
 
   "a session repository" should {
 
+    "must have all required indexes created" in {
+      val indexes = await(repository.collection.listIndexes().toFuture())
+
+      val indexNames = indexes.map(_.getString("name")).toSet
+
+      indexNames must contain("internal-id-index")
+      indexNames must contain("identifier-index")
+      indexNames must contain("session-id-index")
+      indexNames must contain("internal-id-and-utr-and-sessionId-compound-index")
+      indexNames must contain("user-answers-updated-at-index")
+    }
+
     "must return None when no answer exists" in {
       val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
       val identifier = "Testing"
