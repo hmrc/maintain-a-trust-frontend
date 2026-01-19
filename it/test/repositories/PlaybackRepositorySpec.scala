@@ -19,29 +19,43 @@ package test.repositories
 import models.UserAnswers
 import models.errors.MongoError
 import org.mongodb.scala.bson.BsonDocument
+import org.mongodb.scala.model.Indexes.ascending
 import org.mongodb.scala.{MongoException, MongoTimeoutException}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues}
 import play.api.libs.json.Json
-import play.api.test.Helpers.{await, defaultAwaitTimeout}
-import repositories.PlaybackRepositoryImpl
+import repositories.{BaseMongoIndexSpec, PlaybackRepositoryImpl}
 import uk.gov.hmrc.mongo.test.MongoSupport
 
 import java.time.LocalDateTime
-import scala.concurrent.ExecutionContext.Implicits.global
+import org.mongodb.scala.model.{IndexModel, IndexOptions}
+
+import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-class PlaybackRepositorySpec extends AnyWordSpec with Matchers
-  with ScalaFutures with OptionValues with MongoSupport with MongoSuite with BeforeAndAfterEach with EitherValues {
+class PlaybackRepositorySpec extends AnyWordSpec
+  with ScalaFutures with OptionValues with MongoSupport with MongoSuite with BeforeAndAfterEach with EitherValues with BaseMongoIndexSpec {
 
   override def beforeEach(): Unit = Await.result(repository.collection.deleteMany(BsonDocument()).toFuture(),Duration.Inf)
 
   private lazy val repository: PlaybackRepositoryImpl = new PlaybackRepositoryImpl(mongoComponent, config)
 
   "a session repository" should {
+
+    "have all expected indexes" in {
+      val expectedIndexes = Seq(
+        IndexModel(ascending("_id"), IndexOptions().name("_id_")),
+        IndexModel(ascending("updatedAt"), IndexOptions().name("user-answers-updated-at-index").expireAfter(config.cachettlplaybackInSeconds, TimeUnit.SECONDS)),
+        IndexModel(ascending("newId"), IndexOptions().name("internal-id-and-utr-and-sessionId-compound-index").unique(false)),
+        IndexModel(ascending("internalId"), IndexOptions().name("internal-id-index").unique(false)),
+        IndexModel(ascending("identifier"), IndexOptions().name("identifier-index").unique(false)),
+        IndexModel(ascending("sessionId"), IndexOptions().name("session-id-index").unique(false))
+      )
+
+      assertIndexes(expectedIndexes, getIndexes(repository.collection))
+    }
 
     "must return None when no answer exists" in {
       val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
