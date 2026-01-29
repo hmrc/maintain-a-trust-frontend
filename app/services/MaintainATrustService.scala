@@ -23,13 +23,14 @@ import utils.TrustEnvelope.TrustEnvelope
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class MaintainATrustService @Inject()(trustsConnector: TrustConnector,
-                                      trustsStoreConnector: TrustsStoreConnector) {
+class MaintainATrustService @Inject() (trustsConnector: TrustConnector, trustsStoreConnector: TrustsStoreConnector) {
 
-  def removeTransformsAndResetTaskList(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[Unit] = {
+  def removeTransformsAndResetTaskList(
+    identifier: String
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[Unit] =
     for {
       _ <- trustsConnector.removeTransforms(identifier)
       _ <- trustsStoreConnector.resetTasks(identifier)
     } yield ()
-  }
+
 }

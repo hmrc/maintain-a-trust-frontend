@@ -54,7 +54,6 @@ class MigrateTo5mldInformationControllerSpec extends SpecBase {
     ".onSubmit" must {
       "redirect to ExpressTrustYesNoController " in {
 
-
         val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -65,13 +64,15 @@ class MigrateTo5mldInformationControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.transition.routes.ExpressTrustYesNoController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.transition.routes.ExpressTrustYesNoController
+          .onPageLoad()
+          .url
 
         application.stop()
 
       }
     }
 
-
   }
+
 }

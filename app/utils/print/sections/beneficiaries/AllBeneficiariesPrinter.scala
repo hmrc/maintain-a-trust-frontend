@@ -23,13 +23,15 @@ import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class AllBeneficiariesPrinter @Inject()(individualBeneficiaryPrinter: IndividualBeneficiaryPrinter,
-                                        classOfBeneficiaryPrinter: ClassOfBeneficiaryPrinter,
-                                        charityBeneficiaryPrinter: CharityBeneficiaryPrinter,
-                                        companyBeneficiaryPrinter: CompanyBeneficiaryPrinter,
-                                        largeBeneficiaryPrinter: LargeBeneficiaryPrinter,
-                                        trustBeneficiaryPrinter: TrustBeneficiaryPrinter,
-                                        otherBeneficiaryPrinter: OtherBeneficiaryPrinter) extends PrinterHelper {
+class AllBeneficiariesPrinter @Inject() (
+  individualBeneficiaryPrinter: IndividualBeneficiaryPrinter,
+  classOfBeneficiaryPrinter: ClassOfBeneficiaryPrinter,
+  charityBeneficiaryPrinter: CharityBeneficiaryPrinter,
+  companyBeneficiaryPrinter: CompanyBeneficiaryPrinter,
+  largeBeneficiaryPrinter: LargeBeneficiaryPrinter,
+  trustBeneficiaryPrinter: TrustBeneficiaryPrinter,
+  otherBeneficiaryPrinter: OtherBeneficiaryPrinter
+) extends PrinterHelper {
 
   def entities(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
     val answerSections: Seq[AnswerSection] = Seq(

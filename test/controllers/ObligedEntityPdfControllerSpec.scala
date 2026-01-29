@@ -40,25 +40,25 @@ class ObligedEntityPdfControllerSpec extends SpecBase {
   private val mockConnector: TrustsObligedEntityOutputConnector = mock[TrustsObligedEntityOutputConnector]
 
   private case class MockResponse(s: Int, h: Map[String, Seq[String]]) extends WSResponse {
-    override def status: Int = s
-    override def headers: Map[String, Seq[String]] = h
-    override def bodyAsSource: Source[ByteString, _] = Source(List(ByteString("responseBody")))
-    override def statusText: String = ???
-    override def underlying[T]: T = ???
-    override def cookies: Seq[ws.WSCookie] = ???
+    override def status: Int                               = s
+    override def headers: Map[String, Seq[String]]         = h
+    override def bodyAsSource: Source[ByteString, _]       = Source(List(ByteString("responseBody")))
+    override def statusText: String                        = ???
+    override def underlying[T]: T                          = ???
+    override def cookies: Seq[ws.WSCookie]                 = ???
     override def cookie(name: String): Option[ws.WSCookie] = ???
-    override def body: String = ???
-    override def bodyAsBytes: ByteString = ???
-    override def allHeaders: Map[String, Seq[String]] = ???
-    override def xml: Elem = ???
-    override def json: JsValue = ???
-    override def uri: URI = ???
+    override def body: String                              = ???
+    override def bodyAsBytes: ByteString                   = ???
+    override def allHeaders: Map[String, Seq[String]]      = ???
+    override def xml: Elem                                 = ???
+    override def json: JsValue                             = ???
+    override def uri: URI                                  = ???
   }
 
   private val headers: Map[String, Seq[String]] = Map(
     CONTENT_DISPOSITION -> "inline; file-name.pdf",
-    CONTENT_TYPE -> "application/pdf",
-    CONTENT_LENGTH -> "12345"
+    CONTENT_TYPE        -> "application/pdf",
+    CONTENT_LENGTH      -> "12345"
   ).map(x => x._1 -> Seq(x._2))
 
   private val identifier: String = "1234567890"
@@ -94,7 +94,8 @@ class ObligedEntityPdfControllerSpec extends SpecBase {
 
       "non-OK response from connector" in {
 
-        when(mockConnector.getPdf(any())(any())).thenReturn(Future.successful(MockResponse(INTERNAL_SERVER_ERROR, headers)))
+        when(mockConnector.getPdf(any())(any()))
+          .thenReturn(Future.successful(MockResponse(INTERNAL_SERVER_ERROR, headers)))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
           .overrides(bind[TrustsObligedEntityOutputConnector].toInstance(mockConnector))
@@ -188,4 +189,5 @@ class ObligedEntityPdfControllerSpec extends SpecBase {
 
     }
   }
+
 }

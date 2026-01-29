@@ -24,7 +24,6 @@ import views.html.makechanges.AddNonEeaCompanyYesNoView
 
 class AddNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
-
   def displayExpectedContent(messageKeyPrefix: String, expectedQuestionText: String): Unit = {
     val commonContentPrefix = "nonEeaCompany"
 
@@ -38,8 +37,16 @@ class AddNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
     behave like normalPage(
       view = applyView(form),
       messageKeyPrefix = commonContentPrefix,
-      expectedGuidanceKeys = "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5",
-      "paragraph2", "bullet6", "bullet7", "bullet8"
+      expectedGuidanceKeys = "paragraph1",
+      "bullet1",
+      "bullet2",
+      "bullet3",
+      "bullet4",
+      "bullet5",
+      "paragraph2",
+      "bullet6",
+      "bullet7",
+      "bullet8"
     )
 
     behave like pageWithBackLink(applyView(form))
@@ -54,18 +61,19 @@ class AddNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
   "AddNonEeaCompanyYesNoView" when {
 
-    "making changes" must {
+    "making changes" must
       displayExpectedContent(
         messageKeyPrefix = "addNonEeaCompany",
-        expectedQuestionText = "Do you need to add a controlling interest in a company registered outside the UK and EEA?"
+        expectedQuestionText =
+          "Do you need to add a controlling interest in a company registered outside the UK and EEA?"
       )
-    }
 
-    "closing" must {
+    "closing" must
       displayExpectedContent(
         messageKeyPrefix = "addNonEeaCompanyClosing",
-        expectedQuestionText = "Do you need to add a controlling interest in a company registered outside the UK and EEA before closing the trust?"
+        expectedQuestionText =
+          "Do you need to add a controlling interest in a company registered outside the UK and EEA before closing the trust?"
       )
-    }
   }
+
 }

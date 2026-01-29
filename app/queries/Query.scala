@@ -31,4 +31,5 @@ trait Settable[A] extends Query {
 
   def cleanup(value: Option[A], userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] =
     Right(userAnswers)
+
 }

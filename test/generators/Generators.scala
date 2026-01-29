@@ -28,23 +28,23 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
 
   private val (num10, num100) = (10, 100)
 
-  def genIntersperseString(gen: Gen[String],
-                           value: String,
-                           frequencyV: Int = 1,
-                           frequencyN: Int = num10): Gen[String] = {
+  def genIntersperseString(
+    gen: Gen[String],
+    value: String,
+    frequencyV: Int = 1,
+    frequencyN: Int = num10
+  ): Gen[String] = {
 
     val genValue: Gen[Option[String]] = Gen.frequency(frequencyN -> None, frequencyV -> Gen.const(Some(value)))
 
     for {
       seq1 <- gen
       seq2 <- Gen.listOfN(seq1.length, genValue)
-    } yield {
-      seq1.toSeq.zip(seq2).foldRight("") {
-        case ((n, Some(v)), m) =>
-          m + n + v
-        case ((n, _), m) =>
-          m + n
-      }
+    } yield seq1.toSeq.zip(seq2).foldRight("") {
+      case ((n, Some(v)), m) =>
+        m + n + v
+      case ((n, _), m)       =>
+        m + n
     }
   }
 
@@ -95,13 +95,13 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
   private def stringGenerator(minLength: Int, maxLength: Int): Gen[String] =
     for {
       length <- choose(minLength, maxLength)
-      chars <- listOfN(length, arbitrary[Char])
+      chars  <- listOfN(length, arbitrary[Char])
     } yield chars.mkString
 
   def stringsLongerThan(minLength: Int): Gen[String] = for {
     maxLength <- (minLength * 2).max(num100)
     length    <- Gen.chooseNum(minLength + 1, maxLength)
-    chars     <- listOfN(length, arbitrary[Char]).suchThat (!_.endsWith(" "))
+    chars     <- listOfN(length, arbitrary[Char]).suchThat(!_.endsWith(" "))
   } yield chars.mkString
 
   def stringsExceptSpecificValues(excluded: Seq[String]): Gen[String] =
@@ -120,9 +120,9 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     def toMillis(date: LocalDate): Long =
       date.atStartOfDay.atZone(ZoneOffset.UTC).toInstant.toEpochMilli
 
-    Gen.choose(toMillis(min), toMillis(max)).map {
-      millis =>
-        Instant.ofEpochMilli(millis).atOffset(ZoneOffset.UTC).toLocalDate
+    Gen.choose(toMillis(min), toMillis(max)).map { millis =>
+      Instant.ofEpochMilli(millis).atOffset(ZoneOffset.UTC).toLocalDate
     }
   }
+
 }

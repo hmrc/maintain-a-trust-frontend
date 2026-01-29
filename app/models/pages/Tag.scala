@@ -32,13 +32,17 @@ object Tag extends Enumerable.Implicits {
   case object NoActionNeeded extends WithName("no-action-needed") with Tag
 
   val values: Set[Tag] = Set(
-    Completed, InProgress, NotStarted, CannotStartYet, NoActionNeeded
+    Completed,
+    InProgress,
+    NotStarted,
+    CannotStartYet,
+    NoActionNeeded
   )
 
   implicit val enumerable: Enumerable[Tag] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
 
-  def tagFor(status: Tag, featureEnabled: Boolean = true): Tag = {
+  def tagFor(status: Tag, featureEnabled: Boolean = true): Tag =
     if (!featureEnabled) Completed else status
-  }
+
 }

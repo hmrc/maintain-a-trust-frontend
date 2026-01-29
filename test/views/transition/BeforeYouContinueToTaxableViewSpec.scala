@@ -24,7 +24,7 @@ class BeforeYouContinueToTaxableViewSpec extends ViewBehaviours {
 
   "BeforeYouContinueToTaxable" when {
 
-    val urn = "XATRUST12345678"
+    val urn  = "XATRUST12345678"
     val view = viewFor[BeforeYouContinueToTaxableView](Some(emptyUserAnswersForUtr))
 
     "express answered at registration" must {
@@ -36,7 +36,18 @@ class BeforeYouContinueToTaxableViewSpec extends ViewBehaviours {
         messageKeyPrefix = "beforeYouContinueToTaxable",
         captionKey = "urn",
         captionParam = urn,
-        expectedGuidanceKeys = "p1", "p2", "bullet2", "bullet3", "bullet4", "p3", "bullet5", "bullet6", "bullet7", "bullet8", "bullet9", "bullet10"
+        expectedGuidanceKeys = "p1",
+        "p2",
+        "bullet2",
+        "bullet3",
+        "bullet4",
+        "p3",
+        "bullet5",
+        "bullet6",
+        "bullet7",
+        "bullet8",
+        "bullet9",
+        "bullet10"
       )
 
       behave like pageWithBackLink(applyView)
@@ -53,7 +64,19 @@ class BeforeYouContinueToTaxableViewSpec extends ViewBehaviours {
         messageKeyPrefix = "beforeYouContinueToTaxable",
         captionKey = "urn",
         captionParam = urn,
-        expectedGuidanceKeys = "p1", "p2", "bullet1", "bullet2", "bullet3", "bullet4", "p3", "bullet5", "bullet6", "bullet7", "bullet8", "bullet9", "bullet10"
+        expectedGuidanceKeys = "p1",
+        "p2",
+        "bullet1",
+        "bullet2",
+        "bullet3",
+        "bullet4",
+        "p3",
+        "bullet5",
+        "bullet6",
+        "bullet7",
+        "bullet8",
+        "bullet9",
+        "bullet10"
       )
 
       behave like pageWithBackLink(applyView)
@@ -61,4 +84,5 @@ class BeforeYouContinueToTaxableViewSpec extends ViewBehaviours {
       behave like pageWithASubmitButton(applyView)
     }
   }
+
 }

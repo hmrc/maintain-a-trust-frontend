@@ -30,17 +30,22 @@ class NeedToPayTaxYesNoViewSpec extends YesNoViewBehaviours {
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
   "NeedToPayTaxYesNoView" must {
-    val urn = "XATRUST12345678"
+    val urn  = "XATRUST12345678"
     val view = viewFor[NeedToPayTaxYesNoView](Some(emptyUserAnswersForUtr))
 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, urn, URN)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView(form),
+    behave like normalPageTitleWithCaption(
+      applyView(form),
       prefix,
       "urn",
       urn,
-      expectedGuidanceKeys = "p1", "bullet1", "bullet2", "bullet3")
+      expectedGuidanceKeys = "p1",
+      "bullet1",
+      "bullet2",
+      "bullet3"
+    )
 
     behave like pageWithBackLink(applyView(form))
 
@@ -48,4 +53,5 @@ class NeedToPayTaxYesNoViewSpec extends YesNoViewBehaviours {
 
     behave like pageWithASubmitButton(applyView(form))
   }
+
 }

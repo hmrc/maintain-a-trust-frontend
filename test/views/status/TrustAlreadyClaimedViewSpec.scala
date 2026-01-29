@@ -22,32 +22,24 @@ import views.html.status.TrustAlreadyClaimedView
 
 class TrustAlreadyClaimedViewSpec extends ViewBehaviours {
 
-
   "TrustAlreadyClaimed view for UTR" must {
-    val utr = "0987654321"
+    val utr  = "0987654321"
     val view = viewFor[TrustAlreadyClaimedView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
-      "trustAlreadyClaimed",
-      "utr",
-      utr,
-      "p1", "p2","p2.a")
+    behave like normalPageTitleWithCaption(applyView, "trustAlreadyClaimed", "utr", utr, "p1", "p2", "p2.a")
 
   }
 
   "TrustAlreadyClaimed view for URN" must {
-    val urn = "XATRUST12345678"
+    val urn  = "XATRUST12345678"
     val view = viewFor[TrustAlreadyClaimedView](Some(emptyUserAnswersForUrn))
 
     val applyView = view.apply(urn, URN)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
-      "trustAlreadyClaimed",
-      "urn",
-      urn,
-      "p1", "p2","p2.a")
+    behave like normalPageTitleWithCaption(applyView, "trustAlreadyClaimed", "urn", urn, "p1", "p2", "p2.a")
 
   }
+
 }

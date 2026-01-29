@@ -58,21 +58,24 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     def userAnswers: UserAnswers = emptyUserAnswersForUtr
 
-    val fakeTrustConnector: TrustConnector = mock[TrustConnector]
+    val fakeTrustConnector: TrustConnector            = mock[TrustConnector]
     val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
-    val fakePlaybackRepository: PlaybackRepository = mock[PlaybackRepository]
+    val fakePlaybackRepository: PlaybackRepository    = mock[PlaybackRepository]
 
     def request: FakeRequest[AnyContentAsEmpty.type]
 
     def result: Future[Result] = route(application, request).value
 
-    lazy val application: Application = builder.overrides(
-      bind[TrustConnector].to(fakeTrustConnector),
-      bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
-      bind[AuthenticationService].to(new FakeAuthenticationService()),
-      bind[UserAnswersExtractor].to(new FakeUserAnswerExtractor(Right(userAnswers))),
-      bind[SessionService].toInstance(mockSessionService)
-    ).build()
+    lazy val application: Application = builder
+      .overrides(
+        bind[TrustConnector].to(fakeTrustConnector),
+        bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
+        bind[AuthenticationService].to(new FakeAuthenticationService()),
+        bind[UserAnswersExtractor].to(new FakeUserAnswerExtractor(Right(userAnswers))),
+        bind[SessionService].toInstance(mockSessionService)
+      )
+      .build()
+
   }
 
   trait LocalSetup extends BaseSetup {
@@ -80,17 +83,20 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
   }
 
   trait LocalSetupForAgent extends BaseSetup {
+
     override val builder: GuiceApplicationBuilder = applicationBuilder(
       userAnswers = Some(userAnswers),
       affinityGroup = AffinityGroup.Agent
     )
+
   }
 
   "TrustStatus Controller" when {
 
     "must return OK and the correct view for GET ../status/closed" in new LocalSetup {
 
-      override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.closed().url)
+      override def request: FakeRequest[AnyContentAsEmpty.type] =
+        FakeRequest(GET, routes.TrustStatusController.closed().url)
 
       val view: TrustClosedView = application.injector.instanceOf[TrustClosedView]
 
@@ -103,7 +109,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     "must return OK and the correct view for GET ../status/processing" in new LocalSetup {
 
-      override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.processing().url)
+      override def request: FakeRequest[AnyContentAsEmpty.type] =
+        FakeRequest(GET, routes.TrustStatusController.processing().url)
 
       val view: TrustStillProcessingView = application.injector.instanceOf[TrustStillProcessingView]
 
@@ -117,7 +124,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     "must return OK and the correct view for GET ../status/not-found" in new LocalSetup {
 
-      override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.notFound().url)
+      override def request: FakeRequest[AnyContentAsEmpty.type] =
+        FakeRequest(GET, routes.TrustStatusController.notFound().url)
 
       val view: IdentifierDoesNotMatchView = application.injector.instanceOf[IdentifierDoesNotMatchView]
 
@@ -131,7 +139,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     "must return OK and the correct view for GET ../status/locked" in new LocalSetup {
 
-      override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.locked().url)
+      override def request: FakeRequest[AnyContentAsEmpty.type] =
+        FakeRequest(GET, routes.TrustStatusController.locked().url)
 
       val view: TrustLockedView = application.injector.instanceOf[TrustLockedView]
 
@@ -145,7 +154,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     "must return OK and the correct view for GET ../status/already-claimed" in new LocalSetup {
 
-      override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.alreadyClaimed().url)
+      override def request: FakeRequest[AnyContentAsEmpty.type] =
+        FakeRequest(GET, routes.TrustStatusController.alreadyClaimed().url)
 
       val view: TrustAlreadyClaimedView = application.injector.instanceOf[TrustAlreadyClaimedView]
 
@@ -159,7 +169,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     "must return OK and the correct view for GET ../status/sorry-there-has-been-a-problem" in new LocalSetup {
 
-      override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.sorryThereHasBeenAProblem().url)
+      override def request: FakeRequest[AnyContentAsEmpty.type] =
+        FakeRequest(GET, routes.TrustStatusController.sorryThereHasBeenAProblem().url)
 
       val view: PlaybackProblemContactHMRCView = application.injector.instanceOf[PlaybackProblemContactHMRCView]
 
@@ -173,7 +184,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
     "must return SERVICE_UNAVAILABLE and the correct view for GET ../status/down" in new LocalSetup {
 
-      override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.down().url)
+      override def request: FakeRequest[AnyContentAsEmpty.type] =
+        FakeRequest(GET, routes.TrustStatusController.down().url)
 
       val view: IVDownView = application.injector.instanceOf[IVDownView]
 
@@ -189,11 +201,14 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       "a Closed status is received from the trust connector" in new LocalSetup {
 
-        override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+        override def request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-            (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+          .thenReturn(
+            EitherT[Future, TrustErrors, Option[TrustClaim]](
+              Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+            )
           )
 
         when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
@@ -208,11 +223,14 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       "a Processing status is received from the trust connector" in new LocalSetup {
 
-        override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+        override def request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-            (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+          .thenReturn(
+            EitherT[Future, TrustErrors, Option[TrustClaim]](
+              Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+            )
           )
 
         when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
@@ -227,11 +245,14 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       "a NotFound status is received from the trust connector" in new LocalSetup {
 
-        override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+        override def request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-            (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+          .thenReturn(
+            EitherT[Future, TrustErrors, Option[TrustClaim]](
+              Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+            )
           )
 
         when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
@@ -246,11 +267,14 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       "A locked trust claim is returned from the trusts store connector" in new LocalSetup {
 
-        override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+        override def request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-            (Future.successful(Right(Some(TrustClaim("utr", trustLocked = true, managedByAgent = false)))))
+          .thenReturn(
+            EitherT[Future, TrustErrors, Option[TrustClaim]](
+              Future.successful(Right(Some(TrustClaim("utr", trustLocked = true, managedByAgent = false))))
+            )
           )
 
         status(result) mustEqual SEE_OTHER
@@ -262,11 +286,14 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       "a ServiceUnavailable status is received from the trust connector" in new LocalSetup {
 
-        override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+        override def request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-            (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+          .thenReturn(
+            EitherT[Future, TrustErrors, Option[TrustClaim]](
+              Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+            )
           )
 
         when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
@@ -281,11 +308,14 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       "a ClosedRequest status is received from the trust connector" in new LocalSetup {
 
-        override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+        override def request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-            (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+          .thenReturn(
+            EitherT[Future, TrustErrors, Option[TrustClaim]](
+              Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+            )
           )
 
         when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
@@ -300,15 +330,22 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       "a ServerError status is received from the trust connector" in new LocalSetup {
 
-        override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+        override def request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.TrustStatusController.status().url)
 
         when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-            (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+          .thenReturn(
+            EitherT[Future, TrustErrors, Option[TrustClaim]](
+              Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+            )
           )
 
         when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(TrustsErrorResponse(INTERNAL_SERVER_ERROR)))))
+          .thenReturn(
+            EitherT[Future, TrustErrors, TrustsResponse](
+              Future.successful(Right(TrustsErrorResponse(INTERNAL_SERVER_ERROR)))
+            )
+          )
 
         status(result) mustEqual SEE_OTHER
 
@@ -327,7 +364,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
               override def userAnswers: UserAnswers = super.userAnswers
 
-              override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+              override def request: FakeRequest[AnyContentAsEmpty.type] =
+                FakeRequest(GET, routes.TrustStatusController.status().url)
 
               val payload: String =
                 Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
@@ -337,16 +375,28 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val getTrust: GetTrust = json.as[GetTrustDesResponse].getTrust.value
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-                  (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, Option[TrustClaim]](
+                    Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+                  )
                 )
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(Processed(getTrust, "9873459837459837")))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustsResponse](
+                    Future.successful(Right(Processed(getTrust, "9873459837459837")))
+                  )
+                )
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
-                  (Future.successful(Right(TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None, schedule3aExempt = None))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustDetails](
+                    Future.successful(
+                      Right(
+                        TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None, schedule3aExempt = None)
+                      )
+                    )
+                  )
                 )
 
               when(fakePlaybackRepository.resetCache(any(), any(), any()))
@@ -359,18 +409,25 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
               when(mockSessionService.initialiseUserAnswers(any(), any(), any(), any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Right(userAnswers.copy(isUnderlyingData5mld = false)))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, UserAnswers](
+                    Future.successful(Right(userAnswers.copy(isUnderlyingData5mld = false)))
+                  )
+                )
 
               status(result) mustEqual SEE_OTHER
 
-              redirectLocation(result).value mustEqual controllers.routes.MigrateTo5mldInformationController.onPageLoad().url
+              redirectLocation(result).value mustEqual controllers.routes.MigrateTo5mldInformationController
+                .onPageLoad()
+                .url
 
               application.stop()
             }
 
             "redirect to maintain this trust for organisation" in new LocalSetup {
 
-              override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+              override def request: FakeRequest[AnyContentAsEmpty.type] =
+                FakeRequest(GET, routes.TrustStatusController.status().url)
 
               val payload: String =
                 Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
@@ -380,17 +437,34 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val getTrust: GetTrust = json.as[GetTrustDesResponse].getTrust.value
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-                  (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, Option[TrustClaim]](
+                    Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+                  )
                 )
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustDetails](Future.successful(Right(
-                  TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = Some(true))
-                ))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustDetails](
+                    Future.successful(
+                      Right(
+                        TrustDetails(
+                          LocalDate.now,
+                          trustTaxable = Some(true),
+                          expressTrust = Some(true),
+                          schedule3aExempt = Some(true)
+                        )
+                      )
+                    )
+                  )
+                )
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(Processed(getTrust, "9873459837459837")))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustsResponse](
+                    Future.successful(Right(Processed(getTrust, "9873459837459837")))
+                  )
+                )
 
               when(fakePlaybackRepository.resetCache(any(), any(), any()))
                 .thenReturn(EitherT[Future, TrustErrors, Option[Boolean]](Future.successful(Right(Some(true)))))
@@ -402,19 +476,28 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
               when(mockSessionService.initialiseUserAnswers(any(), any(), any(), any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Right(
-                  userAnswers.copy(isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
-                ))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, UserAnswers](
+                    Future.successful(
+                      Right(
+                        userAnswers.copy(isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
+                      )
+                    )
+                  )
+                )
 
               status(result) mustEqual SEE_OTHER
 
-              redirectLocation(result).value mustEqual routes.MaintainThisTrustController.onPageLoad(needsIv = false).url
+              redirectLocation(result).value mustEqual routes.MaintainThisTrustController
+                .onPageLoad(needsIv = false)
+                .url
 
               application.stop()
             }
 
             "redirect to information maintaining this trust for agent" in new LocalSetupForAgent {
-              override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+              override def request: FakeRequest[AnyContentAsEmpty.type] =
+                FakeRequest(GET, routes.TrustStatusController.status().url)
 
               val payload: String =
                 Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
@@ -424,20 +507,37 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val getTrust: GetTrust = json.as[GetTrustDesResponse].getTrust.value
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-                  (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = true)))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, Option[TrustClaim]](
+                    Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = true))))
+                  )
                 )
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustDetails](Future.successful(Right(
-                  TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = Some(false))
-                ))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustDetails](
+                    Future.successful(
+                      Right(
+                        TrustDetails(
+                          LocalDate.now,
+                          trustTaxable = Some(true),
+                          expressTrust = Some(true),
+                          schedule3aExempt = Some(false)
+                        )
+                      )
+                    )
+                  )
+                )
 
               when(fakePlaybackRepository.resetCache(any(), any(), any()))
                 .thenReturn(EitherT[Future, TrustErrors, Option[Boolean]](Future.successful(Right(Some(true)))))
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(Processed(getTrust, "9873459837459837")))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustsResponse](
+                    Future.successful(Right(Processed(getTrust, "9873459837459837")))
+                  )
+                )
 
               when(fakePlaybackRepository.set(any()))
                 .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
@@ -446,9 +546,15 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
               when(mockSessionService.initialiseUserAnswers(any(), any(), any(), any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Right(
-                  userAnswers.copy(isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
-                ))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, UserAnswers](
+                    Future.successful(
+                      Right(
+                        userAnswers.copy(isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
+                      )
+                    )
+                  )
+                )
 
               status(result) mustEqual SEE_OTHER
 
@@ -459,7 +565,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
             "redirect to interrupt page if schedule3a question has not been answered" in new LocalSetup {
 
-              override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+              override def request: FakeRequest[AnyContentAsEmpty.type] =
+                FakeRequest(GET, routes.TrustStatusController.status().url)
 
               val payload: String =
                 Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
@@ -469,17 +576,34 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val getTrust: GetTrust = json.as[GetTrustDesResponse].getTrust.value
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-                  (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, Option[TrustClaim]](
+                    Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+                  )
                 )
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
-                  (Future.successful(Right(TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = None))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustDetails](
+                    Future.successful(
+                      Right(
+                        TrustDetails(
+                          LocalDate.now,
+                          trustTaxable = Some(true),
+                          expressTrust = Some(true),
+                          schedule3aExempt = None
+                        )
+                      )
+                    )
+                  )
                 )
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(Processed(getTrust, "9873459837459837")))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustsResponse](
+                    Future.successful(Right(Processed(getTrust, "9873459837459837")))
+                  )
+                )
 
               when(fakePlaybackRepository.resetCache(any(), any(), any()))
                 .thenReturn(EitherT[Future, TrustErrors, Option[Boolean]](Future.successful(Right(Some(true)))))
@@ -491,9 +615,15 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
               when(mockSessionService.initialiseUserAnswers(any(), any(), any(), any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Right(
-                  userAnswers.copy(isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
-                ))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, UserAnswers](
+                    Future.successful(
+                      Right(
+                        userAnswers.copy(isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
+                      )
+                    )
+                  )
+                )
 
               status(result) mustEqual SEE_OTHER
 
@@ -507,24 +637,31 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
             "render sorry there's been a problem" in {
 
-              lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.status().url)
+              lazy val request: FakeRequest[AnyContentAsEmpty.type] =
+                FakeRequest(GET, routes.TrustStatusController.status().url)
 
-              val fakeTrustConnector: TrustConnector = mock[TrustConnector]
+              val fakeTrustConnector: TrustConnector            = mock[TrustConnector]
               val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
               val fakeUserAnswerExtractor: UserAnswersExtractor = mock[UserAnswersExtractor]
 
               when(fakeUserAnswerExtractor.extract(any(), any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Left(FailedToExtractData("No beneficiaries")))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, UserAnswers](
+                    Future.successful(Left(FailedToExtractData("No beneficiaries")))
+                  )
+                )
 
               val userAnswers = emptyUserAnswersForUtr
 
-              def application: Application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(
-                bind[TrustConnector].to(fakeTrustConnector),
-                bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
-                bind[UserAnswersExtractor].to(fakeUserAnswerExtractor),
-                bind[AuthenticationService].to(new FakeAuthenticationService()),
-                bind[SessionService].toInstance(mockSessionService)
-              ).build()
+              def application: Application = applicationBuilder(userAnswers = Some(userAnswers))
+                .overrides(
+                  bind[TrustConnector].to(fakeTrustConnector),
+                  bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
+                  bind[UserAnswersExtractor].to(fakeUserAnswerExtractor),
+                  bind[AuthenticationService].to(new FakeAuthenticationService()),
+                  bind[SessionService].toInstance(mockSessionService)
+                )
+                .build()
 
               val payload: String =
                 Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
@@ -534,16 +671,28 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val getTrust = json.as[GetTrustDesResponse].getTrust.value
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-                  (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, Option[TrustClaim]](
+                    Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+                  )
                 )
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(Processed(getTrust, "9873459837459837")))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustsResponse](
+                    Future.successful(Right(Processed(getTrust, "9873459837459837")))
+                  )
+                )
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
-                  (Future.successful(Right(TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None, schedule3aExempt = None))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustDetails](
+                    Future.successful(
+                      Right(
+                        TrustDetails(LocalDate.now, trustTaxable = None, expressTrust = None, schedule3aExempt = None)
+                      )
+                    )
+                  )
                 )
 
               when(mockPlaybackRepository.resetCache(any(), any(), any()))
@@ -562,7 +711,9 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
               status(result) mustEqual SEE_OTHER
 
-              redirectLocation(result).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
+              redirectLocation(result).value mustEqual controllers.routes.TrustStatusController
+                .sorryThereHasBeenAProblem()
+                .url
 
               application.stop()
             }
@@ -579,15 +730,17 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
             def userAnswers = emptyUserAnswersForUtr
 
-            val fakeTrustConnector: TrustConnector = mock[TrustConnector]
+            val fakeTrustConnector: TrustConnector            = mock[TrustConnector]
             val fakeTrustStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
 
-            def application: Application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(
-              bind[TrustConnector].to(fakeTrustConnector),
-              bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
-              bind[AuthenticationService].to(new FakeFailingAuthenticationService()),
-              bind[SessionService].toInstance(mockSessionService)
-            ).build()
+            def application: Application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(
+                bind[TrustConnector].to(fakeTrustConnector),
+                bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
+                bind[AuthenticationService].to(new FakeFailingAuthenticationService()),
+                bind[SessionService].toInstance(mockSessionService)
+              )
+              .build()
 
             val payload: String =
               Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
@@ -599,17 +752,34 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
             def result: Future[Result] = route(application, request).value
 
             when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-                (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+              .thenReturn(
+                EitherT[Future, TrustErrors, Option[TrustClaim]](
+                  Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+                )
               )
 
             when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, TrustDetails](Future.successful(Right(
-                TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = None)
-              ))))
+              .thenReturn(
+                EitherT[Future, TrustErrors, TrustDetails](
+                  Future.successful(
+                    Right(
+                      TrustDetails(
+                        LocalDate.now,
+                        trustTaxable = Some(true),
+                        expressTrust = Some(true),
+                        schedule3aExempt = None
+                      )
+                    )
+                  )
+                )
+              )
 
             when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(Processed(getTrust, "9873459837459837")))))
+              .thenReturn(
+                EitherT[Future, TrustErrors, TrustsResponse](
+                  Future.successful(Right(Processed(getTrust, "9873459837459837")))
+                )
+              )
 
             when(mockPlaybackRepository.resetCache(any(), any(), any()))
               .thenReturn(EitherT[Future, TrustErrors, Option[Boolean]](Future.successful(Right(Some(true)))))
@@ -643,7 +813,8 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
             "redirect to maintain this trust for organisation" in new LocalSetup {
 
-              override def request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.TrustStatusController.statusAfterVerify().url)
+              override def request: FakeRequest[AnyContentAsEmpty.type] =
+                FakeRequest(GET, routes.TrustStatusController.statusAfterVerify().url)
 
               val payload: String =
                 Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json")).mkString
@@ -653,17 +824,34 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
               val getTrust: GetTrust = json.as[GetTrustDesResponse].getTrust.value
 
               when(fakeTrustStoreConnector.get(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, Option[TrustClaim]]
-                  (Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false)))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, Option[TrustClaim]](
+                    Future.successful(Right(Some(TrustClaim("utr", trustLocked = false, managedByAgent = false))))
+                  )
                 )
 
               when(fakeTrustConnector.playbackFromEtmp(any[String])(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(Processed(getTrust, "9873459837459837")))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustsResponse](
+                    Future.successful(Right(Processed(getTrust, "9873459837459837")))
+                  )
+                )
 
               when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, TrustDetails](Future.successful(Right(
-                  TrustDetails(LocalDate.now, trustTaxable = Some(true), expressTrust = Some(true), schedule3aExempt = Some(true))
-                ))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, TrustDetails](
+                    Future.successful(
+                      Right(
+                        TrustDetails(
+                          LocalDate.now,
+                          trustTaxable = Some(true),
+                          expressTrust = Some(true),
+                          schedule3aExempt = Some(true)
+                        )
+                      )
+                    )
+                  )
+                )
 
               when(fakePlaybackRepository.resetCache(any(), any(), any()))
                 .thenReturn(EitherT[Future, TrustErrors, Option[Boolean]](Future.successful(Right(Some(true)))))
@@ -675,9 +863,15 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
                 .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
               when(mockSessionService.initialiseUserAnswers(any(), any(), any(), any())(any(), any()))
-                .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Right(
-                  userAnswers.copy(isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
-                ))))
+                .thenReturn(
+                  EitherT[Future, TrustErrors, UserAnswers](
+                    Future.successful(
+                      Right(
+                        userAnswers.copy(isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
+                      )
+                    )
+                  )
+                )
 
               status(result) mustEqual SEE_OTHER
 
@@ -690,4 +884,5 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
       }
     }
   }
+
 }

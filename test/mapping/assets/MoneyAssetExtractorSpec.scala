@@ -24,8 +24,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.EitherValues
 import pages.assets.money.MoneyValuePage
 
-class MoneyAssetExtractorSpec extends AnyFreeSpec with Matchers
-  with EitherValues with Generators with SpecBaseHelpers {
+class MoneyAssetExtractorSpec extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   val assetExtractor: MoneyAssetExtractor = injector.instanceOf[MoneyAssetExtractor]
 
@@ -40,7 +39,7 @@ class MoneyAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, assets)
 
-        extraction mustBe Symbol("right")
+        extraction            mustBe Symbol("right")
         extraction.value.data mustBe ua.data
 
       }
@@ -51,9 +50,11 @@ class MoneyAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         val value: Long = 4000L
 
-        val businessAssets = List(AssetMonetaryAmount(
-          assetMonetaryAmount = value
-        ))
+        val businessAssets = List(
+          AssetMonetaryAmount(
+            assetMonetaryAmount = value
+          )
+        )
 
         val ua = emptyUserAnswersForUtr
 
@@ -63,4 +64,5 @@ class MoneyAssetExtractorSpec extends AnyFreeSpec with Matchers
       }
     }
   }
+
 }

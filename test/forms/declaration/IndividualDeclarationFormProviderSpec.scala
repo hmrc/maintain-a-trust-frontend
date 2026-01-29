@@ -31,10 +31,10 @@ class IndividualDeclarationFormProviderSpec extends StringFieldBehaviours {
 
   ".firstName" must {
 
-    val fieldName = "firstName"
+    val fieldName   = "firstName"
     val requiredKey = s"$prefix.$fieldName.required"
-    val lengthKey = s"$prefix.$fieldName.length"
-    val maxLength = 35
+    val lengthKey   = s"$prefix.$fieldName.length"
+    val maxLength   = 35
 
     behave like fieldThatBindsValidData(
       form,
@@ -99,10 +99,10 @@ class IndividualDeclarationFormProviderSpec extends StringFieldBehaviours {
 
   ".lastName" must {
 
-    val fieldName = "lastName"
+    val fieldName   = "lastName"
     val requiredKey = s"$prefix.$fieldName.required"
-    val lengthKey = s"$prefix.$fieldName.length"
-    val maxLength = 35
+    val lengthKey   = s"$prefix.$fieldName.length"
+    val maxLength   = 35
 
     behave like fieldThatBindsValidData(
       form,

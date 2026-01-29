@@ -26,21 +26,21 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html._
 
 @Singleton
-class MigrateTo5mldInformationController @Inject()(
-                                                    actions: Actions,
-                                                    val controllerComponents: MessagesControllerComponents,
-                                                    view: MigrateTo5mldInformationView
-                                                  ) extends FrontendBaseController with I18nSupport with Logging {
+class MigrateTo5mldInformationController @Inject() (
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  view: MigrateTo5mldInformationView
+) extends FrontendBaseController with I18nSupport with Logging {
 
   def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier {
     Redirect(controllers.transition.routes.ExpressTrustYesNoController.onPageLoad())
   }
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
-      val identifier = request.userAnswers.identifier
-      val identifierType = request.userAnswers.identifierType
-      val isAgent = request.user.affinityGroup == Agent
-      Ok(view(identifier,identifierType,isAgent))
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    val identifier     = request.userAnswers.identifier
+    val identifierType = request.userAnswers.identifierType
+    val isAgent        = request.user.affinityGroup == Agent
+    Ok(view(identifier, identifierType, isAgent))
   }
+
 }

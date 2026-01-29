@@ -26,8 +26,8 @@ import org.scalatest.EitherValues
 import pages.beneficiaries.other._
 import utils.Constants.{DE, GB}
 
-class OtherBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
-  with EitherValues with Generators with SpecBaseHelpers {
+class OtherBeneficiaryExtractorSpec
+    extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   def generateOther(index: Int): DisplayTrustOtherType = DisplayTrustOtherType(
     lineNo = Some(s"$index"),
@@ -60,7 +60,7 @@ class OtherBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
       case _ => None
     }
 
-  val otherExtractor : OtherBeneficiaryExtractor =
+  val otherExtractor: OtherBeneficiaryExtractor =
     injector.instanceOf[OtherBeneficiaryExtractor]
 
   "Other Beneficiary Extractor" - {
@@ -86,29 +86,31 @@ class OtherBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
       "for a 4mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val other = List(DisplayTrustOtherType(
-            lineNo = Some("1"),
-            bpMatchStatus = Some("01"),
-            description = s"Other 1",
-            beneficiaryDiscretion = None,
-            beneficiaryShareOfIncome = None,
-            countryOfResidence = Some("FR"),
-            address = None,
-            entityStart = "2019-11-26"
-          ))
+          val other = List(
+            DisplayTrustOtherType(
+              lineNo = Some("1"),
+              bpMatchStatus = Some("01"),
+              description = s"Other 1",
+              beneficiaryDiscretion = None,
+              beneficiaryShareOfIncome = None,
+              countryOfResidence = Some("FR"),
+              address = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUtr
 
           val extraction = otherExtractor.extract(ua, other)
 
-          extraction.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
-          extraction.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(OtherBeneficiaryDescriptionPage(0)).get     mustBe "Other 1"
+          extraction.value.get(OtherBeneficiaryMetaData(0)).get            mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get mustBe true
           extraction.value.get(OtherBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
           extraction.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
-          extraction.value.get(OtherBeneficiaryAddressYesNoPage(0)).get mustBe false
+          extraction.value.get(OtherBeneficiaryAddressYesNoPage(0)).get    mustBe false
           extraction.value.get(OtherBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherBeneficiaryAddressPage(0)) mustNot be(defined)
         }
@@ -117,29 +119,31 @@ class OtherBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
       "for a 5mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val other = List(DisplayTrustOtherType(
-            lineNo = Some("1"),
-            bpMatchStatus = Some("01"),
-            description = s"Other 1",
-            beneficiaryDiscretion = None,
-            beneficiaryShareOfIncome = None,
-            countryOfResidence = None,
-            address = None,
-            entityStart = "2019-11-26"
-          ))
+          val other = List(
+            DisplayTrustOtherType(
+              lineNo = Some("1"),
+              bpMatchStatus = Some("01"),
+              description = s"Other 1",
+              beneficiaryDiscretion = None,
+              beneficiaryShareOfIncome = None,
+              countryOfResidence = None,
+              address = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val extraction = otherExtractor.extract(ua, other)
 
-          extraction.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
-          extraction.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-          extraction.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get mustBe true
+          extraction.value.get(OtherBeneficiaryDescriptionPage(0)).get             mustBe "Other 1"
+          extraction.value.get(OtherBeneficiaryMetaData(0)).get                    mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(OtherBeneficiaryDiscretionYesNoPage(0)).get         mustBe true
           extraction.value.get(OtherBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
           extraction.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.value.get(OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
-          extraction.value.get(OtherBeneficiaryAddressYesNoPage(0)).get mustBe false
+          extraction.value.get(OtherBeneficiaryAddressYesNoPage(0)).get            mustBe false
           extraction.value.get(OtherBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherBeneficiaryAddressPage(0)) mustNot be(defined)
         }
@@ -185,9 +189,20 @@ class OtherBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(OtherBeneficiaryAddressYesNoPage(1)).get mustBe false
           extraction.value.get(OtherBeneficiaryAddressYesNoPage(2)).get mustBe true
 
-          extraction.value.get(OtherBeneficiaryAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "DE")
+          extraction.value.get(OtherBeneficiaryAddressPage(0)).get mustBe InternationalAddress(
+            "line 0",
+            "line2",
+            None,
+            "DE"
+          )
           extraction.value.get(OtherBeneficiaryAddressPage(1)) mustNot be(defined)
-          extraction.value.get(OtherBeneficiaryAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+          extraction.value.get(OtherBeneficiaryAddressPage(2)).get mustBe UKAddress(
+            "line 2",
+            "line2",
+            None,
+            None,
+            "NE11NE"
+          )
 
           extraction.value.get(OtherBeneficiaryAddressUKYesNoPage(0)).get mustBe false
           extraction.value.get(OtherBeneficiaryAddressUKYesNoPage(1)) mustNot be(defined)
@@ -199,23 +214,25 @@ class OtherBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
       "for a non taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val other = List(DisplayTrustOtherType(
-            lineNo = Some("1"),
-            bpMatchStatus = Some("01"),
-            description = s"Other 1",
-            beneficiaryDiscretion = None,
-            beneficiaryShareOfIncome = None,
-            countryOfResidence = None,
-            address = None,
-            entityStart = "2019-11-26"
-          ))
+          val other = List(
+            DisplayTrustOtherType(
+              lineNo = Some("1"),
+              bpMatchStatus = Some("01"),
+              description = s"Other 1",
+              beneficiaryDiscretion = None,
+              beneficiaryShareOfIncome = None,
+              countryOfResidence = None,
+              address = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUrn
 
           val extraction = otherExtractor.extract(ua, other)
 
-          extraction.value.get(OtherBeneficiaryDescriptionPage(0)).get mustBe "Other 1"
-          extraction.value.get(OtherBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(OtherBeneficiaryDescriptionPage(0)).get             mustBe "Other 1"
+          extraction.value.get(OtherBeneficiaryMetaData(0)).get                    mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.value.get(OtherBeneficiaryDiscretionYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
           extraction.value.get(OtherBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe false
@@ -279,4 +296,5 @@ class OtherBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
       }
     }
   }
+
 }

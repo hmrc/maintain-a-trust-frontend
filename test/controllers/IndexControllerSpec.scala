@@ -41,25 +41,31 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
   }
 
   private lazy val onPageLoad: String = routes.IndexController.onPageLoad.url
-  private lazy val startUtr: String = routes.IndexController.startUtr.url
-  private lazy val startUrn: String = routes.IndexController.startUrn.url
+  private lazy val startUtr: String   = routes.IndexController.startUtr.url
+  private lazy val startUrn: String   = routes.IndexController.startUrn.url
 
   private val utr: String = "1234567892"
   private val urn: String = "ABTRUST12345678"
 
-  private val taxableEnrolment: Enrolments = Enrolments(Set(Enrolment(
-    key = "HMRC-TERS-ORG",
-    identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = utr)),
-    state = "Activated"
-  )))
-
-  private val nonTaxableEnrolment: Enrolments = Enrolments(Set(
-    Enrolment(
-      key = "HMRC-TERSNT-ORG",
-      identifiers = Seq(EnrolmentIdentifier(key = "URN", value = urn)),
-      state = "Activated"
+  private val taxableEnrolment: Enrolments = Enrolments(
+    Set(
+      Enrolment(
+        key = "HMRC-TERS-ORG",
+        identifiers = Seq(EnrolmentIdentifier(key = "SAUTR", value = utr)),
+        state = "Activated"
+      )
     )
-  ))
+  )
+
+  private val nonTaxableEnrolment: Enrolments = Enrolments(
+    Set(
+      Enrolment(
+        key = "HMRC-TERSNT-ORG",
+        identifiers = Seq(EnrolmentIdentifier(key = "URN", value = urn)),
+        state = "Activated"
+      )
+    )
+  )
 
   "Index Controller" when {
 
@@ -85,8 +91,7 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
     }
   }
 
-  def indexController(onPageLoadRoute: String,
-                      redirectRoute: String): Unit = {
+  def indexController(onPageLoadRoute: String, redirectRoute: String): Unit = {
 
     s"redirect to $redirectRoute when user is not enrolled (agent)" in {
       val application = applicationBuilder(
@@ -149,4 +154,5 @@ class IndexControllerSpec extends SpecBase with BeforeAndAfterEach {
     }
 
   }
+
 }

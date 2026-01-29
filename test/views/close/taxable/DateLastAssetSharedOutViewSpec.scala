@@ -26,9 +26,11 @@ import java.time.LocalDate
 
 class DateLastAssetSharedOutViewSpec extends QuestionViewBehaviours[LocalDate] {
 
-  private val messageKeyPrefix = "dateLastAssetSharedOut"
-  private val trustStartDate = LocalDate.parse("2019-02-03")
-  private val form: Form[LocalDate] = new DateFormProvider().withPrefixAndTrustStartDate(messageKeyPrefix, trustStartDate)
+  private val messageKeyPrefix      = "dateLastAssetSharedOut"
+  private val trustStartDate        = LocalDate.parse("2019-02-03")
+
+  private val form: Form[LocalDate] =
+    new DateFormProvider().withPrefixAndTrustStartDate(messageKeyPrefix, trustStartDate)
 
   "DateLastAssetSharedOut view" must {
 
@@ -53,4 +55,5 @@ class DateLastAssetSharedOutViewSpec extends QuestionViewBehaviours[LocalDate] {
 
     behave like pageWithASubmitButton(applyView(form))
   }
+
 }

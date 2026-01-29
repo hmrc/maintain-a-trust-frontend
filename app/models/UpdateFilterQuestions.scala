@@ -18,28 +18,35 @@ package models
 
 import _root_.pages.makechanges._
 
-case class UpdateFilterQuestions(trustDetails: Boolean,
-                                 trustees: Boolean,
-                                 beneficiaries: Boolean,
-                                 settlors: Boolean,
-                                 protectors: Boolean,
-                                 otherIndividuals: Boolean,
-                                 nonEeaCompany: Boolean)
+case class UpdateFilterQuestions(
+  trustDetails: Boolean,
+  trustees: Boolean,
+  beneficiaries: Boolean,
+  settlors: Boolean,
+  protectors: Boolean,
+  otherIndividuals: Boolean,
+  nonEeaCompany: Boolean
+)
 
 object UpdateFilterQuestions {
 
-  def from(userAnswers: UserAnswers): Option[UpdateFilterQuestions] = {
+  def from(userAnswers: UserAnswers): Option[UpdateFilterQuestions] =
     for {
-      trustDetails <- userAnswers.getWithDefault(UpdateTrustDetailsYesNoPage, false)
-      trustees <- userAnswers.get(UpdateTrusteesYesNoPage)
-      beneficiaries <- userAnswers.get(UpdateBeneficiariesYesNoPage)
-      settlors <- userAnswers.get(UpdateSettlorsYesNoPage)
-      protectors <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
+      trustDetails     <- userAnswers.getWithDefault(UpdateTrustDetailsYesNoPage, false)
+      trustees         <- userAnswers.get(UpdateTrusteesYesNoPage)
+      beneficiaries    <- userAnswers.get(UpdateBeneficiariesYesNoPage)
+      settlors         <- userAnswers.get(UpdateSettlorsYesNoPage)
+      protectors       <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
       otherIndividuals <- userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage)
-      nonEeaCompanies <- userAnswers.getWithDefault(AddOrUpdateNonEeaCompanyYesNoPage, false)
-    } yield {
-      UpdateFilterQuestions(trustDetails, trustees, beneficiaries, settlors, protectors, otherIndividuals, nonEeaCompanies)
-    }
-  }
+      nonEeaCompanies  <- userAnswers.getWithDefault(AddOrUpdateNonEeaCompanyYesNoPage, false)
+    } yield UpdateFilterQuestions(
+      trustDetails,
+      trustees,
+      beneficiaries,
+      settlors,
+      protectors,
+      otherIndividuals,
+      nonEeaCompanies
+    )
 
 }

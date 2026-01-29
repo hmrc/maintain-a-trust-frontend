@@ -25,15 +25,22 @@ import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class TrusteeOrganisationPrinter @Inject()(converter: AnswerRowConverter) extends EntityPrinter[String] {
+class TrusteeOrganisationPrinter @Inject() (converter: AnswerRowConverter) extends EntityPrinter[String] {
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.stringQuestion(TrusteeOrgNamePage(index), userAnswers, "trusteeBusinessName"),
     converter.yesNoQuestion(TrusteeUtrYesNoPage(index), userAnswers, "trusteeUtrYesNo", name),
     converter.stringQuestion(TrusteeUtrPage(index), userAnswers, "trusteeUtr", name),
-    converter.yesNoQuestion(TrusteeCountryOfResidenceYesNoPage(index), userAnswers, "trusteeCountryOfResidenceYesNo", name),
-    converter.yesNoQuestion(TrusteeCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "trusteeCountryOfResidenceUkYesNo", name),
+    converter
+      .yesNoQuestion(TrusteeCountryOfResidenceYesNoPage(index), userAnswers, "trusteeCountryOfResidenceYesNo", name),
+    converter.yesNoQuestion(
+      TrusteeCountryOfResidenceInTheUkYesNoPage(index),
+      userAnswers,
+      "trusteeCountryOfResidenceUkYesNo",
+      name
+    ),
     converter.countryQuestion(
       TrusteeCountryOfResidenceInTheUkYesNoPage(index),
       TrusteeCountryOfResidencePage(index),

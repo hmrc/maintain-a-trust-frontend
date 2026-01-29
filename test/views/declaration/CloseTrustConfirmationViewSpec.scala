@@ -22,11 +22,11 @@ import views.html.declaration.CloseTrustConfirmationView
 
 class CloseTrustConfirmationViewSpec extends ViewBehaviours {
 
-  val messageKeyPrefix = "closeTrustConfirmation"
-  val fakeTvn = "XC TVN 000 000 4912"
+  val messageKeyPrefix    = "closeTrustConfirmation"
+  val fakeTvn             = "XC TVN 000 000 4912"
   val accessibleRefNumber = fakeTvn
 
-  private def confirmationPage(view: HtmlFormat.Appendable) : Unit = {
+  private def confirmationPage(view: HtmlFormat.Appendable): Unit =
 
     "assert content" in {
       val doc = asDocument(view)
@@ -36,23 +36,25 @@ class CloseTrustConfirmationViewSpec extends ViewBehaviours {
       assertContainsText(doc, s"$fakeTvn")
       assertContainsText(doc, "Print or save a declared copy of the trust’s registration")
       assertContainsText(doc, "What happens next")
-      assertContainsText(doc, "Keep a note of your reference in case you need to contact HMRC. " +
-        "If there is a problem with the declaration, we will contact the lead trustee.")
-      assertContainsText(doc, "Your request to close this trust will be processed and access to its online register will now be removed.")
+      assertContainsText(
+        doc,
+        "Keep a note of your reference in case you need to contact HMRC. " +
+          "If there is a problem with the declaration, we will contact the lead trustee."
+      )
+      assertContainsText(
+        doc,
+        "Your request to close this trust will be processed and access to its online register will now be removed."
+      )
     }
 
-  }
-
-  private def confirmationPageForAgent(view: HtmlFormat.Appendable) : Unit = {
+  private def confirmationPageForAgent(view: HtmlFormat.Appendable): Unit =
     "display return to agent overview link" in {
 
-      val doc = asDocument(view)
+      val doc               = asDocument(view)
       val agentOverviewLink = doc.getElementById("agent-overview")
       assertAttributeValueForElement(agentOverviewLink, "href", "#")
       assertContainsTextForId(doc, "agent-overview", "return to register or manage a trust for a client.")
     }
-
-  }
 
   "Confirmation view for an agent" must {
     val view = viewFor[CloseTrustConfirmationView](Some(emptyUserAnswersForUtr))

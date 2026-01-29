@@ -20,7 +20,6 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.TrustDetails
 
-
 case object CorrespondenceAddressInTheUKPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ TrustDetails \ toString

@@ -36,58 +36,57 @@ import views.html.transition.Schedule3aExemptYesNoView
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class Schedule3aExemptYesNoController @Inject()(
-                                                 override val messagesApi: MessagesApi,
-                                                 playbackRepository: PlaybackRepository,
-                                                 actions: Actions,
-                                                 formProvider: YesNoFormProvider,
-                                                 val controllerComponents: MessagesControllerComponents,
-                                                 view: Schedule3aExemptYesNoView,
-                                                 trustsConnector: TrustConnector,
-                                                 errorHandler: ErrorHandler
-                                               ) (implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Logging {
+class Schedule3aExemptYesNoController @Inject() (
+  override val messagesApi: MessagesApi,
+  playbackRepository: PlaybackRepository,
+  actions: Actions,
+  formProvider: YesNoFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: Schedule3aExemptYesNoView,
+  trustsConnector: TrustConnector,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  private val className = getClass.getSimpleName
+  private val className           = getClass.getSimpleName
   private val form: Form[Boolean] = formProvider.withPrefix("schedule3aExemptYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
-
-      val preparedForm = request.userAnswers.get(Schedule3aExemptYesNoPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-      Ok(view(preparedForm))
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    val preparedForm = request.userAnswers.get(Schedule3aExemptYesNoPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
+    Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
-    implicit request =>
-
-      val result = for {
-        formData <- TrustEnvelope(handleFormValidation)
-        updatedAnswers <- TrustEnvelope(request.userAnswers.set(Schedule3aExemptYesNoPage, formData))
-        _ <- playbackRepository.set(updatedAnswers)
-        _ <- trustsConnector.setSchedule3aExempt(request.userAnswers.identifier, formData)
-      } yield Redirect(declarationUrl(
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async { implicit request =>
+    val result = for {
+      formData       <- TrustEnvelope(handleFormValidation)
+      updatedAnswers <- TrustEnvelope(request.userAnswers.set(Schedule3aExemptYesNoPage, formData))
+      _              <- playbackRepository.set(updatedAnswers)
+      _              <- trustsConnector.setSchedule3aExempt(request.userAnswers.identifier, formData)
+    } yield Redirect(
+      declarationUrl(
         request.user.affinityGroup,
         isTrustMigratingFromNonTaxableToTaxable = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
-      ))
-
-      result.value.flatMap {
-        case Right(call) => Future.successful(call)
-        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
-        case Left(_) =>
-          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-      }
-  }
-
-  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, Boolean] = {
-    form.bindFromRequest().fold(
-      (formWithErrors: Form[_]) =>
-        Left(FormValidationError(BadRequest(view(formWithErrors)))),
-      value => Right(value)
+      )
     )
+
+    result.value.flatMap {
+      case Right(call)                               => Future.successful(call)
+      case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
+      case Left(_)                                   =>
+        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
+    }
   }
+
+  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, Boolean] =
+    form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) => Left(FormValidationError(BadRequest(view(formWithErrors)))),
+        value => Right(value)
+      )
+
 }

@@ -40,23 +40,26 @@ import scala.concurrent.Future
 class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
   private val mockTrustsStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
-  private val mockTrustsConnector: TrustConnector = mock[TrustConnector]
+  private val mockTrustsConnector: TrustConnector            = mock[TrustConnector]
 
-  private lazy val updateOtherIndividualsYesNoRoute: String = routes.UpdateOtherIndividualsYesNoController.onPageLoad().url
+  private lazy val updateOtherIndividualsYesNoRoute: String =
+    routes.UpdateOtherIndividualsYesNoController.onPageLoad().url
 
   "UpdateOtherIndividualsYesNoController" when {
 
     "making changes" must {
 
-      val prefix: String = "updateOtherIndividuals"
+      val prefix: String  = "updateOtherIndividuals"
       val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       "underlying trust data is 4mld" must {
 
-        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = false)
-          .set(WhatIsNextPage, WhatIsNext.MakeChanges).value
+        val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+          .copy(isUnderlyingData5mld = false)
+          .set(WhatIsNextPage, WhatIsNext.MakeChanges)
+          .value
 
         "return OK and the correct view for a GET" in {
 
@@ -79,7 +82,8 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
         "populate the view correctly on a GET when the question has previously been answered" in {
 
           val userAnswers = baseAnswers
-            .set(AddOrUpdateOtherIndividualsYesNoPage, true).value
+            .set(AddOrUpdateOtherIndividualsYesNoPage, true)
+            .value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -100,10 +104,14 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
         "redirect to individual declaration when valid data is submitted and no has been selected for all the questions" in {
 
           val userAnswers = baseAnswers
-            .set(UpdateTrusteesYesNoPage, false).value
-            .set(UpdateBeneficiariesYesNoPage, false).value
-            .set(UpdateSettlorsYesNoPage, false).value
-            .set(AddOrUpdateProtectorYesNoPage, false).value
+            .set(UpdateTrusteesYesNoPage, false)
+            .value
+            .set(UpdateBeneficiariesYesNoPage, false)
+            .value
+            .set(UpdateSettlorsYesNoPage, false)
+            .value
+            .set(AddOrUpdateProtectorYesNoPage, false)
+            .value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -114,17 +122,23 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustEqual controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+          redirectLocation(result).value mustEqual controllers.declaration.routes.IndividualDeclarationController
+            .onPageLoad()
+            .url
 
           application.stop()
         }
 
         "redirect to overview when valid data is submitted, yes has been selected for update trustees question and no has been selected for the rest" in {
           val userAnswers = baseAnswers
-            .set(UpdateTrusteesYesNoPage, true).value
-            .set(UpdateBeneficiariesYesNoPage, false).value
-            .set(UpdateSettlorsYesNoPage, false).value
-            .set(AddOrUpdateProtectorYesNoPage, false).value
+            .set(UpdateTrusteesYesNoPage, true)
+            .value
+            .set(UpdateBeneficiariesYesNoPage, false)
+            .value
+            .set(UpdateSettlorsYesNoPage, false)
+            .value
+            .set(AddOrUpdateProtectorYesNoPage, false)
+            .value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(bind[TrustsStoreConnector].toInstance(mockTrustsStoreConnector))
@@ -134,7 +148,11 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(("value", "false"))
 
           when(mockTrustsStoreConnector.set(any(), any())(any(), any()))
-            .thenReturn(EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks()))))
+            .thenReturn(
+              EitherT[Future, TrustErrors, CompletedMaintenanceTasks](
+                Future.successful(Right(CompletedMaintenanceTasks()))
+              )
+            )
 
           val result = route(application, request).value
 
@@ -171,8 +189,10 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       "underlying trust data is 5mld" must {
 
-        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
-          .set(WhatIsNextPage, WhatIsNext.MakeChanges).value
+        val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+          .copy(isUnderlyingData5mld = true)
+          .set(WhatIsNextPage, WhatIsNext.MakeChanges)
+          .value
 
         "return OK and the correct view for a GET" in {
 
@@ -195,7 +215,8 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
         "populate the view correctly on a GET when the question has previously been answered" in {
 
           val userAnswers = baseAnswers
-            .set(AddOrUpdateOtherIndividualsYesNoPage, true).value
+            .set(AddOrUpdateOtherIndividualsYesNoPage, true)
+            .value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -216,10 +237,14 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
         "redirect to add a non eea company yes no page when valid data is submitted and no eea company exists" in {
 
           val userAnswers = baseAnswers
-            .set(UpdateTrusteesYesNoPage, false).value
-            .set(UpdateBeneficiariesYesNoPage, false).value
-            .set(UpdateSettlorsYesNoPage, false).value
-            .set(AddOrUpdateProtectorYesNoPage, false).value
+            .set(UpdateTrusteesYesNoPage, false)
+            .value
+            .set(UpdateBeneficiariesYesNoPage, false)
+            .value
+            .set(UpdateSettlorsYesNoPage, false)
+            .value
+            .set(AddOrUpdateProtectorYesNoPage, false)
+            .value
 
           when(mockTrustsConnector.getDoNonEeaCompaniesAlreadyExist(any())(any(), any()))
             .thenReturn(EitherT[Future, TrustErrors, JsBoolean](Future.successful(Right(JsBoolean(false)))))
@@ -235,7 +260,9 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustEqual controllers.makechanges.routes.AddNonEeaCompanyYesNoController.onPageLoad().url
+          redirectLocation(result).value mustEqual controllers.makechanges.routes.AddNonEeaCompanyYesNoController
+            .onPageLoad()
+            .url
 
           application.stop()
         }
@@ -243,11 +270,16 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
         "redirect to update a non eea company yes no page when valid data is submitted and an eea company already exists" in {
 
           val userAnswers = baseAnswers
-            .set(NonEeaBusinessAsset, JsArray()).value
-            .set(UpdateTrusteesYesNoPage, false).value
-            .set(UpdateBeneficiariesYesNoPage, false).value
-            .set(UpdateSettlorsYesNoPage, false).value
-            .set(AddOrUpdateProtectorYesNoPage, false).value
+            .set(NonEeaBusinessAsset, JsArray())
+            .value
+            .set(UpdateTrusteesYesNoPage, false)
+            .value
+            .set(UpdateBeneficiariesYesNoPage, false)
+            .value
+            .set(UpdateSettlorsYesNoPage, false)
+            .value
+            .set(AddOrUpdateProtectorYesNoPage, false)
+            .value
 
           when(mockTrustsConnector.getDoNonEeaCompaniesAlreadyExist(any())(any(), any()))
             .thenReturn(EitherT[Future, TrustErrors, JsBoolean](Future.successful(Right(JsBoolean(true)))))
@@ -263,7 +295,9 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateNonEeaCompanyYesNoController.onPageLoad().url
+          redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateNonEeaCompanyYesNoController
+            .onPageLoad()
+            .url
 
           application.stop()
         }
@@ -293,15 +327,17 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
     "closing" must {
 
-      val prefix: String = "updateOtherIndividualsClosing"
+      val prefix: String  = "updateOtherIndividualsClosing"
       val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       "underlying trust data is 4mld" must {
 
-        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = false)
-          .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+        val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+          .copy(isUnderlyingData5mld = false)
+          .set(WhatIsNextPage, WhatIsNext.CloseTrust)
+          .value
 
         "return OK and the correct view for a GET" in {
 
@@ -324,7 +360,8 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
         "populate the view correctly on a GET when the question has previously been answered" in {
 
           val userAnswers = baseAnswers
-            .set(AddOrUpdateOtherIndividualsYesNoPage, true).value
+            .set(AddOrUpdateOtherIndividualsYesNoPage, true)
+            .value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -345,10 +382,14 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
         "redirect to overview when valid data is submitted and no has been selected for all questions" in {
 
           val userAnswers = baseAnswers
-            .set(UpdateTrusteesYesNoPage, false).value
-            .set(UpdateBeneficiariesYesNoPage, false).value
-            .set(UpdateSettlorsYesNoPage, false).value
-            .set(AddOrUpdateProtectorYesNoPage, false).value
+            .set(UpdateTrusteesYesNoPage, false)
+            .value
+            .set(UpdateBeneficiariesYesNoPage, false)
+            .value
+            .set(UpdateSettlorsYesNoPage, false)
+            .value
+            .set(AddOrUpdateProtectorYesNoPage, false)
+            .value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(bind[TrustsStoreConnector].toInstance(mockTrustsStoreConnector))
@@ -358,7 +399,11 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
             .withFormUrlEncodedBody(("value", "false"))
 
           when(mockTrustsStoreConnector.set(any(), any())(any(), any()))
-            .thenReturn(EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks()))))
+            .thenReturn(
+              EitherT[Future, TrustErrors, CompletedMaintenanceTasks](
+                Future.successful(Right(CompletedMaintenanceTasks()))
+              )
+            )
 
           val result = route(application, request).value
 
@@ -395,8 +440,10 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       "underlying trust data is 5mld" must {
 
-        val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
-          .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+        val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+          .copy(isUnderlyingData5mld = true)
+          .set(WhatIsNextPage, WhatIsNext.CloseTrust)
+          .value
 
         "return OK and the correct view for a GET" in {
 
@@ -419,7 +466,8 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
         "populate the view correctly on a GET when the question has previously been answered" in {
 
           val userAnswers = baseAnswers
-            .set(AddOrUpdateOtherIndividualsYesNoPage, true).value
+            .set(AddOrUpdateOtherIndividualsYesNoPage, true)
+            .value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -440,10 +488,14 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
         "redirect to add a non eea company yes no page when valid data is submitted and no eea company exists" in {
 
           val userAnswers = baseAnswers
-            .set(UpdateTrusteesYesNoPage, false).value
-            .set(UpdateBeneficiariesYesNoPage, false).value
-            .set(UpdateSettlorsYesNoPage, false).value
-            .set(AddOrUpdateProtectorYesNoPage, false).value
+            .set(UpdateTrusteesYesNoPage, false)
+            .value
+            .set(UpdateBeneficiariesYesNoPage, false)
+            .value
+            .set(UpdateSettlorsYesNoPage, false)
+            .value
+            .set(AddOrUpdateProtectorYesNoPage, false)
+            .value
 
           when(mockTrustsConnector.getDoNonEeaCompaniesAlreadyExist(any())(any(), any()))
             .thenReturn(EitherT[Future, TrustErrors, JsBoolean](Future.successful(Right(JsBoolean(false)))))
@@ -459,7 +511,9 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustEqual controllers.makechanges.routes.AddNonEeaCompanyYesNoController.onPageLoad().url
+          redirectLocation(result).value mustEqual controllers.makechanges.routes.AddNonEeaCompanyYesNoController
+            .onPageLoad()
+            .url
 
           application.stop()
         }
@@ -467,11 +521,16 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
         "redirect to update a non eea company yes no page when valid data is submitted and an eea company already exists" in {
 
           val userAnswers = baseAnswers
-            .set(NonEeaBusinessAsset, JsArray()).value
-            .set(UpdateTrusteesYesNoPage, false).value
-            .set(UpdateBeneficiariesYesNoPage, false).value
-            .set(UpdateSettlorsYesNoPage, false).value
-            .set(AddOrUpdateProtectorYesNoPage, false).value
+            .set(NonEeaBusinessAsset, JsArray())
+            .value
+            .set(UpdateTrusteesYesNoPage, false)
+            .value
+            .set(UpdateBeneficiariesYesNoPage, false)
+            .value
+            .set(UpdateSettlorsYesNoPage, false)
+            .value
+            .set(AddOrUpdateProtectorYesNoPage, false)
+            .value
 
           when(mockTrustsConnector.getDoNonEeaCompaniesAlreadyExist(any())(any(), any()))
             .thenReturn(EitherT[Future, TrustErrors, JsBoolean](Future.successful(Right(JsBoolean(true)))))
@@ -487,7 +546,9 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateNonEeaCompanyYesNoController.onPageLoad().url
+          redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateNonEeaCompanyYesNoController
+            .onPageLoad()
+            .url
 
           application.stop()
         }
@@ -519,12 +580,18 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
 
-      val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
-        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
-        .set(UpdateTrusteesYesNoPage, false).value
-        .set(UpdateBeneficiariesYesNoPage, false).value
-        .set(UpdateSettlorsYesNoPage, false).value
-        .set(AddOrUpdateProtectorYesNoPage, false).value
+      val userAnswers = emptyUserAnswersForUtr
+        .copy(isUnderlyingData5mld = true)
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust)
+        .value
+        .set(UpdateTrusteesYesNoPage, false)
+        .value
+        .set(UpdateBeneficiariesYesNoPage, false)
+        .value
+        .set(UpdateSettlorsYesNoPage, false)
+        .value
+        .set(AddOrUpdateProtectorYesNoPage, false)
+        .value
 
       when(mockTrustsConnector.getDoNonEeaCompaniesAlreadyExist(any())(any(), any()))
         .thenReturn(EitherT[Future, TrustErrors, JsBoolean](Future.successful(Right(JsBoolean(false)))))
@@ -538,10 +605,11 @@ class UpdateOtherIndividualsYesNoControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      status(result) mustBe INTERNAL_SERVER_ERROR
+      status(result)      mustBe INTERNAL_SERVER_ERROR
       contentType(result) mustBe Some("text/html")
 
       application.stop()
     }
   }
+
 }

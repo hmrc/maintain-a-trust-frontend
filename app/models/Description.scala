@@ -18,12 +18,13 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Description(description: String,
-                       description1: Option[String],
-                       description2: Option[String],
-                       description3: Option[String],
-                       description4: Option[String]
-                      )
+case class Description(
+  description: String,
+  description1: Option[String],
+  description2: Option[String],
+  description3: Option[String],
+  description4: Option[String]
+)
 
 object Description {
 

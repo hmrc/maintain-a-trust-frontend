@@ -22,7 +22,7 @@ import sections.beneficiaries.{Beneficiaries, IndividualBeneficiaries}
 
 final case class IndividualBeneficiaryNationalInsuranceNumberPage(index: Int) extends QuestionPage[String] {
 
-  override def path: JsPath = JsPath \  Beneficiaries \ IndividualBeneficiaries \ index \ toString
+  override def path: JsPath = JsPath \ Beneficiaries \ IndividualBeneficiaries \ index \ toString
 
   override def toString: String = "nationalInsuranceNumber"
 }

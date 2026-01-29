@@ -35,9 +35,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach with ScalaFutures with IntegrationPatience {
+class TrustsStoreConnectorSpec
+    extends SpecBase with BeforeAndAfterAll with BeforeAndAfterEach with ScalaFutures with IntegrationPatience {
 
-  private implicit lazy val hc: HeaderCarrier = HeaderCarrier()
+  implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
   protected val server: WireMockServer = new WireMockServer(wireMockConfig().dynamicPort())
 
@@ -65,14 +66,14 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         .configure(
           Seq(
             "microservice.services.trusts-store.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                        -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[TrustsStoreConnector]
 
-      val json = Json.parse(
-        """
+      val json = Json.parse("""
           |{
           |  "trustDetails": "not-started",
           |  "assets": "not-started",
@@ -116,21 +117,26 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           .configure(
             Seq(
               "microservice.services.trusts-store.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                        -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustsStoreConnector]
 
         val userAnswers = emptyUserAnswersForUtr
-          .set(UpdateTrusteesYesNoPage, true).value
-          .set(UpdateBeneficiariesYesNoPage, false).value
-          .set(UpdateSettlorsYesNoPage, false).value
-          .set(AddOrUpdateProtectorYesNoPage, false).value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
+          .set(UpdateTrusteesYesNoPage, true)
+          .value
+          .set(UpdateBeneficiariesYesNoPage, false)
+          .value
+          .set(UpdateSettlorsYesNoPage, false)
+          .value
+          .set(AddOrUpdateProtectorYesNoPage, false)
+          .value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false)
+          .value
 
-        val json = Json.parse(
-          """
+        val json = Json.parse("""
             |{
             |  "trustDetails": "completed",
             |  "assets": "completed",
@@ -174,23 +180,30 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
           .configure(
             Seq(
               "microservice.services.trusts-store.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                        -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustsStoreConnector]
 
         val userAnswers = emptyUserAnswersForUtr
-          .set(UpdateTrustDetailsYesNoPage, false).value
-          .set(UpdateTrusteesYesNoPage, true).value
-          .set(UpdateBeneficiariesYesNoPage, false).value
-          .set(UpdateSettlorsYesNoPage, false).value
-          .set(AddOrUpdateProtectorYesNoPage, false).value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
-          .set(AddOrUpdateNonEeaCompanyYesNoPage, false).value
+          .set(UpdateTrustDetailsYesNoPage, false)
+          .value
+          .set(UpdateTrusteesYesNoPage, true)
+          .value
+          .set(UpdateBeneficiariesYesNoPage, false)
+          .value
+          .set(UpdateSettlorsYesNoPage, false)
+          .value
+          .set(AddOrUpdateProtectorYesNoPage, false)
+          .value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false)
+          .value
+          .set(AddOrUpdateNonEeaCompanyYesNoPage, false)
+          .value
 
-        val json = Json.parse(
-          """
+        val json = Json.parse("""
             |{
             |  "trustDetails": "completed",
             |  "assets": "completed",
@@ -235,9 +248,10 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         .configure(
           Seq(
             "microservice.services.trusts-store.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                        -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[TrustsStoreConnector]
 
@@ -255,9 +269,10 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
         .configure(
           Seq(
             "microservice.services.trusts-store.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                        -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[TrustsStoreConnector]
 
@@ -279,9 +294,10 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       .configure(
         Seq(
           "microservice.services.trusts-store.port" -> server.port(),
-          "auditing.enabled" -> false
+          "auditing.enabled"                        -> false
         ): _*
-      ).build()
+      )
+      .build()
 
     val connector = application.injector.instanceOf[TrustsStoreConnector]
 
@@ -313,9 +329,10 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       .configure(
         Seq(
           "microservice.services.trusts-store.port" -> server.port(),
-          "auditing.enabled" -> false
+          "auditing.enabled"                        -> false
         ): _*
-      ).build()
+      )
+      .build()
 
     val connector = application.injector.instanceOf[TrustsStoreConnector]
 
@@ -323,8 +340,10 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       put(urlEqualTo("/trusts-store/features/TestFeature"))
         .withHeader(CONTENT_TYPE, containing(JSON))
         .withRequestBody(equalTo("true"))
-        .willReturn(aResponse()
-          .withStatus(OK))
+        .willReturn(
+          aResponse()
+            .withStatus(OK)
+        )
     )
 
     val result = Await.result(connector.setFeature("TestFeature", state = true).value, Duration.Inf)
@@ -339,9 +358,10 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       .configure(
         Seq(
           "microservice.services.trusts-store.port" -> server.port(),
-          "auditing.enabled" -> false
+          "auditing.enabled"                        -> false
         ): _*
-      ).build()
+      )
+      .build()
 
     val connector = application.injector.instanceOf[TrustsStoreConnector]
 
@@ -367,9 +387,10 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       .configure(
         Seq(
           "microservice.services.trusts-store.port" -> server.port(),
-          "auditing.enabled" -> false
+          "auditing.enabled"                        -> false
         ): _*
-      ).build()
+      )
+      .build()
 
     val connector = application.injector.instanceOf[TrustsStoreConnector]
 
@@ -395,9 +416,10 @@ class TrustsStoreConnectorSpec extends SpecBase with BeforeAndAfterAll with Befo
       .configure(
         Seq(
           "microservice.services.trusts-store.port" -> server.port(),
-          "auditing.enabled" -> false
+          "auditing.enabled"                        -> false
         ): _*
-      ).build()
+      )
+      .build()
 
     val connector = application.injector.instanceOf[TrustsStoreConnector]
 

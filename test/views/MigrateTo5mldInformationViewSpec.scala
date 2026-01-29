@@ -16,7 +16,6 @@
 
 package views
 
-
 import models.UTR
 import views.behaviours.ViewBehaviours
 import views.html.MigrateTo5mldInformationView
@@ -31,7 +30,8 @@ class MigrateTo5mldInformationViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(utr, UTR, isAgent = false)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "migrateTo5mldInformation",
       "utr",
       utr,
@@ -50,7 +50,8 @@ class MigrateTo5mldInformationViewSpec extends ViewBehaviours {
       "p5",
       "org.p6",
       "heading2",
-      "p7")
+      "p7"
+    )
 
     behave like pageWithBackLink(applyView)
 
@@ -66,7 +67,8 @@ class MigrateTo5mldInformationViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(utr, UTR, isAgent = true)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "migrateTo5mldInformation",
       "utr",
       utr,
@@ -85,11 +87,13 @@ class MigrateTo5mldInformationViewSpec extends ViewBehaviours {
       "p5",
       "agent.p6",
       "heading2",
-      "p7")
+      "p7"
+    )
 
     behave like pageWithBackLink(applyView)
 
     behave like pageWithASubmitButton(applyView)
 
   }
+
 }

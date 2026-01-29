@@ -33,41 +33,39 @@ import views.html._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class InformationSchedule3aExemptionController @Inject()(
-                                                          override val messagesApi: MessagesApi,
-                                                          actions: Actions,
-                                                          val controllerComponents: MessagesControllerComponents,
-                                                          view: InformationSchedule3aExemptionView,
-                                                          playbackRepository: PlaybackRepository,
-                                                          trustsConnector: TrustConnector,
-                                                          errorHandler: ErrorHandler
-                                                        )(implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Logging {
+class InformationSchedule3aExemptionController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  view: InformationSchedule3aExemptionView,
+  playbackRepository: PlaybackRepository,
+  trustsConnector: TrustConnector,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
-      val identifier = request.userAnswers.identifier
-      val identifierType = request.userAnswers.identifierType
-      val isAgent = request.user.affinityGroup == Agent
-      Ok(view(identifier, identifierType, isAgent))
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    val identifier     = request.userAnswers.identifier
+    val identifierType = request.userAnswers.identifierType
+    val isAgent        = request.user.affinityGroup == Agent
+    Ok(view(identifier, identifierType, isAgent))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
-    implicit request =>
-      val result = for {
-        updatedAnswers <- TrustEnvelope(request.userAnswers.set(WhatIsNextPage, MakeChanges))
-        _ <- playbackRepository.set(updatedAnswers)
-        _ <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
-      } yield
-        Redirect(controllers.transition.routes.Schedule3aExemptYesNoController.onPageLoad())
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async { implicit request =>
+    val result = for {
+      updatedAnswers <- TrustEnvelope(request.userAnswers.set(WhatIsNextPage, MakeChanges))
+      _              <- playbackRepository.set(updatedAnswers)
+      _              <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
+    } yield Redirect(controllers.transition.routes.Schedule3aExemptYesNoController.onPageLoad())
 
-      result.value.flatMap {
-        case Right(call) => Future.successful(call)
-        case Left(_) =>
-          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-      }
+    result.value.flatMap {
+      case Right(call) => Future.successful(call)
+      case Left(_)     =>
+        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
+    }
   }
+
 }

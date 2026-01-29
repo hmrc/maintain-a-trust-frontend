@@ -22,11 +22,13 @@ import views.ViewUtils
 
 trait Schedule3aExemptYesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
 
-  def yesNoPage(form: Form[Boolean],
-                createView: Form[Boolean] => HtmlFormat.Appendable,
-                messageKeyPrefix: String,
-                hintTextPrefix : Option[String] = None,
-                args : Seq[String] = Nil) : Unit = {
+  def yesNoPage(
+    form: Form[Boolean],
+    createView: Form[Boolean] => HtmlFormat.Appendable,
+    messageKeyPrefix: String,
+    hintTextPrefix: Option[String] = None,
+    args: Seq[String] = Nil
+  ): Unit =
 
     "behave like a page with a Yes/No question" when {
 
@@ -34,14 +36,13 @@ trait Schedule3aExemptYesNoViewBehaviours extends QuestionViewBehaviours[Boolean
 
         "contain a legend for the question" in {
 
-          val doc = asDocument(createView(form))
+          val doc     = asDocument(createView(form))
           val legends = doc.getElementsByTag("legend")
-          legends.size mustBe 1
+          legends.size     mustBe 1
           legends.first.text must include(messages(s"$messageKeyPrefix.subheading", args: _*))
 
-          hintTextPrefix.map {
-            pref =>
-              doc.getElementsByClass("govuk-hint").first.text must include(messages(s"$pref.hint"))
+          hintTextPrefix.map { pref =>
+            doc.getElementsByClass("govuk-hint").first.text must include(messages(s"$pref.hint"))
           }
         }
 
@@ -86,7 +87,7 @@ trait Schedule3aExemptYesNoViewBehaviours extends QuestionViewBehaviours[Boolean
 
         "show an error in the value field's label" in {
 
-          val doc = asDocument(createView(form.withError(error)))
+          val doc       = asDocument(createView(form.withError(error)))
           val errorSpan = doc.getElementsByClass("govuk-error-message").first
           errorSpan.text mustBe s"""${messages("site.error")} ${messages(errorMessage)}"""
         }
@@ -104,10 +105,12 @@ trait Schedule3aExemptYesNoViewBehaviours extends QuestionViewBehaviours[Boolean
         }
       }
     }
-  }
 
-
-  def answeredYesNoPage(createView: Form[Boolean] => HtmlFormat.Appendable, answer: Boolean, form: Form[Boolean]): Unit = {
+  def answeredYesNoPage(
+    createView: Form[Boolean] => HtmlFormat.Appendable,
+    answer: Boolean,
+    form: Form[Boolean]
+  ): Unit = {
 
     "have only the correct value checked" in {
 
@@ -122,4 +125,5 @@ trait Schedule3aExemptYesNoViewBehaviours extends QuestionViewBehaviours[Boolean
       assertNotRenderedById(doc, "error-summary_header")
     }
   }
+
 }

@@ -30,7 +30,8 @@ class InformationMaintainingTaxableTrustViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "informationMaintainingTaxableTrust",
       "utr",
       utr,
@@ -53,4 +54,5 @@ class InformationMaintainingTaxableTrustViewSpec extends ViewBehaviours {
 
     behave like pageWithContinueButton(applyView, Some("site.startMaintaining"))
   }
+
 }

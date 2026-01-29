@@ -99,7 +99,9 @@ class Schedule3aExemptYesNoControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.declaration.routes.IndividualDeclarationController
+        .onPageLoad()
+        .url
 
       application.stop()
     }
@@ -121,7 +123,7 @@ class Schedule3aExemptYesNoControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      status(result) mustBe INTERNAL_SERVER_ERROR
+      status(result)      mustBe INTERNAL_SERVER_ERROR
       contentType(result) mustBe Some("text/html")
 
       application.stop()
@@ -181,4 +183,5 @@ class Schedule3aExemptYesNoControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

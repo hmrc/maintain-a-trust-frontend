@@ -25,7 +25,7 @@ class URNFormProviderSpec extends StringFieldBehaviours {
   private val requiredLength = 15
 
   private val requiredKey = "urn.error.required"
-  private val lengthKey = "urn.error.length"
+  private val lengthKey   = "urn.error.length"
 
   private val urnRegex = Validation.urnRegex
 
@@ -68,4 +68,5 @@ class URNFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
+
 }

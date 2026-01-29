@@ -26,10 +26,13 @@ import pages.trustees._
 
 class OrganisationTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrustTrusteeOrgType] {
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayTrustTrusteeOrgType,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
-    super.updateUserAnswers(answers, entity, index)
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayTrustTrusteeOrgType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
+    super
+      .updateUserAnswers(answers, entity, index)
       .flatMap(_.set(IsThisLeadTrusteePage(index), false))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(TrusteeOrgNamePage(index), entity.name))
@@ -38,14 +41,16 @@ class OrganisationTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrust
       .flatMap(answers => extractTelephoneAndEmail(entity, index, answers))
       .flatMap(_.set(TrusteeSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(_.set(TrusteeStatus(index), Completed))
-  }
 
-  private def extractTelephoneAndEmail(entity: DisplayTrustTrusteeOrgType,
-                               index: Int,
-                               answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  private def extractTelephoneAndEmail(
+    entity: DisplayTrustTrusteeOrgType,
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     extractIfTaxableOrMigratingToTaxable(answers) {
-      answers.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber)
+      answers
+        .set(TrusteeTelephoneNumberPage(index), entity.phoneNumber)
         .flatMap(_.set(TrusteeEmailPage(index), entity.email))
     }
-  }
+
 }

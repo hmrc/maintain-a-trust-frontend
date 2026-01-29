@@ -29,29 +29,28 @@ import views.html.UTRView
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UTRController @Inject()(
-                               override val messagesApi: MessagesApi,
-                               actions: Actions,
-                               formProvider: UtrFormProvider,
-                               sessionService: SessionService,
-                               val controllerComponents: MessagesControllerComponents,
-                               view: UTRView
-                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class UTRController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  formProvider: UtrFormProvider,
+  sessionService: SessionService,
+  val controllerComponents: MessagesControllerComponents,
+  view: UTRView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   private val form: Form[String] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.auth {
-    implicit request =>
-      Ok(view(form))
+  def onPageLoad(): Action[AnyContent] = actions.auth { implicit request =>
+    Ok(view(form))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.auth.async {
-    implicit request =>
-      form.bindFromRequest().fold(
-        (formWithErrors: Form[_]) =>
-          Future.successful(BadRequest(view(formWithErrors))),
-        utr =>
-          sessionService.initialiseSession(utr)
+  def onSubmit(): Action[AnyContent] = actions.auth.async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) => Future.successful(BadRequest(view(formWithErrors))),
+        utr => sessionService.initialiseSession(utr)
       )
   }
 

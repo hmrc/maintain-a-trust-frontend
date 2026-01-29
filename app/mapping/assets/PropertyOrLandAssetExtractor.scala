@@ -27,33 +27,35 @@ class PropertyOrLandAssetExtractor extends PlaybackExtractor[PropertyLandType] {
 
   override val optionalEntity: Boolean = true
 
-  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = PropertyOrLandAddressYesNoPage(index)
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean]   = PropertyOrLandAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = PropertyOrLandAddressUkYesNoPage(index)
-  override def addressPage(index: Int): QuestionPage[Address] = PropertyOrLandAddressPage(index)
+  override def addressPage(index: Int): QuestionPage[Address]        = PropertyOrLandAddressPage(index)
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: PropertyLandType,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: PropertyLandType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
     answers
       .flatMap(_.set(PropertyOrLandDescriptionPage(index), entity.buildingLandName))
       .flatMap(answers => extractOptionalAddress(entity.address, index, answers))
       .flatMap(_.set(PropertyOrLandTotalValuePage(index), entity.valueFull))
       .flatMap(answers => extractOptionalPreviousValue(entity.valuePrevious, entity.valueFull, index, answers))
-  }
 
-  private def extractOptionalPreviousValue(valuePrevious: Option[Long],
-                                           valueFull: Long,
-                                           index: Int,
-                                           answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  private def extractOptionalPreviousValue(
+    valuePrevious: Option[Long],
+    valueFull: Long,
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     valuePrevious match {
       // if a trust owns part of a property or land
       case Some(valuePrevious) if valuePrevious < valueFull =>
         answers
           .set(TrustOwnAllThePropertyOrLandPage(index), false)
           .flatMap(_.set(PropertyLandValueTrustPage(index), valuePrevious))
-      case _ =>
+      case _                                                =>
         answers.set(TrustOwnAllThePropertyOrLandPage(index), true)
     }
-  }
 
 }

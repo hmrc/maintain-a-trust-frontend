@@ -36,10 +36,10 @@ import scala.concurrent.Future
 
 class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValues with RecoverMethods {
 
-  private val utr = "0987654321"
-  private val address: UKAddress = UKAddress("Line 1", "Line 2", None, None, "NE11NE")
+  private val utr                                = "0987654321"
+  private val address: UKAddress                 = UKAddress("Line 1", "Line 2", None, None, "NE11NE")
   private val mockTrustConnector: TrustConnector = mock[TrustConnector]
-  private val date: LocalDate = LocalDate.parse("2019-02-03")
+  private val date: LocalDate                    = LocalDate.parse("2019-02-03")
 
   private val agentDeclaration: AgentDeclaration = AgentDeclaration(
     name = FullName(
@@ -63,7 +63,7 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
   )
 
   implicit val request: Request[AnyContent] = FakeRequest()
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit private val hc: HeaderCarrier    = HeaderCarrier()
 
   "Declaration service" when {
 
@@ -74,16 +74,16 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
         when(mockTrustConnector.declare(any[String], any[DeclarationForApi])(any(), any(), any()))
           .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(Right(TVNResponse("123456")))))
 
-
         val app = applicationBuilder()
           .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
           .build()
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.agentDeclaration(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName", Some(date)).value) {
-          result =>
-            result mustBe Right(TVNResponse("123456"))
+        whenReady(
+          service.agentDeclaration(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName", Some(date)).value
+        ) { result =>
+          result mustBe Right(TVNResponse("123456"))
         }
       }
 
@@ -98,9 +98,10 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.agentDeclaration(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName", Some(date)).value) {
-          result =>
-            result mustBe Left(ServerError())
+        whenReady(
+          service.agentDeclaration(utr, agentDeclaration, "SARN1234567", address, "agentFriendlyName", Some(date)).value
+        ) { result =>
+          result mustBe Left(ServerError())
         }
       }
 
@@ -119,9 +120,8 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.individualDeclaration(utr, individualDeclaration, Some(date)).value) {
-          result =>
-            result mustBe Right(TVNResponse("123456"))
+        whenReady(service.individualDeclaration(utr, individualDeclaration, Some(date)).value) { result =>
+          result mustBe Right(TVNResponse("123456"))
         }
       }
 
@@ -136,12 +136,12 @@ class DeclarationServiceSpec extends SpecBase with ScalaFutures with EitherValue
 
         val service = app.injector.instanceOf[DeclarationService]
 
-        whenReady(service.individualDeclaration(utr, individualDeclaration, Some(date)).value) {
-          result =>
-            result mustBe Left(ServerError())
+        whenReady(service.individualDeclaration(utr, individualDeclaration, Some(date)).value) { result =>
+          result mustBe Left(ServerError())
         }
       }
 
     }
   }
+
 }

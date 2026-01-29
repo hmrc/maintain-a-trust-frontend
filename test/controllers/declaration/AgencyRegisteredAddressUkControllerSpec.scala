@@ -29,12 +29,13 @@ import views.html.declaration.AgencyRegisteredAddressUkView
 
 class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
-  private val formProvider = new UKAddressFormProvider()
-  private val form = formProvider()
+  private val formProvider                        = new UKAddressFormProvider()
+  private val form                                = formProvider()
   private lazy val agencyRegisteredAddressUkRoute = routes.AgencyRegisteredAddressUkController.onPageLoad().url
 
   private val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, MakeChanges).value
+    .set(WhatIsNextPage, MakeChanges)
+    .value
 
   "AgencyRegisteredAddressUk Controller" must {
 
@@ -59,7 +60,8 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = baseAnswers
-        .set(AgencyRegisteredAddressUkPage, UKAddress("line 1", "line 2", Some("line 3"), Some("line 4"),"line 5")).value
+        .set(AgencyRegisteredAddressUkPage, UKAddress("line 1", "line 2", Some("line 3"), Some("line 4"), "line 5"))
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -72,7 +74,10 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(UKAddress("line 1","line 2", Some("line 3"), Some("line 4"),"line 5")))(request, messages).toString
+        view(form.fill(UKAddress("line 1", "line 2", Some("line 3"), Some("line 4"), "line 5")))(
+          request,
+          messages
+        ).toString
 
       application.stop()
     }
@@ -92,7 +97,9 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.transition.declaration.routes.AgentDeclarationController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.transition.declaration.routes.AgentDeclarationController
+          .onPageLoad()
+          .url
 
         application.stop()
       }
@@ -155,4 +162,5 @@ class AgencyRegisteredAddressUkControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

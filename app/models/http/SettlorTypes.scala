@@ -27,56 +27,61 @@ sealed trait SettlorType extends EntityType
 
 sealed trait LivingSettlor extends SettlorType
 
-case class DisplayTrustSettlors(settlor: List[DisplayTrustSettlor],
-                                settlorCompany: List[DisplayTrustSettlorCompany])
+case class DisplayTrustSettlors(settlor: List[DisplayTrustSettlor], settlorCompany: List[DisplayTrustSettlorCompany])
 
 object DisplayTrustSettlors {
 
   implicit val reads: Reads[DisplayTrustSettlors] = (
     (__ \ "settlor").readWithDefault[List[DisplayTrustSettlor]](Nil) and
       (__ \ "settlorCompany").readWithDefault[List[DisplayTrustSettlorCompany]](Nil)
-    )(DisplayTrustSettlors.apply _)
+  )(DisplayTrustSettlors.apply _)
 
   implicit val writes: Writes[DisplayTrustSettlors] = Json.writes[DisplayTrustSettlors]
 
 }
 
-case class DisplayTrustSettlor(lineNo: Option[String],
-                               bpMatchStatus: Option[String],
-                               name: FullName,
-                               dateOfBirth: Option[LocalDate],
-                               nationality: Option[String],
-                               countryOfResidence: Option[String],
-                               legallyIncapable: Option[Boolean],
-                               identification: Option[DisplayTrustIdentificationType],
-                               entityStart: String) extends LivingSettlor
+case class DisplayTrustSettlor(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  name: FullName,
+  dateOfBirth: Option[LocalDate],
+  nationality: Option[String],
+  countryOfResidence: Option[String],
+  legallyIncapable: Option[Boolean],
+  identification: Option[DisplayTrustIdentificationType],
+  entityStart: String
+) extends LivingSettlor
 
 object DisplayTrustSettlor {
   implicit val settlorFormat: Format[DisplayTrustSettlor] = Json.format[DisplayTrustSettlor]
 }
 
-case class DisplayTrustSettlorCompany(lineNo: Option[String],
-                                      bpMatchStatus: Option[String],
-                                      name: String,
-                                      countryOfResidence: Option[String],
-                                      companyType: Option[KindOfBusiness],
-                                      companyTime: Option[Boolean],
-                                      identification: Option[DisplayTrustIdentificationOrgType],
-                                      entityStart: String) extends LivingSettlor
+case class DisplayTrustSettlorCompany(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  name: String,
+  countryOfResidence: Option[String],
+  companyType: Option[KindOfBusiness],
+  companyTime: Option[Boolean],
+  identification: Option[DisplayTrustIdentificationOrgType],
+  entityStart: String
+) extends LivingSettlor
 
 object DisplayTrustSettlorCompany {
   implicit val settlorCompanyFormat: Format[DisplayTrustSettlorCompany] = Json.format[DisplayTrustSettlorCompany]
 }
 
-case class DisplayTrustWillType(lineNo: Option[String],
-                                bpMatchStatus: Option[String],
-                                name: FullName,
-                                dateOfBirth: Option[LocalDate],
-                                dateOfDeath: Option[LocalDate],
-                                nationality: Option[String],
-                                countryOfResidence: Option[String],
-                                identification: Option[DisplayTrustIdentificationType],
-                                entityStart: String) extends SettlorType
+case class DisplayTrustWillType(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  name: FullName,
+  dateOfBirth: Option[LocalDate],
+  dateOfDeath: Option[LocalDate],
+  nationality: Option[String],
+  countryOfResidence: Option[String],
+  identification: Option[DisplayTrustIdentificationType],
+  entityStart: String
+) extends SettlorType
 
 object DisplayTrustWillType {
   implicit val willTypeFormat: Format[DisplayTrustWillType] = Json.format[DisplayTrustWillType]

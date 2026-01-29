@@ -30,12 +30,15 @@ import views.html.declaration.AgencyRegisteredAddressInternationalView
 
 class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
-  private val formProvider = new InternationalAddressFormProvider()
-  private val form = formProvider()
-  private lazy val agencyRegisteredAddressInternationalRoute = routes.AgencyRegisteredAddressInternationalController.onPageLoad().url
+  private val formProvider                                   = new InternationalAddressFormProvider()
+  private val form                                           = formProvider()
+
+  private lazy val agencyRegisteredAddressInternationalRoute =
+    routes.AgencyRegisteredAddressInternationalController.onPageLoad().url
 
   private val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, MakeChanges).value
+    .set(WhatIsNextPage, MakeChanges)
+    .value
 
   "AgencyRegisteredAddressInternational Controller" must {
 
@@ -45,7 +48,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
       val request = FakeRequest(GET, agencyRegisteredAddressInternationalRoute)
 
-      val view = application.injector.instanceOf[AgencyRegisteredAddressInternationalView]
+      val view           = application.injector.instanceOf[AgencyRegisteredAddressInternationalView]
       val countryOptions = application.injector.instanceOf[CountryOptionsNonUK].options()
 
       val result = route(application, request).value
@@ -61,13 +64,17 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = baseAnswers
-        .set(AgencyRegisteredAddressInternationalPage, InternationalAddress("line 1", "line 2", Some("line 3"), "country")).value
+        .set(
+          AgencyRegisteredAddressInternationalPage,
+          InternationalAddress("line 1", "line 2", Some("line 3"), "country")
+        )
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       val request = FakeRequest(GET, agencyRegisteredAddressInternationalRoute)
 
-      val view = application.injector.instanceOf[AgencyRegisteredAddressInternationalView]
+      val view           = application.injector.instanceOf[AgencyRegisteredAddressInternationalView]
       val countryOptions = application.injector.instanceOf[CountryOptionsNonUK].options()
 
       val result = route(application, request).value
@@ -75,7 +82,10 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form.fill(InternationalAddress("line 1","line 2", Some("line 3"), "country")), countryOptions)(request, messages).toString
+        view(form.fill(InternationalAddress("line 1", "line 2", Some("line 3"), "country")), countryOptions)(
+          request,
+          messages
+        ).toString
 
       application.stop()
     }
@@ -97,7 +107,9 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.transition.declaration.routes.AgentDeclarationController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.transition.declaration.routes.AgentDeclarationController
+          .onPageLoad()
+          .url
 
         application.stop()
       }
@@ -129,7 +141,7 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val view = application.injector.instanceOf[AgencyRegisteredAddressInternationalView]
+      val view           = application.injector.instanceOf[AgencyRegisteredAddressInternationalView]
       val countryOptions = application.injector.instanceOf[CountryOptionsNonUK].options()
 
       val result = route(application, request).value
@@ -161,4 +173,5 @@ class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

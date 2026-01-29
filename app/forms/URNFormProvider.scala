@@ -26,4 +26,5 @@ class URNFormProvider @Inject() extends Mappings {
     Form(
       "value" -> urn()
     )
+
 }

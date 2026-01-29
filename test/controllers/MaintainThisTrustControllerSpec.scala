@@ -22,9 +22,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.MaintainThisTrustView
 
-
 class MaintainThisTrustControllerSpec extends SpecBase {
-
 
   "MaintainThisTrust Controller" must {
 
@@ -45,7 +43,9 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr, UTR,
+        view(
+          utr,
+          UTR,
           "settlors, trustees, beneficiaries, protectors and other individuals",
           routes.MaintainThisTrustController.onSubmit(needsIv = true)
         )(request, messages).toString
@@ -69,7 +69,9 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(urn, URN,
+        view(
+          urn,
+          URN,
           "settlors, trustees, beneficiaries, protectors and other individuals",
           routes.MaintainThisTrustController.onSubmit(needsIv = true)
         )(request, messages).toString
@@ -94,7 +96,9 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(utr, UTR,
+        view(
+          utr,
+          UTR,
           "settlors, trustees, beneficiaries, protectors and other individuals",
           routes.MaintainThisTrustController.onSubmit(needsIv = false)
         )(request, messages).toString
@@ -173,6 +177,6 @@ class MaintainThisTrustControllerSpec extends SpecBase {
       application.stop()
     }
 
-
   }
+
 }

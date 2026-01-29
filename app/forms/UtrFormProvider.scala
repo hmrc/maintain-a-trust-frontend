@@ -26,11 +26,9 @@ class UtrFormProvider @Inject() extends Mappings {
     Form(
       "value" -> utr(
         requiredKey = "utr.error.required",
-        invalidKey  = "utr.error.invalidCharacters",
-        lengthKey   = "utr.error.length"
+        invalidKey = "utr.error.invalidCharacters",
+        lengthKey = "utr.error.length"
       ).verifying(isNotEmpty("value", "utr.error.required"))
     )
 
 }
-
-

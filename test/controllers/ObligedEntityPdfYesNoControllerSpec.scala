@@ -35,12 +35,13 @@ import scala.concurrent.Future
 
 class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  private val formProvider = new YesNoFormProvider()
+  private val formProvider        = new YesNoFormProvider()
   private val form: Form[Boolean] = formProvider.withPrefix("obligedEntityPdfYesNo")
 
   private val identifier = "1234567890"
 
-  private lazy val obligedEntityPdfYesNoControllerRoute: String = routes.ObligedEntityPdfYesNoController.onPageLoad().url
+  private lazy val obligedEntityPdfYesNoControllerRoute: String =
+    routes.ObligedEntityPdfYesNoController.onPageLoad().url
 
   override val emptyUserAnswersForUtr: UserAnswers = super.emptyUserAnswersForUtr
 
@@ -88,7 +89,8 @@ class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       val mockPlaybackRepository = mock[PlaybackRepository]
 
-      when(mockPlaybackRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+      when(mockPlaybackRepository.set(any()))
+        .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr)).build()
 
@@ -100,7 +102,9 @@ class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.routes.ObligedEntityPdfController.getPdf(emptyUserAnswersForUtr.identifier).url
+      redirectLocation(result).value mustEqual controllers.routes.ObligedEntityPdfController
+        .getPdf(emptyUserAnswersForUtr.identifier)
+        .url
 
       application.stop()
     }
@@ -181,4 +185,5 @@ class ObligedEntityPdfYesNoControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

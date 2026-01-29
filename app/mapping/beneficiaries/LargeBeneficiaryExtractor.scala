@@ -27,9 +27,11 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
 
   override def metaDataPage(index: Int): QuestionPage[MetaData] = LargeBeneficiaryMetaData(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = LargeBeneficiaryCountryOfResidenceYesNoPage(index)
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    LargeBeneficiaryCountryOfResidenceYesNoPage(index)
 
-  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
 
   override def countryOfResidencePage(index: Int): QuestionPage[String] = LargeBeneficiaryCountryOfResidencePage(index)
 
@@ -45,10 +47,13 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
 
   override def utrPage(index: Int): QuestionPage[String] = LargeBeneficiaryUtrPage(index)
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayTrustLargeType,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
-    super.updateUserAnswers(answers, entity, index)
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayTrustLargeType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
+    super
+      .updateUserAnswers(answers, entity, index)
       .flatMap(_.set(LargeBeneficiaryNamePage(index), entity.organisationName))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
@@ -56,31 +61,36 @@ class LargeBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
       .flatMap(answers => extractBeneficiaryDescription(entity, index, answers))
       .flatMap(answers => extractNumberOfBeneficiaries(entity.numberOfBeneficiary, index, answers))
       .flatMap(_.set(LargeBeneficiarySafeIdPage(index), entity.identification.flatMap(_.safeId)))
-  }
 
-  private def extractBeneficiaryDescription(entity: DisplayTrustLargeType, index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
-      answers.set(
-        LargeBeneficiaryDescriptionPage(index),
-        Description(
-          entity.description,
-          entity.description1,
-          entity.description2,
-          entity.description3,
-          entity.description4
-        )
+  private def extractBeneficiaryDescription(
+    entity: DisplayTrustLargeType,
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
+    answers.set(
+      LargeBeneficiaryDescriptionPage(index),
+      Description(
+        entity.description,
+        entity.description1,
+        entity.description2,
+        entity.description3,
+        entity.description4
       )
+    )
+
+  private def extractNumberOfBeneficiaries(
+    numberOfBeneficiary: String,
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] = {
+    val setValue = (x: HowManyBeneficiaries) => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), x)
+    numberOfBeneficiary.toInt match {
+      case x if 0 to 100 contains x   => setValue(Over1)
+      case x if 101 to 200 contains x => setValue(Over101)
+      case x if 201 to 500 contains x => setValue(Over201)
+      case x if 501 to 999 contains x => setValue(Over501)
+      case _                          => setValue(Over1001)
+    }
   }
 
-  private def extractNumberOfBeneficiaries(numberOfBeneficiary: String,
-                                           index: Int,
-                                           answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
-      val setValue = (x: HowManyBeneficiaries) => answers.set(LargeBeneficiaryNumberOfBeneficiariesPage(index), x)
-      numberOfBeneficiary.toInt match {
-        case x if 0 to 100 contains x => setValue(Over1)
-        case x if 101 to 200 contains x => setValue(Over101)
-        case x if 201 to 500 contains x => setValue(Over201)
-        case x if 501 to 999 contains x => setValue(Over501)
-        case _ => setValue(Over1001)
-      }
-  }
 }

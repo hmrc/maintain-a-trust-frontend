@@ -26,18 +26,24 @@ import sections.assets.NonEeaBusinessAsset
 import utils.print.sections.{AnswerRowConverter, EntitiesPrinter, EntityPrinter}
 import viewmodels.{AnswerRow, AnswerSection}
 
-class NonEeaBusinessPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
+class NonEeaBusinessPrinter @Inject() (converter: AnswerRowConverter)
+    extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
 
-  override def printSection(index: Int, userAnswers: UserAnswers)
-                           (implicit messages: Messages): Option[AnswerSection] = {
+  override def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection] =
     printAnswerRows(index, userAnswers)
-  }
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.stringQuestion(NonEeaBusinessNamePage(index), userAnswers, "nonEeaBusiness.name"),
-    converter.addressQuestion(NonEeaBusinessAddressPage(index), userAnswers, "nonEeaBusiness.internationalAddress", name),
-    converter.countryQuestion(NonEeaBusinessGoverningCountryPage(index), userAnswers, "nonEeaBusiness.governingCountry", name)
+    converter
+      .addressQuestion(NonEeaBusinessAddressPage(index), userAnswers, "nonEeaBusiness.internationalAddress", name),
+    converter.countryQuestion(
+      NonEeaBusinessGoverningCountryPage(index),
+      userAnswers,
+      "nonEeaBusiness.governingCountry",
+      name
+    )
   )
 
   override def namePath(index: Int): JsPath = NonEeaBusinessNamePage(index).path

@@ -30,8 +30,7 @@ class SessionTimeoutController @Inject() (
   val config: Configuration,
   val env: Environment,
   mcc: MessagesControllerComponents
-) extends FrontendController(mcc)
-    with Logging {
+) extends FrontendController(mcc) with Logging {
 
   val keepAlive: Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok.withSession(request.session))
@@ -40,4 +39,5 @@ class SessionTimeoutController @Inject() (
   val timeout: Action[AnyContent] = Action.async {
     Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad.url).withNewSession)
   }
+
 }

@@ -40,7 +40,7 @@ import scala.concurrent.Future
 
 class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  private val formProvider = new YesNoFormProvider()
+  private val formProvider        = new YesNoFormProvider()
   private val form: Form[Boolean] = formProvider.withPrefix("needToPayTaxYesNo")
 
   private lazy val needToPayTaxYesNoRoute: String = routes.NeedToPayTaxYesNoController.onPageLoad().url
@@ -87,8 +87,8 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when true is submitted, marking this as taxable" in {
 
-      val mockPlaybackRepository = mock[PlaybackRepository]
-      val mockTrustConnector = mock[TrustConnector]
+      val mockPlaybackRepository    = mock[PlaybackRepository]
+      val mockTrustConnector        = mock[TrustConnector]
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
@@ -122,8 +122,8 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when true is submitted and this doesn't match the previous answer" in {
 
-      val mockPlaybackRepository = mock[PlaybackRepository]
-      val mockTrustConnector = mock[TrustConnector]
+      val mockPlaybackRepository    = mock[PlaybackRepository]
+      val mockTrustConnector        = mock[TrustConnector]
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
@@ -136,7 +136,8 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
         .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
       val userAnswers = emptyUserAnswersForUtr
-        .set(NeedToPayTaxYesNoPage, false).value
+        .set(NeedToPayTaxYesNoPage, false)
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -160,8 +161,8 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when true is submitted and this matches the previous answer" in {
 
-      val mockPlaybackRepository = mock[PlaybackRepository]
-      val mockTrustConnector = mock[TrustConnector]
+      val mockPlaybackRepository    = mock[PlaybackRepository]
+      val mockTrustConnector        = mock[TrustConnector]
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
@@ -174,7 +175,8 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
         .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
       val userAnswers = emptyUserAnswersForUtr
-        .set(NeedToPayTaxYesNoPage, true).value
+        .set(NeedToPayTaxYesNoPage, true)
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -198,8 +200,8 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the previous page when false is submitted" in {
 
-      val mockPlaybackRepository = mock[PlaybackRepository]
-      val mockTrustConnector = mock[TrustConnector]
+      val mockPlaybackRepository    = mock[PlaybackRepository]
+      val mockTrustConnector        = mock[TrustConnector]
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
@@ -254,7 +256,7 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "return an Internal Server Error when setting the user answers goes wrong" in {
 
-      val mockTrustConnector = mock[TrustConnector]
+      val mockTrustConnector        = mock[TrustConnector]
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
@@ -275,7 +277,7 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       val result = route(application, request).value
 
-      status(result) mustBe INTERNAL_SERVER_ERROR
+      status(result)      mustBe INTERNAL_SERVER_ERROR
       contentType(result) mustBe Some("text/html")
 
       application.stop()
@@ -297,4 +299,5 @@ class NeedToPayTaxYesNoControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

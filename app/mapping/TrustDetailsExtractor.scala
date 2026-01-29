@@ -45,57 +45,67 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
     updated match {
       case Right(a) =>
         Right(a)
-      case Left(_) =>
+      case Left(_)  =>
         logger.warn(s"[$className][extract][UTR/URN: ${answers.identifier}] failed to extract data.")
         Left(FailedToExtractData(TrustDetailsType.toString))
     }
   }
 
-  private def extractGovernedBy(lawCountry: Option[String],
-                                answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  private def extractGovernedBy(lawCountry: Option[String], answers: UserAnswers): Either[TrustErrors, UserAnswers] =
     extractIfTaxableOrMigratingToTaxable(answers) {
       lawCountry match {
-        case Some(country) => answers
-          .set(GovernedInsideTheUKPage, false)
-          .flatMap(_.set(CountryGoverningTrustPage, country))
-        case _ => answers
-          .set(GovernedInsideTheUKPage, true)
+        case Some(country) =>
+          answers
+            .set(GovernedInsideTheUKPage, false)
+            .flatMap(_.set(CountryGoverningTrustPage, country))
+        case _             =>
+          answers
+            .set(GovernedInsideTheUKPage, true)
       }
     }
-  }
 
-  private def extractAdminBy(administrationCountry: Option[String],
-                             answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  private def extractAdminBy(
+    administrationCountry: Option[String],
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     extractIfTaxableOrMigratingToTaxable(answers) {
       administrationCountry match {
-        case Some(country) if country != GB => answers
-          .set(AdministrationInsideUKPage, false)
-          .flatMap(_.set(CountryAdministeringTrustPage, country))
-        case _ => answers
-          .set(AdministrationInsideUKPage, true)
+        case Some(country) if country != GB =>
+          answers
+            .set(AdministrationInsideUKPage, false)
+            .flatMap(_.set(CountryAdministeringTrustPage, country))
+        case _                              =>
+          answers
+            .set(AdministrationInsideUKPage, true)
       }
     }
-  }
 
-  private def extractResidentialType(details: TrustDetailsType,
-                                     answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  private def extractResidentialType(
+    details: TrustDetailsType,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     extractIfTaxableOrMigratingToTaxable(answers) {
       details.residentialStatus match {
-        case Some(ResidentialStatusType(Some(uk), None)) => ukTrust(uk, details.settlorsUkBased, answers)
+        case Some(ResidentialStatusType(Some(uk), None))    => ukTrust(uk, details.settlorsUkBased, answers)
         case Some(ResidentialStatusType(None, Some(nonUK))) => nonUKTrust(nonUK, details.settlorsUkBased, answers)
-        case _ => Right(answers)
+        case _                                              => Right(answers)
       }
     }
-  }
 
-  private def ukTrust(uk: UkType, settlorsUkBased: Option[Boolean], answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  private def ukTrust(
+    uk: UkType,
+    settlorsUkBased: Option[Boolean],
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] = {
 
     def extractOffShore(answers: UserAnswers): Either[TrustErrors, UserAnswers] = uk.preOffShore match {
-      case Some(country) => answers
-        .set(TrustResidentOffshorePage, true)
-        .flatMap(_.set(TrustPreviouslyResidentPage, country))
-      case _ => answers
-        .set(TrustResidentOffshorePage, false)
+      case Some(country) =>
+        answers
+          .set(TrustResidentOffshorePage, true)
+          .flatMap(_.set(TrustPreviouslyResidentPage, country))
+      case _             =>
+        answers
+          .set(TrustResidentOffshorePage, false)
     }
 
     answers
@@ -104,12 +114,17 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
       .flatMap(extractWhereTrusteesAndSettlorsBased(true, settlorsUkBased, _))
   }
 
-  private def nonUKTrust(nonUK: NonUKType, settlorsUkBased: Option[Boolean], answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  private def nonUKTrust(
+    nonUK: NonUKType,
+    settlorsUkBased: Option[Boolean],
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] = {
 
-    def nonResidentType(answers: UserAnswers): Either[TrustErrors, UserAnswers] = nonUK.trusteeStatus.map(NonResidentType.fromDES) match {
-      case Some(value) => answers.set(NonResidentTypePage, value)
-      case _ => Right(answers)
-    }
+    def nonResidentType(answers: UserAnswers): Either[TrustErrors, UserAnswers] =
+      nonUK.trusteeStatus.map(NonResidentType.fromDES) match {
+        case Some(value) => answers.set(NonResidentTypePage, value)
+        case _           => Right(answers)
+      }
 
     answers
       .set(RegisteringTrustFor5APage, nonUK.sch5atcgga92)
@@ -119,19 +134,26 @@ class TrustDetailsExtractor extends ConditionalExtractor with Logging {
       .flatMap(extractWhereTrusteesAndSettlorsBased(false, settlorsUkBased, _))
   }
 
-  private def extractWhereTrusteesAndSettlorsBased(isUk: Boolean, settlorsUkBased: Option[Boolean], answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  private def extractWhereTrusteesAndSettlorsBased(
+    isUk: Boolean,
+    settlorsUkBased: Option[Boolean],
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     (isUk, settlorsUkBased) match {
-      case (true, None) => answers
-        .set(WhereTrusteesBasedPage, AllTrusteesUkBased)
-      case (true, _) => answers
-        .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees)
-        .flatMap(_.set(SettlorsUkBasedPage, true))
-      case (false, None) => answers
-        .set(WhereTrusteesBasedPage, NoTrusteesUkBased)
-      case (false, _) => answers
-        .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees)
-        .flatMap(_.set(SettlorsUkBasedPage, false))
+      case (true, None)  =>
+        answers
+          .set(WhereTrusteesBasedPage, AllTrusteesUkBased)
+      case (true, _)     =>
+        answers
+          .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees)
+          .flatMap(_.set(SettlorsUkBasedPage, true))
+      case (false, None) =>
+        answers
+          .set(WhereTrusteesBasedPage, NoTrusteesUkBased)
+      case (false, _)    =>
+        answers
+          .set(WhereTrusteesBasedPage, InternationalAndUkBasedTrustees)
+          .flatMap(_.set(SettlorsUkBasedPage, false))
     }
-  }
 
 }

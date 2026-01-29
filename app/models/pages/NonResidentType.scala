@@ -28,30 +28,32 @@ object NonResidentType extends Enumerable.Implicits {
   case object CeaseResident extends WithName("non-resident-cease-resident") with NonResidentType
 
   val values: List[NonResidentType] = List(
-    Domiciled, NonDomiciled, CeaseResident
+    Domiciled,
+    NonDomiciled,
+    CeaseResident
   )
 
-  val options: List[RadioOption] = values.map {
-    value =>
-      RadioOption("nonresidentType", value.toString)
+  val options: List[RadioOption] = values.map { value =>
+    RadioOption("nonresidentType", value.toString)
   }
 
   implicit val enumerable: Enumerable[NonResidentType] =
     Enumerable(values.map(v => v.toString -> v): _*)
 
-  private val domiciledDES = "Non Resident Domiciled"
-  private val nonDomiciledDES = "Non Resident Non Domiciled"
+  private val domiciledDES     = "Non Resident Domiciled"
+  private val nonDomiciledDES  = "Non Resident Non Domiciled"
   private val ceaseResidentDES = "Non Resident Cease Resident"
 
   def toDES(value: NonResidentType): String = value match {
-    case Domiciled => domiciledDES
-    case NonDomiciled => nonDomiciledDES
+    case Domiciled     => domiciledDES
+    case NonDomiciled  => nonDomiciledDES
     case CeaseResident => ceaseResidentDES
   }
 
   def fromDES(value: String): NonResidentType = value match {
-    case `domiciledDES` => Domiciled
-    case `nonDomiciledDES` => NonDomiciled
+    case `domiciledDES`     => Domiciled
+    case `nonDomiciledDES`  => NonDomiciled
     case `ceaseResidentDES` => CeaseResident
   }
+
 }

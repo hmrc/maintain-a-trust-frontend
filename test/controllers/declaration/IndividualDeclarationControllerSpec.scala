@@ -45,22 +45,24 @@ import scala.concurrent.Future
 
 class IndividualDeclarationControllerSpec extends SpecBase {
 
-  private val formProvider = new IndividualDeclarationFormProvider()
+  private val formProvider                      = new IndividualDeclarationFormProvider()
   private val form: Form[IndividualDeclaration] = formProvider()
-  private val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
-  private lazy val onSubmit: Call = routes.IndividualDeclarationController.onSubmit()
+  private val address: UKAddress                = UKAddress("line1", "line2", None, None, "postCode")
+  private lazy val onSubmit: Call               = routes.IndividualDeclarationController.onSubmit()
 
-  private val whatIsNext: WhatIsNext = MakeChanges
+  private val whatIsNext: WhatIsNext   = MakeChanges
+
   private val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, whatIsNext).value
+    .set(WhatIsNextPage, whatIsNext)
+    .value
 
-  private def mockDeclarationServiceResult(declarationService: DeclarationService,
-                                           result: Either[TrustErrors, TVNResponse] = Right(TVNResponse("123456"))
-                                          ): OngoingStubbing[TrustEnvelope[TVNResponse]] = {
+  private def mockDeclarationServiceResult(
+    declarationService: DeclarationService,
+    result: Either[TrustErrors, TVNResponse] = Right(TVNResponse("123456"))
+  ): OngoingStubbing[TrustEnvelope[TVNResponse]] =
 
     when(declarationService.individualDeclaration(any(), any(), any())(any(), any(), any()))
       .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(result)))
-  }
 
   "Individual Declaration Controller" must {
 
@@ -86,13 +88,21 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
       val utr = "0987654321"
 
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
-      )))
+      val enrolments = Enrolments(
+        Set(
+          Enrolment(
+            "HMRC-TERS-ORG",
+            Seq(EnrolmentIdentifier("SAUTR", utr)),
+            "Activated"
+          )
+        )
+      )
 
       val userAnswers = baseAnswers
-        .set(IsThisLeadTrusteePage(0), true).value
-        .set(TrusteeAddressPage(0), address).value
+        .set(IsThisLeadTrusteePage(0), true)
+        .value
+        .set(TrusteeAddressPage(0), address)
+        .value
 
       val mockDeclarationService: DeclarationService = mock[DeclarationService]
       mockDeclarationServiceResult(mockDeclarationService)
@@ -121,13 +131,21 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
       val utr = "0987654321"
 
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
-      )))
+      val enrolments = Enrolments(
+        Set(
+          Enrolment(
+            "HMRC-TERS-ORG",
+            Seq(EnrolmentIdentifier("SAUTR", utr)),
+            "Activated"
+          )
+        )
+      )
 
       val userAnswers = baseAnswers
-        .set(IsThisLeadTrusteePage(0), true).value
-        .set(CorrespondenceAddressPage, address).value
+        .set(IsThisLeadTrusteePage(0), true)
+        .value
+        .set(CorrespondenceAddressPage, address)
+        .value
 
       val mockDeclarationService: DeclarationService = mock[DeclarationService]
       mockDeclarationServiceResult(mockDeclarationService)
@@ -178,13 +196,21 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
       val utr = "0987654321"
 
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
-      )))
+      val enrolments = Enrolments(
+        Set(
+          Enrolment(
+            "HMRC-TERS-ORG",
+            Seq(EnrolmentIdentifier("SAUTR", utr)),
+            "Activated"
+          )
+        )
+      )
 
       val userAnswers = baseAnswers
-        .set(IsThisLeadTrusteePage(0), true).value
-        .set(TrusteeAddressPage(0), address).value
+        .set(IsThisLeadTrusteePage(0), true)
+        .value
+        .set(TrusteeAddressPage(0), address)
+        .value
 
       val mockDeclarationService: DeclarationService = mock[DeclarationService]
       mockDeclarationServiceResult(mockDeclarationService, Left(DeclarationError()))
@@ -203,7 +229,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      status(result) mustBe SEE_OTHER
+      status(result)           mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.declaration.routes.ProblemDeclaringController.onPageLoad().url)
 
       application.stop()
@@ -213,13 +239,21 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
       val utr = "0987654321"
 
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
-      )))
+      val enrolments = Enrolments(
+        Set(
+          Enrolment(
+            "HMRC-TERS-ORG",
+            Seq(EnrolmentIdentifier("SAUTR", utr)),
+            "Activated"
+          )
+        )
+      )
 
       val userAnswers = baseAnswers
-        .set(IsThisLeadTrusteePage(0), true).value
-        .set(TrusteeAddressPage(0), address).value
+        .set(IsThisLeadTrusteePage(0), true)
+        .value
+        .set(TrusteeAddressPage(0), address)
+        .value
 
       val mockDeclarationService: DeclarationService = mock[DeclarationService]
       mockDeclarationServiceResult(mockDeclarationService, Left(ServerError()))
@@ -238,7 +272,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      status(result) mustBe INTERNAL_SERVER_ERROR
+      status(result)      mustBe INTERNAL_SERVER_ERROR
       contentType(result) mustBe Some("text/html")
 
       application.stop()

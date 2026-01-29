@@ -31,10 +31,10 @@ class AgentDeclarationFormProviderSpec extends StringFieldBehaviours {
 
   ".firstName" must {
 
-    val fieldName = "firstName"
+    val fieldName   = "firstName"
     val requiredKey = s"$prefix.$fieldName.required"
-    val lengthKey = s"$prefix.$fieldName.length"
-    val maxLength = 35
+    val lengthKey   = s"$prefix.$fieldName.length"
+    val maxLength   = 35
 
     behave like fieldThatBindsValidData(
       form,
@@ -82,30 +82,54 @@ class AgentDeclarationFormProviderSpec extends StringFieldBehaviours {
     )
 
     "bind whitespace trim values" in {
-      val result = form.bind(Map("firstName" -> "firstName", "middleName" -> "  middle  ", "lastName" -> "lastName",
-        "agencyName" -> "agencyName", "telephoneNumber" -> "07700900000", "crn" -> "123 456 789A"))
+      val result = form.bind(
+        Map(
+          "firstName"       -> "firstName",
+          "middleName"      -> "  middle  ",
+          "lastName"        -> "lastName",
+          "agencyName"      -> "agencyName",
+          "telephoneNumber" -> "07700900000",
+          "crn"             -> "123 456 789A"
+        )
+      )
       result.value.value.name.middleName shouldBe Some("middle")
     }
 
     "bind whitespace blank values" in {
-      val result = form.bind(Map("firstName" -> "firstName", "middleName" -> "  ", "lastName" -> "lastName",
-        "agencyName" -> "agencyName", "telephoneNumber" -> "07700900000", "crn" -> "123 456 789A"))
+      val result = form.bind(
+        Map(
+          "firstName"       -> "firstName",
+          "middleName"      -> "  ",
+          "lastName"        -> "lastName",
+          "agencyName"      -> "agencyName",
+          "telephoneNumber" -> "07700900000",
+          "crn"             -> "123 456 789A"
+        )
+      )
       result.value.value.name.middleName shouldBe None
     }
 
     "bind whitespace no values" in {
-      val result = form.bind(Map("firstName" -> "firstName", "middleName" -> "", "lastName" -> "lastName",
-        "agencyName" -> "agencyName", "telephoneNumber" -> "07700900000", "crn" -> "123 456 789A"))
+      val result = form.bind(
+        Map(
+          "firstName"       -> "firstName",
+          "middleName"      -> "",
+          "lastName"        -> "lastName",
+          "agencyName"      -> "agencyName",
+          "telephoneNumber" -> "07700900000",
+          "crn"             -> "123 456 789A"
+        )
+      )
       result.value.value.name.middleName shouldBe None
     }
   }
 
   ".lastName" must {
 
-    val fieldName = "lastName"
+    val fieldName   = "lastName"
     val requiredKey = s"$prefix.$fieldName.required"
-    val lengthKey = s"$prefix.$fieldName.length"
-    val maxLength = 35
+    val lengthKey   = s"$prefix.$fieldName.length"
+    val maxLength   = 35
 
     behave like fieldThatBindsValidData(
       form,
@@ -135,10 +159,10 @@ class AgentDeclarationFormProviderSpec extends StringFieldBehaviours {
 
   ".agencyName" must {
 
-    val fieldName = "agencyName"
+    val fieldName   = "agencyName"
     val requiredKey = s"$prefix.$fieldName.required"
-    val lengthKey = s"$prefix.$fieldName.length"
-    val maxLength = 56
+    val lengthKey   = s"$prefix.$fieldName.length"
+    val maxLength   = 56
 
     behave like fieldThatBindsValidData(
       form,
@@ -168,9 +192,9 @@ class AgentDeclarationFormProviderSpec extends StringFieldBehaviours {
 
   "telephoneNumber" must {
 
-    val fieldName = "telephoneNumber"
+    val fieldName   = "telephoneNumber"
     val requiredKey = s"$prefix.$fieldName.required"
-    val invalidKey = s"$prefix.$fieldName.invalid"
+    val invalidKey  = s"$prefix.$fieldName.invalid"
 
     behave like fieldThatBindsValidData(
       form,
@@ -199,10 +223,10 @@ class AgentDeclarationFormProviderSpec extends StringFieldBehaviours {
 
   "crn" must {
 
-    val fieldName = "crn"
+    val fieldName   = "crn"
     val requiredKey = s"$prefix.$fieldName.required"
-    val lengthKey = s"$prefix.$fieldName.length"
-    val maxLength = 56
+    val lengthKey   = s"$prefix.$fieldName.length"
+    val maxLength   = 56
 
     behave like fieldThatBindsValidData(
       form,
@@ -241,14 +265,30 @@ class AgentDeclarationFormProviderSpec extends StringFieldBehaviours {
     )
 
     "bind whitespace trim values" in {
-      val result = form.bind(Map("firstName" -> "firstName", "lastName" -> "lastName", "agencyName" -> "agencyName",
-        "telephoneNumber" -> "07700900000", "crn" -> "123 456 789A", "email" -> "  test@test.com  "))
+      val result = form.bind(
+        Map(
+          "firstName"       -> "firstName",
+          "lastName"        -> "lastName",
+          "agencyName"      -> "agencyName",
+          "telephoneNumber" -> "07700900000",
+          "crn"             -> "123 456 789A",
+          "email"           -> "  test@test.com  "
+        )
+      )
       result.value.value.email shouldBe Some("test@test.com")
     }
 
     "bind whitespace no values" in {
-      val result = form.bind(Map("firstName" -> "firstName", "lastName" -> "lastName", "agencyName" -> "agencyName",
-        "telephoneNumber" -> "07700900000", "crn" -> "123 456 789A", "email" -> ""))
+      val result = form.bind(
+        Map(
+          "firstName"       -> "firstName",
+          "lastName"        -> "lastName",
+          "agencyName"      -> "agencyName",
+          "telephoneNumber" -> "07700900000",
+          "crn"             -> "123 456 789A",
+          "email"           -> ""
+        )
+      )
       result.value.value.email shouldBe None
     }
   }

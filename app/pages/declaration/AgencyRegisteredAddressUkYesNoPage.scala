@@ -27,14 +27,14 @@ case object AgencyRegisteredAddressUkYesNoPage extends QuestionPage[Boolean] {
 
   override def toString: String = "agencyRegisteredAddressInUkYesNo"
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] =
     value match {
       case Some(false) =>
         userAnswers.remove(AgencyRegisteredAddressUkPage)
-      case Some(true) =>
+      case Some(true)  =>
         userAnswers.remove(AgencyRegisteredAddressInternationalPage)
-      case _ =>
+      case _           =>
         super.cleanup(value, userAnswers)
     }
-  }
+
 }

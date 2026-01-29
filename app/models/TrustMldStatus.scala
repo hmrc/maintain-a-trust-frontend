@@ -17,8 +17,10 @@
 package models
 
 sealed trait TrustMldStatus {
+
   def is5mldTrustIn5mldMode: Boolean =
     this == Underlying5mldTaxableTrustIn5mldMode || this == Underlying5mldNonTaxableTrustIn5mldMode
+
 }
 
 case object Underlying4mldTrustIn5mldMode extends TrustMldStatus

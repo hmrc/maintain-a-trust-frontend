@@ -39,7 +39,8 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
 
   private lazy val baseUrl: String = s"${config.trustsUrl}/trusts"
 
-  def getUntransformedTrustDetails(identifier: String
+  def getUntransformedTrustDetails(
+    identifier: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TrustDetails] = EitherT {
     val url: String = s"$baseUrl/trust-details/$identifier/untransformed"
     http
@@ -121,9 +122,9 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
   }
 
   def declare(identifier: String, payload: DeclarationForApi)(implicit
-                                                              request: RequestHeader,
-                                                              hc: HeaderCarrier,
-                                                              ec: ExecutionContext
+    request: RequestHeader,
+    hc: HeaderCarrier,
+    ec: ExecutionContext
   ): TrustEnvelope[TVNResponse] = EitherT {
 
     val httpReads     = HttpReads.Implicits.readRaw
@@ -136,7 +137,7 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
     http
       .post(url"$url")(newHc)
       .withBody(Json.toJson(payload))
-      .execute[HttpResponse](httpReads,ec)
+      .execute[HttpResponse](httpReads, ec)
       .map { response =>
         response.status match {
           case OK     => Right(response.json.as[TVNResponse])
@@ -263,4 +264,5 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
         Left(handleError(ex, "getFirstTaxYearToAskFor"))
       }
   }
+
 }

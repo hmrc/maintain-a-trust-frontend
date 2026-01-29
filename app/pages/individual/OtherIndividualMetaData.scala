@@ -21,7 +21,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.OtherIndividuals
 
-case class OtherIndividualMetaData(index: Int) extends QuestionPage[MetaData]{
+case class OtherIndividualMetaData(index: Int) extends QuestionPage[MetaData] {
 
   override def path: JsPath = JsPath \ OtherIndividuals \ index \ toString
 

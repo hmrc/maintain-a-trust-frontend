@@ -44,11 +44,12 @@ trait Mocked extends MockitoSugar {
 
   val mockActiveSessionRepository: ActiveSessionRepository = mock[ActiveSessionRepository]
 
-  def mockPlaybackRepositoryBuilder(playbackRepository: PlaybackRepository,
-                                    getResult: Either[TrustErrors, Option[UserAnswers]] = Right(None),
-                                    setResult: Either[TrustErrors, Boolean] = Right(true),
-                                    resetCacheResult: Either[TrustErrors, Option[Boolean]] = Right(Some(true))
-                                   ): OngoingStubbing[TrustEnvelope[Option[Boolean]]] = {
+  def mockPlaybackRepositoryBuilder(
+    playbackRepository: PlaybackRepository,
+    getResult: Either[TrustErrors, Option[UserAnswers]] = Right(None),
+    setResult: Either[TrustErrors, Boolean] = Right(true),
+    resetCacheResult: Either[TrustErrors, Option[Boolean]] = Right(Some(true))
+  ): OngoingStubbing[TrustEnvelope[Option[Boolean]]] = {
 
     when(playbackRepository.get(any(), any(), any()))
       .thenReturn(EitherT[Future, TrustErrors, Option[UserAnswers]](Future.successful(getResult)))

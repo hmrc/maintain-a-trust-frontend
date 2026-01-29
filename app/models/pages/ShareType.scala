@@ -27,14 +27,15 @@ object ShareType extends Enumerable.Implicits {
   case object Unquoted extends WithName("Unquoted") with ShareType
 
   val values: List[ShareType] = List(
-    Quoted, Unquoted
+    Quoted,
+    Unquoted
   )
 
-  val options: List[RadioOption] = values.map {
-    value =>
-      RadioOption("shareType", value.toString)
+  val options: List[RadioOption] = values.map { value =>
+    RadioOption("shareType", value.toString)
   }
 
   implicit val enumerable: Enumerable[ShareType] =
     Enumerable(values.map(v => v.toString -> v): _*)
+
 }

@@ -32,10 +32,8 @@ class ShareClassSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyCh
 
       val gen = Gen.oneOf(ShareClass.values)
 
-      forAll(gen) {
-        shareClass =>
-
-          JsString(shareClass.toString).validate[ShareClass].asOpt.value mustEqual shareClass
+      forAll(gen) { shareClass =>
+        JsString(shareClass.toString).validate[ShareClass].asOpt.value mustEqual shareClass
       }
     }
 
@@ -43,10 +41,8 @@ class ShareClassSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyCh
 
       val gen = arbitrary[String] suchThat (!ShareClass.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[ShareClass] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[ShareClass] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,11 +50,10 @@ class ShareClassSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyCh
 
       val gen = Gen.oneOf(ShareClass.values)
 
-      forAll(gen) {
-        shareClass =>
-
-          Json.toJson(shareClass) mustEqual JsString(shareClass.toString)
+      forAll(gen) { shareClass =>
+        Json.toJson(shareClass) mustEqual JsString(shareClass.toString)
       }
     }
   }
+
 }

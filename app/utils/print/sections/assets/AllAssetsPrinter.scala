@@ -23,13 +23,15 @@ import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class AllAssetsPrinter @Inject()(moneyAssetPrinter: MoneyAssetPrinter,
-                                 propertyOrLandAssetPrinter: PropertyOrLandAssetPrinter,
-                                 shareAssetPrinter: ShareAssetPrinter,
-                                 businessAssetPrinter: BusinessAssetPrinter,
-                                 partnershipAssetPrinter: PartnershipAssetPrinter,
-                                 otherAssetPrinter: OtherAssetPrinter,
-                                 nonEeaBusiness: NonEeaBusinessPrinter) extends PrinterHelper {
+class AllAssetsPrinter @Inject() (
+  moneyAssetPrinter: MoneyAssetPrinter,
+  propertyOrLandAssetPrinter: PropertyOrLandAssetPrinter,
+  shareAssetPrinter: ShareAssetPrinter,
+  businessAssetPrinter: BusinessAssetPrinter,
+  partnershipAssetPrinter: PartnershipAssetPrinter,
+  otherAssetPrinter: OtherAssetPrinter,
+  nonEeaBusiness: NonEeaBusinessPrinter
+) extends PrinterHelper {
 
   def entities(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
@@ -54,4 +56,5 @@ class AllAssetsPrinter @Inject()(moneyAssetPrinter: MoneyAssetPrinter,
 
   override def headingKey(migratingFromNonTaxableToTaxable: Boolean): Option[String] =
     if (migratingFromNonTaxableToTaxable) Some("assets") else Some("nonEeaBusinesses")
+
 }

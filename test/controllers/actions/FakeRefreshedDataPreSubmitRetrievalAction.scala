@@ -22,10 +22,11 @@ import play.api.mvc.Result
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeRefreshedDataPreSubmitRetrievalAction @Inject()(
-                                              implicit val executionContext: ExecutionContext
-                                            ) extends RefreshedDataPreSubmitRetrievalAction {
+class FakeRefreshedDataPreSubmitRetrievalAction @Inject() (implicit
+  val executionContext: ExecutionContext
+) extends RefreshedDataPreSubmitRetrievalAction {
 
-  override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = Future.successful(Right(request))
+  override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] =
+    Future.successful(Right(request))
 
 }

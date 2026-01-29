@@ -26,21 +26,23 @@ import sections.assets.PropertyOrLandAsset
 import utils.print.sections.{AnswerRowConverter, EntitiesPrinter, EntityPrinter}
 import viewmodels.{AnswerRow, AnswerSection}
 
-class PropertyOrLandAssetPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
+class PropertyOrLandAssetPrinter @Inject() (converter: AnswerRowConverter)
+    extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
 
-  override def printSection(index: Int, userAnswers: UserAnswers)
-                           (implicit messages: Messages): Option[AnswerSection] = {
+  override def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection] =
     printAnswerRows(index, userAnswers)
-  }
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.yesNoQuestion(PropertyOrLandAddressYesNoPage(index), userAnswers, "asset.propertyOrLand.addressYesNo"),
-    converter.yesNoQuestion(PropertyOrLandAddressUkYesNoPage(index), userAnswers, "asset.propertyOrLand.addressUkYesNo"),
+    converter
+      .yesNoQuestion(PropertyOrLandAddressUkYesNoPage(index), userAnswers, "asset.propertyOrLand.addressUkYesNo"),
     converter.addressQuestion(PropertyOrLandAddressPage(index), userAnswers, "asset.propertyOrLand.address"),
     converter.stringQuestion(PropertyOrLandDescriptionPage(index), userAnswers, "asset.propertyOrLand.description"),
     converter.currencyQuestion(PropertyOrLandTotalValuePage(index), userAnswers, "asset.propertyOrLand.totalValue"),
-    converter.yesNoQuestion(TrustOwnAllThePropertyOrLandPage(index), userAnswers, "asset.propertyOrLand.trustOwnAllYesNo"),
+    converter
+      .yesNoQuestion(TrustOwnAllThePropertyOrLandPage(index), userAnswers, "asset.propertyOrLand.trustOwnAllYesNo"),
     converter.currencyQuestion(PropertyLandValueTrustPage(index), userAnswers, "asset.propertyOrLand.valueInTrust")
   )
 

@@ -28,7 +28,9 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.stubbing.OngoingStubbing
 import pages.WhatIsNextPage
-import pages.declaration.{AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage}
+import pages.declaration.{
+  AgencyRegisteredAddressInternationalPage, AgencyRegisteredAddressUkPage, AgencyRegisteredAddressUkYesNoPage
+}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Call}
@@ -44,22 +46,24 @@ import scala.concurrent.Future
 
 class AgentDeclarationControllerSpec extends SpecBase {
 
-  private val formProvider = new AgentDeclarationFormProvider()
+  private val formProvider                 = new AgentDeclarationFormProvider()
   private val form: Form[AgentDeclaration] = formProvider()
-  private val address: UKAddress = UKAddress("line1", "line2", None, None, "postCode")
-  private lazy val onSubmit: Call = routes.AgentDeclarationController.onSubmit()
+  private val address: UKAddress           = UKAddress("line1", "line2", None, None, "postCode")
+  private lazy val onSubmit: Call          = routes.AgentDeclarationController.onSubmit()
 
-  private val whatIsNext: WhatIsNext = MakeChanges
+  private val whatIsNext: WhatIsNext   = MakeChanges
+
   private val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, whatIsNext).value
+    .set(WhatIsNextPage, whatIsNext)
+    .value
 
-  private def mockDeclarationServiceResult(declarationService: DeclarationService,
-                                           result: Either[TrustErrors, TVNResponse] = Right(TVNResponse("123456"))
-                                          ): OngoingStubbing[TrustEnvelope[TVNResponse]] = {
+  private def mockDeclarationServiceResult(
+    declarationService: DeclarationService,
+    result: Either[TrustErrors, TVNResponse] = Right(TVNResponse("123456"))
+  ): OngoingStubbing[TrustEnvelope[TVNResponse]] =
 
     when(declarationService.agentDeclaration(any(), any(), any(), any(), any(), any())(any(), any(), any()))
       .thenReturn(EitherT[Future, TrustErrors, TVNResponse](Future.successful(result)))
-  }
 
   "Agent Declaration Controller" must {
 
@@ -83,13 +87,21 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
     "redirect to confirmation for a POST" in {
 
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")), "Activated"
-      )))
+      val enrolments = Enrolments(
+        Set(
+          Enrolment(
+            "HMRC-AS-AGENT",
+            Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")),
+            "Activated"
+          )
+        )
+      )
 
       val userAnswers = baseAnswers
-        .set(AgencyRegisteredAddressUkYesNoPage, true).value
-        .set(AgencyRegisteredAddressUkPage, address).value
+        .set(AgencyRegisteredAddressUkYesNoPage, true)
+        .value
+        .set(AgencyRegisteredAddressUkPage, address)
+        .value
 
       val mockDeclarationService: DeclarationService = mock[DeclarationService]
       mockDeclarationServiceResult(mockDeclarationService)
@@ -126,9 +138,16 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
       val request =
         FakeRequest(POST, routes.AgentDeclarationController.onPageLoad().url)
-          .withFormUrlEncodedBody(("firstName", ""), ("lastName", ""), ("agencyName", ""), ("telephoneNumber", ""), ("crn", ""))
+          .withFormUrlEncodedBody(
+            ("firstName", ""),
+            ("lastName", ""),
+            ("agencyName", ""),
+            ("telephoneNumber", ""),
+            ("crn", "")
+          )
 
-      val boundForm = form.bind(Map("firstName" -> "", "lastName" -> "", "agencyName" -> "", "telephoneNumber" -> "", "crn" -> ""))
+      val boundForm =
+        form.bind(Map("firstName" -> "", "lastName" -> "", "agencyName" -> "", "telephoneNumber" -> "", "crn" -> ""))
 
       val view = application.injector.instanceOf[AgentDeclarationView]
 
@@ -144,13 +163,21 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
     "render problem declaring when error retrieving TVN" in {
 
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")), "Activated"
-      )))
+      val enrolments = Enrolments(
+        Set(
+          Enrolment(
+            "HMRC-AS-AGENT",
+            Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")),
+            "Activated"
+          )
+        )
+      )
 
       val userAnswers = baseAnswers
-        .set(AgencyRegisteredAddressUkYesNoPage, true).value
-        .set(AgencyRegisteredAddressUkPage, address).value
+        .set(AgencyRegisteredAddressUkYesNoPage, true)
+        .value
+        .set(AgencyRegisteredAddressUkPage, address)
+        .value
 
       val mockDeclarationService: DeclarationService = mock[DeclarationService]
       mockDeclarationServiceResult(mockDeclarationService, Left(DeclarationError()))
@@ -182,13 +209,21 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
     "render problem declaring when the user is not an agent" in {
 
-      val enrolments: Enrolments = Enrolments(Set(Enrolment(
-        "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", "0987654321")), "Activated"
-      )))
+      val enrolments: Enrolments = Enrolments(
+        Set(
+          Enrolment(
+            "HMRC-TERS-ORG",
+            Seq(EnrolmentIdentifier("SAUTR", "0987654321")),
+            "Activated"
+          )
+        )
+      )
 
       val userAnswers = baseAnswers
-        .set(AgencyRegisteredAddressUkYesNoPage, true).value
-        .set(AgencyRegisteredAddressUkPage, address).value
+        .set(AgencyRegisteredAddressUkYesNoPage, true)
+        .value
+        .set(AgencyRegisteredAddressUkPage, address)
+        .value
 
       val mockDeclarationService: DeclarationService = mock[DeclarationService]
       mockDeclarationServiceResult(mockDeclarationService)
@@ -202,7 +237,13 @@ class AgentDeclarationControllerSpec extends SpecBase {
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("agencyName", "Agency Name"), ("telephoneNumber", "01234567890"), ("crn", "123456"))
+        .withFormUrlEncodedBody(
+          ("firstName", "John"),
+          ("lastName", "Smith"),
+          ("agencyName", "Agency Name"),
+          ("telephoneNumber", "01234567890"),
+          ("crn", "123456")
+        )
 
       val result = route(application, request).value
 
@@ -214,14 +255,23 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
     "render problem declaring when failed to get agency address (agencyAddress = None)" in {
 
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")), "Activated"
-      )))
+      val enrolments = Enrolments(
+        Set(
+          Enrolment(
+            "HMRC-AS-AGENT",
+            Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")),
+            "Activated"
+          )
+        )
+      )
 
       val userAnswers = baseAnswers
-        .set(AgencyRegisteredAddressUkYesNoPage, false).value
-        .set(AgencyRegisteredAddressUkPage, None).value
-        .set(AgencyRegisteredAddressInternationalPage, None).value
+        .set(AgencyRegisteredAddressUkYesNoPage, false)
+        .value
+        .set(AgencyRegisteredAddressUkPage, None)
+        .value
+        .set(AgencyRegisteredAddressInternationalPage, None)
+        .value
 
       val mockDeclarationService: DeclarationService = mock[DeclarationService]
       mockDeclarationServiceResult(mockDeclarationService)
@@ -236,7 +286,13 @@ class AgentDeclarationControllerSpec extends SpecBase {
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("agencyName", "Agency Name"), ("telephoneNumber", "01234567890"), ("crn", "123456"))
+        .withFormUrlEncodedBody(
+          ("firstName", "John"),
+          ("lastName", "Smith"),
+          ("agencyName", "Agency Name"),
+          ("telephoneNumber", "01234567890"),
+          ("crn", "123456")
+        )
 
       val result = route(application, request).value
 
@@ -249,13 +305,21 @@ class AgentDeclarationControllerSpec extends SpecBase {
 
       mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(ServerError()))
 
-      val enrolments = Enrolments(Set(Enrolment(
-        "HMRC-AS-AGENT", Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")), "Activated"
-      )))
+      val enrolments = Enrolments(
+        Set(
+          Enrolment(
+            "HMRC-AS-AGENT",
+            Seq(EnrolmentIdentifier("AgentReferenceNumber", "SARN1234567")),
+            "Activated"
+          )
+        )
+      )
 
       val userAnswers = baseAnswers
-        .set(AgencyRegisteredAddressUkYesNoPage, true).value
-        .set(AgencyRegisteredAddressUkPage, address).value
+        .set(AgencyRegisteredAddressUkYesNoPage, true)
+        .value
+        .set(AgencyRegisteredAddressUkPage, address)
+        .value
 
       val mockDeclarationService: DeclarationService = mock[DeclarationService]
       mockDeclarationServiceResult(mockDeclarationService)
@@ -270,7 +334,13 @@ class AgentDeclarationControllerSpec extends SpecBase {
         ).build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-        .withFormUrlEncodedBody(("firstName", "John"), ("lastName", "Smith"), ("agencyName", "Agency Name"), ("telephoneNumber", "01234567890"), ("crn", "123456"))
+        .withFormUrlEncodedBody(
+          ("firstName", "John"),
+          ("lastName", "Smith"),
+          ("agencyName", "Agency Name"),
+          ("telephoneNumber", "01234567890"),
+          ("crn", "123456")
+        )
 
       val result = route(application, request).value
 

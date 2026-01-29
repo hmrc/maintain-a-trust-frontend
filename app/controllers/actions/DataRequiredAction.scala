@@ -28,8 +28,8 @@ import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DataRequiredAction @Inject()(implicit val executionContext: ExecutionContext)
-  extends ActionRefiner[OptionalDataRequest, DataRequest] with Logging {
+class DataRequiredAction @Inject() (implicit val executionContext: ExecutionContext)
+    extends ActionRefiner[OptionalDataRequest, DataRequest] with Logging {
 
   private val className = getClass.getSimpleName
 
@@ -38,12 +38,17 @@ class DataRequiredAction @Inject()(implicit val executionContext: ExecutionConte
     val hc = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     request.userAnswers match {
-      case None =>
-        logger.warn(s"[$className][refine] [Session ID: ${Session.id(hc)}] no user answers for session in mongo, cannot continue with session")
+      case None       =>
+        logger.warn(
+          s"[$className][refine] [Session ID: ${Session.id(hc)}] no user answers for session in mongo, cannot continue with session"
+        )
         Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad)))
       case Some(data) =>
-        logger.info(s"[$className][refine] [Session ID: ${Session.id(hc)}][UTR/URN: ${data.identifier}] user answers in request, continuing with journey")
+        logger.info(
+          s"[$className][refine] [Session ID: ${Session.id(hc)}][UTR/URN: ${data.identifier}] user answers in request, continuing with journey"
+        )
         Future.successful(Right(DataRequest(request.request, data, request.user)))
     }
   }
+
 }

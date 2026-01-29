@@ -36,13 +36,14 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
 
     "making changes" must {
 
-      val prefix: String = "updateTrustees"
+      val prefix: String  = "updateTrustees"
       val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).value
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges)
+        .value
 
       "return OK and the correct view for a GET" in {
 
@@ -122,13 +123,14 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
 
     "closing" must {
 
-      val prefix: String = "updateTrusteesClosing"
+      val prefix: String  = "updateTrusteesClosing"
       val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust)
+        .value
 
       "return OK and the correct view for a GET" in {
 
@@ -209,7 +211,8 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
     "return an Internal Server Error when setting the user answers goes wrong" in {
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust)
+        .value
 
       mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
 
@@ -220,10 +223,11 @@ class UpdateTrusteesYesNoControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      status(result) mustBe INTERNAL_SERVER_ERROR
+      status(result)      mustBe INTERNAL_SERVER_ERROR
       contentType(result) mustBe Some("text/html")
 
       application.stop()
     }
   }
+
 }

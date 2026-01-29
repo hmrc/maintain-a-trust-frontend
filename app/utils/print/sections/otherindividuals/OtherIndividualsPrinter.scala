@@ -27,20 +27,31 @@ import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class OtherIndividualsPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[FullName] {
+class OtherIndividualsPrinter @Inject() (converter: AnswerRowConverter)
+    extends EntitiesPrinter[JsArray] with EntityPrinter[FullName] {
 
-  override def printSection(index: Int, userAnswers: UserAnswers)
-                           (implicit messages: Messages): Option[AnswerSection] = {
+  override def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection] =
     printAnswerRows(index, userAnswers)
-  }
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.fullNameQuestion(OtherIndividualNamePage(index), userAnswers, "otherIndividualName"),
-    converter.yesNoQuestion(OtherIndividualDateOfBirthYesNoPage(index), userAnswers, "otherIndividualDateOfBirthYesNo", name),
+    converter
+      .yesNoQuestion(OtherIndividualDateOfBirthYesNoPage(index), userAnswers, "otherIndividualDateOfBirthYesNo", name),
     converter.dateQuestion(OtherIndividualDateOfBirthPage(index), userAnswers, "otherIndividualDateOfBirth", name),
-    converter.yesNoQuestion(OtherIndividualCountryOfNationalityYesNoPage(index), userAnswers, "otherIndividualCountryOfNationalityYesNo", name),
-    converter.yesNoQuestion(OtherIndividualCountryOfNationalityInTheUkYesNoPage(index), userAnswers, "otherIndividualCountryOfNationalityUkYesNo", name),
+    converter.yesNoQuestion(
+      OtherIndividualCountryOfNationalityYesNoPage(index),
+      userAnswers,
+      "otherIndividualCountryOfNationalityYesNo",
+      name
+    ),
+    converter.yesNoQuestion(
+      OtherIndividualCountryOfNationalityInTheUkYesNoPage(index),
+      userAnswers,
+      "otherIndividualCountryOfNationalityUkYesNo",
+      name
+    ),
     converter.countryQuestion(
       OtherIndividualCountryOfNationalityInTheUkYesNoPage(index),
       OtherIndividualCountryOfNationalityPage(index),
@@ -48,10 +59,21 @@ class OtherIndividualsPrinter @Inject()(converter: AnswerRowConverter) extends E
       "otherIndividualCountryOfNationality",
       name
     ),
-    converter.yesNoQuestion(OtherIndividualNationalInsuranceYesNoPage(index), userAnswers, "otherIndividualNINOYesNo", name),
+    converter
+      .yesNoQuestion(OtherIndividualNationalInsuranceYesNoPage(index), userAnswers, "otherIndividualNINOYesNo", name),
     converter.ninoQuestion(OtherIndividualNationalInsuranceNumberPage(index), userAnswers, "otherIndividualNINO", name),
-    converter.yesNoQuestion(OtherIndividualCountryOfResidenceYesNoPage(index), userAnswers, "otherIndividualCountryOfResidenceYesNo", name),
-    converter.yesNoQuestion(OtherIndividualCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "otherIndividualCountryOfResidenceUkYesNo", name),
+    converter.yesNoQuestion(
+      OtherIndividualCountryOfResidenceYesNoPage(index),
+      userAnswers,
+      "otherIndividualCountryOfResidenceYesNo",
+      name
+    ),
+    converter.yesNoQuestion(
+      OtherIndividualCountryOfResidenceInTheUkYesNoPage(index),
+      userAnswers,
+      "otherIndividualCountryOfResidenceUkYesNo",
+      name
+    ),
     converter.countryQuestion(
       OtherIndividualCountryOfResidenceInTheUkYesNoPage(index),
       OtherIndividualCountryOfResidencePage(index),
@@ -60,11 +82,27 @@ class OtherIndividualsPrinter @Inject()(converter: AnswerRowConverter) extends E
       name
     ),
     converter.yesNoQuestion(OtherIndividualAddressYesNoPage(index), userAnswers, "otherIndividualAddressYesNo", name),
-    converter.yesNoQuestion(OtherIndividualAddressUKYesNoPage(index), userAnswers, "otherIndividualAddressUKYesNo", name),
+    converter
+      .yesNoQuestion(OtherIndividualAddressUKYesNoPage(index), userAnswers, "otherIndividualAddressUKYesNo", name),
     converter.addressQuestion(OtherIndividualAddressPage(index), userAnswers, "otherIndividualAddress", name),
-    converter.yesNoQuestion(OtherIndividualPassportIDCardYesNoPage(index), userAnswers, "otherIndividualPassportIDCardYesNo", name),
-    converter.passportOrIdCardQuestion(OtherIndividualPassportIDCardPage(index), userAnswers, "otherIndividualPassportIDCard", name),
-    converter.yesNoDontKnowQuestion(OtherIndividualMentalCapacityYesNoPage(index), userAnswers, "otherIndividualMentalCapacityYesNo", name)
+    converter.yesNoQuestion(
+      OtherIndividualPassportIDCardYesNoPage(index),
+      userAnswers,
+      "otherIndividualPassportIDCardYesNo",
+      name
+    ),
+    converter.passportOrIdCardQuestion(
+      OtherIndividualPassportIDCardPage(index),
+      userAnswers,
+      "otherIndividualPassportIDCard",
+      name
+    ),
+    converter.yesNoDontKnowQuestion(
+      OtherIndividualMentalCapacityYesNoPage(index),
+      userAnswers,
+      "otherIndividualMentalCapacityYesNo",
+      name
+    )
   )
 
   override def namePath(index: Int): JsPath = OtherIndividualNamePage(index).path

@@ -24,7 +24,7 @@ import views.html.status.IdentifierDoesNotMatchView
 class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
 
   "IdentifierDoesNotMatch view for utr for Agent" must {
-    val utr = "0987654321"
+    val utr  = "0987654321"
     val view = viewFor[IdentifierDoesNotMatchView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(AffinityGroup.Agent, utr, UTR)(fakeRequest, messages)
@@ -47,7 +47,7 @@ class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
   }
 
   "IdentifierDoesNotMatch view for utr for Organisation" must {
-    val utr = "0987654321"
+    val utr  = "0987654321"
     val view = viewFor[IdentifierDoesNotMatchView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(AffinityGroup.Organisation, utr, UTR)(fakeRequest, messages)
@@ -69,7 +69,7 @@ class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
   }
 
   "IdentifierDoesNotMatch view for urn for Agent" must {
-    val urn = "XATRUST12345678"
+    val urn  = "XATRUST12345678"
     val view = viewFor[IdentifierDoesNotMatchView](Some(emptyUserAnswersForUrn))
 
     val applyView = view.apply(AffinityGroup.Agent, urn, URN)(fakeRequest, messages)
@@ -90,4 +90,5 @@ class IdentifierDoesNotMatchViewSpec extends ViewBehaviours {
       "contact.link"
     )
   }
+
 }

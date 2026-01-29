@@ -28,44 +28,47 @@ import views.html.transition.BeforeYouContinueToTaxableView
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class BeforeYouContinueToTaxableController @Inject()(
-                                                      override val messagesApi: MessagesApi,
-                                                      actions: Actions,
-                                                      val controllerComponents: MessagesControllerComponents,
-                                                      view: BeforeYouContinueToTaxableView,
-                                                      connector: TrustConnector,
-                                                      errorHandler: ErrorHandler
-                                                    ) (implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Logging {
+class BeforeYouContinueToTaxableController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  view: BeforeYouContinueToTaxableView,
+  connector: TrustConnector,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier.async {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier.async { implicit request =>
+    val identifier     = request.userAnswers.identifier
+    val identifierType = request.userAnswers.identifierType
 
-      val identifier = request.userAnswers.identifier
-      val identifierType = request.userAnswers.identifierType
-
-      connector.getUntransformedTrustDetails(identifier).value.flatMap {
-        case Right(trustDetails) => Future.successful(Ok(view(identifier, identifierType, displayExpress = trustDetails.expressTrust.isEmpty)))
-        case Left(_) =>
-          logger.warn(s"[$className][onPageLoad][Session ID: ${utils.Session.id(hc)}] Error while retrieving trust details.")
-          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-      }
+    connector.getUntransformedTrustDetails(identifier).value.flatMap {
+      case Right(trustDetails) =>
+        Future.successful(Ok(view(identifier, identifierType, displayExpress = trustDetails.expressTrust.isEmpty)))
+      case Left(_)             =>
+        logger.warn(
+          s"[$className][onPageLoad][Session ID: ${utils.Session.id(hc)}] Error while retrieving trust details."
+        )
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
+    }
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
-    implicit request =>
-
-      connector.getUntransformedTrustDetails(request.userAnswers.identifier).value.flatMap {
-        case Right(trustDetails) => if (trustDetails.expressTrust.isEmpty) {
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async { implicit request =>
+    connector.getUntransformedTrustDetails(request.userAnswers.identifier).value.flatMap {
+      case Right(trustDetails) =>
+        if (trustDetails.expressTrust.isEmpty) {
           Future.successful(Redirect(routes.ExpressTrustYesNoController.onPageLoad()))
         } else {
           Future.successful(Redirect(controllers.tasklist.routes.TaskListController.onPageLoad()))
         }
-        case Left(_) =>
-          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while retrieving trust details.")
-          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-      }
+      case Left(_)             =>
+        logger.warn(
+          s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while retrieving trust details."
+        )
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
+    }
   }
+
 }

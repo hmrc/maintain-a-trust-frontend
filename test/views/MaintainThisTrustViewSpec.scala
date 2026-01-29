@@ -26,31 +26,44 @@ class MaintainThisTrustViewSpec extends ViewBehaviours {
 
   val continue: Call = routes.MaintainThisTrustController.onSubmit(needsIv = true)
 
-    "TrustAlreadyClaimed view for UTR" must {
-    val utr = "0987654321"
+  "TrustAlreadyClaimed view for UTR" must {
+    val utr  = "0987654321"
     val view = viewFor[MaintainThisTrustView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr, UTR, "test", continue)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "maintainThisTrust",
       "utr",
       utr,
-      "utr.p1.a", "p1.b", "p3", "p4", "p4.a")
+      "utr.p1.a",
+      "p1.b",
+      "p3",
+      "p4",
+      "p4.a"
+    )
 
   }
 
   "TrustAlreadyClaimed view for URN" must {
-    val urn = "XATRUST12345678"
+    val urn  = "XATRUST12345678"
     val view = viewFor[MaintainThisTrustView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(urn, URN, "", continue)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "maintainThisTrust",
       "urn",
       urn,
-      "urn.p1.a", "p1.b", "p3", "p4", "p4.a")
+      "urn.p1.a",
+      "p1.b",
+      "p3",
+      "p4",
+      "p4.a"
+    )
 
   }
+
 }

@@ -27,14 +27,15 @@ class BusinessAssetExtractor extends PlaybackExtractor[DisplayBusinessAssetType]
 
   override val optionalEntity: Boolean = true
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayBusinessAssetType,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayBusinessAssetType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
     answers
       .flatMap(_.set(BusinessNamePage(index), entity.orgName))
       .flatMap(_.set(BusinessDescriptionPage(index), entity.businessDescription))
       .flatMap(_.set(BusinessAddressPage(index), entity.address.convert))
       .flatMap(_.set(BusinessValuePage(index), entity.businessValue))
-  }
 
 }

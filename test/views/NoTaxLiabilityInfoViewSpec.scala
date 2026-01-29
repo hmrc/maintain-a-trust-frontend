@@ -23,17 +23,23 @@ import views.html.NoTaxLiabilityInfoView
 class NoTaxLiabilityInfoViewSpec extends ViewBehaviours {
 
   "NoTaxLiabilityInfo view" must {
-    val utr = "0987654321"
+    val utr  = "0987654321"
     val view = viewFor[NoTaxLiabilityInfoView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply("0987654321", UTR)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "noTaxLiabilityInfo",
       "utr",
       utr,
-    "paragraph1", "bullet1", "bullet2", "paragraph2")
+      "paragraph1",
+      "bullet1",
+      "bullet2",
+      "paragraph2"
+    )
 
     behave like pageWithBackLink(applyView)
   }
+
 }

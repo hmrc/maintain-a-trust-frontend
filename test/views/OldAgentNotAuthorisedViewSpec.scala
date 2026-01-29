@@ -23,32 +23,25 @@ import views.html.AgentNotAuthorisedView
 class OldAgentNotAuthorisedViewSpec extends ViewBehaviours {
 
   "OldAgentNotAuthorised view for UTR" must {
-    val utr = "0987654321"
+    val utr  = "0987654321"
     val view = viewFor[AgentNotAuthorisedView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply("0987654321", UTR)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
-      "agentNotAuthorised",
-      "utr",
-      utr,
-      "p1", "p2", "p3", "p4", "p5")
+    behave like normalPageTitleWithCaption(applyView, "agentNotAuthorised", "utr", utr, "p1", "p2", "p3", "p4", "p5")
 
     behave like pageWithBackLink(applyView)
   }
 
   "OldAgentNotAuthorised view for URN" must {
-    val urn = "XATRUST12345678"
+    val urn  = "XATRUST12345678"
     val view = viewFor[AgentNotAuthorisedView](Some(emptyUserAnswersForUrn))
 
     val applyView = view.apply("XATRUST12345678", URN)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
-      "agentNotAuthorised",
-      "urn",
-      urn,
-      "p1", "p2", "p3", "p4", "p5")
+    behave like normalPageTitleWithCaption(applyView, "agentNotAuthorised", "urn", urn, "p1", "p2", "p3", "p4", "p5")
 
     behave like pageWithBackLink(applyView)
   }
+
 }

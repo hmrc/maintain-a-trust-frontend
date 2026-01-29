@@ -35,61 +35,65 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class PlaybackRepositoryImpl @Inject()(
-                                        val mongoComponent: MongoComponent,
-                                        val config: FrontendAppConfig
-                                      )(implicit val ec: ExecutionContext)
-  extends PlayMongoRepository[UserAnswers](
-    collectionName = "user-answers",
-    mongoComponent = mongoComponent,
-    domainFormat = Format(UserAnswers.reads, UserAnswers.writes),
-    indexes = Seq(
-      IndexModel(
-        ascending("updatedAt"),
-        IndexOptions()
-          .unique(false)
-          .name("user-answers-updated-at-index")
-          .expireAfter(config.cachettlplaybackInSeconds, TimeUnit.SECONDS)),
-      IndexModel(
-        ascending("newId"),
-        IndexOptions()
-          .unique(false)
-          .name("internal-id-and-utr-and-sessionId-compound-index")
+class PlaybackRepositoryImpl @Inject() (
+  val mongoComponent: MongoComponent,
+  val config: FrontendAppConfig
+)(implicit val ec: ExecutionContext)
+    extends PlayMongoRepository[UserAnswers](
+      collectionName = "user-answers",
+      mongoComponent = mongoComponent,
+      domainFormat = Format(UserAnswers.reads, UserAnswers.writes),
+      indexes = Seq(
+        IndexModel(
+          ascending("updatedAt"),
+          IndexOptions()
+            .unique(false)
+            .name("user-answers-updated-at-index")
+            .expireAfter(config.cachettlplaybackInSeconds, TimeUnit.SECONDS)
+        ),
+        IndexModel(
+          ascending("newId"),
+          IndexOptions()
+            .unique(false)
+            .name("internal-id-and-utr-and-sessionId-compound-index")
+        ),
+        IndexModel(
+          ascending("internalId"),
+          IndexOptions()
+            .unique(false)
+            .name("internal-id-index")
+        ),
+        IndexModel(
+          ascending("identifier"),
+          IndexOptions()
+            .unique(false)
+            .name("identifier-index")
+        ),
+        IndexModel(
+          ascending("sessionId"),
+          IndexOptions()
+            .unique(false)
+            .name("session-id-index")
+        )
       ),
-      IndexModel(
-        ascending("internalId"),
-        IndexOptions()
-          .unique(false)
-          .name("internal-id-index")
-      ),
-      IndexModel(
-        ascending("identifier"),
-        IndexOptions()
-          .unique(false)
-          .name("identifier-index")
-      ),
-      IndexModel(
-        ascending("sessionId"),
-        IndexOptions()
-          .unique(false)
-          .name("session-id-index")
-      )
-    ), replaceIndexes = config.dropIndexes
-
-  ) with Logging with PlaybackRepository with RepositoryHelper {
+      replaceIndexes = config.dropIndexes
+    )
+    with Logging
+    with PlaybackRepository
+    with RepositoryHelper {
 
   private val className = getClass.getSimpleName
 
   private def selector(internalId: String, identifier: String, sessionId: String): Bson =
     equal("newId", s"$internalId-$identifier-$sessionId")
 
-
   def get(internalId: String, identifier: String, sessionId: String): TrustEnvelope[Option[UserAnswers]] = EitherT {
 
-    val modifier = Updates.set("updatedAt", LocalDateTime.now)
+    val modifier     = Updates.set("updatedAt", LocalDateTime.now)
     val updateOption = new FindOneAndUpdateOptions().upsert(false).returnDocument(ReturnDocument.BEFORE)
 
-    collection.findOneAndUpdate(selector(internalId, identifier, sessionId), modifier, updateOption)
+    collection
+      .findOneAndUpdate(selector(internalId, identifier, sessionId), modifier, updateOption)
       .toFutureOption()
       .map(Right(_))
       .recover {
@@ -103,11 +107,12 @@ class PlaybackRepositoryImpl @Inject()(
   }
 
   override def set(userAnswers: UserAnswers): TrustEnvelope[Boolean] = EitherT {
-    collection.replaceOne(
-      selector(userAnswers.internalId, userAnswers.identifier, userAnswers.sessionId),
-      userAnswers.copy(updatedAt = LocalDateTime.now),
-      ReplaceOptions().upsert(true)
-    )
+    collection
+      .replaceOne(
+        selector(userAnswers.internalId, userAnswers.identifier, userAnswers.sessionId),
+        userAnswers.copy(updatedAt = LocalDateTime.now),
+        ReplaceOptions().upsert(true)
+      )
       .head()
       .map(updateResult => Right(updateResult.wasAcknowledged()))
       .recover {
@@ -120,20 +125,26 @@ class PlaybackRepositoryImpl @Inject()(
       }
   }
 
-  override def resetCache(internalId: String, identifier: String, sessionId: String): TrustEnvelope[Option[Boolean]] = EitherT {
+  override def resetCache(internalId: String, identifier: String, sessionId: String): TrustEnvelope[Option[Boolean]] =
+    EitherT {
 
-    collection.deleteOne(selector(internalId, identifier, sessionId))
-      .toFutureOption()
-      .map(optDeleteResult => Right(optDeleteResult
-        .map(_.wasAcknowledged())
-      ))
-      .recover {
-        mongoRecover(
-          repository = className,
-          method = "resetCache",
-          sessionId = sessionId,
-          message = "operation failed due to exception from Mongo")
-      }
-  }
+      collection
+        .deleteOne(selector(internalId, identifier, sessionId))
+        .toFutureOption()
+        .map(optDeleteResult =>
+          Right(
+            optDeleteResult
+              .map(_.wasAcknowledged())
+          )
+        )
+        .recover {
+          mongoRecover(
+            repository = className,
+            method = "resetCache",
+            sessionId = sessionId,
+            message = "operation failed due to exception from Mongo"
+          )
+        }
+    }
 
 }

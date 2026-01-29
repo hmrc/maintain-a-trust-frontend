@@ -20,7 +20,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.LivingSettlors
 
-final case class SettlorIndividualIDCardYesNoPage(index : Int) extends QuestionPage[Boolean] {
+final case class SettlorIndividualIDCardYesNoPage(index: Int) extends QuestionPage[Boolean] {
 
   override def path: JsPath = LivingSettlors.path \ index \ toString
 

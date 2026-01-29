@@ -23,10 +23,12 @@ import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.DisplayTrustProtectorsType
 import sections.Protectors
 
-class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProtectorExtractor,
-                                   businessProtectorExtractor: BusinessProtectorExtractor) {
+class ProtectorExtractor @Inject() (
+  individualProtectorExtractor: IndividualProtectorExtractor,
+  businessProtectorExtractor: BusinessProtectorExtractor
+) {
 
-  def extract(answers: UserAnswers, data: Option[DisplayTrustProtectorsType]): Either[TrustErrors, UserAnswers] = {
+  def extract(answers: UserAnswers, data: Option[DisplayTrustProtectorsType]): Either[TrustErrors, UserAnswers] =
 
     data match {
       case Some(p) =>
@@ -34,16 +36,16 @@ class ProtectorExtractor @Inject()(individualProtectorExtractor: IndividualProte
         val protectors: List[UserAnswers] = List(
           individualProtectorExtractor.extract(answers, p.protector),
           businessProtectorExtractor.extract(answers, p.protectorCompany)
-        ).collect {
-          case Right(z) => z
+        ).collect { case Right(z) =>
+          z
         }
 
         protectors.combineArraysWithPath(Protectors.path) match {
           case Some(value) => Right(value)
-          case None => Left(FailedToExtractData("Protector Extraction Error - Failed to combine protector answers"))
+          case None        => Left(FailedToExtractData("Protector Extraction Error - Failed to combine protector answers"))
         }
       case None =>
         Right(answers)
     }
-  }
+
 }

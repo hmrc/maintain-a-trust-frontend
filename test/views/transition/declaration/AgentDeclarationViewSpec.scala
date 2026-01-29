@@ -16,7 +16,6 @@
 
 package views.transition.declaration
 
-
 import forms.declaration.AgentDeclarationFormProvider
 import models.AgentDeclaration
 import play.api.data.Form
@@ -30,8 +29,6 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
 
   val form = new AgentDeclarationFormProvider()()
 
-
-
   "DeclarationView view for agent" must {
 
     val view = viewFor[AgentDeclarationView](Some(emptyUserAnswersForUtr))
@@ -39,25 +36,36 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form)(fakeRequest, messages)
 
-    if(appConfig.declarationEmailEnabled) {
+    if (appConfig.declarationEmailEnabled) {
       behave like normalPage(applyView(form), messageKeyPrefix, "paragraph1", "paragraph2")
     }
 
     behave like pageWithBackLink(applyView(form))
 
-    if(appConfig.declarationEmailEnabled) {
+    if (appConfig.declarationEmailEnabled) {
       behave like pageWithTextFields(
         form,
         applyView,
         messageKeyPrefix,
-        "firstName", "middleName", "lastName", "agencyName", "telephoneNumber", "crn", "email"
+        "firstName",
+        "middleName",
+        "lastName",
+        "agencyName",
+        "telephoneNumber",
+        "crn",
+        "email"
       )
     } else {
       behave like pageWithTextFields(
         form,
         applyView,
         messageKeyPrefix,
-        "firstName", "middleName", "lastName", "agencyName", "telephoneNumber", "crn"
+        "firstName",
+        "middleName",
+        "lastName",
+        "agencyName",
+        "telephoneNumber",
+        "crn"
       )
     }
 
@@ -72,4 +80,5 @@ class AgentDeclarationViewSpec extends QuestionViewBehaviours[AgentDeclaration] 
     }
 
   }
+
 }

@@ -24,15 +24,15 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.declaration.ProblemDeclaringView
 import scala.concurrent.Future
 
-class ProblemDeclaringController @Inject()(
-                                            override val messagesApi: MessagesApi,
-                                            actions: Actions,
-                                            problemDeclaringView: ProblemDeclaringView,
-                                            val controllerComponents: MessagesControllerComponents
-                                          ) extends FrontendBaseController with I18nSupport {
+class ProblemDeclaringController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  problemDeclaringView: ProblemDeclaringView,
+  val controllerComponents: MessagesControllerComponents
+) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithData.async {
-    implicit request =>
-      Future.successful(InternalServerError(problemDeclaringView(request.user.affinityGroup)))
+  def onPageLoad(): Action[AnyContent] = actions.authWithData.async { implicit request =>
+    Future.successful(InternalServerError(problemDeclaringView(request.user.affinityGroup)))
   }
+
 }

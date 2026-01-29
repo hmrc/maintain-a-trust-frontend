@@ -29,8 +29,8 @@ class AgentDeclarationFormProvider extends DeclarationFormProvider {
   def apply(): Form[AgentDeclaration] =
     Form(
       mapping(
-        "" -> fullName,
-        "agencyName" -> text("declaration.error.agencyName.required").verifying(
+        ""                -> fullName,
+        "agencyName"      -> text("declaration.error.agencyName.required").verifying(
           firstError(
             maxLength(maximumLength, "declaration.error.agencyName.length"),
             isNotEmpty("agencyName", "declaration.error.agencyName.required"),
@@ -43,19 +43,21 @@ class AgentDeclarationFormProvider extends DeclarationFormProvider {
             isTelephoneNumberValid("telephoneNumber", "declaration.error.telephoneNumber.invalid")
           )
         ),
-        "crn" -> text("declaration.error.crn.required").verifying(
+        "crn"             -> text("declaration.error.crn.required").verifying(
           firstError(
             maxLength(maximumLength, "declaration.error.crn.length"),
             isNotEmpty("crn", "declaration.error.crn.required"),
             regexp(Validation.clientRefRegex, "declaration.error.crn.invalid")
           )
         ),
-        "email" -> optional(text()
-          .transform(trimWhitespace, identity[String])
-          .verifying(
-            firstError(
-              regexp(Validation.emailRegex, "declaration.error.email.invalid"))
-          )).transform(emptyToNone, identity[Option[String]])
+        "email"           -> optional(
+          text()
+            .transform(trimWhitespace, identity[String])
+            .verifying(
+              firstError(regexp(Validation.emailRegex, "declaration.error.email.invalid"))
+            )
+        ).transform(emptyToNone, identity[Option[String]])
       )(AgentDeclaration.apply)(AgentDeclaration.unapply)
     )
+
 }

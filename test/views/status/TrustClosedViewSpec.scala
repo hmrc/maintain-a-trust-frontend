@@ -24,7 +24,7 @@ import views.html.status.TrustClosedView
 class TrustClosedViewSpec extends ViewBehaviours {
 
   "TrustClosed view for UTR" must {
-    val utr = "0987654321"
+    val utr  = "0987654321"
     val view = viewFor[TrustClosedView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(AffinityGroup.Agent, utr, UTR)(fakeRequest, messages)
@@ -44,7 +44,7 @@ class TrustClosedViewSpec extends ViewBehaviours {
   }
 
   "TrustClosed view for URN" must {
-    val urn = "XATRUST12345678"
+    val urn  = "XATRUST12345678"
     val view = viewFor[TrustClosedView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(AffinityGroup.Agent, urn, URN)(fakeRequest, messages)
@@ -62,4 +62,5 @@ class TrustClosedViewSpec extends ViewBehaviours {
     )
 
   }
+
 }

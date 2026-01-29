@@ -24,20 +24,23 @@ import utils.Session
 
 import scala.concurrent.ExecutionContext
 
-class EnrolmentStoreStubController @Inject()(
-                                              connector: TestUserConnector,
-                                              override val controllerComponents: MessagesControllerComponents
-                                            )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
+class EnrolmentStoreStubController @Inject() (
+  connector: TestUserConnector,
+  override val controllerComponents: MessagesControllerComponents
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with Logging {
 
-  def insertTestUserIntoEnrolmentStore = Action.async(parse.json) {
-    implicit request =>
-      logger.info(s"[EnrolmentStoreStubController][insertTestUserIntoEnrolmentStore][Session ID: ${Session.id(hc)}] inserting test user: ${request.body}")
-      connector.insert(request.body).map(_ => Ok)
+  def insertTestUserIntoEnrolmentStore = Action.async(parse.json) { implicit request =>
+    logger.info(
+      s"[EnrolmentStoreStubController][insertTestUserIntoEnrolmentStore][Session ID: ${Session.id(hc)}] inserting test user: ${request.body}"
+    )
+    connector.insert(request.body).map(_ => Ok)
   }
 
-  def flush = Action.async {
-    implicit request =>
-    logger.info(s"[EnrolmentStoreStubController][flush][Session ID: ${Session.id(hc)}] flushing test users from enrolment-store")
+  def flush = Action.async { implicit request =>
+    logger.info(
+      s"[EnrolmentStoreStubController][flush][Session ID: ${Session.id(hc)}] flushing test users from enrolment-store"
+    )
     connector.delete().map(_ => Ok)
   }
 

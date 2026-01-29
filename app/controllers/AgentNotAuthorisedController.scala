@@ -25,23 +25,22 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{AgentNotAuthorisedView, OldAgentNotAuthorisedView}
 
 @Singleton
-class AgentNotAuthorisedController @Inject()(
-                                              val controllerComponents: MessagesControllerComponents,
-                                              actions: Actions,
-                                              newView: AgentNotAuthorisedView,
-                                              oldView: OldAgentNotAuthorisedView,
-                                              config: FrontendAppConfig
-                                            ) extends FrontendBaseController with I18nSupport {
+class AgentNotAuthorisedController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  actions: Actions,
+  newView: AgentNotAuthorisedView,
+  oldView: OldAgentNotAuthorisedView,
+  config: FrontendAppConfig
+) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.authWithData {
-    implicit request =>
-
-      Ok {
-        if (config.primaryEnrolmentCheckEnabled) {
-          oldView(request.userAnswers.identifier, request.userAnswers.identifierType)
-        } else {
-          newView(request.userAnswers.identifier, request.userAnswers.identifierType)
-        }
+  def onPageLoad(): Action[AnyContent] = actions.authWithData { implicit request =>
+    Ok {
+      if (config.primaryEnrolmentCheckEnabled) {
+        oldView(request.userAnswers.identifier, request.userAnswers.identifierType)
+      } else {
+        newView(request.userAnswers.identifier, request.userAnswers.identifierType)
       }
+    }
   }
+
 }

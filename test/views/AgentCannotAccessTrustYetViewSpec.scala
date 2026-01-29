@@ -22,35 +22,56 @@ import views.html.AgentCannotAccessTrustYetView
 
 class AgentCannotAccessTrustYetViewSpec extends ViewBehaviours {
 
-
-
   "AgentCannotAccessTrustYet view for UTR" must {
-    val utr = "0987654321"
+    val utr  = "0987654321"
     val view = viewFor[AgentCannotAccessTrustYetView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply("0987654321", UTR)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "agentCannotAccessTrustYet",
       "utr",
       utr,
-    "p1", "p2", "heading.2", "p3", "bullet.1", "bullet.2", "bullet.3", "bullet.4", "heading.3", "p4")
+      "p1",
+      "p2",
+      "heading.2",
+      "p3",
+      "bullet.1",
+      "bullet.2",
+      "bullet.3",
+      "bullet.4",
+      "heading.3",
+      "p4"
+    )
 
     behave like pageWithBackLink(applyView)
   }
 
   "AgentCannotAccessTrustYet view for URN" must {
-    val urn = "XATRUST12345678"
+    val urn  = "XATRUST12345678"
     val view = viewFor[AgentCannotAccessTrustYetView](Some(emptyUserAnswersForUrn))
 
     val applyView = view.apply("XATRUST12345678", URN)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "agentCannotAccessTrustYet",
       "urn",
       urn,
-      "p1", "p2", "heading.2", "p3", "bullet.1", "bullet.2", "bullet.3", "bullet.4", "heading.3", "p4")
+      "p1",
+      "p2",
+      "heading.2",
+      "p3",
+      "bullet.1",
+      "bullet.2",
+      "bullet.3",
+      "bullet.4",
+      "heading.3",
+      "p4"
+    )
 
     behave like pageWithBackLink(applyView)
   }
+
 }

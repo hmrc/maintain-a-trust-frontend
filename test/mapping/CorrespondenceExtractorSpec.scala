@@ -27,7 +27,8 @@ import pages.correspondence._
 import pages.trustdetails.TrustNamePage
 import utils.Constants.GB
 
-class CorrespondenceExtractorSpec extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
+class CorrespondenceExtractorSpec
+    extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   val correspondenceExtractor: CorrespondenceExtractor =
     injector.instanceOf[CorrespondenceExtractor]
@@ -40,7 +41,12 @@ class CorrespondenceExtractorSpec extends AnyFreeSpec with Matchers with EitherV
         abroadIndicator = false,
         name = "Trust Ltd",
         address = AddressType(
-          "line1", "line2", None, None, Some("NE991NE"), GB
+          "line1",
+          "line2",
+          None,
+          None,
+          Some("NE991NE"),
+          GB
         ),
         bpMatchStatus = None,
         phoneNumber = "1225645"
@@ -51,10 +57,10 @@ class CorrespondenceExtractorSpec extends AnyFreeSpec with Matchers with EitherV
       val extraction = correspondenceExtractor.extract(ua, correspondence)
 
       extraction.value.get(CorrespondenceAbroadIndicatorPage).get mustBe false
-      extraction.value.get(TrustNamePage).get mustBe "Trust Ltd"
-      extraction.value.get(CorrespondenceAddressPage).get mustBe UKAddress("line1", "line2", None, None, "NE991NE")
+      extraction.value.get(TrustNamePage).get                     mustBe "Trust Ltd"
+      extraction.value.get(CorrespondenceAddressPage).get         mustBe UKAddress("line1", "line2", None, None, "NE991NE")
       extraction.value.get(CorrespondenceBpMatchStatusPage) mustNot be(defined)
-      extraction.value.get(CorrespondencePhoneNumberPage).get mustBe "1225645"
+      extraction.value.get(CorrespondencePhoneNumberPage).get     mustBe "1225645"
 
     }
 

@@ -28,13 +28,20 @@ class MakeChangesRouterSpec extends SpecBase {
       val filter = MakeChangesRouter
 
       val userAnswers = emptyUserAnswersForUtr
-        .set(UpdateTrustDetailsYesNoPage, false).value
-        .set(UpdateTrusteesYesNoPage, false).value
-        .set(UpdateBeneficiariesYesNoPage, false).value
-        .set(UpdateSettlorsYesNoPage, false).value
-        .set(AddOrUpdateProtectorYesNoPage, false).value
-        .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
-        .set(AddOrUpdateNonEeaCompanyYesNoPage, false).value
+        .set(UpdateTrustDetailsYesNoPage, false)
+        .value
+        .set(UpdateTrusteesYesNoPage, false)
+        .value
+        .set(UpdateBeneficiariesYesNoPage, false)
+        .value
+        .set(UpdateSettlorsYesNoPage, false)
+        .value
+        .set(AddOrUpdateProtectorYesNoPage, false)
+        .value
+        .set(AddOrUpdateOtherIndividualsYesNoPage, false)
+        .value
+        .set(AddOrUpdateNonEeaCompanyYesNoPage, false)
+        .value
 
       filter.decide(userAnswers) mustBe Declaration
     }
@@ -43,13 +50,20 @@ class MakeChangesRouterSpec extends SpecBase {
       val filter = MakeChangesRouter
 
       val userAnswers = emptyUserAnswersForUtr
-        .set(UpdateTrustDetailsYesNoPage, false).value
-        .set(UpdateTrusteesYesNoPage, true).value
-        .set(UpdateBeneficiariesYesNoPage, true).value
-        .set(UpdateSettlorsYesNoPage, false).value
-        .set(AddOrUpdateProtectorYesNoPage, false).value
-        .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
-        .set(AddOrUpdateNonEeaCompanyYesNoPage, false).value
+        .set(UpdateTrustDetailsYesNoPage, false)
+        .value
+        .set(UpdateTrusteesYesNoPage, true)
+        .value
+        .set(UpdateBeneficiariesYesNoPage, true)
+        .value
+        .set(UpdateSettlorsYesNoPage, false)
+        .value
+        .set(AddOrUpdateProtectorYesNoPage, false)
+        .value
+        .set(AddOrUpdateOtherIndividualsYesNoPage, false)
+        .value
+        .set(AddOrUpdateNonEeaCompanyYesNoPage, false)
+        .value
       filter.decide(userAnswers) mustBe TaskList
     }
 

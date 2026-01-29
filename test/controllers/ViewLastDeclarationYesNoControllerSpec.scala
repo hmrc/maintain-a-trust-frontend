@@ -29,9 +29,9 @@ import views.html.ViewLastDeclarationYesNoView
 
 class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  private val formProvider = new YesNoFormProvider()
+  private val formProvider        = new YesNoFormProvider()
   private val form: Form[Boolean] = formProvider.withPrefix("viewLastDeclarationYesNo")
-  private val utr: String = "1234567890"
+  private val utr: String         = "1234567890"
 
   private lazy val viewLastDeclarationYesNoRoute: String = routes.ViewLastDeclarationYesNoController.onPageLoad().url
 
@@ -89,7 +89,9 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.print.routes.PrintLastDeclaredAnswersController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.print.routes.PrintLastDeclaredAnswersController
+        .onPageLoad()
+        .url
 
       application.stop()
     }
@@ -168,4 +170,5 @@ class ViewLastDeclarationYesNoControllerSpec extends SpecBase with MockitoSugar 
       application.stop()
     }
   }
+
 }

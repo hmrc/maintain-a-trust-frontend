@@ -22,23 +22,33 @@ import pages.beneficiaries.large._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsArray, JsPath}
 import sections.beneficiaries.LargeBeneficiaries
-import utils.print.sections.{EntitiesPrinter, AnswerRowConverter, EntityPrinter}
+import utils.print.sections.{AnswerRowConverter, EntitiesPrinter, EntityPrinter}
 import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
+class LargeBeneficiaryPrinter @Inject() (converter: AnswerRowConverter)
+    extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
 
-  override def printSection(index: Int, userAnswers: UserAnswers)
-                           (implicit messages: Messages): Option[AnswerSection] = {
+  override def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection] =
     printAnswerRows(index, userAnswers)
-  }
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.stringQuestion(LargeBeneficiaryNamePage(index), userAnswers, "largeBeneficiaryName"),
-    converter.yesNoQuestion(LargeBeneficiaryCountryOfResidenceYesNoPage(index), userAnswers, "largeBeneficiaryCountryOfResidenceYesNo", name),
-    converter.yesNoQuestion(LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "largeBeneficiaryCountryOfResidenceUkYesNo", name),
+    converter.yesNoQuestion(
+      LargeBeneficiaryCountryOfResidenceYesNoPage(index),
+      userAnswers,
+      "largeBeneficiaryCountryOfResidenceYesNo",
+      name
+    ),
+    converter.yesNoQuestion(
+      LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(index),
+      userAnswers,
+      "largeBeneficiaryCountryOfResidenceUkYesNo",
+      name
+    ),
     converter.countryQuestion(
       LargeBeneficiaryCountryOfResidenceInTheUkYesNoPage(index),
       LargeBeneficiaryCountryOfResidencePage(index),
@@ -47,11 +57,18 @@ class LargeBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends E
       name
     ),
     converter.yesNoQuestion(LargeBeneficiaryAddressYesNoPage(index), userAnswers, "largeBeneficiaryAddressYesNo", name),
-    converter.yesNoQuestion(LargeBeneficiaryAddressUKYesNoPage(index), userAnswers, "largeBeneficiaryAddressUKYesNo", name),
+    converter
+      .yesNoQuestion(LargeBeneficiaryAddressUKYesNoPage(index), userAnswers, "largeBeneficiaryAddressUKYesNo", name),
     converter.addressQuestion(LargeBeneficiaryAddressPage(index), userAnswers, "largeBeneficiaryAddress", name),
     converter.stringQuestion(LargeBeneficiaryUtrPage(index), userAnswers, "largeBeneficiaryUtr", name),
-    converter.descriptionQuestion(LargeBeneficiaryDescriptionPage(index), userAnswers, "largeBeneficiaryDescription", name),
-    converter.enumQuestion(LargeBeneficiaryNumberOfBeneficiariesPage(index), userAnswers, "largeBeneficiaryNumberOfBeneficiaries", "numberOfBeneficiaries")
+    converter
+      .descriptionQuestion(LargeBeneficiaryDescriptionPage(index), userAnswers, "largeBeneficiaryDescription", name),
+    converter.enumQuestion(
+      LargeBeneficiaryNumberOfBeneficiariesPage(index),
+      userAnswers,
+      "largeBeneficiaryNumberOfBeneficiaries",
+      "numberOfBeneficiaries"
+    )
   )
 
   override def namePath(index: Int): JsPath = LargeBeneficiaryNamePage(index).path

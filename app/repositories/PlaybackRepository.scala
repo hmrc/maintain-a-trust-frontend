@@ -19,7 +19,6 @@ package repositories
 import models.UserAnswers
 import utils.TrustEnvelope.TrustEnvelope
 
-
 trait PlaybackRepository {
 
   def get(internalId: String, identifier: String, sessionId: String): TrustEnvelope[Option[UserAnswers]]

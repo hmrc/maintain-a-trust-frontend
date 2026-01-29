@@ -31,20 +31,17 @@ import java.time.LocalDate
 import javax.inject.Inject
 import scala.util.Try
 
-class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
-                                      (implicit countryOptions: CountryOptions) {
+class CheckAnswersFormatters @Inject() (languageUtils: LanguageUtils)(implicit countryOptions: CountryOptions) {
 
-  def formatDate(date: LocalDate)(implicit messages: Messages): String = {
+  def formatDate(date: LocalDate)(implicit messages: Messages): String =
     languageUtils.Dates.formatDate(date)
-  }
 
-  def yesOrNo(answer: Boolean)(implicit messages: Messages): Html = {
+  def yesOrNo(answer: Boolean)(implicit messages: Messages): Html =
     if (answer) {
       escape(messages("site.yes"))
     } else {
       escape(messages("site.no"))
     }
-  }
 
   def formatNino(nino: String): Html = {
     val formatted = Try(Nino(nino.toUpperCase).formatted).getOrElse(nino.toUpperCase)
@@ -81,12 +78,11 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     breakLines(lines)
   }
 
-  def addressFormatter(address: Address)(implicit messages: Messages): Html = {
+  def addressFormatter(address: Address)(implicit messages: Messages): Html =
     address match {
-      case a: UKAddress => ukAddress(a)
+      case a: UKAddress            => ukAddress(a)
       case a: InternationalAddress => internationalAddress(a)
     }
-  }
 
   def formatPassportOrIDCard(passportOrIdCard: PassportType)(implicit messages: Messages): Html = {
 
@@ -106,16 +102,14 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     breakLines(lines)
   }
 
-  def formatRoleInCompany(answer: RoleInCompany)(implicit messages: Messages): Html = {
+  def formatRoleInCompany(answer: RoleInCompany)(implicit messages: Messages): Html =
     answer match {
       case NA => escape(messages("individualBeneficiary.roleInCompany.checkYourAnswersLabel.na"))
-      case _ => formatEnum("individualBeneficiary.roleInCompany", answer)
+      case _  => formatEnum("individualBeneficiary.roleInCompany", answer)
     }
-  }
 
-  def formatEnum[T](key: String, answer: T)(implicit messages: Messages): Html = {
+  def formatEnum[T](key: String, answer: T)(implicit messages: Messages): Html =
     escape(messages(s"$key.$answer"))
-  }
 
   def description(description: Description): Html = {
     val lines = Seq(
@@ -129,8 +123,7 @@ class CheckAnswersFormatters @Inject()(languageUtils: LanguageUtils)
     breakLines(lines)
   }
 
-  private def breakLines(lines: Seq[String]): Html = {
+  private def breakLines(lines: Seq[String]): Html =
     Html(lines.map(escape).mkString("<br />"))
-  }
 
 }

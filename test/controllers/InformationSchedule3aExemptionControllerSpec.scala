@@ -53,7 +53,8 @@ class InformationSchedule3aExemptionControllerSpec extends SpecBase {
 
         val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
-        val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = AffinityGroup.Agent).build()
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = AffinityGroup.Agent).build()
 
         val request = FakeRequest(GET, routes.InformationSchedule3aExemptionController.onPageLoad().url)
 

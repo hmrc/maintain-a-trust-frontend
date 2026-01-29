@@ -25,15 +25,26 @@ import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class BusinessProtectorPrinter @Inject()(converter: AnswerRowConverter) extends EntityPrinter[String] {
+class BusinessProtectorPrinter @Inject() (converter: AnswerRowConverter) extends EntityPrinter[String] {
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.stringQuestion(BusinessProtectorNamePage(index), userAnswers, "companyProtectorName", name),
     converter.yesNoQuestion(BusinessProtectorUtrYesNoPage(index), userAnswers, "companyProtectorUtrYesNo", name),
     converter.stringQuestion(BusinessProtectorUtrPage(index), userAnswers, "companyProtectorUtr", name),
-    converter.yesNoQuestion(BusinessProtectorCountryOfResidenceYesNoPage(index), userAnswers, "companyProtectorCountryOfResidenceYesNo", name),
-    converter.yesNoQuestion(BusinessProtectorCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "companyProtectorCountryOfResidenceUkYesNo", name),
+    converter.yesNoQuestion(
+      BusinessProtectorCountryOfResidenceYesNoPage(index),
+      userAnswers,
+      "companyProtectorCountryOfResidenceYesNo",
+      name
+    ),
+    converter.yesNoQuestion(
+      BusinessProtectorCountryOfResidenceInTheUkYesNoPage(index),
+      userAnswers,
+      "companyProtectorCountryOfResidenceUkYesNo",
+      name
+    ),
     converter.countryQuestion(
       BusinessProtectorCountryOfResidenceInTheUkYesNoPage(index),
       BusinessProtectorCountryOfResidencePage(index),
@@ -41,8 +52,10 @@ class BusinessProtectorPrinter @Inject()(converter: AnswerRowConverter) extends 
       "companyProtectorCountryOfResidence",
       name
     ),
-    converter.yesNoQuestion(BusinessProtectorAddressYesNoPage(index), userAnswers, "companyProtectorAddressYesNo", name),
-    converter.yesNoQuestion(BusinessProtectorAddressUKYesNoPage(index), userAnswers, "companyProtectorAddressUkYesNo", name),
+    converter
+      .yesNoQuestion(BusinessProtectorAddressYesNoPage(index), userAnswers, "companyProtectorAddressYesNo", name),
+    converter
+      .yesNoQuestion(BusinessProtectorAddressUKYesNoPage(index), userAnswers, "companyProtectorAddressUkYesNo", name),
     converter.addressQuestion(BusinessProtectorAddressPage(index), userAnswers, "companyProtectorAddress", name)
   )
 

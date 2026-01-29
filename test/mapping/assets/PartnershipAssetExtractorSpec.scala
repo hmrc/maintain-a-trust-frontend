@@ -27,8 +27,8 @@ import org.scalatest.EitherValues
 import pages.assets.partnership._
 import java.time.Month.NOVEMBER
 
-class PartnershipAssetExtractorSpec extends AnyFreeSpec with Matchers
-  with EitherValues with Generators with SpecBaseHelpers {
+class PartnershipAssetExtractorSpec
+    extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   private val (year2019, num26) = (2019, 26)
 
@@ -38,7 +38,7 @@ class PartnershipAssetExtractorSpec extends AnyFreeSpec with Matchers
     partnershipStart = Some(LocalDate.parse("2019-11-26"))
   )
 
-  val assetExtractor : PartnershipAssetExtractor =
+  val assetExtractor: PartnershipAssetExtractor =
     injector.instanceOf[PartnershipAssetExtractor]
 
   "Partnership Asset Extractor" - {
@@ -53,7 +53,7 @@ class PartnershipAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, assets)
 
-        extraction mustBe Symbol("right")
+        extraction            mustBe Symbol("right")
         extraction.value.data mustBe ua.data
 
       }
@@ -66,18 +66,20 @@ class PartnershipAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         "with minimum data must return user answers updated" in {
 
-          val businessAssets = List(DisplayTrustPartnershipType(
-            utr = None,
-            description = "Partnership 1",
-            partnershipStart = Some(LocalDate.parse("2019-11-26"))
-          ))
+          val businessAssets = List(
+            DisplayTrustPartnershipType(
+              utr = None,
+              description = "Partnership 1",
+              partnershipStart = Some(LocalDate.parse("2019-11-26"))
+            )
+          )
 
           val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, businessAssets)
 
           extraction.value.get(PartnershipDescriptionPage(0)).get mustBe "Partnership 1"
-          extraction.value.get(PartnershipStartDatePage(0)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(PartnershipStartDatePage(0)).get   mustBe LocalDate.of(year2019, NOVEMBER, num26)
         }
 
         "with full data must return user answers updated" in {
@@ -90,13 +92,13 @@ class PartnershipAssetExtractorSpec extends AnyFreeSpec with Matchers
           extraction mustBe Symbol("right")
 
           extraction.value.get(PartnershipDescriptionPage(0)).get mustBe "Partnership 0"
-          extraction.value.get(PartnershipStartDatePage(0)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(PartnershipStartDatePage(0)).get   mustBe LocalDate.of(year2019, NOVEMBER, num26)
 
           extraction.value.get(PartnershipDescriptionPage(1)).get mustBe "Partnership 1"
-          extraction.value.get(PartnershipStartDatePage(1)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(PartnershipStartDatePage(1)).get   mustBe LocalDate.of(year2019, NOVEMBER, num26)
 
           extraction.value.get(PartnershipDescriptionPage(2)).get mustBe "Partnership 2"
-          extraction.value.get(PartnershipStartDatePage(2)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(PartnershipStartDatePage(2)).get   mustBe LocalDate.of(year2019, NOVEMBER, num26)
         }
       }
 

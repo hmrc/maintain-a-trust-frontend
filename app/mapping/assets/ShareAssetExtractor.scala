@@ -28,24 +28,28 @@ class ShareAssetExtractor extends PlaybackExtractor[DisplaySharesType] {
 
   override val optionalEntity: Boolean = true
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplaySharesType,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplaySharesType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
     answers
       .flatMap(answers => extractPortfolioOrNonPortfolio(entity, index, answers))
-  }
 
-  private def extractPortfolioOrNonPortfolio(entity: DisplaySharesType, index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
-    answers.set(SharesInAPortfolioPage(index), entity.isPortfolio)
+  private def extractPortfolioOrNonPortfolio(
+    entity: DisplaySharesType,
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
+    answers
+      .set(SharesInAPortfolioPage(index), entity.isPortfolio)
       .flatMap(_.set(ShareNamePage(index), entity.orgName))
       .flatMap(_.set(ShareOnStockExchangePage(index), entity.typeOfShare.contains(Quoted)))
       .flatMap(_.set(ShareClassPage(index), shareClass(entity)))
       .flatMap(_.set(ShareQuantityInTrustPage(index), entity.numberOfShares))
       .flatMap(_.set(ShareValueInTrustPage(index), entity.value))
-  }
 
-  private def shareClass(entity: DisplaySharesType): Option[ShareClass] = {
+  private def shareClass(entity: DisplaySharesType): Option[ShareClass] =
     if (entity.isPortfolio.contains(true)) None else entity.shareClassDisplay
-  }
 
 }

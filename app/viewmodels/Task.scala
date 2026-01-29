@@ -18,7 +18,4 @@ package viewmodels
 
 import models.pages.Tag
 
-case class Task(link: Link,
-                tag: Tag,
-                appTaskStyles: Option[String] = None,
-                taskTagTextStyles: Option[String] = None)
+case class Task(link: Link, tag: Tag, appTaskStyles: Option[String] = None, taskTagTextStyles: Option[String] = None)

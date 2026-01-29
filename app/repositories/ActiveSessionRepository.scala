@@ -35,40 +35,45 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ActiveSessionRepositoryImpl @Inject()(
-                                             val mongoComponent: MongoComponent,
-                                             val config: FrontendAppConfig
-                                           )(implicit val ec: ExecutionContext)
-  extends PlayMongoRepository[IdentifierSession](
-    collectionName = "session",
-    mongoComponent = mongoComponent,
-    domainFormat = Format(IdentifierSession.reads, IdentifierSession.writes),
-    indexes = Seq(
-      IndexModel(
-        ascending("updatedAt"),
-        IndexOptions()
-          .unique(false)
-          .name("session-updated-at-index")
-          .expireAfter(config.cachettlSessionInSeconds, TimeUnit.SECONDS)),
-      IndexModel(
-        ascending("identifier"),
-        IndexOptions()
-          .unique(false)
-          .name("identifier-index")
-      )
-    ), replaceIndexes = config.dropIndexes
-
-  ) with Logging with ActiveSessionRepository with RepositoryHelper {
+class ActiveSessionRepositoryImpl @Inject() (
+  val mongoComponent: MongoComponent,
+  val config: FrontendAppConfig
+)(implicit val ec: ExecutionContext)
+    extends PlayMongoRepository[IdentifierSession](
+      collectionName = "session",
+      mongoComponent = mongoComponent,
+      domainFormat = Format(IdentifierSession.reads, IdentifierSession.writes),
+      indexes = Seq(
+        IndexModel(
+          ascending("updatedAt"),
+          IndexOptions()
+            .unique(false)
+            .name("session-updated-at-index")
+            .expireAfter(config.cachettlSessionInSeconds, TimeUnit.SECONDS)
+        ),
+        IndexModel(
+          ascending("identifier"),
+          IndexOptions()
+            .unique(false)
+            .name("identifier-index")
+        )
+      ),
+      replaceIndexes = config.dropIndexes
+    )
+    with Logging
+    with ActiveSessionRepository
+    with RepositoryHelper {
 
   private val className = getClass.getSimpleName
 
   def get(internalId: String): TrustEnvelope[Option[IdentifierSession]] = EitherT {
 
-    val selector = equal("internalId", internalId)
-    val modifier = Updates.set("updatedAt", LocalDateTime.now())
+    val selector     = equal("internalId", internalId)
+    val modifier     = Updates.set("updatedAt", LocalDateTime.now())
     val updateOption = new FindOneAndUpdateOptions().upsert(false)
 
-    collection.findOneAndUpdate(selector, modifier, updateOption)
+    collection
+      .findOneAndUpdate(selector, modifier, updateOption)
       .toFutureOption()
       .map(Right(_))
       .recover {
@@ -85,7 +90,8 @@ class ActiveSessionRepositoryImpl @Inject()(
 
     val selector = equal("internalId", session.internalId)
 
-    collection.replaceOne(selector, session.copy(updatedAt = LocalDateTime.now), ReplaceOptions().upsert(true))
+    collection
+      .replaceOne(selector, session.copy(updatedAt = LocalDateTime.now), ReplaceOptions().upsert(true))
       .head()
       .map(updateResult => Right(updateResult.wasAcknowledged()))
       .recover {
@@ -95,7 +101,7 @@ class ActiveSessionRepositoryImpl @Inject()(
           sessionId = session.internalId,
           message = s"operation failed due to exception from Mongo"
         )
-    }
+      }
   }
 
 }

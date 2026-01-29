@@ -32,10 +32,8 @@ class KindOfBusinessSpec extends AnyWordSpec with Matchers with ScalaCheckProper
 
       val gen = Gen.oneOf(KindOfBusiness.values.toSeq)
 
-      forAll(gen) {
-        kindOfBusiness =>
-
-          JsString(kindOfBusiness.toString).validate[KindOfBusiness].asOpt.value mustEqual kindOfBusiness
+      forAll(gen) { kindOfBusiness =>
+        JsString(kindOfBusiness.toString).validate[KindOfBusiness].asOpt.value mustEqual kindOfBusiness
       }
     }
 
@@ -43,10 +41,8 @@ class KindOfBusinessSpec extends AnyWordSpec with Matchers with ScalaCheckProper
 
       val gen = arbitrary[String] suchThat (!KindOfBusiness.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[KindOfBusiness] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[KindOfBusiness] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,11 +50,10 @@ class KindOfBusinessSpec extends AnyWordSpec with Matchers with ScalaCheckProper
 
       val gen = Gen.oneOf(KindOfBusiness.values.toSeq)
 
-      forAll(gen) {
-        kindOfBusiness =>
-
-          Json.toJson(kindOfBusiness) mustEqual JsString(kindOfBusiness.toString)
+      forAll(gen) { kindOfBusiness =>
+        Json.toJson(kindOfBusiness) mustEqual JsString(kindOfBusiness.toString)
       }
     }
   }
+
 }

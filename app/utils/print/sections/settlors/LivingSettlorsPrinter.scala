@@ -28,16 +28,16 @@ import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class LivingSettlorsPrinter @Inject()(individualSettlorPrinter: SettlorIndividualPrinter,
-                                      companySettlorPrinter: SettlorCompanyPrinter) extends EntitiesPrinter[JsArray] {
+class LivingSettlorsPrinter @Inject() (
+  individualSettlorPrinter: SettlorIndividualPrinter,
+  companySettlorPrinter: SettlorCompanyPrinter
+) extends EntitiesPrinter[JsArray] {
 
-  override def printSection(index: Int, userAnswers: UserAnswers)
-                           (implicit messages: Messages): Option[AnswerSection] = {
+  override def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection] =
     userAnswers.get(SettlorIndividualOrBusinessPage(index)).flatMap {
       case Individual => individualSettlorPrinter.printAnswerRows(index, userAnswers)
-      case Business => companySettlorPrinter.printAnswerRows(index, userAnswers)
+      case Business   => companySettlorPrinter.printAnswerRows(index, userAnswers)
     }
-  }
 
   override def section: QuestionPage[JsArray] = LivingSettlors
 

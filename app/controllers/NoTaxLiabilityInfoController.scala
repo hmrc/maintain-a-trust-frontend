@@ -25,24 +25,21 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.NoTaxLiabilityInfoView
 
 @Singleton
-class NoTaxLiabilityInfoController @Inject()(
-                                              actions: Actions,
-                                              val controllerComponents: MessagesControllerComponents,
-                                              noTaxLiabilityInfoView: NoTaxLiabilityInfoView
-                                            )
-  extends FrontendBaseController with I18nSupport with Logging {
+class NoTaxLiabilityInfoController @Inject() (
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  noTaxLiabilityInfoView: NoTaxLiabilityInfoView
+) extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    val identifier     = request.userAnswers.identifier
+    val identifierType = request.userAnswers.identifierType
 
-      val identifier = request.userAnswers.identifier
-      val identifierType = request.userAnswers.identifierType
-
-      Ok(noTaxLiabilityInfoView(identifier, identifierType))
+    Ok(noTaxLiabilityInfoView(identifier, identifierType))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier {
-    _ =>
-      Redirect(routes.WhatIsNextController.onPageLoad())
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier { _ =>
+    Redirect(routes.WhatIsNextController.onPageLoad())
   }
+
 }

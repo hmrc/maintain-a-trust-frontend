@@ -17,50 +17,61 @@
 package connectors
 
 import play.api.Logging
-import play.api.http.Status.{OK, NOT_FOUND}
+import play.api.http.Status.{NOT_FOUND, OK}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import play.api.libs.json.{Json, OFormat}
 
 import scala.language.implicitConversions
 
-case class TrustClaim(id:String, managedByAgent: Boolean, trustLocked:Boolean)
+case class TrustClaim(id: String, managedByAgent: Boolean, trustLocked: Boolean)
 
 object TrustClaim extends Logging {
 
-  implicit val formats : OFormat[TrustClaim] = Json.format[TrustClaim]
+  implicit val formats: OFormat[TrustClaim] = Json.format[TrustClaim]
 
-  implicit def httpReads(identifier : String): HttpReads[Option[TrustClaim]] =
+  implicit def httpReads(identifier: String): HttpReads[Option[TrustClaim]] =
     new HttpReads[Option[TrustClaim]] {
       override def read(method: String, url: String, response: HttpResponse): Option[TrustClaim] = {
-        logger.info(s"[TrustClaim][read][UTR/URN: $identifier] response status received from trusts store api: ${response.status}")
+        logger.info(
+          s"[TrustClaim][read][UTR/URN: $identifier] response status received from trusts store api: ${response.status}"
+        )
         response.status match {
-          case OK =>
+          case OK        =>
             response.json.asOpt[TrustClaim] match {
               case validClaim @ Some(c) =>
                 if (c.id.toLowerCase.trim == identifier.toLowerCase.trim) {
                   if (c.trustLocked) {
-                    logger.info(s"[TrustClaim][read][UTR/URN: $identifier] User has been locked out of Trust IV for 30 minutes")
+                    logger.info(
+                      s"[TrustClaim][read][UTR/URN: $identifier] User has been locked out of Trust IV for 30 minutes"
+                    )
                   } else {
                     logger.info(s"[TrustClaim][read][UTR/URN: $identifier] User has not been locked out of Trust IV")
                   }
                   validClaim
                 } else {
-                  logger.info(s"[TrustClaim][read][UTR/URN: $identifier] There was a problem in the data from trusts-store so unable to determine if there is a claim")
+                  logger.info(
+                    s"[TrustClaim][read][UTR/URN: $identifier] There was a problem in the data from trusts-store so unable to determine if there is a claim"
+                  )
                   None
                 }
-              case None =>
-                logger.info(s"[TrustClaim][read][UTR/URN: $identifier] there was a problem in the data from trusts-store so unable to determine if there is a claim")
+              case None                 =>
+                logger.info(
+                  s"[TrustClaim][read][UTR/URN: $identifier] there was a problem in the data from trusts-store so unable to determine if there is a claim"
+                )
                 None
             }
           case NOT_FOUND =>
-            logger.info(s"[TrustClaim][read][UTR/URN: $identifier] User has not been locked out of Trust IV for 30 minutes, continuing into claiming/verifying the trust")
+            logger.info(
+              s"[TrustClaim][read][UTR/URN: $identifier] User has not been locked out of Trust IV for 30 minutes, continuing into claiming/verifying the trust"
+            )
             None
-          case _ =>
-            logger.info(s"[TrustClaim][read][UTR/URN: $identifier] User is unable to continue TRUST IV due to the following response - ${response.body}")
+          case _         =>
+            logger.info(
+              s"[TrustClaim][read][UTR/URN: $identifier] User is unable to continue TRUST IV due to the following response - ${response.body}"
+            )
             None
         }
       }
     }
-
 
 }

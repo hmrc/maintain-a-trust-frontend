@@ -22,8 +22,8 @@ import views.html.transition.declaration.IndividualConfirmationView
 class IndividualConfirmationViewSpec extends ViewBehaviours {
 
   val messageKeyPrefix = "individualConfirmation"
-  val fakeTvn = "XC TVN 000 000 4912"
-  val leadTrusteeName = "Name"
+  val fakeTvn          = "XC TVN 000 000 4912"
+  val leadTrusteeName  = "Name"
 
   "IndividualConfirmationView" must {
 
@@ -37,8 +37,17 @@ class IndividualConfirmationViewSpec extends ViewBehaviours {
     behave like normalPage(
       view = applyView,
       messageKeyPrefix = messageKeyPrefix,
-      expectedGuidanceKeys = "subheading1", "paragraph1", "paragraph2", "paragraph3", "paragraph4", "subheading2",
-      "paragraph6", "subheading3", "paragraph7", "paragraph8", "paragraph9"
+      expectedGuidanceKeys = "subheading1",
+      "paragraph1",
+      "paragraph2",
+      "paragraph3",
+      "paragraph4",
+      "subheading2",
+      "paragraph6",
+      "subheading3",
+      "paragraph7",
+      "paragraph8",
+      "paragraph9"
     )
 
     behave like pageWithWarning(applyView)

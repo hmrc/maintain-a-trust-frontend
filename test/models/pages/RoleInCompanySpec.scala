@@ -32,10 +32,8 @@ class RoleInCompanySpec extends AnyWordSpec with Matchers with ScalaCheckPropert
 
       val gen = Gen.oneOf(RoleInCompany.values.toSeq)
 
-      forAll(gen) {
-        roleInCompany =>
-
-          JsString(roleInCompany.toString).validate[RoleInCompany].asOpt.value mustEqual roleInCompany
+      forAll(gen) { roleInCompany =>
+        JsString(roleInCompany.toString).validate[RoleInCompany].asOpt.value mustEqual roleInCompany
       }
     }
 
@@ -43,10 +41,8 @@ class RoleInCompanySpec extends AnyWordSpec with Matchers with ScalaCheckPropert
 
       val gen = arbitrary[String] suchThat (!RoleInCompany.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[RoleInCompany] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[RoleInCompany] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,11 +50,10 @@ class RoleInCompanySpec extends AnyWordSpec with Matchers with ScalaCheckPropert
 
       val gen = Gen.oneOf(RoleInCompany.values.toSeq)
 
-      forAll(gen) {
-        roleInCompany =>
-
-          Json.toJson(roleInCompany) mustEqual JsString(roleInCompany.toString)
+      forAll(gen) { roleInCompany =>
+        Json.toJson(roleInCompany) mustEqual JsString(roleInCompany.toString)
       }
     }
   }
+
 }

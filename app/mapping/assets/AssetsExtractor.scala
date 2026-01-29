@@ -22,15 +22,17 @@ import models.UserAnswersCombinator._
 import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.DisplayTrustAssets
 
-class AssetsExtractor @Inject()(moneyAssetExtractor: MoneyAssetExtractor,
-                                propertyOrLandAssetExtractor: PropertyOrLandAssetExtractor,
-                                shareAssetExtractor: ShareAssetExtractor,
-                                businessAssetExtractor: BusinessAssetExtractor,
-                                partnershipAssetExtractor: PartnershipAssetExtractor,
-                                otherAssetExtractor: OtherAssetExtractor,
-                                nonEeaBusinessAssetExtractor: NonEeaBusinessAssetExtractor) {
+class AssetsExtractor @Inject() (
+  moneyAssetExtractor: MoneyAssetExtractor,
+  propertyOrLandAssetExtractor: PropertyOrLandAssetExtractor,
+  shareAssetExtractor: ShareAssetExtractor,
+  businessAssetExtractor: BusinessAssetExtractor,
+  partnershipAssetExtractor: PartnershipAssetExtractor,
+  otherAssetExtractor: OtherAssetExtractor,
+  nonEeaBusinessAssetExtractor: NonEeaBusinessAssetExtractor
+) {
 
-  def extract(answers: UserAnswers, data: Option[DisplayTrustAssets]): Either[TrustErrors, UserAnswers] = {
+  def extract(answers: UserAnswers, data: Option[DisplayTrustAssets]): Either[TrustErrors, UserAnswers] =
 
     data match {
 
@@ -44,17 +46,18 @@ class AssetsExtractor @Inject()(moneyAssetExtractor: MoneyAssetExtractor,
           partnershipAssetExtractor.extract(answers, a.partnerShip),
           otherAssetExtractor.extract(answers, a.other),
           nonEeaBusinessAssetExtractor.extract(answers, a.nonEEABusiness)
-        ).collect {
-          case Right(z) => z
+        ).collect { case Right(z) =>
+          z
         }
 
         assets match {
           case Nil => Left(FailedToExtractData("Assets Extraction Error - No assets"))
-          case _ => assets.combine match {
-            case Some(value) =>
-              Right(value)
-            case None => Left(FailedToExtractData("Assets Extraction Error - Failed to combine asset answers"))
-          }
+          case _   =>
+            assets.combine match {
+              case Some(value) =>
+                Right(value)
+              case None        => Left(FailedToExtractData("Assets Extraction Error - Failed to combine asset answers"))
+            }
         }
 
       case None =>
@@ -62,5 +65,4 @@ class AssetsExtractor @Inject()(moneyAssetExtractor: MoneyAssetExtractor,
 
     }
 
-  }
 }

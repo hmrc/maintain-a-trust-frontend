@@ -28,32 +28,34 @@ import utils.Session
 import views.html.transition.declaration.{AgentConfirmationView, IndividualConfirmationView}
 
 @Singleton
-class ConfirmationController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        actions: Actions,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        individualConfirmationView: IndividualConfirmationView,
-                                        agentConfirmationView: AgentConfirmationView,
-                                        answerRequiredAction: RequireClosingTrustAnswerAction
-                                      ) extends FrontendBaseController with I18nSupport with Logging {
+class ConfirmationController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  individualConfirmationView: IndividualConfirmationView,
+  agentConfirmationView: AgentConfirmationView,
+  answerRequiredAction: RequireClosingTrustAnswerAction
+) extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad(): Action[AnyContent] = actions.refreshedData.andThen(answerRequiredAction) {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.refreshedData.andThen(answerRequiredAction) { implicit request =>
+    val isAgent = request.user.affinityGroup == Agent
 
-      val isAgent = request.user.affinityGroup == Agent
-
-      request.userAnswers.get(TVNPage).fold {
-        logger.error(s"[ConfirmationController][onPageLoad][Session ID: ${Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}] no TVN in user answers, cannot render confirmation")
+    request.userAnswers
+      .get(TVNPage)
+      .fold {
+        logger.error(
+          s"[ConfirmationController][onPageLoad][Session ID: ${Session.id(hc)}][UTR/URN: ${request.userAnswers.identifier}] no TVN in user answers, cannot render confirmation"
+        )
         Redirect(controllers.routes.TrustStatusController.sorryThereHasBeenAProblem())
-      } {
-        tvn =>
-          Ok(
-            if (isAgent) {
-              agentConfirmationView(tvn, request.userAnswers.leadTrusteeName)
-            } else {
-              individualConfirmationView(tvn, request.userAnswers.leadTrusteeName)
-            }
-          )
+      } { tvn =>
+        Ok(
+          if (isAgent) {
+            agentConfirmationView(tvn, request.userAnswers.leadTrusteeName)
+          } else {
+            individualConfirmationView(tvn, request.userAnswers.leadTrusteeName)
+          }
+        )
       }
   }
+
 }

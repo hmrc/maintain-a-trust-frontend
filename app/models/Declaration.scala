@@ -20,11 +20,13 @@ import play.api.libs.json.{Json, OFormat, Reads, Writes}
 
 import scala.language.implicitConversions
 
-final case class AgentDeclaration(name: FullName,
-                                  agencyName: String,
-                                  telephoneNumber: String,
-                                  crn: String,
-                                  email: Option[String]) extends Declaration
+final case class AgentDeclaration(
+  name: FullName,
+  agencyName: String,
+  telephoneNumber: String,
+  crn: String,
+  email: Option[String]
+) extends Declaration
 
 object AgentDeclaration {
 
@@ -46,9 +48,8 @@ object Declaration {
 
     implicit class ReadsWithContravariantOr[A](a: Reads[A]) {
 
-      def or[B >: A](b: Reads[B]): Reads[B] = {
+      def or[B >: A](b: Reads[B]): Reads[B] =
         a.map[B](identity).orElse(b)
-      }
     }
 
     implicit def convertToSupertype[A, B >: A](a: Reads[A]): Reads[B] =
@@ -59,7 +60,8 @@ object Declaration {
   }
 
   implicit lazy val writes: Writes[Declaration] = Writes {
-    case declaration: AgentDeclaration => Json.toJson(declaration)(AgentDeclaration.formats)
+    case declaration: AgentDeclaration      => Json.toJson(declaration)(AgentDeclaration.formats)
     case declaration: IndividualDeclaration => Json.toJson(declaration)(IndividualDeclaration.formats)
   }
+
 }

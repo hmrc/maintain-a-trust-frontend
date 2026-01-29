@@ -32,10 +32,8 @@ class KindOfTrustSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
 
       val gen = Gen.oneOf(KindOfTrust.values.toSeq)
 
-      forAll(gen) {
-        kindOfTrust =>
-
-          JsString(kindOfTrust.toString).validate[KindOfTrust].asOpt.value mustEqual kindOfTrust
+      forAll(gen) { kindOfTrust =>
+        JsString(kindOfTrust.toString).validate[KindOfTrust].asOpt.value mustEqual kindOfTrust
       }
     }
 
@@ -43,10 +41,8 @@ class KindOfTrustSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
 
       val gen = arbitrary[String] suchThat (!KindOfTrust.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[KindOfTrust] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[KindOfTrust] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,11 +50,10 @@ class KindOfTrustSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
 
       val gen = Gen.oneOf(KindOfTrust.values.toSeq)
 
-      forAll(gen) {
-        kindOfTrust =>
-
-          Json.toJson(kindOfTrust) mustEqual JsString(kindOfTrust.toString)
+      forAll(gen) { kindOfTrust =>
+        Json.toJson(kindOfTrust) mustEqual JsString(kindOfTrust.toString)
       }
     }
   }
+
 }

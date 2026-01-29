@@ -24,17 +24,19 @@ import java.time.LocalDate
 
 sealed trait Asset
 
-case class DisplayTrustAssets(monetary: List[AssetMonetaryAmount],
-                              propertyOrLand: List[PropertyLandType],
-                              shares: List[DisplaySharesType],
-                              business: List[DisplayBusinessAssetType],
-                              partnerShip: List[DisplayTrustPartnershipType],
-                              other: List[DisplayOtherAssetType],
-                              nonEEABusiness: List[DisplayNonEEABusinessType])
+case class DisplayTrustAssets(
+  monetary: List[AssetMonetaryAmount],
+  propertyOrLand: List[PropertyLandType],
+  shares: List[DisplaySharesType],
+  business: List[DisplayBusinessAssetType],
+  partnerShip: List[DisplayTrustPartnershipType],
+  other: List[DisplayOtherAssetType],
+  nonEEABusiness: List[DisplayNonEEABusinessType]
+)
 
 object DisplayTrustAssets {
 
-  implicit val reads : Reads[DisplayTrustAssets] = (
+  implicit val reads: Reads[DisplayTrustAssets] = (
     (__ \ "monetary").readWithDefault[List[AssetMonetaryAmount]](Nil) and
       (__ \ "propertyOrLand").readWithDefault[List[PropertyLandType]](Nil) and
       (__ \ "shares").readWithDefault[List[DisplaySharesType]](Nil) and
@@ -42,31 +44,33 @@ object DisplayTrustAssets {
       (__ \ "partnerShip").readWithDefault[List[DisplayTrustPartnershipType]](Nil) and
       (__ \ "other").readWithDefault[List[DisplayOtherAssetType]](Nil) and
       (__ \ "nonEEABusiness").readWithDefault[List[DisplayNonEEABusinessType]](Nil)
-    )(DisplayTrustAssets.apply _)
+  )(DisplayTrustAssets.apply _)
 
-  implicit val writes : Writes[DisplayTrustAssets] = Json.writes[DisplayTrustAssets]
+  implicit val writes: Writes[DisplayTrustAssets] = Json.writes[DisplayTrustAssets]
 
 }
 
 case class AssetMonetaryAmount(assetMonetaryAmount: Long) extends Asset with EntityType {
 
   override val bpMatchStatus: Option[String] = None
-  override val lineNo: Option[String] = None
-  override val entityStart: String = LocalDate.now.toString
+  override val lineNo: Option[String]        = None
+  override val entityStart: String           = LocalDate.now.toString
 }
 
 object AssetMonetaryAmount {
   implicit val assetMonetaryAmountFormat: Format[AssetMonetaryAmount] = Json.format[AssetMonetaryAmount]
 }
 
-case class PropertyLandType(buildingLandName: Option[String],
-                            address: Option[AddressType],
-                            valueFull: Long,
-                            valuePrevious: Option[Long]) extends Asset with EntityType {
+case class PropertyLandType(
+  buildingLandName: Option[String],
+  address: Option[AddressType],
+  valueFull: Long,
+  valuePrevious: Option[Long]
+) extends Asset with EntityType {
 
   override val bpMatchStatus: Option[String] = None
-  override val lineNo: Option[String] = None
-  override val entityStart: String = LocalDate.now.toString
+  override val lineNo: Option[String]        = None
+  override val entityStart: String           = LocalDate.now.toString
 
 }
 
@@ -74,17 +78,19 @@ object PropertyLandType {
   implicit val propertyLandTypeFormat: Format[PropertyLandType] = Json.format[PropertyLandType]
 }
 
-case class DisplaySharesType(numberOfShares: Option[String],
-                             orgName: String,
-                             utr: Option[String],
-                             shareClassDisplay: Option[ShareClass],
-                             typeOfShare: Option[ShareType],
-                             value: Option[Long],
-                             isPortfolio: Option[Boolean]) extends Asset with EntityType {
+case class DisplaySharesType(
+  numberOfShares: Option[String],
+  orgName: String,
+  utr: Option[String],
+  shareClassDisplay: Option[ShareClass],
+  typeOfShare: Option[ShareType],
+  value: Option[Long],
+  isPortfolio: Option[Boolean]
+) extends Asset with EntityType {
 
   override val bpMatchStatus: Option[String] = None
-  override val lineNo: Option[String] = None
-  override val entityStart: String = LocalDate.now.toString
+  override val lineNo: Option[String]        = None
+  override val entityStart: String           = LocalDate.now.toString
 
 }
 
@@ -92,15 +98,17 @@ object DisplaySharesType {
   implicit val sharesTypeFormat: Format[DisplaySharesType] = Json.format[DisplaySharesType]
 }
 
-case class DisplayBusinessAssetType(orgName: String,
-                                    utr: Option[String],
-                                    businessDescription: String,
-                                    address: Option[AddressType],
-                                    businessValue: Option[Long]) extends Asset with EntityType {
+case class DisplayBusinessAssetType(
+  orgName: String,
+  utr: Option[String],
+  businessDescription: String,
+  address: Option[AddressType],
+  businessValue: Option[Long]
+) extends Asset with EntityType {
 
   override val bpMatchStatus: Option[String] = None
-  override val lineNo: Option[String] = None
-  override val entityStart: String = LocalDate.now.toString
+  override val lineNo: Option[String]        = None
+  override val entityStart: String           = LocalDate.now.toString
 
 }
 
@@ -108,13 +116,12 @@ object DisplayBusinessAssetType {
   implicit val businessAssetTypeFormat: Format[DisplayBusinessAssetType] = Json.format[DisplayBusinessAssetType]
 }
 
-case class DisplayTrustPartnershipType(utr: Option[String],
-                                       description: String,
-                                       partnershipStart: Option[LocalDate]) extends Asset with EntityType {
+case class DisplayTrustPartnershipType(utr: Option[String], description: String, partnershipStart: Option[LocalDate])
+    extends Asset with EntityType {
 
   override val bpMatchStatus: Option[String] = None
-  override val lineNo: Option[String] = None
-  override val entityStart: String = LocalDate.now.toString
+  override val lineNo: Option[String]        = None
+  override val entityStart: String           = LocalDate.now.toString
 
 }
 
@@ -122,12 +129,11 @@ object DisplayTrustPartnershipType {
   implicit val partnershipTypeFormat: Format[DisplayTrustPartnershipType] = Json.format[DisplayTrustPartnershipType]
 }
 
-case class DisplayOtherAssetType(description: String,
-                                 value: Option[Long]) extends Asset with EntityType {
+case class DisplayOtherAssetType(description: String, value: Option[Long]) extends Asset with EntityType {
 
   override val bpMatchStatus: Option[String] = None
-  override val lineNo: Option[String] = None
-  override val entityStart: String = LocalDate.now.toString
+  override val lineNo: Option[String]        = None
+  override val entityStart: String           = LocalDate.now.toString
 
 }
 
@@ -135,15 +141,17 @@ object DisplayOtherAssetType {
   implicit val otherAssetTypeFormat: Format[DisplayOtherAssetType] = Json.format[DisplayOtherAssetType]
 }
 
-case class DisplayNonEEABusinessType(lineNo: Option[String],
-                                     orgName: String,
-                                     address: AddressType,
-                                     govLawCountry: String,
-                                     startDate: LocalDate,
-                                     endDate: Option[LocalDate]) extends Asset with EntityType {
+case class DisplayNonEEABusinessType(
+  lineNo: Option[String],
+  orgName: String,
+  address: AddressType,
+  govLawCountry: String,
+  startDate: LocalDate,
+  endDate: Option[LocalDate]
+) extends Asset with EntityType {
 
   override val bpMatchStatus: Option[String] = None
-  override val entityStart: String = startDate.toString
+  override val entityStart: String           = startDate.toString
 }
 
 object DisplayNonEEABusinessType {

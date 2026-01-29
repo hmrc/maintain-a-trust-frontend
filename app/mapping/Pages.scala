@@ -24,33 +24,33 @@ import java.time.LocalDate
 
 trait Pages {
 
-  def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   = new EmptyPage[Boolean]
   def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def countryOfResidencePage(index: Int): QuestionPage[String] = new EmptyPage[String]
+  def countryOfResidencePage(index: Int): QuestionPage[String]         = new EmptyPage[String]
 
-  def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean]   = new EmptyPage[Boolean]
   def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def countryOfNationalityPage(index: Int): QuestionPage[String] = new EmptyPage[String]
+  def countryOfNationalityPage(index: Int): QuestionPage[String]         = new EmptyPage[String]
 
   def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
 
-  def addressYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
+  def addressYesNoPage(index: Int): QuestionPage[Boolean]   = new EmptyPage[Boolean]
   def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def addressPage(index: Int): QuestionPage[Address] = new EmptyPage[Address]
+  def addressPage(index: Int): QuestionPage[Address]        = new EmptyPage[Address]
 
   def utrYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def utrPage(index: Int): QuestionPage[String] = new EmptyPage[String]
+  def utrPage(index: Int): QuestionPage[String]       = new EmptyPage[String]
 
   def ninoYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def ninoPage(index: Int): QuestionPage[String] = new EmptyPage[String]
+  def ninoPage(index: Int): QuestionPage[String]       = new EmptyPage[String]
 
   def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
   def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = new EmptyPage[PassportType]
 
   def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = new EmptyPage[LocalDate]
+  def dateOfBirthPage(index: Int): QuestionPage[LocalDate]    = new EmptyPage[LocalDate]
 
-  def safeIdPage(index: Int): QuestionPage[String] = new EmptyPage[String]
+  def safeIdPage(index: Int): QuestionPage[String]     = new EmptyPage[String]
   def metaDataPage(index: Int): QuestionPage[MetaData] = new EmptyPage[MetaData]
 
 }

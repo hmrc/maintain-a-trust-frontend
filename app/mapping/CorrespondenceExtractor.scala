@@ -16,7 +16,6 @@
 
 package mapping
 
-
 import mapping.PlaybackImplicits._
 import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.Correspondence
@@ -38,19 +37,21 @@ class CorrespondenceExtractor extends Logging {
     updated match {
       case Right(a) =>
         Right(a)
-      case Left(_) =>
+      case Left(_)  =>
         logger.error(s"[CorrespondenceExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data.")
         Left(FailedToExtractData(Correspondence.toString))
     }
   }
 
   private def extractAddress(address: Address, answers: UserAnswers): Either[TrustErrors, UserAnswers] = address match {
-    case uk: UKAddress => answers
-      .set(CorrespondenceAddressInTheUKPage, true)
-      .flatMap(_.set(CorrespondenceAddressPage, uk))
-    case nonUk: InternationalAddress => answers
-      .set(CorrespondenceAddressInTheUKPage, false)
-      .flatMap(_.set(CorrespondenceAddressPage, nonUk))
+    case uk: UKAddress               =>
+      answers
+        .set(CorrespondenceAddressInTheUKPage, true)
+        .flatMap(_.set(CorrespondenceAddressPage, uk))
+    case nonUk: InternationalAddress =>
+      answers
+        .set(CorrespondenceAddressInTheUKPage, false)
+        .flatMap(_.set(CorrespondenceAddressPage, nonUk))
   }
 
 }

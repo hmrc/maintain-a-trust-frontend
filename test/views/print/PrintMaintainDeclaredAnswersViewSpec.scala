@@ -42,30 +42,22 @@ class PrintMaintainDeclaredAnswersViewSpec extends ViewBehaviours {
     "render correct content" in {
       val doc = asDocument(applyView)
 
-      assertContainsText(doc,
-        "Declared copy of updates to the trust"
-      )
+      assertContainsText(doc, "Declared copy of updates to the trust")
 
-      assertContainsText(doc,
-        "Declaration reference number is: tvn"
-      )
+      assertContainsText(doc, "Declaration reference number is: tvn")
 
-      assertContainsText(doc,
-        "Client reference number: crn"
-      )
+      assertContainsText(doc, "Client reference number: crn")
 
-      assertContainsText(doc,
-        "The trust’s declaration was sent on 27 January 2020"
-      )
+      assertContainsText(doc, "The trust’s declaration was sent on 27 January 2020")
 
-      assertContainsText(doc,
-        "You only need to declare the trust is up to date every year if there is a tax liability"
-      )
+      assertContainsText(doc, "You only need to declare the trust is up to date every year if there is a tax liability")
 
-      assertContainsText(doc,
+      assertContainsText(
+        doc,
         "No further updates to trust details, assets and years of tax liability are required through this service."
       )
-      assertContainsText(doc,
+      assertContainsText(
+        doc,
         "If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts."
       )
     }

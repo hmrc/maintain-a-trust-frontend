@@ -21,7 +21,7 @@ import views.html.print.PrintLastDeclaredAnswersView
 
 class PrintLastDeclaredAnswersViewSpec extends ViewBehaviours {
 
-  lazy val continueUrl: String =  controllers.routes.WhatIsNextController.onPageLoad().url
+  lazy val continueUrl: String = controllers.routes.WhatIsNextController.onPageLoad().url
 
   "PrintLastDeclaredAnswersView view" must {
 
@@ -42,20 +42,19 @@ class PrintLastDeclaredAnswersViewSpec extends ViewBehaviours {
     "render correct content" in {
       val doc = asDocument(applyView)
 
-      assertContainsText(doc,
-        "Last declared copy of the trust’s registration"
-      )
+      assertContainsText(doc, "Last declared copy of the trust’s registration")
 
-      assertContainsText(doc,
-        "You only need to declare the trust is up to date every year if there is a tax liability"
-      )
+      assertContainsText(doc, "You only need to declare the trust is up to date every year if there is a tax liability")
 
-      assertContainsText(doc,
+      assertContainsText(
+        doc,
         "No further updates to trust details, assets and years of tax liability are required through this service."
       )
-      assertContainsText(doc,
+      assertContainsText(
+        doc,
         "If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts."
       )
     }
   }
+
 }

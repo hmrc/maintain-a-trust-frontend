@@ -24,26 +24,32 @@ import pages.beneficiaries.trust._
 
 class TrustBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustBeneficiaryTrustType] {
 
-  override def namePage(index: Int): QuestionPage[String] = TrustBeneficiaryNamePage(index)
-  override def safeIdPage(index: Int): QuestionPage[String] = TrustBeneficiarySafeIdPage(index)
+  override def namePage(index: Int): QuestionPage[String]       = TrustBeneficiaryNamePage(index)
+  override def safeIdPage(index: Int): QuestionPage[String]     = TrustBeneficiarySafeIdPage(index)
   override def metaDataPage(index: Int): QuestionPage[MetaData] = TrustBeneficiaryMetaData(index)
 
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryDiscretionYesNoPage(index)
-  override def shareOfIncomePage(index: Int): QuestionPage[String] = TrustBeneficiaryShareOfIncomePage(index)
+  override def shareOfIncomePage(index: Int): QuestionPage[String]       = TrustBeneficiaryShareOfIncomePage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryCountryOfResidenceYesNoPage(index)
-  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
-  override def countryOfResidencePage(index: Int): QuestionPage[String] = TrustBeneficiaryCountryOfResidencePage(index)
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   =
+    TrustBeneficiaryCountryOfResidenceYesNoPage(index)
 
-  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryAddressYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
+
+  override def countryOfResidencePage(index: Int): QuestionPage[String]         = TrustBeneficiaryCountryOfResidencePage(index)
+
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean]   = TrustBeneficiaryAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryAddressUKYesNoPage(index)
-  override def addressPage(index: Int): QuestionPage[Address] = TrustBeneficiaryAddressPage(index)
+  override def addressPage(index: Int): QuestionPage[Address]        = TrustBeneficiaryAddressPage(index)
 
   override def utrPage(index: Int): QuestionPage[String] = TrustBeneficiaryUtrPage(index)
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayTrustBeneficiaryTrustType,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayTrustBeneficiaryTrustType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
     updateUserAnswersForOrgBeneficiary(answers, entity, index)
-  }
+
 }

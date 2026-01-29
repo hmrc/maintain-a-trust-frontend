@@ -27,13 +27,11 @@ final case class DeclarationError() extends TrustErrors
 case object NoData extends TrustErrors
 final case class WrongUserType() extends TrustErrors
 
-
 sealed trait PlaybackExtractionErrors extends TrustErrors
 
 case class FailedToExtractData(reason: String) extends PlaybackExtractionErrors
 case object FailedToCombineAnswers extends PlaybackExtractionErrors
 case object InvalidExtractorState extends PlaybackExtractionErrors
-
 
 sealed trait DatabaseErrors extends TrustErrors
 

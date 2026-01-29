@@ -45,11 +45,13 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
     "making changes" must {
 
-      val prefix: String = "addNonEeaCompany"
+      val prefix: String      = "addNonEeaCompany"
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
-      val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
-        .set(WhatIsNextPage, MakeChanges).value
+      val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+        .copy(isUnderlyingData5mld = true)
+        .set(WhatIsNextPage, MakeChanges)
+        .value
 
       "return OK and the correct view for a GET" in {
 
@@ -94,12 +96,18 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
         mockPlaybackRepositoryBuilder(mockPlaybackRepository)
 
         val userAnswers = baseAnswers
-          .set(UpdateTrustDetailsYesNoPage, false).value
-          .set(UpdateTrusteesYesNoPage, false).value
-          .set(UpdateBeneficiariesYesNoPage, false).value
-          .set(UpdateSettlorsYesNoPage, false).value
-          .set(AddOrUpdateProtectorYesNoPage, false).value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
+          .set(UpdateTrustDetailsYesNoPage, false)
+          .value
+          .set(UpdateTrusteesYesNoPage, false)
+          .value
+          .set(UpdateBeneficiariesYesNoPage, false)
+          .value
+          .set(UpdateSettlorsYesNoPage, false)
+          .value
+          .set(AddOrUpdateProtectorYesNoPage, false)
+          .value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false)
+          .value
 
         val application =
           applicationBuilder(userAnswers = Some(userAnswers)).build()
@@ -111,7 +119,9 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.declaration.routes.IndividualDeclarationController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.declaration.routes.IndividualDeclarationController
+          .onPageLoad()
+          .url
 
         application.stop()
       }
@@ -121,12 +131,18 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
         mockPlaybackRepositoryBuilder(mockPlaybackRepository)
 
         val userAnswers = baseAnswers
-          .set(UpdateTrustDetailsYesNoPage, false).value
-          .set(UpdateTrusteesYesNoPage, true).value
-          .set(UpdateBeneficiariesYesNoPage, false).value
-          .set(UpdateSettlorsYesNoPage, false).value
-          .set(AddOrUpdateProtectorYesNoPage, false).value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
+          .set(UpdateTrustDetailsYesNoPage, false)
+          .value
+          .set(UpdateTrusteesYesNoPage, true)
+          .value
+          .set(UpdateBeneficiariesYesNoPage, false)
+          .value
+          .set(UpdateSettlorsYesNoPage, false)
+          .value
+          .set(AddOrUpdateProtectorYesNoPage, false)
+          .value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false)
+          .value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
@@ -136,7 +152,11 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
           .withFormUrlEncodedBody(("value", "false"))
 
         when(mockConnector.set(any(), any())(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks()))))
+          .thenReturn(
+            EitherT[Future, TrustErrors, CompletedMaintenanceTasks](
+              Future.successful(Right(CompletedMaintenanceTasks()))
+            )
+          )
 
         val result = route(application, request).value
 
@@ -173,11 +193,13 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
     "closing" must {
 
-      val prefix: String = "addNonEeaCompanyClosing"
+      val prefix: String      = "addNonEeaCompanyClosing"
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
-      val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
-        .set(WhatIsNextPage, CloseTrust).value
+      val baseAnswers: UserAnswers = emptyUserAnswersForUtr
+        .copy(isUnderlyingData5mld = true)
+        .set(WhatIsNextPage, CloseTrust)
+        .value
 
       "return OK and the correct view for a GET" in {
 
@@ -224,12 +246,18 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
         val addNonEeaCompanyYesNoRoute = routes.AddNonEeaCompanyYesNoController.onPageLoad().url
 
         val userAnswers = baseAnswers
-          .set(UpdateTrustDetailsYesNoPage, false).value
-          .set(UpdateTrusteesYesNoPage, false).value
-          .set(UpdateBeneficiariesYesNoPage, false).value
-          .set(UpdateSettlorsYesNoPage, false).value
-          .set(AddOrUpdateProtectorYesNoPage, false).value
-          .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
+          .set(UpdateTrustDetailsYesNoPage, false)
+          .value
+          .set(UpdateTrusteesYesNoPage, false)
+          .value
+          .set(UpdateBeneficiariesYesNoPage, false)
+          .value
+          .set(UpdateSettlorsYesNoPage, false)
+          .value
+          .set(AddOrUpdateProtectorYesNoPage, false)
+          .value
+          .set(AddOrUpdateOtherIndividualsYesNoPage, false)
+          .value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
@@ -239,7 +267,11 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
           .withFormUrlEncodedBody(("value", "false"))
 
         when(mockConnector.set(any(), any())(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks()))))
+          .thenReturn(
+            EitherT[Future, TrustErrors, CompletedMaintenanceTasks](
+              Future.successful(Right(CompletedMaintenanceTasks()))
+            )
+          )
 
         val result = route(application, request).value
 
@@ -278,14 +310,22 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
 
       mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(ServerError()))
 
-      val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
-        .set(WhatIsNextPage, CloseTrust).value
-        .set(UpdateTrustDetailsYesNoPage, false).value
-        .set(UpdateTrusteesYesNoPage, true).value
-        .set(UpdateBeneficiariesYesNoPage, false).value
-        .set(UpdateSettlorsYesNoPage, false).value
-        .set(AddOrUpdateProtectorYesNoPage, false).value
-        .set(AddOrUpdateOtherIndividualsYesNoPage, false).value
+      val userAnswers = emptyUserAnswersForUtr
+        .copy(isUnderlyingData5mld = true)
+        .set(WhatIsNextPage, CloseTrust)
+        .value
+        .set(UpdateTrustDetailsYesNoPage, false)
+        .value
+        .set(UpdateTrusteesYesNoPage, true)
+        .value
+        .set(UpdateBeneficiariesYesNoPage, false)
+        .value
+        .set(UpdateSettlorsYesNoPage, false)
+        .value
+        .set(AddOrUpdateProtectorYesNoPage, false)
+        .value
+        .set(AddOrUpdateOtherIndividualsYesNoPage, false)
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[TrustsStoreConnector].toInstance(mockConnector))
@@ -295,14 +335,17 @@ class AddNonEeaCompanyYesNoControllerSpec extends SpecBase {
         .withFormUrlEncodedBody(("value", "false"))
 
       when(mockConnector.set(any(), any())(any(), any()))
-        .thenReturn(EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks()))))
+        .thenReturn(
+          EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks())))
+        )
 
       val result = route(application, request).value
 
-      status(result) mustBe INTERNAL_SERVER_ERROR
+      status(result)      mustBe INTERNAL_SERVER_ERROR
       contentType(result) mustBe Some("text/html")
 
       application.stop()
     }
   }
+
 }

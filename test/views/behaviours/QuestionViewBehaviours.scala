@@ -22,107 +22,27 @@ import views.ViewUtils
 
 trait QuestionViewBehaviours[A] extends ViewBehaviours {
 
-  val errorKey = "value"
-  val errorMessage = "error.number"
+  val errorKey         = "value"
+  val errorMessage     = "error.number"
   val error: FormError = FormError(errorKey, errorMessage)
 
-  def pageWithTextFields(form: Form[A],
-                         createView: Form[A] => HtmlFormat.Appendable,
-                         messageKeyPrefix: String,
-                         fields: String*): Unit = {
+  def pageWithTextFields(
+    form: Form[A],
+    createView: Form[A] => HtmlFormat.Appendable,
+    messageKeyPrefix: String,
+    fields: String*
+  ): Unit =
 
     "behave like a question page" when {
 
       "rendered" must {
 
-        for (field <- fields) {
+        for (field <- fields)
 
           s"contain an input for $field" in {
             val doc = asDocument(createView(form))
             assertRenderedById(doc, field)
           }
-        }
-
-        "not render an error summary" in {
-
-          val doc = asDocument(createView(form))
-          assertNotRenderedByClass(doc, "govuk-error-summary")
-        }
-      }
-
-      "rendered with any error" must {
-
-        "show an error prefix in the browser title" in {
-
-          val doc = asDocument(createView(form.withError(error)))
-          assertEqualsValue(doc, "title", ViewUtils.breadcrumbTitle(s"""${messages("error.browser.title.prefix")} ${messages(s"$messageKeyPrefix.title")}"""))
-        }
-      }
-
-      for (field <- fields) {
-
-        s"rendered with an error with field '$field'" must {
-
-          "show an error summary" in {
-
-            val doc = asDocument(createView(form.withError(FormError(field, "error"))))
-            assertRenderedByClass(doc, "govuk-error-summary")
-          }
-
-          s"show an error associated with the field '$field'" in {
-
-            val doc = asDocument(createView(form.withError(FormError(field, "error"))))
-            val errorSpan = doc.getElementsByClass("govuk-error-message").first
-            errorSpan.attr("id") contains field
-            errorSpan.siblingElements().get(0).attr("for") mustBe field
-          }
-        }
-
-        s"show an error associated with the field '$field'" in {
-
-          val fieldId = if(field.contains("_")) {
-            field.replace("_", ".")
-          } else {
-            field
-          }
-
-          val doc = asDocument(createView(form.withError(FormError(fieldId, "error"))))
-
-          val errorSpan = doc.getElementsByClass("govuk-error-message").first
-
-          // error id is that of the input field
-          errorSpan.attr("id") must include(field)
-          errorSpan.getElementsByClass("govuk-visually-hidden").first().text() must include("Error:")
-
-          // input is described by error to screen readers
-          doc.getElementById(field).attr("aria-describedby") must include(errorSpan.attr("id"))
-
-          // error is linked with input
-          errorSpan.parent().getElementsByAttributeValue("for", field).get(0).attr("for") mustBe field
-        }
-      }
-    }
-  }
-
-  def pageWithDateFields(form: Form[A],
-                         createView: Form[A] => HtmlFormat.Appendable,
-                         messageKeyPrefix: String,
-                         key: String,
-                         args: String*): Unit = {
-
-    val fields = Seq(s"$key.day", s"$key.month", s"$key.year")
-
-    "behave like a question page" when {
-
-      "rendered" must {
-
-        for (field <- fields) {
-
-          s"contain an input for $field" in {
-            val doc = asDocument(createView(form))
-            assertRenderedById(doc, field)
-          }
-        }
 
         "not render an error summary" in {
 
@@ -139,7 +59,96 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
           assertEqualsValue(
             doc,
             "title",
-            ViewUtils.breadcrumbTitle(s"""${messages("error.browser.title.prefix")} ${messages(s"$messageKeyPrefix.title", args: _*)}""")
+            ViewUtils.breadcrumbTitle(
+              s"""${messages("error.browser.title.prefix")} ${messages(s"$messageKeyPrefix.title")}"""
+            )
+          )
+        }
+      }
+
+      for (field <- fields) {
+
+        s"rendered with an error with field '$field'" must {
+
+          "show an error summary" in {
+
+            val doc = asDocument(createView(form.withError(FormError(field, "error"))))
+            assertRenderedByClass(doc, "govuk-error-summary")
+          }
+
+          s"show an error associated with the field '$field'" in {
+
+            val doc       = asDocument(createView(form.withError(FormError(field, "error"))))
+            val errorSpan = doc.getElementsByClass("govuk-error-message").first
+            errorSpan.attr("id") contains field
+            errorSpan.siblingElements().get(0).attr("for") mustBe field
+          }
+        }
+
+        s"show an error associated with the field '$field'" in {
+
+          val fieldId = if (field.contains("_")) {
+            field.replace("_", ".")
+          } else {
+            field
+          }
+
+          val doc = asDocument(createView(form.withError(FormError(fieldId, "error"))))
+
+          val errorSpan = doc.getElementsByClass("govuk-error-message").first
+
+          // error id is that of the input field
+          errorSpan.attr("id")                                                 must include(field)
+          errorSpan.getElementsByClass("govuk-visually-hidden").first().text() must include("Error:")
+
+          // input is described by error to screen readers
+          doc.getElementById(field).attr("aria-describedby") must include(errorSpan.attr("id"))
+
+          // error is linked with input
+          errorSpan.parent().getElementsByAttributeValue("for", field).get(0).attr("for") mustBe field
+        }
+      }
+    }
+
+  def pageWithDateFields(
+    form: Form[A],
+    createView: Form[A] => HtmlFormat.Appendable,
+    messageKeyPrefix: String,
+    key: String,
+    args: String*
+  ): Unit = {
+
+    val fields = Seq(s"$key.day", s"$key.month", s"$key.year")
+
+    "behave like a question page" when {
+
+      "rendered" must {
+
+        for (field <- fields)
+
+          s"contain an input for $field" in {
+            val doc = asDocument(createView(form))
+            assertRenderedById(doc, field)
+          }
+
+        "not render an error summary" in {
+
+          val doc = asDocument(createView(form))
+          assertNotRenderedByClass(doc, "govuk-error-summary")
+        }
+      }
+
+      "rendered with any error" must {
+
+        "show an error prefix in the browser title" in {
+
+          val doc = asDocument(createView(form.withError(error)))
+          assertEqualsValue(
+            doc,
+            "title",
+            ViewUtils.breadcrumbTitle(
+              s"""${messages("error.browser.title.prefix")} ${messages(s"$messageKeyPrefix.title", args: _*)}"""
+            )
           )
         }
       }
@@ -160,4 +169,5 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
       }
     }
   }
+
 }

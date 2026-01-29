@@ -27,22 +27,44 @@ import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[FullName] {
+class IndividualBeneficiaryPrinter @Inject() (converter: AnswerRowConverter)
+    extends EntitiesPrinter[JsArray] with EntityPrinter[FullName] {
 
-  override def printSection(index: Int, userAnswers: UserAnswers)
-                           (implicit messages: Messages): Option[AnswerSection] = {
+  override def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection] =
     printAnswerRows(index, userAnswers)
-  }
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.fullNameQuestion(IndividualBeneficiaryNamePage(index), userAnswers, "individualBeneficiaryName"),
-    converter.roleInCompanyQuestion(IndividualBeneficiaryRoleInCompanyPage(index), userAnswers, "individualBeneficiaryRoleInCompany", name),
-    converter.yesNoQuestion(IndividualBeneficiaryDateOfBirthYesNoPage(index), userAnswers, "individualBeneficiaryDateOfBirthYesNo", name),
-    converter.dateQuestion(IndividualBeneficiaryDateOfBirthPage(index), userAnswers, "individualBeneficiaryDateOfBirth", name),
-    converter.yesNoQuestion(IndividualBeneficiaryIncomeYesNoPage(index), userAnswers, "individualBeneficiaryIncomeYesNo", name),
-    converter.percentageQuestion(IndividualBeneficiaryIncomePage(index), userAnswers, "individualBeneficiaryIncome", name),
-    converter.yesNoQuestion(IndividualBeneficiaryCountryOfNationalityYesNoPage(index), userAnswers, "individualBeneficiaryCountryOfNationalityYesNo", name),
+    converter.roleInCompanyQuestion(
+      IndividualBeneficiaryRoleInCompanyPage(index),
+      userAnswers,
+      "individualBeneficiaryRoleInCompany",
+      name
+    ),
+    converter.yesNoQuestion(
+      IndividualBeneficiaryDateOfBirthYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryDateOfBirthYesNo",
+      name
+    ),
+    converter
+      .dateQuestion(IndividualBeneficiaryDateOfBirthPage(index), userAnswers, "individualBeneficiaryDateOfBirth", name),
+    converter.yesNoQuestion(
+      IndividualBeneficiaryIncomeYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryIncomeYesNo",
+      name
+    ),
+    converter
+      .percentageQuestion(IndividualBeneficiaryIncomePage(index), userAnswers, "individualBeneficiaryIncome", name),
+    converter.yesNoQuestion(
+      IndividualBeneficiaryCountryOfNationalityYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryCountryOfNationalityYesNo",
+      name
+    ),
     converter.yesNoQuestion(
       IndividualBeneficiaryCountryOfNationalityInTheUkYesNoPage(index),
       userAnswers,
@@ -56,9 +78,24 @@ class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) exte
       "individualBeneficiaryCountryOfNationality",
       name
     ),
-    converter.yesNoQuestion(IndividualBeneficiaryNationalInsuranceYesNoPage(index), userAnswers, "individualBeneficiaryNationalInsuranceYesNo", name),
-    converter.ninoQuestion(IndividualBeneficiaryNationalInsuranceNumberPage(index), userAnswers, "individualBeneficiaryNationalInsuranceNumber", name),
-    converter.yesNoQuestion(IndividualBeneficiaryCountryOfResidenceYesNoPage(index), userAnswers, "individualBeneficiaryCountryOfResidenceYesNo", name),
+    converter.yesNoQuestion(
+      IndividualBeneficiaryNationalInsuranceYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryNationalInsuranceYesNo",
+      name
+    ),
+    converter.ninoQuestion(
+      IndividualBeneficiaryNationalInsuranceNumberPage(index),
+      userAnswers,
+      "individualBeneficiaryNationalInsuranceNumber",
+      name
+    ),
+    converter.yesNoQuestion(
+      IndividualBeneficiaryCountryOfResidenceYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryCountryOfResidenceYesNo",
+      name
+    ),
     converter.yesNoQuestion(
       IndividualBeneficiaryCountryOfResidenceInTheUkYesNoPage(index),
       userAnswers,
@@ -72,13 +109,44 @@ class IndividualBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) exte
       "individualBeneficiaryCountryOfResidence",
       name
     ),
-    converter.yesNoQuestion(IndividualBeneficiaryAddressYesNoPage(index), userAnswers, "individualBeneficiaryAddressYesNo", name),
-    converter.yesNoQuestion(IndividualBeneficiaryAddressUKYesNoPage(index), userAnswers, "individualBeneficiaryAddressUKYesNo", name),
-    converter.addressQuestion(IndividualBeneficiaryAddressPage(index), userAnswers, "individualBeneficiaryAddressUK", name),
-    converter.yesNoQuestion(IndividualBeneficiaryPassportIDCardYesNoPage(index), userAnswers, "individualBeneficiaryPassportIDCardYesNo", name),
-    converter.passportOrIdCardQuestion(IndividualBeneficiaryPassportIDCardPage(index), userAnswers, "individualBeneficiaryPassportIDCard", name),
-    converter.yesNoQuestion(IndividualBeneficiaryVulnerableYesNoPage(index), userAnswers, "individualBeneficiaryVulnerableYesNo", name),
-    converter.yesNoDontKnowQuestion(IndividualBeneficiaryMentalCapacityYesNoPage(index), userAnswers, "individualBeneficiaryMentalCapacityYesNo", name)
+    converter.yesNoQuestion(
+      IndividualBeneficiaryAddressYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryAddressYesNo",
+      name
+    ),
+    converter.yesNoQuestion(
+      IndividualBeneficiaryAddressUKYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryAddressUKYesNo",
+      name
+    ),
+    converter
+      .addressQuestion(IndividualBeneficiaryAddressPage(index), userAnswers, "individualBeneficiaryAddressUK", name),
+    converter.yesNoQuestion(
+      IndividualBeneficiaryPassportIDCardYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryPassportIDCardYesNo",
+      name
+    ),
+    converter.passportOrIdCardQuestion(
+      IndividualBeneficiaryPassportIDCardPage(index),
+      userAnswers,
+      "individualBeneficiaryPassportIDCard",
+      name
+    ),
+    converter.yesNoQuestion(
+      IndividualBeneficiaryVulnerableYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryVulnerableYesNo",
+      name
+    ),
+    converter.yesNoDontKnowQuestion(
+      IndividualBeneficiaryMentalCapacityYesNoPage(index),
+      userAnswers,
+      "individualBeneficiaryMentalCapacityYesNo",
+      name
+    )
   )
 
   override def namePath(index: Int): JsPath = IndividualBeneficiaryNamePage(index).path

@@ -25,18 +25,20 @@ import play.api.{Configuration, Environment}
 
 class SessionTimeoutControllerSpec extends SpecBase {
 
-  object TestSessionTimeoutController extends SessionTimeoutController(
-    app.injector.instanceOf[FrontendAppConfig],
-    app.injector.instanceOf[Configuration],
-    app.injector.instanceOf[Environment],
-    app.injector.instanceOf[MessagesControllerComponents])
+  object TestSessionTimeoutController
+      extends SessionTimeoutController(
+        app.injector.instanceOf[FrontendAppConfig],
+        app.injector.instanceOf[Configuration],
+        app.injector.instanceOf[Environment],
+        app.injector.instanceOf[MessagesControllerComponents]
+      )
 
   "timeout" should {
 
     "stay on current page with current session" when {
       "the keep alive method is used" in {
         val fakeRequest: Request[AnyContent] = FakeRequest().withSession()
-        val res = TestSessionTimeoutController.keepAlive(fakeRequest)
+        val res                              = TestSessionTimeoutController.keepAlive(fakeRequest)
         status(res) mustEqual OK
       }
     }
@@ -44,7 +46,7 @@ class SessionTimeoutControllerSpec extends SpecBase {
     "redirect to session expired page new session " when {
       "the timeout method is" in {
         val fakeRequest: Request[AnyContent] = FakeRequest().withSession()
-        val res = TestSessionTimeoutController.timeout(fakeRequest)
+        val res                              = TestSessionTimeoutController.timeout(fakeRequest)
         status(res) mustEqual SEE_OTHER
         redirectLocation(res).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
       }

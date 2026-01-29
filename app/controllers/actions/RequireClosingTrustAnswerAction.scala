@@ -26,29 +26,32 @@ import play.api.mvc.{ActionRefiner, Result, Results}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RequireClosingTrustAnswerAction @Inject()(errorHandler: ErrorHandler)
-                                               (implicit val executionContext: ExecutionContext)
-  extends ActionRefiner[DataRequest, ClosingTrustRequest] with Logging {
+class RequireClosingTrustAnswerAction @Inject() (errorHandler: ErrorHandler)(implicit
+  val executionContext: ExecutionContext
+) extends ActionRefiner[DataRequest, ClosingTrustRequest] with Logging {
 
   private val className = getClass.getSimpleName
 
-  override protected def refine[A](request: DataRequest[A]): Future[Either[Result, ClosingTrustRequest[A]]] = {
+  override protected def refine[A](request: DataRequest[A]): Future[Either[Result, ClosingTrustRequest[A]]] =
     request.userAnswers.get(WhatIsNextPage) match {
       case None =>
-        logger.warn(s"[$className][refine] [UTR/URN: ${request.userAnswers.identifier}] " +
-          s"no answer for 'What next' found in user answers, cannot determine if user is closing the trust, cannot continue with journey")
+        logger.warn(
+          s"[$className][refine] [UTR/URN: ${request.userAnswers.identifier}] " +
+            s"no answer for 'What next' found in user answers, cannot determine if user is closing the trust, cannot continue with journey"
+        )
 
-        errorHandler.internalServerErrorTemplate(request.request).map { html =>
-          Left(Results.InternalServerError(html))
-        }.recover {
-          case ex: Throwable =>
+        errorHandler
+          .internalServerErrorTemplate(request.request)
+          .map { html =>
+            Left(Results.InternalServerError(html))
+          }
+          .recover { case ex: Throwable =>
             logger.error(s"[$className][refine] Failed to render internal server error template", ex)
             Left(Results.InternalServerError("An unexpected error occurred"))
-        }
+          }
 
       case Some(value) =>
         Future.successful(Right(ClosingTrustRequest(request, value == CloseTrust)))
     }
-  }
 
 }

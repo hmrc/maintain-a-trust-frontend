@@ -24,26 +24,34 @@ import pages.beneficiaries.charity._
 
 class CharityBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrustCharityType] {
 
-  override def namePage(index: Int): QuestionPage[String] = CharityBeneficiaryNamePage(index)
-  override def safeIdPage(index: Int): QuestionPage[String] = CharityBeneficiarySafeIdPage(index)
+  override def namePage(index: Int): QuestionPage[String]       = CharityBeneficiaryNamePage(index)
+  override def safeIdPage(index: Int): QuestionPage[String]     = CharityBeneficiarySafeIdPage(index)
   override def metaDataPage(index: Int): QuestionPage[MetaData] = CharityBeneficiaryMetaData(index)
 
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryDiscretionYesNoPage(index)
-  override def shareOfIncomePage(index: Int): QuestionPage[String] = CharityBeneficiaryShareOfIncomePage(index)
+  override def shareOfIncomePage(index: Int): QuestionPage[String]       = CharityBeneficiaryShareOfIncomePage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryCountryOfResidenceYesNoPage(index)
-  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
-  override def countryOfResidencePage(index: Int): QuestionPage[String] = CharityBeneficiaryCountryOfResidencePage(index)
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   =
+    CharityBeneficiaryCountryOfResidenceYesNoPage(index)
 
-  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryAddressYesNoPage(index)
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
+
+  override def countryOfResidencePage(index: Int): QuestionPage[String]         = CharityBeneficiaryCountryOfResidencePage(
+    index
+  )
+
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean]   = CharityBeneficiaryAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = CharityBeneficiaryAddressUKYesNoPage(index)
-  override def addressPage(index: Int): QuestionPage[Address] = CharityBeneficiaryAddressPage(index)
+  override def addressPage(index: Int): QuestionPage[Address]        = CharityBeneficiaryAddressPage(index)
 
   override def utrPage(index: Int): QuestionPage[String] = CharityBeneficiaryUtrPage(index)
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayTrustCharityType,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayTrustCharityType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
     updateUserAnswersForOrgBeneficiary(answers, entity, index)
-  }
+
 }

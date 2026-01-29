@@ -38,17 +38,20 @@ import views.html.{NonTaxToTaxProgressView, VariationProgressView}
 
 import scala.concurrent.Future
 
-class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with ScalaCheckPropertyChecks with ModelGenerators {
+class TaskListControllerSpec
+    extends SpecBase with BeforeAndAfterEach with ScalaCheckPropertyChecks with ModelGenerators {
 
   private val mockTrustsStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
-  private val mockTrustsConnector: TrustConnector = mock[TrustConnector]
-  private val mockVariationProgress: VariationProgress = mock[VariationProgress]
+  private val mockTrustsConnector: TrustConnector            = mock[TrustConnector]
+  private val mockVariationProgress: VariationProgress       = mock[VariationProgress]
 
   override def beforeEach(): Unit = {
     reset[Any](mockTrustsStoreConnector, mockTrustsConnector, mockVariationProgress, mockPlaybackRepository)
 
     when(mockTrustsStoreConnector.getStatusOfTasks(any())(any(), any()))
-      .thenReturn(EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks()))))
+      .thenReturn(
+        EitherT[Future, TrustErrors, CompletedMaintenanceTasks](Future.successful(Right(CompletedMaintenanceTasks())))
+      )
 
     when(mockTrustsConnector.getSettlorsStatus(any())(any(), any()))
       .thenReturn(EitherT[Future, TrustErrors, MigrationTaskStatus](Future.successful(Right(NothingToUpdate))))
@@ -57,8 +60,10 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
       .thenReturn(EitherT[Future, TrustErrors, MigrationTaskStatus](Future.successful(Right(NothingToUpdate))))
 
     when(mockTrustsConnector.getFirstTaxYearToAskFor(any())(any(), any()))
-      .thenReturn(EitherT[Future, TrustErrors, FirstTaxYearAvailable]
-        (Future.successful(Right(FirstTaxYearAvailable(1, earlierYearsToDeclare = false))))
+      .thenReturn(
+        EitherT[Future, TrustErrors, FirstTaxYearAvailable](
+          Future.successful(Right(FirstTaxYearAvailable(1, earlierYearsToDeclare = false)))
+        )
       )
 
     when(mockVariationProgress.generateTaskList(any(), any(), any()))
@@ -84,7 +89,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
             bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
             bind(classOf[TrustConnector]).toInstance(mockTrustsConnector),
             bind(classOf[VariationProgress]).toInstance(mockVariationProgress)
-          ).build()
+          )
+          .build()
 
         val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
@@ -95,7 +101,10 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
         status(result) mustEqual OK
 
         contentAsString(result) mustEqual
-          view(answers.identifier, answers.identifierType, Nil, Nil, Organisation, isAbleToDeclare = true)(request, messages).toString
+          view(answers.identifier, answers.identifierType, Nil, Nil, Organisation, isAbleToDeclare = true)(
+            request,
+            messages
+          ).toString
 
         verify(mockVariationProgress).generateTransitionTaskList(any(), any(), any(), any(), any())
 
@@ -113,7 +122,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
               bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
               bind(classOf[TrustConnector]).toInstance(mockTrustsConnector),
               bind(classOf[VariationProgress]).toInstance(mockVariationProgress)
-            ).build()
+            )
+            .build()
 
           val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
@@ -124,7 +134,15 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
           status(result) mustEqual OK
 
           contentAsString(result) mustEqual
-            view(answers.identifier, answers.identifierType, Nil, Nil, Organisation, isAbleToDeclare = true, closingTrust = false)(request, messages).toString
+            view(
+              answers.identifier,
+              answers.identifierType,
+              Nil,
+              Nil,
+              Organisation,
+              isAbleToDeclare = true,
+              closingTrust = false
+            )(request, messages).toString
 
           verify(mockVariationProgress).generateTaskList(any(), any(), any())
 
@@ -140,7 +158,8 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
               bind(classOf[TrustsStoreConnector]).toInstance(mockTrustsStoreConnector),
               bind(classOf[TrustConnector]).toInstance(mockTrustsConnector),
               bind(classOf[VariationProgress]).toInstance(mockVariationProgress)
-            ).build()
+            )
+            .build()
 
           val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
@@ -151,7 +170,15 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
           status(result) mustEqual OK
 
           contentAsString(result) mustEqual
-            view(answers.identifier, answers.identifierType, Nil, Nil, Organisation, isAbleToDeclare = true, closingTrust = true)(request, messages).toString
+            view(
+              answers.identifier,
+              answers.identifierType,
+              Nil,
+              Nil,
+              Organisation,
+              isAbleToDeclare = true,
+              closingTrust = true
+            )(request, messages).toString
 
           verify(mockVariationProgress).generateTaskList(any(), any(), any())
 
@@ -170,13 +197,14 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
       val application = applicationBuilder(userAnswers = Some(answers))
         .overrides(
           bind(classOf[TrustConnector]).toInstance(mockTrustsConnector)
-        ).build()
+        )
+        .build()
 
       val request = FakeRequest(GET, controllers.tasklist.routes.TaskListController.onPageLoad().url)
 
       val result = route(application, request).value
 
-      status(result) mustBe INTERNAL_SERVER_ERROR
+      status(result)      mustBe INTERNAL_SERVER_ERROR
       contentType(result) mustBe Some("text/html")
 
       application.stop()
@@ -268,4 +296,5 @@ class TaskListControllerSpec extends SpecBase with BeforeAndAfterEach with Scala
       }
     }
   }
+
 }

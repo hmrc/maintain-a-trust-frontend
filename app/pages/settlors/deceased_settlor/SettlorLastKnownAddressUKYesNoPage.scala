@@ -22,7 +22,7 @@ import sections.settlors.DeceasedSettlor
 
 case object SettlorLastKnownAddressUKYesNoPage extends QuestionPage[Boolean] {
 
-  override def path: JsPath = DeceasedSettlor.path \toString
+  override def path: JsPath = DeceasedSettlor.path \ toString
 
   override def toString: String = "wasAddressUKYesNo"
 

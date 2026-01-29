@@ -32,64 +32,81 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-class ActiveSessionRepositorySpec extends AnyWordSpec with Matchers
-  with ScalaFutures with OptionValues with MongoSupport with MongoSuite with BeforeAndAfterEach with EitherValues {
+class ActiveSessionRepositorySpec
+    extends AnyWordSpec
+    with Matchers
+    with ScalaFutures
+    with OptionValues
+    with MongoSupport
+    with MongoSuite
+    with BeforeAndAfterEach
+    with EitherValues {
 
-  override def beforeEach(): Unit = Await.result(repository.collection.deleteMany(BsonDocument()).toFuture(),Duration.Inf)
+  override def beforeEach(): Unit =
+    Await.result(repository.collection.deleteMany(BsonDocument()).toFuture(), Duration.Inf)
 
   private lazy val repository: ActiveSessionRepositoryImpl = new ActiveSessionRepositoryImpl(mongoComponent, config)
 
   "a session repository" should {
 
-    "must return None when no cache exists" in  {
+    "must return None when no cache exists" in {
 
-        val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
+      val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
 
-        repository.get(internalId).value.futureValue mustBe Right(None)
+      repository.get(internalId).value.futureValue mustBe Right(None)
     }
 
     "must return a UtrSession when one exists" in {
 
-        val internalId = "Int-328969d0-557e-2559-96ba-074d0597107e"
+      val internalId = "Int-328969d0-557e-2559-96ba-074d0597107e"
 
-        val session = IdentifierSession(internalId, "utr")
+      val session = IdentifierSession(internalId, "utr")
 
-        val initial = repository.set(session).value.futureValue
+      val initial = repository.set(session).value.futureValue
 
-        initial mustBe Right(true)
+      initial mustBe Right(true)
 
-        repository.get(internalId).value.futureValue.value.map(_.identifier) mustBe Some("utr")
+      repository.get(internalId).value.futureValue.value.map(_.identifier) mustBe Some("utr")
     }
 
     "must override an existing session for an internalId" in {
 
-        val internalId = "Int-328969d0-557e-4559-96ba-0d4d0597107e"
+      val internalId = "Int-328969d0-557e-4559-96ba-0d4d0597107e"
 
-        val session = IdentifierSession(internalId, "utr")
+      val session = IdentifierSession(internalId, "utr")
 
-        repository.set(session).value.futureValue
+      repository.set(session).value.futureValue
 
-        repository.get(internalId).value.futureValue.value.map(_.identifier) mustBe Some("utr")
-        repository.get(internalId).value.futureValue.value.map(_.internalId) mustBe Some(internalId)
+      repository.get(internalId).value.futureValue.value.map(_.identifier) mustBe Some("utr")
+      repository.get(internalId).value.futureValue.value.map(_.internalId) mustBe Some(internalId)
 
-        // update
+      // update
 
-        val session2 = IdentifierSession(internalId, "utr2")
+      val session2 = IdentifierSession(internalId, "utr2")
 
-        repository.set(session2).value.futureValue
+      repository.set(session2).value.futureValue
 
-        repository.get(internalId).value.futureValue.value.map(_.identifier) mustBe Some("utr2")
-        repository.get(internalId).value.futureValue.value.map(_.internalId) mustBe Some(internalId)
+      repository.get(internalId).value.futureValue.value.map(_.identifier) mustBe Some("utr2")
+      repository.get(internalId).value.futureValue.value.map(_.internalId) mustBe Some(internalId)
     }
 
-    Seq(new MongoTimeoutException("test message"), new MongoException("test message"), new Exception, new RuntimeException("test message"),
-      new NullPointerException("test message"), new NoSuchElementException("test message"), new IndexOutOfBoundsException("test message")).foreach { exception =>
+    Seq(
+      new MongoTimeoutException("test message"),
+      new MongoException("test message"),
+      new Exception,
+      new RuntimeException("test message"),
+      new NullPointerException("test message"),
+      new NoSuchElementException("test message"),
+      new IndexOutOfBoundsException("test message")
+    ).foreach { exception =>
       s"return a Left(MongoError) when there's an exception from Mongo ($exception)" in {
-        val result = Future.failed(exception)
-          .recover(repository.mongoRecover("test repository", "test method","test message", "test sessionId"))
+        val result = Future
+          .failed(exception)
+          .recover(repository.mongoRecover("test repository", "test method", "test message", "test sessionId"))
 
         await(result) mustBe Left(MongoError)
       }
     }
   }
+
 }

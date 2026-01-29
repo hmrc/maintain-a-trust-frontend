@@ -25,15 +25,26 @@ import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class TrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter) extends EntityPrinter[FullName] {
+class TrusteeIndividualPrinter @Inject() (converter: AnswerRowConverter) extends EntityPrinter[FullName] {
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.fullNameQuestion(TrusteeNamePage(index), userAnswers, "trusteeName"),
     converter.yesNoQuestion(TrusteeDateOfBirthYesNoPage(index), userAnswers, "trusteeDateOfBirthYesNo", name),
     converter.dateQuestion(TrusteeDateOfBirthPage(index), userAnswers, "trusteeDateOfBirth", name),
-    converter.yesNoQuestion(TrusteeCountryOfNationalityYesNoPage(index), userAnswers, "trusteeCountryOfNationalityYesNo", name),
-    converter.yesNoQuestion(TrusteeCountryOfNationalityInTheUkYesNoPage(index), userAnswers, "trusteeCountryOfNationalityUkYesNo", name),
+    converter.yesNoQuestion(
+      TrusteeCountryOfNationalityYesNoPage(index),
+      userAnswers,
+      "trusteeCountryOfNationalityYesNo",
+      name
+    ),
+    converter.yesNoQuestion(
+      TrusteeCountryOfNationalityInTheUkYesNoPage(index),
+      userAnswers,
+      "trusteeCountryOfNationalityUkYesNo",
+      name
+    ),
     converter.countryQuestion(
       TrusteeCountryOfNationalityInTheUkYesNoPage(index),
       TrusteeCountryOfNationalityPage(index),
@@ -43,8 +54,14 @@ class TrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter) extends 
     ),
     converter.yesNoQuestion(TrusteeNinoYesNoPage(index), userAnswers, "trusteeNinoYesNo", name),
     converter.ninoQuestion(TrusteeNinoPage(index), userAnswers, "trusteeNino", name),
-    converter.yesNoQuestion(TrusteeCountryOfResidenceYesNoPage(index), userAnswers, "trusteeCountryOfResidenceYesNo", name),
-    converter.yesNoQuestion(TrusteeCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "trusteeCountryOfResidenceUkYesNo", name),
+    converter
+      .yesNoQuestion(TrusteeCountryOfResidenceYesNoPage(index), userAnswers, "trusteeCountryOfResidenceYesNo", name),
+    converter.yesNoQuestion(
+      TrusteeCountryOfResidenceInTheUkYesNoPage(index),
+      userAnswers,
+      "trusteeCountryOfResidenceUkYesNo",
+      name
+    ),
     converter.countryQuestion(
       TrusteeCountryOfResidenceInTheUkYesNoPage(index),
       TrusteeCountryOfResidencePage(index),
@@ -57,7 +74,12 @@ class TrusteeIndividualPrinter @Inject()(converter: AnswerRowConverter) extends 
     converter.addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name),
     converter.yesNoQuestion(TrusteePassportIDCardYesNoPage(index), userAnswers, "trusteePassportOrIdCardYesNo", name),
     converter.passportOrIdCardQuestion(TrusteePassportIDCardPage(index), userAnswers, "trusteePassportOrIdCard", name),
-    converter.yesNoDontKnowQuestion(TrusteeMentalCapacityYesNoPage(index), userAnswers, "trusteeMentalCapacityYesNo", name)
+    converter.yesNoDontKnowQuestion(
+      TrusteeMentalCapacityYesNoPage(index),
+      userAnswers,
+      "trusteeMentalCapacityYesNo",
+      name
+    )
   )
 
   override def namePath(index: Int): JsPath = TrusteeNamePage(index).path

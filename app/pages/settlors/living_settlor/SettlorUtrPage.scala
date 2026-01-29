@@ -20,7 +20,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.LivingSettlors
 
-case class SettlorUtrPage(index : Int) extends QuestionPage[String] {
+case class SettlorUtrPage(index: Int) extends QuestionPage[String] {
 
   override def path: JsPath = LivingSettlors.path \ index \ toString
 

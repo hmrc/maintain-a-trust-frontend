@@ -27,15 +27,15 @@ import utils.Constants.GB
 import java.time.LocalDate
 import scala.reflect.{ClassTag, classTag}
 
-abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with ConditionalExtractor with Logging {
+abstract class PlaybackExtractor[T <: EntityType: ClassTag] extends Pages with ConditionalExtractor with Logging {
 
   val optionalEntity: Boolean = false
 
-  def extract(answers: UserAnswers, data: List[T]): Either[TrustErrors, UserAnswers] = {
+  def extract(answers: UserAnswers, data: List[T]): Either[TrustErrors, UserAnswers] =
     data match {
       case Nil if optionalEntity => Right(answers)
-      case Nil => Left(FailedToExtractData(s"No entities of type ${classTag[T].runtimeClass.getSimpleName}"))
-      case entities =>
+      case Nil                   => Left(FailedToExtractData(s"No entities of type ${classTag[T].runtimeClass.getSimpleName}"))
+      case entities              =>
 
         val updated = entities.zipWithIndex.foldLeft[Either[TrustErrors, UserAnswers]](Right(answers)) {
           case (answers, (entity, index)) =>
@@ -45,27 +45,34 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
         updated match {
           case Right(a) =>
             Right(a)
-          case Left(_) =>
+          case Left(_)  =>
             logger.warn(s"[PlaybackExtractor][extract][UTR/URN: ${answers.identifier}] failed to extract data.")
             Left(FailedToExtractData(classTag[T].runtimeClass.getSimpleName))
         }
     }
-  }
 
-  def updateUserAnswers(answers: Either[TrustErrors, UserAnswers], entity: T, index: Int): Either[TrustErrors, UserAnswers] = {
+  def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: T,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
     answers.flatMap(answers => extractMetaData(entity, index, answers))
-  }
 
-  def extractMentalCapacity(legallyIncapable: Option[Boolean], index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  def extractMentalCapacity(
+    legallyIncapable: Option[Boolean],
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     legallyIncapable match {
       case Some(value) => answers.set(mentalCapacityYesNoPage(index), !value)
-      case None => Right(answers)
+      case None        => Right(answers)
     }
-  }
 
-  def extractCountryOfResidence(countryOfResidence: Option[String],
-                                index: Int,
-                                answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  def extractCountryOfResidence(
+    countryOfResidence: Option[String],
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     extractCountryOfResidenceOrNationality(
       country = countryOfResidence,
       answers = answers,
@@ -73,11 +80,12 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
       ukYesNoPage = ukCountryOfResidenceYesNoPage(index),
       page = countryOfResidencePage(index)
     )
-  }
 
-  def extractCountryOfNationality(countryOfNationality: Option[String],
-                                  index: Int,
-                                  answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  def extractCountryOfNationality(
+    countryOfNationality: Option[String],
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     extractCountryOfResidenceOrNationality(
       country = countryOfNationality,
       answers = answers,
@@ -85,123 +93,138 @@ abstract class PlaybackExtractor[T <: EntityType : ClassTag] extends Pages with 
       ukYesNoPage = ukCountryOfNationalityYesNoPage(index),
       page = countryOfNationalityPage(index)
     )
-  }
 
-  private def extractCountryOfResidenceOrNationality(country: Option[String],
-                                                     answers: UserAnswers,
-                                                     yesNoPage: QuestionPage[Boolean],
-                                                     ukYesNoPage: QuestionPage[Boolean],
-                                                     page: QuestionPage[String]): Either[TrustErrors, UserAnswers] = {
+  private def extractCountryOfResidenceOrNationality(
+    country: Option[String],
+    answers: UserAnswers,
+    yesNoPage: QuestionPage[Boolean],
+    ukYesNoPage: QuestionPage[Boolean],
+    page: QuestionPage[String]
+  ): Either[TrustErrors, UserAnswers] =
     extractIf5mldTrustIn5mldMode(answers) {
       country match {
-        case Some(GB) =>
-          answers.set(yesNoPage, true)
+        case Some(GB)      =>
+          answers
+            .set(yesNoPage, true)
             .flatMap(_.set(ukYesNoPage, true))
             .flatMap(_.set(page, GB))
         case Some(country) =>
-          answers.set(yesNoPage, true)
+          answers
+            .set(yesNoPage, true)
             .flatMap(_.set(ukYesNoPage, false))
             .flatMap(_.set(page, country))
-        case None =>
+        case None          =>
           answers.set(yesNoPage, false)
       }
     }
-  }
 
-  def extractAddress(address: AddressType,
-                     index: Int,
-                     answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  def extractAddress(address: AddressType, index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] =
     address.convert match {
-      case uk: UKAddress =>
-        answers.set(addressYesNoPage(index), true)
+      case uk: UKAddress               =>
+        answers
+          .set(addressYesNoPage(index), true)
           .flatMap(_.set(ukAddressYesNoPage(index), true))
           .flatMap(_.set(addressPage(index), uk))
       case nonUk: InternationalAddress =>
-        answers.set(addressYesNoPage(index), true)
+        answers
+          .set(addressYesNoPage(index), true)
           .flatMap(_.set(ukAddressYesNoPage(index), false))
           .flatMap(_.set(addressPage(index), nonUk))
     }
-  }
 
-  def extractOptionalAddress(optionalAddress: Option[AddressType],
-                             index: Int,
-                             answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  def extractOptionalAddress(
+    optionalAddress: Option[AddressType],
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     extractIfTaxableOrMigratingToTaxable(answers) {
       optionalAddress match {
         case Some(address) =>
           extractAddress(address, index, answers)
-        case None =>
+        case None          =>
           answers.set(addressYesNoPage(index), false)
       }
     }
-  }
 
-  def extractIndIdentification(identification: Option[DisplayTrustIdentificationType],
-                               index: Int,
-                               answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  def extractIndIdentification(
+    identification: Option[DisplayTrustIdentificationType],
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     extractIfTaxableOrMigratingToTaxable(answers) {
       identification match {
-        case Some(DisplayTrustIdentificationType(_, Some(nino), None, None)) =>
-          answers.set(ninoYesNoPage(index), true)
+        case Some(DisplayTrustIdentificationType(_, Some(nino), None, None))              =>
+          answers
+            .set(ninoYesNoPage(index), true)
             .flatMap(_.set(ninoPage(index), nino))
-        case Some(DisplayTrustIdentificationType(_, None, None, Some(address))) =>
-          answers.set(ninoYesNoPage(index), false)
+        case Some(DisplayTrustIdentificationType(_, None, None, Some(address)))           =>
+          answers
+            .set(ninoYesNoPage(index), false)
             .flatMap(answers => extractAddress(address, index, answers))
             .flatMap(_.set(passportOrIdCardYesNoPage(index), false))
         case Some(DisplayTrustIdentificationType(_, None, Some(passport), Some(address))) =>
-          answers.set(ninoYesNoPage(index), false)
+          answers
+            .set(ninoYesNoPage(index), false)
             .flatMap(answers => extractAddress(address, index, answers))
             .flatMap(answers => extractPassportIdCard(passport, index, answers))
-        case Some(DisplayTrustIdentificationType(_, None, Some(_), None)) =>
-          logger.error(s"[PlaybackExtractor][extractIndIdentification][UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustIdentificationType")
+        case Some(DisplayTrustIdentificationType(_, None, Some(_), None))                 =>
+          logger.error(
+            s"[PlaybackExtractor][extractIndIdentification][UTR/URN: ${answers.identifier}] only passport identification returned in DisplayTrustIdentificationType"
+          )
           Left(InvalidExtractorState)
-        case _ =>
-          answers.set(ninoYesNoPage(index), false)
+        case _                                                                            =>
+          answers
+            .set(ninoYesNoPage(index), false)
             .flatMap(_.set(addressYesNoPage(index), false))
       }
     }
-  }
 
-  def extractPassportIdCard(passport: PassportType,
-                            index: Int,
-                            answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
-    answers.set(passportOrIdCardYesNoPage(index), true)
+  def extractPassportIdCard(
+    passport: PassportType,
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
+    answers
+      .set(passportOrIdCardYesNoPage(index), true)
       .flatMap(_.set(passportOrIdCardPage(index), passport))
-  }
 
-  def extractOrgIdentification(identification: Option[DisplayTrustIdentificationOrgType],
-                               index: Int,
-                               answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  def extractOrgIdentification(
+    identification: Option[DisplayTrustIdentificationOrgType],
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     extractIfTaxableOrMigratingToTaxable(answers) {
       identification match {
-        case Some(DisplayTrustIdentificationOrgType(_, Some(utr), None)) =>
-          answers.set(utrYesNoPage(index), true)
+        case Some(DisplayTrustIdentificationOrgType(_, Some(utr), None))     =>
+          answers
+            .set(utrYesNoPage(index), true)
             .flatMap(_.set(utrPage(index), utr))
         case Some(DisplayTrustIdentificationOrgType(_, None, Some(address))) =>
-          answers.set(utrYesNoPage(index), false)
+          answers
+            .set(utrYesNoPage(index), false)
             .flatMap(answers => extractAddress(address, index, answers))
-        case _ =>
-          answers.set(utrYesNoPage(index), false)
+        case _                                                               =>
+          answers
+            .set(utrYesNoPage(index), false)
             .flatMap(_.set(addressYesNoPage(index), false))
       }
     }
-  }
 
-  def extractDateOfBirth(dateOfBirth: Option[LocalDate],
-                         index: Int,
-                         answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  def extractDateOfBirth(
+    dateOfBirth: Option[LocalDate],
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     dateOfBirth match {
       case Some(dateOfBirth) =>
-        answers.set(dateOfBirthYesNoPage(index), true)
+        answers
+          .set(dateOfBirthYesNoPage(index), true)
           .flatMap(_.set(dateOfBirthPage(index), dateOfBirth))
-      case None =>
+      case None              =>
         answers.set(dateOfBirthYesNoPage(index), false)
     }
-  }
 
-  def extractMetaData(entity: T,
-                      index: Int,
-                      answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  def extractMetaData(entity: T, index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
     val metaData = MetaData(
       lineNo = entity.lineNo.getOrElse(""),
       bpMatchStatus = bpMatchStatus(entity),

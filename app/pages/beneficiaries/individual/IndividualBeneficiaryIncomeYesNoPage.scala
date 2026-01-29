@@ -22,7 +22,7 @@ import sections.beneficiaries.{Beneficiaries, IndividualBeneficiaries}
 
 case class IndividualBeneficiaryIncomeYesNoPage(index: Int) extends QuestionPage[Boolean] {
 
-  override def path: JsPath = JsPath \  Beneficiaries \ IndividualBeneficiaries \ index \ toString
+  override def path: JsPath = JsPath \ Beneficiaries \ IndividualBeneficiaries \ index \ toString
 
   override def toString: String = "incomeYesNo"
 

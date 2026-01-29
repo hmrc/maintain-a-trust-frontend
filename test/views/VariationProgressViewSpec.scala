@@ -69,7 +69,10 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
           messageKeyPrefix = "variationProgress",
           captionKey = "utr",
           captionParam = utr,
-          expectedGuidanceKeys = "p1", "p2", "subHeading.2", "subHeading.3"
+          expectedGuidanceKeys = "p1",
+          "p2",
+          "subHeading.2",
+          "subHeading.3"
         )
 
         behave like pageWithBackLink(applyView)
@@ -83,9 +86,8 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
 
         val doc = asDocument(applyView)
 
-        "render agent overview link" in {
+        "render agent overview link" in
           assertContainsText(doc, messages("variationsProgress.return.link"))
-        }
       }
 
       "non-agent user" must {
@@ -111,7 +113,10 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
           messageKeyPrefix = "variationProgress",
           captionKey = "utr",
           captionParam = utr,
-          expectedGuidanceKeys = "p1", "p2", "subHeading.2", "subHeading.3"
+          expectedGuidanceKeys = "p1",
+          "p2",
+          "subHeading.2",
+          "subHeading.3"
         )
 
         behave like pageWithBackLink(applyView)
@@ -150,7 +155,16 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
           messageKeyPrefix = "variationProgress",
           captionKey = "utr",
           captionParam = utr,
-          expectedGuidanceKeys = "p1", "p2", "subHeading.2", "subHeading.3", "subHeading.4", "p3", "p4", "subHeading.5", "p5", "sa900.link"
+          expectedGuidanceKeys = "p1",
+          "p2",
+          "subHeading.2",
+          "subHeading.3",
+          "subHeading.4",
+          "p3",
+          "p4",
+          "subHeading.5",
+          "p5",
+          "sa900.link"
         )
 
         behave like pageWithBackLink(applyView)
@@ -166,13 +180,11 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
 
         val doc = asDocument(applyView)
 
-        "render agent overview link" in {
+        "render agent overview link" in
           assertContainsText(doc, messages("variationsProgress.return.link"))
-        }
 
-        "render print link" in {
+        "render print link" in
           assertRenderedById(doc, "print-and-save")
-        }
       }
 
       "non-agent user" must {
@@ -198,7 +210,16 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
           messageKeyPrefix = "variationProgress",
           captionKey = "utr",
           captionParam = utr,
-          expectedGuidanceKeys = "p1", "p2", "subHeading.2", "subHeading.3", "subHeading.4", "p3", "p4", "subHeading.5", "p5", "sa900.link"
+          expectedGuidanceKeys = "p1",
+          "p2",
+          "subHeading.2",
+          "subHeading.3",
+          "subHeading.4",
+          "p3",
+          "p4",
+          "subHeading.5",
+          "p5",
+          "sa900.link"
         )
 
         behave like pageWithBackLink(applyView)
@@ -214,10 +235,10 @@ class VariationProgressViewSpec extends ViewBehaviours with ProgressViewBehaviou
 
         val doc = asDocument(applyView)
 
-        "render print link" in {
+        "render print link" in
           assertRenderedById(doc, "print-and-save")
-        }
       }
     }
   }
+
 }

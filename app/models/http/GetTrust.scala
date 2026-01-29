@@ -21,10 +21,7 @@ import play.api.libs.json._
 
 import java.time.LocalDate
 
-case class GetTrust(matchData: MatchData,
-                    correspondence: Correspondence,
-                    declaration: Declaration,
-                    trust: DisplayTrust)
+case class GetTrust(matchData: MatchData, correspondence: Correspondence, declaration: Declaration, trust: DisplayTrust)
 
 object GetTrust {
   implicit val format: Format[GetTrust] = Json.format[GetTrust]
@@ -36,11 +33,13 @@ object MatchData {
   implicit val format: Format[MatchData] = Json.format[MatchData]
 }
 
-case class Correspondence(abroadIndicator: Boolean,
-                          name: String,
-                          address: AddressType,
-                          bpMatchStatus: Option[String],
-                          phoneNumber: String)
+case class Correspondence(
+  abroadIndicator: Boolean,
+  name: String,
+  address: AddressType,
+  bpMatchStatus: Option[String],
+  phoneNumber: String
+)
 
 object Correspondence {
   implicit val format: Format[Correspondence] = Json.format[Correspondence]
@@ -52,43 +51,43 @@ object Declaration {
   implicit val format: Format[Declaration] = Json.format[Declaration]
 }
 
-case class DeclarationForApi(declaration: Declaration,
-                             agentDetails: Option[AgentDetails],
-                             endDate: Option[LocalDate])
+case class DeclarationForApi(declaration: Declaration, agentDetails: Option[AgentDetails], endDate: Option[LocalDate])
 
 object DeclarationForApi {
   implicit val format: Format[DeclarationForApi] = Json.format[DeclarationForApi]
 }
 
-case class GetTrustDesResponse(getTrust: Option[GetTrust],
-                               responseHeader: ResponseHeader)
+case class GetTrustDesResponse(getTrust: Option[GetTrust], responseHeader: ResponseHeader)
 
 object GetTrustDesResponse {
   implicit val format: Format[GetTrustDesResponse] = Json.format[GetTrustDesResponse]
 }
 
-case class ResponseHeader(status: String,
-                          formBundleNo: String)
+case class ResponseHeader(status: String, formBundleNo: String)
 
 object ResponseHeader {
   implicit val format: Format[ResponseHeader] = Json.format[ResponseHeader]
 }
 
-case class DisplayTrust(details: TrustDetailsType,
-                        entities: DisplayTrustEntitiesType,
-                        assets: Option[DisplayTrustAssets])
+case class DisplayTrust(
+  details: TrustDetailsType,
+  entities: DisplayTrustEntitiesType,
+  assets: Option[DisplayTrustAssets]
+)
 
 object DisplayTrust {
   implicit val format: Format[DisplayTrust] = Json.format[DisplayTrust]
 }
 
-case class DisplayTrustEntitiesType(naturalPerson: Option[List[NaturalPersonType]],
-                                    beneficiary: DisplayTrustBeneficiaryType,
-                                    deceased: Option[DisplayTrustWillType],
-                                    leadTrustee: DisplayTrustLeadTrusteeType,
-                                    trustees: Option[List[DisplayTrustTrusteeType]],
-                                    protectors: Option[DisplayTrustProtectorsType],
-                                    settlors: Option[DisplayTrustSettlors])
+case class DisplayTrustEntitiesType(
+  naturalPerson: Option[List[NaturalPersonType]],
+  beneficiary: DisplayTrustBeneficiaryType,
+  deceased: Option[DisplayTrustWillType],
+  leadTrustee: DisplayTrustLeadTrusteeType,
+  trustees: Option[List[DisplayTrustTrusteeType]],
+  protectors: Option[DisplayTrustProtectorsType],
+  settlors: Option[DisplayTrustSettlors]
+)
 
 object DisplayTrustEntitiesType {
   implicit val format: Format[DisplayTrustEntitiesType] = Json.format[DisplayTrustEntitiesType]

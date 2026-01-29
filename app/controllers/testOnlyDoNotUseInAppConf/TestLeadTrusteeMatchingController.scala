@@ -29,11 +29,13 @@ import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class TestLeadTrusteeMatchingController @Inject()(actions: Actions,
-                                                  val controllerComponents: MessagesControllerComponents,
-                                                  http: HttpClientV2,
-                                                  config: FrontendAppConfig
-                                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
+class TestLeadTrusteeMatchingController @Inject() (
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  http: HttpClientV2,
+  config: FrontendAppConfig
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with Logging {
 
   case class IdMatchRequest(id: String, nino: String, surname: String, forename: String, birthDate: String)
 
@@ -41,15 +43,13 @@ class TestLeadTrusteeMatchingController @Inject()(actions: Actions,
     implicit lazy val formats: Format[IdMatchRequest] = Json.format[IdMatchRequest]
   }
 
-  def matchLeadTrustee(nino: String,
-                       forename: String,
-                       surname: String,
-                       dob: String): Action[AnyContent] = actions.auth.async {
-    implicit request =>
-
-      val url = s"${config.trustsIndividualCheck}/trusts-individual-check/individual-check"
+  def matchLeadTrustee(nino: String, forename: String, surname: String, dob: String): Action[AnyContent] =
+    actions.auth.async { implicit request =>
+      val url     = s"${config.trustsIndividualCheck}/trusts-individual-check/individual-check"
       val payload = IdMatchRequest(UUID.randomUUID().toString, nino, surname.capitalize, forename.capitalize, dob)
-      logger.info(s"[TestLeadTrusteeMatchingController][matchLeadTrustee] sending payload to trusts-individual-check service $payload")
+      logger.info(
+        s"[TestLeadTrusteeMatchingController][matchLeadTrustee] sending payload to trusts-individual-check service $payload"
+      )
 
       val headers = Seq(
         CONTENT_TYPE -> "application/json"
@@ -60,8 +60,8 @@ class TestLeadTrusteeMatchingController @Inject()(actions: Actions,
         .setHeader(headers: _*)
         .execute[JsValue]
         .map {
-        Ok(_)
-      }
-  }
+          Ok(_)
+        }
+    }
 
 }

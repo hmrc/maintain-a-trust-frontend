@@ -55,7 +55,7 @@ class WhatIsNextViewSpec extends ViewBehaviours {
 
     "render selected radio button with hint text" when {
 
-      for (option <- WhatIsNext.options(trustMldStatus)) {
+      for (option <- WhatIsNext.options(trustMldStatus))
 
         s"value is '${option._1.value}'" must {
 
@@ -67,31 +67,33 @@ class WhatIsNextViewSpec extends ViewBehaviours {
             assertRadioButtonContainsHint(doc, option._1.id + "-item-hint", messages(option._2))
 
             for (unselectedOption <- WhatIsNext.options(trustMldStatus).filterNot(_ == option)) {
-              assertContainsRadioButton(doc, unselectedOption._1.id, "value", unselectedOption._1.value, isChecked = false)
+              assertContainsRadioButton(
+                doc,
+                unselectedOption._1.id,
+                "value",
+                unselectedOption._1.value,
+                isChecked = false
+              )
               assertRadioButtonContainsHint(doc, unselectedOption._1.id + "-item-hint", messages(unselectedOption._2))
             }
           }
         }
-      }
     }
   }
 
   "WhatIsNextView" when {
 
-      "underlying trust is 4mld" must {
-        applyTests(Underlying4mldTrustIn5mldMode)
-      }
+    "underlying trust is 4mld" must
+      applyTests(Underlying4mldTrustIn5mldMode)
 
-      "underlying trust is 5mld" when {
+    "underlying trust is 5mld" when {
 
-        "taxable" must {
-          applyTests(Underlying5mldTaxableTrustIn5mldMode)
-        }
+      "taxable" must
+        applyTests(Underlying5mldTaxableTrustIn5mldMode)
 
-        "non-taxable" must {
-          applyTests(Underlying5mldNonTaxableTrustIn5mldMode)
-        }
-      }
+      "non-taxable" must
+        applyTests(Underlying5mldNonTaxableTrustIn5mldMode)
+    }
   }
 
 }

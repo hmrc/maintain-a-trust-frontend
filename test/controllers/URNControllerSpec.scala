@@ -36,16 +36,22 @@ import scala.concurrent.Future
 
 class URNControllerSpec extends SpecBase {
 
-  private val formProvider = new URNFormProvider()
+  private val formProvider       = new URNFormProvider()
   private val form: Form[String] = formProvider()
 
   private lazy val trustURNRoute: String = routes.URNController.onPageLoad().url
 
   private val urn = "abtrust12345678"
 
-  private val enrolments: Enrolments = Enrolments(Set(Enrolment(
-    "HMRC-TERSNT-ORG", Seq(EnrolmentIdentifier("URN", urn)), "Activated"
-  )))
+  private val enrolments: Enrolments = Enrolments(
+    Set(
+      Enrolment(
+        "HMRC-TERSNT-ORG",
+        Seq(EnrolmentIdentifier("URN", urn)),
+        "Activated"
+      )
+    )
+  )
 
   "URN Controller" must {
 
@@ -91,9 +97,11 @@ class URNControllerSpec extends SpecBase {
 
       when(mockRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
-      val application = applicationBuilder(userAnswers = None).overrides(
-        bind[ActiveSessionRepository].toInstance(mockRepository)
-      ).build()
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(
+          bind[ActiveSessionRepository].toInstance(mockRepository)
+        )
+        .build()
 
       val request = FakeRequest(POST, trustURNRoute)
         .withFormUrlEncodedBody(("value", urn))
@@ -155,4 +163,5 @@ class URNControllerSpec extends SpecBase {
     }
 
   }
+
 }

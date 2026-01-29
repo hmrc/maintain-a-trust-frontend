@@ -28,16 +28,16 @@ import utils.TrustEnvelope.TrustEnvelope
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext
 
-class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends DeclarationService {
+class DeclarationServiceImpl @Inject() (connector: TrustConnector) extends DeclarationService {
 
   override def agentDeclaration(
-                                 utr: String,
-                                 declaration: AgentDeclaration,
-                                 arn: String,
-                                 agencyAddress: Address,
-                                 agentFriendlyName: String,
-                                 endDate: Option[LocalDate]
-                               )(implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
+    utr: String,
+    declaration: AgentDeclaration,
+    arn: String,
+    agencyAddress: Address,
+    agentFriendlyName: String,
+    endDate: Option[LocalDate]
+  )(implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
 
     val agentDetails = AgentDetails(
       arn,
@@ -50,14 +50,20 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
     declare(declaration.name, utr, Some(agentDetails), endDate)
   }
 
-  override def individualDeclaration(utr: String, declaration: IndividualDeclaration, endDate: Option[LocalDate])
-                                    (implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
+  override def individualDeclaration(
+    utr: String,
+    declaration: IndividualDeclaration,
+    endDate: Option[LocalDate]
+  )(implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] =
 
     declare(declaration.name, utr, None, endDate)
-  }
 
-  private def declare(name: FullName, utr: String, agentDetails: Option[AgentDetails], endDate: Option[LocalDate])
-                     (implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
+  private def declare(
+    name: FullName,
+    utr: String,
+    agentDetails: Option[AgentDetails],
+    endDate: Option[LocalDate]
+  )(implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse] = {
 
     val payload = DeclarationForApi(
       declaration = Declaration(name),
@@ -67,21 +73,25 @@ class DeclarationServiceImpl @Inject()(connector: TrustConnector) extends Declar
 
     connector.declare(utr, payload)
   }
+
 }
 
 @ImplementedBy(classOf[DeclarationServiceImpl])
 trait DeclarationService {
 
   def agentDeclaration(
-                        utr: String,
-                        declaration: AgentDeclaration,
-                        arn: String,
-                        agencyAddress: Address,
-                        agentFriendlyName: String,
-                        endDate: Option[LocalDate]
-                      )(implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse]
+    utr: String,
+    declaration: AgentDeclaration,
+    arn: String,
+    agencyAddress: Address,
+    agentFriendlyName: String,
+    endDate: Option[LocalDate]
+  )(implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse]
 
-  def individualDeclaration(utr: String, declaration: IndividualDeclaration, endDate: Option[LocalDate])
-                           (implicit request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[TVNResponse]
+  def individualDeclaration(utr: String, declaration: IndividualDeclaration, endDate: Option[LocalDate])(implicit
+    request: RequestHeader,
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): TrustEnvelope[TVNResponse]
 
 }

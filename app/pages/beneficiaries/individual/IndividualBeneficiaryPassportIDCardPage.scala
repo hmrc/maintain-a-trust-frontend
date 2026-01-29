@@ -23,7 +23,7 @@ import sections.beneficiaries.{Beneficiaries, IndividualBeneficiaries}
 
 final case class IndividualBeneficiaryPassportIDCardPage(index: Int) extends QuestionPage[PassportType] {
 
-  override def path: JsPath = JsPath \  Beneficiaries \ IndividualBeneficiaries \ index \ toString
+  override def path: JsPath = JsPath \ Beneficiaries \ IndividualBeneficiaries \ index \ toString
 
   override def toString: String = "passportIdCard"
 }

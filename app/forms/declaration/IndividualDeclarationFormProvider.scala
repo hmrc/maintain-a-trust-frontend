@@ -27,13 +27,15 @@ class IndividualDeclarationFormProvider extends DeclarationFormProvider {
   def apply(): Form[IndividualDeclaration] =
     Form(
       mapping(
-        "" -> fullName,
-        "email" -> optional(text()
-          .transform(trimWhitespace, identity[String])
-          .verifying(
-            firstError(
-              regexp(Validation.emailRegex, "declaration.error.email.invalid"))
-          )).transform(emptyToNone, identity[Option[String]])
+        ""      -> fullName,
+        "email" -> optional(
+          text()
+            .transform(trimWhitespace, identity[String])
+            .verifying(
+              firstError(regexp(Validation.emailRegex, "declaration.error.email.invalid"))
+            )
+        ).transform(emptyToNone, identity[Option[String]])
       )(IndividualDeclaration.apply)(IndividualDeclaration.unapply)
     )
+
 }

@@ -28,8 +28,8 @@ import pages.assets.nonEeaBusiness._
 
 import java.time.Month.{FEBRUARY, JANUARY, NOVEMBER}
 
-class NonEeaBusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
-  with EitherValues with Generators with SpecBaseHelpers {
+class NonEeaBusinessAssetExtractorSpec
+    extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   private val (year2019, year2020, num26) = (2019, 2020, 26)
 
@@ -54,7 +54,7 @@ class NonEeaBusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
     }
   )
 
-  val assetExtractor : NonEeaBusinessAssetExtractor =
+  val assetExtractor: NonEeaBusinessAssetExtractor =
     injector.instanceOf[NonEeaBusinessAssetExtractor]
 
   "None-EEA business asset Extractor" - {
@@ -69,7 +69,7 @@ class NonEeaBusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, assets)
 
-        extraction mustBe Symbol("right")
+        extraction            mustBe Symbol("right")
         extraction.value.data mustBe ua.data
 
       }
@@ -81,24 +81,31 @@ class NonEeaBusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
       "for a taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val nonEeaBusinessAssets = List(DisplayNonEEABusinessType(
-            lineNo = Some("1"),
-            orgName = s"Non EEA Business 1",
-            address = AddressType("line 1", "line2", None, None, None, "FR"),
-            govLawCountry = "FR",
-            startDate = LocalDate.parse("2019-11-26"),
-            endDate = None
-          ))
+          val nonEeaBusinessAssets = List(
+            DisplayNonEEABusinessType(
+              lineNo = Some("1"),
+              orgName = s"Non EEA Business 1",
+              address = AddressType("line 1", "line2", None, None, None, "FR"),
+              govLawCountry = "FR",
+              startDate = LocalDate.parse("2019-11-26"),
+              endDate = None
+            )
+          )
 
           val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, nonEeaBusinessAssets)
 
-          extraction.value.get(NonEeaBusinessLineNoPage(0)).get mustBe "1"
-          extraction.value.get(NonEeaBusinessNamePage(0)).get mustBe "Non EEA Business 1"
-          extraction.value.get(NonEeaBusinessAddressPage(0)).get mustBe InternationalAddress("line 1", "line2", None, "FR")
+          extraction.value.get(NonEeaBusinessLineNoPage(0)).get           mustBe "1"
+          extraction.value.get(NonEeaBusinessNamePage(0)).get             mustBe "Non EEA Business 1"
+          extraction.value.get(NonEeaBusinessAddressPage(0)).get          mustBe InternationalAddress(
+            "line 1",
+            "line2",
+            None,
+            "FR"
+          )
           extraction.value.get(NonEeaBusinessGoverningCountryPage(0)).get mustBe "FR"
-          extraction.value.get(NonEeaBusinessStartDatePage(0)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(NonEeaBusinessStartDatePage(0)).get        mustBe LocalDate.of(year2019, NOVEMBER, num26)
           extraction.value.get(NonEeaBusinessEndDatePage(0)) mustNot be(defined)
         }
 
@@ -111,25 +118,40 @@ class NonEeaBusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
 
           extraction mustBe Symbol("right")
 
-          extraction.value.get(NonEeaBusinessLineNoPage(0)).get mustBe "0"
-          extraction.value.get(NonEeaBusinessNamePage(0)).get mustBe "Non EEA Business 0"
-          extraction.value.get(NonEeaBusinessAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "FR")
+          extraction.value.get(NonEeaBusinessLineNoPage(0)).get           mustBe "0"
+          extraction.value.get(NonEeaBusinessNamePage(0)).get             mustBe "Non EEA Business 0"
+          extraction.value.get(NonEeaBusinessAddressPage(0)).get          mustBe InternationalAddress(
+            "line 0",
+            "line2",
+            None,
+            "FR"
+          )
           extraction.value.get(NonEeaBusinessGoverningCountryPage(0)).get mustBe "FR"
-          extraction.value.get(NonEeaBusinessStartDatePage(0)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
-          extraction.value.get(NonEeaBusinessEndDatePage(0)).get mustBe LocalDate.of(year2020, JANUARY, 1)
+          extraction.value.get(NonEeaBusinessStartDatePage(0)).get        mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(NonEeaBusinessEndDatePage(0)).get          mustBe LocalDate.of(year2020, JANUARY, 1)
 
-          extraction.value.get(NonEeaBusinessLineNoPage(1)).get mustBe "1"
-          extraction.value.get(NonEeaBusinessNamePage(1)).get mustBe "Non EEA Business 1"
-          extraction.value.get(NonEeaBusinessAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
+          extraction.value.get(NonEeaBusinessLineNoPage(1)).get           mustBe "1"
+          extraction.value.get(NonEeaBusinessNamePage(1)).get             mustBe "Non EEA Business 1"
+          extraction.value.get(NonEeaBusinessAddressPage(1)).get          mustBe InternationalAddress(
+            "line 1",
+            "line2",
+            None,
+            "DE"
+          )
           extraction.value.get(NonEeaBusinessGoverningCountryPage(1)).get mustBe "DE"
-          extraction.value.get(NonEeaBusinessStartDatePage(1)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
-          extraction.value.get(NonEeaBusinessEndDatePage(1)).get mustBe LocalDate.of(year2020, FEBRUARY, 1)
+          extraction.value.get(NonEeaBusinessStartDatePage(1)).get        mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(NonEeaBusinessEndDatePage(1)).get          mustBe LocalDate.of(year2020, FEBRUARY, 1)
 
-          extraction.value.get(NonEeaBusinessLineNoPage(2)).get mustBe "2"
-          extraction.value.get(NonEeaBusinessNamePage(2)).get mustBe "Non EEA Business 2"
-          extraction.value.get(NonEeaBusinessAddressPage(2)).get mustBe InternationalAddress("line 2", "line2", None, "ES")
+          extraction.value.get(NonEeaBusinessLineNoPage(2)).get           mustBe "2"
+          extraction.value.get(NonEeaBusinessNamePage(2)).get             mustBe "Non EEA Business 2"
+          extraction.value.get(NonEeaBusinessAddressPage(2)).get          mustBe InternationalAddress(
+            "line 2",
+            "line2",
+            None,
+            "ES"
+          )
           extraction.value.get(NonEeaBusinessGoverningCountryPage(2)).get mustBe "ES"
-          extraction.value.get(NonEeaBusinessStartDatePage(2)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(NonEeaBusinessStartDatePage(2)).get        mustBe LocalDate.of(year2019, NOVEMBER, num26)
           extraction.value.get(NonEeaBusinessEndDatePage(2)) mustNot be(defined)
         }
       }
@@ -137,24 +159,31 @@ class NonEeaBusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
       "for a non taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val nonEeaBusinessAssets = List(DisplayNonEEABusinessType(
-            lineNo = Some("1"),
-            orgName = s"Non EEA Business 1",
-            address = AddressType("line 1", "line2", None, None, None, "FR"),
-            govLawCountry = "FR",
-            startDate = LocalDate.parse("2019-11-26"),
-            endDate = None
-          ))
+          val nonEeaBusinessAssets = List(
+            DisplayNonEEABusinessType(
+              lineNo = Some("1"),
+              orgName = s"Non EEA Business 1",
+              address = AddressType("line 1", "line2", None, None, None, "FR"),
+              govLawCountry = "FR",
+              startDate = LocalDate.parse("2019-11-26"),
+              endDate = None
+            )
+          )
 
           val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, nonEeaBusinessAssets)
 
-          extraction.value.get(NonEeaBusinessLineNoPage(0)).get mustBe "1"
-          extraction.value.get(NonEeaBusinessNamePage(0)).get mustBe "Non EEA Business 1"
-          extraction.value.get(NonEeaBusinessAddressPage(0)).get mustBe InternationalAddress("line 1", "line2", None, "FR")
+          extraction.value.get(NonEeaBusinessLineNoPage(0)).get           mustBe "1"
+          extraction.value.get(NonEeaBusinessNamePage(0)).get             mustBe "Non EEA Business 1"
+          extraction.value.get(NonEeaBusinessAddressPage(0)).get          mustBe InternationalAddress(
+            "line 1",
+            "line2",
+            None,
+            "FR"
+          )
           extraction.value.get(NonEeaBusinessGoverningCountryPage(0)).get mustBe "FR"
-          extraction.value.get(NonEeaBusinessStartDatePage(0)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(NonEeaBusinessStartDatePage(0)).get        mustBe LocalDate.of(year2019, NOVEMBER, num26)
           extraction.value.get(NonEeaBusinessEndDatePage(0)) mustNot be(defined)
         }
 
@@ -167,25 +196,40 @@ class NonEeaBusinessAssetExtractorSpec extends AnyFreeSpec with Matchers
 
           extraction mustBe Symbol("right")
 
-          extraction.value.get(NonEeaBusinessLineNoPage(0)).get mustBe "0"
-          extraction.value.get(NonEeaBusinessNamePage(0)).get mustBe "Non EEA Business 0"
-          extraction.value.get(NonEeaBusinessAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "FR")
+          extraction.value.get(NonEeaBusinessLineNoPage(0)).get           mustBe "0"
+          extraction.value.get(NonEeaBusinessNamePage(0)).get             mustBe "Non EEA Business 0"
+          extraction.value.get(NonEeaBusinessAddressPage(0)).get          mustBe InternationalAddress(
+            "line 0",
+            "line2",
+            None,
+            "FR"
+          )
           extraction.value.get(NonEeaBusinessGoverningCountryPage(0)).get mustBe "FR"
-          extraction.value.get(NonEeaBusinessStartDatePage(0)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
-          extraction.value.get(NonEeaBusinessEndDatePage(0)).get mustBe LocalDate.of(year2020, JANUARY, 1)
+          extraction.value.get(NonEeaBusinessStartDatePage(0)).get        mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(NonEeaBusinessEndDatePage(0)).get          mustBe LocalDate.of(year2020, JANUARY, 1)
 
-          extraction.value.get(NonEeaBusinessLineNoPage(1)).get mustBe "1"
-          extraction.value.get(NonEeaBusinessNamePage(1)).get mustBe "Non EEA Business 1"
-          extraction.value.get(NonEeaBusinessAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
+          extraction.value.get(NonEeaBusinessLineNoPage(1)).get           mustBe "1"
+          extraction.value.get(NonEeaBusinessNamePage(1)).get             mustBe "Non EEA Business 1"
+          extraction.value.get(NonEeaBusinessAddressPage(1)).get          mustBe InternationalAddress(
+            "line 1",
+            "line2",
+            None,
+            "DE"
+          )
           extraction.value.get(NonEeaBusinessGoverningCountryPage(1)).get mustBe "DE"
-          extraction.value.get(NonEeaBusinessStartDatePage(1)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
-          extraction.value.get(NonEeaBusinessEndDatePage(1)).get mustBe LocalDate.of(year2020, FEBRUARY, 1)
+          extraction.value.get(NonEeaBusinessStartDatePage(1)).get        mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(NonEeaBusinessEndDatePage(1)).get          mustBe LocalDate.of(year2020, FEBRUARY, 1)
 
-          extraction.value.get(NonEeaBusinessLineNoPage(2)).get mustBe "2"
-          extraction.value.get(NonEeaBusinessNamePage(2)).get mustBe "Non EEA Business 2"
-          extraction.value.get(NonEeaBusinessAddressPage(2)).get mustBe InternationalAddress("line 2", "line2", None, "ES")
+          extraction.value.get(NonEeaBusinessLineNoPage(2)).get           mustBe "2"
+          extraction.value.get(NonEeaBusinessNamePage(2)).get             mustBe "Non EEA Business 2"
+          extraction.value.get(NonEeaBusinessAddressPage(2)).get          mustBe InternationalAddress(
+            "line 2",
+            "line2",
+            None,
+            "ES"
+          )
           extraction.value.get(NonEeaBusinessGoverningCountryPage(2)).get mustBe "ES"
-          extraction.value.get(NonEeaBusinessStartDatePage(2)).get mustBe LocalDate.of(year2019, NOVEMBER, num26)
+          extraction.value.get(NonEeaBusinessStartDatePage(2)).get        mustBe LocalDate.of(year2019, NOVEMBER, num26)
           extraction.value.get(NonEeaBusinessEndDatePage(2)) mustNot be(defined)
         }
       }

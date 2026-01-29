@@ -21,7 +21,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.beneficiaries.{Beneficiaries, ClassOfBeneficiaries}
 
-case class ClassOfBeneficiaryMetaData(index: Int) extends QuestionPage[MetaData]{
+case class ClassOfBeneficiaryMetaData(index: Int) extends QuestionPage[MetaData] {
 
   override def path: JsPath = JsPath \ Beneficiaries \ ClassOfBeneficiaries \ index \ toString
 

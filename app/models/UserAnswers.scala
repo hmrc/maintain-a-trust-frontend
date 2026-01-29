@@ -29,37 +29,41 @@ import sections.Trustees
 
 import java.time.LocalDateTime
 
-final case class UserAnswers(internalId: String,
-                             identifier: String,
-                             sessionId: String,
-                             newId: String,
-                             data: JsObject = Json.obj(),
-                             isUnderlyingData5mld: Boolean = false,
-                             isUnderlyingDataTaxable: Boolean = true,
-                             updatedAt: LocalDateTime = LocalDateTime.now) extends Logging {
+final case class UserAnswers(
+  internalId: String,
+  identifier: String,
+  sessionId: String,
+  newId: String,
+  data: JsObject = Json.obj(),
+  isUnderlyingData5mld: Boolean = false,
+  isUnderlyingDataTaxable: Boolean = true,
+  updatedAt: LocalDateTime = LocalDateTime.now
+) extends Logging {
 
   def identifierType: IdentifierType = IdentifierType(identifier)
 
   def trustTaxability: TrustTaxability = (this.get(WhatIsNextPage), isUnderlyingDataTaxable) match {
-    case (Some(NeedsToPayTax), _) => MigratingFromNonTaxableToTaxable
+    case (Some(NeedsToPayTax), _)   => MigratingFromNonTaxableToTaxable
     case (Some(NoLongerTaxable), _) => MigratingFromTaxableToNonTaxable
-    case (_, true) => Taxable
-    case (_, false) => NonTaxable
+    case (_, true)                  => Taxable
+    case (_, false)                 => NonTaxable
   }
 
-  def isTrustTaxable: Boolean = trustTaxability.isTrustTaxable
+  def isTrustTaxable: Boolean                          = trustTaxability.isTrustTaxable
   def isTrustMigratingFromNonTaxableToTaxable: Boolean = trustTaxability.isTrustMigratingFromNonTaxableToTaxable
-  def isTrustTaxableOrMigratingToTaxable: Boolean = isTrustTaxable || isTrustMigratingFromNonTaxableToTaxable
+  def isTrustTaxableOrMigratingToTaxable: Boolean      = isTrustTaxable || isTrustMigratingFromNonTaxableToTaxable
 
   def trustMldStatus: TrustMldStatus = (isUnderlyingData5mld, isUnderlyingDataTaxable) match {
-    case (false, _) => Underlying4mldTrustIn5mldMode
-    case (true, true) => Underlying5mldTaxableTrustIn5mldMode
+    case (false, _)    => Underlying4mldTrustIn5mldMode
+    case (true, true)  => Underlying5mldTaxableTrustIn5mldMode
     case (true, false) => Underlying5mldNonTaxableTrustIn5mldMode
   }
 
   def is5mldTrustIn5mldMode: Boolean = trustMldStatus.is5mldTrustIn5mldMode
 
-  def leadTrusteeName(implicit messages: Messages): String = this.get(Trustees).getOrElse(JsArray())
+  def leadTrusteeName(implicit messages: Messages): String = this
+    .get(Trustees)
+    .getOrElse(JsArray())
     .value
     .zipWithIndex
     .find(x => x._1.transform((__ \ IsThisLeadTrusteePage(x._2)).json.pick[JsBoolean]).contains(JsBoolean(true)))
@@ -67,55 +71,57 @@ final case class UserAnswers(internalId: String,
       for {
         ind <- x._1.transform((__ \ TrusteeNamePage(x._2)).json.pick)
         org <- x._1.transform((__ \ TrusteeOrgNamePage(x._2)).json.pick)
-      } yield {
-        ind.asOpt[FullName].map(_.toString) orElse org.asOpt[String]
-      }
+      } yield ind.asOpt[FullName].map(_.toString) orElse org.asOpt[String]
     } match {
     case Some(JsSuccess(Some(name), _)) => name
-    case _ => messages("leadTrustee.default")
+    case _                              => messages("leadTrustee.default")
   }
 
-  def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] = {
+  def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     getAtPath(page.path)
-  }
 
-  def getAtPath[A](path: JsPath)(implicit rds: Reads[A]): Option[A] = {
+  def getAtPath[A](path: JsPath)(implicit rds: Reads[A]): Option[A] =
     Reads.at(path).reads(data) match {
       case JsSuccess(value, _) => Some(value)
-      case JsError(_) => None
+      case JsError(_)          => None
     }
-  }
 
-  def getWithDefault[A](page: Gettable[A], default: A)(implicit rds: Reads[A]): Option[A] = {
+  def getWithDefault[A](page: Gettable[A], default: A)(implicit rds: Reads[A]): Option[A] =
     get(page).orElse(Some(default))
-  }
 
-  def set[A](page: Settable[A], value: Option[A])(implicit writes: Writes[A], reads: Reads[A]): Either[TrustErrors, UserAnswers] = {
+  def set[A](page: Settable[A], value: Option[A])(implicit
+    writes: Writes[A],
+    reads: Reads[A]
+  ): Either[TrustErrors, UserAnswers] =
     value match {
       case Some(v) => setValue(page, v)
-      case None =>
+      case None    =>
         val updatedAnswers = this
         page.cleanup(value, updatedAnswers)
     }
-  }
 
-  def set[A](page: Settable[A], value: A)(implicit writes: Writes[A], reads: Reads[A]): Either[TrustErrors, UserAnswers] = setValue(page, value)
+  def set[A](page: Settable[A], value: A)(implicit
+    writes: Writes[A],
+    reads: Reads[A]
+  ): Either[TrustErrors, UserAnswers] = setValue(page, value)
 
-  private def setValue[A](page: Settable[A], value: A)(implicit writes: Writes[A], reads: Reads[A]): Either[TrustErrors, UserAnswers] = {
+  private def setValue[A](page: Settable[A], value: A)(implicit
+    writes: Writes[A],
+    reads: Reads[A]
+  ): Either[TrustErrors, UserAnswers] = {
     val hasValueChanged: Boolean = !getAtPath(page.path).contains(value)
 
     val updatedData = data.setObject(page.path, Json.toJson(value)) match {
       case JsSuccess(jsValue, _) =>
         Right(jsValue)
-      case JsError(_) =>
+      case JsError(_)            =>
         logger.error(s"[UserAnswers][setValue] Unable to set path ${page.path} due to errors")
         Left(ServerError())
     }
 
-    updatedData.flatMap {
-      d =>
-        val updatedAnswers = copy(data = d)
-        if (hasValueChanged) page.cleanup(Some(value), updatedAnswers) else Right(updatedAnswers)
+    updatedData.flatMap { d =>
+      val updatedAnswers = copy(data = d)
+      if (hasValueChanged) page.cleanup(Some(value), updatedAnswers) else Right(updatedAnswers)
     }
   }
 
@@ -124,23 +130,24 @@ final case class UserAnswers(internalId: String,
     val updatedData = data.removeObject(query.path) match {
       case JsSuccess(jsValue, _) =>
         Right(jsValue)
-      case JsError(_) =>
+      case JsError(_)            =>
         Right(data)
     }
 
-    updatedData.flatMap {
-      d =>
-        val updatedAnswers = copy(data = d)
-        query.cleanup(None, updatedAnswers)
+    updatedData.flatMap { d =>
+      val updatedAnswers = copy(data = d)
+      query.cleanup(None, updatedAnswers)
     }
   }
 
-  def deleteAtPath(path: JsPath): Either[TrustErrors, UserAnswers] = {
-    data.removeObject(path).map(obj => copy(data = obj)).fold(
-      _ => Right(this),
-      result => Right(result)
-    )
-  }
+  def deleteAtPath(path: JsPath): Either[TrustErrors, UserAnswers] =
+    data
+      .removeObject(path)
+      .map(obj => copy(data = obj))
+      .fold(
+        _ => Right(this),
+        result => Right(result)
+      )
 
   def clearData: UserAnswers = this.copy(data = Json.obj())
 
@@ -148,11 +155,13 @@ final case class UserAnswers(internalId: String,
 
 object UserAnswers {
 
-  def startNewSession(internalId: String,
-                      identifier: String,
-                      sessionId: String,
-                      isUnderlyingData5mld: Boolean,
-                      isUnderlyingDataTaxable: Boolean): UserAnswers =
+  def startNewSession(
+    internalId: String,
+    identifier: String,
+    sessionId: String,
+    isUnderlyingData5mld: Boolean,
+    isUnderlyingDataTaxable: Boolean
+  ): UserAnswers =
     UserAnswers(
       internalId = internalId,
       identifier = identifier,
@@ -171,7 +180,7 @@ object UserAnswers {
       (__ \ "isUnderlyingData5mld").readWithDefault[Boolean](false) and
       (__ \ "isUnderlyingDataTaxable").readWithDefault[Boolean](true) and
       (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
-    )(UserAnswers.apply _)
+  )(UserAnswers.apply _)
 
   implicit lazy val writes: Writes[UserAnswers] = (
     (__ \ "internalId").write[String] and
@@ -182,5 +191,6 @@ object UserAnswers {
       (__ \ "isUnderlyingData5mld").write[Boolean] and
       (__ \ "isUnderlyingDataTaxable").write[Boolean] and
       (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
-    )(unlift(UserAnswers.unapply))
+  )(unlift(UserAnswers.unapply))
+
 }

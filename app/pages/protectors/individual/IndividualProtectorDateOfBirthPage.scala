@@ -22,7 +22,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.Protectors
 
-final case class IndividualProtectorDateOfBirthPage(index : Int) extends QuestionPage[LocalDate] {
+final case class IndividualProtectorDateOfBirthPage(index: Int) extends QuestionPage[LocalDate] {
 
   override def path: JsPath = Protectors.path \ index \ toString
 

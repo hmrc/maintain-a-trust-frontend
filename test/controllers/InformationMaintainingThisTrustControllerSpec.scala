@@ -20,7 +20,9 @@ import base.SpecBase
 import models.{URN, UTR}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.{InformationMaintainingNonTaxableTrustView, InformationMaintainingTaxableTrustView, InformationMaintainingThisTrustView}
+import views.html.{
+  InformationMaintainingNonTaxableTrustView, InformationMaintainingTaxableTrustView, InformationMaintainingThisTrustView
+}
 
 class InformationMaintainingThisTrustControllerSpec extends SpecBase {
 
@@ -28,9 +30,31 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" when {
 
-        "underlying trust data is 4mld" in {
+      "underlying trust data is 4mld" in {
 
-          val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = false)
+        val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = false)
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+        val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[InformationMaintainingThisTrustView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(userAnswers.identifier, UTR)(request, messages).toString
+
+        application.stop()
+      }
+
+      "underlying trust data is 5mld" when {
+
+        "taxable" in {
+
+          val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -38,7 +62,7 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
 
           val result = route(application, request).value
 
-          val view = application.injector.instanceOf[InformationMaintainingThisTrustView]
+          val view = application.injector.instanceOf[InformationMaintainingTaxableTrustView]
 
           status(result) mustEqual OK
 
@@ -48,48 +72,26 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
           application.stop()
         }
 
-        "underlying trust data is 5mld" when {
+        "non-taxable" in {
 
-          "taxable" in {
+          val userAnswers = emptyUserAnswersForUrn
 
-            val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
+          val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
-            val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+          val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
 
-            val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
+          val result = route(application, request).value
 
-            val result = route(application, request).value
+          val view = application.injector.instanceOf[InformationMaintainingNonTaxableTrustView]
 
-            val view = application.injector.instanceOf[InformationMaintainingTaxableTrustView]
+          status(result) mustEqual OK
 
-            status(result) mustEqual OK
+          contentAsString(result) mustEqual
+            view(userAnswers.identifier, URN)(request, messages).toString
 
-            contentAsString(result) mustEqual
-              view(userAnswers.identifier, UTR)(request, messages).toString
-
-            application.stop()
-          }
-
-          "non-taxable" in {
-
-            val userAnswers = emptyUserAnswersForUrn
-
-            val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-            val request = FakeRequest(GET, routes.InformationMaintainingThisTrustController.onPageLoad().url)
-
-            val result = route(application, request).value
-
-            val view = application.injector.instanceOf[InformationMaintainingNonTaxableTrustView]
-
-            status(result) mustEqual OK
-
-            contentAsString(result) mustEqual
-              view(userAnswers.identifier, URN)(request, messages).toString
-
-            application.stop()
-          }
+          application.stop()
         }
+      }
     }
 
     ".onSubmit" must {
@@ -112,4 +114,5 @@ class InformationMaintainingThisTrustControllerSpec extends SpecBase {
       }
     }
   }
+
 }

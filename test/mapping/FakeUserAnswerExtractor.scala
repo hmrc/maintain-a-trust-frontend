@@ -26,7 +26,11 @@ import utils.TrustEnvelope.TrustEnvelope
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeUserAnswerExtractor(mockResult: Either[TrustErrors, UserAnswers]) extends UserAnswersExtractor {
-  override def extract(answers: UserAnswers, data: GetTrust)
-                      (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[UserAnswers] =
+
+  override def extract(answers: UserAnswers, data: GetTrust)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): TrustEnvelope[UserAnswers] =
     EitherT[Future, TrustErrors, UserAnswers](Future.successful(mockResult))
+
 }

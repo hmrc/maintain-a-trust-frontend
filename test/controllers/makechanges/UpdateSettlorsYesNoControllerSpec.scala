@@ -44,13 +44,14 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
     "making changes" must {
 
-      val prefix: String = "updateSettlors"
+      val prefix: String  = "updateSettlors"
       val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).value
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges)
+        .value
 
       "return OK and the correct view for a GET" in {
 
@@ -91,7 +92,6 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       }
 
       "redirect to the add a protector page when valid data is submitted and no protectors exist" in {
-
 
         val mockTrustConnector = mock[TrustConnector]
 
@@ -161,13 +161,14 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
     "closing" must {
 
-      val prefix: String = "updateSettlorsClosing"
+      val prefix: String  = "updateSettlorsClosing"
       val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust)
+        .value
 
       "return OK and the correct view for a GET" in {
 
@@ -208,7 +209,6 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       }
 
       "redirect to the add a protector page when valid data is submitted and no protectors exist" in {
-
 
         val mockTrustConnector = mock[TrustConnector]
 
@@ -283,7 +283,8 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
       val mockTrustConnector = mock[TrustConnector]
 
       val userAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust)
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
@@ -297,10 +298,11 @@ class UpdateSettlorsYesNoControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      status(result) mustBe INTERNAL_SERVER_ERROR
+      status(result)      mustBe INTERNAL_SERVER_ERROR
       contentType(result) mustBe Some("text/html")
 
       application.stop()
     }
   }
+
 }

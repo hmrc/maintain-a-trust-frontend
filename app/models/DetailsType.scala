@@ -22,16 +22,17 @@ object DetailsType extends Enumeration {
 
   type DetailsType = Value
 
-  val Passport: Value = Value("passport")
-  val IdCard: Value = Value("id-card")
-  val Combined: Value = Value("combined")
+  val Passport: Value            = Value("passport")
+  val IdCard: Value              = Value("id-card")
+  val Combined: Value            = Value("combined")
   val CombinedProvisional: Value = Value("combined-provisional")
 
-  implicit val reads: Reads[Value] = Reads.enumNameReads(DetailsType)
-  implicit val writes: Writes[Value] = Writes.enumNameWrites
+  implicit val reads: Reads[Value]    = Reads.enumNameReads(DetailsType)
+  implicit val writes: Writes[Value]  = Writes.enumNameWrites
   implicit val formats: Format[Value] = Format.apply(reads, writes)
 
   implicit class DetailsTypeValue(detailsType: Value) {
     def isProvisional: Boolean = detailsType != Combined
   }
+
 }

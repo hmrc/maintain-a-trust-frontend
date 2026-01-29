@@ -30,95 +30,97 @@ trait Formatters {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {
         case None | Some("") => Left(Seq(FormError(key, errorKey)))
-        case Some(s) => Right(s.replace(" ", "").toUpperCase())
+        case Some(s)         => Right(s.replace(" ", "").toUpperCase())
       }
 
     override def unbind(key: String, value: String): Map[String, String] =
       Map(key -> value)
   }
-
 
   private[mappings] def stringFormatter(errorKey: String): Formatter[String] = new Formatter[String] {
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {
         case None | Some("") => Left(Seq(FormError(key, errorKey)))
-        case Some(s) => Right(s.trim.replace("‘", "'").replace("’", "'"))
+        case Some(s)         => Right(s.trim.replace("‘", "'").replace("’", "'"))
       }
 
     override def unbind(key: String, value: String): Map[String, String] =
       Map(key -> value)
   }
 
-  private[mappings] def utrFormatter(requiredKey: String, invalidKey: String, lengthKey: String): Formatter[String] = new Formatter[String] {
+  private[mappings] def utrFormatter(requiredKey: String, invalidKey: String, lengthKey: String): Formatter[String] =
+    new Formatter[String] {
 
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
-      val fixedLength = 10
-      val trimmedUtr = data.get(key).map(s => s.replaceAll("\\s",""))
-      trimmedUtr match {
-        case None | Some("") => Left(Seq(FormError(key, requiredKey)))
-        case Some(s) if s.length != fixedLength => Left(Seq(FormError(key, lengthKey, Seq(fixedLength))))
-        case Some(s) if !s.matches(Validation.utrRegex) => Left(Seq(FormError(key, invalidKey)))
-        case Some(s) => Right(s)
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
+        val fixedLength = 10
+        val trimmedUtr  = data.get(key).map(s => s.replaceAll("\\s", ""))
+        trimmedUtr match {
+          case None | Some("")                            => Left(Seq(FormError(key, requiredKey)))
+          case Some(s) if s.length != fixedLength         => Left(Seq(FormError(key, lengthKey, Seq(fixedLength))))
+          case Some(s) if !s.matches(Validation.utrRegex) => Left(Seq(FormError(key, invalidKey)))
+          case Some(s)                                    => Right(s)
+        }
       }
+
+      override def unbind(key: String, value: String): Map[String, String] =
+        Map(key -> value)
     }
 
-    override def unbind(key: String, value: String): Map[String, String] =
-      Map(key -> value)
-  }
+  private[mappings] def postcodeFormatter(requiredKey: String, invalidKey: String): Formatter[String] =
+    new Formatter[String] {
 
-  private[mappings] def postcodeFormatter(requiredKey: String, invalidKey: String): Formatter[String] = new Formatter[String] {
-
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
-      data.get(key) match {
-        case None | Some("") => Left(Seq(FormError(key, requiredKey)))
-        case Some(s) =>
-          val trimmed = s.trim.toUpperCase
-          trimmed.matches(Validation.postcodeRegex) match {
-            case true => Right(trimmed)
-            case false => Left(Seq(FormError(key, invalidKey)))
-          }
-      }
-    override def unbind(key: String, value: String): Map[String, String] =
-      Map(key -> value)
-  }
-
-  private[mappings] def urnFormatter(requiredKey: String, invalidKey: String, lengthKey: String): Formatter[String] = new Formatter[String] {
-
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
-      data.get(key) match {
-        case None => Left(Seq(FormError(key, requiredKey)))
-        case Some(s) if s.trim == "" => Left(Seq(FormError(key, requiredKey)))
-        case Some(s) =>
-          val trimmed = s.filterNot(_ == ' ').trim.toUpperCase
-          if (trimmed.length != 15) {
-            Left(Seq(FormError(key, lengthKey)))
-          } else {
-            trimmed.matches(Validation.urnRegex) match {
-              case true => Right(trimmed)
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
+        data.get(key) match {
+          case None | Some("") => Left(Seq(FormError(key, requiredKey)))
+          case Some(s)         =>
+            val trimmed = s.trim.toUpperCase
+            trimmed.matches(Validation.postcodeRegex) match {
+              case true  => Right(trimmed)
               case false => Left(Seq(FormError(key, invalidKey)))
             }
-          }
-      }
+        }
+      override def unbind(key: String, value: String): Map[String, String]                      =
+        Map(key -> value)
     }
 
-    override def unbind(key: String, value: String): Map[String, String] =
-      Map(key -> value)
-  }
+  private[mappings] def urnFormatter(requiredKey: String, invalidKey: String, lengthKey: String): Formatter[String] =
+    new Formatter[String] {
 
-  private[mappings] def currencyFormatter(requiredKey: String, invalidKey: String): Formatter[String] = new Formatter[String] {
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
+        data.get(key) match {
+          case None                    => Left(Seq(FormError(key, requiredKey)))
+          case Some(s) if s.trim == "" => Left(Seq(FormError(key, requiredKey)))
+          case Some(s)                 =>
+            val trimmed = s.filterNot(_ == ' ').trim.toUpperCase
+            if (trimmed.length != 15) {
+              Left(Seq(FormError(key, lengthKey)))
+            } else {
+              trimmed.matches(Validation.urnRegex) match {
+                case true  => Right(trimmed)
+                case false => Left(Seq(FormError(key, invalidKey)))
+              }
+            }
+        }
 
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
-      data.get(key) match {
-        case None | Some("") => Left(Seq(FormError(key, requiredKey)))
-        case Some(s) =>
-          val trimmed = s.trim.replaceAll(",", "")
-          Right(trimmed)
-      }
+      override def unbind(key: String, value: String): Map[String, String] =
+        Map(key -> value)
+    }
 
-    override def unbind(key: String, value: String): Map[String, String] =
-      Map(key -> value)
-  }
+  private[mappings] def currencyFormatter(requiredKey: String, invalidKey: String): Formatter[String] =
+    new Formatter[String] {
+
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
+        data.get(key) match {
+          case None | Some("") => Left(Seq(FormError(key, requiredKey)))
+          case Some(s)         =>
+            val trimmed = s.trim.replaceAll(",", "")
+            Right(trimmed)
+        }
+
+      override def unbind(key: String, value: String): Map[String, String] =
+        Map(key -> value)
+    }
 
   private[mappings] def booleanFormatter(requiredKey: String, invalidKey: String): Formatter[Boolean] =
     new Formatter[Boolean] {
@@ -129,15 +131,19 @@ trait Formatters {
         baseFormatter
           .bind(key, data)
           .flatMap {
-          case "true" => Right(true)
-          case "false" => Right(false)
-          case _ => Left(Seq(FormError(key, invalidKey)))
-        }
+            case "true"  => Right(true)
+            case "false" => Right(false)
+            case _       => Left(Seq(FormError(key, invalidKey)))
+          }
 
       def unbind(key: String, value: Boolean) = Map(key -> value.toString)
     }
 
-  private[mappings] def intFormatter(requiredKey: String, wholeNumberKey: String, nonNumericKey: String): Formatter[Int] =
+  private[mappings] def intFormatter(
+    requiredKey: String,
+    wholeNumberKey: String,
+    nonNumericKey: String
+  ): Formatter[Int] =
     new Formatter[Int] {
 
       val decimalRegexp = """^-?(\d*\.\d*)$"""
@@ -149,30 +155,33 @@ trait Formatters {
           .bind(key, data)
           .map(_.replace(",", ""))
           .flatMap {
-          case s if s.matches(decimalRegexp) =>
-            Left(Seq(FormError(key, wholeNumberKey)))
-          case s =>
-            nonFatalCatch
-              .either(s.toInt)
-              .left.map(_ => Seq(FormError(key, nonNumericKey)))
-        }
+            case s if s.matches(decimalRegexp) =>
+              Left(Seq(FormError(key, wholeNumberKey)))
+            case s                             =>
+              nonFatalCatch
+                .either(s.toInt)
+                .left
+                .map(_ => Seq(FormError(key, nonNumericKey)))
+          }
 
       override def unbind(key: String, value: Int) =
         baseFormatter.unbind(key, value.toString)
     }
 
-  private[mappings] def enumerableFormatter[A](requiredKey: String, invalidKey: String)(implicit ev: Enumerable[A]): Formatter[A] =
+  private[mappings] def enumerableFormatter[A](requiredKey: String, invalidKey: String)(implicit
+    ev: Enumerable[A]
+  ): Formatter[A] =
     new Formatter[A] {
 
       private val baseFormatter = stringFormatter(requiredKey)
 
       override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], A] =
-        baseFormatter.bind(key, data).flatMap {
-          str =>
-            ev.withName(str).map(Right.apply).getOrElse(Left(Seq(FormError(key, invalidKey))))
+        baseFormatter.bind(key, data).flatMap { str =>
+          ev.withName(str).map(Right.apply).getOrElse(Left(Seq(FormError(key, invalidKey))))
         }
 
       override def unbind(key: String, value: A): Map[String, String] =
         baseFormatter.unbind(key, value.toString)
     }
+
 }

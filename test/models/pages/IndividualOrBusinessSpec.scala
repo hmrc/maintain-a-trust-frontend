@@ -32,10 +32,11 @@ class IndividualOrBusinessSpec extends AnyWordSpec with Matchers with ScalaCheck
 
       val gen = Gen.oneOf(IndividualOrBusiness.values.toSeq)
 
-      forAll(gen) {
-        individualOrBusiness =>
-
-          JsString(individualOrBusiness.toString).validate[IndividualOrBusiness].asOpt.value mustEqual individualOrBusiness
+      forAll(gen) { individualOrBusiness =>
+        JsString(individualOrBusiness.toString)
+          .validate[IndividualOrBusiness]
+          .asOpt
+          .value mustEqual individualOrBusiness
       }
     }
 
@@ -43,10 +44,8 @@ class IndividualOrBusinessSpec extends AnyWordSpec with Matchers with ScalaCheck
 
       val gen = arbitrary[String] suchThat (!IndividualOrBusiness.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[IndividualOrBusiness] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[IndividualOrBusiness] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,11 +53,10 @@ class IndividualOrBusinessSpec extends AnyWordSpec with Matchers with ScalaCheck
 
       val gen = Gen.oneOf(IndividualOrBusiness.values.toSeq)
 
-      forAll(gen) {
-        individualOrBusiness =>
-
-          Json.toJson(individualOrBusiness) mustEqual JsString(individualOrBusiness.toString)
+      forAll(gen) { individualOrBusiness =>
+        Json.toJson(individualOrBusiness) mustEqual JsString(individualOrBusiness.toString)
       }
     }
   }
+
 }

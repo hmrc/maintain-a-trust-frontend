@@ -20,7 +20,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.Protectors
 
-final case class IndividualProtectorAddressUKYesNoPage(index : Int) extends QuestionPage[Boolean] {
+final case class IndividualProtectorAddressUKYesNoPage(index: Int) extends QuestionPage[Boolean] {
 
   override def path: JsPath = Protectors.path \ index \ toString
 

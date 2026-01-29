@@ -21,7 +21,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.Protectors
 
-case class BusinessProtectorMetaData(index: Int) extends QuestionPage[MetaData]{
+case class BusinessProtectorMetaData(index: Int) extends QuestionPage[MetaData] {
 
   override def path: JsPath = Protectors.path \ index \ toString
 

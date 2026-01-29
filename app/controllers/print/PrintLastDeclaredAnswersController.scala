@@ -26,27 +26,24 @@ import views.html.print.PrintLastDeclaredAnswersView
 
 import scala.concurrent.Future
 
-class PrintLastDeclaredAnswersController @Inject()(
-                                                    override val messagesApi: MessagesApi,
-                                                    actions: Actions,
-                                                    val controllerComponents: MessagesControllerComponents,
-                                                    view: PrintLastDeclaredAnswersView,
-                                                    printPlaybackAnswersHelper: PrintPlaybackHelper
-                                                  ) extends FrontendBaseController with I18nSupport {
+class PrintLastDeclaredAnswersController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  view: PrintLastDeclaredAnswersView,
+  printPlaybackAnswersHelper: PrintPlaybackHelper
+) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier.async {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier.async { implicit request =>
+    val entities = printPlaybackAnswersHelper.entities(request.userAnswers)
 
-      val entities = printPlaybackAnswersHelper.entities(request.userAnswers)
+    val trustDetails = printPlaybackAnswersHelper.trustDetails(request.userAnswers)
 
-      val trustDetails = printPlaybackAnswersHelper.trustDetails(request.userAnswers)
-
-      Future.successful(Ok(view(entities, trustDetails)))
+    Future.successful(Ok(view(entities, trustDetails)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
-    _ =>
-      Future.successful(Redirect(controllers.routes.WhatIsNextController.onPageLoad()))
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async { _ =>
+    Future.successful(Redirect(controllers.routes.WhatIsNextController.onPageLoad()))
   }
 
 }

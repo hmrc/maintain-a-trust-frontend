@@ -40,11 +40,11 @@ import scala.concurrent.Future
 
 class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  private val formProvider = new YesNoFormProvider()
+  private val formProvider        = new YesNoFormProvider()
   private val form: Form[Boolean] = formProvider.withPrefix("expressTrustYesNo")
 
   private lazy val expressTrustYesNoRoute: String = routes.ExpressTrustYesNoController.onPageLoad().url
-  private val validAnswer = true
+  private val validAnswer                         = true
 
   "ExpressTrustYesNoController" must {
 
@@ -88,8 +88,8 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when valid data is submitted" in {
 
-      val mockPlaybackRepository = mock[PlaybackRepository]
-      val mockTrustsConnector = mock[TrustConnector]
+      val mockPlaybackRepository    = mock[PlaybackRepository]
+      val mockTrustsConnector       = mock[TrustConnector]
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
@@ -123,8 +123,8 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "redirect to the next page when valid data is submitted for the Non tax to Tax transition journey" in {
 
-      val mockPlaybackRepository = mock[PlaybackRepository]
-      val mockTrustsConnector = mock[TrustConnector]
+      val mockPlaybackRepository    = mock[PlaybackRepository]
+      val mockTrustsConnector       = mock[TrustConnector]
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       when(mockPlaybackRepository.set(any()))
@@ -136,10 +136,11 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
       when(mockTrustsConnector.setExpressTrust(any(), any())(any(), any()))
         .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr.set(WhatIsNextPage, NeedsToPayTax).value))
-        .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
-        .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
-        .build()
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr.set(WhatIsNextPage, NeedsToPayTax).value))
+          .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+          .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
+          .build()
 
       val request = FakeRequest(POST, expressTrustYesNoRoute)
         .withFormUrlEncodedBody(("value", validAnswer.toString))
@@ -179,7 +180,7 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
     "return an Internal Server Error when setting the user answers goes wrong" in {
 
-      val mockTrustsConnector = mock[TrustConnector]
+      val mockTrustsConnector       = mock[TrustConnector]
       val mockMaintainATrustService = mock[MaintainATrustService]
 
       mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
@@ -200,7 +201,7 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
 
       val result = route(application, request).value
 
-      status(result) mustBe INTERNAL_SERVER_ERROR
+      status(result)      mustBe INTERNAL_SERVER_ERROR
       contentType(result) mustBe Some("text/html")
 
       application.stop()
@@ -222,4 +223,5 @@ class ExpressTrustYesNoControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

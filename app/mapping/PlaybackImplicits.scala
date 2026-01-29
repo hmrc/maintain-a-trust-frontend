@@ -31,7 +31,7 @@ object PlaybackImplicits {
         line4 = address.line4,
         postcode = post
       )
-    case None =>
+    case None       =>
       InternationalAddress(
         line1 = address.line1,
         line2 = address.line2,
@@ -40,9 +40,9 @@ object PlaybackImplicits {
       )
   }
 
-  private def convertAddress(address: Address): AddressType = {
+  private def convertAddress(address: Address): AddressType =
     address match {
-      case UKAddress(line1, line2, line3, line4, postcode) =>
+      case UKAddress(line1, line2, line3, line4, postcode)    =>
         AddressType(
           line1,
           line2,
@@ -61,7 +61,6 @@ object PlaybackImplicits {
           country = country
         )
     }
-  }
 
   implicit class AddressOptionConverter(address: Option[AddressType]) {
     def convert: Option[Address] = address.map(convertAddress)

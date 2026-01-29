@@ -41,22 +41,24 @@ import utils.TrustEnvelope.TrustEnvelope
 import java.time.{LocalDate, LocalDateTime}
 import scala.concurrent.{ExecutionContext, Future}
 
-class RefreshedDataRetrievalActionImpl @Inject()(
-                                                  val parser: BodyParsers.Default,
-                                                  playbackRepository: PlaybackRepository,
-                                                  trustConnector: TrustConnector,
-                                                  playbackExtractor: UserAnswersExtractor
-                                                )(override implicit val executionContext: ExecutionContext)
-  extends RefreshedDataRetrievalAction with Logging {
+class RefreshedDataRetrievalActionImpl @Inject() (
+  val parser: BodyParsers.Default,
+  playbackRepository: PlaybackRepository,
+  trustConnector: TrustConnector,
+  playbackExtractor: UserAnswersExtractor
+)(implicit override val executionContext: ExecutionContext)
+    extends RefreshedDataRetrievalAction with Logging {
 
   private val className = getClass.getSimpleName
 
-  case class SubmissionData(identifier: String,
-                            whatIsNext: WhatIsNext,
-                            tvn: String,
-                            date: LocalDateTime,
-                            agent: Option[AgentDeclaration],
-                            endDate: Option[LocalDate])
+  case class SubmissionData(
+    identifier: String,
+    whatIsNext: WhatIsNext,
+    tvn: String,
+    date: LocalDateTime,
+    agent: Option[AgentDeclaration],
+    endDate: Option[LocalDate]
+  )
 
   override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
@@ -65,62 +67,76 @@ class RefreshedDataRetrievalActionImpl @Inject()(
     val identifier = request.userAnswers.identifier
 
     val result = for {
-      whatIsNext <- TrustEnvelope.fromOption(request.userAnswers.get(WhatIsNextPage))
-      tvn <- TrustEnvelope.fromOption(request.userAnswers.get(TVNPage))
-      submissionDate <- TrustEnvelope.fromOption(request.userAnswers.get(SubmissionDatePage))
+      whatIsNext              <- TrustEnvelope.fromOption(request.userAnswers.get(WhatIsNextPage))
+      tvn                     <- TrustEnvelope.fromOption(request.userAnswers.get(TVNPage))
+      submissionDate          <- TrustEnvelope.fromOption(request.userAnswers.get(SubmissionDatePage))
       optionalAgentInformation = request.userAnswers.get(AgentDeclarationPage)
-      submissionData = SubmissionData(identifier, whatIsNext, tvn, submissionDate, optionalAgentInformation, getClosureDate(request.userAnswers))
-      playbackResponse <- trustConnector.playback(identifier)
-      response <- handlePlaybackResponse(playbackResponse, submissionData)(request)
+      submissionData           = SubmissionData(
+                                   identifier,
+                                   whatIsNext,
+                                   tvn,
+                                   submissionDate,
+                                   optionalAgentInformation,
+                                   getClosureDate(request.userAnswers)
+                                 )
+      playbackResponse        <- trustConnector.playback(identifier)
+      response                <- handlePlaybackResponse(playbackResponse, submissionData)(request)
     } yield response
 
     result.value.map {
-      case Right(dataRequest) => Right(dataRequest)
-      case Left(NoData) =>
-        logger.error(s"[$className][refine][UTR/URN: ${request.userAnswers.identifier}] unable to get data from user answers")
+      case Right(dataRequest)                     => Right(dataRequest)
+      case Left(NoData)                           =>
+        logger.error(
+          s"[$className][refine][UTR/URN: ${request.userAnswers.identifier}] unable to get data from user answers"
+        )
         Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
       case Left(TrustErrorWithRedirect(redirect)) => Left(redirect)
-      case Left(_) => Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
+      case Left(_)                                => Left(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem()))
     }
   }
 
-  private def handlePlaybackResponse[A](response: TrustsResponse, submissionData: SubmissionData)
-                                       (implicit request: DataRequest[A]): TrustEnvelope[DataRequest[A]] = {
+  private def handlePlaybackResponse[A](response: TrustsResponse, submissionData: SubmissionData)(implicit
+    request: DataRequest[A]
+  ): TrustEnvelope[DataRequest[A]] =
     response match {
       case Processed(playback, _) => extractAndRefreshUserAnswers(submissionData, playback)(request)
-      case _ =>
-        logger.error(s"[$className][handlePlaybackResponse][UTR/URN: ${request.userAnswers.identifier}] unable to get data from user answers")
+      case _                      =>
+        logger.error(
+          s"[$className][handlePlaybackResponse][UTR/URN: ${request.userAnswers.identifier}] unable to get data from user answers"
+        )
         TrustEnvelope(TrustErrorWithRedirect(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
-  }
 
-
-  private def extractAndRefreshUserAnswers[A](data: SubmissionData, playback: GetTrust)
-                                             (implicit request: DataRequest[A]): TrustEnvelope[DataRequest[A]] = EitherT {
+  private def extractAndRefreshUserAnswers[A](data: SubmissionData, playback: GetTrust)(implicit
+    request: DataRequest[A]
+  ): TrustEnvelope[DataRequest[A]] = EitherT {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     val expectedResult = for {
-      updatedUserAnswers <- TrustEnvelope(request.userAnswers.clearData
-        .set(WhatIsNextPage, data.whatIsNext)
-        .flatMap(_.set(TVNPage, data.tvn))
-        .flatMap(_.set(SubmissionDatePage, data.date))
-        .flatMap(_.set(AgentDeclarationPage, data.agent))
-        .flatMap(answers => setClosureDate(answers, data.endDate)))
-      extractedAnswers <- playbackExtractor.extract(updatedUserAnswers, playback)(hc, executionContext)
-      _ <- TrustEnvelope(playbackRepository.set(extractedAnswers))
+      updatedUserAnswers <- TrustEnvelope(
+                              request.userAnswers.clearData
+                                .set(WhatIsNextPage, data.whatIsNext)
+                                .flatMap(_.set(TVNPage, data.tvn))
+                                .flatMap(_.set(SubmissionDatePage, data.date))
+                                .flatMap(_.set(AgentDeclarationPage, data.agent))
+                                .flatMap(answers => setClosureDate(answers, data.endDate))
+                            )
+      extractedAnswers   <- playbackExtractor.extract(updatedUserAnswers, playback)(hc, executionContext)
+      _                  <- TrustEnvelope(playbackRepository.set(extractedAnswers))
     } yield DataRequest(request.request, extractedAnswers, request.user)
 
     expectedResult.value.map {
-      case Right(dataRequest) => Right(dataRequest)
+      case Right(dataRequest)                     => Right(dataRequest)
       case Left(reason: PlaybackExtractionErrors) =>
         logger.warn(s"[$className][extractAndRefreshUserAnswers] unable to extract user answers due to $reason")
         Left(TrustErrorWithRedirect(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
-      case Left(_) =>
+      case Left(_)                                =>
         logger.warn(s"[$className][extractAndRefreshUserAnswers] Error while setting user answers.")
         Left(TrustErrorWithRedirect(Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())))
     }
   }
+
 }
 
 @ImplementedBy(classOf[RefreshedDataRetrievalActionImpl])

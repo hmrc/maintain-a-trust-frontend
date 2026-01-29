@@ -30,36 +30,38 @@ import utils.TrustEnvelope.TrustEnvelope
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SessionService @Inject()(playbackRepository: PlaybackRepository,
-                               sessionRepository: ActiveSessionRepository,
-                               errorHandler: ErrorHandler)
-  extends Logging {
+class SessionService @Inject() (
+  playbackRepository: PlaybackRepository,
+  sessionRepository: ActiveSessionRepository,
+  errorHandler: ErrorHandler
+) extends Logging {
 
-  def initialiseUserAnswers(identifier: String,
-                            internalId: String,
-                            isUnderlyingData5mld: Boolean,
-                            isUnderlyingDataTaxable: Boolean)
-                           (implicit ec: ExecutionContext, hc: HeaderCarrier): TrustEnvelope[UserAnswers] = {
+  def initialiseUserAnswers(
+    identifier: String,
+    internalId: String,
+    isUnderlyingData5mld: Boolean,
+    isUnderlyingDataTaxable: Boolean
+  )(implicit ec: ExecutionContext, hc: HeaderCarrier): TrustEnvelope[UserAnswers] = {
 
-    val activeSession = IdentifierSession(internalId, identifier)
-    val newEmptyAnswers = UserAnswers.startNewSession(internalId, identifier, Session.id(hc), isUnderlyingData5mld, isUnderlyingDataTaxable)
+    val activeSession   = IdentifierSession(internalId, identifier)
+    val newEmptyAnswers =
+      UserAnswers.startNewSession(internalId, identifier, Session.id(hc), isUnderlyingData5mld, isUnderlyingDataTaxable)
 
     for {
       _ <- playbackRepository.resetCache(internalId, identifier, Session.id(hc))
       _ <- playbackRepository.set(newEmptyAnswers)
       _ <- sessionRepository.set(activeSession)
-    } yield {
-      newEmptyAnswers
-    }
+    } yield newEmptyAnswers
   }
 
-  def initialiseSession[A](identifier: String)
-                          (implicit request: IdentifierRequest[A], ec: ExecutionContext): Future[Result] = {
+  def initialiseSession[A](
+    identifier: String
+  )(implicit request: IdentifierRequest[A], ec: ExecutionContext): Future[Result] = {
     val session = IdentifierSession(request.user.internalId, identifier)
 
     sessionRepository.set(session).value.flatMap {
       case Right(_) => Future.successful(Redirect(controllers.routes.TrustStatusController.status()))
-      case Left(_) => errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
+      case Left(_)  => errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
     }
   }
 

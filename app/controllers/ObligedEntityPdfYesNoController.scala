@@ -34,64 +34,60 @@ import views.html.ObligedEntityPdfYesNoView
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ObligedEntityPdfYesNoController @Inject()(
-                                                 override val messagesApi: MessagesApi,
-                                                 playbackRepository: PlaybackRepository,
-                                                 actions: Actions,
-                                                 yesNoFormProvider: YesNoFormProvider,
-                                                 val controllerComponents: MessagesControllerComponents,
-                                                 view: ObligedEntityPdfYesNoView,
-                                                 errorHandler: ErrorHandler
-                                               ) (implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Logging {
+class ObligedEntityPdfYesNoController @Inject() (
+  override val messagesApi: MessagesApi,
+  playbackRepository: PlaybackRepository,
+  actions: Actions,
+  yesNoFormProvider: YesNoFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: ObligedEntityPdfYesNoView,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  private val className = getClass.getSimpleName
+  private val className           = getClass.getSimpleName
   private val form: Form[Boolean] = yesNoFormProvider.withPrefix("obligedEntityPdfYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    val preparedForm = request.userAnswers.get(ObligedEntityPdfYesNoPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(ObligedEntityPdfYesNoPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, request.userAnswers.identifier))
+    Ok(view(preparedForm, request.userAnswers.identifier))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
-    implicit request =>
-
-      val result = for {
-        formData <- TrustEnvelope(handleFormValidation)
-        updatedAnswers <- TrustEnvelope(
-          request.userAnswers
-            .set(ObligedEntityPdfYesNoPage, formData)
-        )
-        _ <- playbackRepository.set(updatedAnswers)
-      } yield {
-        if (formData) {
-          Redirect(controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier))
-        } else {
-          Redirect(routes.WhatIsNextController.onPageLoad())
-        }
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async { implicit request =>
+    val result = for {
+      formData       <- TrustEnvelope(handleFormValidation)
+      updatedAnswers <- TrustEnvelope(
+                          request.userAnswers
+                            .set(ObligedEntityPdfYesNoPage, formData)
+                        )
+      _              <- playbackRepository.set(updatedAnswers)
+    } yield
+      if (formData) {
+        Redirect(controllers.routes.ObligedEntityPdfController.getPdf(request.userAnswers.identifier))
+      } else {
+        Redirect(routes.WhatIsNextController.onPageLoad())
       }
 
-      result.value.flatMap {
-        case Right(call) => Future.successful(call)
-        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
-        case Left(_) =>
-          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-      }
+    result.value.flatMap {
+      case Right(call)                               => Future.successful(call)
+      case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
+      case Left(_)                                   =>
+        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
+    }
   }
 
-  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, Boolean] = {
-    form.bindFromRequest().fold(
-      (formWithErrors: Form[_]) =>
-        Left(FormValidationError(BadRequest(view(formWithErrors, request.userAnswers.identifier)))),
-      value => Right(value)
-    )
-  }
+  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, Boolean] =
+    form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) =>
+          Left(FormValidationError(BadRequest(view(formWithErrors, request.userAnswers.identifier)))),
+        value => Right(value)
+      )
 
 }

@@ -46,13 +46,24 @@ import uk.gov.hmrc.auth.core.Enrolments
 import java.time.LocalDate
 import scala.concurrent.Future
 
-class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSugar with ScalaFutures with EitherValues
-  with ScalaCheckPropertyChecks with ModelGenerators {
+class RefreshedDataPreSubmitRetrievalActionSpec
+    extends SpecBase
+    with MockitoSugar
+    with ScalaFutures
+    with EitherValues
+    with ScalaCheckPropertyChecks
+    with ModelGenerators {
 
-  class Harness(playbackRepository: PlaybackRepository,
-                trustConnector: TrustConnector,
-                playbackExtractor: UserAnswersExtractor)
-    extends RefreshedDataPreSubmitRetrievalActionImpl(bodyParsers, playbackRepository, trustConnector, playbackExtractor) {
+  class Harness(
+    playbackRepository: PlaybackRepository,
+    trustConnector: TrustConnector,
+    playbackExtractor: UserAnswersExtractor
+  ) extends RefreshedDataPreSubmitRetrievalActionImpl(
+        bodyParsers,
+        playbackRepository,
+        trustConnector,
+        playbackExtractor
+      ) {
     def callRefine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = refine(request)
   }
 
@@ -65,8 +76,8 @@ class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSug
       "WhatIsNextPage in user answers is undefined" in {
 
         val playbackRepository = mock[PlaybackRepository]
-        val trustsConnector = mock[TrustConnector]
-        val playbackExtractor = mock[UserAnswersExtractor]
+        val trustsConnector    = mock[TrustConnector]
+        val playbackExtractor  = mock[UserAnswersExtractor]
 
         val userAnswers = emptyUserAnswersForUtr
 
@@ -74,158 +85,158 @@ class RefreshedDataPreSubmitRetrievalActionSpec extends SpecBase with MockitoSug
 
         val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-        redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
+        redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController
+          .sorryThereHasBeenAProblem()
+          .url
       }
 
-      "trust is not in processed state" in {
+      "trust is not in processed state" in
+        forAll(arbitrary[TrustsResponse].suchThat(!_.isInstanceOf[Processed])) { response =>
+          val playbackRepository = mock[PlaybackRepository]
+          val trustsConnector    = mock[TrustConnector]
+          val playbackExtractor  = mock[UserAnswersExtractor]
 
-        forAll(arbitrary[TrustsResponse].suchThat(!_.isInstanceOf[Processed])) {
-          response =>
+          val userAnswers = emptyUserAnswersForUtr
+            .set(WhatIsNextPage, WhatIsNext.MakeChanges)
+            .value
 
-            val playbackRepository = mock[PlaybackRepository]
-            val trustsConnector = mock[TrustConnector]
-            val playbackExtractor = mock[UserAnswersExtractor]
+          when(trustsConnector.playback(any())(any(), any()))
+            .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(response))))
 
-            val userAnswers = emptyUserAnswersForUtr
-              .set(WhatIsNextPage, WhatIsNext.MakeChanges).value
+          val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
 
-            when(trustsConnector.playback(any())(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(response))))
+          val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-            val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
-
-            val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
-
-            redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
+          redirectLocation(
+            Future.successful(result.left.value)
+          ).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
         }
-      }
 
-      "playback extractor fails" in {
+      "playback extractor fails" in
+        forAll(arbitrary[Processed]) { response =>
+          val playbackRepository = mock[PlaybackRepository]
+          val trustsConnector    = mock[TrustConnector]
+          val playbackExtractor  = mock[UserAnswersExtractor]
 
-        forAll(arbitrary[Processed]) {
-          response =>
+          val userAnswers = emptyUserAnswersForUtr
+            .set(WhatIsNextPage, WhatIsNext.MakeChanges)
+            .value
 
-            val playbackRepository = mock[PlaybackRepository]
-            val trustsConnector = mock[TrustConnector]
-            val playbackExtractor = mock[UserAnswersExtractor]
+          when(trustsConnector.playback(any())(any(), any()))
+            .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(response))))
+          when(playbackExtractor.extract(any(), any())(any(), any()))
+            .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Left(FailedToExtractData("")))))
 
-            val userAnswers = emptyUserAnswersForUtr
-              .set(WhatIsNextPage, WhatIsNext.MakeChanges).value
+          val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
 
-            when(trustsConnector.playback(any())(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(response))))
-            when(playbackExtractor.extract(any(), any())(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Left(FailedToExtractData("")))))
+          val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-            val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
-
-            val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
-
-            redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
+          redirectLocation(
+            Future.successful(result.left.value)
+          ).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
         }
-      }
 
-      "there is an error while setting user answers" in {
+      "there is an error while setting user answers" in
+        forAll(arbitrary[Processed]) { response =>
+          val playbackRepository = mock[PlaybackRepository]
+          val trustsConnector    = mock[TrustConnector]
+          val playbackExtractor  = mock[UserAnswersExtractor]
 
-        forAll(arbitrary[Processed]) {
-          response =>
+          val userAnswers = emptyUserAnswersForUtr
+            .set(WhatIsNextPage, WhatIsNext.MakeChanges)
+            .value
 
-            val playbackRepository = mock[PlaybackRepository]
-            val trustsConnector = mock[TrustConnector]
-            val playbackExtractor = mock[UserAnswersExtractor]
+          when(trustsConnector.playback(any())(any(), any()))
+            .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(response))))
+          when(playbackExtractor.extract(any(), any())(any(), any()))
+            .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Right(userAnswers))))
 
-            val userAnswers = emptyUserAnswersForUtr
-              .set(WhatIsNextPage, WhatIsNext.MakeChanges).value
+          mockPlaybackRepositoryBuilder(playbackRepository, setResult = Left(MongoError))
 
-            when(trustsConnector.playback(any())(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(response))))
-            when(playbackExtractor.extract(any(), any())(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Right(userAnswers))))
+          val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
 
-            mockPlaybackRepositoryBuilder(playbackRepository, setResult = Left(MongoError))
+          val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-            val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
-
-            val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
-
-            redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
+          redirectLocation(
+            Future.successful(result.left.value)
+          ).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
         }
-      }
 
-      "trust connector returns an error" in {
+      "trust connector returns an error" in
+        forAll(arbitrary[Processed]) { response =>
+          val playbackRepository = mock[PlaybackRepository]
+          val trustsConnector    = mock[TrustConnector]
+          val playbackExtractor  = mock[UserAnswersExtractor]
 
-        forAll(arbitrary[Processed]) {
-          response =>
+          val whatNext         = WhatIsNext.MakeChanges
+          val agentDeclaration = AgentDeclaration(FullName("Joe", None, "Bloggs"), "Agency", "tel", "crn", None)
+          val closeDate        = LocalDate.parse("2021-01-01")
 
-            val playbackRepository = mock[PlaybackRepository]
-            val trustsConnector = mock[TrustConnector]
-            val playbackExtractor = mock[UserAnswersExtractor]
+          val userAnswers = emptyUserAnswersForUtr
+            .set(WhatIsNextPage, whatNext)
+            .value
+            .set(AgentDeclarationPage, agentDeclaration)
+            .value
+            .set(DateLastAssetSharedOutPage, closeDate)
+            .value
 
-            val whatNext = WhatIsNext.MakeChanges
-            val agentDeclaration = AgentDeclaration(FullName("Joe", None, "Bloggs"), "Agency", "tel", "crn", None)
-            val closeDate = LocalDate.parse("2021-01-01")
+          when(trustsConnector.playback(any())(any(), any()))
+            .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Left(ServerError()))))
 
-            val userAnswers = emptyUserAnswersForUtr
-              .set(WhatIsNextPage, whatNext).value
-              .set(AgentDeclarationPage, agentDeclaration).value
-              .set(DateLastAssetSharedOutPage, closeDate).value
+          when(playbackExtractor.extract(eqTo(userAnswers), eqTo(response.playback))(any(), any()))
+            .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Right(userAnswers))))
+          when(playbackRepository.set(any()))
+            .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
-            when(trustsConnector.playback(any())(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Left(ServerError()))))
+          val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
 
-            when(playbackExtractor.extract(eqTo(userAnswers), eqTo(response.playback))(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Right(userAnswers))))
-            when(playbackRepository.set(any()))
-              .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+          val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-            val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
-
-            val result = action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
-
-            redirectLocation(Future.successful(result.left.value)).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
+          redirectLocation(
+            Future.successful(result.left.value)
+          ).value mustEqual controllers.routes.TrustStatusController.sorryThereHasBeenAProblem().url
         }
-      }
     }
 
     "return right" when {
-      "action succeeds" in {
+      "action succeeds" in
+        forAll(arbitrary[Processed]) { response =>
+          val playbackRepository = mock[PlaybackRepository]
+          val trustsConnector    = mock[TrustConnector]
+          val playbackExtractor  = mock[UserAnswersExtractor]
 
-        forAll(arbitrary[Processed]) {
-          response =>
+          val whatNext         = WhatIsNext.MakeChanges
+          val agentDeclaration = AgentDeclaration(FullName("Joe", None, "Bloggs"), "Agency", "tel", "crn", None)
+          val closeDate        = LocalDate.parse("2021-01-01")
 
-            val playbackRepository = mock[PlaybackRepository]
-            val trustsConnector = mock[TrustConnector]
-            val playbackExtractor = mock[UserAnswersExtractor]
+          val userAnswers = emptyUserAnswersForUtr
+            .set(WhatIsNextPage, whatNext)
+            .value
+            .set(AgentDeclarationPage, agentDeclaration)
+            .value
+            .set(DateLastAssetSharedOutPage, closeDate)
+            .value
 
-            val whatNext = WhatIsNext.MakeChanges
-            val agentDeclaration = AgentDeclaration(FullName("Joe", None, "Bloggs"), "Agency", "tel", "crn", None)
-            val closeDate = LocalDate.parse("2021-01-01")
+          when(trustsConnector.playback(any())(any(), any()))
+            .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(response))))
+          when(playbackExtractor.extract(eqTo(userAnswers), eqTo(response.playback))(any(), any()))
+            .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Right(userAnswers))))
+          when(playbackRepository.set(any()))
+            .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
-            val userAnswers = emptyUserAnswersForUtr
-              .set(WhatIsNextPage, whatNext).value
-              .set(AgentDeclarationPage, agentDeclaration).value
-              .set(DateLastAssetSharedOutPage, closeDate).value
+          val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
 
-            when(trustsConnector.playback(any())(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, TrustsResponse](Future.successful(Right(response))))
-            when(playbackExtractor.extract(eqTo(userAnswers), eqTo(response.playback))(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, UserAnswers](Future.successful(Right(userAnswers))))
-            when(playbackRepository.set(any()))
-              .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+          action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
 
-            val action = new Harness(playbackRepository, trustsConnector, playbackExtractor)
+          val uaCaptor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
+          verify(playbackRepository).set(uaCaptor.capture)
 
-            action.callRefine(DataRequest(fakeRequest, userAnswers, user)).futureValue
-
-            val uaCaptor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
-            verify(playbackRepository).set(uaCaptor.capture)
-
-            uaCaptor.getValue.get(WhatIsNextPage).get mustBe whatNext
-            uaCaptor.getValue.get(AgentDeclarationPage).get mustBe agentDeclaration
-            uaCaptor.getValue.get(DateLastAssetSharedOutPage).get mustBe closeDate
-            uaCaptor.getValue.get(DateClosedPage) mustBe None
+          uaCaptor.getValue.get(WhatIsNextPage).get             mustBe whatNext
+          uaCaptor.getValue.get(AgentDeclarationPage).get       mustBe agentDeclaration
+          uaCaptor.getValue.get(DateLastAssetSharedOutPage).get mustBe closeDate
+          uaCaptor.getValue.get(DateClosedPage)                 mustBe None
         }
-      }
     }
   }
+
 }

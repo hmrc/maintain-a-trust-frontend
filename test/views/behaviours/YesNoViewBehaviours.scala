@@ -22,11 +22,13 @@ import views.ViewUtils
 
 trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
 
-  //scalastyle:off
-  def yesNoPage(form: Form[Boolean],
-                createView: Form[Boolean] => HtmlFormat.Appendable,
-                messageKeyPrefix: String,
-                headingAndTitleKey: Option[String] = None): Unit = {
+  // scalastyle:off
+  def yesNoPage(
+    form: Form[Boolean],
+    createView: Form[Boolean] => HtmlFormat.Appendable,
+    messageKeyPrefix: String,
+    headingAndTitleKey: Option[String] = None
+  ): Unit =
 
     "behave like a page with a Yes/No question" when {
 
@@ -40,9 +42,9 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
             s"$messageKeyPrefix.heading"
           }
 
-          val doc = asDocument(createView(form))
+          val doc     = asDocument(createView(form))
           val legends = doc.getElementsByTag("legend")
-          legends.size mustBe 1
+          legends.size     mustBe 1
           legends.first.text must include(messages(expectedLegendText))
         }
 
@@ -87,7 +89,7 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
 
         "show an error in the value field's label" in {
 
-          val doc = asDocument(createView(form.withError(error)))
+          val doc       = asDocument(createView(form.withError(error)))
           val errorSpan = doc.getElementsByClass("govuk-error-message").first
           errorSpan.text mustBe s"""${messages("site.error")} ${messages(errorMessage)}"""
         }
@@ -97,16 +99,20 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
           val title = headingAndTitleKey.getOrElse(messageKeyPrefix)
 
           val doc = asDocument(createView(form.withError(error)))
-          assertEqualsValue(doc, "title", ViewUtils.breadcrumbTitle(s"""${messages("error.browser.title.prefix")} ${messages(s"$title.title")}"""))
+          assertEqualsValue(
+            doc,
+            "title",
+            ViewUtils.breadcrumbTitle(s"""${messages("error.browser.title.prefix")} ${messages(s"$title.title")}""")
+          )
         }
       }
     }
-  }
 
-
-  def answeredYesNoPage(form: Form[Boolean],
-                        createView: Form[Boolean] => HtmlFormat.Appendable,
-                        answer: Boolean): Unit = {
+  def answeredYesNoPage(
+    form: Form[Boolean],
+    createView: Form[Boolean] => HtmlFormat.Appendable,
+    answer: Boolean
+  ): Unit = {
 
     "have only the correct value checked" in {
       val doc = asDocument(createView(form.fill(answer)))
@@ -120,14 +126,18 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
     }
   }
 
-  def pageWithQuestionSubHeading(view: HtmlFormat.Appendable, expectedQuestionSubHeadingKey: String, expectedText: String): Unit = {
+  def pageWithQuestionSubHeading(
+    view: HtmlFormat.Appendable,
+    expectedQuestionSubHeadingKey: String,
+    expectedText: String
+  ): Unit =
 
     "have the expected question sub heading" in {
 
       val doc = asDocument(view)
 
       val mediumHeadingElements = doc.getElementsByClass("govuk-heading-m")
-      val legendElements = doc.getElementsByClass("govuk-fieldset__legend--m")
+      val legendElements        = doc.getElementsByClass("govuk-fieldset__legend--m")
 
       val subHeadingText =
         if (!mediumHeadingElements.isEmpty) {
@@ -141,5 +151,5 @@ trait YesNoViewBehaviours extends QuestionViewBehaviours[Boolean] {
       assert(subHeadingText == messages(expectedQuestionSubHeadingKey))
       assert(subHeadingText == expectedText)
     }
-  }
+
 }

@@ -28,16 +28,16 @@ import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class AllProtectorsPrinter @Inject()(individualProtectorPrinter: IndividualProtectorPrinter,
-                                     businessProtectorPrinter: BusinessProtectorPrinter) extends EntitiesPrinter[JsArray] {
+class AllProtectorsPrinter @Inject() (
+  individualProtectorPrinter: IndividualProtectorPrinter,
+  businessProtectorPrinter: BusinessProtectorPrinter
+) extends EntitiesPrinter[JsArray] {
 
-  override def printSection(index: Int, userAnswers: UserAnswers)
-                           (implicit messages: Messages): Option[AnswerSection] = {
+  override def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection] =
     userAnswers.get(ProtectorIndividualOrBusinessPage(index)).flatMap {
       case Individual => individualProtectorPrinter.printAnswerRows(index, userAnswers)
-      case Business => businessProtectorPrinter.printAnswerRows(index, userAnswers)
+      case Business   => businessProtectorPrinter.printAnswerRows(index, userAnswers)
     }
-  }
 
   override def section: QuestionPage[JsArray] = Protectors
 

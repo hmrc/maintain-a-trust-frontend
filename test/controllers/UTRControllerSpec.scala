@@ -36,16 +36,22 @@ import scala.concurrent.Future
 
 class UTRControllerSpec extends SpecBase {
 
-  private val formProvider = new UtrFormProvider()
+  private val formProvider       = new UtrFormProvider()
   private val form: Form[String] = formProvider()
 
   private lazy val trustUTRRoute: String = routes.UTRController.onPageLoad().url
 
   private val utr = "0987654321"
 
-  private val enrolments: Enrolments = Enrolments(Set(Enrolment(
-    "HMRC-TERS-ORG", Seq(EnrolmentIdentifier("SAUTR", utr)), "Activated"
-  )))
+  private val enrolments: Enrolments = Enrolments(
+    Set(
+      Enrolment(
+        "HMRC-TERS-ORG",
+        Seq(EnrolmentIdentifier("SAUTR", utr)),
+        "Activated"
+      )
+    )
+  )
 
   "UTR Controller" must {
 
@@ -95,7 +101,8 @@ class UTRControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = None, affinityGroup = Organisation, enrolments = enrolments)
           .overrides(
             bind[ActiveSessionRepository].toInstance(mockRepository)
-          ).build()
+          )
+          .build()
 
       implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, trustUTRRoute)
         .withFormUrlEncodedBody(("value", utr))
@@ -156,4 +163,5 @@ class UTRControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

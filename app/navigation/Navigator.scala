@@ -22,7 +22,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 
 object Navigator {
 
-  def declarationUrl(affinity: AffinityGroup, isTrustMigratingFromNonTaxableToTaxable: Boolean): Call = {
+  def declarationUrl(affinity: AffinityGroup, isTrustMigratingFromNonTaxableToTaxable: Boolean): Call =
 
     if (affinity == Agent) {
       controllers.declaration.routes.AgencyRegisteredAddressUkYesNoController.onPageLoad()
@@ -34,14 +34,11 @@ object Navigator {
       }
     }
 
-  }
-
-  def agentDeclarationUrl(isTrustMigratingFromNonTaxableToTaxable: Boolean): String = {
+  def agentDeclarationUrl(isTrustMigratingFromNonTaxableToTaxable: Boolean): String =
     if (isTrustMigratingFromNonTaxableToTaxable) {
       controllers.transition.declaration.routes.AgentDeclarationController.onPageLoad().url
     } else {
       controllers.declaration.routes.AgentDeclarationController.onPageLoad().url
     }
-  }
 
 }

@@ -34,15 +34,24 @@ class PrintLastDeclaredAnswersControllerSpec extends SpecBase {
     "return OK and the correct view for a GET" in {
 
       val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
-        .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1").value
-        .set(CharityBeneficiaryDiscretionYesNoPage(0), true).value
-        .set(CharityBeneficiaryShareOfIncomePage(0), "10").value
-        .set(CharityBeneficiaryAddressYesNoPage(0), true).value
-        .set(CharityBeneficiaryAddressUKYesNoPage(0), true).value
-        .set(CharityBeneficiaryAddressPage(0), UKAddress("line1", "line2", None, None, "NE11NE")).value
-        .set(CharityBeneficiaryNamePage(1), "Charity Beneficiary 2").value
-        .set(CharityBeneficiaryDiscretionYesNoPage(1), false).value
-        .set(CharityBeneficiaryAddressYesNoPage(1), false).value
+        .set(CharityBeneficiaryNamePage(0), "Charity Beneficiary 1")
+        .value
+        .set(CharityBeneficiaryDiscretionYesNoPage(0), true)
+        .value
+        .set(CharityBeneficiaryShareOfIncomePage(0), "10")
+        .value
+        .set(CharityBeneficiaryAddressYesNoPage(0), true)
+        .value
+        .set(CharityBeneficiaryAddressUKYesNoPage(0), true)
+        .value
+        .set(CharityBeneficiaryAddressPage(0), UKAddress("line1", "line2", None, None, "NE11NE"))
+        .value
+        .set(CharityBeneficiaryNamePage(1), "Charity Beneficiary 2")
+        .value
+        .set(CharityBeneficiaryDiscretionYesNoPage(1), false)
+        .value
+        .set(CharityBeneficiaryAddressYesNoPage(1), false)
+        .value
 
       val entities = injector.instanceOf[PrintPlaybackHelper].entities(playbackAnswers)
 
@@ -67,15 +76,24 @@ class PrintLastDeclaredAnswersControllerSpec extends SpecBase {
     "return OK and the correct view for a GET with Trustee Mental Capacity questions answered when no mental capacity data held" in {
 
       val playbackAnswers = TestUserAnswers.emptyUserAnswersForUtr
-        .set(IsThisLeadTrusteePage(0), false).value
-        .set(TrusteeIndividualOrBusinessPage(0), Individual).value
-        .set(TrusteeNamePage(0), FullName("Trustee", None, "1")).value
-        .set(TrusteeDateOfBirthYesNoPage(0), false).value
-        .set(TrusteeCountryOfNationalityYesNoPage(0), false).value
-        .set(TrusteeNinoYesNoPage(0), false).value
-        .set(TrusteeCountryOfResidenceYesNoPage(0), false).value
-        .set(TrusteeAddressYesNoPage(0), false).value
-        .set(TrusteePassportIDCardYesNoPage(0), false).value
+        .set(IsThisLeadTrusteePage(0), false)
+        .value
+        .set(TrusteeIndividualOrBusinessPage(0), Individual)
+        .value
+        .set(TrusteeNamePage(0), FullName("Trustee", None, "1"))
+        .value
+        .set(TrusteeDateOfBirthYesNoPage(0), false)
+        .value
+        .set(TrusteeCountryOfNationalityYesNoPage(0), false)
+        .value
+        .set(TrusteeNinoYesNoPage(0), false)
+        .value
+        .set(TrusteeCountryOfResidenceYesNoPage(0), false)
+        .value
+        .set(TrusteeAddressYesNoPage(0), false)
+        .value
+        .set(TrusteePassportIDCardYesNoPage(0), false)
+        .value
 
       val entities = injector.instanceOf[PrintPlaybackHelper].entities(playbackAnswers)
 

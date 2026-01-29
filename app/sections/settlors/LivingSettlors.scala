@@ -19,7 +19,7 @@ package sections.settlors
 import pages.QuestionPage
 import play.api.libs.json.{JsArray, JsPath}
 
-case object LivingSettlors extends QuestionPage[JsArray]{
+case object LivingSettlors extends QuestionPage[JsArray] {
 
   override def path: JsPath = Settlors.path \ toString
 

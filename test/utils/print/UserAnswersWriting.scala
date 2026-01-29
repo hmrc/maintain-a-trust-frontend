@@ -29,27 +29,28 @@ import queries.Settable
 import scala.language.implicitConversions
 
 trait UserAnswersWriting extends ModelGenerators with EitherValues {
-  class SettableWriterOps[T : Writes](s: Settable[T])(implicit reads: Reads[T]) {
-    def is(value: T): State[UserAnswers, Unit] = writeUA(s, value)
+
+  class SettableWriterOps[T: Writes](s: Settable[T])(implicit reads: Reads[T]) {
+    def is(value: T): State[UserAnswers, Unit]                                   = writeUA(s, value)
     def withArbitraryValue(implicit arb: Arbitrary[T]): State[UserAnswers, Unit] = writeArbUA(s)
-    def isRemoved: State[UserAnswers, Unit] = remove(s)
+    def isRemoved: State[UserAnswers, Unit]                                      = remove(s)
   }
 
-  implicit def settableStuff[T:Writes](s: Settable[T])(implicit reads: Reads[T]) : SettableWriterOps[T] = new SettableWriterOps[T](s)
+  implicit def settableStuff[T: Writes](s: Settable[T])(implicit reads: Reads[T]): SettableWriterOps[T] =
+    new SettableWriterOps[T](s)
 
-  def writeUA[T](s: Settable[T], value: T)(implicit writes: Writes[T], reads: Reads[T]): State[UserAnswers, Unit] = {
+  def writeUA[T](s: Settable[T], value: T)(implicit writes: Writes[T], reads: Reads[T]): State[UserAnswers, Unit] =
     State(_.set(s, value).value -> ())
-  }
 
-  def writeArbUA[T](s: Settable[T])(implicit writes: Writes[T], reads: Reads[T], arb: Arbitrary[T]): State[UserAnswers, Unit] = {
+  def writeArbUA[T](
+    s: Settable[T]
+  )(implicit writes: Writes[T], reads: Reads[T], arb: Arbitrary[T]): State[UserAnswers, Unit] =
     arb.arbitrary.sample
       .map(t => writeUA(s, t))
       .getOrElse(throw new Exception(s"Test value generation failure for ${s.path}"))
-  }
 
-  def remove(s: Settable[_]): State[UserAnswers, Unit] = {
+  def remove(s: Settable[_]): State[UserAnswers, Unit] =
     State(_.remove(s).value -> ())
-  }
 
   def individualUKTrustee(index: Int): State[UserAnswers, Unit] = for {
     _ <- IsThisLeadTrusteePage(index) is false
@@ -84,10 +85,11 @@ trait UserAnswersWriting extends ModelGenerators with EitherValues {
   } yield ()
 
   def ukCompanyTrustee(index: Int): State[UserAnswers, Unit] = for {
-  _ <- TrusteeIndividualOrBusinessPage(index) is IndividualOrBusiness.Business
-  _ <- IsThisLeadTrusteePage(index) is false
-  _ <- TrusteeOrgNamePage(index).withArbitraryValue
-  _ <- TrusteeUtrYesNoPage(index).withArbitraryValue
-  _ <- TrusteeUtrPage(index).withArbitraryValue
+    _ <- TrusteeIndividualOrBusinessPage(index) is IndividualOrBusiness.Business
+    _ <- IsThisLeadTrusteePage(index) is false
+    _ <- TrusteeOrgNamePage(index).withArbitraryValue
+    _ <- TrusteeUtrYesNoPage(index).withArbitraryValue
+    _ <- TrusteeUtrPage(index).withArbitraryValue
   } yield ()
+
 }

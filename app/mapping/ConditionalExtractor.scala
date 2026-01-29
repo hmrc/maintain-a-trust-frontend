@@ -21,27 +21,31 @@ import models.errors.TrustErrors
 
 trait ConditionalExtractor {
 
-  def extractIfTaxable(answers: UserAnswers)(block: Either[TrustErrors, UserAnswers]): Either[TrustErrors, UserAnswers] = {
+  def extractIfTaxable(
+    answers: UserAnswers
+  )(block: Either[TrustErrors, UserAnswers]): Either[TrustErrors, UserAnswers] =
     if (answers.isTrustTaxable) {
       block
     } else {
       Right(answers)
     }
-  }
 
-  def extractIfTaxableOrMigratingToTaxable(answers: UserAnswers)(block: Either[TrustErrors, UserAnswers]): Either[TrustErrors, UserAnswers] = {
+  def extractIfTaxableOrMigratingToTaxable(
+    answers: UserAnswers
+  )(block: Either[TrustErrors, UserAnswers]): Either[TrustErrors, UserAnswers] =
     if (answers.isTrustTaxableOrMigratingToTaxable) {
       block
     } else {
       Right(answers)
     }
-  }
 
-  def extractIf5mldTrustIn5mldMode(answers: UserAnswers)(block: Either[TrustErrors, UserAnswers]): Either[TrustErrors, UserAnswers] = {
+  def extractIf5mldTrustIn5mldMode(
+    answers: UserAnswers
+  )(block: Either[TrustErrors, UserAnswers]): Either[TrustErrors, UserAnswers] =
     if (answers.is5mldTrustIn5mldMode) {
       block
     } else {
       Right(answers)
     }
-  }
+
 }

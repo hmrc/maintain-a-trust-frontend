@@ -24,16 +24,16 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.EitherValues
 import pages.assets.other._
 
-class OtherAssetExtractorSpec extends AnyFreeSpec with Matchers
-  with EitherValues with Generators with SpecBaseHelpers {
+class OtherAssetExtractorSpec extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
-  private val num100 = 100
+  private val num100            = 100
+
   def generateOther(index: Int) = DisplayOtherAssetType(
     description = s"Other $index",
     value = Some(num100)
   )
 
-  val assetExtractor : OtherAssetExtractor =
+  val assetExtractor: OtherAssetExtractor =
     injector.instanceOf[OtherAssetExtractor]
 
   "Other Asset Extractor" - {
@@ -48,7 +48,7 @@ class OtherAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, assets)
 
-        extraction mustBe Symbol("right")
+        extraction            mustBe Symbol("right")
         extraction.value.data mustBe ua.data
 
       }
@@ -61,17 +61,19 @@ class OtherAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         "with minimum data must return user answers updated" in {
 
-          val businessAssets = List(DisplayOtherAssetType(
-            description = "Other 1",
-            value = Some(num100.toLong)
-          ))
+          val businessAssets = List(
+            DisplayOtherAssetType(
+              description = "Other 1",
+              value = Some(num100.toLong)
+            )
+          )
 
           val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, businessAssets)
 
           extraction.value.get(OtherAssetDescriptionPage(0)).get mustBe "Other 1"
-          extraction.value.get(OtherAssetValuePage(0)).get mustBe 100
+          extraction.value.get(OtherAssetValuePage(0)).get       mustBe 100
         }
 
         "with full data must return user answers updated" in {
@@ -84,13 +86,13 @@ class OtherAssetExtractorSpec extends AnyFreeSpec with Matchers
           extraction mustBe Symbol("right")
 
           extraction.value.get(OtherAssetDescriptionPage(0)).get mustBe "Other 0"
-          extraction.value.get(OtherAssetValuePage(0)).get mustBe 100
+          extraction.value.get(OtherAssetValuePage(0)).get       mustBe 100
 
           extraction.value.get(OtherAssetDescriptionPage(1)).get mustBe "Other 1"
-          extraction.value.get(OtherAssetValuePage(1)).get mustBe 100
+          extraction.value.get(OtherAssetValuePage(1)).get       mustBe 100
 
           extraction.value.get(OtherAssetDescriptionPage(2)).get mustBe "Other 2"
-          extraction.value.get(OtherAssetValuePage(2)).get mustBe 100
+          extraction.value.get(OtherAssetValuePage(2)).get       mustBe 100
         }
       }
 
