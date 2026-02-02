@@ -39,8 +39,8 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
   private lazy val beforeYouContinueToTaxableRoute: String =
     routes.BeforeYouContinueToTaxableController.onPageLoad().url
 
-  private val startDate: LocalDate                         = LocalDate.parse("2000-01-01")
-  private val mockTrustsConnector: TrustConnector          = mock[TrustConnector]
+  private val startDate: LocalDate                = LocalDate.parse("2000-01-01")
+  private val mockTrustsConnector: TrustConnector = mock[TrustConnector]
 
   "BeforeYouContinueToTaxableController" when {
 

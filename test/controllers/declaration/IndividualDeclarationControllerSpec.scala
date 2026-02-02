@@ -50,7 +50,7 @@ class IndividualDeclarationControllerSpec extends SpecBase {
   private val address: UKAddress                = UKAddress("line1", "line2", None, None, "postCode")
   private lazy val onSubmit: Call               = routes.IndividualDeclarationController.onSubmit()
 
-  private val whatIsNext: WhatIsNext   = MakeChanges
+  private val whatIsNext: WhatIsNext = MakeChanges
 
   private val baseAnswers: UserAnswers = emptyUserAnswersForUtr
     .set(WhatIsNextPage, whatIsNext)

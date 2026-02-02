@@ -29,9 +29,9 @@ import views.html.close.taxable.DateLastAssetSharedOutYesNoView
 
 class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  private val formProvider                                  = new YesNoFormProvider()
-  private val form: Form[Boolean]                           = formProvider.withPrefix("dateLastAssetSharedOutYesNo")
-  private val utr: String                                   = "1234567890"
+  private val formProvider        = new YesNoFormProvider()
+  private val form: Form[Boolean] = formProvider.withPrefix("dateLastAssetSharedOutYesNo")
+  private val utr: String         = "1234567890"
 
   private lazy val dateLastAssetSharedOutYesNoRoute: String =
     routes.DateLastAssetSharedOutYesNoController.onPageLoad().url

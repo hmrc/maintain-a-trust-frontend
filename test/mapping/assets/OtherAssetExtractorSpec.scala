@@ -26,7 +26,7 @@ import pages.assets.other._
 
 class OtherAssetExtractorSpec extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
-  private val num100            = 100
+  private val num100 = 100
 
   def generateOther(index: Int) = DisplayOtherAssetType(
     description = s"Other $index",

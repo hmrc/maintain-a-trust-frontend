@@ -118,34 +118,34 @@ class FrontendAppConfig @Inject() (
 
   lazy val playbackEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.playback.enabled")
 
-  lazy val maintainTrustDetailsEnabled: Boolean     =
+  lazy val maintainTrustDetailsEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.maintain-trust-details.enabled")
 
-  lazy val maintainTrustAssetsEnabled: Boolean      =
+  lazy val maintainTrustAssetsEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.maintain-trust-assets.enabled")
 
-  lazy val maintainTaxLiabilityEnabled: Boolean     =
+  lazy val maintainTaxLiabilityEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.maintain-tax-liability.enabled")
 
-  lazy val maintainTrusteesEnabled: Boolean         =
+  lazy val maintainTrusteesEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.maintain-trustees.enabled")
 
-  lazy val maintainBeneficiariesEnabled: Boolean    =
+  lazy val maintainBeneficiariesEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.maintain-beneficiaries.enabled")
 
-  lazy val maintainSettlorsEnabled: Boolean         =
+  lazy val maintainSettlorsEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.maintain-settlors.enabled")
 
-  lazy val maintainProtectorsEnabled: Boolean       =
+  lazy val maintainProtectorsEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.maintain-protectors.enabled")
 
   lazy val maintainOtherIndividualsEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.maintain-other-individuals.enabled")
 
-  lazy val maintainNonEeaCompaniesEnabled: Boolean  =
+  lazy val maintainNonEeaCompaniesEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.maintain-non-eea-companies.enabled")
 
-  lazy val closeATrustEnabled: Boolean   =
+  lazy val closeATrustEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.close-a-trust.enabled")
 
   lazy val migrateATrustEnabled: Boolean =

@@ -45,23 +45,23 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate]    = IndividualProtectorDateOfBirthPage(index)
 
-  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean]   =
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
     IndividualProtectorCountryOfNationalityYesNoPage(index)
 
   override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
     IndividualProtectorCountryOfNationalityInTheUkYesNoPage(index)
 
-  override def countryOfNationalityPage(index: Int): QuestionPage[String]         = IndividualProtectorCountryOfNationalityPage(
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] = IndividualProtectorCountryOfNationalityPage(
     index
   )
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   =
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     IndividualProtectorCountryOfResidenceYesNoPage(index)
 
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     IndividualProtectorCountryOfResidenceInTheUkYesNoPage(index)
 
-  override def countryOfResidencePage(index: Int): QuestionPage[String]         = IndividualProtectorCountryOfResidencePage(
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = IndividualProtectorCountryOfResidencePage(
     index
   )
 

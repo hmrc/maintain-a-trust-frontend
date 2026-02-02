@@ -65,7 +65,7 @@ class IndividualTrusteeExtractorSpec
       case _ => None
     }
 
-  private def populateIdentification(index: Int)          =
+  private def populateIdentification(index: Int) =
     Some(
       DisplayTrustIdentificationType(
         safeId = Some("8947584-94759745-84758745"),

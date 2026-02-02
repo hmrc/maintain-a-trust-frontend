@@ -44,23 +44,23 @@ class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate]    = OtherIndividualDateOfBirthPage(index)
 
-  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean]   =
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
     OtherIndividualCountryOfNationalityYesNoPage(index)
 
   override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
     OtherIndividualCountryOfNationalityInTheUkYesNoPage(index)
 
-  override def countryOfNationalityPage(index: Int): QuestionPage[String]         = OtherIndividualCountryOfNationalityPage(
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] = OtherIndividualCountryOfNationalityPage(
     index
   )
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   =
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     OtherIndividualCountryOfResidenceYesNoPage(index)
 
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     OtherIndividualCountryOfResidenceInTheUkYesNoPage(index)
 
-  override def countryOfResidencePage(index: Int): QuestionPage[String]         = OtherIndividualCountryOfResidencePage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = OtherIndividualCountryOfResidencePage(index)
 
   override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualMentalCapacityYesNoPage(
     index

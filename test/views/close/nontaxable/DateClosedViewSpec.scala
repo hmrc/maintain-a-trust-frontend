@@ -26,8 +26,8 @@ import java.time.LocalDate
 
 class DateClosedViewSpec extends QuestionViewBehaviours[LocalDate] {
 
-  private val messageKeyPrefix      = "dateClosed"
-  private val trustStartDate        = LocalDate.parse("2019-02-03")
+  private val messageKeyPrefix = "dateClosed"
+  private val trustStartDate   = LocalDate.parse("2019-02-03")
 
   private val form: Form[LocalDate] =
     new DateFormProvider().withPrefixAndTrustStartDate(messageKeyPrefix, trustStartDate)

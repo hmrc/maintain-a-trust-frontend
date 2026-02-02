@@ -30,8 +30,8 @@ import views.html.declaration.AgencyRegisteredAddressInternationalView
 
 class AgencyRegisteredAddressInternationalControllerSpec extends SpecBase {
 
-  private val formProvider                                   = new InternationalAddressFormProvider()
-  private val form                                           = formProvider()
+  private val formProvider = new InternationalAddressFormProvider()
+  private val form         = formProvider()
 
   private lazy val agencyRegisteredAddressInternationalRoute =
     routes.AgencyRegisteredAddressInternationalController.onPageLoad().url

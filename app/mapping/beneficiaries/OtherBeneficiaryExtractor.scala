@@ -29,13 +29,13 @@ class OtherBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String]       = OtherBeneficiaryShareOfIncomePage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   =
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     OtherBeneficiaryCountryOfResidenceYesNoPage(index)
 
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     OtherBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
 
-  override def countryOfResidencePage(index: Int): QuestionPage[String]         = OtherBeneficiaryCountryOfResidencePage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = OtherBeneficiaryCountryOfResidencePage(index)
 
   override def addressYesNoPage(index: Int): QuestionPage[Boolean]   = OtherBeneficiaryAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = OtherBeneficiaryAddressUKYesNoPage(index)

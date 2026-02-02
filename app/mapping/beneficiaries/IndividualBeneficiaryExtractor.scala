@@ -31,23 +31,23 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = IndividualBeneficiaryIncomeYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String]       = IndividualBeneficiaryIncomePage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   =
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     IndividualBeneficiaryCountryOfResidenceYesNoPage(index)
 
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     IndividualBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
 
-  override def countryOfResidencePage(index: Int): QuestionPage[String]         = IndividualBeneficiaryCountryOfResidencePage(
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = IndividualBeneficiaryCountryOfResidencePage(
     index
   )
 
-  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean]   =
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
     IndividualBeneficiaryCountryOfNationalityYesNoPage(index)
 
   override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
     IndividualBeneficiaryCountryOfNationalityInTheUkYesNoPage(index)
 
-  override def countryOfNationalityPage(index: Int): QuestionPage[String]         =
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] =
     IndividualBeneficiaryCountryOfNationalityPage(index)
 
   override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] =
@@ -71,7 +71,7 @@ class IndividualBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[Displa
     index
   )
 
-  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate]    = IndividualBeneficiaryDateOfBirthPage(index)
+  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = IndividualBeneficiaryDateOfBirthPage(index)
 
   override def updateUserAnswers(
     answers: Either[TrustErrors, UserAnswers],

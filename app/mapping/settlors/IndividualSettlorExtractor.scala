@@ -41,23 +41,23 @@ class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSe
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualDateOfBirthYesNoPage(index)
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate]    = SettlorIndividualDateOfBirthPage(index)
 
-  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean]   = SettlorCountryOfNationalityYesNoPage(
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfNationalityYesNoPage(
     index
   )
 
   override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
     SettlorCountryOfNationalityInTheUkYesNoPage(index)
 
-  override def countryOfNationalityPage(index: Int): QuestionPage[String]         = SettlorCountryOfNationalityPage(index)
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] = SettlorCountryOfNationalityPage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   = SettlorCountryOfResidenceYesNoPage(
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfResidenceYesNoPage(
     index
   )
 
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     SettlorCountryOfResidenceInTheUkYesNoPage(index)
 
-  override def countryOfResidencePage(index: Int): QuestionPage[String]         = SettlorCountryOfResidencePage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = SettlorCountryOfResidencePage(index)
 
   override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualMentalCapacityYesNoPage(
     index

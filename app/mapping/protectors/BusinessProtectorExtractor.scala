@@ -33,13 +33,13 @@ class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrust
   override def utrYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorUtrYesNoPage(index)
   override def utrPage(index: Int): QuestionPage[String]       = BusinessProtectorUtrPage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   =
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     BusinessProtectorCountryOfResidenceYesNoPage(index)
 
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     BusinessProtectorCountryOfResidenceInTheUkYesNoPage(index)
 
-  override def countryOfResidencePage(index: Int): QuestionPage[String]         = BusinessProtectorCountryOfResidencePage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = BusinessProtectorCountryOfResidencePage(index)
 
   override def metaDataPage(index: Int): QuestionPage[MetaData] = BusinessProtectorMetaData(index)
 

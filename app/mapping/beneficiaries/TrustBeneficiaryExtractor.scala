@@ -31,13 +31,13 @@ class TrustBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTrus
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryDiscretionYesNoPage(index)
   override def shareOfIncomePage(index: Int): QuestionPage[String]       = TrustBeneficiaryShareOfIncomePage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   =
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     TrustBeneficiaryCountryOfResidenceYesNoPage(index)
 
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(index)
 
-  override def countryOfResidencePage(index: Int): QuestionPage[String]         = TrustBeneficiaryCountryOfResidencePage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = TrustBeneficiaryCountryOfResidencePage(index)
 
   override def addressYesNoPage(index: Int): QuestionPage[Boolean]   = TrustBeneficiaryAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = TrustBeneficiaryAddressUKYesNoPage(index)

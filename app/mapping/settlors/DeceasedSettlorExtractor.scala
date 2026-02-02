@@ -39,21 +39,21 @@ class DeceasedSettlorExtractor extends PlaybackExtractor[DisplayTrustWillType] {
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = SettlorDateOfBirthYesNoPage
   override def dateOfBirthPage(index: Int): QuestionPage[LocalDate]    = SettlorDateOfBirthPage
 
-  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean]   =
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
     DeceasedSettlorCountryOfNationalityYesNoPage
 
   override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
     DeceasedSettlorCountryOfNationalityInTheUkYesNoPage
 
-  override def countryOfNationalityPage(index: Int): QuestionPage[String]         = DeceasedSettlorCountryOfNationalityPage
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] = DeceasedSettlorCountryOfNationalityPage
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   =
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     DeceasedSettlorCountryOfResidenceYesNoPage
 
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     DeceasedSettlorCountryOfResidenceInTheUkYesNoPage
 
-  override def countryOfResidencePage(index: Int): QuestionPage[String]         = DeceasedSettlorCountryOfResidencePage
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = DeceasedSettlorCountryOfResidencePage
 
   override def metaDataPage(index: Int): QuestionPage[MetaData] = DeceasedSettlorMetaData
 

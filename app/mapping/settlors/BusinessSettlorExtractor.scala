@@ -30,14 +30,14 @@ class BusinessSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSett
   override def utrYesNoPage(index: Int): QuestionPage[Boolean] = SettlorUtrYesNoPage(index)
   override def utrPage(index: Int): QuestionPage[String]       = SettlorUtrPage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean]   = SettlorCountryOfResidenceYesNoPage(
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfResidenceYesNoPage(
     index
   )
 
   override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
     SettlorCountryOfResidenceInTheUkYesNoPage(index)
 
-  override def countryOfResidencePage(index: Int): QuestionPage[String]         = SettlorCountryOfResidencePage(index)
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = SettlorCountryOfResidencePage(index)
 
   override def updateUserAnswers(
     answers: Either[TrustErrors, UserAnswers],
