@@ -24,20 +24,20 @@ class TelephoneNumberSpec extends SpecBase {
 
     "not have less than six digits" in {
 
-      TelephoneNumber.isValid(" ") mustBe false
-      TelephoneNumber.isValid("07543") mustBe false
-      TelephoneNumber.isValid("+07543") mustBe false
+      TelephoneNumber.isValid(" ")         mustBe false
+      TelephoneNumber.isValid("07543")     mustBe false
+      TelephoneNumber.isValid("+07543")    mustBe false
       TelephoneNumber.isValid("+(0)07543") mustBe false
-      TelephoneNumber.isValid("07 543") mustBe false
+      TelephoneNumber.isValid("07 543")    mustBe false
     }
 
     "not be more than 19 characters once first instance of (0) has been removed" in {
 
-      TelephoneNumber.isValid("07700 900 982 12345") mustBe true
-      TelephoneNumber.isValid("07700 900 982 123456") mustBe false
-      TelephoneNumber.isValid("+44 0808 157 019234") mustBe true
-      TelephoneNumber.isValid("+44 0808 157 0192345") mustBe false
-      TelephoneNumber.isValid("+44(0) 0808 157 019234") mustBe true
+      TelephoneNumber.isValid("07700 900 982 12345")     mustBe true
+      TelephoneNumber.isValid("07700 900 982 123456")    mustBe false
+      TelephoneNumber.isValid("+44 0808 157 019234")     mustBe true
+      TelephoneNumber.isValid("+44 0808 157 0192345")    mustBe false
+      TelephoneNumber.isValid("+44(0) 0808 157 019234")  mustBe true
       TelephoneNumber.isValid("+44(0) 0808 157 0192345") mustBe false
     }
 
@@ -47,10 +47,11 @@ class TelephoneNumberSpec extends SpecBase {
 
     "be a valid telephone number" in {
 
-      TelephoneNumber.isValid("01632 960 001") mustBe true
-      TelephoneNumber.isValid("07700 900 982") mustBe true
-      TelephoneNumber.isValid("+44 0808 157 0192") mustBe true
+      TelephoneNumber.isValid("01632 960 001")      mustBe true
+      TelephoneNumber.isValid("07700 900 982")      mustBe true
+      TelephoneNumber.isValid("+44 0808 157 0192")  mustBe true
       TelephoneNumber.isValid("+44(0)151 666 1337") mustBe true
     }
   }
+
 }

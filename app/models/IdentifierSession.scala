@@ -20,9 +20,7 @@ import play.api.libs.json._
 
 import java.time.LocalDateTime
 
-final case class IdentifierSession(internalId: String,
-                                   identifier: String,
-                                   updatedAt: LocalDateTime = LocalDateTime.now)
+final case class IdentifierSession(internalId: String, identifier: String, updatedAt: LocalDateTime = LocalDateTime.now)
 
 object IdentifierSession {
 
@@ -34,7 +32,7 @@ object IdentifierSession {
       (__ \ "internalId").read[String] and
         (__ \ "identifier").read[String] and
         (__ \ "updatedAt").read(MongoDateTimeFormats.localDateTimeRead)
-      ) (IdentifierSession.apply _)
+    )(IdentifierSession.apply _)
   }
 
   implicit lazy val writes: OWrites[IdentifierSession] = {
@@ -45,7 +43,7 @@ object IdentifierSession {
       (__ \ "internalId").write[String] and
         (__ \ "identifier").write[String] and
         (__ \ "updatedAt").write(MongoDateTimeFormats.localDateTimeWrite)
-      ) (unlift(IdentifierSession.unapply))
+    )(unlift(IdentifierSession.unapply))
   }
 
 }

@@ -22,13 +22,15 @@ import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class AllSettlorsPrinter @Inject()(deceasedSettlorPrinter: DeceasedSettlorPrinter,
-                                   livingSettlorsPrinter: LivingSettlorsPrinter) {
+class AllSettlorsPrinter @Inject() (
+  deceasedSettlorPrinter: DeceasedSettlorPrinter,
+  livingSettlorsPrinter: LivingSettlorsPrinter
+) {
 
   def entities(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
     val deceasedSettlor: Seq[AnswerSection] = deceasedSettlorPrinter.entities(userAnswers)
-    val livingSettlors: Seq[AnswerSection] = livingSettlorsPrinter.entities(userAnswers)
+    val livingSettlors: Seq[AnswerSection]  = livingSettlorsPrinter.entities(userAnswers)
 
     deceasedSettlor ++ livingSettlors
   }

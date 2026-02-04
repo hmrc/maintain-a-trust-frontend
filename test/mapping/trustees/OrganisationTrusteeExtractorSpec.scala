@@ -27,8 +27,8 @@ import org.scalatest.EitherValues
 import pages.trustees._
 import utils.Constants.{DE, GB}
 
-class OrganisationTrusteeExtractorSpec extends AnyFreeSpec with Matchers
-  with EitherValues with Generators with SpecBaseHelpers {
+class OrganisationTrusteeExtractorSpec
+    extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   def generateTrusteeCompany(index: Int): DisplayTrustTrusteeOrgType = DisplayTrustTrusteeOrgType(
     lineNo = Some(s"$index"),
@@ -37,11 +37,11 @@ class OrganisationTrusteeExtractorSpec extends AnyFreeSpec with Matchers
     countryOfResidence = populateCountry(index),
     phoneNumber = index match {
       case 0 | 1 => Some("01911112222")
-      case _ => None
+      case _     => None
     },
     email = index match {
       case 0 | 1 => Some("email@email.com")
-      case _ => None
+      case _     => None
     },
     identification = Some(
       DisplayTrustIdentificationOrgType(
@@ -67,7 +67,7 @@ class OrganisationTrusteeExtractorSpec extends AnyFreeSpec with Matchers
       case _ => None
     }
 
-  val trusteesExtractor : OrganisationTrusteeExtractor =
+  val trusteesExtractor: OrganisationTrusteeExtractor =
     injector.instanceOf[OrganisationTrusteeExtractor]
 
   "Organisation Trustee Extractor" - {
@@ -93,74 +93,78 @@ class OrganisationTrusteeExtractorSpec extends AnyFreeSpec with Matchers
       "for a 4mld taxable trust" - {
 
         "should not populate Country Of Residence pages" in {
-          val trustees = List(DisplayTrustTrusteeOrgType(
-            lineNo = Some("1"),
-            bpMatchStatus = Some("01"),
-            name = s"Trustee Company 1",
-            countryOfResidence = Some("FR"),
-            phoneNumber = None,
-            email = None,
-            identification = None,
-            entityStart = "2019-11-26"
-          ))
+          val trustees = List(
+            DisplayTrustTrusteeOrgType(
+              lineNo = Some("1"),
+              bpMatchStatus = Some("01"),
+              name = s"Trustee Company 1",
+              countryOfResidence = Some("FR"),
+              phoneNumber = None,
+              email = None,
+              identification = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUtr
 
           val extraction = trusteesExtractor.extract(ua, trustees)
 
-          extraction.value.get(IsThisLeadTrusteePage(0)).get mustBe false
+          extraction.value.get(IsThisLeadTrusteePage(0)).get           mustBe false
           extraction.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
-          extraction.value.get(TrusteeOrgNamePage(0)).get mustBe "Trustee Company 1"
+          extraction.value.get(TrusteeOrgNamePage(0)).get              mustBe "Trustee Company 1"
           extraction.value.get(TrusteeCountryOfResidenceYesNoPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeCountryOfResidencePage(0)) mustNot be(defined)
-          extraction.value.get(TrusteeUtrYesNoPage(0)).get mustBe false
+          extraction.value.get(TrusteeUtrYesNoPage(0)).get             mustBe false
           extraction.value.get(TrusteeUtrPage(0)) mustNot be(defined)
-          extraction.value.get(TrusteeAddressYesNoPage(0)).get mustBe false
+          extraction.value.get(TrusteeAddressYesNoPage(0)).get         mustBe false
           extraction.value.get(TrusteeAddressInTheUKPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeUkAddressPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeTelephoneNumberPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeEmailPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeSafeIdPage(0)) mustNot be(defined)
-          extraction.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(TrusteeMetaData(0)).get                 mustBe MetaData("1", Some("01"), "2019-11-26")
         }
       }
 
       "for a 5mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val trustees = List(DisplayTrustTrusteeOrgType(
-            lineNo = Some("1"),
-            bpMatchStatus = Some("01"),
-            name = s"Trustee Company 1",
-            countryOfResidence = None,
-            phoneNumber = None,
-            email = None,
-            identification = None,
-            entityStart = "2019-11-26"
-          ))
+          val trustees = List(
+            DisplayTrustTrusteeOrgType(
+              lineNo = Some("1"),
+              bpMatchStatus = Some("01"),
+              name = s"Trustee Company 1",
+              countryOfResidence = None,
+              phoneNumber = None,
+              email = None,
+              identification = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val extraction = trusteesExtractor.extract(ua, trustees)
 
-          extraction.value.get(IsThisLeadTrusteePage(0)).get mustBe false
-          extraction.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
-          extraction.value.get(TrusteeOrgNamePage(0)).get mustBe "Trustee Company 1"
+          extraction.value.get(IsThisLeadTrusteePage(0)).get              mustBe false
+          extraction.value.get(TrusteeIndividualOrBusinessPage(0)).get    mustBe IndividualOrBusiness.Business
+          extraction.value.get(TrusteeOrgNamePage(0)).get                 mustBe "Trustee Company 1"
           extraction.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeCountryOfResidencePage(0)) mustNot be(defined)
-          extraction.value.get(TrusteeUtrYesNoPage(0)).get mustBe false
+          extraction.value.get(TrusteeUtrYesNoPage(0)).get                mustBe false
           extraction.value.get(TrusteeUtrPage(0)) mustNot be(defined)
-          extraction.value.get(TrusteeAddressYesNoPage(0)).get mustBe false
+          extraction.value.get(TrusteeAddressYesNoPage(0)).get            mustBe false
           extraction.value.get(TrusteeAddressInTheUKPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeUkAddressPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeInternationalAddressPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeTelephoneNumberPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeEmailPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeSafeIdPage(0)) mustNot be(defined)
-          extraction.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(TrusteeMetaData(0)).get                    mustBe MetaData("1", Some("01"), "2019-11-26")
         }
 
         "with full data must return user answers updated" in {
@@ -172,71 +176,73 @@ class OrganisationTrusteeExtractorSpec extends AnyFreeSpec with Matchers
 
           extraction mustBe Symbol("right")
 
-          extraction.value.get(TrusteeOrgNamePage(0)).get mustBe "Trustee Company 0"
-          extraction.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.value.get(TrusteeOrgNamePage(0)).get                        mustBe "Trustee Company 0"
+          extraction.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get        mustBe true
           extraction.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-          extraction.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
-          extraction.value.get(TrusteeMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
-          extraction.value.get(TrusteeTelephoneNumberPage(0)).get mustBe "01911112222"
-          extraction.value.get(TrusteeEmailPage(0)).get mustBe "email@email.com"
-          extraction.value.get(TrusteeUtrYesNoPage(0)).get mustBe false
+          extraction.value.get(TrusteeCountryOfResidencePage(0)).get             mustBe GB
+          extraction.value.get(TrusteeMetaData(0)).get                           mustBe MetaData("0", Some("01"), "2019-11-26")
+          extraction.value.get(TrusteeTelephoneNumberPage(0)).get                mustBe "01911112222"
+          extraction.value.get(TrusteeEmailPage(0)).get                          mustBe "email@email.com"
+          extraction.value.get(TrusteeUtrYesNoPage(0)).get                       mustBe false
           extraction.value.get(TrusteeUtrPage(0)) mustNot be(defined)
-          extraction.value.get(TrusteeSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
-          extraction.value.get(TrusteeAddressYesNoPage(0)).get mustBe true
-          extraction.value.get(TrusteeAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "DE")
-          extraction.value.get(TrusteeAddressInTheUKPage(0)).get mustBe false
+          extraction.value.get(TrusteeSafeIdPage(0)).get                         mustBe "8947584-94759745-84758745"
+          extraction.value.get(TrusteeAddressYesNoPage(0)).get                   mustBe true
+          extraction.value.get(TrusteeAddressPage(0)).get                        mustBe InternationalAddress("line 0", "line2", None, "DE")
+          extraction.value.get(TrusteeAddressInTheUKPage(0)).get                 mustBe false
 
-          extraction.value.get(TrusteeOrgNamePage(1)).get mustBe "Trustee Company 1"
-          extraction.value.get(TrusteeCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.value.get(TrusteeOrgNamePage(1)).get                        mustBe "Trustee Company 1"
+          extraction.value.get(TrusteeCountryOfResidenceYesNoPage(1)).get        mustBe true
           extraction.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
-          extraction.value.get(TrusteeCountryOfResidencePage(1)).get mustBe "DE"
-          extraction.value.get(TrusteeMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-          extraction.value.get(TrusteeTelephoneNumberPage(1)).get mustBe "01911112222"
-          extraction.value.get(TrusteeEmailPage(1)).get mustBe "email@email.com"
-          extraction.value.get(TrusteeUtrYesNoPage(1)).get mustBe true
-          extraction.value.get(TrusteeUtrPage(1)).get mustBe "1234567890"
-          extraction.value.get(TrusteeSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(TrusteeCountryOfResidencePage(1)).get             mustBe "DE"
+          extraction.value.get(TrusteeMetaData(1)).get                           mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(TrusteeTelephoneNumberPage(1)).get                mustBe "01911112222"
+          extraction.value.get(TrusteeEmailPage(1)).get                          mustBe "email@email.com"
+          extraction.value.get(TrusteeUtrYesNoPage(1)).get                       mustBe true
+          extraction.value.get(TrusteeUtrPage(1)).get                            mustBe "1234567890"
+          extraction.value.get(TrusteeSafeIdPage(1)).get                         mustBe "8947584-94759745-84758745"
           extraction.value.get(TrusteeAddressYesNoPage(1)) mustNot be(defined)
           extraction.value.get(TrusteeAddressPage(1)) mustNot be(defined)
           extraction.value.get(TrusteeAddressInTheUKPage(1)) mustNot be(defined)
 
-          extraction.value.get(TrusteeOrgNamePage(2)).get mustBe "Trustee Company 2"
+          extraction.value.get(TrusteeOrgNamePage(2)).get                 mustBe "Trustee Company 2"
           extraction.value.get(TrusteeCountryOfResidenceYesNoPage(2)).get mustBe false
           extraction.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
           extraction.value.get(TrusteeCountryOfResidencePage(2)) mustNot be(defined)
-          extraction.value.get(TrusteeMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
+          extraction.value.get(TrusteeMetaData(2)).get                    mustBe MetaData("2", Some("01"), "2019-11-26")
           extraction.value.get(TrusteeTelephoneNumberPage(2)) mustNot be(defined)
           extraction.value.get(TrusteeEmailPage(2)) mustNot be(defined)
-          extraction.value.get(TrusteeUtrYesNoPage(2)).get mustBe false
+          extraction.value.get(TrusteeUtrYesNoPage(2)).get                mustBe false
           extraction.value.get(TrusteeUtrPage(2)) mustNot be(defined)
-          extraction.value.get(TrusteeSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
-          extraction.value.get(TrusteeAddressYesNoPage(2)).get mustBe true
-          extraction.value.get(TrusteeAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
-          extraction.value.get(TrusteeAddressInTheUKPage(2)).get mustBe true
+          extraction.value.get(TrusteeSafeIdPage(2)).get                  mustBe "8947584-94759745-84758745"
+          extraction.value.get(TrusteeAddressYesNoPage(2)).get            mustBe true
+          extraction.value.get(TrusteeAddressPage(2)).get                 mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+          extraction.value.get(TrusteeAddressInTheUKPage(2)).get          mustBe true
         }
       }
 
       "for a non taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val trustees = List(DisplayTrustTrusteeOrgType(
-            lineNo = Some("1"),
-            bpMatchStatus = Some("01"),
-            name = s"Trustee Company 1",
-            countryOfResidence = None,
-            phoneNumber = None,
-            email = None,
-            identification = None,
-            entityStart = "2019-11-26"
-          ))
+          val trustees = List(
+            DisplayTrustTrusteeOrgType(
+              lineNo = Some("1"),
+              bpMatchStatus = Some("01"),
+              name = s"Trustee Company 1",
+              countryOfResidence = None,
+              phoneNumber = None,
+              email = None,
+              identification = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUrn
 
           val extraction = trusteesExtractor.extract(ua, trustees)
 
-          extraction.value.get(IsThisLeadTrusteePage(0)).get mustBe false
-          extraction.value.get(TrusteeIndividualOrBusinessPage(0)).get mustBe IndividualOrBusiness.Business
-          extraction.value.get(TrusteeOrgNamePage(0)).get mustBe "Trustee Company 1"
+          extraction.value.get(IsThisLeadTrusteePage(0)).get              mustBe false
+          extraction.value.get(TrusteeIndividualOrBusinessPage(0)).get    mustBe IndividualOrBusiness.Business
+          extraction.value.get(TrusteeOrgNamePage(0)).get                 mustBe "Trustee Company 1"
           extraction.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeCountryOfResidencePage(0)) mustNot be(defined)
@@ -249,7 +255,7 @@ class OrganisationTrusteeExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(TrusteeTelephoneNumberPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeEmailPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeSafeIdPage(0)) mustNot be(defined)
-          extraction.value.get(TrusteeMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(TrusteeMetaData(0)).get                    mustBe MetaData("1", Some("01"), "2019-11-26")
         }
 
         "with full data must return user answers updated" in {
@@ -261,44 +267,44 @@ class OrganisationTrusteeExtractorSpec extends AnyFreeSpec with Matchers
 
           extraction mustBe Symbol("right")
 
-          extraction.value.get(TrusteeOrgNamePage(0)).get mustBe "Trustee Company 0"
-          extraction.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get mustBe true
+          extraction.value.get(TrusteeOrgNamePage(0)).get                        mustBe "Trustee Company 0"
+          extraction.value.get(TrusteeCountryOfResidenceYesNoPage(0)).get        mustBe true
           extraction.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(0)).get mustBe true
-          extraction.value.get(TrusteeCountryOfResidencePage(0)).get mustBe GB
-          extraction.value.get(TrusteeMetaData(0)).get mustBe MetaData("0", Some("01"), "2019-11-26")
+          extraction.value.get(TrusteeCountryOfResidencePage(0)).get             mustBe GB
+          extraction.value.get(TrusteeMetaData(0)).get                           mustBe MetaData("0", Some("01"), "2019-11-26")
           extraction.value.get(TrusteeTelephoneNumberPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeEmailPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeUtrYesNoPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeUtrPage(0)) mustNot be(defined)
-          extraction.value.get(TrusteeSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(TrusteeSafeIdPage(0)).get                         mustBe "8947584-94759745-84758745"
           extraction.value.get(TrusteeAddressYesNoPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeAddressPage(0)) mustNot be(defined)
           extraction.value.get(TrusteeAddressInTheUKPage(0)) mustNot be(defined)
 
-          extraction.value.get(TrusteeOrgNamePage(1)).get mustBe "Trustee Company 1"
-          extraction.value.get(TrusteeCountryOfResidenceYesNoPage(1)).get mustBe true
+          extraction.value.get(TrusteeOrgNamePage(1)).get                        mustBe "Trustee Company 1"
+          extraction.value.get(TrusteeCountryOfResidenceYesNoPage(1)).get        mustBe true
           extraction.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(1)).get mustBe false
-          extraction.value.get(TrusteeCountryOfResidencePage(1)).get mustBe "DE"
-          extraction.value.get(TrusteeMetaData(1)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(TrusteeCountryOfResidencePage(1)).get             mustBe "DE"
+          extraction.value.get(TrusteeMetaData(1)).get                           mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.value.get(TrusteeTelephoneNumberPage(1)) mustNot be(defined)
           extraction.value.get(TrusteeEmailPage(1)) mustNot be(defined)
           extraction.value.get(TrusteeUtrYesNoPage(1)) mustNot be(defined)
           extraction.value.get(TrusteeUtrPage(1)) mustNot be(defined)
-          extraction.value.get(TrusteeSafeIdPage(1)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(TrusteeSafeIdPage(1)).get                         mustBe "8947584-94759745-84758745"
           extraction.value.get(TrusteeAddressYesNoPage(1)) mustNot be(defined)
           extraction.value.get(TrusteeAddressPage(1)) mustNot be(defined)
           extraction.value.get(TrusteeAddressInTheUKPage(1)) mustNot be(defined)
 
-          extraction.value.get(TrusteeOrgNamePage(2)).get mustBe "Trustee Company 2"
+          extraction.value.get(TrusteeOrgNamePage(2)).get                 mustBe "Trustee Company 2"
           extraction.value.get(TrusteeCountryOfResidenceYesNoPage(2)).get mustBe false
           extraction.value.get(TrusteeCountryOfResidenceInTheUkYesNoPage(2)) mustNot be(defined)
           extraction.value.get(TrusteeCountryOfResidencePage(2)) mustNot be(defined)
-          extraction.value.get(TrusteeMetaData(2)).get mustBe MetaData("2", Some("01"), "2019-11-26")
+          extraction.value.get(TrusteeMetaData(2)).get                    mustBe MetaData("2", Some("01"), "2019-11-26")
           extraction.value.get(TrusteeTelephoneNumberPage(2)) mustNot be(defined)
           extraction.value.get(TrusteeEmailPage(2)) mustNot be(defined)
           extraction.value.get(TrusteeUtrYesNoPage(2)) mustNot be(defined)
           extraction.value.get(TrusteeUtrPage(2)) mustNot be(defined)
-          extraction.value.get(TrusteeSafeIdPage(2)).get mustBe "8947584-94759745-84758745"
+          extraction.value.get(TrusteeSafeIdPage(2)).get                  mustBe "8947584-94759745-84758745"
           extraction.value.get(TrusteeAddressYesNoPage(2)) mustNot be(defined)
           extraction.value.get(TrusteeAddressPage(2)) mustNot be(defined)
           extraction.value.get(TrusteeAddressInTheUKPage(2)) mustNot be(defined)
@@ -306,4 +312,5 @@ class OrganisationTrusteeExtractorSpec extends AnyFreeSpec with Matchers
       }
     }
   }
+
 }

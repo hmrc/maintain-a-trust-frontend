@@ -25,7 +25,9 @@ object MigrationTaskStatus extends Enumerable.Implicits {
   case object Updated extends WithName("updated") with MigrationTaskStatus
 
   val values: List[MigrationTaskStatus] = List(
-    NothingToUpdate, NeedsUpdating, Updated
+    NothingToUpdate,
+    NeedsUpdating,
+    Updated
   )
 
   implicit val enumerable: Enumerable[MigrationTaskStatus] = Enumerable(values.map(v => v.toString -> v): _*)

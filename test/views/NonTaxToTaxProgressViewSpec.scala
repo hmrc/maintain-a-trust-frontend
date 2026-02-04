@@ -70,7 +70,9 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "p2", "p3"
+          expectedGuidanceKeys = "p1",
+          "p2",
+          "p3"
         )
 
         behave like pageWithBackLink(applyView)
@@ -85,9 +87,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
 
         val doc = asDocument(applyView)
 
-        "render agent overview link" in {
+        "render agent overview link" in
           assertContainsText(doc, messages("transitionsProgress.return.link"))
-        }
       }
 
       "non-agent user" must {
@@ -112,7 +113,9 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "p2", "p3"
+          expectedGuidanceKeys = "p1",
+          "p2",
+          "p3"
         )
 
         behave like pageWithBackLink(applyView)
@@ -151,8 +154,15 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "p4", "p4.bullet1", "p4.bullet2", "p5",
-          "printsave.link", "p5b", "p6", "p6.link"
+          expectedGuidanceKeys = "p1",
+          "p4",
+          "p4.bullet1",
+          "p4.bullet2",
+          "p5",
+          "printsave.link",
+          "p5b",
+          "p6",
+          "p6.link"
         )
 
         behave like pageWithBackLink(applyView)
@@ -169,9 +179,8 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
 
         val doc = asDocument(applyView)
 
-        "render agent overview link" in {
+        "render agent overview link" in
           assertContainsText(doc, messages("transitionsProgress.return.link"))
-        }
       }
 
       "non-agent user" must {
@@ -196,8 +205,15 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
           messageKeyPrefix = "transitionProgress",
           captionKey = "urn",
           captionParam = urn,
-          expectedGuidanceKeys = "p1", "p4", "p4.bullet1", "p4.bullet2", "p5",
-          "printsave.link", "p5b", "p6", "p6.link"
+          expectedGuidanceKeys = "p1",
+          "p4",
+          "p4.bullet1",
+          "p4.bullet2",
+          "p5",
+          "printsave.link",
+          "p5b",
+          "p6",
+          "p6.link"
         )
 
         behave like pageWithBackLink(applyView)
@@ -214,4 +230,5 @@ class NonTaxToTaxProgressViewSpec extends ViewBehaviours with ProgressViewBehavi
       }
     }
   }
+
 }

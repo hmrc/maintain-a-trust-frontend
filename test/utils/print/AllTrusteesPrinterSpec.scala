@@ -58,20 +58,21 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
         result.size mustEqual 2
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
-        result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
-          "What is the lead trustee’s name?" -> Html("Wild Bill Hickock"),
-          "What is Wild Hickock’s date of birth?" -> Html("23 January 1975"),
-          "Do you know Wild Hickock’s country of nationality?" -> Html("Yes"),
-          "Does Wild Hickock have UK nationality?" -> Html("Yes"),
+        result must containSectionWithHeadingAndValues(
+          messages("answerPage.section.leadTrustee.subheading"),
+          "What is the lead trustee’s name?"                    -> Html("Wild Bill Hickock"),
+          "What is Wild Hickock’s date of birth?"               -> Html("23 January 1975"),
+          "Do you know Wild Hickock’s country of nationality?"  -> Html("Yes"),
+          "Does Wild Hickock have UK nationality?"              -> Html("Yes"),
           "Does Wild Hickock have a National Insurance number?" -> Html("Yes"),
-          "What is Wild Hickock’s National Insurance number?" -> Html("AA 11 11 11 A"),
-          "Do you know Wild Hickock’s country of residence?" -> Html("Yes"),
-          "Does Wild Hickock have UK residency?" -> Html("Yes"),
-          "Does Wild Hickock live in the UK?" -> Html("Yes"),
-          "What is Wild Hickock’s address?" -> Html("Address 1<br />Address 2<br />AA11 1AA"),
-          "Do you know Wild Hickock’s email address?" -> Html("Yes"),
-          "What is Wild Hickock’s email address?" -> Html("aa@aabb.com"),
-          "What is Wild Hickock’s telephone number?" -> Html("67676767676")
+          "What is Wild Hickock’s National Insurance number?"   -> Html("AA 11 11 11 A"),
+          "Do you know Wild Hickock’s country of residence?"    -> Html("Yes"),
+          "Does Wild Hickock have UK residency?"                -> Html("Yes"),
+          "Does Wild Hickock live in the UK?"                   -> Html("Yes"),
+          "What is Wild Hickock’s address?"                     -> Html("Address 1<br />Address 2<br />AA11 1AA"),
+          "Do you know Wild Hickock’s email address?"           -> Html("Yes"),
+          "What is Wild Hickock’s email address?"               -> Html("aa@aabb.com"),
+          "What is Wild Hickock’s telephone number?"            -> Html("67676767676")
         )
       }
     }
@@ -97,7 +98,12 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
           _ <- TrusteeEmailYesNoPage(0) is true
           _ <- TrusteeEmailPage(0) is "aa@aabb.com"
           _ <- IsThisLeadTrusteePage(0) is true
-          _ <- TrusteePassportIDCardPage(0) is PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, 2, 2), DetailsType.Combined)
+          _ <- TrusteePassportIDCardPage(0) is PassportType(
+                 "DE",
+                 "KSJDFKSDHF6456545147852369QWER",
+                 LocalDate.of(year2020, 2, 2),
+                 DetailsType.Combined
+               )
           _ <- TrusteePassportIDCardYesNoPage(0) is true
         } yield ()).run(emptyUserAnswersForUtr).value
 
@@ -106,23 +112,26 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
         result.size mustEqual 2
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
-        result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
-          "What is the lead trustee’s name?" -> Html("William Bonny"),
-          "What is William Bonny’s date of birth?" -> Html("23 January 1975"),
-          "Do you know William Bonny’s country of nationality?" -> Html("Yes"),
-          "Does William Bonny have UK nationality?" -> Html("No"),
-          "What is William Bonny’s country of nationality?" -> Html("France"),
-          "Does William Bonny have a National Insurance number?" -> Html("No"),
-          "Does William Bonny live in the UK?" -> Html("No"),
-          "What is William Bonny’s address?" -> Html("Address 1<br />Address 2<br />Germany"),
+        result must containSectionWithHeadingAndValues(
+          messages("answerPage.section.leadTrustee.subheading"),
+          "What is the lead trustee’s name?"                         -> Html("William Bonny"),
+          "What is William Bonny’s date of birth?"                   -> Html("23 January 1975"),
+          "Do you know William Bonny’s country of nationality?"      -> Html("Yes"),
+          "Does William Bonny have UK nationality?"                  -> Html("No"),
+          "What is William Bonny’s country of nationality?"          -> Html("France"),
+          "Does William Bonny have a National Insurance number?"     -> Html("No"),
+          "Does William Bonny live in the UK?"                       -> Html("No"),
+          "What is William Bonny’s address?"                         -> Html("Address 1<br />Address 2<br />Germany"),
           "Do you know William Bonny’s passport or ID card details?" -> Html("Yes"),
-          "What are William Bonny’s passport or ID card details?" -> Html("Germany<br />Number ending QWER<br />2 February 2020"),
-          "Do you know William Bonny’s country of residence?" -> Html("Yes"),
-          "Does William Bonny have UK residency?" -> Html("No"),
-          "What is William Bonny’s country of residence?" -> Html("France"),
-          "Do you know William Bonny’s email address?" -> Html("Yes"),
-          "What is William Bonny’s email address?" -> Html("aa@aabb.com"),
-          "What is William Bonny’s telephone number?" -> Html("67676767676")
+          "What are William Bonny’s passport or ID card details?"    -> Html(
+            "Germany<br />Number ending QWER<br />2 February 2020"
+          ),
+          "Do you know William Bonny’s country of residence?"        -> Html("Yes"),
+          "Does William Bonny have UK residency?"                    -> Html("No"),
+          "What is William Bonny’s country of residence?"            -> Html("France"),
+          "Do you know William Bonny’s email address?"               -> Html("Yes"),
+          "What is William Bonny’s email address?"                   -> Html("aa@aabb.com"),
+          "What is William Bonny’s telephone number?"                -> Html("67676767676")
         )
       }
     }
@@ -154,19 +163,20 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
         result.size mustEqual 2
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
-        result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
-          "What is the lead trustee’s name?" -> Html("Wild Bill Hickock"),
-          "What is Wild Hickock’s date of birth?" -> Html("23 January 1975"),
-          "Do you know Wild Hickock’s country of nationality?" -> Html("Yes"),
-          "Does Wild Hickock have UK nationality?" -> Html("Yes"),
+        result must containSectionWithHeadingAndValues(
+          messages("answerPage.section.leadTrustee.subheading"),
+          "What is the lead trustee’s name?"                    -> Html("Wild Bill Hickock"),
+          "What is Wild Hickock’s date of birth?"               -> Html("23 January 1975"),
+          "Do you know Wild Hickock’s country of nationality?"  -> Html("Yes"),
+          "Does Wild Hickock have UK nationality?"              -> Html("Yes"),
           "Does Wild Hickock have a National Insurance number?" -> Html("Yes"),
-          "What is Wild Hickock’s National Insurance number?" -> Html("AA 11 11 11 A"),
-          "Do you know Wild Hickock’s country of residence?" -> Html("Yes"),
-          "Does Wild Hickock have UK residency?" -> Html("Yes"),
-          "What is Wild Hickock’s address?" -> Html("Address 1<br />Address 2<br />AA11 1AA"),
-          "Do you know Wild Hickock’s email address?" -> Html("Yes"),
-          "What is Wild Hickock’s email address?" -> Html("aa@aabb.com"),
-          "What is Wild Hickock’s telephone number?" -> Html("67676767676")
+          "What is Wild Hickock’s National Insurance number?"   -> Html("AA 11 11 11 A"),
+          "Do you know Wild Hickock’s country of residence?"    -> Html("Yes"),
+          "Does Wild Hickock have UK residency?"                -> Html("Yes"),
+          "What is Wild Hickock’s address?"                     -> Html("Address 1<br />Address 2<br />AA11 1AA"),
+          "Do you know Wild Hickock’s email address?"           -> Html("Yes"),
+          "What is Wild Hickock’s email address?"               -> Html("aa@aabb.com"),
+          "What is Wild Hickock’s telephone number?"            -> Html("67676767676")
         )
       }
     }
@@ -195,17 +205,18 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
         result.size mustEqual 2
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
-        result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
-          "What is the business’s name?" -> Html("Lead Trustee Company"),
-          "Is this trustee a UK registered company?" -> Html("Yes"),
+        result must containSectionWithHeadingAndValues(
+          messages("answerPage.section.leadTrustee.subheading"),
+          "What is the business’s name?"                                           -> Html("Lead Trustee Company"),
+          "Is this trustee a UK registered company?"                               -> Html("Yes"),
           "What is Lead Trustee Company’s Unique Taxpayer Reference (UTR) number?" -> Html("1234567890"),
-          "Do you know Lead Trustee Company’s country of residence?" -> Html("Yes"),
-          "Does Lead Trustee Company have UK residency?" -> Html("No"),
-          "What is Lead Trustee Company’s country of residence?" -> Html("France"),
-          "Does Lead Trustee Company live in the UK?" -> Html("Yes"),
-          "What is Lead Trustee Company’s address?" -> Html("Address 1<br />Address 2<br />AA11 1AA"),
-          "Do you know Lead Trustee Company’s email address?" -> Html("No"),
-          "What is Lead Trustee Company’s telephone number?" -> Html("67676767676")
+          "Do you know Lead Trustee Company’s country of residence?"               -> Html("Yes"),
+          "Does Lead Trustee Company have UK residency?"                           -> Html("No"),
+          "What is Lead Trustee Company’s country of residence?"                   -> Html("France"),
+          "Does Lead Trustee Company live in the UK?"                              -> Html("Yes"),
+          "What is Lead Trustee Company’s address?"                                -> Html("Address 1<br />Address 2<br />AA11 1AA"),
+          "Do you know Lead Trustee Company’s email address?"                      -> Html("No"),
+          "What is Lead Trustee Company’s telephone number?"                       -> Html("67676767676")
         )
       }
     }
@@ -235,16 +246,17 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
         result.size mustEqual 2
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
-        result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
-          "What is the business’s name?" -> Html("Lead Trustee Company"),
-          "Is this trustee a UK registered company?" -> Html("Yes"),
+        result must containSectionWithHeadingAndValues(
+          messages("answerPage.section.leadTrustee.subheading"),
+          "What is the business’s name?"                                           -> Html("Lead Trustee Company"),
+          "Is this trustee a UK registered company?"                               -> Html("Yes"),
           "What is Lead Trustee Company’s Unique Taxpayer Reference (UTR) number?" -> Html("1234567890"),
-          "Do you know Lead Trustee Company’s country of residence?" -> Html("Yes"),
-          "Does Lead Trustee Company have UK residency?" -> Html("Yes"),
-          "What is Lead Trustee Company’s address?" -> Html("Address 1<br />Address 2<br />AA11 1AA"),
-          "Do you know Lead Trustee Company’s email address?" -> Html("Yes"),
-          "What is Lead Trustee Company’s email address?" -> Html("aa@aabb.com"),
-          "What is Lead Trustee Company’s telephone number?" -> Html("67676767676")
+          "Do you know Lead Trustee Company’s country of residence?"               -> Html("Yes"),
+          "Does Lead Trustee Company have UK residency?"                           -> Html("Yes"),
+          "What is Lead Trustee Company’s address?"                                -> Html("Address 1<br />Address 2<br />AA11 1AA"),
+          "Do you know Lead Trustee Company’s email address?"                      -> Html("Yes"),
+          "What is Lead Trustee Company’s email address?"                          -> Html("aa@aabb.com"),
+          "What is Lead Trustee Company’s telephone number?"                       -> Html("67676767676")
         )
       }
     }
@@ -298,42 +310,45 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
         result.size mustEqual 4
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
-        result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
-          "What is the lead trustee’s name?" -> Html("Wild Bill Hickock"),
-          "What is Wild Hickock’s date of birth?" -> Html("23 January 1975"),
-          "Do you know Wild Hickock’s country of nationality?" -> Html("Yes"),
-          "Does Wild Hickock have UK nationality?" -> Html("No"),
-          "What is Wild Hickock’s country of nationality?" -> Html("France"),
+        result must containSectionWithHeadingAndValues(
+          messages("answerPage.section.leadTrustee.subheading"),
+          "What is the lead trustee’s name?"                    -> Html("Wild Bill Hickock"),
+          "What is Wild Hickock’s date of birth?"               -> Html("23 January 1975"),
+          "Do you know Wild Hickock’s country of nationality?"  -> Html("Yes"),
+          "Does Wild Hickock have UK nationality?"              -> Html("No"),
+          "What is Wild Hickock’s country of nationality?"      -> Html("France"),
           "Does Wild Hickock have a National Insurance number?" -> Html("Yes"),
-          "What is Wild Hickock’s National Insurance number?" -> Html("AA 11 11 11 A"),
-          "Do you know Wild Hickock’s country of residence?" -> Html("Yes"),
-          "Does Wild Hickock have UK residency?" -> Html("No"),
-          "What is Wild Hickock’s country of residence?" -> Html("France"),
-          "Does Wild Hickock live in the UK?" -> Html("Yes"),
-          "What is Wild Hickock’s address?" -> Html("Address 1<br />Address 2<br />AA11 1AA"),
-          "Do you know Wild Hickock’s email address?" -> Html("No"),
-          "What is Wild Hickock’s telephone number?" -> Html("67676767676")
+          "What is Wild Hickock’s National Insurance number?"   -> Html("AA 11 11 11 A"),
+          "Do you know Wild Hickock’s country of residence?"    -> Html("Yes"),
+          "Does Wild Hickock have UK residency?"                -> Html("No"),
+          "What is Wild Hickock’s country of residence?"        -> Html("France"),
+          "Does Wild Hickock live in the UK?"                   -> Html("Yes"),
+          "What is Wild Hickock’s address?"                     -> Html("Address 1<br />Address 2<br />AA11 1AA"),
+          "Do you know Wild Hickock’s email address?"           -> Html("No"),
+          "What is Wild Hickock’s telephone number?"            -> Html("67676767676")
         )
-        result must containSectionWithHeadingAndValues(messages("answerPage.section.trustee.subheading", 2),
-          "What is the business’s name?" -> Html("Trustee Company"),
+        result must containSectionWithHeadingAndValues(
+          messages("answerPage.section.trustee.subheading", 2),
+          "What is the business’s name?"                                          -> Html("Trustee Company"),
           "Do you know Trustee Company’s Unique Taxpayer Reference (UTR) number?" -> Html("Yes"),
-          "Do you know Trustee Company’s country of residence?" -> Html("Yes"),
-          "Does Trustee Company have UK residency?" -> Html("No"),
-          "What is Trustee Company’s country of residence?" -> Html("France"),
-          "What is Trustee Company’s Unique Taxpayer Reference (UTR) number?" -> Html("1234567890")
+          "Do you know Trustee Company’s country of residence?"                   -> Html("Yes"),
+          "Does Trustee Company have UK residency?"                               -> Html("No"),
+          "What is Trustee Company’s country of residence?"                       -> Html("France"),
+          "What is Trustee Company’s Unique Taxpayer Reference (UTR) number?"     -> Html("1234567890")
         )
-        result must containSectionWithHeadingAndValues(messages("answerPage.section.trustee.subheading", 3),
-          "What is the trustee’s name?" -> Html("Individual trustee"),
-          "Do you know Individual trustee’s date of birth?" -> Html("Yes"),
-          "What is Individual trustee’s date of birth?" -> Html("23 January 1975"),
-          "Do you know Individual trustee’s country of nationality?" -> Html("Yes"),
-          "Does Individual trustee have UK nationality?" -> Html("No"),
-          "What is Individual trustee’s country of nationality?" -> Html("France"),
-          "Do you know Individual trustee’s National Insurance number?" -> Html("Yes"),
-          "What is Individual trustee’s National Insurance number?" -> Html("NH 11 11 11 A"),
-          "Do you know Individual trustee’s country of residence?" -> Html("Yes"),
-          "Does Individual trustee have UK residency?" -> Html("No"),
-          "What is Individual trustee’s country of residence?" -> Html("France"),
+        result must containSectionWithHeadingAndValues(
+          messages("answerPage.section.trustee.subheading", 3),
+          "What is the trustee’s name?"                                               -> Html("Individual trustee"),
+          "Do you know Individual trustee’s date of birth?"                           -> Html("Yes"),
+          "What is Individual trustee’s date of birth?"                               -> Html("23 January 1975"),
+          "Do you know Individual trustee’s country of nationality?"                  -> Html("Yes"),
+          "Does Individual trustee have UK nationality?"                              -> Html("No"),
+          "What is Individual trustee’s country of nationality?"                      -> Html("France"),
+          "Do you know Individual trustee’s National Insurance number?"               -> Html("Yes"),
+          "What is Individual trustee’s National Insurance number?"                   -> Html("NH 11 11 11 A"),
+          "Do you know Individual trustee’s country of residence?"                    -> Html("Yes"),
+          "Does Individual trustee have UK residency?"                                -> Html("No"),
+          "What is Individual trustee’s country of residence?"                        -> Html("France"),
           "Does Individual trustee have mental capacity at the time of registration?" -> Html("Yes")
         )
 
@@ -381,34 +396,37 @@ class AllTrusteesPrinterSpec extends SpecBase with AnswerSectionMatchers with Us
         result.size mustEqual 4
 
         result must containHeadingSection(messages("answerPage.section.trustees.heading"))
-        result must containSectionWithHeadingAndValues(messages("answerPage.section.leadTrustee.subheading"),
-          "What is the business’s name?" -> Html("Lead Trustee Company"),
-          "Is this trustee a UK registered company?" -> Html("Yes"),
+        result must containSectionWithHeadingAndValues(
+          messages("answerPage.section.leadTrustee.subheading"),
+          "What is the business’s name?"                                           -> Html("Lead Trustee Company"),
+          "Is this trustee a UK registered company?"                               -> Html("Yes"),
           "What is Lead Trustee Company’s Unique Taxpayer Reference (UTR) number?" -> Html("1234567890"),
-          "Do you know Lead Trustee Company’s country of residence?" -> Html("Yes"),
-          "Does Lead Trustee Company have UK residency?" -> Html("No"),
-          "What is Lead Trustee Company’s country of residence?" -> Html("France")
+          "Do you know Lead Trustee Company’s country of residence?"               -> Html("Yes"),
+          "Does Lead Trustee Company have UK residency?"                           -> Html("No"),
+          "What is Lead Trustee Company’s country of residence?"                   -> Html("France")
         )
-        result must containSectionWithHeadingAndValues(messages("answerPage.section.trustee.subheading", 2),
-          "What is the business’s name?" -> Html("Trustee Company"),
+        result must containSectionWithHeadingAndValues(
+          messages("answerPage.section.trustee.subheading", 2),
+          "What is the business’s name?"                                          -> Html("Trustee Company"),
           "Do you know Trustee Company’s Unique Taxpayer Reference (UTR) number?" -> Html("Yes"),
-          "What is Trustee Company’s Unique Taxpayer Reference (UTR) number?" -> Html("1234567890"),
-          "Do you know Trustee Company’s country of residence?" -> Html("Yes"),
-          "Does Trustee Company have UK residency?" -> Html("No"),
-          "What is Trustee Company’s country of residence?" -> Html("France")
+          "What is Trustee Company’s Unique Taxpayer Reference (UTR) number?"     -> Html("1234567890"),
+          "Do you know Trustee Company’s country of residence?"                   -> Html("Yes"),
+          "Does Trustee Company have UK residency?"                               -> Html("No"),
+          "What is Trustee Company’s country of residence?"                       -> Html("France")
         )
-        result must containSectionWithHeadingAndValues(messages("answerPage.section.trustee.subheading", 3),
-          "What is the trustee’s name?" -> Html("Individual trustee"),
-          "Do you know Individual trustee’s date of birth?" -> Html("Yes"),
-          "What is Individual trustee’s date of birth?" -> Html("23 January 1975"),
-          "Do you know Individual trustee’s country of nationality?" -> Html("Yes"),
-          "Does Individual trustee have UK nationality?" -> Html("No"),
-          "What is Individual trustee’s country of nationality?" -> Html("France"),
-          "Do you know Individual trustee’s National Insurance number?" -> Html("Yes"),
-          "What is Individual trustee’s National Insurance number?" -> Html("NH 11 11 11 A"),
-          "Do you know Individual trustee’s country of residence?" -> Html("Yes"),
-          "Does Individual trustee have UK residency?" -> Html("No"),
-          "What is Individual trustee’s country of residence?" -> Html("France"),
+        result must containSectionWithHeadingAndValues(
+          messages("answerPage.section.trustee.subheading", 3),
+          "What is the trustee’s name?"                                               -> Html("Individual trustee"),
+          "Do you know Individual trustee’s date of birth?"                           -> Html("Yes"),
+          "What is Individual trustee’s date of birth?"                               -> Html("23 January 1975"),
+          "Do you know Individual trustee’s country of nationality?"                  -> Html("Yes"),
+          "Does Individual trustee have UK nationality?"                              -> Html("No"),
+          "What is Individual trustee’s country of nationality?"                      -> Html("France"),
+          "Do you know Individual trustee’s National Insurance number?"               -> Html("Yes"),
+          "What is Individual trustee’s National Insurance number?"                   -> Html("NH 11 11 11 A"),
+          "Do you know Individual trustee’s country of residence?"                    -> Html("Yes"),
+          "Does Individual trustee have UK residency?"                                -> Html("No"),
+          "What is Individual trustee’s country of residence?"                        -> Html("France"),
           "Does Individual trustee have mental capacity at the time of registration?" -> Html("Yes")
         )
 

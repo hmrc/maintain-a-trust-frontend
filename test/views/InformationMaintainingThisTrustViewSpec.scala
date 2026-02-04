@@ -30,7 +30,8 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "informationMaintainingThisTrust",
       "utr",
       utr,
@@ -55,7 +56,8 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(urn, URN)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "informationMaintainingThisTrust",
       "urn",
       urn,
@@ -71,4 +73,5 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
     behave like pageWithContinueButton(applyView, Some("site.startMaintaining"))
 
   }
+
 }

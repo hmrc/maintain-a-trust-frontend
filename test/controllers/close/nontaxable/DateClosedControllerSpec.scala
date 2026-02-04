@@ -53,9 +53,9 @@ class DateClosedControllerSpec extends SpecBase with MockitoSugar {
 
   private def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, dateClosedRoute)
     .withFormUrlEncodedBody(
-      "value.day" -> validAnswer.getDayOfMonth.toString,
+      "value.day"   -> validAnswer.getDayOfMonth.toString,
       "value.month" -> validAnswer.getMonthValue.toString,
-      "value.year" -> validAnswer.getYear.toString
+      "value.year"  -> validAnswer.getYear.toString
     )
 
   "DateLastAssetSharedOutController" must {
@@ -87,7 +87,8 @@ class DateClosedControllerSpec extends SpecBase with MockitoSugar {
         .thenReturn(EitherT[Future, TrustErrors, LocalDate](Future.successful(Right(trustStartDate))))
 
       val userAnswers = emptyUserAnswersForUrn
-        .set(DateClosedPage, validAnswer).value
+        .set(DateClosedPage, validAnswer)
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[TrustConnector].toInstance(fakeConnector))
@@ -202,4 +203,5 @@ class DateClosedControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

@@ -29,17 +29,18 @@ case object DateLastAssetSharedOutYesNoPage extends QuestionPage[Boolean] {
 
   override def toString: String = "dateLastAssetSharedOutYesNo"
 
-  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Either[TrustErrors, UserAnswers] =
     value match {
       case Some(false) =>
-        userAnswers.remove(DateLastAssetSharedOutPage)
+        userAnswers
+          .remove(DateLastAssetSharedOutPage)
           .flatMap(_.remove(UpdateTrusteesYesNoPage))
           .flatMap(_.remove(UpdateBeneficiariesYesNoPage))
           .flatMap(_.remove(UpdateSettlorsYesNoPage))
           .flatMap(_.remove(AddOrUpdateProtectorYesNoPage))
           .flatMap(_.remove(AddOrUpdateOtherIndividualsYesNoPage))
-      case _ =>
+      case _           =>
         super.cleanup(value, userAnswers)
     }
-  }
+
 }

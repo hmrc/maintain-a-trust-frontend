@@ -29,10 +29,12 @@ import views.html.close.taxable.DateLastAssetSharedOutYesNoView
 
 class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  private val formProvider = new YesNoFormProvider()
+  private val formProvider        = new YesNoFormProvider()
   private val form: Form[Boolean] = formProvider.withPrefix("dateLastAssetSharedOutYesNo")
-  private val utr: String = "1234567890"
-  private lazy val dateLastAssetSharedOutYesNoRoute: String = routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
+  private val utr: String         = "1234567890"
+
+  private lazy val dateLastAssetSharedOutYesNoRoute: String =
+    routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
 
   override val emptyUserAnswersForUtr: UserAnswers = super.emptyUserAnswersForUtr
 
@@ -148,10 +150,10 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
 
       val result = route(application, request).value
 
-        status(result) mustEqual INTERNAL_SERVER_ERROR
-        contentType(result) mustBe Some("text/html")
+      status(result) mustEqual INTERNAL_SERVER_ERROR
+      contentType(result) mustBe Some("text/html")
 
-        application.stop()
+      application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
@@ -171,4 +173,5 @@ class DateLastAssetSharedOutYesNoControllerSpec extends SpecBase with MockitoSug
       application.stop()
     }
   }
+
 }

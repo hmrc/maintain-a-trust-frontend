@@ -21,10 +21,12 @@ import play.api.Logging
 
 trait RepositoryHelper extends Logging {
 
-  def mongoRecover[T](repository: String,
-                      method: String,
-                      message: String,
-                      sessionId: String): PartialFunction[Throwable, Either[TrustErrors, T]] = new PartialFunction[Throwable, Either[TrustErrors, T]] {
+  def mongoRecover[T](
+    repository: String,
+    method: String,
+    message: String,
+    sessionId: String
+  ): PartialFunction[Throwable, Either[TrustErrors, T]] = new PartialFunction[Throwable, Either[TrustErrors, T]] {
 
     override def isDefinedAt(x: Throwable): Boolean = x.isInstanceOf[Exception]
 

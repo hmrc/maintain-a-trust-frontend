@@ -27,9 +27,11 @@ class NonEeaBusinessAssetExtractor extends PlaybackExtractor[DisplayNonEEABusine
 
   override val optionalEntity: Boolean = true
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayNonEEABusinessType,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayNonEEABusinessType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
     answers
       .flatMap(_.set(NonEeaBusinessLineNoPage(index), entity.lineNo))
       .flatMap(_.set(NonEeaBusinessNamePage(index), entity.orgName))
@@ -37,6 +39,5 @@ class NonEeaBusinessAssetExtractor extends PlaybackExtractor[DisplayNonEEABusine
       .flatMap(_.set(NonEeaBusinessAddressPage(index), entity.address.convert))
       .flatMap(_.set(NonEeaBusinessStartDatePage(index), entity.startDate))
       .flatMap(_.set(NonEeaBusinessEndDatePage(index), entity.endDate))
-  }
 
 }

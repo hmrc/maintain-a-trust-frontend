@@ -26,15 +26,15 @@ import sections.assets.BusinessAsset
 import utils.print.sections.{AnswerRowConverter, EntitiesPrinter, EntityPrinter}
 import viewmodels.{AnswerRow, AnswerSection}
 
-class BusinessAssetPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
+class BusinessAssetPrinter @Inject() (converter: AnswerRowConverter)
+    extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
 
-  override def printSection(index: Int, userAnswers: UserAnswers)
-                           (implicit messages: Messages): Option[AnswerSection] = {
+  override def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection] =
     printAnswerRows(index, userAnswers)
-  }
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.stringQuestion(BusinessNamePage(index), userAnswers, "asset.business.name"),
     converter.stringQuestion(BusinessDescriptionPage(index), userAnswers, "asset.business.description", name),
     converter.addressQuestion(BusinessAddressPage(index), userAnswers, "asset.business.address", name),

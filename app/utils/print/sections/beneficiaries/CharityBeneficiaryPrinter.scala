@@ -22,25 +22,45 @@ import pages.beneficiaries.charity._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsArray, JsPath}
 import sections.beneficiaries.CharityBeneficiaries
-import utils.print.sections.{EntitiesPrinter, AnswerRowConverter, EntityPrinter}
+import utils.print.sections.{AnswerRowConverter, EntitiesPrinter, EntityPrinter}
 import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class CharityBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
+class CharityBeneficiaryPrinter @Inject() (converter: AnswerRowConverter)
+    extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
 
-  override def printSection(index: Int, userAnswers: UserAnswers)
-                           (implicit messages: Messages): Option[AnswerSection] = {
+  override def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection] =
     printAnswerRows(index, userAnswers)
-  }
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.stringQuestion(CharityBeneficiaryNamePage(index), userAnswers, "charityBeneficiaryName"),
-    converter.yesNoQuestion(CharityBeneficiaryDiscretionYesNoPage(index), userAnswers, "charityBeneficiaryShareOfIncomeYesNo", name),
-    converter.percentageQuestion(CharityBeneficiaryShareOfIncomePage(index), userAnswers, "charityBeneficiaryShareOfIncome", name),
-    converter.yesNoQuestion(CharityBeneficiaryCountryOfResidenceYesNoPage(index), userAnswers, "charityBeneficiaryCountryOfResidenceYesNo", name),
-    converter.yesNoQuestion(CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "charityBeneficiaryCountryOfResidenceUkYesNo", name),
+    converter.yesNoQuestion(
+      CharityBeneficiaryDiscretionYesNoPage(index),
+      userAnswers,
+      "charityBeneficiaryShareOfIncomeYesNo",
+      name
+    ),
+    converter.percentageQuestion(
+      CharityBeneficiaryShareOfIncomePage(index),
+      userAnswers,
+      "charityBeneficiaryShareOfIncome",
+      name
+    ),
+    converter.yesNoQuestion(
+      CharityBeneficiaryCountryOfResidenceYesNoPage(index),
+      userAnswers,
+      "charityBeneficiaryCountryOfResidenceYesNo",
+      name
+    ),
+    converter.yesNoQuestion(
+      CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index),
+      userAnswers,
+      "charityBeneficiaryCountryOfResidenceUkYesNo",
+      name
+    ),
     converter.countryQuestion(
       CharityBeneficiaryCountryOfResidenceInTheUkYesNoPage(index),
       CharityBeneficiaryCountryOfResidencePage(index),
@@ -48,8 +68,14 @@ class CharityBeneficiaryPrinter @Inject()(converter: AnswerRowConverter) extends
       "charityBeneficiaryCountryOfResidence",
       name
     ),
-    converter.yesNoQuestion(CharityBeneficiaryAddressYesNoPage(index), userAnswers, "charityBeneficiaryAddressYesNo", name),
-    converter.yesNoQuestion(CharityBeneficiaryAddressUKYesNoPage(index), userAnswers, "charityBeneficiaryAddressUKYesNo", name),
+    converter
+      .yesNoQuestion(CharityBeneficiaryAddressYesNoPage(index), userAnswers, "charityBeneficiaryAddressYesNo", name),
+    converter.yesNoQuestion(
+      CharityBeneficiaryAddressUKYesNoPage(index),
+      userAnswers,
+      "charityBeneficiaryAddressUKYesNo",
+      name
+    ),
     converter.addressQuestion(CharityBeneficiaryAddressPage(index), userAnswers, "charityBeneficiaryAddress", name),
     converter.stringQuestion(CharityBeneficiaryUtrPage(index), userAnswers, "charityBeneficiaryUtr", name)
   )

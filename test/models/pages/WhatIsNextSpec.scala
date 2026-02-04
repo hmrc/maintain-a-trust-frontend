@@ -16,7 +16,9 @@
 
 package models.pages
 
-import models.{Underlying4mldTrustIn5mldMode, Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode}
+import models.{
+  Underlying4mldTrustIn5mldMode, Underlying5mldNonTaxableTrustIn5mldMode, Underlying5mldTaxableTrustIn5mldMode
+}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatest.OptionValues
@@ -33,10 +35,8 @@ class WhatIsNextSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyCh
 
       val gen = Gen.oneOf(WhatIsNext.values)
 
-      forAll(gen) {
-        whatIsNext =>
-
-          JsString(whatIsNext.toString).validate[WhatIsNext].asOpt.value mustEqual whatIsNext
+      forAll(gen) { whatIsNext =>
+        JsString(whatIsNext.toString).validate[WhatIsNext].asOpt.value mustEqual whatIsNext
       }
     }
 
@@ -44,10 +44,8 @@ class WhatIsNextSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyCh
 
       val gen = arbitrary[String] suchThat (!WhatIsNext.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[WhatIsNext] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[WhatIsNext] mustEqual JsError("error.invalid")
       }
     }
 
@@ -55,32 +53,31 @@ class WhatIsNextSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyCh
 
       val gen = Gen.oneOf(WhatIsNext.values)
 
-      forAll(gen) {
-        whatIsNext =>
-
-          Json.toJson(whatIsNext) mustEqual JsString(whatIsNext.toString)
+      forAll(gen) { whatIsNext =>
+        Json.toJson(whatIsNext) mustEqual JsString(whatIsNext.toString)
       }
     }
 
     "determine options correctly" when {
 
-        "underlying trust is 4mld" in {
-          WhatIsNext.options(Underlying4mldTrustIn5mldMode).map(_._1.value) mustBe
-            List("declare", "make-changes", "close-trust", "generate-pdf")
+      "underlying trust is 4mld" in {
+        WhatIsNext.options(Underlying4mldTrustIn5mldMode).map(_._1.value) mustBe
+          List("declare", "make-changes", "close-trust", "generate-pdf")
+      }
+
+      "underlying trust is 5mld" when {
+        "taxable" in {
+          WhatIsNext.options(Underlying5mldTaxableTrustIn5mldMode).map(_._1.value) mustBe
+            List("declare", "make-changes", "close-trust", "no-longer-taxable", "generate-pdf")
         }
 
-        "underlying trust is 5mld" when {
-          "taxable" in {
-            WhatIsNext.options(Underlying5mldTaxableTrustIn5mldMode).map(_._1.value) mustBe
-              List("declare", "make-changes", "close-trust", "no-longer-taxable", "generate-pdf")
-          }
-
-          "non-taxable" in {
-            WhatIsNext.options(Underlying5mldNonTaxableTrustIn5mldMode).map(_._1.value) mustBe
-              List("make-changes", "close-trust", "needs-to-pay-tax", "generate-pdf")
-          }
+        "non-taxable" in {
+          WhatIsNext.options(Underlying5mldNonTaxableTrustIn5mldMode).map(_._1.value) mustBe
+            List("make-changes", "close-trust", "needs-to-pay-tax", "generate-pdf")
         }
+      }
     }
 
   }
+
 }

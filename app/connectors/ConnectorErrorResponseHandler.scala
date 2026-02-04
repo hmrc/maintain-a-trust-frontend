@@ -16,11 +16,10 @@
 
 package connectors
 
-
 import models.errors.{ServerError, TrustErrors}
 import play.api.Logging
 
-trait ConnectorErrorResponseHandler extends Logging  {
+trait ConnectorErrorResponseHandler extends Logging {
 
   val className: String
 

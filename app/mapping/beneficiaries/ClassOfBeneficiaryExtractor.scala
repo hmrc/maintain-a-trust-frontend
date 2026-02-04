@@ -27,17 +27,19 @@ class ClassOfBeneficiaryExtractor extends BeneficiaryPlaybackExtractor[DisplayTr
   override def metaDataPage(index: Int): QuestionPage[MetaData] = ClassOfBeneficiaryMetaData(index)
 
   override def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = ClassOfBeneficiaryDiscretionYesNoPage(index)
-  override def shareOfIncomePage(index: Int): QuestionPage[String] = ClassOfBeneficiaryShareOfIncomePage(index)
+  override def shareOfIncomePage(index: Int): QuestionPage[String]       = ClassOfBeneficiaryShareOfIncomePage(index)
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayTrustUnidentifiedType,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
-    super.updateUserAnswers(answers, entity, index)
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayTrustUnidentifiedType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
+    super
+      .updateUserAnswers(answers, entity, index)
       .flatMap(_.set(ClassOfBeneficiaryDescriptionPage(index), entity.description))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
-  }
 
-  override def bpMatchStatus(entity: DisplayTrustUnidentifiedType): Option[String] = {
+  override def bpMatchStatus(entity: DisplayTrustUnidentifiedType): Option[String] =
     entity.bpMatchStatus.fold(Some("98"))(Some(_))
-  }
+
 }

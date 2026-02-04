@@ -22,30 +22,34 @@ import views.html.status.IVDownView
 
 class IVDownViewSpec extends ViewBehaviours {
 
-
   "IVDown view for UTR" must {
-    val utr = "0987654321"
+    val utr  = "0987654321"
     val view = viewFor[IVDownView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(view = applyView,
-      messageKeyPrefix =  "ivDown",
+    behave like normalPageTitleWithCaption(
+      view = applyView,
+      messageKeyPrefix = "ivDown",
       "utr",
       captionParam = utr,
-      "p1")
+      "p1"
+    )
   }
 
   "IVDown view for URN" must {
-    val urn = "XATRUST12345678"
+    val urn  = "XATRUST12345678"
     val view = viewFor[IVDownView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(urn, URN)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(view = applyView,
-      messageKeyPrefix =  "ivDown",
+    behave like normalPageTitleWithCaption(
+      view = applyView,
+      messageKeyPrefix = "ivDown",
       "urn",
       captionParam = urn,
-      "p1")
+      "p1"
+    )
   }
+
 }

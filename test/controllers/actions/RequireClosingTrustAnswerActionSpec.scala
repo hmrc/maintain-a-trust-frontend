@@ -28,7 +28,7 @@ import uk.gov.hmrc.auth.core.Enrolments
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RequireClosingTrustAnswerActionSpec (implicit ec: ExecutionContext) extends SpecBase with ScalaFutures {
+class RequireClosingTrustAnswerActionSpec(implicit ec: ExecutionContext) extends SpecBase with ScalaFutures {
 
   private val handler = injector.instanceOf[ErrorHandler]
 
@@ -46,13 +46,15 @@ class RequireClosingTrustAnswerActionSpec (implicit ec: ExecutionContext) extend
 
         val action = new Harness()
 
-        val futureResult = action.callRefine(
-          DataRequest(
-            fakeRequest,
-            emptyUserAnswersForUtr,
-            user
+        val futureResult = action
+          .callRefine(
+            DataRequest(
+              fakeRequest,
+              emptyUserAnswersForUtr,
+              user
+            )
           )
-        ).futureValue
+          .futureValue
 
         val result = Future.successful(futureResult.left.value)
         status(result) mustEqual INTERNAL_SERVER_ERROR
@@ -67,13 +69,15 @@ class RequireClosingTrustAnswerActionSpec (implicit ec: ExecutionContext) extend
 
         val userAnswers = emptyUserAnswersForUtr.set(WhatIsNextPage, CloseTrust).value
 
-        val result = action.callRefine(
-          DataRequest(
-            fakeRequest,
-            userAnswers,
-            user
+        val result = action
+          .callRefine(
+            DataRequest(
+              fakeRequest,
+              userAnswers,
+              user
+            )
           )
-        ).futureValue
+          .futureValue
 
         result.value.closingTrust must be(true)
       }
@@ -87,13 +91,15 @@ class RequireClosingTrustAnswerActionSpec (implicit ec: ExecutionContext) extend
 
         val userAnswers = emptyUserAnswersForUtr.set(WhatIsNextPage, MakeChanges).value
 
-        val result = action.callRefine(
-          DataRequest(
-            fakeRequest,
-            userAnswers,
-            user
+        val result = action
+          .callRefine(
+            DataRequest(
+              fakeRequest,
+              userAnswers,
+              user
+            )
           )
-        ).futureValue
+          .futureValue
 
         result.value.closingTrust must be(false)
       }

@@ -25,11 +25,11 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.SessionExpiredView
 
 @Singleton
-class SessionExpiredController @Inject()(
-                                          val controllerComponents: MessagesControllerComponents,
-                                          appConfig: FrontendAppConfig,
-                                          view: SessionExpiredView
-                                        ) extends FrontendBaseController with I18nSupport with Logging {
+class SessionExpiredController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  appConfig: FrontendAppConfig,
+  view: SessionExpiredView
+) extends FrontendBaseController with I18nSupport with Logging {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
     Ok(view())

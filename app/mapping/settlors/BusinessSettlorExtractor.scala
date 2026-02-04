@@ -28,16 +28,24 @@ import pages.settlors.living_settlor._
 class BusinessSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSettlorCompany] {
 
   override def utrYesNoPage(index: Int): QuestionPage[Boolean] = SettlorUtrYesNoPage(index)
-  override def utrPage(index: Int): QuestionPage[String] = SettlorUtrPage(index)
+  override def utrPage(index: Int): QuestionPage[String]       = SettlorUtrPage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfResidenceYesNoPage(index)
-  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfResidenceYesNoPage(
+    index
+  )
+
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    SettlorCountryOfResidenceInTheUkYesNoPage(index)
+
   override def countryOfResidencePage(index: Int): QuestionPage[String] = SettlorCountryOfResidencePage(index)
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayTrustSettlorCompany,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
-    super.updateUserAnswers(answers, entity, index)
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayTrustSettlorCompany,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
+    super
+      .updateUserAnswers(answers, entity, index)
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(SettlorBusinessNamePage(index), entity.name))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
@@ -45,12 +53,16 @@ class BusinessSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSett
       .flatMap(answers => extractSettlorCompanyTypeAndTime(entity, index, answers))
       .flatMap(_.set(SettlorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(_.set(LivingSettlorStatus(index), Completed))
-  }
 
-  private def extractSettlorCompanyTypeAndTime(entity: DisplayTrustSettlorCompany, index: Int, answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  private def extractSettlorCompanyTypeAndTime(
+    entity: DisplayTrustSettlorCompany,
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     extractIfTaxableOrMigratingToTaxable(answers) {
-      answers.set(SettlorCompanyTypePage(index), entity.companyType)
+      answers
+        .set(SettlorCompanyTypePage(index), entity.companyType)
         .flatMap(_.set(SettlorCompanyTimePage(index), entity.companyTime))
     }
-  }
+
 }

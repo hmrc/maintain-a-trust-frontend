@@ -43,7 +43,8 @@ import views.html.WhatIsNextView
 
 import scala.concurrent.Future
 
-class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators with BeforeAndAfterEach with EitherValues {
+class WhatIsNextControllerSpec
+    extends SpecBase with ScalaCheckPropertyChecks with ModelGenerators with BeforeAndAfterEach with EitherValues {
 
   private val form: Form[WhatIsNext] = new WhatIsNextFormProvider()()
 
@@ -51,7 +52,7 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
 
   private lazy val onSubmit: Call = routes.WhatIsNextController.onSubmit()
 
-  private val mockTrustsConnector: TrustConnector = mock[TrustConnector]
+  private val mockTrustsConnector: TrustConnector              = mock[TrustConnector]
   private val mockMaintainATrustService: MaintainATrustService = mock[MaintainATrustService]
 
   override def beforeEach(): Unit = {
@@ -137,10 +138,37 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
 
       "Make Changes" when {
 
-          "underlying data is 4mld" must {
-            "redirect to update trustee details" in {
+        "underlying data is 4mld" must {
+          "redirect to update trustee details" in {
 
-              val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = false)
+            val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = false)
+
+            val application = applicationBuilder(userAnswers = Some(userAnswers))
+              .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+              .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
+              .build()
+
+            implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+              .withFormUrlEncodedBody(("value", MakeChanges.toString))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+
+            redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController
+              .onPageLoad()
+              .url
+
+            application.stop()
+          }
+        }
+
+        "underlying data is 5mld" must {
+          "redirect to update trust details" when {
+
+            "taxable" in {
+
+              val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -154,58 +182,37 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
 
               status(result) mustEqual SEE_OTHER
 
-              redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
+              redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrustDetailsYesNoController
+                .onPageLoad()
+                .url
+
+              application.stop()
+            }
+
+            "non-taxable" in {
+
+              val userAnswers = emptyUserAnswersForUrn
+
+              val application = applicationBuilder(userAnswers = Some(userAnswers))
+                .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
+                .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
+                .build()
+
+              implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
+                .withFormUrlEncodedBody(("value", MakeChanges.toString))
+
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+
+              redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrustDetailsYesNoController
+                .onPageLoad()
+                .url
 
               application.stop()
             }
           }
-
-          "underlying data is 5mld" must {
-            "redirect to update trust details" when {
-
-              "taxable" in {
-
-                val userAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
-
-                val application = applicationBuilder(userAnswers = Some(userAnswers))
-                  .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
-                  .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
-                  .build()
-
-                implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-                  .withFormUrlEncodedBody(("value", MakeChanges.toString))
-
-                val result = route(application, request).value
-
-                status(result) mustEqual SEE_OTHER
-
-                redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
-
-                application.stop()
-              }
-
-              "non-taxable" in {
-
-                val userAnswers = emptyUserAnswersForUrn
-
-                val application = applicationBuilder(userAnswers = Some(userAnswers))
-                  .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
-                  .overrides(bind[MaintainATrustService].toInstance(mockMaintainATrustService))
-                  .build()
-
-                implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest(POST, onSubmit.url)
-                  .withFormUrlEncodedBody(("value", MakeChanges.toString))
-
-                val result = route(application, request).value
-
-                status(result) mustEqual SEE_OTHER
-
-                redirectLocation(result).value mustBe controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
-
-                application.stop()
-              }
-            }
-          }
+        }
       }
 
       "Close Trust" when {
@@ -219,7 +226,8 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
               beforeEach()
 
               val userAnswers = emptyUserAnswersForUtr
-                .set(WhatIsNextPage, previousAnswer).value
+                .set(WhatIsNextPage, previousAnswer)
+                .value
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -233,7 +241,9 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
 
               status(result) mustEqual SEE_OTHER
 
-              redirectLocation(result).value mustBe controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
+              redirectLocation(
+                result
+              ).value mustBe controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad().url
 
               application.stop()
             }
@@ -249,7 +259,8 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
               beforeEach()
 
               val userAnswers = emptyUserAnswersForUrn
-                .set(WhatIsNextPage, previousAnswer).value
+                .set(WhatIsNextPage, previousAnswer)
+                .value
 
               val application = applicationBuilder(userAnswers = Some(userAnswers))
                 .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -263,7 +274,9 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
 
               status(result) mustEqual SEE_OTHER
 
-              redirectLocation(result).value mustBe controllers.close.nontaxable.routes.DateClosedController.onPageLoad().url
+              redirectLocation(result).value mustBe controllers.close.nontaxable.routes.DateClosedController
+                .onPageLoad()
+                .url
 
               application.stop()
             }
@@ -314,7 +327,9 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
 
             status(result) mustEqual SEE_OTHER
 
-            redirectLocation(result).value mustBe controllers.transition.routes.NeedToPayTaxYesNoController.onPageLoad().url
+            redirectLocation(result).value mustBe controllers.transition.routes.NeedToPayTaxYesNoController
+              .onPageLoad()
+              .url
 
             application.stop()
           }
@@ -405,7 +420,8 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
             beforeEach()
 
             val userAnswers = emptyUserAnswersForUtr
-              .set(WhatIsNextPage, previousAnswer).value
+              .set(WhatIsNextPage, previousAnswer)
+              .value
 
             val application = applicationBuilder(userAnswers = Some(userAnswers))
               .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -437,7 +453,8 @@ class WhatIsNextControllerSpec extends SpecBase with ScalaCheckPropertyChecks wi
           beforeEach()
 
           val userAnswers = emptyUserAnswersForUtr
-            .set(WhatIsNextPage, previousAnswer).value
+            .set(WhatIsNextPage, previousAnswer)
+            .value
 
           val application = applicationBuilder(userAnswers = Some(userAnswers))
             .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))

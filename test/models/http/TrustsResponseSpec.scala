@@ -132,4 +132,5 @@ class TrustsResponseSpec extends AnyWordSpec with Matchers {
       Json.parse(json).validate[TrustStatus] mustBe JsError("Unexpected Status")
     }
   }
+
 }

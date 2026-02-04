@@ -22,7 +22,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.settlors.LivingSettlors
 
-final case class SettlorIndividualDateOfBirthPage(index : Int) extends QuestionPage[LocalDate] {
+final case class SettlorIndividualDateOfBirthPage(index: Int) extends QuestionPage[LocalDate] {
 
   override def path: JsPath = LivingSettlors.path \ index \ toString
 

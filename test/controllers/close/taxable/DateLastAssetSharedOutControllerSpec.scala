@@ -56,9 +56,9 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
   private def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, dateLastAssetSharedOutRoute)
       .withFormUrlEncodedBody(
-        "value.day" -> validAnswer.getDayOfMonth.toString,
+        "value.day"   -> validAnswer.getDayOfMonth.toString,
         "value.month" -> validAnswer.getMonthValue.toString,
-        "value.year" -> validAnswer.getYear.toString
+        "value.year"  -> validAnswer.getYear.toString
       )
 
   "DateLastAssetSharedOut Controller" must {
@@ -90,7 +90,8 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
         .thenReturn(EitherT[Future, TrustErrors, LocalDate](Future.successful(Right(trustStartDate))))
 
       val userAnswers = emptyUserAnswersForUtr
-        .set(DateLastAssetSharedOutPage, validAnswer).value
+        .set(DateLastAssetSharedOutPage, validAnswer)
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[TrustConnector].toInstance(fakeConnector))
@@ -205,4 +206,5 @@ class DateLastAssetSharedOutControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

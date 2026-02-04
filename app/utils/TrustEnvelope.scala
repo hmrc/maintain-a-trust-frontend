@@ -40,7 +40,9 @@ object TrustEnvelope {
 
   def fromFuture[T](t: Future[T])(implicit ec: ExecutionContext): TrustEnvelope[T] = EitherT.right(t)
 
-  def fromLeftResult[T](eitherArg: Future[Either[Result, T]])(implicit ec: ExecutionContext): EitherT[Future, TrustErrors, T] =
+  def fromLeftResult[T](eitherArg: Future[Either[Result, T]])(implicit
+    ec: ExecutionContext
+  ): EitherT[Future, TrustErrors, T] =
     EitherT(eitherArg.map(_.left.map(result => TrustErrorWithRedirect(result))))
 
 }

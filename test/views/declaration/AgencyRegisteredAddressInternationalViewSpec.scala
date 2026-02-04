@@ -47,4 +47,5 @@ class AgencyRegisteredAddressInternationalViewSpec extends InternationalAddressV
     behave like pageWithASubmitButton(applyView(form))
 
   }
+
 }

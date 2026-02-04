@@ -32,13 +32,15 @@ sealed trait OrgBeneficiaryType extends BeneficiaryType {
   val countryOfResidence: Option[String]
 }
 
-case class DisplayTrustBeneficiaryType(individualDetails: List[DisplayTrustIndividualDetailsType],
-                                       company: List[DisplayTrustCompanyType],
-                                       trust: List[DisplayTrustBeneficiaryTrustType],
-                                       charity: List[DisplayTrustCharityType],
-                                       unidentified: List[DisplayTrustUnidentifiedType],
-                                       large: List[DisplayTrustLargeType],
-                                       other: List[DisplayTrustOtherType])
+case class DisplayTrustBeneficiaryType(
+  individualDetails: List[DisplayTrustIndividualDetailsType],
+  company: List[DisplayTrustCompanyType],
+  trust: List[DisplayTrustBeneficiaryTrustType],
+  charity: List[DisplayTrustCharityType],
+  unidentified: List[DisplayTrustUnidentifiedType],
+  large: List[DisplayTrustLargeType],
+  other: List[DisplayTrustOtherType]
+)
 
 object DisplayTrustBeneficiaryType {
 
@@ -50,108 +52,127 @@ object DisplayTrustBeneficiaryType {
       (__ \ "unidentified").readWithDefault[List[DisplayTrustUnidentifiedType]](Nil) and
       (__ \ "large").readWithDefault[List[DisplayTrustLargeType]](Nil) and
       (__ \ "other").readWithDefault[List[DisplayTrustOtherType]](Nil)
-    )(DisplayTrustBeneficiaryType.apply _)
+  )(DisplayTrustBeneficiaryType.apply _)
 
   implicit val writes: Writes[DisplayTrustBeneficiaryType] = Json.writes[DisplayTrustBeneficiaryType]
 
 }
 
-case class DisplayTrustIndividualDetailsType(lineNo: Option[String],
-                                             bpMatchStatus: Option[String],
-                                             name: FullName,
-                                             dateOfBirth: Option[LocalDate],
-                                             countryOfResidence: Option[String],
-                                             nationality: Option[String],
-                                             legallyIncapable: Option[Boolean],
-                                             vulnerableBeneficiary: Option[Boolean],
-                                             beneficiaryType: Option[RoleInCompany],
-                                             beneficiaryDiscretion: Option[Boolean],
-                                             beneficiaryShareOfIncome: Option[String],
-                                             identification: Option[DisplayTrustIdentificationType],
-                                             entityStart: String) extends BeneficiaryType
+case class DisplayTrustIndividualDetailsType(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  name: FullName,
+  dateOfBirth: Option[LocalDate],
+  countryOfResidence: Option[String],
+  nationality: Option[String],
+  legallyIncapable: Option[Boolean],
+  vulnerableBeneficiary: Option[Boolean],
+  beneficiaryType: Option[RoleInCompany],
+  beneficiaryDiscretion: Option[Boolean],
+  beneficiaryShareOfIncome: Option[String],
+  identification: Option[DisplayTrustIdentificationType],
+  entityStart: String
+) extends BeneficiaryType
 
 object DisplayTrustIndividualDetailsType {
-  implicit val individualDetailsTypeFormat: Format[DisplayTrustIndividualDetailsType] = Json.format[DisplayTrustIndividualDetailsType]
+
+  implicit val individualDetailsTypeFormat: Format[DisplayTrustIndividualDetailsType] =
+    Json.format[DisplayTrustIndividualDetailsType]
+
 }
 
-case class DisplayTrustCompanyType(lineNo: Option[String],
-                                   bpMatchStatus: Option[String],
-                                   organisationName: String,
-                                   beneficiaryDiscretion: Option[Boolean],
-                                   beneficiaryShareOfIncome: Option[String],
-                                   countryOfResidence: Option[String],
-                                   identification: Option[DisplayTrustIdentificationOrgType],
-                                   entityStart: String) extends OrgBeneficiaryType
+case class DisplayTrustCompanyType(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  organisationName: String,
+  beneficiaryDiscretion: Option[Boolean],
+  beneficiaryShareOfIncome: Option[String],
+  countryOfResidence: Option[String],
+  identification: Option[DisplayTrustIdentificationOrgType],
+  entityStart: String
+) extends OrgBeneficiaryType
 
 object DisplayTrustCompanyType {
   implicit val companyTypeFormat: Format[DisplayTrustCompanyType] = Json.format[DisplayTrustCompanyType]
 }
 
-case class DisplayTrustBeneficiaryTrustType(lineNo: Option[String],
-                                            bpMatchStatus: Option[String],
-                                            organisationName: String,
-                                            beneficiaryDiscretion: Option[Boolean],
-                                            beneficiaryShareOfIncome: Option[String],
-                                            countryOfResidence: Option[String],
-                                            identification: Option[DisplayTrustIdentificationOrgType],
-                                            entityStart: String) extends OrgBeneficiaryType
+case class DisplayTrustBeneficiaryTrustType(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  organisationName: String,
+  beneficiaryDiscretion: Option[Boolean],
+  beneficiaryShareOfIncome: Option[String],
+  countryOfResidence: Option[String],
+  identification: Option[DisplayTrustIdentificationOrgType],
+  entityStart: String
+) extends OrgBeneficiaryType
 
 object DisplayTrustBeneficiaryTrustType {
-  implicit val beneficiaryTrustTypeFormat: Format[DisplayTrustBeneficiaryTrustType] = Json.format[DisplayTrustBeneficiaryTrustType]
+
+  implicit val beneficiaryTrustTypeFormat: Format[DisplayTrustBeneficiaryTrustType] =
+    Json.format[DisplayTrustBeneficiaryTrustType]
+
 }
 
-case class DisplayTrustCharityType(lineNo: Option[String],
-                                   bpMatchStatus: Option[String],
-                                   organisationName: String,
-                                   beneficiaryDiscretion: Option[Boolean],
-                                   beneficiaryShareOfIncome: Option[String],
-                                   countryOfResidence: Option[String],
-                                   identification: Option[DisplayTrustIdentificationOrgType],
-                                   entityStart: String) extends OrgBeneficiaryType
+case class DisplayTrustCharityType(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  organisationName: String,
+  beneficiaryDiscretion: Option[Boolean],
+  beneficiaryShareOfIncome: Option[String],
+  countryOfResidence: Option[String],
+  identification: Option[DisplayTrustIdentificationOrgType],
+  entityStart: String
+) extends OrgBeneficiaryType
 
 object DisplayTrustCharityType {
   implicit val charityTypeFormat: Format[DisplayTrustCharityType] = Json.format[DisplayTrustCharityType]
 }
 
-case class DisplayTrustUnidentifiedType(lineNo: Option[String],
-                                        bpMatchStatus: Option[String],
-                                        description: String,
-                                        beneficiaryDiscretion: Option[Boolean],
-                                        beneficiaryShareOfIncome: Option[String],
-                                        entityStart: String) extends BeneficiaryType
+case class DisplayTrustUnidentifiedType(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  description: String,
+  beneficiaryDiscretion: Option[Boolean],
+  beneficiaryShareOfIncome: Option[String],
+  entityStart: String
+) extends BeneficiaryType
 
 object DisplayTrustUnidentifiedType {
   implicit val unidentifiedTypeFormat: Format[DisplayTrustUnidentifiedType] = Json.format[DisplayTrustUnidentifiedType]
 }
 
-
-case class DisplayTrustLargeType(lineNo: Option[String],
-                                 bpMatchStatus: Option[String],
-                                 organisationName: String,
-                                 countryOfResidence: Option[String],
-                                 description: String,
-                                 description1: Option[String],
-                                 description2: Option[String],
-                                 description3: Option[String],
-                                 description4: Option[String],
-                                 numberOfBeneficiary: String,
-                                 identification: Option[DisplayTrustIdentificationOrgType],
-                                 beneficiaryDiscretion: Option[Boolean],
-                                 beneficiaryShareOfIncome: Option[String],
-                                 entityStart: String) extends BeneficiaryType
+case class DisplayTrustLargeType(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  organisationName: String,
+  countryOfResidence: Option[String],
+  description: String,
+  description1: Option[String],
+  description2: Option[String],
+  description3: Option[String],
+  description4: Option[String],
+  numberOfBeneficiary: String,
+  identification: Option[DisplayTrustIdentificationOrgType],
+  beneficiaryDiscretion: Option[Boolean],
+  beneficiaryShareOfIncome: Option[String],
+  entityStart: String
+) extends BeneficiaryType
 
 object DisplayTrustLargeType {
   implicit val largeTypeFormat: Format[DisplayTrustLargeType] = Json.format[DisplayTrustLargeType]
 }
 
-case class DisplayTrustOtherType(lineNo: Option[String],
-                                 bpMatchStatus: Option[String],
-                                 description: String,
-                                 countryOfResidence: Option[String],
-                                 address: Option[AddressType],
-                                 beneficiaryDiscretion: Option[Boolean],
-                                 beneficiaryShareOfIncome: Option[String],
-                                 entityStart: String) extends BeneficiaryType
+case class DisplayTrustOtherType(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  description: String,
+  countryOfResidence: Option[String],
+  address: Option[AddressType],
+  beneficiaryDiscretion: Option[Boolean],
+  beneficiaryShareOfIncome: Option[String],
+  entityStart: String
+) extends BeneficiaryType
 
 object DisplayTrustOtherType {
   implicit val otherTypeFormat: Format[DisplayTrustOtherType] = Json.format[DisplayTrustOtherType]

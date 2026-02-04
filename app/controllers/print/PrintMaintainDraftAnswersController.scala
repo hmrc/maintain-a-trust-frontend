@@ -26,29 +26,26 @@ import views.html.print.PrintMaintainDraftAnswersView
 
 import scala.concurrent.Future
 
-class PrintMaintainDraftAnswersController @Inject()(
-                                                     override val messagesApi: MessagesApi,
-                                                     actions: Actions,
-                                                     val controllerComponents: MessagesControllerComponents,
-                                                     view: PrintMaintainDraftAnswersView,
-                                                     printPlaybackAnswersHelper: PrintPlaybackHelper
-                                                   ) extends FrontendBaseController with I18nSupport {
+class PrintMaintainDraftAnswersController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  view: PrintMaintainDraftAnswersView,
+  printPlaybackAnswersHelper: PrintPlaybackHelper
+) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer.async { implicit request =>
+    val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)
 
-      val closeDate = printPlaybackAnswersHelper.closeDate(request.userAnswers)
+    val entities = printPlaybackAnswersHelper.entities(request.userAnswers)
 
-      val entities = printPlaybackAnswersHelper.entities(request.userAnswers)
+    val trustDetails = printPlaybackAnswersHelper.trustDetails(request.userAnswers)
 
-      val trustDetails = printPlaybackAnswersHelper.trustDetails(request.userAnswers)
-
-      Future.successful(Ok(view(closeDate, entities, trustDetails)))
+    Future.successful(Ok(view(closeDate, entities, trustDetails)))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer {
-    _ =>
-      Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer { _ =>
+    Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
   }
 
 }

@@ -30,28 +30,46 @@ import java.time.LocalDate
 class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSettlor] {
 
   override def ninoYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualNINOYesNoPage(index)
-  override def ninoPage(index: Int): QuestionPage[String] = SettlorIndividualNINOPage(index)
+  override def ninoPage(index: Int): QuestionPage[String]       = SettlorIndividualNINOPage(index)
 
-  override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualPassportIDCardYesNoPage(index)
+  override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualPassportIDCardYesNoPage(
+    index
+  )
+
   override def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = SettlorIndividualPassportIDCardPage(index)
 
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualDateOfBirthYesNoPage(index)
-  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = SettlorIndividualDateOfBirthPage(index)
+  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate]    = SettlorIndividualDateOfBirthPage(index)
 
-  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfNationalityYesNoPage(index)
-  override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfNationalityInTheUkYesNoPage(index)
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfNationalityYesNoPage(
+    index
+  )
+
+  override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
+    SettlorCountryOfNationalityInTheUkYesNoPage(index)
+
   override def countryOfNationalityPage(index: Int): QuestionPage[String] = SettlorCountryOfNationalityPage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfResidenceYesNoPage(index)
-  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = SettlorCountryOfResidenceYesNoPage(
+    index
+  )
+
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    SettlorCountryOfResidenceInTheUkYesNoPage(index)
+
   override def countryOfResidencePage(index: Int): QuestionPage[String] = SettlorCountryOfResidencePage(index)
 
-  override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualMentalCapacityYesNoPage(index)
+  override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = SettlorIndividualMentalCapacityYesNoPage(
+    index
+  )
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayTrustSettlor,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
-    super.updateUserAnswers(answers, entity, index)
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayTrustSettlor,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
+    super
+      .updateUserAnswers(answers, entity, index)
       .flatMap(_.set(SettlorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(SettlorIndividualNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
@@ -61,5 +79,5 @@ class IndividualSettlorExtractor extends SettlorPlaybackExtractor[DisplayTrustSe
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(SettlorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(_.set(LivingSettlorStatus(index), Completed))
-  }
+
 }

@@ -28,8 +28,7 @@ trait DeclarationFormProvider extends Mappings {
   private val maximumLength = 35
 
   val fullName: Mapping[FullName] = mapping(
-
-    "firstName" -> text("declaration.error.firstName.required")
+    "firstName"  -> text("declaration.error.firstName.required")
       .verifying(
         firstError(
           maxLength(maximumLength, "declaration.error.firstName.length"),
@@ -37,15 +36,17 @@ trait DeclarationFormProvider extends Mappings {
           regexp(Validation.nameRegex, "declaration.error.firstName.invalid")
         )
       ),
-    "middleName" -> optional(text()
-      .transform(trimWhitespace, identity[String])
-      .verifying(
-        firstError(
-          maxLength(maximumLength, "declaration.error.middleName.length"),
-          regexp(Validation.nameRegex, "declaration.error.middleName.invalid"))
-      )
+    "middleName" -> optional(
+      text()
+        .transform(trimWhitespace, identity[String])
+        .verifying(
+          firstError(
+            maxLength(maximumLength, "declaration.error.middleName.length"),
+            regexp(Validation.nameRegex, "declaration.error.middleName.invalid")
+          )
+        )
     ).transform(emptyToNone, identity[Option[String]]),
-    "lastName" -> text("declaration.error.lastName.required")
+    "lastName"   -> text("declaration.error.lastName.required")
       .verifying(
         firstError(
           maxLength(maximumLength, "declaration.error.lastName.length"),

@@ -23,4 +23,3 @@ final case class TVNResponse(tvn: String)
 object TVNResponse {
   implicit val format: Format[TVNResponse] = Json.format[TVNResponse]
 }
-

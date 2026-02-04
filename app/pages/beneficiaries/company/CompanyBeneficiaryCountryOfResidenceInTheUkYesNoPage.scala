@@ -20,7 +20,7 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import sections.beneficiaries.{Beneficiaries, CompanyBeneficiaries}
 
-final case class CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(index : Int) extends QuestionPage[Boolean] {
+final case class CompanyBeneficiaryCountryOfResidenceInTheUkYesNoPage(index: Int) extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ Beneficiaries \ CompanyBeneficiaries \ index \ toString
 

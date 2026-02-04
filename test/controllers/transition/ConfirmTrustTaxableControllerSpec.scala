@@ -107,7 +107,8 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
             reset(mockPlaybackRepository)
 
-            when(mockPlaybackRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+            when(mockPlaybackRepository.set(any()))
+              .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
             val mockTrustsConnector = mock[TrustConnector]
 
@@ -143,7 +144,8 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
             reset(mockPlaybackRepository)
 
-            when(mockPlaybackRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+            when(mockPlaybackRepository.set(any()))
+              .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
             val mockTrustsConnector = mock[TrustConnector]
 
@@ -151,7 +153,8 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
               .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
             val userAnswers = TestUserAnswers.emptyUserAnswersForUrn
-              .set(WhatIsNextPage, NeedsToPayTax).value
+              .set(WhatIsNextPage, NeedsToPayTax)
+              .value
 
             val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
               .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -177,7 +180,8 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
             reset(mockPlaybackRepository)
 
-            when(mockPlaybackRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+            when(mockPlaybackRepository.set(any()))
+              .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
             val mockTrustsConnector = mock[TrustConnector]
 
@@ -185,7 +189,8 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
               .thenReturn(EitherT[Future, TrustErrors, HttpResponse](Future.successful(Right(okResponse))))
 
             val userAnswers = TestUserAnswers.emptyUserAnswersForUrn
-              .set(WhatIsNextPage, NeedsToPayTax).value
+              .set(WhatIsNextPage, NeedsToPayTax)
+              .value
 
             val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Organisation)
               .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -229,11 +234,12 @@ class ConfirmTrustTaxableControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustBe INTERNAL_SERVER_ERROR
+        status(result)      mustBe INTERNAL_SERVER_ERROR
         contentType(result) mustBe Some("text/html")
 
         application.stop()
       }
     }
   }
+
 }

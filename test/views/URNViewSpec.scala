@@ -41,4 +41,5 @@ class URNViewSpec extends StringViewBehaviours {
 
     behave like stringPage(form, applyView, messageKeyPrefix)
   }
+
 }

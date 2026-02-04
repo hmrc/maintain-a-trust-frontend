@@ -21,15 +21,17 @@ import play.api.libs.json.{Format, Json}
 
 import java.time.LocalDate
 
-case class NaturalPersonType(lineNo: Option[String],
-                             bpMatchStatus: Option[String],
-                             name: FullName,
-                             dateOfBirth: Option[LocalDate],
-                             nationality: Option[String],
-                             countryOfResidence: Option[String],
-                             legallyIncapable: Option[Boolean],
-                             identification: Option[DisplayTrustIdentificationType],
-                             entityStart: String) extends EntityType
+case class NaturalPersonType(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  name: FullName,
+  dateOfBirth: Option[LocalDate],
+  nationality: Option[String],
+  countryOfResidence: Option[String],
+  legallyIncapable: Option[Boolean],
+  identification: Option[DisplayTrustIdentificationType],
+  entityStart: String
+) extends EntityType
 
 object NaturalPersonType {
   implicit val naturalPersonTypeFormat: Format[NaturalPersonType] = Json.format[NaturalPersonType]

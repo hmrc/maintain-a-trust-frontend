@@ -41,75 +41,71 @@ import views.html.WhatIsNextView
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class WhatIsNextController @Inject()(
-                                      override val messagesApi: MessagesApi,
-                                      playbackRepository: PlaybackRepository,
-                                      actions: Actions,
-                                      formProvider: WhatIsNextFormProvider,
-                                      val controllerComponents: MessagesControllerComponents,
-                                      view: WhatIsNextView,
-                                      trustConnector: TrustConnector,
-                                      trustsStoreConnector: TrustsStoreConnector,
-                                      maintainATrustService: MaintainATrustService,
-                                      appConfig: FrontendAppConfig,
-                                      errorHandler: ErrorHandler
-                                    ) (implicit ec: ExecutionContext)
-  extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) with Logging {
+class WhatIsNextController @Inject() (
+  override val messagesApi: MessagesApi,
+  playbackRepository: PlaybackRepository,
+  actions: Actions,
+  formProvider: WhatIsNextFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: WhatIsNextView,
+  trustConnector: TrustConnector,
+  trustsStoreConnector: TrustsStoreConnector,
+  maintainATrustService: MaintainATrustService,
+  appConfig: FrontendAppConfig,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) with Logging {
 
-  private val className = getClass.getSimpleName
+  private val className              = getClass.getSimpleName
   private val form: Form[WhatIsNext] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
-
-      val preparedForm = request.userAnswers.get(WhatIsNextPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-      Ok(view(preparedForm, request.userAnswers.trustMldStatus))
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    val preparedForm = request.userAnswers.get(WhatIsNextPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
+    Ok(view(preparedForm, request.userAnswers.trustMldStatus))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
-    implicit request =>
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async { implicit request =>
+    val result = for {
+      formData         <- TrustEnvelope(handleFormValidation)
+      hasAnswerChanged <- TrustEnvelope(!request.userAnswers.get(WhatIsNextPage).contains(formData))
+      updatedAnswers   <- TrustEnvelope(request.userAnswers.set(WhatIsNextPage, formData))
+      _                <- playbackRepository.set(updatedAnswers)
+      redirectRoute    <- updateMigrationStatusAndRedirect(updatedAnswers, formData, hasAnswerChanged)
+    } yield redirectRoute
 
-      val result = for {
-        formData <- TrustEnvelope(handleFormValidation)
-        hasAnswerChanged <- TrustEnvelope(!request.userAnswers.get(WhatIsNextPage).contains(formData))
-        updatedAnswers <- TrustEnvelope(request.userAnswers.set(WhatIsNextPage, formData))
-        _ <- playbackRepository.set(updatedAnswers)
-        redirectRoute <- updateMigrationStatusAndRedirect(updatedAnswers, formData, hasAnswerChanged)
-      } yield {
-        redirectRoute
-      }
-
-      result.value.flatMap {
-        case Right(call) => Future.successful(call)
-        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
-        case Left(_) =>
-          logger.warn(s"[$className][onSubmit][Session ID: ${Session.id(hc)}] Error while storing user answers")
-          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-      }
+    result.value.flatMap {
+      case Right(call)                               => Future.successful(call)
+      case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
+      case Left(_)                                   =>
+        logger.warn(s"[$className][onSubmit][Session ID: ${Session.id(hc)}] Error while storing user answers")
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
+    }
   }
 
-  private def updateMigrationStatusAndRedirect(userAnswers: UserAnswers, newAnswer: WhatIsNext, hasAnswerChanged: Boolean)
-                                              (implicit request: DataRequest[AnyContent]): TrustEnvelope[Result] = {
+  private def updateMigrationStatusAndRedirect(
+    userAnswers: UserAnswers,
+    newAnswer: WhatIsNext,
+    hasAnswerChanged: Boolean
+  )(implicit request: DataRequest[AnyContent]): TrustEnvelope[Result] = {
 
     def redirect: Result = Redirect {
       newAnswer match {
-        case DeclareTheTrustIsUpToDate =>
+        case DeclareTheTrustIsUpToDate                       =>
           redirectToDeclaration
-        case MakeChanges =>
+        case MakeChanges                                     =>
           redirectToFirstUpdateQuestion
-        case CloseTrust =>
+        case CloseTrust                                      =>
           redirectsForClosedTrust(userAnswers)
-        case NoLongerTaxable =>
+        case NoLongerTaxable                                 =>
           controllers.routes.NoTaxLiabilityInfoController.onPageLoad()
         case NeedsToPayTax if appConfig.migrateATrustEnabled =>
-          controllers.transition.routes.
-            NeedToPayTaxYesNoController.onPageLoad()
-        case GeneratePdf =>
+          controllers.transition.routes.NeedToPayTaxYesNoController.onPageLoad()
+        case GeneratePdf                                     =>
           controllers.routes.ObligedEntityPdfYesNoController.onPageLoad()
-        case _ =>
+        case _                                               =>
           controllers.routes.FeatureNotAvailableController.onPageLoad()
       }
     }
@@ -124,30 +120,32 @@ class WhatIsNextController @Inject()(
     }
   }
 
-  private def removeTransformsIfAnswerHasChanged(hasAnswerChanged: Boolean)
-                                                (implicit request: DataRequest[AnyContent]): TrustEnvelope[Unit] = {
+  private def removeTransformsIfAnswerHasChanged(
+    hasAnswerChanged: Boolean
+  )(implicit request: DataRequest[AnyContent]): TrustEnvelope[Unit] =
     if (hasAnswerChanged) {
-      logger.info(s"[$className][removeTransformsIfAnswerHasChanged][Session ID: ${Session.id(hc)}] Answer has changed. Removing transforms and resetting tasks.")
+      logger.info(
+        s"[$className][removeTransformsIfAnswerHasChanged][Session ID: ${Session.id(hc)}] Answer has changed. Removing transforms and resetting tasks."
+      )
       maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
     } else {
       TrustEnvelope(())
     }
-  }
 
-  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, WhatIsNext] = {
-    form.bindFromRequest().fold(
-      (formWithErrors: Form[_]) =>
-        Left(FormValidationError(BadRequest(view(formWithErrors, request.userAnswers.trustMldStatus)))),
-      value => Right(value)
-    )
-  }
+  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, WhatIsNext] =
+    form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) =>
+          Left(FormValidationError(BadRequest(view(formWithErrors, request.userAnswers.trustMldStatus)))),
+        value => Right(value)
+      )
 
-  protected def redirectsForClosedTrust(userAnswers: UserAnswers): Call = {
-    if(userAnswers.isTrustTaxable) {
+  protected def redirectsForClosedTrust(userAnswers: UserAnswers): Call =
+    if (userAnswers.isTrustTaxable) {
       controllers.close.taxable.routes.DateLastAssetSharedOutYesNoController.onPageLoad()
     } else {
       controllers.close.nontaxable.routes.DateClosedController.onPageLoad()
     }
-  }
 
 }

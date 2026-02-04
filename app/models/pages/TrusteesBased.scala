@@ -27,7 +27,9 @@ object TrusteesBased extends Enumerable.Implicits {
   case object InternationalAndUkBasedTrustees extends WithName("some-uk-based") with TrusteesBased
 
   val values: List[TrusteesBased] = List(
-    AllTrusteesUkBased, NoTrusteesUkBased, InternationalAndUkBasedTrustees
+    AllTrusteesUkBased,
+    NoTrusteesUkBased,
+    InternationalAndUkBasedTrustees
   )
 
   implicit val enumerable: Enumerable[TrusteesBased] =

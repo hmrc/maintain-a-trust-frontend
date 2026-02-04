@@ -25,5 +25,3 @@ object TestWizardForm {
 
   implicit val formats: OFormat[TestWizardForm] = Json.format[TestWizardForm]
 }
-
-

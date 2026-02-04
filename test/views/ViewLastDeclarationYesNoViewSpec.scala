@@ -38,14 +38,11 @@ class ViewLastDeclarationYesNoViewSpec extends YesNoViewBehaviours {
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, utr, UTR)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView(form),
-      messageKeyPrefix,
-      "utr",
-      utr,
-      "hint")
+    behave like normalPageTitleWithCaption(applyView(form), messageKeyPrefix, "utr", utr, "hint")
 
     behave like pageWithBackLink(applyView(form))
 
     behave like yesNoPage(form, applyView, messageKeyPrefix)
   }
+
 }

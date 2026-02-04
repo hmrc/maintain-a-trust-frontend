@@ -22,41 +22,82 @@ import views.html.AgentNotAuthorisedView
 
 class AgentNotAuthorisedViewSpec extends ViewBehaviours {
 
-
-
   "AgentNotAuthorised view for UTR" must {
-    val utr = "0987654321"
+    val utr  = "0987654321"
     val view = viewFor[AgentNotAuthorisedView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply("0987654321", UTR)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "agentNotAuthorised",
       "utr",
       utr,
-      "p1", "subheading1", "p2", "p3","bullet.1","bullet.2", "subheading2", "p4", "p5",
-      "bullet.3", "bullet.4", "p6", "bullet.5", "bullet.6", "p7", "p7.a", "subheading3",
-      "p8", "p9", "p9.a", "p10", "p11", "p11.a"
+      "p1",
+      "subheading1",
+      "p2",
+      "p3",
+      "bullet.1",
+      "bullet.2",
+      "subheading2",
+      "p4",
+      "p5",
+      "bullet.3",
+      "bullet.4",
+      "p6",
+      "bullet.5",
+      "bullet.6",
+      "p7",
+      "p7.a",
+      "subheading3",
+      "p8",
+      "p9",
+      "p9.a",
+      "p10",
+      "p11",
+      "p11.a"
     )
 
     behave like pageWithBackLink(applyView)
   }
 
   "AgentNotAuthorised view for URN" must {
-    val urn = "XATRUST12345678"
+    val urn  = "XATRUST12345678"
     val view = viewFor[AgentNotAuthorisedView](Some(emptyUserAnswersForUrn))
 
     val applyView = view.apply("XATRUST12345678", URN)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "agentNotAuthorised",
       "urn",
       urn,
-      "p1", "subheading1", "p2", "p3","bullet.1","bullet.2", "subheading2", "p4", "p5",
-      "bullet.3", "bullet.4", "p6", "bullet.5", "bullet.6", "p7", "p7.a", "subheading3",
-      "p8", "p9", "p9.a", "p10", "p11", "p11.a"
+      "p1",
+      "subheading1",
+      "p2",
+      "p3",
+      "bullet.1",
+      "bullet.2",
+      "subheading2",
+      "p4",
+      "p5",
+      "bullet.3",
+      "bullet.4",
+      "p6",
+      "bullet.5",
+      "bullet.6",
+      "p7",
+      "p7.a",
+      "subheading3",
+      "p8",
+      "p9",
+      "p9.a",
+      "p10",
+      "p11",
+      "p11.a"
     )
 
     behave like pageWithBackLink(applyView)
   }
+
 }

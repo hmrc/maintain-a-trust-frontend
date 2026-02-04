@@ -29,8 +29,8 @@ class UpdateTrustDetailsYesNoViewSpec extends YesNoViewBehaviours {
     "making changes" must {
 
       val messageKeyPrefix: String = "updateTrustDetails"
-      val determinePrefix = (_: Boolean) => messageKeyPrefix
-      val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+      val determinePrefix          = (_: Boolean) => messageKeyPrefix
+      val form: Form[Boolean]      = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
       val view = viewFor[UpdateTrustDetailsYesNoView](Some(emptyUserAnswersForUtr))
 
@@ -40,7 +40,9 @@ class UpdateTrustDetailsYesNoViewSpec extends YesNoViewBehaviours {
       behave like normalPage(
         view = applyView(form),
         messageKeyPrefix = messageKeyPrefix,
-        expectedGuidanceKeys = "additionalContent1", "additionalContent2", "additionalContent3"
+        expectedGuidanceKeys = "additionalContent1",
+        "additionalContent2",
+        "additionalContent3"
       )
 
       behave like pageWithBackLink(applyView(form))
@@ -53,8 +55,8 @@ class UpdateTrustDetailsYesNoViewSpec extends YesNoViewBehaviours {
     "closing" must {
 
       val messageKeyPrefix: String = "updateTrustDetailsClosing"
-      val determinePrefix = (_: Boolean) => messageKeyPrefix
-      val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+      val determinePrefix          = (_: Boolean) => messageKeyPrefix
+      val form: Form[Boolean]      = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
       val view = viewFor[UpdateTrustDetailsYesNoView](Some(emptyUserAnswersForUtr))
 
@@ -72,4 +74,5 @@ class UpdateTrustDetailsYesNoViewSpec extends YesNoViewBehaviours {
       behave like pageWithASubmitButton(applyView(form))
     }
   }
+
 }

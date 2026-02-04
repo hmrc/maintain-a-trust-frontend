@@ -29,10 +29,10 @@ class UnavailableSectionsControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .configure(
-          "microservice.services.features.maintain-trustees.enabled" -> true,
-          "microservice.services.features.maintain-beneficiaries.enabled" -> false,
-          "microservice.services.features.maintain-settlors.enabled" -> false,
-          "microservice.services.features.maintain-protectors.enabled" -> false,
+          "microservice.services.features.maintain-trustees.enabled"          -> true,
+          "microservice.services.features.maintain-beneficiaries.enabled"     -> false,
+          "microservice.services.features.maintain-settlors.enabled"          -> false,
+          "microservice.services.features.maintain-protectors.enabled"        -> false,
           "microservice.services.features.maintain-other-individuals.enabled" -> false
         )
         .build()
@@ -59,10 +59,10 @@ class UnavailableSectionsControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .configure(
-          "microservice.services.features.maintain-trustees.enabled" -> true,
-          "microservice.services.features.maintain-beneficiaries.enabled" -> true,
-          "microservice.services.features.maintain-settlors.enabled" -> false,
-          "microservice.services.features.maintain-protectors.enabled" -> false,
+          "microservice.services.features.maintain-trustees.enabled"          -> true,
+          "microservice.services.features.maintain-beneficiaries.enabled"     -> true,
+          "microservice.services.features.maintain-settlors.enabled"          -> false,
+          "microservice.services.features.maintain-protectors.enabled"        -> false,
           "microservice.services.features.maintain-other-individuals.enabled" -> false
         )
         .build()
@@ -89,10 +89,10 @@ class UnavailableSectionsControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
         .configure(
-          "microservice.services.features.maintain-trustees.enabled" -> true,
-          "microservice.services.features.maintain-beneficiaries.enabled" -> true,
-          "microservice.services.features.maintain-settlors.enabled" -> true,
-          "microservice.services.features.maintain-protectors.enabled" -> false,
+          "microservice.services.features.maintain-trustees.enabled"          -> true,
+          "microservice.services.features.maintain-beneficiaries.enabled"     -> true,
+          "microservice.services.features.maintain-settlors.enabled"          -> true,
+          "microservice.services.features.maintain-protectors.enabled"        -> false,
           "microservice.services.features.maintain-other-individuals.enabled" -> false
         )
         .build()
@@ -115,4 +115,5 @@ class UnavailableSectionsControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

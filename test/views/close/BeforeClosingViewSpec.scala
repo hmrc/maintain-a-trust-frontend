@@ -33,10 +33,20 @@ class BeforeClosingViewSpec extends ViewBehaviours {
     behave like normalPage(
       view = applyView(),
       messageKeyPrefix = messageKeyPrefix,
-      expectedGuidanceKeys = "subheading", "paragraph1", "bullet1", "bullet2", "bullet3", "bullet4", "bullet5", "paragraph2", "paragraph3")
+      expectedGuidanceKeys = "subheading",
+      "paragraph1",
+      "bullet1",
+      "bullet2",
+      "bullet3",
+      "bullet4",
+      "bullet5",
+      "paragraph2",
+      "paragraph3"
+    )
 
     behave like pageWithBackLink(applyView())
 
     behave like pageWithASubmitButton(applyView())
   }
+
 }

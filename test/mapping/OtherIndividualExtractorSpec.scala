@@ -28,8 +28,8 @@ import utils.Constants.{DE, GB}
 
 import java.time.LocalDate
 
-class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
-  with EitherValues with Generators with SpecBaseHelpers {
+class OtherIndividualExtractorSpec
+    extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   private val (year1970, year2020) = (1970, 2020)
 
@@ -68,7 +68,7 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
           case _ => None
         },
         passport = index match {
-          case 2 => Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020,2,2)))
+          case 2 => Some(PassportType("DE", "KSJDFKSDHF6456545147852369QWER", LocalDate.of(year2020, 2, 2)))
           case _ => None
         },
         address = index match {
@@ -79,7 +79,7 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
       )
     )
 
-  val individualExtractor : OtherIndividualExtractor =
+  val individualExtractor: OtherIndividualExtractor =
     injector.instanceOf[OtherIndividualExtractor]
 
   "Other Individual Extractor" - {
@@ -105,25 +105,27 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
       "for a 4mld taxable trust" - {
 
         "should not populate Country Of Residence pages" in {
-          val individual = List(NaturalPersonType(
-            lineNo = Some("1"),
-            bpMatchStatus = Some("01"),
-            name = FullName("First Name", None, "Last Name"),
-            dateOfBirth = None,
-            nationality = Some("FR"),
-            countryOfResidence = Some("FR"),
-            legallyIncapable = None,
-            identification = None,
-            entityStart = "2019-11-26"
-          ))
+          val individual = List(
+            NaturalPersonType(
+              lineNo = Some("1"),
+              bpMatchStatus = Some("01"),
+              name = FullName("First Name", None, "Last Name"),
+              dateOfBirth = None,
+              nationality = Some("FR"),
+              countryOfResidence = Some("FR"),
+              legallyIncapable = None,
+              identification = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUtr
 
           val extraction = individualExtractor.extract(ua, individual)
 
-          extraction.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-          extraction.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get mustBe false
+          extraction.value.get(OtherIndividualNamePage(0)).get                   mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(OtherIndividualMetaData(0)).get                   mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get       mustBe false
           extraction.value.get(OtherIndividualDateOfBirthPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualCountryOfNationalityYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
@@ -134,7 +136,7 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(OtherIndividualMentalCapacityYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualNationalInsuranceYesNoPage(0)).get mustBe false
           extraction.value.get(OtherIndividualNationalInsuranceNumberPage(0)) mustNot be(defined)
-          extraction.value.get(OtherIndividualAddressYesNoPage(0)).get mustBe false
+          extraction.value.get(OtherIndividualAddressYesNoPage(0)).get           mustBe false
           extraction.value.get(OtherIndividualAddressUKYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualAddressPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
@@ -146,36 +148,38 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
       "for a 5mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val individual = List(NaturalPersonType(
-            lineNo = Some("1"),
-            bpMatchStatus = Some("01"),
-            name = FullName("First Name", None, "Last Name"),
-            dateOfBirth = None,
-            nationality = None,
-            countryOfResidence = None,
-            legallyIncapable = None,
-            identification = None,
-            entityStart = "2019-11-26"
-          ))
+          val individual = List(
+            NaturalPersonType(
+              lineNo = Some("1"),
+              bpMatchStatus = Some("01"),
+              name = FullName("First Name", None, "Last Name"),
+              dateOfBirth = None,
+              nationality = None,
+              countryOfResidence = None,
+              legallyIncapable = None,
+              identification = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val extraction = individualExtractor.extract(ua, individual)
 
-          extraction.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-          extraction.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get mustBe false
+          extraction.value.get(OtherIndividualNamePage(0)).get                      mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(OtherIndividualMetaData(0)).get                      mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get          mustBe false
           extraction.value.get(OtherIndividualDateOfBirthPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualCountryOfNationalityYesNoPage(0)).get mustBe false
           extraction.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualCountryOfNationalityPage(0)) mustNot be(defined)
-          extraction.value.get(OtherIndividualCountryOfResidenceYesNoPage(0)).get mustBe false
+          extraction.value.get(OtherIndividualCountryOfResidenceYesNoPage(0)).get   mustBe false
           extraction.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualCountryOfResidencePage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualMentalCapacityYesNoPage(0)) mustNot be(defined)
-          extraction.value.get(OtherIndividualNationalInsuranceYesNoPage(0)).get mustBe false
+          extraction.value.get(OtherIndividualNationalInsuranceYesNoPage(0)).get    mustBe false
           extraction.value.get(OtherIndividualNationalInsuranceNumberPage(0)) mustNot be(defined)
-          extraction.value.get(OtherIndividualAddressYesNoPage(0)).get mustBe false
+          extraction.value.get(OtherIndividualAddressYesNoPage(0)).get              mustBe false
           extraction.value.get(OtherIndividualAddressUKYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualAddressPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
@@ -253,14 +257,25 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(OtherIndividualAddressUKYesNoPage(2)).get mustBe true
 
           extraction.value.get(OtherIndividualAddressPage(0)) mustNot be(defined)
-          extraction.value.get(OtherIndividualAddressPage(1)).get mustBe InternationalAddress("line 1", "line2", None, "DE")
-          extraction.value.get(OtherIndividualAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+          extraction.value.get(OtherIndividualAddressPage(1)).get mustBe InternationalAddress(
+            "line 1",
+            "line2",
+            None,
+            "DE"
+          )
+          extraction.value.get(OtherIndividualAddressPage(2)).get mustBe UKAddress(
+            "line 2",
+            "line2",
+            None,
+            None,
+            "NE11NE"
+          )
 
           extraction.value.get(OtherIndividualPassportIDCardYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualPassportIDCardPage(0)) mustNot be(defined)
-          extraction.value.get(OtherIndividualPassportIDCardYesNoPage(1)).get mustBe false
+          extraction.value.get(OtherIndividualPassportIDCardYesNoPage(1)).get           mustBe false
           extraction.value.get(OtherIndividualPassportIDCardPage(1)) mustNot be(defined)
-          extraction.value.get(OtherIndividualPassportIDCardYesNoPage(2)).get mustBe true
+          extraction.value.get(OtherIndividualPassportIDCardYesNoPage(2)).get           mustBe true
           extraction.value.get(OtherIndividualPassportIDCardPage(2)).get.countryOfIssue mustBe "DE"
 
           extraction.value.get(OtherIndividualSafeIdPage(0)).get mustBe "8947584-94759745-84758745"
@@ -273,30 +288,32 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
       "for a non taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val individual = List(NaturalPersonType(
-            lineNo = Some("1"),
-            bpMatchStatus = Some("01"),
-            name = FullName("First Name", None, "Last Name"),
-            dateOfBirth = None,
-            nationality = None,
-            countryOfResidence = None,
-            legallyIncapable = None,
-            identification = None,
-            entityStart = "2019-11-26"
-          ))
+          val individual = List(
+            NaturalPersonType(
+              lineNo = Some("1"),
+              bpMatchStatus = Some("01"),
+              name = FullName("First Name", None, "Last Name"),
+              dateOfBirth = None,
+              nationality = None,
+              countryOfResidence = None,
+              legallyIncapable = None,
+              identification = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUrn
 
           val extraction = individualExtractor.extract(ua, individual)
 
-          extraction.value.get(OtherIndividualNamePage(0)).get mustBe FullName("First Name", None, "Last Name")
-          extraction.value.get(OtherIndividualMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-          extraction.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get mustBe false
+          extraction.value.get(OtherIndividualNamePage(0)).get                      mustBe FullName("First Name", None, "Last Name")
+          extraction.value.get(OtherIndividualMetaData(0)).get                      mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(OtherIndividualDateOfBirthYesNoPage(0)).get          mustBe false
           extraction.value.get(OtherIndividualDateOfBirthPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualCountryOfNationalityYesNoPage(0)).get mustBe false
           extraction.value.get(OtherIndividualCountryOfNationalityInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualCountryOfNationalityPage(0)) mustNot be(defined)
-          extraction.value.get(OtherIndividualCountryOfResidenceYesNoPage(0)).get mustBe false
+          extraction.value.get(OtherIndividualCountryOfResidenceYesNoPage(0)).get   mustBe false
           extraction.value.get(OtherIndividualCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualCountryOfResidencePage(0)) mustNot be(defined)
           extraction.value.get(OtherIndividualMentalCapacityYesNoPage(0)) mustNot be(defined)
@@ -396,4 +413,5 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with Matchers
       }
     }
   }
+
 }

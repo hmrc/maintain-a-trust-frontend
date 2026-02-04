@@ -37,84 +37,87 @@ import views.html.transition.NeedToPayTaxYesNoView
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class NeedToPayTaxYesNoController @Inject()(
-                                             override val messagesApi: MessagesApi,
-                                             playbackRepository: PlaybackRepository,
-                                             actions: Actions,
-                                             val controllerComponents: MessagesControllerComponents,
-                                             yesNoFormProvider: YesNoFormProvider,
-                                             view: NeedToPayTaxYesNoView,
-                                             trustConnector: TrustConnector,
-                                             maintainATrustService: MaintainATrustService,
-                                             errorHandler: ErrorHandler
-                                           ) (implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Logging {
+class NeedToPayTaxYesNoController @Inject() (
+  override val messagesApi: MessagesApi,
+  playbackRepository: PlaybackRepository,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  yesNoFormProvider: YesNoFormProvider,
+  view: NeedToPayTaxYesNoView,
+  trustConnector: TrustConnector,
+  maintainATrustService: MaintainATrustService,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  private val className = getClass.getSimpleName
+  private val className           = getClass.getSimpleName
   private val form: Form[Boolean] = yesNoFormProvider.withPrefix("needToPayTaxYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    val identifier     = request.userAnswers.identifier
+    val identifierType = request.userAnswers.identifierType
 
-      val identifier = request.userAnswers.identifier
-      val identifierType = request.userAnswers.identifierType
-
-      val preparedForm = request.userAnswers.get(NeedToPayTaxYesNoPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-      Ok(view(preparedForm, identifier, identifierType))
+    val preparedForm = request.userAnswers.get(NeedToPayTaxYesNoPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
+    Ok(view(preparedForm, identifier, identifierType))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
-    implicit request =>
-
-      val result = for {
-        needsToPayTax <- TrustEnvelope(handleFormValidation)
-        hasAnswerChanged <- TrustEnvelope(!request.userAnswers.get(NeedToPayTaxYesNoPage).contains(needsToPayTax))
-        updatedAnswers <- TrustEnvelope(request.userAnswers.set(NeedToPayTaxYesNoPage, needsToPayTax))
-        _ <- playbackRepository.set(updatedAnswers)
-        _ <- updateTransforms(hasAnswerChanged, needsToPayTax)
-      } yield {
-        if (needsToPayTax) {
-          Redirect(routes.BeforeYouContinueToTaxableController.onPageLoad())
-        } else {
-          Redirect(controllers.routes.WhatIsNextController.onPageLoad())
-        }
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async { implicit request =>
+    val result = for {
+      needsToPayTax    <- TrustEnvelope(handleFormValidation)
+      hasAnswerChanged <- TrustEnvelope(!request.userAnswers.get(NeedToPayTaxYesNoPage).contains(needsToPayTax))
+      updatedAnswers   <- TrustEnvelope(request.userAnswers.set(NeedToPayTaxYesNoPage, needsToPayTax))
+      _                <- playbackRepository.set(updatedAnswers)
+      _                <- updateTransforms(hasAnswerChanged, needsToPayTax)
+    } yield
+      if (needsToPayTax) {
+        Redirect(routes.BeforeYouContinueToTaxableController.onPageLoad())
+      } else {
+        Redirect(controllers.routes.WhatIsNextController.onPageLoad())
       }
 
-      result.value.flatMap {
-        case Right(call) => Future.successful(call)
-        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
-        case Left(_) =>
-          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-      }
-  }
-
-  private def updateTransforms(hasAnswerChanged: Boolean, needsToPayTax: Boolean)
-                              (implicit request: DataRequest[AnyContent]): TrustEnvelope[Unit] = {
-    (hasAnswerChanged, needsToPayTax) match {
-      case (false, _) =>
-        logger.info(s"[$className][updateTransforms][Session ID: ${Session.id(hc)}] Answer hasn't changed. Nothing to update.")
-        TrustEnvelope(())
-      case (true, true) =>
-        logger.info(s"[$className][updateTransforms][Session ID: ${Session.id(hc)}] Answer has changed to yes. Setting taxable trust.")
-        trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax).map(_ => ())
-      case (true, false) =>
-        logger.info(s"[$className][updateTransforms][Session ID: ${Session.id(hc)}] Answer has changed to no. Removing transforms and resetting tasks.")
-        maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
+    result.value.flatMap {
+      case Right(call)                               => Future.successful(call)
+      case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
+      case Left(_)                                   =>
+        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
     }
   }
 
-  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, Boolean] = {
-    form.bindFromRequest().fold(
-      (formWithErrors: Form[_]) => {
-        val identifier = request.userAnswers.identifier
-        val identifierType = request.userAnswers.identifierType
-        Left(FormValidationError(BadRequest(view(formWithErrors, identifier, identifierType))))
-      },
-      value => Right(value)
-    )
-  }
+  private def updateTransforms(hasAnswerChanged: Boolean, needsToPayTax: Boolean)(implicit
+    request: DataRequest[AnyContent]
+  ): TrustEnvelope[Unit] =
+    (hasAnswerChanged, needsToPayTax) match {
+      case (false, _)    =>
+        logger.info(
+          s"[$className][updateTransforms][Session ID: ${Session.id(hc)}] Answer hasn't changed. Nothing to update."
+        )
+        TrustEnvelope(())
+      case (true, true)  =>
+        logger.info(
+          s"[$className][updateTransforms][Session ID: ${Session.id(hc)}] Answer has changed to yes. Setting taxable trust."
+        )
+        trustConnector.setTaxableTrust(request.userAnswers.identifier, needsToPayTax).map(_ => ())
+      case (true, false) =>
+        logger.info(
+          s"[$className][updateTransforms][Session ID: ${Session.id(hc)}] Answer has changed to no. Removing transforms and resetting tasks."
+        )
+        maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
+    }
+
+  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, Boolean] =
+    form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) => {
+          val identifier     = request.userAnswers.identifier
+          val identifierType = request.userAnswers.identifierType
+          Left(FormValidationError(BadRequest(view(formWithErrors, identifier, identifierType))))
+        },
+        value => Right(value)
+      )
+
 }

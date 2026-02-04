@@ -23,13 +23,15 @@ import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.DisplayTrustBeneficiaryType
 import play.api.Logging
 
-class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBeneficiaryExtractor,
-                                     companyBeneficiaryExtractor: CompanyBeneficiaryExtractor,
-                                     trustBeneficiaryExtractor: TrustBeneficiaryExtractor,
-                                     otherBeneficiaryExtractor: OtherBeneficiaryExtractor,
-                                     classOfBeneficiaryExtractor: ClassOfBeneficiaryExtractor,
-                                     individualBeneficiaryExtractor: IndividualBeneficiaryExtractor,
-                                     largeBeneficiaryExtractor: LargeBeneficiaryExtractor) extends Logging {
+class BeneficiaryExtractor @Inject() (
+  charityBeneficiaryExtractor: CharityBeneficiaryExtractor,
+  companyBeneficiaryExtractor: CompanyBeneficiaryExtractor,
+  trustBeneficiaryExtractor: TrustBeneficiaryExtractor,
+  otherBeneficiaryExtractor: OtherBeneficiaryExtractor,
+  classOfBeneficiaryExtractor: ClassOfBeneficiaryExtractor,
+  individualBeneficiaryExtractor: IndividualBeneficiaryExtractor,
+  largeBeneficiaryExtractor: LargeBeneficiaryExtractor
+) extends Logging {
 
   def extract(answers: UserAnswers, data: DisplayTrustBeneficiaryType): Either[TrustErrors, UserAnswers] = {
 
@@ -41,19 +43,20 @@ class BeneficiaryExtractor @Inject()(charityBeneficiaryExtractor: CharityBenefic
       companyBeneficiaryExtractor.extract(answers, data.company),
       largeBeneficiaryExtractor.extract(answers, data.large),
       otherBeneficiaryExtractor.extract(answers, data.other)
-    ).collect {
-      case Right(z) => z
+    ).collect { case Right(z) =>
+      z
     }
 
     beneficiaries match {
       case Nil =>
         logger.warn(s"[BeneficiaryExtractor][extract][Identifier: ${answers.identifier}] No beneficiaries")
         Right(answers)
-      case _ =>
+      case _   =>
         beneficiaries.combine match {
           case Some(value) => Right(value)
-          case None => Left(FailedToExtractData("Beneficiary Extraction Error - Failed to combine beneficiary answers"))
+          case None        => Left(FailedToExtractData("Beneficiary Extraction Error - Failed to combine beneficiary answers"))
         }
     }
   }
+
 }

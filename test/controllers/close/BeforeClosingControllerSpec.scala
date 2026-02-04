@@ -53,11 +53,10 @@ class BeforeClosingControllerSpec extends SpecBase with ScalaCheckPropertyChecks
     ".onSubmit" when {
 
       "a 5mld trust in 5mld mode" must {
-        "redirect to update trust details yes/no" in {
-
+        "redirect to update trust details yes/no" in
           forAll(arbitrary[Boolean]) { boolean =>
-
-            val baseAnswers: UserAnswers = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true, isUnderlyingDataTaxable = boolean)
+            val baseAnswers: UserAnswers =
+              emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true, isUnderlyingDataTaxable = boolean)
 
             val application = applicationBuilder(userAnswers = Some(baseAnswers))
               .build()
@@ -68,11 +67,12 @@ class BeforeClosingControllerSpec extends SpecBase with ScalaCheckPropertyChecks
 
             status(result) mustEqual SEE_OTHER
 
-            redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrustDetailsYesNoController.onPageLoad().url
+            redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrustDetailsYesNoController
+              .onPageLoad()
+              .url
 
             application.stop()
           }
-        }
       }
 
       "not a 5mld trust in 5mld mode" must {
@@ -89,11 +89,14 @@ class BeforeClosingControllerSpec extends SpecBase with ScalaCheckPropertyChecks
 
           status(result) mustEqual SEE_OTHER
 
-          redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController.onPageLoad().url
+          redirectLocation(result).value mustEqual controllers.makechanges.routes.UpdateTrusteesYesNoController
+            .onPageLoad()
+            .url
 
           application.stop()
         }
       }
     }
   }
+
 }

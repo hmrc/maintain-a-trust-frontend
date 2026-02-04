@@ -26,23 +26,22 @@ import views.html.close.BeforeClosingView
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class BeforeClosingController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         actions: Actions,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: BeforeClosingView,
-                                         trustConnector: TrustConnector,
-                                         trustsStoreConnector: TrustsStoreConnector
-                                       )(implicit ec: ExecutionContext)
-  extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) {
+class BeforeClosingController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  view: BeforeClosingView,
+  trustConnector: TrustConnector,
+  trustsStoreConnector: TrustsStoreConnector
+)(implicit ec: ExecutionContext)
+    extends MakeChangesQuestionRouterController(trustConnector, trustsStoreConnector) {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
-      Ok(view())
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    Ok(view())
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
-      Redirect(redirectToFirstUpdateQuestion)
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    Redirect(redirectToFirstUpdateQuestion)
   }
+
 }

@@ -26,7 +26,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TestUserConnector @Inject()(http: HttpClientV2, config: FrontendAppConfig) extends Logging {
+class TestUserConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) extends Logging {
 
   private val dataUrl: String = s"${config.enrolmentStoreProxyUrl}/enrolment-store-stub/data"
 
@@ -41,9 +41,9 @@ class TestUserConnector @Inject()(http: HttpClientV2, config: FrontendAppConfig)
       .execute[Unit]
   }
 
-  def delete()(implicit hc: HeaderCarrier, ec: ExecutionContext) : Future[HttpResponse] = {
+  def delete()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
     http
       .delete(url"$dataUrl")
       .execute[HttpResponse]
-  }
+
 }

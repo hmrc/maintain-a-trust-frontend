@@ -41,4 +41,5 @@ class UTRViewSpec extends StringViewBehaviours {
 
     behave like stringPage(form, applyView, messageKeyPrefix)
   }
+
 }

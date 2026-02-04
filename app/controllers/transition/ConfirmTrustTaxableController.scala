@@ -35,46 +35,46 @@ import views.html.transition.ConfirmTrustTaxableView
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ConfirmTrustTaxableController @Inject()(
-                                               override val messagesApi: MessagesApi,
-                                               playbackRepository: PlaybackRepository,
-                                               actions: Actions,
-                                               val controllerComponents: MessagesControllerComponents,
-                                               view: ConfirmTrustTaxableView,
-                                               trustsConnector: TrustConnector,
-                                               config: FrontendAppConfig,
-                                               errorHandler: ErrorHandler
-                                             ) (implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Logging {
+class ConfirmTrustTaxableController @Inject() (
+  override val messagesApi: MessagesApi,
+  playbackRepository: PlaybackRepository,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  view: ConfirmTrustTaxableView,
+  trustsConnector: TrustConnector,
+  config: FrontendAppConfig,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
-      Ok(view())
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    Ok(view())
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
-    implicit request =>
-      val result = for {
-        updatedAnswers <- TrustEnvelope(request.userAnswers.set(WhatIsNextPage, MakeChanges))
-        _ <- playbackRepository.set(updatedAnswers)
-        _ <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
-      } yield
-        request.userAnswers.get(ExpressTrustYesNoPage) match {
-          case Some(true) if config.schedule3aExemptEnabled => Redirect(routes.Schedule3aExemptYesNoController.onPageLoad())
-          case _ => Redirect(declarationUrl(
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async { implicit request =>
+    val result = for {
+      updatedAnswers <- TrustEnvelope(request.userAnswers.set(WhatIsNextPage, MakeChanges))
+      _              <- playbackRepository.set(updatedAnswers)
+      _              <- trustsConnector.setTaxableTrust(request.userAnswers.identifier, value = true)
+    } yield request.userAnswers.get(ExpressTrustYesNoPage) match {
+      case Some(true) if config.schedule3aExemptEnabled => Redirect(routes.Schedule3aExemptYesNoController.onPageLoad())
+      case _                                            =>
+        Redirect(
+          declarationUrl(
             request.user.affinityGroup,
             isTrustMigratingFromNonTaxableToTaxable = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
-          ))
-        }
+          )
+        )
+    }
 
-      result.value.flatMap {
-        case Right(call) => Future.successful(call)
-        case Left(_) =>
-          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-      }
+    result.value.flatMap {
+      case Right(call) => Future.successful(call)
+      case Left(_)     =>
+        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
+    }
   }
 
 }

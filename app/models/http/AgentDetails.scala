@@ -18,11 +18,13 @@ package models.http
 
 import play.api.libs.json.{Format, Json}
 
-case class AgentDetails(arn: String,
-                        agentName: String,
-                        agentAddress: AddressType,
-                        agentTelephoneNumber: String,
-                        clientReference: String)
+case class AgentDetails(
+  arn: String,
+  agentName: String,
+  agentAddress: AddressType,
+  agentTelephoneNumber: String,
+  clientReference: String
+)
 
 object AgentDetails {
   implicit val agentDetailsFormat: Format[AgentDetails] = Json.format[AgentDetails]

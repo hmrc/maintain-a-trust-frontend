@@ -32,10 +32,8 @@ class NonResidentTypeSpec extends AnyWordSpec with Matchers with ScalaCheckPrope
 
       val gen = Gen.oneOf(NonResidentType.values.toSeq)
 
-      forAll(gen) {
-        nonresidentType =>
-
-          JsString(nonresidentType.toString).validate[NonResidentType].asOpt.value mustEqual nonresidentType
+      forAll(gen) { nonresidentType =>
+        JsString(nonresidentType.toString).validate[NonResidentType].asOpt.value mustEqual nonresidentType
       }
     }
 
@@ -43,10 +41,8 @@ class NonResidentTypeSpec extends AnyWordSpec with Matchers with ScalaCheckPrope
 
       val gen = arbitrary[String] suchThat (!NonResidentType.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[NonResidentType] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[NonResidentType] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,11 +50,10 @@ class NonResidentTypeSpec extends AnyWordSpec with Matchers with ScalaCheckPrope
 
       val gen = Gen.oneOf(NonResidentType.values.toSeq)
 
-      forAll(gen) {
-        nonresidentType =>
-
-          Json.toJson(nonresidentType) mustEqual JsString(nonresidentType.toString)
+      forAll(gen) { nonresidentType =>
+        Json.toJson(nonresidentType) mustEqual JsString(nonresidentType.toString)
       }
     }
   }
+
 }

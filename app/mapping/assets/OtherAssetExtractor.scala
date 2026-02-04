@@ -26,13 +26,14 @@ class OtherAssetExtractor extends PlaybackExtractor[DisplayOtherAssetType] {
 
   override val optionalEntity: Boolean = true
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                     entity: DisplayOtherAssetType,
-                     index: Int): Either[TrustErrors, UserAnswers] = {
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayOtherAssetType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
 
     answers
       .flatMap(_.set(OtherAssetDescriptionPage(index), entity.description))
       .flatMap(_.set(OtherAssetValuePage(index), entity.value))
-  }
 
 }

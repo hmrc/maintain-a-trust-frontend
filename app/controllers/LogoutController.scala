@@ -30,35 +30,36 @@ import utils.Session
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class LogoutController @Inject()(
-                                  appConfig: FrontendAppConfig,
-                                  val controllerComponents: MessagesControllerComponents,
-                                  actions: Actions,
-                                  auditConnector: AuditConnector)(implicit val ec: ExecutionContext) extends FrontendBaseController with Logging {
+class LogoutController @Inject() (
+  appConfig: FrontendAppConfig,
+  val controllerComponents: MessagesControllerComponents,
+  actions: Actions,
+  auditConnector: AuditConnector
+)(implicit val ec: ExecutionContext)
+    extends FrontendBaseController with Logging {
 
-  def logout: Action[AnyContent] = actions.authWithData {
-    request =>
+  def logout: Action[AnyContent] = actions.authWithData { request =>
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+    if (appConfig.logoutAudit) {
 
-      if (appConfig.logoutAudit) {
+      val identifierKey: String = request.userAnswers.identifierType.toString.toLowerCase
 
-        val identifierKey: String = request.userAnswers.identifierType.toString.toLowerCase
+      val auditData = Map(
+        "sessionId"   -> Session.id(hc),
+        "event"       -> "signout",
+        "service"     -> "maintain-a-trust-frontend",
+        "userGroup"   -> request.user.affinityGroup.toString,
+        identifierKey -> request.userAnswers.identifier
+      )
 
-        val auditData = Map(
-          "sessionId" -> Session.id(hc),
-          "event" -> "signout",
-          "service" -> "maintain-a-trust-frontend",
-          "userGroup" -> request.user.affinityGroup.toString,
-          identifierKey -> request.userAnswers.identifier
-        )
+      auditConnector.sendExplicitAudit(
+        "trusts",
+        auditData
+      )
+    }
 
-        auditConnector.sendExplicitAudit(
-          "trusts",
-          auditData
-        )
-      }
-
-      Redirect(appConfig.logoutUrl).withSession(session = ("feedbackId", Session.id(hc)))
+    Redirect(appConfig.logoutUrl).withSession(session = ("feedbackId", Session.id(hc)))
   }
+
 }

@@ -27,10 +27,10 @@ class InternationalAddressFormProviderSpec extends StringFieldBehaviours with Op
 
   ".line1" must {
 
-    val fieldName = "line1"
+    val fieldName   = "line1"
     val requiredKey = "internationalAddress.error.line1.required"
-    val lengthKey = "internationalAddress.error.line1.length"
-    val maxLength = 35
+    val lengthKey   = "internationalAddress.error.line1.length"
+    val maxLength   = 35
 
     behave like fieldThatBindsValidData(
       form,
@@ -60,10 +60,10 @@ class InternationalAddressFormProviderSpec extends StringFieldBehaviours with Op
 
   ".line2" must {
 
-    val fieldName = "line2"
+    val fieldName   = "line2"
     val requiredKey = "internationalAddress.error.line2.required"
-    val lengthKey = "internationalAddress.error.line2.length"
-    val maxLength = 35
+    val lengthKey   = "internationalAddress.error.line2.length"
+    val maxLength   = 35
 
     behave like fieldThatBindsValidData(
       form,
@@ -111,7 +111,8 @@ class InternationalAddressFormProviderSpec extends StringFieldBehaviours with Op
     )
 
     "bind whitespace trim values" in {
-      val result = form.bind(Map("line1" -> "line1", "line2" -> "line2", "line3" -> "  line3  ", "country" -> "country"))
+      val result =
+        form.bind(Map("line1" -> "line1", "line2" -> "line2", "line3" -> "  line3  ", "country" -> "country"))
       result.value.value.line3 shouldBe Some("line3")
     }
 
@@ -126,7 +127,8 @@ class InternationalAddressFormProviderSpec extends StringFieldBehaviours with Op
     }
 
     "filter out smart apostrophes and replace with straight ones" in {
-      val result = form bind Map("line1" -> "val1", "line2" -> "val2", "line3" -> "Besses o’ th‘Barn", "country" -> "England")
+      val result =
+        form bind Map("line1" -> "val1", "line2" -> "val2", "line3" -> "Besses o’ th‘Barn", "country" -> "England")
       result.value.value.line3.get shouldBe "Besses o' th'Barn"
     }
 
@@ -134,10 +136,10 @@ class InternationalAddressFormProviderSpec extends StringFieldBehaviours with Op
 
   ".country" must {
 
-    val fieldName = "country"
+    val fieldName   = "country"
     val requiredKey = "internationalAddress.error.country.required"
-    val lengthKey = "internationalAddress.error.country.length"
-    val maxLength = 35
+    val lengthKey   = "internationalAddress.error.country.length"
+    val maxLength   = 35
 
     behave like fieldWithMaxLength(
       form,

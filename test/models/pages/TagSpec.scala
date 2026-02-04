@@ -32,10 +32,8 @@ class TagSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChecks wi
 
       val gen = Gen.oneOf(Tag.values.toSeq)
 
-      forAll(gen) {
-        status =>
-
-          JsString(status.toString).validate[Tag].asOpt.value mustEqual status
+      forAll(gen) { status =>
+        JsString(status.toString).validate[Tag].asOpt.value mustEqual status
       }
     }
 
@@ -43,10 +41,8 @@ class TagSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChecks wi
 
       val gen = arbitrary[String] suchThat (!Tag.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[Tag] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[Tag] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,11 +50,10 @@ class TagSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChecks wi
 
       val gen = Gen.oneOf(Tag.values.toSeq)
 
-      forAll(gen) {
-        status =>
-
-          Json.toJson(status) mustEqual JsString(status.toString)
+      forAll(gen) { status =>
+        Json.toJson(status) mustEqual JsString(status.toString)
       }
     }
   }
+
 }

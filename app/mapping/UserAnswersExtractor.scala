@@ -37,50 +37,73 @@ import scala.concurrent.ExecutionContext
 
 @ImplementedBy(classOf[UserAnswersExtractorImpl])
 trait UserAnswersExtractor {
-  def extract(userAnswers: UserAnswers, playback: GetTrust)
-             (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[UserAnswers]
+
+  def extract(userAnswers: UserAnswers, playback: GetTrust)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): TrustEnvelope[UserAnswers]
+
 }
 
-class UserAnswersExtractorImpl @Inject()(
-                                          trustsConnector: TrustConnector,
-                                          beneficiariesExtractor: BeneficiaryExtractor,
-                                          trusteesExtractor: TrusteeExtractor,
-                                          settlorsExtractor: SettlorExtractor,
-                                          assetsExtractor: AssetsExtractor,
-                                          trustTypeExtractor: TrustTypeExtractor,
-                                          protectorsExtractor: ProtectorExtractor,
-                                          otherIndividualsExtractor: OtherIndividualExtractor,
-                                          correspondenceExtractor: CorrespondenceExtractor,
-                                          trustDetailsExtractor: TrustDetailsExtractor
-                                        ) extends UserAnswersExtractor with Logging {
+class UserAnswersExtractorImpl @Inject() (
+  trustsConnector: TrustConnector,
+  beneficiariesExtractor: BeneficiaryExtractor,
+  trusteesExtractor: TrusteeExtractor,
+  settlorsExtractor: SettlorExtractor,
+  assetsExtractor: AssetsExtractor,
+  trustTypeExtractor: TrustTypeExtractor,
+  protectorsExtractor: ProtectorExtractor,
+  otherIndividualsExtractor: OtherIndividualExtractor,
+  correspondenceExtractor: CorrespondenceExtractor,
+  trustDetailsExtractor: TrustDetailsExtractor
+) extends UserAnswersExtractor with Logging {
 
   private val className = getClass.getName
 
-  def extract(answers: UserAnswers, data: GetTrust)
-             (implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[UserAnswers] = EitherT {
+  def extract(answers: UserAnswers, data: GetTrust)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): TrustEnvelope[UserAnswers] = EitherT {
 
     val expectedResult = for {
-      trustDetails <- trustsConnector.getUntransformedTrustDetails(answers.identifier)
-      updatedAnswers = answers.copy(isUnderlyingData5mld = trustDetails.is5mld, isUnderlyingDataTaxable = trustDetails.isTaxable)
-      correspondence <- TrustEnvelope(correspondenceExtractor.extract(updatedAnswers, data.correspondence))
-      beneficiaries <- TrustEnvelope(beneficiariesExtractor.extract(updatedAnswers, data.trust.entities.beneficiary))
-      settlors <- TrustEnvelope(settlorsExtractor.extract(updatedAnswers, data.trust.entities))
-      assets <- TrustEnvelope(assetsExtractor.extract(updatedAnswers, data.trust.assets))
-      trustType <- TrustEnvelope(trustTypeExtractor.extract(updatedAnswers, data.trust))
-      protectors <- TrustEnvelope(protectorsExtractor.extract(updatedAnswers, data.trust.entities.protectors))
-      otherIndividuals <- TrustEnvelope(otherIndividualsExtractor.extract(updatedAnswers, data.trust.entities.naturalPerson.getOrElse(Nil)))
-      trustees <- TrustEnvelope(trusteesExtractor.extract(updatedAnswers, data.trust.entities))
-      trustDetails <- TrustEnvelope(trustDetailsExtractor.extract(updatedAnswers, data.trust.details))
-    } yield List(correspondence, beneficiaries, settlors, assets, trustType, protectors, otherIndividuals, trustees, trustDetails).combine
+      trustDetails     <- trustsConnector.getUntransformedTrustDetails(answers.identifier)
+      updatedAnswers    =
+        answers.copy(isUnderlyingData5mld = trustDetails.is5mld, isUnderlyingDataTaxable = trustDetails.isTaxable)
+      correspondence   <- TrustEnvelope(correspondenceExtractor.extract(updatedAnswers, data.correspondence))
+      beneficiaries    <- TrustEnvelope(beneficiariesExtractor.extract(updatedAnswers, data.trust.entities.beneficiary))
+      settlors         <- TrustEnvelope(settlorsExtractor.extract(updatedAnswers, data.trust.entities))
+      assets           <- TrustEnvelope(assetsExtractor.extract(updatedAnswers, data.trust.assets))
+      trustType        <- TrustEnvelope(trustTypeExtractor.extract(updatedAnswers, data.trust))
+      protectors       <- TrustEnvelope(protectorsExtractor.extract(updatedAnswers, data.trust.entities.protectors))
+      otherIndividuals <-
+        TrustEnvelope(
+          otherIndividualsExtractor.extract(updatedAnswers, data.trust.entities.naturalPerson.getOrElse(Nil))
+        )
+      trustees         <- TrustEnvelope(trusteesExtractor.extract(updatedAnswers, data.trust.entities))
+      trustDetails     <- TrustEnvelope(trustDetailsExtractor.extract(updatedAnswers, data.trust.details))
+    } yield List(
+      correspondence,
+      beneficiaries,
+      settlors,
+      assets,
+      trustType,
+      protectors,
+      otherIndividuals,
+      trustees,
+      trustDetails
+    ).combine
 
     expectedResult.value.map {
       case Right(Some(combinedAnswers)) => Right(combinedAnswers)
-      case Right(None) =>
+      case Right(None)                  =>
         logger.error(s"[$className][extract][UTR/URN: ${answers.identifier}] failed to combine user answers")
         Left(FailedToCombineAnswers)
-      case Left(error) =>
-        logger.error(s"[$className][extract][UTR/URN: ${answers.identifier}] failed to extract session data to user answers, failed for $error")
+      case Left(error)                  =>
+        logger.error(
+          s"[$className][extract][UTR/URN: ${answers.identifier}] failed to extract session data to user answers, failed for $error"
+        )
         Left(error)
     }
   }
+
 }

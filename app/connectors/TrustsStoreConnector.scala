@@ -28,7 +28,8 @@ import utils.TrustEnvelope.TrustEnvelope
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConfig) extends ConnectorErrorResponseHandler {
+class TrustsStoreConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig)
+    extends ConnectorErrorResponseHandler {
 
   override val className: String = getClass.getSimpleName
 
@@ -38,17 +39,21 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
 
   private def featuresUrl(feature: String) = s"${config.trustsStoreUrl}/features/$feature"
 
-  def get(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[Option[TrustClaim]] = EitherT {
-    http
-      .get(url"$trustLockedUrl")
-      .execute[Option[TrustClaim]](TrustClaim.httpReads(identifier), ec)
-      .map(Right(_)).recover {
-      case ex =>
-        Left(handleError(ex, "get"))
+  def get(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[Option[TrustClaim]] =
+    EitherT {
+      http
+        .get(url"$trustLockedUrl")
+        .execute[Option[TrustClaim]](TrustClaim.httpReads(identifier), ec)
+        .map(Right(_))
+        .recover { case ex =>
+          Left(handleError(ex, "get"))
+        }
     }
-  }
 
-  def set(identifier: String, userAnswers: UserAnswers)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[CompletedMaintenanceTasks] = EitherT {
+  def set(identifier: String, userAnswers: UserAnswers)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): TrustEnvelope[CompletedMaintenanceTasks] = EitherT {
     CompletedMaintenanceTasks.from(userAnswers) match {
       case Some(taskStatusTag) =>
         val maintainUrl = maintainTasksUrl(identifier)
@@ -57,60 +62,65 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
           .withBody(Json.toJson(taskStatusTag))
           .execute[CompletedMaintenanceTasks]
           .map(_ => Right(taskStatusTag))
-          .recover {
-            case ex => Left(handleError(ex, "set"))
+          .recover { case ex =>
+            Left(handleError(ex, "set"))
           }
-      case None =>
+      case None                =>
         logger.error(s"[$className][set] Unable to set status tags for Tasks.")
         Future.successful(Left(ServerError()))
     }
   }
 
-  def getStatusOfTasks(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[CompletedMaintenanceTasks] = EitherT {
+  def getStatusOfTasks(
+    identifier: String
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[CompletedMaintenanceTasks] = EitherT {
     val maintainUrl = maintainTasksUrl(identifier)
     http
       .get(url"$maintainUrl")
       .execute[CompletedMaintenanceTasks]
       .map(Right(_))
-      .recover {
-        case _ => Right(CompletedMaintenanceTasks())
+      .recover { case _ =>
+        Right(CompletedMaintenanceTasks())
       }
   }
 
-  def resetTasks(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
-    val maintainUrl = maintainTasksUrl(identifier)
-    http
-      .delete(url"$maintainUrl")
-      .execute[HttpResponse]
-      .map(Right(_))
-      .recover {
-        case ex =>
+  def resetTasks(identifier: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[HttpResponse] =
+    EitherT {
+      val maintainUrl = maintainTasksUrl(identifier)
+      http
+        .delete(url"$maintainUrl")
+        .execute[HttpResponse]
+        .map(Right(_))
+        .recover { case ex =>
           Left(handleError(ex, "resetTasks"))
-      }
-  }
+        }
+    }
 
-  def getFeature(feature: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[FeatureResponse] = EitherT {
-    val featureVal = featuresUrl(feature)
-    http
-      .get(url"$featureVal")
-      .execute[FeatureResponse]
-      .map(Right(_))
-      .recover {
-        case ex =>
+  def getFeature(feature: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[FeatureResponse] =
+    EitherT {
+      val featureVal = featuresUrl(feature)
+      http
+        .get(url"$featureVal")
+        .execute[FeatureResponse]
+        .map(Right(_))
+        .recover { case ex =>
           Left(handleError(ex, "getFeature"))
-      }
-  }
+        }
+    }
 
-  def setFeature(feature: String, state: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): TrustEnvelope[HttpResponse] = EitherT {
+  def setFeature(feature: String, state: Boolean)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): TrustEnvelope[HttpResponse] = EitherT {
     val featureVal = featuresUrl(feature)
     http
       .put(url"$featureVal")
       .withBody(JsBoolean(state))
       .execute[HttpResponse]
       .map(Right(_))
-      .recover {
-        case ex =>
-          Left(handleError(ex, "setFeature"))
+      .recover { case ex =>
+        Left(handleError(ex, "setFeature"))
       }
   }
+
 }

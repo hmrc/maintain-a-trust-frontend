@@ -23,10 +23,12 @@ import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.DisplayTrustEntitiesType
 import sections.Trustees
 
-class TrusteeExtractor @Inject()(individualLeadTrusteeExtractor: IndividualLeadTrusteeExtractor,
-                                 organisationLeadTrusteeExtractor: OrganisationLeadTrusteeExtractor,
-                                 individualTrusteeExtractor: IndividualTrusteeExtractor,
-                                 organisationTrusteeExtractor: OrganisationTrusteeExtractor) {
+class TrusteeExtractor @Inject() (
+  individualLeadTrusteeExtractor: IndividualLeadTrusteeExtractor,
+  organisationLeadTrusteeExtractor: OrganisationLeadTrusteeExtractor,
+  individualTrusteeExtractor: IndividualTrusteeExtractor,
+  organisationTrusteeExtractor: OrganisationTrusteeExtractor
+) {
 
   def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[TrustErrors, UserAnswers] = {
 
@@ -35,21 +37,21 @@ class TrusteeExtractor @Inject()(individualLeadTrusteeExtractor: IndividualLeadT
       organisationLeadTrusteeExtractor.extract(answers, data.leadTrustee.leadTrusteeOrg.toList),
       individualTrusteeExtractor.extract(answers, data.trustees.getOrElse(Nil).flatMap(_.trusteeInd)),
       organisationTrusteeExtractor.extract(answers, data.trustees.getOrElse(Nil).flatMap(_.trusteeOrg))
-    ).collect {
-      case Right(userAnswers) => userAnswers
+    ).collect { case Right(userAnswers) =>
+      userAnswers
     }
 
     val noLeadTrustee: Boolean = data.leadTrustee.leadTrusteeInd.isEmpty && data.leadTrustee.leadTrusteeOrg.isEmpty
 
     (trustees, noLeadTrustee) match {
-      case (Nil, _) =>
+      case (Nil, _)   =>
         Left(FailedToExtractData("Trustee Extraction Error - No trustees"))
-      case (_, true) =>
+      case (_, true)  =>
         Left(FailedToExtractData("Trustee Extraction Error - Missing lead trustee"))
       case (_, false) =>
         trustees.combineArraysWithPath(Trustees.path) match {
           case Some(value) => Right(value)
-          case None => Left(FailedToExtractData("Trustee Extraction Error - Failed to combine trustee answers"))
+          case None        => Left(FailedToExtractData("Trustee Extraction Error - Failed to combine trustee answers"))
         }
     }
   }

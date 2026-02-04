@@ -24,7 +24,7 @@ import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class CloseDatePrinter @Inject()(converter: AnswerRowConverter) extends PrinterHelper {
+class CloseDatePrinter @Inject() (converter: AnswerRowConverter) extends PrinterHelper {
 
   def print(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection = {
 

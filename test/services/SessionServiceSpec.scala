@@ -31,60 +31,61 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, Future}
 
-class SessionServiceSpec (implicit ec: ExecutionContext) extends SpecBase with ScalaCheckPropertyChecks {
+class SessionServiceSpec(implicit ec: ExecutionContext) extends SpecBase with ScalaCheckPropertyChecks {
 
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit private val hc: HeaderCarrier = HeaderCarrier()
 
-  private val identifier = "identifier"
-  private val internalId = "internalId"
+  private val identifier        = "identifier"
+  private val internalId        = "internalId"
   private val sessionId: String = utils.Session.id(hc)
 
   "SessionService" when {
 
     "initialiseUserAnswers" must {
 
-      "setup user answers" in {
+      "setup user answers" in
+        forAll(arbitrary[Boolean], arbitrary[Boolean]) { (isUnderlyingData5mld, isUnderlyingDataTaxable) =>
+          val mockPlaybackRepository = mock[PlaybackRepository]
 
-        forAll(arbitrary[Boolean], arbitrary[Boolean]) {
-          (isUnderlyingData5mld, isUnderlyingDataTaxable) =>
+          when(mockPlaybackRepository.set(any()))
+            .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
-            val mockPlaybackRepository = mock[PlaybackRepository]
+          when(mockPlaybackRepository.resetCache(any(), any(), any()))
+            .thenReturn(EitherT[Future, TrustErrors, Option[Boolean]](Future.successful(Right(Some(true)))))
 
-            when(mockPlaybackRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+          val mockSessionRepository = mock[ActiveSessionRepository]
+          when(mockSessionRepository.set(any()))
+            .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
 
-            when(mockPlaybackRepository.resetCache(any(), any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, Option[Boolean]](Future.successful(Right(Some(true)))))
+          val mockErrorHandler = mock[ErrorHandler]
 
-            val mockSessionRepository = mock[ActiveSessionRepository]
-            when(mockSessionRepository.set(any())).thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+          val userAnswersSetupService =
+            new SessionService(mockPlaybackRepository, mockSessionRepository, mockErrorHandler)
 
-            val mockErrorHandler = mock[ErrorHandler]
+          val resultF = userAnswersSetupService.initialiseUserAnswers(
+            identifier = identifier,
+            internalId = internalId,
+            isUnderlyingData5mld = isUnderlyingData5mld,
+            isUnderlyingDataTaxable = isUnderlyingDataTaxable
+          )
 
-            val userAnswersSetupService = new SessionService(mockPlaybackRepository, mockSessionRepository, mockErrorHandler)
+          val ua = Await.result(resultF.value, 5.seconds).value
 
-            val resultF = userAnswersSetupService.initialiseUserAnswers(
-              identifier = identifier,
-              internalId = internalId,
-              isUnderlyingData5mld = isUnderlyingData5mld,
-              isUnderlyingDataTaxable = isUnderlyingDataTaxable
-            )
+          ua.internalId              mustBe internalId
+          ua.identifier              mustBe identifier
+          ua.isUnderlyingData5mld    mustBe isUnderlyingData5mld
+          ua.isUnderlyingDataTaxable mustBe isUnderlyingDataTaxable
 
-            val ua = Await.result(resultF.value, 5.seconds).value
+          verify(mockPlaybackRepository).resetCache(internalId, identifier, sessionId)
 
-            ua.internalId mustBe internalId
-            ua.identifier mustBe identifier
-            ua.isUnderlyingData5mld mustBe isUnderlyingData5mld
-            ua.isUnderlyingDataTaxable mustBe isUnderlyingDataTaxable
+          val identifierSessionCaptor: ArgumentCaptor[IdentifierSession] =
+            ArgumentCaptor.forClass(classOf[IdentifierSession])
+          verify(mockSessionRepository).set(identifierSessionCaptor.capture())
 
-            verify(mockPlaybackRepository).resetCache(internalId, identifier, sessionId)
-
-            val identifierSessionCaptor: ArgumentCaptor[IdentifierSession] = ArgumentCaptor.forClass(classOf[IdentifierSession])
-            verify(mockSessionRepository).set(identifierSessionCaptor.capture())
-
-            identifierSessionCaptor.getValue.internalId mustBe internalId
-            identifierSessionCaptor.getValue.identifier mustBe identifier
+          identifierSessionCaptor.getValue.internalId mustBe internalId
+          identifierSessionCaptor.getValue.identifier mustBe identifier
         }
-      }
     }
   }
+
 }

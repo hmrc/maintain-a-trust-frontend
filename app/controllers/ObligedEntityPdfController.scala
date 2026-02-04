@@ -31,49 +31,48 @@ import uk.gov.hmrc.play.language.LanguageUtils
 import utils.Session
 import scala.concurrent.{ExecutionContext, Future}
 
-class ObligedEntityPdfController @Inject()(actions: Actions,
-                                            connector: TrustsObligedEntityOutputConnector,
-                                            val controllerComponents: MessagesControllerComponents,
-                                            errorHandler: ErrorHandler)
-                                          (implicit ec: ExecutionContext,
-                                            lang: LanguageUtils)
-  extends FrontendBaseController with Logging {
+class ObligedEntityPdfController @Inject() (
+  actions: Actions,
+  connector: TrustsObligedEntityOutputConnector,
+  val controllerComponents: MessagesControllerComponents,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext, lang: LanguageUtils)
+    extends FrontendBaseController with Logging {
 
   private val className = getClass.getSimpleName
 
-  def getPdf(identifier: String): Action[AnyContent] = actions.auth.async {
-    implicit request =>
-
-      connector.getPdf(identifier).flatMap { response =>
-        response.status match {
-          case OK =>
-            handleSuccessfulGetPdfResponse(identifier, response)
-          case _ =>
-            logger.error(s"[$className][getPdf][Session ID: ${Session.id(hc)}][Identifier: $identifier] Error retrieving pdf: $response.")
-            errorHandler.customErrorPage("Error", "Error").map { html =>
-              InternalServerError(html)
-            }
-        }
-      } recoverWith {
-        case e =>
-          logger.error(s"[$className][getPdf][Session ID: ${Session.id(hc)}][Identifier: $identifier] Exception thrown when retrieving pdf ${e.getMessage}")
-          errorHandler.internalServerErrorTemplate.map { html =>
+  def getPdf(identifier: String): Action[AnyContent] = actions.auth.async { implicit request =>
+    connector.getPdf(identifier).flatMap { response =>
+      response.status match {
+        case OK =>
+          handleSuccessfulGetPdfResponse(identifier, response)
+        case _  =>
+          logger.error(
+            s"[$className][getPdf][Session ID: ${Session.id(hc)}][Identifier: $identifier] Error retrieving pdf: $response."
+          )
+          errorHandler.customErrorPage("Error", "Error").map { html =>
             InternalServerError(html)
           }
       }
+    } recoverWith { case e =>
+      logger.error(
+        s"[$className][getPdf][Session ID: ${Session.id(hc)}][Identifier: $identifier] Exception thrown when retrieving pdf ${e.getMessage}"
+      )
+      errorHandler.internalServerErrorTemplate.map { html =>
+        InternalServerError(html)
+      }
+    }
   }
 
-
-  private def handleSuccessfulGetPdfResponse(identifier: String, response: WSResponse)
-                                            (implicit request: IdentifierRequest[AnyContent]): Future[Result] = {
+  private def handleSuccessfulGetPdfResponse(identifier: String, response: WSResponse)(implicit
+    request: IdentifierRequest[AnyContent]
+  ): Future[Result] = {
 
     val headers: Option[PdfHeaders] = for {
       contentDisposition <- response.header(CONTENT_DISPOSITION)
-      contentType <- response.header(CONTENT_TYPE)
-      contentLength <- response.header(CONTENT_LENGTH)
-    } yield {
-      PdfHeaders(contentDisposition, contentType, contentLength.toLong)
-    }
+      contentType        <- response.header(CONTENT_TYPE)
+      contentLength      <- response.header(CONTENT_LENGTH)
+    } yield PdfHeaders(contentDisposition, contentType, contentLength.toLong)
 
     headers match {
       case Some(h) =>
@@ -86,8 +85,10 @@ class ObligedEntityPdfController @Inject()(actions: Actions,
             )
           ).withHeaders(CONTENT_DISPOSITION -> h.fileNameWithServiceName)
         )
-      case None =>
-        logger.error(s"[$className][handleSuccessfulGetPdfResponse][Session ID: ${Session.id(hc)}][Identifier: $identifier] Response has no headers: ${response.headers}.")
+      case None    =>
+        logger.error(
+          s"[$className][handleSuccessfulGetPdfResponse][Session ID: ${Session.id(hc)}][Identifier: $identifier] Response has no headers: ${response.headers}."
+        )
         errorHandler.internalServerErrorTemplate.map { html =>
           InternalServerError(html)
         }

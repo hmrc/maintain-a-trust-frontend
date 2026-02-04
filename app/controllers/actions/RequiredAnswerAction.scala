@@ -25,26 +25,30 @@ import queries.Gettable
 
 import scala.concurrent.{ExecutionContext, Future}
 
-final case class RequiredAnswer[T](answer: Gettable[T],
-                                   redirect: Call = controllers.routes.SessionExpiredController.onPageLoad)
+final case class RequiredAnswer[T](
+  answer: Gettable[T],
+  redirect: Call = controllers.routes.SessionExpiredController.onPageLoad
+)
 
-class RequiredAnswerAction[T] @Inject()(required: RequiredAnswer[T])
-                                       (implicit val executionContext: ExecutionContext,
-                                        val reads: Reads[T]) extends ActionRefiner[DataRequest, DataRequest] {
+class RequiredAnswerAction[T] @Inject() (required: RequiredAnswer[T])(implicit
+  val executionContext: ExecutionContext,
+  val reads: Reads[T]
+) extends ActionRefiner[DataRequest, DataRequest] {
 
-  override protected def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
+  override protected def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] =
 
     request.userAnswers.get(required.answer) match {
-      case None =>
+      case None    =>
         Future.successful(Left(Redirect(required.redirect)))
       case Some(_) =>
         Future.successful(Right(request))
     }
-  }
+
 }
 
-class RequiredAnswerActionProvider @Inject()(implicit ec: ExecutionContext) {
+class RequiredAnswerActionProvider @Inject() (implicit ec: ExecutionContext) {
 
   def apply[T](required: RequiredAnswer[T])(implicit reads: Reads[T]) =
     new RequiredAnswerAction(required)
+
 }

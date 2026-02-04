@@ -36,8 +36,10 @@ import scala.concurrent.Future
 
 class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckPropertyChecks {
 
-  private lazy val beforeYouContinueToTaxableRoute: String = routes.BeforeYouContinueToTaxableController.onPageLoad().url
-  private val startDate: LocalDate = LocalDate.parse("2000-01-01")
+  private lazy val beforeYouContinueToTaxableRoute: String =
+    routes.BeforeYouContinueToTaxableController.onPageLoad().url
+
+  private val startDate: LocalDate                = LocalDate.parse("2000-01-01")
   private val mockTrustsConnector: TrustConnector = mock[TrustConnector]
 
   "BeforeYouContinueToTaxableController" when {
@@ -46,13 +48,13 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
 
       "return OK and the correct view for a GET" when {
 
-        "express answered at registration" in {
-
+        "express answered at registration" in
           forAll(arbitrary[Boolean]) { bool =>
-
             when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
-                (Future.successful(Right(TrustDetails(startDate, Some(false), Some(bool), None))))
+              .thenReturn(
+                EitherT[Future, TrustErrors, TrustDetails](
+                  Future.successful(Right(TrustDetails(startDate, Some(false), Some(bool), None)))
+                )
               )
 
             val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
@@ -72,13 +74,14 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
 
             application.stop()
           }
-        }
 
         "express not answered at registration" in {
 
           when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-            .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
-              (Future.successful(Right(TrustDetails(startDate, Some(false), None, None))))
+            .thenReturn(
+              EitherT[Future, TrustErrors, TrustDetails](
+                Future.successful(Right(TrustDetails(startDate, Some(false), None, None)))
+              )
             )
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
@@ -103,9 +106,7 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
       "return an Internal Server Error when the connector call returns an error for /GET" in {
 
         when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
-            (Future.successful(Left(ServerError())))
-          )
+          .thenReturn(EitherT[Future, TrustErrors, TrustDetails](Future.successful(Left(ServerError()))))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
           .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -115,7 +116,7 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
 
         val result = route(application, request).value
 
-        status(result) mustBe INTERNAL_SERVER_ERROR
+        status(result)      mustBe INTERNAL_SERVER_ERROR
         contentType(result) mustBe Some("text/html")
 
         application.stop()
@@ -125,13 +126,13 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
     ".onSubmit" when {
 
       "express answered at registration" must {
-        "redirect to task list" in {
-
+        "redirect to task list" in
           forAll(arbitrary[Boolean]) { bool =>
-
             when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-              .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
-                (Future.successful(Right(TrustDetails(startDate, Some(false), Some(bool), None))))
+              .thenReturn(
+                EitherT[Future, TrustErrors, TrustDetails](
+                  Future.successful(Right(TrustDetails(startDate, Some(false), Some(bool), None)))
+                )
               )
 
             val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
@@ -149,15 +150,16 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
 
             application.stop()
           }
-        }
       }
 
       "express not answered at registration" must {
         "redirect to express trust yes no" in {
 
           when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-            .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
-              (Future.successful(Right(TrustDetails(startDate, Some(false), None, None))))
+            .thenReturn(
+              EitherT[Future, TrustErrors, TrustDetails](
+                Future.successful(Right(TrustDetails(startDate, Some(false), None, None)))
+              )
             )
 
           val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
@@ -180,9 +182,7 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
       "return an Internal Server Error when the connector call returns an error for /POST" in {
 
         when(mockTrustsConnector.getUntransformedTrustDetails(any())(any(), any()))
-          .thenReturn(EitherT[Future, TrustErrors, TrustDetails]
-            (Future.successful(Left(ServerError())))
-          )
+          .thenReturn(EitherT[Future, TrustErrors, TrustDetails](Future.successful(Left(ServerError()))))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUtr))
           .overrides(bind[TrustConnector].toInstance(mockTrustsConnector))
@@ -192,11 +192,12 @@ class BeforeYouContinueToTaxableControllerSpec extends SpecBase with ScalaCheckP
 
         val result = route(application, request).value
 
-        status(result) mustBe INTERNAL_SERVER_ERROR
+        status(result)      mustBe INTERNAL_SERVER_ERROR
         contentType(result) mustBe Some("text/html")
 
         application.stop()
       }
     }
   }
+
 }

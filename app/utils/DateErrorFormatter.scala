@@ -26,10 +26,12 @@ object DateErrorFormatter {
     args.map(arg => if (dateArgs.contains(arg)) messages(s"date.$arg").toLowerCase else arg.toString)
   }
 
-  def addErrorClass(error: Option[FormError], dateArg: String): String = {
-    error.map { e =>
-      if (e.args.isEmpty || e.args.contains(dateArg)) {s"govuk-input--error"} else ""
-    }.getOrElse("")
-  }
+  def addErrorClass(error: Option[FormError], dateArg: String): String =
+    error
+      .map { e =>
+        if (e.args.isEmpty || e.args.contains(dateArg)) { s"govuk-input--error" }
+        else ""
+      }
+      .getOrElse("")
 
 }

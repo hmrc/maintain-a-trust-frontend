@@ -25,13 +25,13 @@ import play.api.mvc.Results.Redirect
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeDataRequiredAction @Inject()(userAnswers: Option[UserAnswers])
-                                      (implicit executionContext: ExecutionContext) extends DataRequiredAction {
+class FakeDataRequiredAction @Inject() (userAnswers: Option[UserAnswers])(implicit executionContext: ExecutionContext)
+    extends DataRequiredAction {
 
-  override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
+  override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] =
     userAnswers match {
       case Some(answers) => Future.successful(Right(DataRequest(request.request, answers, request.user)))
-      case None => Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad)))
+      case None          => Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad)))
     }
-  }
+
 }

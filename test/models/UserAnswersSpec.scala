@@ -31,21 +31,17 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
 
     ".identifierType" must {
 
-      "return UTR when identifier matches UTR regex" in {
-        forAll(RegexpGen.from(Validation.utrRegex)) {
-          utr =>
-            val userAnswers = emptyUserAnswersForUtr.copy(identifier = utr)
-            userAnswers.identifierType mustBe UTR
+      "return UTR when identifier matches UTR regex" in
+        forAll(RegexpGen.from(Validation.utrRegex)) { utr =>
+          val userAnswers = emptyUserAnswersForUtr.copy(identifier = utr)
+          userAnswers.identifierType mustBe UTR
         }
-      }
 
-      "return URN when identifier matches URN regex" in {
-        forAll(RegexpGen.from(Validation.urnRegex)) {
-          urn =>
-            val userAnswers = emptyUserAnswersForUrn.copy(identifier = urn)
-            userAnswers.identifierType mustBe URN
+      "return URN when identifier matches URN regex" in
+        forAll(RegexpGen.from(Validation.urnRegex)) { urn =>
+          val userAnswers = emptyUserAnswersForUrn.copy(identifier = urn)
+          userAnswers.identifierType mustBe URN
         }
-      }
     }
 
     ".trustTaxability and .isTrustTaxable" must {
@@ -54,37 +50,37 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
         "taxable" in {
           val userAnswers = emptyUserAnswersForUtr
 
-          userAnswers.trustTaxability mustBe Taxable
-          userAnswers.isTrustTaxable mustBe true
+          userAnswers.trustTaxability                         mustBe Taxable
+          userAnswers.isTrustTaxable                          mustBe true
           userAnswers.isTrustMigratingFromNonTaxableToTaxable mustBe false
-          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe true
+          userAnswers.isTrustTaxableOrMigratingToTaxable      mustBe true
         }
 
         "non-taxable" in {
           val userAnswers = emptyUserAnswersForUrn
 
-          userAnswers.trustTaxability mustBe NonTaxable
-          userAnswers.isTrustTaxable mustBe false
+          userAnswers.trustTaxability                         mustBe NonTaxable
+          userAnswers.isTrustTaxable                          mustBe false
           userAnswers.isTrustMigratingFromNonTaxableToTaxable mustBe false
-          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe false
+          userAnswers.isTrustTaxableOrMigratingToTaxable      mustBe false
         }
 
         "migrating from non-taxable to taxable" in {
           val userAnswers = emptyUserAnswersForUrn.set(WhatIsNextPage, NeedsToPayTax).value
 
-          userAnswers.trustTaxability mustBe MigratingFromNonTaxableToTaxable
-          userAnswers.isTrustTaxable mustBe false
+          userAnswers.trustTaxability                         mustBe MigratingFromNonTaxableToTaxable
+          userAnswers.isTrustTaxable                          mustBe false
           userAnswers.isTrustMigratingFromNonTaxableToTaxable mustBe true
-          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe true
+          userAnswers.isTrustTaxableOrMigratingToTaxable      mustBe true
         }
 
         "migrating from taxable to non-taxable" in {
           val userAnswers = emptyUserAnswersForUtr.set(WhatIsNextPage, NoLongerTaxable).value
 
-          userAnswers.trustTaxability mustBe MigratingFromTaxableToNonTaxable
-          userAnswers.isTrustTaxable mustBe false
+          userAnswers.trustTaxability                         mustBe MigratingFromTaxableToNonTaxable
+          userAnswers.isTrustTaxable                          mustBe false
           userAnswers.isTrustMigratingFromNonTaxableToTaxable mustBe false
-          userAnswers.isTrustTaxableOrMigratingToTaxable mustBe false
+          userAnswers.isTrustTaxableOrMigratingToTaxable      mustBe false
         }
       }
     }
@@ -121,10 +117,14 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
         "individual" in {
 
           val userAnswers = emptyUserAnswersForUtr
-            .set(trustees.IsThisLeadTrusteePage(0), false).value
-            .set(trustees.TrusteeNamePage(0), FullName("Joe", None, "Bloggs")).value
-            .set(trustees.IsThisLeadTrusteePage(1), true).value
-            .set(trustees.TrusteeNamePage(1), FullName("John", None, "Doe")).value
+            .set(trustees.IsThisLeadTrusteePage(0), false)
+            .value
+            .set(trustees.TrusteeNamePage(0), FullName("Joe", None, "Bloggs"))
+            .value
+            .set(trustees.IsThisLeadTrusteePage(1), true)
+            .value
+            .set(trustees.TrusteeNamePage(1), FullName("John", None, "Doe"))
+            .value
 
           userAnswers.leadTrusteeName mustBe "John Doe"
         }
@@ -132,10 +132,14 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
         "organisation" in {
 
           val userAnswers = emptyUserAnswersForUtr
-            .set(trustees.IsThisLeadTrusteePage(0), false).value
-            .set(trustees.TrusteeOrgNamePage(0), "Amazon").value
-            .set(trustees.IsThisLeadTrusteePage(1), true).value
-            .set(trustees.TrusteeOrgNamePage(1), "Google").value
+            .set(trustees.IsThisLeadTrusteePage(0), false)
+            .value
+            .set(trustees.TrusteeOrgNamePage(0), "Amazon")
+            .value
+            .set(trustees.IsThisLeadTrusteePage(1), true)
+            .value
+            .set(trustees.TrusteeOrgNamePage(1), "Google")
+            .value
 
           userAnswers.leadTrusteeName mustBe "Google"
         }
@@ -160,7 +164,8 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
       "clear answers" in {
 
         val previousAnswers = emptyUserAnswersForUtr
-          .set(ViewLastDeclarationYesNoPage, false).value
+          .set(ViewLastDeclarationYesNoPage, false)
+          .value
 
         val result = previousAnswers.clearData
 
@@ -168,4 +173,5 @@ class UserAnswersSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
     }
   }
+
 }

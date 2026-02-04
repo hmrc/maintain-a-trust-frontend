@@ -20,20 +20,22 @@ import models.{Enumerable, WithName}
 import viewmodels.RadioOption
 
 sealed trait FourOrFiveMLD
+
 object FourOrFiveMLD extends Enumerable.Implicits {
 
   case object FourMLD extends WithName("four") with FourOrFiveMLD
   case object FiveMLD extends WithName("five") with FourOrFiveMLD
 
   val values: Set[FourOrFiveMLD] = Set(
-    FourMLD, FiveMLD
+    FourMLD,
+    FiveMLD
   )
 
-  val options: Set[RadioOption] = values.map {
-    value =>
-      RadioOption("testOnly.fourOrFiveMLD", value.toString)
+  val options: Set[RadioOption] = values.map { value =>
+    RadioOption("testOnly.fourOrFiveMLD", value.toString)
   }
 
   implicit val enumerable: Enumerable[FourOrFiveMLD] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
+
 }

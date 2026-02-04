@@ -44,15 +44,12 @@ trait ModelGenerators {
       Gen.oneOf(DetailsType.values)
     }
 
-  implicit lazy val arbitraryFullName: Arbitrary[FullName] = {
+  implicit lazy val arbitraryFullName: Arbitrary[FullName] =
     Arbitrary {
       for {
         str <- arbitrary[String]
-      } yield {
-        FullName(str, Some(str), str)
-      }
+      } yield FullName(str, Some(str), str)
     }
-  }
 
   implicit lazy val arbitraryInternationalAddress: Arbitrary[InternationalAddress] =
     Arbitrary {
@@ -64,10 +61,10 @@ trait ModelGenerators {
   implicit lazy val arbitraryUkAddress: Arbitrary[UKAddress] =
     Arbitrary {
       for {
-        line1 <- arbitrary[String]
-        line2 <- arbitrary[String]
-        line3 <- arbitrary[String]
-        line4 <- arbitrary[String]
+        line1    <- arbitrary[String]
+        line2    <- arbitrary[String]
+        line3    <- arbitrary[String]
+        line4    <- arbitrary[String]
         postcode <- arbitrary[String]
       } yield UKAddress(line1, line2, Some(line3), Some(line4), postcode)
     }
@@ -94,12 +91,12 @@ trait ModelGenerators {
   implicit lazy val arbitraryAddress: Arbitrary[AddressType] =
     Arbitrary {
       for {
-        line1 <- arbitrary[String]
-        line2 <- arbitrary[String]
-        line3 <- arbitrary[Option[String]]
-        line4 <- arbitrary[Option[String]]
+        line1    <- arbitrary[String]
+        line2    <- arbitrary[String]
+        line3    <- arbitrary[Option[String]]
+        line4    <- arbitrary[Option[String]]
         postcode <- arbitrary[Option[String]]
-        country <- arbitrary[String]
+        country  <- arbitrary[String]
       } yield AddressType(line1, line2, line3, line4, postcode, country)
     }
 
@@ -107,10 +104,10 @@ trait ModelGenerators {
     Arbitrary {
       for {
         abroadIndicator <- arbitrary[Boolean]
-        name <- arbitrary[String]
-        address <- arbitrary[AddressType]
-        bpMatchStatus <- arbitrary[Option[String]]
-        phoneNumber <- arbitrary[String]
+        name            <- arbitrary[String]
+        address         <- arbitrary[AddressType]
+        bpMatchStatus   <- arbitrary[Option[String]]
+        phoneNumber     <- arbitrary[String]
       } yield Correspondence(abroadIndicator, name, address, bpMatchStatus, phoneNumber)
     }
 
@@ -142,14 +139,14 @@ trait ModelGenerators {
     Arbitrary {
       for {
         beneficiaries <- arbitrary[DisplayTrustBeneficiaryType]
-        leadTrustee <- arbitrary[DisplayTrustLeadTrusteeType]
+        leadTrustee   <- arbitrary[DisplayTrustLeadTrusteeType]
       } yield DisplayTrustEntitiesType(None, beneficiaries, None, leadTrustee, None, None, None)
     }
 
   implicit lazy val arbitraryDisplayTrust: Arbitrary[DisplayTrust] =
     Arbitrary {
       for {
-        details <- arbitrary[TrustDetailsType]
+        details  <- arbitrary[TrustDetailsType]
         entities <- arbitrary[DisplayTrustEntitiesType]
       } yield DisplayTrust(details, entities, None)
     }
@@ -157,17 +154,17 @@ trait ModelGenerators {
   implicit lazy val arbitraryGetTrust: Arbitrary[GetTrust] =
     Arbitrary {
       for {
-        matchData <- arbitrary[MatchData]
+        matchData      <- arbitrary[MatchData]
         correspondence <- arbitrary[Correspondence]
-        declaration <- arbitrary[Declaration]
-        trust <- arbitrary[DisplayTrust]
+        declaration    <- arbitrary[Declaration]
+        trust          <- arbitrary[DisplayTrust]
       } yield GetTrust(matchData, correspondence, declaration, trust)
     }
 
   implicit lazy val arbitraryProcessedTrustResponse: Arbitrary[Processed] =
     Arbitrary {
       for {
-        playback <- arbitrary[GetTrust]
+        playback         <- arbitrary[GetTrust]
         formBundleNumber <- arbitrary[String]
       } yield Processed(playback, formBundleNumber)
     }
@@ -176,20 +173,19 @@ trait ModelGenerators {
     Arbitrary {
       for {
         processed <- arbitrary[Processed]
-        response <- Gen.oneOf(
-          Seq(
-            Processing,
-            Closed,
-            processed,
-            SorryThereHasBeenAProblem,
-            IdentifierNotFound,
-            TrustServiceUnavailable,
-            ClosedRequestResponse,
-            TrustsErrorResponse(INTERNAL_SERVER_ERROR)
-          )
-        )
-      } yield
-        response
+        response  <- Gen.oneOf(
+                       Seq(
+                         Processing,
+                         Closed,
+                         processed,
+                         SorryThereHasBeenAProblem,
+                         IdentifierNotFound,
+                         TrustServiceUnavailable,
+                         ClosedRequestResponse,
+                         TrustsErrorResponse(INTERNAL_SERVER_ERROR)
+                       )
+                     )
+      } yield response
     }
 
   implicit lazy val arbitraryMigrationStatus: Arbitrary[MigrationTaskStatus] =

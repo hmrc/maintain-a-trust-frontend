@@ -40,14 +40,23 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.io.Source
 
-class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues with Generators
-  with SpecBaseHelpers with WireMockHelper with ScalaFutures with Inside with ScalaCheckPropertyChecks with EitherValues {
+class TrustConnectorSpec
+    extends AnyFreeSpec
+    with Matchers
+    with OptionValues
+    with Generators
+    with SpecBaseHelpers
+    with WireMockHelper
+    with ScalaFutures
+    with Inside
+    with ScalaCheckPropertyChecks
+    with EitherValues {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  private def playbackUrl(identifier: String) : String = s"/trusts/$identifier/transformed"
-  private def refreshUrl(identifier: String) : String = s"/trusts/$identifier/refresh"
-  private def declareUrl(identifier: String) : String = s"/trusts/declare/$identifier"
+  private def playbackUrl(identifier: String): String = s"/trusts/$identifier/transformed"
+  private def refreshUrl(identifier: String): String  = s"/trusts/$identifier/refresh"
+  private def declareUrl(identifier: String): String  = s"/trusts/declare/$identifier"
 
   private val identifier = "1000000008"
 
@@ -55,14 +64,13 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
     "get trusts details and start date" in {
 
-      val startDate = "1920-03-28"
-      val startDateAsLocalDate = LocalDate.parse(startDate)
-      val express: Boolean = false
-      val taxable: Boolean = true
+      val startDate                 = "1920-03-28"
+      val startDateAsLocalDate      = LocalDate.parse(startDate)
+      val express: Boolean          = false
+      val taxable: Boolean          = true
       val schedule3aExempt: Boolean = true
 
-      val json = Json.parse(
-        s"""
+      val json = Json.parse(s"""
           |{
           |  "startDate": "$startDate",
           |  "lawCountry": "AD",
@@ -86,9 +94,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
         .configure(
           Seq(
             "microservice.services.trusts.port" -> server.port(),
-            "auditing.enabled" -> false
+            "auditing.enabled"                  -> false
           ): _*
-        ).build()
+        )
+        .build()
 
       val connector = application.injector.instanceOf[TrustConnector]
 
@@ -97,11 +106,17 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .willReturn(okJson(json.toString))
       )
 
-      val result = Await.result(connector.getUntransformedTrustDetails(identifier).value, Duration.Inf)
+      val result          = Await.result(connector.getUntransformedTrustDetails(identifier).value, Duration.Inf)
       val startDateResult = Await.result(connector.getStartDate(identifier).value, Duration.Inf)
 
-      result mustBe Right(TrustDetails(startDate = startDateAsLocalDate,
-        trustTaxable = Some(taxable), expressTrust = Some(express), schedule3aExempt = Some(schedule3aExempt)))
+      result mustBe Right(
+        TrustDetails(
+          startDate = startDateAsLocalDate,
+          trustTaxable = Some(taxable),
+          expressTrust = Some(express),
+          schedule3aExempt = Some(schedule3aExempt)
+        )
+      )
 
       startDateResult mustBe Right(startDateAsLocalDate)
 
@@ -112,8 +127,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
       "return TrustFound response" in {
 
-        val json = Json.parse(
-          """
+        val json = Json.parse("""
             |{
             |  "responseHeader": {
             |    "status": "In Processing",
@@ -126,9 +140,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -149,9 +164,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -159,7 +175,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           get(urlEqualTo(playbackUrl(identifier)))
             .willReturn(
               aResponse()
-                .withStatus(Status.NO_CONTENT)))
+                .withStatus(Status.NO_CONTENT)
+            )
+        )
 
         val result = Await.result(connector.playback(identifier).value, Duration.Inf)
         result mustBe Right(SorryThereHasBeenAProblem)
@@ -173,9 +191,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -183,7 +202,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           get(urlEqualTo(playbackUrl(identifier)))
             .willReturn(
               aResponse()
-                .withStatus(Status.NOT_FOUND)))
+                .withStatus(Status.NOT_FOUND)
+            )
+        )
 
         val result = Await.result(connector.playback(identifier).value, Duration.Inf)
         result mustBe Right(IdentifierNotFound)
@@ -197,9 +218,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -207,7 +229,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           get(urlEqualTo(playbackUrl(identifier)))
             .willReturn(
               aResponse()
-                .withStatus(Status.SERVICE_UNAVAILABLE)))
+                .withStatus(Status.SERVICE_UNAVAILABLE)
+            )
+        )
 
         val result = Await.result(connector.playback(identifier).value, Duration.Inf)
         result mustBe Right(TrustServiceUnavailable)
@@ -219,16 +243,17 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val utr = "1000000007"
 
-        val source = Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json"))
+        val source  = Source.fromInputStream(getClass.getResourceAsStream("/display-trust.json"))
         val payload = source.mkString
 
         val application = applicationBuilder()
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -239,32 +264,31 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val processed = Await.result(connector.playback(utr).value, Duration.Inf).value
 
-        inside(processed) {
-          case Processed(data, bundleNumber) =>
+        inside(processed) { case Processed(data, bundleNumber) =>
 
-            bundleNumber mustBe "000012345678"
+          bundleNumber mustBe "000012345678"
 
-            data.matchData.utr.get mustBe utr
+          data.matchData.utr.get mustBe utr
 
-            data.correspondence.name mustBe "Trust of Brian Cloud"
+          data.correspondence.name mustBe "Trust of Brian Cloud"
 
-            data.declaration.name mustBe FullName("Agent", None, "Agency")
+          data.declaration.name mustBe FullName("Agent", None, "Agency")
 
-            data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe FullName("Lead", None, "Trustee")
+          data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe FullName("Lead", None, "Trustee")
 
-            data.trust.details.startDate mustBe LocalDate.parse("2016-04-06")
+          data.trust.details.startDate mustBe LocalDate.parse("2016-04-06")
 
-            data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe Some("1")
-            data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
-            data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
+          data.trust.entities.trustees.value.head.trusteeInd.value.lineNo                          mustBe Some("1")
+          data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
+          data.trust.entities.trustees.value.head.trusteeInd.value.entityStart                     mustBe "2019-02-28"
 
-            data.trust.entities.settlors.value.settlorCompany.head.name mustBe "Settlor Org 01"
+          data.trust.entities.settlors.value.settlorCompany.head.name mustBe "Settlor Org 01"
 
-            data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe Some("1")
-            data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
-            data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
+          data.trust.entities.protectors.value.protectorCompany.head.lineNo      mustBe Some("1")
+          data.trust.entities.protectors.value.protectorCompany.head.name        mustBe "Protector Org 01"
+          data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
 
-            data.trust.assets.get.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+          data.trust.assets.get.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
         }
 
         source.close()
@@ -275,16 +299,17 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val utr = "2134514321"
 
-        val source = Source.fromInputStream(getClass.getResourceAsStream("/display-trust-shares-asset.json"))
+        val source  = Source.fromInputStream(getClass.getResourceAsStream("/display-trust-shares-asset.json"))
         val payload = source.mkString
 
         val application = applicationBuilder()
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -295,10 +320,9 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val processed = Await.result(connector.playback(utr).value, Duration.Inf).value
 
-        inside(processed) {
-          case Processed(data, _) =>
+        inside(processed) { case Processed(data, _) =>
 
-            data.trust.assets.get.shares.head.shareClassDisplay.get mustBe Ordinary
+          data.trust.assets.get.shares.head.shareClassDisplay.get mustBe Ordinary
         }
 
         source.close()
@@ -309,16 +333,18 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val utr = "1000000007"
 
-        val source = Source.fromInputStream(getClass.getResourceAsStream("/display-trust-property-or-land-no-previous.json"))
+        val source  =
+          Source.fromInputStream(getClass.getResourceAsStream("/display-trust-property-or-land-no-previous.json"))
         val payload = source.mkString
 
         val application = applicationBuilder()
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -329,34 +355,33 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val processed = Await.result(connector.playback(utr).value, Duration.Inf).value
 
-        inside(processed) {
-          case Processed(data, bundleNumber) =>
+        inside(processed) { case Processed(data, bundleNumber) =>
 
-            bundleNumber mustBe "000012345678"
+          bundleNumber mustBe "000012345678"
 
-            data.matchData.utr.get mustBe utr
+          data.matchData.utr.get mustBe utr
 
-            data.correspondence.name mustBe "Trust of Brian Cloud"
+          data.correspondence.name mustBe "Trust of Brian Cloud"
 
-            data.declaration.name mustBe FullName("Agent", None, "Agency")
+          data.declaration.name mustBe FullName("Agent", None, "Agency")
 
-            data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe FullName("Lead", None, "Trustee")
+          data.trust.entities.leadTrustee.leadTrusteeInd.value.name mustBe FullName("Lead", None, "Trustee")
 
-            data.trust.details.startDate mustBe LocalDate.parse("2016-04-06")
+          data.trust.details.startDate mustBe LocalDate.parse("2016-04-06")
 
-            data.trust.entities.trustees.value.head.trusteeInd.value.lineNo mustBe Some("1")
-            data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
-            data.trust.entities.trustees.value.head.trusteeInd.value.entityStart mustBe "2019-02-28"
+          data.trust.entities.trustees.value.head.trusteeInd.value.lineNo                          mustBe Some("1")
+          data.trust.entities.trustees.value.head.trusteeInd.value.identification.value.nino.value mustBe "JS123456A"
+          data.trust.entities.trustees.value.head.trusteeInd.value.entityStart                     mustBe "2019-02-28"
 
-            data.trust.entities.settlors.value.settlorCompany.head.name mustBe "Settlor Org 01"
+          data.trust.entities.settlors.value.settlorCompany.head.name mustBe "Settlor Org 01"
 
-            data.trust.entities.protectors.value.protectorCompany.head.lineNo mustBe Some("1")
-            data.trust.entities.protectors.value.protectorCompany.head.name mustBe "Protector Org 01"
-            data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
+          data.trust.entities.protectors.value.protectorCompany.head.lineNo      mustBe Some("1")
+          data.trust.entities.protectors.value.protectorCompany.head.name        mustBe "Protector Org 01"
+          data.trust.entities.protectors.value.protectorCompany.head.entityStart mustBe "2019-03-05"
 
-            data.trust.assets.get.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
-            data.trust.assets.get.propertyOrLand.head.valueFull mustBe 999999999999L
-            data.trust.assets.get.propertyOrLand.head.valuePrevious mustBe None
+          data.trust.assets.get.propertyOrLand.head.buildingLandName.value mustBe "Land of Brian Cloud"
+          data.trust.assets.get.propertyOrLand.head.valueFull              mustBe 999999999999L
+          data.trust.assets.get.propertyOrLand.head.valuePrevious          mustBe None
         }
 
         source.close()
@@ -367,16 +392,17 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val urn = "NTTRUST00000001"
 
-        val source = Source.fromInputStream(getClass.getResourceAsStream("/display-trust-non-taxable.json"))
+        val source  = Source.fromInputStream(getClass.getResourceAsStream("/display-trust-non-taxable.json"))
         val payload = source.mkString
 
         val application = applicationBuilder()
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -387,12 +413,11 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val processed = Await.result(connector.playback(urn).value, Duration.Inf).value
 
-        inside(processed) {
-          case Processed(data, bundleNumber) =>
+        inside(processed) { case Processed(data, bundleNumber) =>
 
-            bundleNumber mustBe "000012345678"
+          bundleNumber mustBe "000012345678"
 
-            data.matchData.urn.get mustBe urn
+          data.matchData.urn.get mustBe urn
         }
 
         source.close()
@@ -402,8 +427,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
     "playback data from ETMP must return TrustFound response" in {
 
-        val json = Json.parse(
-          """
+      val json = Json.parse("""
             |{
             |  "responseHeader": {
             |    "status": "In Processing",
@@ -412,26 +436,27 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
             |}
             |""".stripMargin)
 
-        val application = applicationBuilder()
-          .configure(
-            Seq(
-              "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
-            ): _*
-          ).build()
-
-        val connector = application.injector.instanceOf[TrustConnector]
-
-        server.stubFor(
-          get(urlEqualTo(refreshUrl(identifier)))
-            .willReturn(okJson(json.toString))
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled"                  -> false
+          ): _*
         )
+        .build()
 
-        val result = Await.result(connector.playbackFromEtmp(identifier).value, Duration.Inf)
-        result mustBe Right(Processing)
+      val connector = application.injector.instanceOf[TrustConnector]
 
-        application.stop()
-      }
+      server.stubFor(
+        get(urlEqualTo(refreshUrl(identifier)))
+          .willReturn(okJson(json.toString))
+      )
+
+      val result = Await.result(connector.playbackFromEtmp(identifier).value, Duration.Inf)
+      result mustBe Right(Processing)
+
+      application.stop()
+    }
 
     "declare no change must" - {
 
@@ -445,8 +470,7 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val tvn = "2345678"
 
-        val response = Json.parse(
-          s"""
+        val response = Json.parse(s"""
             |{
             |  "tvn": "$tvn"
             |}
@@ -456,9 +480,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -482,15 +507,17 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
         server.stubFor(
           post(urlEqualTo(declareUrl(identifier)))
-            .willReturn(serviceUnavailable()))
+            .willReturn(serviceUnavailable())
+        )
 
         implicit val request: RequestHeader = fakeRequest
 
@@ -512,9 +539,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -536,9 +564,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -565,9 +594,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -589,9 +619,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -618,9 +649,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -642,9 +674,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -669,9 +702,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -694,9 +728,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -718,9 +753,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -746,9 +782,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -770,9 +807,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -796,9 +834,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -822,9 +861,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -842,74 +882,67 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
     }
 
     ".getSettlorsStatus" - {
-      "return entity status response when the request is successful" in {
+      "return entity status response when the request is successful" in
+        forAll(arbitrary[MigrationTaskStatus]) { migrationStatus =>
+          val json = Json.toJson(migrationStatus)
 
-        forAll(arbitrary[MigrationTaskStatus]) {
-          migrationStatus =>
-
-            val json = Json.toJson(migrationStatus)
-
-            val application = applicationBuilder()
-              .configure(
-                Seq(
-                  "microservice.services.trusts.port" -> server.port(),
-                  "auditing.enabled" -> false
-                ): _*
-              ).build()
-
-            val connector = application.injector.instanceOf[TrustConnector]
-
-            server.stubFor(
-              get(urlEqualTo(s"/trusts/settlors/$identifier/complete-for-migration"))
-                .willReturn(okJson(json.toString))
+          val application = applicationBuilder()
+            .configure(
+              Seq(
+                "microservice.services.trusts.port" -> server.port(),
+                "auditing.enabled"                  -> false
+              ): _*
             )
+            .build()
 
-            val result = Await.result(connector.getSettlorsStatus(identifier).value, Duration.Inf).value
+          val connector = application.injector.instanceOf[TrustConnector]
 
-            result mustBe migrationStatus
+          server.stubFor(
+            get(urlEqualTo(s"/trusts/settlors/$identifier/complete-for-migration"))
+              .willReturn(okJson(json.toString))
+          )
 
-            application.stop()
+          val result = Await.result(connector.getSettlorsStatus(identifier).value, Duration.Inf).value
+
+          result mustBe migrationStatus
+
+          application.stop()
         }
-      }
     }
 
     ".getBeneficiariesStatus" - {
-      "return entity status response when the request is successful" in {
+      "return entity status response when the request is successful" in
+        forAll(arbitrary[MigrationTaskStatus]) { migrationStatus =>
+          val json = Json.toJson(migrationStatus)
 
-        forAll(arbitrary[MigrationTaskStatus]) {
-          migrationStatus =>
-
-            val json = Json.toJson(migrationStatus)
-
-            val application = applicationBuilder()
-              .configure(
-                Seq(
-                  "microservice.services.trusts.port" -> server.port(),
-                  "auditing.enabled" -> false
-                ): _*
-              ).build()
-
-            val connector = application.injector.instanceOf[TrustConnector]
-
-            server.stubFor(
-              get(urlEqualTo(s"/trusts/beneficiaries/$identifier/complete-for-migration"))
-                .willReturn(okJson(json.toString))
+          val application = applicationBuilder()
+            .configure(
+              Seq(
+                "microservice.services.trusts.port" -> server.port(),
+                "auditing.enabled"                  -> false
+              ): _*
             )
+            .build()
 
-            val result = Await.result(connector.getBeneficiariesStatus(identifier).value, Duration.Inf).value
+          val connector = application.injector.instanceOf[TrustConnector]
 
-            result mustBe migrationStatus
+          server.stubFor(
+            get(urlEqualTo(s"/trusts/beneficiaries/$identifier/complete-for-migration"))
+              .willReturn(okJson(json.toString))
+          )
 
-            application.stop()
+          val result = Await.result(connector.getBeneficiariesStatus(identifier).value, Duration.Inf).value
+
+          result mustBe migrationStatus
+
+          application.stop()
         }
-      }
     }
 
     "getFirstTaxYearToAskFor" - {
       "return first tax year available when request is successful" in {
 
-        val json = Json.parse(
-          """
+        val json = Json.parse("""
             |{
             | "yearsAgo": 1,
             | "earlierYearsToDeclare": false
@@ -920,9 +953,10 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
           .configure(
             Seq(
               "microservice.services.trusts.port" -> server.port(),
-              "auditing.enabled" -> false
+              "auditing.enabled"                  -> false
             ): _*
-          ).build()
+          )
+          .build()
 
         val connector = application.injector.instanceOf[TrustConnector]
 
@@ -933,14 +967,16 @@ class TrustConnectorSpec extends AnyFreeSpec with Matchers with OptionValues wit
 
         val processed = connector.getFirstTaxYearToAskFor(identifier).value
 
-        whenReady(processed) {
-          r =>
-            r mustBe Right(FirstTaxYearAvailable(
+        whenReady(processed) { r =>
+          r mustBe Right(
+            FirstTaxYearAvailable(
               yearsAgo = 1,
               earlierYearsToDeclare = false
-            ))
+            )
+          )
         }
       }
     }
   }
+
 }

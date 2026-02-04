@@ -25,7 +25,8 @@ sealed trait DeedOfVariation {
 
 object DeedOfVariation extends Enumerable.Implicits {
 
-  case object PreviouslyAbsoluteInterestUnderWill extends WithName("replaceAbsoluteInterestOverWill") with DeedOfVariation {
+  case object PreviouslyAbsoluteInterestUnderWill
+      extends WithName("replaceAbsoluteInterestOverWill") with DeedOfVariation {
     override val asString: String = "Previously there was only an absolute interest under the will"
   }
 
@@ -39,9 +40,9 @@ object DeedOfVariation extends Enumerable.Implicits {
 
   implicit val reads: Reads[DeedOfVariation] = Reads {
     case JsString(PreviouslyAbsoluteInterestUnderWill.asString) => JsSuccess(PreviouslyAbsoluteInterestUnderWill)
-    case JsString(ReplacedWill.asString) => JsSuccess(ReplacedWill)
-    case JsString(AdditionToWill.asString) => JsSuccess(AdditionToWill)
-    case _ => JsError("Invalid DeedOfVariation")
+    case JsString(ReplacedWill.asString)                        => JsSuccess(ReplacedWill)
+    case JsString(AdditionToWill.asString)                      => JsSuccess(AdditionToWill)
+    case _                                                      => JsError("Invalid DeedOfVariation")
   }
 
   implicit val writes: Writes[DeedOfVariation] = Writes(x => JsString(x.asString))
@@ -54,4 +55,5 @@ object DeedOfVariation extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[DeedOfVariation] =
     Enumerable(values.toSeq.map(v => v.toString -> v): _*)
+
 }

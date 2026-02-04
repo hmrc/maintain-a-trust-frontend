@@ -30,19 +30,16 @@ import viewmodels.AnswerRow
 import java.time.LocalDate
 import javax.inject.Inject
 
-class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatters) {
+class AnswerRowConverter @Inject() (checkAnswersFormatters: CheckAnswersFormatters) {
 
-  def ninoQuestion(query: Gettable[String],
-                   userAnswers: UserAnswers,
-                   labelKey: String,
-                   messageArg: String = "")
-                  (implicit messages: Messages): Option[AnswerRow] = {
+  def ninoQuestion(query: Gettable[String], userAnswers: UserAnswers, labelKey: String, messageArg: String = "")(
+    implicit messages: Messages
+  ): Option[AnswerRow] = {
     val format = (x: String) => checkAnswersFormatters.formatNino(x)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def whichIdentifier(userAnswers: UserAnswers)
-                     (implicit messages: Messages): Option[AnswerRow] = {
+  def whichIdentifier(userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerRow] = {
 
     val key = userAnswers.identifierType match {
       case UTR => "uniqueTaxReference.checkYourAnswersLabel"
@@ -52,180 +49,170 @@ class AnswerRowConverter @Inject()(checkAnswersFormatters: CheckAnswersFormatter
     Some(AnswerRow(messages(s"whichIdentifier.checkYourAnswersLabel"), HtmlFormat.escape(messages(key)), None))
   }
 
-  def identifier(userAnswers: UserAnswers,
-                 labelKey: String,
-                 messageArg: String = "")
-                (implicit messages: Messages): Option[AnswerRow] = {
-    Some(AnswerRow(
-      messages(s"$labelKey.checkYourAnswersLabel", messageArg),
-      HtmlFormat.escape(userAnswers.identifier),
-      None
-    ))
-  }
+  def identifier(userAnswers: UserAnswers, labelKey: String, messageArg: String = "")(implicit
+    messages: Messages
+  ): Option[AnswerRow] =
+    Some(
+      AnswerRow(
+        messages(s"$labelKey.checkYourAnswersLabel", messageArg),
+        HtmlFormat.escape(userAnswers.identifier),
+        None
+      )
+    )
 
-  def addressQuestion[T <: Address](query: Gettable[T],
-                                    userAnswers: UserAnswers,
-                                    labelKey: String,
-                                    messageArg: String = "")
-                                   (implicit messages: Messages, reads: Reads[T]): Option[AnswerRow] = {
+  def addressQuestion[T <: Address](
+    query: Gettable[T],
+    userAnswers: UserAnswers,
+    labelKey: String,
+    messageArg: String = ""
+  )(implicit messages: Messages, reads: Reads[T]): Option[AnswerRow] = {
     val format = (x: T) => checkAnswersFormatters.addressFormatter(x)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def percentageQuestion(query: Gettable[String],
-                         userAnswers: UserAnswers,
-                         labelKey: String,
-                         messageArg: String = "")
-                        (implicit messages: Messages): Option[AnswerRow] = {
+  def percentageQuestion(query: Gettable[String], userAnswers: UserAnswers, labelKey: String, messageArg: String = "")(
+    implicit messages: Messages
+  ): Option[AnswerRow] = {
     val format = (x: String) => checkAnswersFormatters.percentage(x)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def currencyQuestion(query: Gettable[Long],
-                       userAnswers: UserAnswers,
-                       labelKey: String,
-                       messageArg: String = "")
-                      (implicit messages: Messages): Option[AnswerRow] = {
+  def currencyQuestion(query: Gettable[Long], userAnswers: UserAnswers, labelKey: String, messageArg: String = "")(
+    implicit messages: Messages
+  ): Option[AnswerRow] = {
     val format = (x: Long) => checkAnswersFormatters.currency(x.toString)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def dateQuestion(query: Gettable[LocalDate],
-                   userAnswers: UserAnswers,
-                   labelKey: String,
-                   messageArg: String = "")
-                  (implicit messages: Messages): Option[AnswerRow] = {
+  def dateQuestion(query: Gettable[LocalDate], userAnswers: UserAnswers, labelKey: String, messageArg: String = "")(
+    implicit messages: Messages
+  ): Option[AnswerRow] = {
     val format = (x: LocalDate) => HtmlFormat.escape(checkAnswersFormatters.formatDate(x))
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def yesNoQuestion(query: Gettable[Boolean],
-                    userAnswers: UserAnswers,
-                    labelKey: String,
-                    messageArg: String = "")
-                   (implicit messages: Messages): Option[AnswerRow] = {
+  def yesNoQuestion(query: Gettable[Boolean], userAnswers: UserAnswers, labelKey: String, messageArg: String = "")(
+    implicit messages: Messages
+  ): Option[AnswerRow] = {
     val format = (x: Boolean) => checkAnswersFormatters.yesOrNo(x)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def yesNoDontKnowQuestion(query: Gettable[Boolean],
-                    userAnswers: UserAnswers,
-                    labelKey: String,
-                    messageArg: String = "")
-                   (implicit messages: Messages): Option[AnswerRow] = {
+  def yesNoDontKnowQuestion(
+    query: Gettable[Boolean],
+    userAnswers: UserAnswers,
+    labelKey: String,
+    messageArg: String = ""
+  )(implicit messages: Messages): Option[AnswerRow] = {
     val format = (x: Boolean) => checkAnswersFormatters.yesOrNo(x)
     mentalCapacityQuestion(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def fullNameQuestion(query: Gettable[FullName],
-                       userAnswers: UserAnswers,
-                       labelKey: String,
-                       messageArg: String = "")
-                      (implicit messages: Messages): Option[AnswerRow] = {
+  def fullNameQuestion(query: Gettable[FullName], userAnswers: UserAnswers, labelKey: String, messageArg: String = "")(
+    implicit messages: Messages
+  ): Option[AnswerRow] = {
     val format = (x: FullName) => HtmlFormat.escape(x.displayFullName)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def stringQuestion[T](query: Gettable[T],
-                        userAnswers: UserAnswers,
-                        labelKey: String,
-                        messageArg: String = "")
-                       (implicit messages: Messages, rds: Reads[T]): Option[AnswerRow] = {
+  def stringQuestion[T](query: Gettable[T], userAnswers: UserAnswers, labelKey: String, messageArg: String = "")(
+    implicit
+    messages: Messages,
+    rds: Reads[T]
+  ): Option[AnswerRow] = {
     val format = (x: T) => HtmlFormat.escape(x.toString)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def roleInCompanyQuestion(query: Gettable[RoleInCompany],
-                            userAnswers: UserAnswers,
-                            labelKey: String,
-                            messageArg: String = "")
-                           (implicit messages: Messages): Option[AnswerRow] = {
+  def roleInCompanyQuestion(
+    query: Gettable[RoleInCompany],
+    userAnswers: UserAnswers,
+    labelKey: String,
+    messageArg: String = ""
+  )(implicit messages: Messages): Option[AnswerRow] = {
     val format = (x: RoleInCompany) => checkAnswersFormatters.formatRoleInCompany(x)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def passportOrIdCardQuestion(query: Gettable[PassportType],
-                               userAnswers: UserAnswers,
-                               labelKey: String,
-                               messageArg: String = "")
-                              (implicit messages: Messages): Option[AnswerRow] = {
+  def passportOrIdCardQuestion(
+    query: Gettable[PassportType],
+    userAnswers: UserAnswers,
+    labelKey: String,
+    messageArg: String = ""
+  )(implicit messages: Messages): Option[AnswerRow] = {
     val format = (x: PassportType) => checkAnswersFormatters.formatPassportOrIDCard(x)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def descriptionQuestion(query: Gettable[Description],
-                          userAnswers: UserAnswers,
-                          labelKey: String,
-                          messageArg: String)
-                         (implicit messages: Messages): Option[AnswerRow] = {
+  def descriptionQuestion(query: Gettable[Description], userAnswers: UserAnswers, labelKey: String, messageArg: String)(
+    implicit messages: Messages
+  ): Option[AnswerRow] = {
     val format = (x: Description) => checkAnswersFormatters.description(x)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def enumQuestion[T](query: Gettable[T],
-                      userAnswers: UserAnswers,
-                      labelKey: String,
-                      enumKey: String,
-                      messageArg: String = "")
-                     (implicit messages: Messages, reads: Reads[T]): Option[AnswerRow] = {
+  def enumQuestion[T](
+    query: Gettable[T],
+    userAnswers: UserAnswers,
+    labelKey: String,
+    enumKey: String,
+    messageArg: String = ""
+  )(implicit messages: Messages, reads: Reads[T]): Option[AnswerRow] = {
     val format = (x: T) => checkAnswersFormatters.formatEnum(enumKey, x)
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  def countryQuestion(isUkQuery: Gettable[Boolean],
-                      query: Gettable[String],
-                      userAnswers: UserAnswers,
-                      labelKey: String,
-                      messageArg: String)
-                     (implicit messages: Messages): Option[AnswerRow] = {
+  def countryQuestion(
+    isUkQuery: Gettable[Boolean],
+    query: Gettable[String],
+    userAnswers: UserAnswers,
+    labelKey: String,
+    messageArg: String
+  )(implicit messages: Messages): Option[AnswerRow] =
     userAnswers.get(isUkQuery) flatMap {
       case false =>
         countryQuestion(query, userAnswers, labelKey, messageArg)
-      case _ =>
+      case _     =>
         None
     }
-  }
 
-  def countryQuestion(query: Gettable[String],
-                      userAnswers: UserAnswers,
-                      labelKey: String,
-                      messageArg: String = "")
-                     (implicit messages: Messages): Option[AnswerRow] = {
+  def countryQuestion(query: Gettable[String], userAnswers: UserAnswers, labelKey: String, messageArg: String = "")(
+    implicit messages: Messages
+  ): Option[AnswerRow] = {
     val format = (x: String) => HtmlFormat.escape(checkAnswersFormatters.country(x))
     question(query, userAnswers, labelKey, format, messageArg)
   }
 
-  private def answerRow[T](labelKey: String, messageArg: String, answer: Html)
-                          (implicit messages: Messages): AnswerRow = {
+  private def answerRow[T](labelKey: String, messageArg: String, answer: Html)(implicit messages: Messages): AnswerRow =
     AnswerRow(
       label = messages(s"$labelKey.checkYourAnswersLabel", messageArg),
       answer = answer,
       changeUrl = None
     )
-  }
 
-  private def question[T](query: Gettable[T],
-                          userAnswers: UserAnswers,
-                          labelKey: String,
-                          format: T => Html,
-                          messageArg: String)
-                         (implicit messages: Messages, rds: Reads[T]): Option[AnswerRow] = {
+  private def question[T](
+    query: Gettable[T],
+    userAnswers: UserAnswers,
+    labelKey: String,
+    format: T => Html,
+    messageArg: String
+  )(implicit messages: Messages, rds: Reads[T]): Option[AnswerRow] =
     userAnswers.get(query) map { x =>
       answerRow(labelKey, messageArg, format(x))
     }
-  }
 
-  private def mentalCapacityQuestion[T](query: Gettable[T],
-                          userAnswers: UserAnswers,
-                          labelKey: String,
-                          format: T => Html,
-                          messageArg: String)
-                         (implicit messages: Messages, rds: Reads[T]): Option[AnswerRow] = {
+  private def mentalCapacityQuestion[T](
+    query: Gettable[T],
+    userAnswers: UserAnswers,
+    labelKey: String,
+    format: T => Html,
+    messageArg: String
+  )(implicit messages: Messages, rds: Reads[T]): Option[AnswerRow] =
     userAnswers.get(query) map { x =>
       answerRow(labelKey, messageArg, format(x))
     } match {
       case Some(value) => Some(value)
-      case None => Some(answerRow(labelKey, messageArg, escape(messages("site.dontknow"))))
+      case None        => Some(answerRow(labelKey, messageArg, escape(messages("site.dontknow"))))
     }
-  }
+
 }

@@ -29,7 +29,7 @@ case class TelephoneNumber(value: String) {
 object TelephoneNumber extends (String => TelephoneNumber) {
 
   implicit val writes: Writes[TelephoneNumber] = new SimpleObjectWrites[TelephoneNumber](_.value)
-  implicit val reads: Reads[TelephoneNumber] = new SimpleObjectReads[TelephoneNumber]("value", TelephoneNumber.apply)
+  implicit val reads: Reads[TelephoneNumber]   = new SimpleObjectReads[TelephoneNumber]("value", TelephoneNumber.apply)
 
   implicit class TelephoneNumberRequirements(tel: String) {
 
@@ -48,10 +48,12 @@ object TelephoneNumber extends (String => TelephoneNumber) {
       def digit: Regex = "[0-9]".r
       digit.findAllIn(tel).length >= 6
     }
+
   }
 
   def isValid(tel: String): Boolean =
     tel != null &&
       tel.removeParentheses().matches(Validation.telephoneRegex) &&
       tel.removeParentheses().hasMinimumOfSixDigits
+
 }

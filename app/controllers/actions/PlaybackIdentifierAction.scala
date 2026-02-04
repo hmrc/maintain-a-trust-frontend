@@ -25,13 +25,15 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PlaybackIdentifierActionImpl @Inject()(val parser: BodyParsers.Default,
-                                             playbackAuthenticationService: AuthenticationService
-                                            )(override implicit val executionContext: ExecutionContext) extends PlaybackIdentifierAction {
+class PlaybackIdentifierActionImpl @Inject() (
+  val parser: BodyParsers.Default,
+  playbackAuthenticationService: AuthenticationService
+)(implicit override val executionContext: ExecutionContext)
+    extends PlaybackIdentifierAction {
 
   override def refine[A](request: DataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
 
-   val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+    val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     playbackAuthenticationService.authenticateForIdentifier(request.userAnswers.identifier)(request, hc)
   }

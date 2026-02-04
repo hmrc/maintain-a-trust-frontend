@@ -29,8 +29,8 @@ class UpdateSettlorsYesNoViewSpec extends YesNoViewBehaviours {
     "making changes" must {
 
       val messageKeyPrefix = "updateSettlors"
-      val determinePrefix = (_: Boolean) => messageKeyPrefix
-      val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+      val determinePrefix  = (_: Boolean) => messageKeyPrefix
+      val form             = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
       val view = viewFor[UpdateSettlorsYesNoView](Some(emptyUserAnswersForUtr))
 
@@ -49,8 +49,8 @@ class UpdateSettlorsYesNoViewSpec extends YesNoViewBehaviours {
     "closing" must {
 
       val messageKeyPrefix = "updateSettlorsClosing"
-      val determinePrefix = (_: Boolean) => messageKeyPrefix
-      val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+      val determinePrefix  = (_: Boolean) => messageKeyPrefix
+      val form             = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
       val view = viewFor[UpdateSettlorsYesNoView](Some(emptyUserAnswersForUtr))
 
@@ -66,4 +66,5 @@ class UpdateSettlorsYesNoViewSpec extends YesNoViewBehaviours {
       behave like pageWithASubmitButton(applyView(form))
     }
   }
+
 }

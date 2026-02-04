@@ -37,8 +37,7 @@ class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
     behave like normalPage(
       applyView(form),
       commonContentPrefix,
-      expectedGuidanceKeys =
-        "paragraph1",
+      expectedGuidanceKeys = "paragraph1",
       "lead_in",
       "bullet1",
       "bullet2",
@@ -63,18 +62,19 @@ class UpdateNonEeaCompanyYesNoViewSpec extends YesNoViewBehaviours {
 
   "UpdateNonEeaCompanyYesNoView" when {
 
-    "making changes" must {
+    "making changes" must
       displayExpectedContent(
         messageKeyPrefix = "updateNonEeaCompany",
-        expectedQuestionText = "Do you need to update the details of a controlling interest in a company registered outside the UK and EEA?"
+        expectedQuestionText =
+          "Do you need to update the details of a controlling interest in a company registered outside the UK and EEA?"
       )
-    }
 
-    "closing" must {
+    "closing" must
       displayExpectedContent(
         messageKeyPrefix = "updateNonEeaCompanyClosing",
-        expectedQuestionText = "Do you need to update a controlling interest in a company registered outside the UK or EEA before closing the trust?"
+        expectedQuestionText =
+          "Do you need to update a controlling interest in a company registered outside the UK or EEA before closing the trust?"
       )
-    }
   }
+
 }

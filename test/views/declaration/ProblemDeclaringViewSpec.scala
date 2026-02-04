@@ -28,13 +28,7 @@ class ProblemDeclaringViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(AffinityGroup.Agent)(fakeRequest, messages)
 
-    behave like normalPage(applyView,
-      "problemDeclaring",
-      "p1",
-      "p2",
-      "contact.link",
-      "p3",
-      "return.link"
-    )
+    behave like normalPage(applyView, "problemDeclaring", "p1", "p2", "contact.link", "p3", "return.link")
   }
+
 }

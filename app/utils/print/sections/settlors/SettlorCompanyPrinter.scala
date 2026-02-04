@@ -25,16 +25,33 @@ import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class SettlorCompanyPrinter @Inject()(converter: AnswerRowConverter) extends EntityPrinter[String] {
+class SettlorCompanyPrinter @Inject() (converter: AnswerRowConverter) extends EntityPrinter[String] {
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.stringQuestion(SettlorBusinessNamePage(index), userAnswers, "settlorBusinessName"),
     converter.yesNoQuestion(SettlorUtrYesNoPage(index), userAnswers, "settlorBusinessUtrYesNo", name),
     converter.stringQuestion(SettlorUtrPage(index), userAnswers, "settlorBusinessUtr", name),
-    converter.yesNoQuestion(SettlorCountryOfResidenceYesNoPage(index), userAnswers, "settlorBusinessCountryOfResidenceYesNo", name),
-    converter.yesNoQuestion(SettlorCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "settlorBusinessCountryOfResidenceUkYesNo", name),
-    converter.countryQuestion(SettlorCountryOfResidenceInTheUkYesNoPage(index), SettlorCountryOfResidencePage(index), userAnswers, "settlorBusinessCountryOfResidence", name),
+    converter.yesNoQuestion(
+      SettlorCountryOfResidenceYesNoPage(index),
+      userAnswers,
+      "settlorBusinessCountryOfResidenceYesNo",
+      name
+    ),
+    converter.yesNoQuestion(
+      SettlorCountryOfResidenceInTheUkYesNoPage(index),
+      userAnswers,
+      "settlorBusinessCountryOfResidenceUkYesNo",
+      name
+    ),
+    converter.countryQuestion(
+      SettlorCountryOfResidenceInTheUkYesNoPage(index),
+      SettlorCountryOfResidencePage(index),
+      userAnswers,
+      "settlorBusinessCountryOfResidence",
+      name
+    ),
     converter.yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorBusinessAddressYesNo", name),
     converter.yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorBusinessAddressUKYesNo", name),
     converter.addressQuestion(SettlorAddressPage(index), userAnswers, "settlorBusinessAddressUK", name),

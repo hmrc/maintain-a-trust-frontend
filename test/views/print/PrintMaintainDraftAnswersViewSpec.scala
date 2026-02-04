@@ -41,26 +41,23 @@ class PrintMaintainDraftAnswersViewSpec extends ViewBehaviours {
     "render correct content" in {
       val doc = asDocument(applyView)
 
-      assertContainsText(doc,
-        "Draft copy of the trust’s declaration"
-      )
+      assertContainsText(doc, "Draft copy of the trust’s declaration")
 
-      assertContainsText(doc,
-        "This is a draft copy confirming that the trust is up to date."
-      )
+      assertContainsText(doc, "This is a draft copy confirming that the trust is up to date.")
 
-      assertContainsText(doc,
+      assertContainsText(
+        doc,
         "If you have made any changes they must reflect what’s in the trust deed. You will need to re-enter and declare for them to be updated on this service."
       )
 
-      assertContainsText(doc,
-        "This is not a declaration."
-      )
+      assertContainsText(doc, "This is not a declaration.")
 
-      assertContainsText(doc,
+      assertContainsText(
+        doc,
         "No further updates to trust details, assets and years of tax liability are required through this service."
       )
-      assertContainsText(doc,
+      assertContainsText(
+        doc,
         "If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts."
       )
     }

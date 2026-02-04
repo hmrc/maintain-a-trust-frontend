@@ -28,35 +28,56 @@ import java.time.LocalDate
 
 class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrustProtector] {
 
-  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorAddressYesNoPage(index)
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean]   = IndividualProtectorAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorAddressUKYesNoPage(index)
-  override def addressPage(index: Int): QuestionPage[Address] = IndividualProtectorAddressPage(index)
+  override def addressPage(index: Int): QuestionPage[Address]        = IndividualProtectorAddressPage(index)
 
   override def ninoYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorNINOYesNoPage(index)
-  override def ninoPage(index: Int): QuestionPage[String] = IndividualProtectorNINOPage(index)
+  override def ninoPage(index: Int): QuestionPage[String]       = IndividualProtectorNINOPage(index)
 
-  override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorPassportIDCardYesNoPage(index)
-  override def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = IndividualProtectorPassportIDCardPage(index)
+  override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] =
+    IndividualProtectorPassportIDCardYesNoPage(index)
+
+  override def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = IndividualProtectorPassportIDCardPage(
+    index
+  )
 
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorDateOfBirthYesNoPage(index)
-  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = IndividualProtectorDateOfBirthPage(index)
+  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate]    = IndividualProtectorDateOfBirthPage(index)
 
-  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfNationalityYesNoPage(index)
-  override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfNationalityInTheUkYesNoPage(index)
-  override def countryOfNationalityPage(index: Int): QuestionPage[String] = IndividualProtectorCountryOfNationalityPage(index)
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
+    IndividualProtectorCountryOfNationalityYesNoPage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfResidenceYesNoPage(index)
-  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorCountryOfResidenceInTheUkYesNoPage(index)
-  override def countryOfResidencePage(index: Int): QuestionPage[String] = IndividualProtectorCountryOfResidencePage(index)
+  override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
+    IndividualProtectorCountryOfNationalityInTheUkYesNoPage(index)
 
-  override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorMentalCapacityYesNoPage(index)
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] = IndividualProtectorCountryOfNationalityPage(
+    index
+  )
+
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    IndividualProtectorCountryOfResidenceYesNoPage(index)
+
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    IndividualProtectorCountryOfResidenceInTheUkYesNoPage(index)
+
+  override def countryOfResidencePage(index: Int): QuestionPage[String] = IndividualProtectorCountryOfResidencePage(
+    index
+  )
+
+  override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = IndividualProtectorMentalCapacityYesNoPage(
+    index
+  )
 
   override def metaDataPage(index: Int): QuestionPage[MetaData] = IndividualProtectorMetaData(index)
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayTrustProtector,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
-    super.updateUserAnswers(answers, entity, index)
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayTrustProtector,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
+    super
+      .updateUserAnswers(answers, entity, index)
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Individual))
       .flatMap(_.set(IndividualProtectorNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
@@ -65,6 +86,5 @@ class IndividualProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTru
       .flatMap(answers => extractMentalCapacity(entity.legallyIncapable, index, answers))
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(IndividualProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
-  }
 
 }

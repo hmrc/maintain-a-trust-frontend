@@ -23,45 +23,56 @@ import play.api.libs.json._
 
 import java.time.LocalDate
 
-case class DisplayTrustIdentificationType(safeId: Option[String],
-                                          nino: Option[String],
-                                          passport: Option[PassportType],
-                                          address: Option[AddressType])
+case class DisplayTrustIdentificationType(
+  safeId: Option[String],
+  nino: Option[String],
+  passport: Option[PassportType],
+  address: Option[AddressType]
+)
 
 object DisplayTrustIdentificationType {
-  implicit val identificationTypeFormat: Format[DisplayTrustIdentificationType] = Json.format[DisplayTrustIdentificationType]
+
+  implicit val identificationTypeFormat: Format[DisplayTrustIdentificationType] =
+    Json.format[DisplayTrustIdentificationType]
+
 }
 
-case class DisplayTrustIdentificationOrgType(safeId: Option[String],
-                                             utr: Option[String],
-                                             address: Option[AddressType])
+case class DisplayTrustIdentificationOrgType(safeId: Option[String], utr: Option[String], address: Option[AddressType])
 
 object DisplayTrustIdentificationOrgType {
-  implicit val trustBeneficiaryIdentificationFormat: Format[DisplayTrustIdentificationOrgType] = Json.format[DisplayTrustIdentificationOrgType]
+
+  implicit val trustBeneficiaryIdentificationFormat: Format[DisplayTrustIdentificationOrgType] =
+    Json.format[DisplayTrustIdentificationOrgType]
+
 }
 
-case class PassportType(countryOfIssue: String,
-                        number: String,
-                        expirationDate: LocalDate,
-                        detailsType: DetailsType = DetailsType.Combined)
+case class PassportType(
+  countryOfIssue: String,
+  number: String,
+  expirationDate: LocalDate,
+  detailsType: DetailsType = DetailsType.Combined
+)
 
 object PassportType {
+
   implicit val reads: Reads[PassportType] = (
     (__ \ "countryOfIssue").read[String] and
       (__ \ "number").read[String] and
       (__ \ "expirationDate").read[LocalDate] and
       (__ \ "detailsType").readWithDefault[DetailsType](DetailsType.Combined)
-    )(PassportType.apply _)
+  )(PassportType.apply _)
 
   implicit val writes: Writes[PassportType] = Json.writes[PassportType]
 }
 
-case class AddressType(line1: String,
-                       line2: String,
-                       line3: Option[String],
-                       line4: Option[String],
-                       postCode: Option[String],
-                       country: String)
+case class AddressType(
+  line1: String,
+  line2: String,
+  line3: Option[String],
+  line4: Option[String],
+  postCode: Option[String],
+  country: String
+)
 
 object AddressType {
   implicit val addressTypeFormat: Format[AddressType] = Json.format[AddressType]

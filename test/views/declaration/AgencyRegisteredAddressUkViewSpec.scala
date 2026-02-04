@@ -47,4 +47,5 @@ class AgencyRegisteredAddressUkViewSpec extends UkAddressViewBehaviours {
     behave like pageWithASubmitButton(applyView(form))
 
   }
+
 }

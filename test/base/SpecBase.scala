@@ -15,6 +15,7 @@
  */
 
 package base
+
 import config.FrontendAppConfig
 import controllers.actions._
 import models.UserAnswers
@@ -38,8 +39,8 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with Mocked wit
 
   def emptyUserAnswersForUtr: UserAnswers = TestUserAnswers.emptyUserAnswersForUtr
   def emptyUserAnswersForUrn: UserAnswers = TestUserAnswers.emptyUserAnswersForUrn
-  val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
-  val bodyParsers: BodyParsers.Default = injector.instanceOf[BodyParsers.Default]
+  val appConfig: FrontendAppConfig        = injector.instanceOf[FrontendAppConfig]
+  val bodyParsers: BodyParsers.Default    = injector.instanceOf[BodyParsers.Default]
 
   protected def applicationBuilder(
     userAnswers: Option[models.UserAnswers] = None,

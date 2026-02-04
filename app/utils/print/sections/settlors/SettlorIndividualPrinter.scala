@@ -25,27 +25,80 @@ import viewmodels.AnswerRow
 
 import javax.inject.Inject
 
-class SettlorIndividualPrinter @Inject()(converter: AnswerRowConverter) extends EntityPrinter[FullName] {
+class SettlorIndividualPrinter @Inject() (converter: AnswerRowConverter) extends EntityPrinter[FullName] {
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = Seq(
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] = Seq(
     converter.fullNameQuestion(SettlorIndividualNamePage(index), userAnswers, "settlorIndividualName"),
-    converter.yesNoQuestion(SettlorIndividualDateOfBirthYesNoPage(index), userAnswers, "settlorIndividualDateOfBirthYesNo", name),
+    converter.yesNoQuestion(
+      SettlorIndividualDateOfBirthYesNoPage(index),
+      userAnswers,
+      "settlorIndividualDateOfBirthYesNo",
+      name
+    ),
     converter.dateQuestion(SettlorIndividualDateOfBirthPage(index), userAnswers, "settlorIndividualDateOfBirth", name),
-    converter.yesNoQuestion(SettlorCountryOfNationalityYesNoPage(index), userAnswers, "settlorIndividualCountryOfNationalityYesNo", name),
-    converter.yesNoQuestion(SettlorCountryOfNationalityInTheUkYesNoPage(index), userAnswers, "settlorIndividualCountryOfNationalityUkYesNo", name),
-    converter.countryQuestion(SettlorCountryOfNationalityInTheUkYesNoPage(index), SettlorCountryOfNationalityPage(index), userAnswers, "settlorIndividualCountryOfNationality", name),
+    converter.yesNoQuestion(
+      SettlorCountryOfNationalityYesNoPage(index),
+      userAnswers,
+      "settlorIndividualCountryOfNationalityYesNo",
+      name
+    ),
+    converter.yesNoQuestion(
+      SettlorCountryOfNationalityInTheUkYesNoPage(index),
+      userAnswers,
+      "settlorIndividualCountryOfNationalityUkYesNo",
+      name
+    ),
+    converter.countryQuestion(
+      SettlorCountryOfNationalityInTheUkYesNoPage(index),
+      SettlorCountryOfNationalityPage(index),
+      userAnswers,
+      "settlorIndividualCountryOfNationality",
+      name
+    ),
     converter.yesNoQuestion(SettlorIndividualNINOYesNoPage(index), userAnswers, "settlorIndividualNINOYesNo", name),
     converter.ninoQuestion(SettlorIndividualNINOPage(index), userAnswers, "settlorIndividualNINO", name),
-    converter.yesNoQuestion(SettlorCountryOfResidenceYesNoPage(index), userAnswers, "settlorIndividualCountryOfResidenceYesNo", name),
-    converter.yesNoQuestion(SettlorCountryOfResidenceInTheUkYesNoPage(index), userAnswers, "settlorIndividualCountryOfResidenceUkYesNo", name),
-    converter.countryQuestion(SettlorCountryOfResidenceInTheUkYesNoPage(index), SettlorCountryOfResidencePage(index), userAnswers, "settlorIndividualCountryOfResidence", name),
+    converter.yesNoQuestion(
+      SettlorCountryOfResidenceYesNoPage(index),
+      userAnswers,
+      "settlorIndividualCountryOfResidenceYesNo",
+      name
+    ),
+    converter.yesNoQuestion(
+      SettlorCountryOfResidenceInTheUkYesNoPage(index),
+      userAnswers,
+      "settlorIndividualCountryOfResidenceUkYesNo",
+      name
+    ),
+    converter.countryQuestion(
+      SettlorCountryOfResidenceInTheUkYesNoPage(index),
+      SettlorCountryOfResidencePage(index),
+      userAnswers,
+      "settlorIndividualCountryOfResidence",
+      name
+    ),
     converter.yesNoQuestion(SettlorAddressYesNoPage(index), userAnswers, "settlorIndividualAddressYesNo", name),
     converter.yesNoQuestion(SettlorAddressUKYesNoPage(index), userAnswers, "settlorIndividualAddressUKYesNo", name),
     converter.addressQuestion(SettlorAddressPage(index), userAnswers, "settlorIndividualAddressUK", name),
-    converter.yesNoQuestion(SettlorIndividualPassportIDCardYesNoPage(index), userAnswers, "settlorIndividualPassportOrIdCardYesNo", name),
-    converter.passportOrIdCardQuestion(SettlorIndividualPassportIDCardPage(index), userAnswers, "settlorIndividualPassportOrIdCard", name),
-    converter.yesNoDontKnowQuestion(SettlorIndividualMentalCapacityYesNoPage(index), userAnswers, "settlorIndividualMentalCapacityYesNo", name)
+    converter.yesNoQuestion(
+      SettlorIndividualPassportIDCardYesNoPage(index),
+      userAnswers,
+      "settlorIndividualPassportOrIdCardYesNo",
+      name
+    ),
+    converter.passportOrIdCardQuestion(
+      SettlorIndividualPassportIDCardPage(index),
+      userAnswers,
+      "settlorIndividualPassportOrIdCard",
+      name
+    ),
+    converter.yesNoDontKnowQuestion(
+      SettlorIndividualMentalCapacityYesNoPage(index),
+      userAnswers,
+      "settlorIndividualMentalCapacityYesNo",
+      name
+    )
   )
 
   override def namePath(index: Int): JsPath = SettlorIndividualNamePage(index).path

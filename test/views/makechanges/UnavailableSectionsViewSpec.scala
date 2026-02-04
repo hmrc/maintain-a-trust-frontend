@@ -23,9 +23,9 @@ class UnavailableSectionsViewSpec extends ViewBehaviours {
 
   "UnavailableSections view" must {
 
-    val available = "available section"
-    val unavailable = "unavailable section"
-    val future = "future section"
+    val available        = "available section"
+    val unavailable      = "unavailable section"
+    val future           = "future section"
     val messageKeyPrefix = "unavailableSections"
 
     val view = viewFor[UnavailableSectionsView](Some(emptyUserAnswersForUtr))
@@ -38,15 +38,10 @@ class UnavailableSectionsViewSpec extends ViewBehaviours {
       assertContainsText(doc, messages(s"$messageKeyPrefix.p2", future))
     }
 
-    behave like dynamicTitlePage(applyView, s"$messageKeyPrefix",
-      available,
-      "p1.a",
-      "p3.start",
-      "p3.link",
-      "p3.end"
-    )
+    behave like dynamicTitlePage(applyView, s"$messageKeyPrefix", available, "p1.a", "p3.start", "p3.link", "p3.end")
 
     behave like pageWithBackLink(applyView)
 
   }
+
 }

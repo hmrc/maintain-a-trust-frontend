@@ -38,7 +38,15 @@ class ExpressTrustYesNoViewSpec extends IsExpressYesNoViewBehaviours {
     behave like normalPage(
       view = applyView(form),
       messageKeyPrefix = prefix,
-      expectedGuidanceKeys = "subheading1", "p1", "p2", "p3", "bullet1", "bullet2", "subheading2", "p4", "subheading3"
+      expectedGuidanceKeys = "subheading1",
+      "p1",
+      "p2",
+      "p3",
+      "bullet1",
+      "bullet2",
+      "subheading2",
+      "p4",
+      "subheading3"
     )
 
     behave like pageWithBackLink(applyView(form))
@@ -47,4 +55,5 @@ class ExpressTrustYesNoViewSpec extends IsExpressYesNoViewBehaviours {
 
     behave like pageWithASubmitButton(applyView(form))
   }
+
 }

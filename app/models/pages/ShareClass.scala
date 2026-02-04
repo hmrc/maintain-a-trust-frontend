@@ -29,7 +29,11 @@ object ShareClass extends Enumerable.Implicits {
   case object Other extends WithName("other") with ShareClass
 
   val values: List[ShareClass] = List(
-    Ordinary, Preference, Deferred, Growth, Other
+    Ordinary,
+    Preference,
+    Deferred,
+    Growth,
+    Other
   )
 
   implicit val enumerable: Enumerable[ShareClass] =

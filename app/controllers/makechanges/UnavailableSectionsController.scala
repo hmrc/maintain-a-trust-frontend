@@ -26,63 +26,64 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.makechanges.UnavailableSectionsView
 
 @Singleton
-class UnavailableSectionsController @Inject()(
-                                               override val messagesApi: MessagesApi,
-                                               actions: Actions,
-                                               val controllerComponents: MessagesControllerComponents,
-                                               view: UnavailableSectionsView,
-                                               config: FrontendAppConfig
-                                             ) extends FrontendBaseController with I18nSupport {
+class UnavailableSectionsController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  view: UnavailableSectionsView,
+  config: FrontendAppConfig
+) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    case class AvailableSections(
+      trustees: (Boolean, String),
+      beneficiaries: (Boolean, String),
+      settlors: (Boolean, String),
+      protectors: (Boolean, String),
+      otherIndividuals: (Boolean, String)
+    )
 
-      case class AvailableSections(trustees: (Boolean, String),
-                                   beneficiaries: (Boolean, String),
-                                   settlors: (Boolean, String),
-                                   protectors: (Boolean, String),
-                                   otherIndividuals: (Boolean, String))
+    val sections = List(
+      (config.maintainSettlorsEnabled, request.messages(messagesApi)("section.settlors")),
+      (config.maintainTrusteesEnabled, request.messages(messagesApi)("section.trustees")),
+      (config.maintainBeneficiariesEnabled, request.messages(messagesApi)("section.beneficiaries")),
+      (config.maintainProtectorsEnabled, request.messages(messagesApi)("section.protectors")),
+      (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.otherIndividuals"))
+    )
 
-      val sections = List(
-        (config.maintainSettlorsEnabled, request.messages(messagesApi)("section.settlors")),
-        (config.maintainTrusteesEnabled, request.messages(messagesApi)("section.trustees")),
-        (config.maintainBeneficiariesEnabled, request.messages(messagesApi)("section.beneficiaries")),
-        (config.maintainProtectorsEnabled, request.messages(messagesApi)("section.protectors")),
-        (config.maintainOtherIndividualsEnabled, request.messages(messagesApi)("section.otherIndividuals"))
-      )
+    val availableSections = commaSeparate(
+      request.messages(messagesApi)("site.and"),
+      sections.collect { case (true, x) =>
+        x
+      }
+    )
 
-      val availableSections = commaSeparate(
-        request.messages(messagesApi)("site.and"),
-        sections.collect {
-          case (true, x) => x
-        }
-      )
+    val unavailableSections = commaSeparate(
+      request.messages(messagesApi)("site.or"),
+      sections.collect { case (false, x) =>
+        x
+      }
+    )
 
-      val unavailableSections = commaSeparate(
-        request.messages(messagesApi)("site.or"),
-        sections.collect {
-          case (false, x) => x
-        }
-      )
+    val futureSections = commaSeparate(
+      request.messages(messagesApi)("site.and"),
+      sections.collect { case (false, x) =>
+        x
+      }
+    )
 
-      val futureSections = commaSeparate(
-        request.messages(messagesApi)("site.and"),
-        sections.collect {
-          case (false, x) => x
-        }
-      )
-
-      Ok(view(availableSections, unavailableSections, futureSections))
+    Ok(view(availableSections, unavailableSections, futureSections))
   }
 
   @scala.annotation.tailrec
-  private def commaSeparate(connective: String, list: List[String], acc: String = "")(implicit request: DataRequest[AnyContent]): String = {
+  private def commaSeparate(connective: String, list: List[String], acc: String = "")(implicit
+    request: DataRequest[AnyContent]
+  ): String =
     list.size match {
-      case 0 => acc
+      case 0                 => acc
       case 1 if acc.nonEmpty => commaSeparate(connective, list.tail, acc + " " + connective + " " + list.head)
-      case 1 | 2 => commaSeparate(connective, list.tail, acc + list.head)
-      case _ => commaSeparate(connective, list.tail, acc + list.head + ", ")
+      case 1 | 2             => commaSeparate(connective, list.tail, acc + list.head)
+      case _                 => commaSeparate(connective, list.tail, acc + list.head + ", ")
     }
-  }
 
 }

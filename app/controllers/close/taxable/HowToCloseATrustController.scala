@@ -24,15 +24,14 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.close.taxable.HowToCloseATrustView
 
 @Singleton
-class HowToCloseATrustController @Inject()(
-                                            actions: Actions,
-                                            val controllerComponents: MessagesControllerComponents,
-                                            view: HowToCloseATrustView
-                                           ) extends FrontendBaseController with I18nSupport {
+class HowToCloseATrustController @Inject() (
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  view: HowToCloseATrustView
+) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
-
-      Ok(view(request.userAnswers.identifier, request.userAnswers.identifierType))
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    Ok(view(request.userAnswers.identifier, request.userAnswers.identifierType))
   }
+
 }

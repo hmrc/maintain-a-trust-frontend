@@ -27,8 +27,15 @@ class CreateAgentServicesAccountViewSpec extends ViewBehaviours {
 
     val applyView = view.apply()(fakeRequest, messages)
 
-    behave like normalPage(applyView, "createAgentServicesAccount", "paragraph1", "insetText", "paragraph2", "paragraph3")
-
+    behave like normalPage(
+      applyView,
+      "createAgentServicesAccount",
+      "paragraph1",
+      "insetText",
+      "paragraph2",
+      "paragraph3"
+    )
 
   }
+
 }

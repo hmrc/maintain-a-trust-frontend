@@ -28,35 +28,42 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.declaration.{CloseTrustConfirmationView, ConfirmationView}
 
 @Singleton
-class ConfirmationController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        actions: Actions,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        confirmationView: ConfirmationView,
-                                        closeTrustConfirmationView: CloseTrustConfirmationView,
-                                        config: FrontendAppConfig,
-                                        answerRequiredAction: RequireClosingTrustAnswerAction
-                                      ) extends FrontendBaseController with I18nSupport with Logging {
+class ConfirmationController @Inject() (
+  override val messagesApi: MessagesApi,
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  confirmationView: ConfirmationView,
+  closeTrustConfirmationView: CloseTrustConfirmationView,
+  config: FrontendAppConfig,
+  answerRequiredAction: RequireClosingTrustAnswerAction
+) extends FrontendBaseController with I18nSupport with Logging {
 
   private val className = getClass.getSimpleName
 
-  def onPageLoad(): Action[AnyContent] = actions.refreshedData.andThen(answerRequiredAction) {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = actions.refreshedData.andThen(answerRequiredAction) { implicit request =>
+    val isAgent = request.user.affinityGroup == Agent
 
-      val isAgent = request.user.affinityGroup == Agent
-
-      request.userAnswers.get(TVNPage).fold {
-        logger.warn(s"[$className][onPageLoad][UTR/URN: ${request.userAnswers.identifier}] no TVN in user answers, cannot render confirmation page")
+    request.userAnswers
+      .get(TVNPage)
+      .fold {
+        logger.warn(
+          s"[$className][onPageLoad][UTR/URN: ${request.userAnswers.identifier}] no TVN in user answers, cannot render confirmation page"
+        )
         Redirect(controllers.routes.TrustStatusController.sorryThereHasBeenAProblem())
-      }{
-        tvn =>
-          Ok(
-            if (request.closingTrust) {
-              closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
-            } else {
-              confirmationView(tvn, isAgent, request.userAnswers.isTrustTaxable, agentOverviewUrl = config.agentOverviewUrl)
-            }
-          )
+      } { tvn =>
+        Ok(
+          if (request.closingTrust) {
+            closeTrustConfirmationView(tvn, isAgent, agentOverviewUrl = config.agentOverviewUrl)
+          } else {
+            confirmationView(
+              tvn,
+              isAgent,
+              request.userAnswers.isTrustTaxable,
+              agentOverviewUrl = config.agentOverviewUrl
+            )
+          }
+        )
       }
   }
+
 }

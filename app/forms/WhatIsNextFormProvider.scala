@@ -27,4 +27,5 @@ class WhatIsNextFormProvider @Inject() extends Mappings {
     Form(
       "value" -> enumerable[WhatIsNext]("declarationWhatNext.error.required")
     )
+
 }

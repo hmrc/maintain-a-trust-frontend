@@ -34,64 +34,61 @@ import views.html.makechanges.AddOtherIndividualsYesNoView
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddOtherIndividualsYesNoController @Inject()(
-                                                    override val messagesApi: MessagesApi,
-                                                    playbackRepository: PlaybackRepository,
-                                                    actions: Actions,
-                                                    yesNoFormProvider: YesNoFormProvider,
-                                                    val controllerComponents: MessagesControllerComponents,
-                                                    view: AddOtherIndividualsYesNoView,
-                                                    trustConnector: TrustConnector,
-                                                    trustStoreConnector: TrustsStoreConnector,
-                                                    errorHandler: ErrorHandler
-                                                  ) (implicit ec: ExecutionContext)
-  extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with Logging {
+class AddOtherIndividualsYesNoController @Inject() (
+  override val messagesApi: MessagesApi,
+  playbackRepository: PlaybackRepository,
+  actions: Actions,
+  yesNoFormProvider: YesNoFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: AddOtherIndividualsYesNoView,
+  trustConnector: TrustConnector,
+  trustStoreConnector: TrustsStoreConnector,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends MakeChangesQuestionRouterController(trustConnector, trustStoreConnector) with Logging {
 
   private val className = getClass.getSimpleName
 
-  private def prefix(closingTrust: Boolean): String = {
+  private def prefix(closingTrust: Boolean): String =
     if (closingTrust) "addOtherIndividualsClosing" else "addOtherIndividuals"
+
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer { implicit request =>
+    val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
+
+    val preparedForm = request.userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
+
+    Ok(view(preparedForm, prefix, request.closingTrust))
   }
 
-  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
-    implicit request =>
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async { implicit request =>
+    val result = for {
+      formData       <- TrustEnvelope(handleFormValidation)
+      updatedAnswers <- TrustEnvelope(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, formData))
+      _              <- playbackRepository.set(updatedAnswers)
+      route          <- routeToAddOrUpdateNonEeaCompany(updatedAnswers, request.closingTrust)(request.request)
+    } yield route
 
-      val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
-
-      val preparedForm = request.userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, prefix, request.closingTrust))
-  }
-
-  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
-    implicit request =>
-
-      val result = for {
-        formData <- TrustEnvelope(handleFormValidation)
-        updatedAnswers <- TrustEnvelope(request.userAnswers.set(AddOrUpdateOtherIndividualsYesNoPage, formData))
-        _ <- playbackRepository.set(updatedAnswers)
-        route <- routeToAddOrUpdateNonEeaCompany(updatedAnswers, request.closingTrust)(request.request)
-      } yield route
-
-      result.value.flatMap {
-        case Right(call) => Future.successful(call)
-        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
-        case Left(_) =>
-          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-      }
+    result.value.flatMap {
+      case Right(call)                               => Future.successful(call)
+      case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
+      case Left(_)                                   =>
+        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
+    }
   }
 
   private def handleFormValidation(implicit request: ClosingTrustRequest[AnyContent]): Either[TrustErrors, Boolean] = {
     val form: Form[Boolean] = yesNoFormProvider.withPrefix(prefix(request.closingTrust))
-    form.bindFromRequest().fold(
-      (formWithErrors: Form[_]) =>
-        Left(FormValidationError(BadRequest(view(formWithErrors, prefix, request.closingTrust)))),
-      value => Right(value)
-    )
+    form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) =>
+          Left(FormValidationError(BadRequest(view(formWithErrors, prefix, request.closingTrust)))),
+        value => Right(value)
+      )
   }
 
 }

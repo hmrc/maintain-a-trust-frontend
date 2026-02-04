@@ -29,30 +29,29 @@ import utils.Session
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IndexController @Inject()(
-                                 val controllerComponents: MessagesControllerComponents,
-                                 actions: Actions,
-                                 sessionService: SessionService
-                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+class IndexController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  actions: Actions,
+  sessionService: SessionService
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
   private val className = getClass.getSimpleName
 
-  def onPageLoad(): Action[AnyContent] = actions.auth.async {
-    implicit request =>
-      initialise(Redirect(controllers.routes.UTRController.onPageLoad()))
+  def onPageLoad(): Action[AnyContent] = actions.auth.async { implicit request =>
+    initialise(Redirect(controllers.routes.UTRController.onPageLoad()))
   }
 
-  def startUtr(): Action[AnyContent] = actions.auth.async {
-    implicit request =>
-      initialise(Redirect(controllers.routes.UTRController.onPageLoad()))
+  def startUtr(): Action[AnyContent] = actions.auth.async { implicit request =>
+    initialise(Redirect(controllers.routes.UTRController.onPageLoad()))
   }
 
-  def startUrn(): Action[AnyContent] = actions.auth.async {
-    implicit request =>
-      initialise(Redirect(controllers.routes.URNController.onPageLoad()))
+  def startUrn(): Action[AnyContent] = actions.auth.async { implicit request =>
+    initialise(Redirect(controllers.routes.URNController.onPageLoad()))
   }
 
-  private def getIdentifierFromEnrolment(enrolmentKey: String, identifierKey: String)
-                                        (implicit request: IdentifierRequest[_]): Option[String] =
+  private def getIdentifierFromEnrolment(enrolmentKey: String, identifierKey: String)(implicit
+    request: IdentifierRequest[_]
+  ): Option[String] =
     request.user.enrolments.enrolments
       .find(_.key equals enrolmentKey)
       .flatMap(_.identifiers.find(_.key equals identifierKey))
@@ -68,9 +67,12 @@ class IndexController @Inject()(
     identifier match {
       case Some(value) =>
         sessionService.initialiseSession(value)
-      case None =>
-        logger.info(s"[$className][initialise][Session ID: ${Session.id(hc)} user is not enrolled, starting maintain journey, redirect to ask for identifier")
+      case None        =>
+        logger.info(
+          s"[$className][initialise][Session ID: ${Session.id(hc)} user is not enrolled, starting maintain journey, redirect to ask for identifier"
+        )
         Future.successful(redirectForIdentifier)
     }
   }
+
 }

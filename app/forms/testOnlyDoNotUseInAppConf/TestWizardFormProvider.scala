@@ -26,11 +26,10 @@ class TestWizardFormProvider @Inject() extends Mappings {
 
   def apply(): Form[TestWizardForm] = Form(
     mapping(
-      "mode" -> enumerable[FourOrFiveMLD](),
-      "cleanup" -> boolean(),
+      "mode"     -> enumerable[FourOrFiveMLD](),
+      "cleanup"  -> boolean(),
       "testUser" -> optional(text())
     )(TestWizardForm.apply)(TestWizardForm.unapply)
   )
+
 }
-
-

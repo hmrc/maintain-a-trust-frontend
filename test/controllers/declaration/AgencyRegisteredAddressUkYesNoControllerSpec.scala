@@ -31,12 +31,16 @@ import views.html.declaration.AgencyRegisteredAddressUkYesNoView
 class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
 
   private val formProvider = new YesNoFormProvider()
-  private val form = formProvider.withPrefix("agencyRegisteredAddressUkYesNo")
-  private lazy val agencyRegisteredAddressUkYesNoRoute = routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+  private val form         = formProvider.withPrefix("agencyRegisteredAddressUkYesNo")
+
+  private lazy val agencyRegisteredAddressUkYesNoRoute =
+    routes.AgencyRegisteredAddressUkYesNoController.onPageLoad().url
+
   private lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit()
 
   private val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-    .set(WhatIsNextPage, MakeChanges).value
+    .set(WhatIsNextPage, MakeChanges)
+    .value
 
   "AgencyRegisteredAddressUkYesNo Controller" must {
 
@@ -153,4 +157,5 @@ class AgencyRegisteredAddressUkYesNoControllerSpec extends SpecBase {
     }
 
   }
+
 }

@@ -30,21 +30,21 @@ class DeedOfVariationSpec extends AnyWordSpec with Matchers with ScalaCheckPrope
     "serialise and deserailise" when {
 
       "Previously there was only an absolute interest under the will" in {
-        val json = JsString("Previously there was only an absolute interest under the will")
+        val json            = JsString("Previously there was only an absolute interest under the will")
         val deedOfVariation = json.as[DeedOfVariation]
         deedOfVariation mustEqual PreviouslyAbsoluteInterestUnderWill
         Json.toJson(deedOfVariation) mustEqual json
       }
 
       "Replaced the will trust" in {
-        val json = JsString("Replaced the will trust")
+        val json            = JsString("Replaced the will trust")
         val deedOfVariation = json.as[DeedOfVariation]
         deedOfVariation mustEqual ReplacedWill
         Json.toJson(deedOfVariation) mustEqual json
       }
 
       "Addition to the will trust" in {
-        val json = JsString("Addition to the will trust")
+        val json            = JsString("Addition to the will trust")
         val deedOfVariation = json.as[DeedOfVariation]
         deedOfVariation mustEqual AdditionToWill
         Json.toJson(deedOfVariation) mustEqual json
@@ -56,4 +56,5 @@ class DeedOfVariationSpec extends AnyWordSpec with Matchers with ScalaCheckPrope
       json.validate[DeedOfVariation].isError mustBe true
     }
   }
+
 }

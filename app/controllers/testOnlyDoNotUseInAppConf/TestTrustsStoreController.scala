@@ -27,21 +27,20 @@ import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TestTrustsStoreController @Inject()(
-                                           connector: TrustsStoreConnector,
-                                           val controllerComponents: MessagesControllerComponents
-                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with Logging {
+class TestTrustsStoreController @Inject() (
+  connector: TrustsStoreConnector,
+  val controllerComponents: MessagesControllerComponents
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with Logging {
 
-  def set4Mld: Action[AnyContent] = Action.async {
-    implicit request =>
-      logger.info(s"[TestTrustsStoreController][set4Mld][Session ID: ${Session.id(hc)}] set 4MLD mode")
-      connector.setFeature("5mld", state = false).value.map(_ => Ok)
+  def set4Mld: Action[AnyContent] = Action.async { implicit request =>
+    logger.info(s"[TestTrustsStoreController][set4Mld][Session ID: ${Session.id(hc)}] set 4MLD mode")
+    connector.setFeature("5mld", state = false).value.map(_ => Ok)
   }
 
-  def set5Mld: Action[AnyContent] = Action.async {
-    implicit request =>
-      logger.info(s"[TestTrustsStoreController][set5Mld][Session ID: ${Session.id(hc)}] set 5MLD mode")
-      connector.setFeature("5mld", state = true).value.map(_ => Ok)
+  def set5Mld: Action[AnyContent] = Action.async { implicit request =>
+    logger.info(s"[TestTrustsStoreController][set5Mld][Session ID: ${Session.id(hc)}] set 5MLD mode")
+    connector.setFeature("5mld", state = true).value.map(_ => Ok)
   }
 
   /**
@@ -49,19 +48,23 @@ class TestTrustsStoreController @Inject()(
    * @param feature can be either "5mld" or "non-taxable.access-code"
    * @return Ok if successful or BadRequest for invalid request body
    */
-  def setFeature(feature: String): Action[AnyContent] = Action.async {
-    implicit request =>
-      request.body.asJson match {
-        case Some(JsBoolean(value)) =>
-          logger.info(s"[TestTrustsStoreController][setFeature][Session ID: ${Session.id(hc)}] setting $feature to $value")
-          connector.setFeature(feature, value).value.map(_ => Ok).recover {
-            case ex =>
-              logger.error(s"[TestTrustsStoreController][setFeature][Session ID: ${Session.id(hc)}] error setting feature: ${ex.getMessage}", ex)
-              InternalServerError
-          }
-        case None =>
-          logger.error(s"[TestTrustsStoreController][setFeature][Session ID: ${Session.id(hc)}] invalid request body")
-          Future.successful(BadRequest)
-      }
+  def setFeature(feature: String): Action[AnyContent] = Action.async { implicit request =>
+    request.body.asJson match {
+      case Some(JsBoolean(value)) =>
+        logger.info(
+          s"[TestTrustsStoreController][setFeature][Session ID: ${Session.id(hc)}] setting $feature to $value"
+        )
+        connector.setFeature(feature, value).value.map(_ => Ok).recover { case ex =>
+          logger.error(
+            s"[TestTrustsStoreController][setFeature][Session ID: ${Session.id(hc)}] error setting feature: ${ex.getMessage}",
+            ex
+          )
+          InternalServerError
+        }
+      case None                   =>
+        logger.error(s"[TestTrustsStoreController][setFeature][Session ID: ${Session.id(hc)}] invalid request body")
+        Future.successful(BadRequest)
+    }
   }
+
 }

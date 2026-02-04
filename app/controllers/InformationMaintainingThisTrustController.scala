@@ -28,40 +28,38 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html._
 
 @Singleton
-class InformationMaintainingThisTrustController @Inject()(
-                                                           actions: Actions,
-                                                           val controllerComponents: MessagesControllerComponents,
-                                                           maintainingTrustView: InformationMaintainingThisTrustView,
-                                                           maintainingTaxableTrustView: InformationMaintainingTaxableTrustView,
-                                                           maintainingNonTaxableTrustView: InformationMaintainingNonTaxableTrustView,
-                                                           agentCannotAccessTrustYetView: AgentCannotAccessTrustYetView
-                                                         )(implicit config: FrontendAppConfig)
-  extends FrontendBaseController with I18nSupport with Logging {
+class InformationMaintainingThisTrustController @Inject() (
+  actions: Actions,
+  val controllerComponents: MessagesControllerComponents,
+  maintainingTrustView: InformationMaintainingThisTrustView,
+  maintainingTaxableTrustView: InformationMaintainingTaxableTrustView,
+  maintainingNonTaxableTrustView: InformationMaintainingNonTaxableTrustView,
+  agentCannotAccessTrustYetView: AgentCannotAccessTrustYetView
+)(implicit config: FrontendAppConfig)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
-
-      val identifier = request.userAnswers.identifier
-      val identifierType = request.userAnswers.identifierType
-      request.user.affinityGroup match {
-        case Agent if !config.playbackEnabled =>
-          Ok(agentCannotAccessTrustYetView(identifier, identifierType))
-        case _ =>
-          Ok {
-            request.userAnswers.trustMldStatus match {
-              case Underlying5mldTaxableTrustIn5mldMode =>
-                maintainingTaxableTrustView(identifier, identifierType)
-              case Underlying5mldNonTaxableTrustIn5mldMode =>
-                maintainingNonTaxableTrustView(identifier, identifierType)
-              case _ =>
-                maintainingTrustView(identifier, identifierType)
-            }
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    val identifier     = request.userAnswers.identifier
+    val identifierType = request.userAnswers.identifierType
+    request.user.affinityGroup match {
+      case Agent if !config.playbackEnabled =>
+        Ok(agentCannotAccessTrustYetView(identifier, identifierType))
+      case _                                =>
+        Ok {
+          request.userAnswers.trustMldStatus match {
+            case Underlying5mldTaxableTrustIn5mldMode    =>
+              maintainingTaxableTrustView(identifier, identifierType)
+            case Underlying5mldNonTaxableTrustIn5mldMode =>
+              maintainingNonTaxableTrustView(identifier, identifierType)
+            case _                                       =>
+              maintainingTrustView(identifier, identifierType)
           }
-      }
+        }
+    }
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier {
-    _ =>
-      Redirect(routes.ViewLastDeclarationYesNoController.onPageLoad())
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier { _ =>
+    Redirect(routes.ViewLastDeclarationYesNoController.onPageLoad())
   }
+
 }

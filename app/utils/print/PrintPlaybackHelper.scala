@@ -29,14 +29,16 @@ import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class PrintPlaybackHelper @Inject()(closeDatePrinter: CloseDatePrinter,
-                                    settlorsPrinter: AllSettlorsPrinter,
-                                    trusteesPrinter: AllTrusteesPrinter,
-                                    beneficiariesPrinter: AllBeneficiariesPrinter,
-                                    protectorsPrinter: AllProtectorsPrinter,
-                                    otherIndividualsPrinter: OtherIndividualsPrinter,
-                                    assetsPrinter: AllAssetsPrinter,
-                                    trustDetailsPrinter: TrustDetailsPrinter) {
+class PrintPlaybackHelper @Inject() (
+  closeDatePrinter: CloseDatePrinter,
+  settlorsPrinter: AllSettlorsPrinter,
+  trusteesPrinter: AllTrusteesPrinter,
+  beneficiariesPrinter: AllBeneficiariesPrinter,
+  protectorsPrinter: AllProtectorsPrinter,
+  otherIndividualsPrinter: OtherIndividualsPrinter,
+  assetsPrinter: AllAssetsPrinter,
+  trustDetailsPrinter: TrustDetailsPrinter
+) {
 
   def closeDate(userAnswers: UserAnswers)(implicit messages: Messages): AnswerSection =
     closeDatePrinter.print(userAnswers)

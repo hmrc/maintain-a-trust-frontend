@@ -26,8 +26,8 @@ import views.html.declaration.AgencyRegisteredAddressUkYesNoView
 
 class AgencyRegisteredAddressUkYesNoViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "agencyRegisteredAddressUkYesNo"
-  val form = new YesNoFormProvider().withPrefix(messageKeyPrefix)
+  val messageKeyPrefix    = "agencyRegisteredAddressUkYesNo"
+  val form                = new YesNoFormProvider().withPrefix(messageKeyPrefix)
   lazy val onSubmit: Call = routes.AgencyRegisteredAddressUkYesNoController.onSubmit()
 
   "AgencyRegisteredAddressUKYesNo view" must {
@@ -46,4 +46,5 @@ class AgencyRegisteredAddressUkYesNoViewSpec extends YesNoViewBehaviours {
     behave like pageWithASubmitButton(applyView(form))
 
   }
+
 }

@@ -27,38 +27,49 @@ import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class ShareAssetPrinter @Inject()(converter: AnswerRowConverter) extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
+class ShareAssetPrinter @Inject() (converter: AnswerRowConverter)
+    extends EntitiesPrinter[JsArray] with EntityPrinter[String] {
 
-  override def printSection(index: Int, userAnswers: UserAnswers)
-                           (implicit messages: Messages): Option[AnswerSection] = {
+  override def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection] =
     printAnswerRows(index, userAnswers)
-  }
 
-  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)
-                         (implicit messages: Messages): Seq[Option[AnswerRow]] = {
+  override def answerRows(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] =
 
     userAnswers
       .get(SharesInAPortfolioPage(index))
-      .fold[Seq[Option[AnswerRow]]](Nil)(inPortfolio => {
+      .fold[Seq[Option[AnswerRow]]](Nil)(inPortfolio =>
         converter.yesNoQuestion(SharesInAPortfolioPage(index), userAnswers, "asset.shares.inAPortfolioYesNo") +:
           (if (inPortfolio) {
-            Seq(
-              converter.stringQuestion(ShareNamePage(index), userAnswers, "asset.shares.portfolioName"),
-              converter.yesNoQuestion(ShareOnStockExchangePage(index), userAnswers, "asset.shares.portfolioOnStockExchangeYesNo"),
-              converter.stringQuestion(ShareQuantityInTrustPage(index), userAnswers, "asset.shares.portfolioQuantityInTrust"),
-              converter.currencyQuestion(ShareValueInTrustPage(index), userAnswers, "asset.shares.portfolioValueInTrust")
-            )
-          } else {
-            Seq(
-              converter.stringQuestion(ShareNamePage(index), userAnswers, "asset.shares.companyName"),
-              converter.enumQuestion(ShareClassPage(index), userAnswers, "asset.shares.class", "shares.class", name),
-              converter.yesNoQuestion(ShareOnStockExchangePage(index), userAnswers, "asset.shares.onStockExchangeYesNo", name),
-              converter.stringQuestion(ShareQuantityInTrustPage(index), userAnswers, "asset.shares.quantityInTrust", name),
-              converter.currencyQuestion(ShareValueInTrustPage(index), userAnswers, "asset.shares.valueInTrust", name)
-            )
-          })
-      })
-  }
+             Seq(
+               converter.stringQuestion(ShareNamePage(index), userAnswers, "asset.shares.portfolioName"),
+               converter.yesNoQuestion(
+                 ShareOnStockExchangePage(index),
+                 userAnswers,
+                 "asset.shares.portfolioOnStockExchangeYesNo"
+               ),
+               converter
+                 .stringQuestion(ShareQuantityInTrustPage(index), userAnswers, "asset.shares.portfolioQuantityInTrust"),
+               converter
+                 .currencyQuestion(ShareValueInTrustPage(index), userAnswers, "asset.shares.portfolioValueInTrust")
+             )
+           } else {
+             Seq(
+               converter.stringQuestion(ShareNamePage(index), userAnswers, "asset.shares.companyName"),
+               converter.enumQuestion(ShareClassPage(index), userAnswers, "asset.shares.class", "shares.class", name),
+               converter.yesNoQuestion(
+                 ShareOnStockExchangePage(index),
+                 userAnswers,
+                 "asset.shares.onStockExchangeYesNo",
+                 name
+               ),
+               converter
+                 .stringQuestion(ShareQuantityInTrustPage(index), userAnswers, "asset.shares.quantityInTrust", name),
+               converter.currencyQuestion(ShareValueInTrustPage(index), userAnswers, "asset.shares.valueInTrust", name)
+             )
+           })
+      )
 
   override def namePath(index: Int): JsPath = ShareNamePage(index).path
 

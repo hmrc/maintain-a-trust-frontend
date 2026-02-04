@@ -29,13 +29,13 @@ trait EntitiesPrinter[T <: JsValue] extends PrinterHelper {
     val answerSections: Seq[AnswerSection] = (userAnswers.get(section) match {
       case Some(array: JsArray) => array
       case Some(value: JsValue) => JsArray(Seq(value))
-      case _ => JsArray()
-    }).value.zipWithIndex.foldLeft[Seq[AnswerSection]](Nil)((acc, entity) => {
+      case _                    => JsArray()
+    }).value.zipWithIndex.foldLeft[Seq[AnswerSection]](Nil)((acc, entity) =>
       printSection(entity._2, userAnswers) match {
         case Some(value) => acc :+ value
-        case _ => acc
+        case _           => acc
       }
-    })
+    )
 
     prependHeadingToAnswerSections(answerSections, userAnswers.isTrustMigratingFromNonTaxableToTaxable)
   }

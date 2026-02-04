@@ -25,19 +25,13 @@ import play.api.data.Form
 
 trait OptionalFieldBehaviours extends FormSpec with ScalaCheckPropertyChecks with Generators {
 
+  def optionalField(form: Form[_], fieldName: String, validDataGenerator: Gen[String]): Unit = {
 
-  def optionalField(form: Form[_],
-                    fieldName: String,
-                    validDataGenerator: Gen[String]): Unit = {
-
-    "bind valid data" in {
-      forAll(validDataGenerator) {
-        dataItem =>
-          val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
-          result.value.value shouldBe dataItem
+    "bind valid data" in
+      forAll(validDataGenerator) { dataItem =>
+        val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)
+        result.value.value shouldBe dataItem
       }
-    }
-
 
     "bind when key is not present at all" in {
 
@@ -52,4 +46,5 @@ trait OptionalFieldBehaviours extends FormSpec with ScalaCheckPropertyChecks wit
     }
 
   }
+
 }

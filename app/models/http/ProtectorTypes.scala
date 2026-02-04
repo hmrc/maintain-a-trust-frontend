@@ -24,8 +24,10 @@ import java.time.LocalDate
 
 sealed trait Protector extends EntityType
 
-case class DisplayTrustProtectorsType(protector: List[DisplayTrustProtector],
-                                      protectorCompany: List[DisplayTrustProtectorBusiness]) {
+case class DisplayTrustProtectorsType(
+  protector: List[DisplayTrustProtector],
+  protectorCompany: List[DisplayTrustProtectorBusiness]
+) {
 
   val count: Int = protector.size + protectorCompany.size
 }
@@ -35,33 +37,40 @@ object DisplayTrustProtectorsType {
   implicit val reads: Reads[DisplayTrustProtectorsType] = (
     (__ \ "protector").readWithDefault[List[DisplayTrustProtector]](Nil) and
       (__ \ "protectorCompany").readWithDefault[List[DisplayTrustProtectorBusiness]](Nil)
-    )(DisplayTrustProtectorsType.apply _)
+  )(DisplayTrustProtectorsType.apply _)
 
   implicit val writes: Writes[DisplayTrustProtectorsType] = Json.writes[DisplayTrustProtectorsType]
 
 }
 
-case class DisplayTrustProtector(lineNo: Option[String],
-                                 bpMatchStatus: Option[String],
-                                 name: FullName,
-                                 dateOfBirth: Option[LocalDate],
-                                 countryOfResidence: Option[String],
-                                 nationality: Option[String],
-                                 legallyIncapable: Option[Boolean],
-                                 identification: Option[DisplayTrustIdentificationType],
-                                 entityStart: String) extends Protector
+case class DisplayTrustProtector(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  name: FullName,
+  dateOfBirth: Option[LocalDate],
+  countryOfResidence: Option[String],
+  nationality: Option[String],
+  legallyIncapable: Option[Boolean],
+  identification: Option[DisplayTrustIdentificationType],
+  entityStart: String
+) extends Protector
 
 object DisplayTrustProtector {
   implicit val protectorFormat: Format[DisplayTrustProtector] = Json.format[DisplayTrustProtector]
 }
 
-case class DisplayTrustProtectorBusiness(lineNo: Option[String],
-                                         bpMatchStatus: Option[String],
-                                         name: String,
-                                         countryOfResidence: Option[String],
-                                         identification: Option[DisplayTrustIdentificationOrgType],
-                                         entityStart: String) extends Protector
+case class DisplayTrustProtectorBusiness(
+  lineNo: Option[String],
+  bpMatchStatus: Option[String],
+  name: String,
+  countryOfResidence: Option[String],
+  identification: Option[DisplayTrustIdentificationOrgType],
+  entityStart: String
+) extends Protector
 
 object DisplayTrustProtectorBusiness {
-  implicit val protectorCompanyFormat: Format[DisplayTrustProtectorBusiness] = Json.format[DisplayTrustProtectorBusiness]
+
+  implicit val protectorCompanyFormat: Format[DisplayTrustProtectorBusiness] =
+    Json.format[DisplayTrustProtectorBusiness]
+
 }

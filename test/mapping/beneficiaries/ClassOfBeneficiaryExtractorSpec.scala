@@ -25,8 +25,8 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.EitherValues
 import pages.beneficiaries.classOfBeneficiary._
 
-class ClassOfBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
-  with EitherValues with Generators with SpecBaseHelpers {
+class ClassOfBeneficiaryExtractorSpec
+    extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   def generateClassOfBeneficiary(index: Int) = DisplayTrustUnidentifiedType(
     lineNo = Some(s"$index"),
@@ -46,7 +46,7 @@ class ClassOfBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
     entityStart = "2019-11-26"
   )
 
-  val classOfBeneficiaryExtractor : ClassOfBeneficiaryExtractor =
+  val classOfBeneficiaryExtractor: ClassOfBeneficiaryExtractor =
     injector.instanceOf[ClassOfBeneficiaryExtractor]
 
   "Class Of Beneficiary Extractor" - {
@@ -70,27 +70,29 @@ class ClassOfBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
     "when there are charities" - {
 
       "with minimum data must return user answers updated" in {
-        val classOfBeneficiary = List(DisplayTrustUnidentifiedType(
-          lineNo = Some("1"),
-          bpMatchStatus = Some("01"),
-          description = s"Class Of Beneficiary 1",
-          beneficiaryDiscretion = None,
-          beneficiaryShareOfIncome = None,
-          entityStart = "2019-11-26"
-        ))
+        val classOfBeneficiary = List(
+          DisplayTrustUnidentifiedType(
+            lineNo = Some("1"),
+            bpMatchStatus = Some("01"),
+            description = s"Class Of Beneficiary 1",
+            beneficiaryDiscretion = None,
+            beneficiaryShareOfIncome = None,
+            entityStart = "2019-11-26"
+          )
+        )
 
         val ua = emptyUserAnswersForUtr
 
         val extraction = classOfBeneficiaryExtractor.extract(ua, classOfBeneficiary)
 
-        extraction.value.get(ClassOfBeneficiaryDescriptionPage(0)).get mustBe "Class Of Beneficiary 1"
-        extraction.value.get(ClassOfBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+        extraction.value.get(ClassOfBeneficiaryDescriptionPage(0)).get     mustBe "Class Of Beneficiary 1"
+        extraction.value.get(ClassOfBeneficiaryMetaData(0)).get            mustBe MetaData("1", Some("01"), "2019-11-26")
         extraction.value.get(ClassOfBeneficiaryDiscretionYesNoPage(0)).get mustBe true
         extraction.value.get(ClassOfBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
       }
 
       "with full data must return user answers updated" in {
-        val charities = (for(index <- 0 to 2) yield generateClassOfBeneficiary(index)).toList
+        val charities = (for (index <- 0 to 2) yield generateClassOfBeneficiary(index)).toList
 
         val ua = emptyUserAnswersForUtr
 

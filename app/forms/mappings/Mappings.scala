@@ -33,36 +33,49 @@ trait Mappings extends Formatters with Constraints {
   protected def utr(requiredKey: String, invalidKey: String, lengthKey: String): FieldMapping[String] =
     of(utrFormatter(requiredKey, invalidKey, lengthKey))
 
-  protected def postcode(requiredKey: String = "error.required",
-                         invalidKey: String = "error.postcodeInvalid"): FieldMapping[String] =
+  protected def postcode(
+    requiredKey: String = "error.required",
+    invalidKey: String = "error.postcodeInvalid"
+  ): FieldMapping[String] =
     of(postcodeFormatter(requiredKey, invalidKey))
 
-  protected def urn(requiredKey: String = "urn.error.required",
-                    invalidKey: String = "urn.error.invalidCharacters",
-                    lengthKey: String = "urn.error.length"): FieldMapping[String] =
+  protected def urn(
+    requiredKey: String = "urn.error.required",
+    invalidKey: String = "urn.error.invalidCharacters",
+    lengthKey: String = "urn.error.length"
+  ): FieldMapping[String] =
     of(urnFormatter(requiredKey, invalidKey, lengthKey))
 
-  protected def currency(requiredKey: String = "assetMoneyValue.error.required",
-                         invalidKey: String = "assetMoneyValue.error.invalidFormat"): FieldMapping[String] =
+  protected def currency(
+    requiredKey: String = "assetMoneyValue.error.required",
+    invalidKey: String = "assetMoneyValue.error.invalidFormat"
+  ): FieldMapping[String] =
     of(currencyFormatter(requiredKey, invalidKey))
 
-  protected def int(requiredKey: String = "error.required",
-                    wholeNumberKey: String = "error.wholeNumber",
-                    nonNumericKey: String = "error.nonNumeric"): FieldMapping[Int] =
+  protected def int(
+    requiredKey: String = "error.required",
+    wholeNumberKey: String = "error.wholeNumber",
+    nonNumericKey: String = "error.nonNumeric"
+  ): FieldMapping[Int] =
     of(intFormatter(requiredKey, wholeNumberKey, nonNumericKey))
 
-  protected def boolean(requiredKey: String = "error.required",
-                        invalidKey: String = "error.boolean"): FieldMapping[Boolean] =
+  protected def boolean(
+    requiredKey: String = "error.required",
+    invalidKey: String = "error.boolean"
+  ): FieldMapping[Boolean] =
     of(booleanFormatter(requiredKey, invalidKey))
 
-
-  protected def enumerable[A](requiredKey: String = "error.required",
-                              invalidKey: String = "error.invalid")(implicit ev: Enumerable[A]): FieldMapping[A] =
+  protected def enumerable[A](requiredKey: String = "error.required", invalidKey: String = "error.invalid")(implicit
+    ev: Enumerable[A]
+  ): FieldMapping[A] =
     of(enumerableFormatter[A](requiredKey, invalidKey))
 
-  protected def localDate(invalidKey: String,
-                          allRequiredKey: String,
-                          twoRequiredKey: String,
-                          requiredKey: String): FieldMapping[LocalDate] =
+  protected def localDate(
+    invalidKey: String,
+    allRequiredKey: String,
+    twoRequiredKey: String,
+    requiredKey: String
+  ): FieldMapping[LocalDate] =
     of(new LocalDateFormatter(invalidKey, allRequiredKey, twoRequiredKey, requiredKey))
+
 }

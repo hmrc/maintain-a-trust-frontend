@@ -21,7 +21,7 @@ import base.SpecBase
 class FullNameSpec extends SpecBase {
 
   private val nameWithNoMiddleName: FullName = FullName("Joe", None, "Bloggs")
-  private val nameWithMiddleName: FullName = FullName("Joe", Some("Joseph"), "Bloggs")
+  private val nameWithMiddleName: FullName   = FullName("Joe", Some("Joseph"), "Bloggs")
 
   "FullName" when {
 
@@ -49,4 +49,5 @@ class FullNameSpec extends SpecBase {
       }
     }
   }
+
 }

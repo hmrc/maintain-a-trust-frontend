@@ -23,9 +23,11 @@ import models.errors.{FailedToExtractData, TrustErrors}
 import models.http.DisplayTrustEntitiesType
 import sections.settlors.LivingSettlors
 
-class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtractor,
-                                 individualSettlorExtractor: IndividualSettlorExtractor,
-                                 businessSettlorExtractor: BusinessSettlorExtractor) {
+class SettlorExtractor @Inject() (
+  deceasedSettlorExtractor: DeceasedSettlorExtractor,
+  individualSettlorExtractor: IndividualSettlorExtractor,
+  businessSettlorExtractor: BusinessSettlorExtractor
+) {
 
   def extract(answers: UserAnswers, data: DisplayTrustEntitiesType): Either[TrustErrors, UserAnswers] = {
 
@@ -33,17 +35,17 @@ class SettlorExtractor @Inject()(deceasedSettlorExtractor: DeceasedSettlorExtrac
       deceasedSettlorExtractor.extract(answers, data.deceased.toList),
       individualSettlorExtractor.extract(answers, data.settlors.map(_.settlor).getOrElse(Nil)),
       businessSettlorExtractor.extract(answers, data.settlors.map(_.settlorCompany).getOrElse(Nil))
-    ).collect {
-      case Right(z) => z
+    ).collect { case Right(z) =>
+      z
     }
 
     settlors match {
       case Nil =>
         Left(FailedToExtractData("Settlor Extraction Error - No settlors"))
-      case _ =>
+      case _   =>
         settlors.combineArraysWithPath(LivingSettlors.path) match {
           case Some(value) => Right(value)
-          case None => Left(FailedToExtractData("Settlor Extraction Error - Failed to combine settlor answers"))
+          case None        => Left(FailedToExtractData("Settlor Extraction Error - Failed to combine settlor answers"))
         }
     }
   }

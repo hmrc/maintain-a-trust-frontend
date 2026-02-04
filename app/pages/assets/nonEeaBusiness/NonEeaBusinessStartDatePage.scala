@@ -22,7 +22,7 @@ import sections.assets.{Assets, NonEeaBusinessAsset}
 
 import java.time.LocalDate
 
-final case class NonEeaBusinessStartDatePage(index : Int) extends QuestionPage[LocalDate] {
+final case class NonEeaBusinessStartDatePage(index: Int) extends QuestionPage[LocalDate] {
 
   override def path: JsPath = JsPath \ Assets \ NonEeaBusinessAsset \ index \ toString
 

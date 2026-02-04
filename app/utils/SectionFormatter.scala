@@ -23,7 +23,7 @@ import viewmodels.AnswerSection
 
 object SectionFormatter {
 
-  def formatAnswerSection(answerSection: AnswerSection)(implicit messages: Messages): Seq[SummaryListRow] = {
+  def formatAnswerSection(answerSection: AnswerSection)(implicit messages: Messages): Seq[SummaryListRow] =
     answerSection.rows.map { row =>
       SummaryListRow(
         key = Key(classes = "govuk-!-width-two-thirds", content = Text(messages(row.label, row.labelArgs: _*))),
@@ -31,6 +31,5 @@ object SectionFormatter {
         actions = None
       )
     }
-  }
 
 }

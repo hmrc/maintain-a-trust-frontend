@@ -21,39 +21,34 @@ import play.api.data.{Form, FormError}
 import play.twirl.api.HtmlFormat
 import views.ViewUtils
 
-
 trait InternationalAddressViewBehaviours extends ViewBehaviours {
 
-
-  val errorKey = "value"
-  val errorMessage = "error.number"
+  val errorKey         = "value"
+  val errorMessage     = "error.number"
   val error: FormError = FormError(errorKey, errorMessage)
 
   val form: Form[InternationalAddress]
 
-  def internationalAddress(createView: Form[InternationalAddress] => HtmlFormat.Appendable,
-                           titleMessagePrefix: Option[String],
-                           args: String*): Unit = {
+  def internationalAddress(
+    createView: Form[InternationalAddress] => HtmlFormat.Appendable,
+    titleMessagePrefix: Option[String],
+    args: String*
+  ): Unit = {
 
     val titlePrefix = titleMessagePrefix.getOrElse("site.address.international")
 
-    val fields = Seq(("line1", None),
-      ("line2", None),
-      ("line3", None),
-      ("country", None)
-    )
+    val fields = Seq(("line1", None), ("line2", None), ("line3", None), ("country", None))
 
     "behave like a internationalAddressPage" when {
 
       "rendered" must {
 
-        for (field <- fields) {
+        for (field <- fields)
 
           s"contain an input for $field" in {
             val doc = asDocument(createView(form))
             assertRenderedById(doc, field._1)
           }
-        }
 
         "not render an error summary" in {
 
@@ -70,11 +65,14 @@ trait InternationalAddressViewBehaviours extends ViewBehaviours {
           assertEqualsValue(
             doc,
             "title",
-            ViewUtils.breadcrumbTitle(s"""${messages("error.browser.title.prefix")} ${messages(s"$titlePrefix.title", args: _*)}"""))
+            ViewUtils.breadcrumbTitle(
+              s"""${messages("error.browser.title.prefix")} ${messages(s"$titlePrefix.title", args: _*)}"""
+            )
+          )
         }
       }
 
-      for (field <- fields) {
+      for (field <- fields)
 
         s"rendered with an error with field '$field'" must {
 
@@ -86,20 +84,18 @@ trait InternationalAddressViewBehaviours extends ViewBehaviours {
 
           s"show an error in the label for field '$field'" in {
 
-            val doc = asDocument(createView(form.withError(FormError(field._1, "error"))))
+            val doc       = asDocument(createView(form.withError(FormError(field._1, "error"))))
             val errorSpan = doc.getElementsByClass("govuk-error-message").first
             errorSpan.parent.getElementsByClass("govuk-label").attr("for") mustBe field._1
           }
         }
-      }
 
-      for (field <- fields) {
+      for (field <- fields)
         s"contains a label and optional hint text for the field '$field'" in {
-          val doc = asDocument(createView(form))
+          val doc       = asDocument(createView(form))
           val fieldName = field._1
           assertContainsLabel(doc, fieldName, messages(s"site.address.international.$fieldName"))
         }
-      }
     }
   }
 

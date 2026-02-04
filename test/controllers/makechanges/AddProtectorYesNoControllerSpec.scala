@@ -44,13 +44,14 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
 
     "making changes" must {
 
-      val prefix: String = "addProtector"
+      val prefix: String  = "addProtector"
       val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).value
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges)
+        .value
 
       "return OK and the correct view for a GET" in {
 
@@ -160,13 +161,14 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
 
     "closing" must {
 
-      val prefix: String = "addProtectorClosing"
+      val prefix: String  = "addProtectorClosing"
       val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust)
+        .value
 
       "return OK and the correct view for a GET" in {
 
@@ -279,7 +281,8 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
       mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(MongoError))
 
       val userAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust)
+        .value
 
       val mockTrustConnector = mock[TrustConnector]
 
@@ -295,10 +298,11 @@ class AddProtectorYesNoControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      status(result) mustBe INTERNAL_SERVER_ERROR
+      status(result)      mustBe INTERNAL_SERVER_ERROR
       contentType(result) mustBe Some("text/html")
 
       application.stop()
     }
   }
+
 }

@@ -32,9 +32,8 @@ class TrustMldStatusSpec extends SpecBase with ScalaCheckPropertyChecks {
           Underlying4mldTrustIn5mldMode
         )
 
-        forAll(Gen.oneOf(trustMldStatuses)) {
-          trustMldStatus =>
-            trustMldStatus.is5mldTrustIn5mldMode mustEqual false
+        forAll(Gen.oneOf(trustMldStatuses)) { trustMldStatus =>
+          trustMldStatus.is5mldTrustIn5mldMode mustEqual false
         }
       }
 
@@ -45,11 +44,11 @@ class TrustMldStatusSpec extends SpecBase with ScalaCheckPropertyChecks {
           Underlying5mldNonTaxableTrustIn5mldMode
         )
 
-        forAll(Gen.oneOf(trustMldStatuses)) {
-          trustMldStatus =>
-            trustMldStatus.is5mldTrustIn5mldMode mustEqual true
+        forAll(Gen.oneOf(trustMldStatuses)) { trustMldStatus =>
+          trustMldStatus.is5mldTrustIn5mldMode mustEqual true
         }
       }
     }
   }
+
 }

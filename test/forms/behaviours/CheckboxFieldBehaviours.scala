@@ -22,10 +22,7 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
 trait CheckboxFieldBehaviours extends FormSpec {
 
-  def checkboxField[T](form: Form[_],
-                       fieldName: String,
-                       validValues: Seq[T],
-                       invalidError: FormError): Unit = {
+  def checkboxField[T](form: Form[_], fieldName: String, validValues: Seq[T], invalidError: FormError): Unit = {
     for {
       (value, i) <- validValues.zipWithIndex
     } yield s"binds `$value` successfully" in {
@@ -43,9 +40,7 @@ trait CheckboxFieldBehaviours extends FormSpec {
     }
   }
 
-  def mandatoryCheckboxField(form: Form[_],
-                             fieldName: String,
-                             requiredKey: String): Unit = {
+  def mandatoryCheckboxField(form: Form[_], fieldName: String, requiredKey: String): Unit = {
 
     "fail to bind when no answers are selected" in {
       val data = Map.empty[String, String]
@@ -59,4 +54,5 @@ trait CheckboxFieldBehaviours extends FormSpec {
       form.bind(data).errors should contain(FormError(s"$fieldName[0]", requiredKey))
     }
   }
+
 }

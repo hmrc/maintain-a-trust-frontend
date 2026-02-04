@@ -22,7 +22,7 @@ import views.ViewSpecBase
 
 trait ProgressViewBehaviours extends ViewSpecBase {
 
-  def taskListHeading(view: HtmlFormat.Appendable): Unit = {
+  def taskListHeading(view: HtmlFormat.Appendable): Unit =
 
     "behave list a page with a task list" when {
 
@@ -35,61 +35,52 @@ trait ProgressViewBehaviours extends ViewSpecBase {
         }
       }
     }
-  }
 
-  def taskList(view: HtmlFormat.Appendable,
-               expectedSections: List[Task]): Unit = {
+  def taskList(view: HtmlFormat.Appendable, expectedSections: List[Task]): Unit =
 
-    expectedSections.foreach {
-      section =>
+    expectedSections.foreach { section =>
+      s"${section.link.text}" must {
 
-        s"${section.link.text}" must {
-
-          "render a list item" in {
-            val doc = asDocument(view)
-            assertRenderedById(doc, s"task-list__item--${section.link.text}")
-          }
-
-          "render a link" in {
-            val id = s"task-list__task-link--${section.link.text}"
-
-            val doc = asDocument(view)
-            doc.getElementById(id).hasAttr("href")
-          }
-
-          "render a tag" in {
-            val doc = asDocument(view)
-            assertRenderedById(doc, s"task-list__task--${section.link.text}__tag")
-          }
+        "render a list item" in {
+          val doc = asDocument(view)
+          assertRenderedById(doc, s"task-list__item--${section.link.text}")
         }
-    }
-  }
 
-  def taskListWithNotActiveLink(view: HtmlFormat.Appendable,
-                                expectedSections: List[Task]): Unit = {
+        "render a link" in {
+          val id = s"task-list__task-link--${section.link.text}"
 
-    expectedSections.foreach {
-      section =>
-
-        s"${section.link.text}" must {
-
-          "render a list item" in {
-            val doc = asDocument(view)
-            assertRenderedById(doc, s"task-list__item--${section.link.text}")
-          }
-
-          "not render as link" in {
-            val id = s"task-list__task--${section.link.text}"
-            val doc = asDocument(view)
-            assert(!doc.getElementById(id).hasAttr("href"))
-          }
-
-          "render a tag" in {
-            val doc = asDocument(view)
-            assertRenderedById(doc, s"task-list__task--${section.link.text}__tag")
-          }
+          val doc = asDocument(view)
+          doc.getElementById(id).hasAttr("href")
         }
+
+        "render a tag" in {
+          val doc = asDocument(view)
+          assertRenderedById(doc, s"task-list__task--${section.link.text}__tag")
+        }
+      }
     }
-  }
+
+  def taskListWithNotActiveLink(view: HtmlFormat.Appendable, expectedSections: List[Task]): Unit =
+
+    expectedSections.foreach { section =>
+      s"${section.link.text}" must {
+
+        "render a list item" in {
+          val doc = asDocument(view)
+          assertRenderedById(doc, s"task-list__item--${section.link.text}")
+        }
+
+        "not render as link" in {
+          val id  = s"task-list__task--${section.link.text}"
+          val doc = asDocument(view)
+          assert(!doc.getElementById(id).hasAttr("href"))
+        }
+
+        "render a tag" in {
+          val doc = asDocument(view)
+          assertRenderedById(doc, s"task-list__task--${section.link.text}__tag")
+        }
+      }
+    }
 
 }

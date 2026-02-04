@@ -32,10 +32,11 @@ class WhatTypeOfBeneficiarySpec extends AnyWordSpec with Matchers with ScalaChec
 
       val gen = Gen.oneOf(WhatTypeOfBeneficiary.values.toSeq)
 
-      forAll(gen) {
-        whatTypeOfBeneficiary =>
-
-          JsString(whatTypeOfBeneficiary.toString).validate[WhatTypeOfBeneficiary].asOpt.value mustEqual whatTypeOfBeneficiary
+      forAll(gen) { whatTypeOfBeneficiary =>
+        JsString(whatTypeOfBeneficiary.toString)
+          .validate[WhatTypeOfBeneficiary]
+          .asOpt
+          .value mustEqual whatTypeOfBeneficiary
       }
     }
 
@@ -43,10 +44,8 @@ class WhatTypeOfBeneficiarySpec extends AnyWordSpec with Matchers with ScalaChec
 
       val gen = arbitrary[String] suchThat (!WhatTypeOfBeneficiary.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[WhatTypeOfBeneficiary] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[WhatTypeOfBeneficiary] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,11 +53,10 @@ class WhatTypeOfBeneficiarySpec extends AnyWordSpec with Matchers with ScalaChec
 
       val gen = Gen.oneOf(WhatTypeOfBeneficiary.values.toSeq)
 
-      forAll(gen) {
-        whatTypeOfBeneficiary =>
-
-          Json.toJson(whatTypeOfBeneficiary) mustEqual JsString(whatTypeOfBeneficiary.toString)
+      forAll(gen) { whatTypeOfBeneficiary =>
+        Json.toJson(whatTypeOfBeneficiary) mustEqual JsString(whatTypeOfBeneficiary.toString)
       }
     }
   }
+
 }

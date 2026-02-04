@@ -34,13 +34,9 @@ case class OrganisationUser(internalId: String, enrolments: Enrolments) extends 
   override val affinityGroup: AffinityGroup = AffinityGroup.Organisation
 }
 
-case class OptionalDataRequest[A](request: Request[A],
-                                  userAnswers: Option[UserAnswers],
-                                  user: User,
-                                  identifier: String) extends WrappedRequest[A](request) {
+case class OptionalDataRequest[A](request: Request[A], userAnswers: Option[UserAnswers], user: User, identifier: String)
+    extends WrappedRequest[A](request) {
   def identifierType: IdentifierType = IdentifierType(identifier)
 }
 
-case class DataRequest[A](request: Request[A],
-                          userAnswers: UserAnswers,
-                          user: User) extends WrappedRequest[A](request)
+case class DataRequest[A](request: Request[A], userAnswers: UserAnswers, user: User) extends WrappedRequest[A](request)

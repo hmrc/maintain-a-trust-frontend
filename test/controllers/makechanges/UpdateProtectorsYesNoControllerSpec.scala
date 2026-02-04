@@ -44,13 +44,14 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
 
     "making changes" must {
 
-      val prefix: String = "updateProtector"
+      val prefix: String  = "updateProtector"
       val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.MakeChanges).value
+        .set(WhatIsNextPage, WhatIsNext.MakeChanges)
+        .value
 
       "return OK and the correct view for a GET" in {
 
@@ -73,7 +74,8 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       "populate the view correctly on a GET when the question has previously been answered" in {
 
         val userAnswers = baseAnswers
-          .set(AddOrUpdateProtectorYesNoPage, true).value
+          .set(AddOrUpdateProtectorYesNoPage, true)
+          .value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -161,13 +163,14 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
 
     "closing" must {
 
-      val prefix: String = "updateProtectorClosing"
+      val prefix: String  = "updateProtectorClosing"
       val determinePrefix = (_: Boolean) => prefix
 
       val form: Form[Boolean] = new YesNoFormProvider().withPrefix(prefix)
 
       val baseAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust)
+        .value
 
       "return OK and the correct view for a GET" in {
 
@@ -190,7 +193,8 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       "populate the view correctly on a GET when the question has previously been answered" in {
 
         val userAnswers = baseAnswers
-          .set(AddOrUpdateProtectorYesNoPage, true).value
+          .set(AddOrUpdateProtectorYesNoPage, true)
+          .value
 
         val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -281,7 +285,8 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
       mockPlaybackRepositoryBuilder(mockPlaybackRepository, setResult = Left(ServerError()))
 
       val userAnswers: UserAnswers = emptyUserAnswersForUtr
-        .set(WhatIsNextPage, WhatIsNext.CloseTrust).value
+        .set(WhatIsNextPage, WhatIsNext.CloseTrust)
+        .value
 
       val mockTrustConnector = mock[TrustConnector]
 
@@ -297,10 +302,11 @@ class UpdateProtectorsYesNoControllerSpec extends SpecBase {
 
       val result = route(application, request).value
 
-      status(result) mustBe INTERNAL_SERVER_ERROR
+      status(result)      mustBe INTERNAL_SERVER_ERROR
       contentType(result) mustBe Some("text/html")
 
       application.stop()
     }
   }
+
 }

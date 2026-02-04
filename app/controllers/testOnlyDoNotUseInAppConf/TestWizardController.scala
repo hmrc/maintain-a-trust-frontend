@@ -32,28 +32,26 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class TestWizardController @Inject()(
-                                      val controllerComponents: MessagesControllerComponents,
-                                      actions: Actions,
-                                      view: WizardView,
-                                      formProvider: TestWizardFormProvider,
-                                      userConnector: TestUserConnector,
-                                      trustStoreConnector: TrustsStoreConnector
-                                    )(implicit ec: ExecutionContext) extends FrontendBaseController
-  with I18nSupport
-  with Logging {
+class TestWizardController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  actions: Actions,
+  view: WizardView,
+  formProvider: TestWizardFormProvider,
+  userConnector: TestUserConnector,
+  trustStoreConnector: TrustsStoreConnector
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad : Action[AnyContent] = actions.auth.async {
-    implicit request =>
-      Future.successful(Ok(view(formProvider())))
+  def onPageLoad: Action[AnyContent] = actions.auth.async { implicit request =>
+    Future.successful(Ok(view(formProvider())))
   }
 
-  def onSubmit : Action[AnyContent] = actions.auth.async {
-    implicit request =>
+  def onSubmit: Action[AnyContent] = actions.auth.async { implicit request =>
+    val form: Form[TestWizardForm] = formProvider()
 
-      val form: Form[TestWizardForm] = formProvider()
-
-      form.bindFromRequest().fold(
+    form
+      .bindFromRequest()
+      .fold(
         (formWithErrors: Form[_]) => {
           logger.warn(s"[TestWizardController][onSubmit] error validating the form")
           Future.successful(BadRequest(view(formWithErrors)))
@@ -63,34 +61,28 @@ class TestWizardController @Inject()(
             _ <- setMode(values.mode)
             _ <- flushTestUsers(values.flushTestUsers)
             _ <- insertTestUser(values.testUser)
-          } yield {
-            Redirect(routes.TestWizardController.onPageLoad).flashing("wizard" -> "Wizard has completed")
-          }
+          } yield Redirect(routes.TestWizardController.onPageLoad).flashing("wizard" -> "Wizard has completed")
       )
   }
 
-  private def flushTestUsers(cleanup: Boolean)(implicit req: Request[AnyContent]): Future[Unit] = {
-    if (cleanup){
+  private def flushTestUsers(cleanup: Boolean)(implicit req: Request[AnyContent]): Future[Unit] =
+    if (cleanup) {
       userConnector.delete().map(_ => ())
     } else {
       Future.successful(())
     }
-  }
 
-  private def insertTestUser(user: Option[String])(implicit req: Request[AnyContent]): Future[Unit] = {
+  private def insertTestUser(user: Option[String])(implicit req: Request[AnyContent]): Future[Unit] =
     user match {
       case Some(value) =>
         Try(Json.parse(value))
           .fold(
-            _ =>
-              Future.successful(()),
-            json =>
-              userConnector.insert(json).map(_ => ())
+            _ => Future.successful(()),
+            json => userConnector.insert(json).map(_ => ())
           )
-      case None =>
+      case None        =>
         Future.successful(())
     }
-  }
 
   private def setMode(mode: FourOrFiveMLD)(implicit req: Request[AnyContent]): Future[Unit] = {
     val state = mode == FiveMLD

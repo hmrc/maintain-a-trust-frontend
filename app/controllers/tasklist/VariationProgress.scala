@@ -30,77 +30,68 @@ import viewmodels.{Link, Task, Width}
 
 import javax.inject.Inject
 
-class VariationProgress @Inject()(config: FrontendAppConfig) {
+class VariationProgress @Inject() (config: FrontendAppConfig) {
 
-  private def trustDetailsRoute(identifier: String): String = {
+  private def trustDetailsRoute(identifier: String): String =
     redirectToServiceIfEnabled(config.maintainTrustDetailsEnabled) {
       config.maintainTrustDetailsUrl(identifier)
     }
-  }
 
-  private def trustAssetsRoute(identifier: String): String = {
+  private def trustAssetsRoute(identifier: String): String =
     redirectToServiceIfEnabled(config.maintainTrustAssetsEnabled) {
       config.maintainTrustAssetsUrl(identifier)
     }
-  }
 
-  private def taxLiabilityRoute(identifier: String): String = {
+  private def taxLiabilityRoute(identifier: String): String =
     redirectToServiceIfEnabled(config.maintainTaxLiabilityEnabled) {
       config.maintainTaxLiabilityUrl(identifier)
     }
-  }
 
-  private def settlorsRoute(identifier: String): String = {
+  private def settlorsRoute(identifier: String): String =
     redirectToServiceIfEnabled(config.maintainSettlorsEnabled) {
       config.maintainSettlorsUrl(identifier)
     }
-  }
 
-  private def trusteesRoute(identifier: String): String = {
+  private def trusteesRoute(identifier: String): String =
     redirectToServiceIfEnabled(config.maintainTrusteesEnabled) {
       config.maintainTrusteesUrl(identifier)
     }
-  }
 
-  private def beneficiariesRoute(identifier: String): String = {
+  private def beneficiariesRoute(identifier: String): String =
     redirectToServiceIfEnabled(config.maintainBeneficiariesEnabled) {
       config.maintainBeneficiariesUrl(identifier)
     }
-  }
 
-  private def protectorsRoute(identifier: String): String = {
+  private def protectorsRoute(identifier: String): String =
     redirectToServiceIfEnabled(config.maintainProtectorsEnabled) {
       config.maintainProtectorsUrl(identifier)
     }
-  }
 
-  private def otherIndividualsRoute(identifier: String): String = {
+  private def otherIndividualsRoute(identifier: String): String =
     redirectToServiceIfEnabled(config.maintainOtherIndividualsEnabled) {
       config.maintainOtherIndividualsUrl(identifier)
     }
-  }
 
-  private def companyOwnershipOrControllingInterestRoute(identifier: String): String = {
+  private def companyOwnershipOrControllingInterestRoute(identifier: String): String =
     redirectToServiceIfEnabled(config.maintainNonEeaCompaniesEnabled) {
       config.maintainNonEeaCompanyUrl(identifier)
     }
-  }
 
-  private def redirectToServiceIfEnabled(enabled: Boolean)(redirectToService: String): String = {
+  private def redirectToServiceIfEnabled(enabled: Boolean)(redirectToService: String): String =
     if (enabled) {
       redirectToService
     } else {
       controllers.routes.FeatureNotAvailableController.onPageLoad().url
     }
-  }
 
-  def generateTaskList(tasks: CompletedMaintenanceTasks,
-                       trustMldStatus: TrustMldStatus,
-                       identifier: String): TaskList = {
+  def generateTaskList(
+    tasks: CompletedMaintenanceTasks,
+    trustMldStatus: TrustMldStatus,
+    identifier: String
+  ): TaskList = {
 
-    def filter5mldSections(task: Task, section: Page): Boolean = {
+    def filter5mldSections(task: Task, section: Page): Boolean =
       task.link.text == section.toString && !trustMldStatus.is5mldTrustIn5mldMode
-    }
 
     val mandatoryTasks = List(
       Task(
@@ -141,21 +132,25 @@ class VariationProgress @Inject()(config: FrontendAppConfig) {
     TaskList(mandatoryTasks, optionalTasks)
   }
 
-  def generateTransitionTaskList(tasks: CompletedMaintenanceTasks,
-                                 settlorsStatus: MigrationTaskStatus,
-                                 beneficiariesStatus: MigrationTaskStatus,
-                                 yearsToAskFor: Int,
-                                 identifier: String): TaskList = {
+  def generateTransitionTaskList(
+    tasks: CompletedMaintenanceTasks,
+    settlorsStatus: MigrationTaskStatus,
+    beneficiariesStatus: MigrationTaskStatus,
+    yearsToAskFor: Int,
+    identifier: String
+  ): TaskList = {
 
-    def task(migrationTaskStatus: MigrationTaskStatus,
-             savedTaskStatus: Tag,
-             trustDetailsCompleted: Boolean,
-             link: Link): Task = {
+    def task(
+      migrationTaskStatus: MigrationTaskStatus,
+      savedTaskStatus: Tag,
+      trustDetailsCompleted: Boolean,
+      link: Link
+    ): Task = {
       val tag: Tag = if (trustDetailsCompleted) {
         migrationTaskStatus match {
           case Updated | NothingToUpdate => if (savedTaskStatus.isCompleted) Completed else NoActionNeeded
-          case NeedsUpdating => if (savedTaskStatus.isCompleted) InProgress else savedTaskStatus
-          case _ => CannotStartYet
+          case NeedsUpdating             => if (savedTaskStatus.isCompleted) InProgress else savedTaskStatus
+          case _                         => CannotStartYet
         }
       } else {
         CannotStartYet

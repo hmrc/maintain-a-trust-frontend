@@ -35,10 +35,18 @@ import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-class PlaybackRepositorySpec extends AnyWordSpec
-  with ScalaFutures with OptionValues with MongoSupport with MongoSuite with BeforeAndAfterEach with EitherValues with BaseMongoIndexSpec {
+class PlaybackRepositorySpec
+    extends AnyWordSpec
+    with ScalaFutures
+    with OptionValues
+    with MongoSupport
+    with MongoSuite
+    with BeforeAndAfterEach
+    with EitherValues
+    with BaseMongoIndexSpec {
 
-  override def beforeEach(): Unit = Await.result(repository.collection.deleteMany(BsonDocument()).toFuture(),Duration.Inf)
+  override def beforeEach(): Unit =
+    Await.result(repository.collection.deleteMany(BsonDocument()).toFuture(), Duration.Inf)
 
   private lazy val repository: PlaybackRepositoryImpl = new PlaybackRepositoryImpl(mongoComponent, config)
 
@@ -47,8 +55,16 @@ class PlaybackRepositorySpec extends AnyWordSpec
     "have all expected indexes" in {
       val expectedIndexes = Seq(
         IndexModel(ascending("_id"), IndexOptions().name("_id_")),
-        IndexModel(ascending("updatedAt"), IndexOptions().name("user-answers-updated-at-index").expireAfter(config.cachettlplaybackInSeconds, TimeUnit.SECONDS)),
-        IndexModel(ascending("newId"), IndexOptions().name("internal-id-and-utr-and-sessionId-compound-index").unique(false)),
+        IndexModel(
+          ascending("updatedAt"),
+          IndexOptions()
+            .name("user-answers-updated-at-index")
+            .expireAfter(config.cachettlplaybackInSeconds, TimeUnit.SECONDS)
+        ),
+        IndexModel(
+          ascending("newId"),
+          IndexOptions().name("internal-id-and-utr-and-sessionId-compound-index").unique(false)
+        ),
         IndexModel(ascending("internalId"), IndexOptions().name("internal-id-index").unique(false)),
         IndexModel(ascending("identifier"), IndexOptions().name("identifier-index").unique(false)),
         IndexModel(ascending("sessionId"), IndexOptions().name("session-id-index").unique(false))
@@ -60,17 +76,17 @@ class PlaybackRepositorySpec extends AnyWordSpec
     "must return None when no answer exists" in {
       val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
       val identifier = "Testing"
-      val sessionId = "Test"
+      val sessionId  = "Test"
 
       repository.get(internalId, identifier, sessionId).value.futureValue mustBe Right(None)
     }
 
     "must return the userAnswers after insert" in {
-      val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
-      val identifier = "Testing"
-      val sessionId = "Test"
-      val newId = s"$internalId-$identifier-$sessionId"
-      val userAnswers: UserAnswers = UserAnswers(internalId,identifier,sessionId,newId)
+      val internalId               = "Int-328969d0-557e-4559-sdba-074d0597107e"
+      val identifier               = "Testing"
+      val sessionId                = "Test"
+      val newId                    = s"$internalId-$identifier-$sessionId"
+      val userAnswers: UserAnswers = UserAnswers(internalId, identifier, sessionId, newId)
 
       repository.get(internalId, identifier, sessionId).value.futureValue mustBe Right(None)
 
@@ -82,12 +98,13 @@ class PlaybackRepositorySpec extends AnyWordSpec
     }
 
     "must return the userAnswers after update" in {
-      val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
-      val identifier = "Testing"
-      val sessionId = "Test"
-      val newId = s"$internalId-$identifier-$sessionId"
-      val userAnswers: UserAnswers = UserAnswers(internalId,identifier,sessionId,newId)
-      val userAnswers2 = userAnswers.copy(data = Json.obj("key" -> "123"), isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
+      val internalId               = "Int-328969d0-557e-4559-sdba-074d0597107e"
+      val identifier               = "Testing"
+      val sessionId                = "Test"
+      val newId                    = s"$internalId-$identifier-$sessionId"
+      val userAnswers: UserAnswers = UserAnswers(internalId, identifier, sessionId, newId)
+      val userAnswers2             =
+        userAnswers.copy(data = Json.obj("key" -> "123"), isUnderlyingData5mld = true, isUnderlyingDataTaxable = false)
 
       repository.get(internalId, identifier, sessionId).value.futureValue mustBe Right(None)
 
@@ -96,7 +113,7 @@ class PlaybackRepositorySpec extends AnyWordSpec
       val userAnswersTest = repository.get(internalId, identifier, sessionId).value.futureValue
       userAnswersTest.value.map(_.copy(updatedAt = userAnswers.updatedAt)) mustBe Some(userAnswers)
 
-      //update
+      // update
 
       repository.set(userAnswers2).value.futureValue mustBe Right(true)
 
@@ -106,32 +123,45 @@ class PlaybackRepositorySpec extends AnyWordSpec
     }
 
     "delete one userAnswers from the collection when resetCache is called" in {
-      val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
-      val identifier = "Testing"
-      val sessionId = "Test"
-      val newId = s"$internalId-$identifier-$sessionId"
-      val userAnswers: UserAnswers = UserAnswers(internalId,identifier,sessionId,newId)
-      val userAnswers2 = UserAnswers("internalId","identifier","sessionId", "internalId-identifier-sessionId",
-        updatedAt = LocalDateTime.of(2023, 4, 19, 12, 0))
+      val internalId               = "Int-328969d0-557e-4559-sdba-074d0597107e"
+      val identifier               = "Testing"
+      val sessionId                = "Test"
+      val newId                    = s"$internalId-$identifier-$sessionId"
+      val userAnswers: UserAnswers = UserAnswers(internalId, identifier, sessionId, newId)
+      val userAnswers2             = UserAnswers(
+        "internalId",
+        "identifier",
+        "sessionId",
+        "internalId-identifier-sessionId",
+        updatedAt = LocalDateTime.of(2023, 4, 19, 12, 0)
+      )
 
-      //setting user answers
+      // setting user answers
       repository.get(internalId, identifier, sessionId).value.futureValue mustBe Right(None)
-      repository.set(userAnswers).value.futureValue mustBe Right(true)
-      repository.set(userAnswers2).value.futureValue mustBe Right(true)
+      repository.set(userAnswers).value.futureValue                       mustBe Right(true)
+      repository.set(userAnswers2).value.futureValue                      mustBe Right(true)
 
       // remove one set of user answers
 
       await(repository.resetCache(internalId, identifier, sessionId).value).value mustBe Some(true)
-      await(repository.get(internalId, identifier, sessionId).value).value mustBe None
-      await(repository.get("internalId", "identifier", "sessionId").value)
-        .value.map(_.copy(updatedAt = userAnswers2.updatedAt)) mustBe Some(userAnswers2)
+      await(repository.get(internalId, identifier, sessionId).value).value        mustBe None
+      await(repository.get("internalId", "identifier", "sessionId").value).value
+        .map(_.copy(updatedAt = userAnswers2.updatedAt))                          mustBe Some(userAnswers2)
     }
 
-    Seq(new MongoTimeoutException("test message"), new MongoException("test message"), new Exception, new RuntimeException("test message"),
-      new NullPointerException("test message"), new NoSuchElementException("test message"), new IndexOutOfBoundsException("test message")).foreach { exception =>
+    Seq(
+      new MongoTimeoutException("test message"),
+      new MongoException("test message"),
+      new Exception,
+      new RuntimeException("test message"),
+      new NullPointerException("test message"),
+      new NoSuchElementException("test message"),
+      new IndexOutOfBoundsException("test message")
+    ).foreach { exception =>
       s"return a Left(MongoError) when there's an exception from Mongo ($exception)" in {
-        val result = Future.failed(exception)
-          .recover(repository.mongoRecover("test repository", "test method","test message", "test sessionId"))
+        val result = Future
+          .failed(exception)
+          .recover(repository.mongoRecover("test repository", "test method", "test message", "test sessionId"))
 
         await(result) mustBe Left(MongoError)
       }

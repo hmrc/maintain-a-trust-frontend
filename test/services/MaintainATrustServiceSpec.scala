@@ -38,7 +38,7 @@ class MaintainATrustServiceSpec extends SpecBase {
 
         val identifier = "identifier"
 
-        val mockTrustsConnector = mock[TrustConnector]
+        val mockTrustsConnector      = mock[TrustConnector]
         val mockTrustsStoreConnector = mock[TrustsStoreConnector]
 
         when(mockTrustsConnector.removeTransforms(any())(any(), any()))

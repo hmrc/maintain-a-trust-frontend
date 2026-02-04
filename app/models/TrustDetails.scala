@@ -20,7 +20,12 @@ import play.api.libs.json.{Format, Json}
 
 import java.time.LocalDate
 
-case class TrustDetails(startDate: LocalDate, trustTaxable: Option[Boolean], expressTrust: Option[Boolean], schedule3aExempt: Option[Boolean]) {
+case class TrustDetails(
+  startDate: LocalDate,
+  trustTaxable: Option[Boolean],
+  expressTrust: Option[Boolean],
+  schedule3aExempt: Option[Boolean]
+) {
 
   def is5mld: Boolean = expressTrust.isDefined
 
@@ -28,7 +33,7 @@ case class TrustDetails(startDate: LocalDate, trustTaxable: Option[Boolean], exp
 
   def hasSchedule3aExemptAnswer: Boolean = schedule3aExempt.isDefined
 
-  def isExpress: Boolean = (is5mld && expressTrust.get)
+  def isExpress: Boolean = is5mld && expressTrust.get
 
 }
 

@@ -26,27 +26,34 @@ import pages.protectors.business._
 
 class BusinessProtectorExtractor extends ProtectorPlaybackExtractor[DisplayTrustProtectorBusiness] {
 
-  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorAddressYesNoPage(index)
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean]   = BusinessProtectorAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorAddressUKYesNoPage(index)
-  override def addressPage(index: Int): QuestionPage[Address] = BusinessProtectorAddressPage(index)
+  override def addressPage(index: Int): QuestionPage[Address]        = BusinessProtectorAddressPage(index)
 
   override def utrYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorUtrYesNoPage(index)
-  override def utrPage(index: Int): QuestionPage[String] = BusinessProtectorUtrPage(index)
+  override def utrPage(index: Int): QuestionPage[String]       = BusinessProtectorUtrPage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorCountryOfResidenceYesNoPage(index)
-  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = BusinessProtectorCountryOfResidenceInTheUkYesNoPage(index)
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    BusinessProtectorCountryOfResidenceYesNoPage(index)
+
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    BusinessProtectorCountryOfResidenceInTheUkYesNoPage(index)
+
   override def countryOfResidencePage(index: Int): QuestionPage[String] = BusinessProtectorCountryOfResidencePage(index)
 
   override def metaDataPage(index: Int): QuestionPage[MetaData] = BusinessProtectorMetaData(index)
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayTrustProtectorBusiness,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
-    super.updateUserAnswers(answers, entity, index)
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayTrustProtectorBusiness,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
+    super
+      .updateUserAnswers(answers, entity, index)
       .flatMap(_.set(ProtectorIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(BusinessProtectorNamePage(index), entity.name))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(_.set(BusinessProtectorSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
-  }
+
 }

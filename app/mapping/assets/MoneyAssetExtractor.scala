@@ -26,11 +26,12 @@ class MoneyAssetExtractor extends PlaybackExtractor[AssetMonetaryAmount] {
 
   override val optionalEntity: Boolean = true
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: AssetMonetaryAmount,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: AssetMonetaryAmount,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
     answers
       .flatMap(_.set(MoneyValuePage(index), entity.assetMonetaryAmount))
-  }
 
 }

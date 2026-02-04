@@ -35,12 +35,28 @@ class Schedule3aExemptYesNoViewSpec extends Schedule3aExemptYesNoViewBehaviours 
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form)(fakeRequest, messages)
 
-    behave like normalPage(applyView(form), prefix,
-      "p1", "p2", "p3",
-      "bullet1", "bullet2", "bullet3", "bullet4",
-      "bullet5", "bullet6", "bullet7", "bullet8",
-      "bullet9", "bullet10", "bullet11", "bullet12",
-      "bullet13", "bullet14", "bullet15", "bullet16",
+    behave like normalPage(
+      applyView(form),
+      prefix,
+      "p1",
+      "p2",
+      "p3",
+      "bullet1",
+      "bullet2",
+      "bullet3",
+      "bullet4",
+      "bullet5",
+      "bullet6",
+      "bullet7",
+      "bullet8",
+      "bullet9",
+      "bullet10",
+      "bullet11",
+      "bullet12",
+      "bullet13",
+      "bullet14",
+      "bullet15",
+      "bullet16",
       "subheading"
     )
 

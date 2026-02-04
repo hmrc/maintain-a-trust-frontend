@@ -31,15 +31,16 @@ case class PdfHeaders(contentDisposition: String, contentType: String, contentLe
    * instruction will be "inline; filename="
    * fileName will be "1234567890-2020-10-10"
    */
-  def fileNameWithServiceName(implicit request: Request[AnyContent],
-                              languageUtils: LanguageUtils,
-                              messagesApi: MessagesApi
-                             ): String = contentDisposition match {
+  def fileNameWithServiceName(implicit
+    request: Request[AnyContent],
+    languageUtils: LanguageUtils,
+    messagesApi: MessagesApi
+  ): String = contentDisposition match {
     case DispositionRegex(_, instruction, _, filename) =>
       val serviceName = messagesApi("service.name")(languageUtils.getCurrentLang)
 
       s"$instruction$filename - $serviceName - GOV.UK.pdf"
-    case _ =>
+    case _                                             =>
       contentDisposition
   }
 

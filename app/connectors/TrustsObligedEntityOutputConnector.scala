@@ -23,15 +23,16 @@ import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class TrustsObligedEntityOutputConnector @Inject()(ws: WSClient, config: FrontendAppConfig) {
+class TrustsObligedEntityOutputConnector @Inject() (ws: WSClient, config: FrontendAppConfig) {
 
   def getPdf(identifier: String)(implicit hc: HeaderCarrier): Future[WSResponse] = {
     val url: String = s"${config.trustsObligedEntityOutputUrl}/trusts-obliged-entity-output/get-pdf/$identifier"
-    val headers = hc.headers(HeaderNames.explicitlyIncludedHeaders)
+    val headers     = hc.headers(HeaderNames.explicitlyIncludedHeaders)
 
     ws.url(url)
       .withMethod(GET)
       .withHttpHeaders(headers: _*)
       .stream()
   }
+
 }

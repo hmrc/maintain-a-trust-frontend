@@ -30,25 +30,23 @@ import viewmodels.AnswerSection
 
 import javax.inject.Inject
 
-class AllTrusteesPrinter @Inject()(leadTrusteeIndividualPrinter: LeadTrusteeIndividualPrinter,
-                                   leadTrusteeBusinessPrinter: LeadTrusteeBusinessPrinter,
-                                   trusteeIndividualPrinter: TrusteeIndividualPrinter,
-                                   trusteeOrganisationPrinter: TrusteeOrganisationPrinter) extends EntitiesPrinter[JsArray] {
+class AllTrusteesPrinter @Inject() (
+  leadTrusteeIndividualPrinter: LeadTrusteeIndividualPrinter,
+  leadTrusteeBusinessPrinter: LeadTrusteeBusinessPrinter,
+  trusteeIndividualPrinter: TrusteeIndividualPrinter,
+  trusteeOrganisationPrinter: TrusteeOrganisationPrinter
+) extends EntitiesPrinter[JsArray] {
 
-  override def printSection(index: Int, userAnswers: UserAnswers)
-                           (implicit messages: Messages): Option[AnswerSection] = {
+  override def printSection(index: Int, userAnswers: UserAnswers)(implicit messages: Messages): Option[AnswerSection] =
     (for {
-      isLeadTrustee <- userAnswers.get(IsThisLeadTrusteePage(index))
+      isLeadTrustee        <- userAnswers.get(IsThisLeadTrusteePage(index))
       individualOrBusiness <- userAnswers.get(TrusteeIndividualOrBusinessPage(index))
-    } yield {
-      (isLeadTrustee, individualOrBusiness) match {
-        case (true, Individual) => leadTrusteeIndividualPrinter.printAnswerRows(index, userAnswers)
-        case (true, Business) => leadTrusteeBusinessPrinter.printAnswerRows(index, userAnswers)
-        case (false, Individual) => trusteeIndividualPrinter.printAnswerRows(index, userAnswers)
-        case (false, Business) => trusteeOrganisationPrinter.printAnswerRows(index, userAnswers)
-      }
+    } yield (isLeadTrustee, individualOrBusiness) match {
+      case (true, Individual)  => leadTrusteeIndividualPrinter.printAnswerRows(index, userAnswers)
+      case (true, Business)    => leadTrusteeBusinessPrinter.printAnswerRows(index, userAnswers)
+      case (false, Individual) => trusteeIndividualPrinter.printAnswerRows(index, userAnswers)
+      case (false, Business)   => trusteeOrganisationPrinter.printAnswerRows(index, userAnswers)
     }).flatten
-  }
 
   override val section: QuestionPage[JsArray] = Trustees
 

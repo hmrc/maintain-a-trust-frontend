@@ -28,36 +28,34 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.Session
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthenticationServiceImpl @Inject()(errorHandler: ErrorHandler,
-                                         trustAuthConnector: TrustAuthConnector)
-                                         (implicit ec: ExecutionContext)
-  extends AuthenticationService with Logging {
+class AuthenticationServiceImpl @Inject() (errorHandler: ErrorHandler, trustAuthConnector: TrustAuthConnector)(implicit
+  ec: ExecutionContext
+) extends AuthenticationService with Logging {
 
-  override def authenticateAgent[A]()
-                                   (implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]] = {
+  override def authenticateAgent[A]()(implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]] =
     trustAuthConnector.agentIsAuthorised().flatMap {
-      case TrustAuthAgentAllowed(arn) =>
+      case TrustAuthAgentAllowed(arn)   =>
         Future.successful(Right(arn))
       case TrustAuthDenied(redirectUrl) =>
         Future.successful(Left(Redirect(redirectUrl)))
-      case _ =>
-        logger.warn(s"[AuthenticationServiceImpl][authenticateAgent][Session ID: ${Session.id(hc)}] Unable to authenticate agent with trusts-auth")
+      case _                            =>
+        logger.warn(
+          s"[AuthenticationServiceImpl][authenticateAgent][Session ID: ${Session.id(hc)}] Unable to authenticate agent with trusts-auth"
+        )
         errorHandler.internalServerErrorTemplate.map { html =>
           Left(InternalServerError(html))
         }
     }
-  }
 
-
-  override def authenticateForIdentifier[A](identifier: String)
-                                           (implicit request: DataRequest[A],
-                                            hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] = {
+  override def authenticateForIdentifier[A](
+    identifier: String
+  )(implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]] =
     trustAuthConnector.authorisedForIdentifier(identifier).flatMap {
-      case _: TrustAuthAllowed =>
+      case _: TrustAuthAllowed          =>
         Future.successful(Right(request))
       case TrustAuthDenied(redirectUrl) =>
         Future.successful(Left(Redirect(redirectUrl)))
-      case _ =>
+      case _                            =>
         logger.warn(
           s"[AuthenticationServiceImpl][authenticateForIdentifier]" +
             s"[Session ID: ${Session.id(hc)}][UTR/URN: $identifier] Unable to authenticate organisation with trusts-auth"
@@ -66,17 +64,15 @@ class AuthenticationServiceImpl @Inject()(errorHandler: ErrorHandler,
           Left(InternalServerError(html))
         }
     }
-  }
-
 
 }
 
 trait AuthenticationService {
 
-  def authenticateAgent[A]()
-                          (implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]]
+  def authenticateAgent[A]()(implicit request: Request[A], hc: HeaderCarrier): Future[Either[Result, String]]
 
-  def authenticateForIdentifier[A](identifier: String)
-                                  (implicit request: DataRequest[A],
-                                   hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]]
+  def authenticateForIdentifier[A](
+    identifier: String
+  )(implicit request: DataRequest[A], hc: HeaderCarrier): Future[Either[Result, DataRequest[A]]]
+
 }

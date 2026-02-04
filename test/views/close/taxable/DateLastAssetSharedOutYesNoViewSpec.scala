@@ -24,8 +24,8 @@ import views.html.close.taxable.DateLastAssetSharedOutYesNoView
 
 class DateLastAssetSharedOutYesNoViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "dateLastAssetSharedOutYesNo"
-  val utr = "1234567890"
+  val messageKeyPrefix    = "dateLastAssetSharedOutYesNo"
+  val utr                 = "1234567890"
   val form: Form[Boolean] = new YesNoFormProvider().withPrefix(messageKeyPrefix)
 
   "DateLastAssetSharedOutYesNo view" must {
@@ -43,4 +43,5 @@ class DateLastAssetSharedOutYesNoViewSpec extends YesNoViewBehaviours {
 
     behave like pageWithASubmitButton(applyView(form))
   }
+
 }

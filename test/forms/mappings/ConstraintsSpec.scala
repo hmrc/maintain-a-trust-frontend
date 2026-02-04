@@ -130,30 +130,28 @@ class ConstraintsSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
     "return Valid for a date before or equal to the maximum" in {
 
       val gen: Gen[(LocalDate, LocalDate)] = for {
-        max <- datesBetween(LocalDate.of(year2000, JANUARY, 1), LocalDate.of(year3000, JANUARY, 1))
+        max  <- datesBetween(LocalDate.of(year2000, JANUARY, 1), LocalDate.of(year3000, JANUARY, 1))
         date <- datesBetween(LocalDate.of(year2000, JANUARY, 1), max)
       } yield (max, date)
 
-      forAll(gen) {
-        case (max, date) =>
+      forAll(gen) { case (max, date) =>
 
-          val result = maxDate(max, "error.future")(date)
-          result mustEqual Valid
+        val result = maxDate(max, "error.future")(date)
+        result mustEqual Valid
       }
     }
 
     "return Invalid for a date after the maximum" in {
 
       val gen: Gen[(LocalDate, LocalDate)] = for {
-        max <- datesBetween(LocalDate.of(year2000, JANUARY, 1), LocalDate.of(year3000, JANUARY, 1))
+        max  <- datesBetween(LocalDate.of(year2000, JANUARY, 1), LocalDate.of(year3000, JANUARY, 1))
         date <- datesBetween(max.plusDays(1), LocalDate.of(year3000, JANUARY, 2))
       } yield (max, date)
 
-      forAll(gen) {
-        case (max, date) =>
+      forAll(gen) { case (max, date) =>
 
-          val result = maxDate(max, "error.future", "foo")(date)
-          result mustEqual Invalid("error.future", "foo")
+        val result = maxDate(max, "error.future", "foo")(date)
+        result mustEqual Invalid("error.future", "foo")
       }
     }
   }
@@ -163,31 +161,30 @@ class ConstraintsSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
     "return Valid for a date after or equal to the minimum" in {
 
       val gen: Gen[(LocalDate, LocalDate)] = for {
-        min <- datesBetween(LocalDate.of(year2000, JANUARY, 1), LocalDate.of(year3000, JANUARY, 1))
+        min  <- datesBetween(LocalDate.of(year2000, JANUARY, 1), LocalDate.of(year3000, JANUARY, 1))
         date <- datesBetween(min, LocalDate.of(year3000, JANUARY, 1))
       } yield (min, date)
 
-      forAll(gen) {
-        case (min, date) =>
+      forAll(gen) { case (min, date) =>
 
-          val result = minDate(min, "error.past", "foo")(date)
-          result mustEqual Valid
+        val result = minDate(min, "error.past", "foo")(date)
+        result mustEqual Valid
       }
     }
 
     "return Invalid for a date before the minimum" in {
 
       val gen: Gen[(LocalDate, LocalDate)] = for {
-        min <- datesBetween(LocalDate.of(year2000, JANUARY, 2), LocalDate.of(year3000, JANUARY, 1))
+        min  <- datesBetween(LocalDate.of(year2000, JANUARY, 2), LocalDate.of(year3000, JANUARY, 1))
         date <- datesBetween(LocalDate.of(year2000, JANUARY, 1), min.minusDays(1))
       } yield (min, date)
 
-      forAll(gen) {
-        case (min, date) =>
+      forAll(gen) { case (min, date) =>
 
-          val result = minDate(min, "error.past", "foo")(date)
-          result mustEqual Invalid("error.past", "foo")
+        val result = minDate(min, "error.past", "foo")(date)
+        result mustEqual Invalid("error.past", "foo")
       }
     }
   }
+
 }

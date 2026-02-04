@@ -26,21 +26,20 @@ import java.time.LocalDate
 
 object TrustClosureDate {
 
-  def getClosureDate(userAnswers: UserAnswers): Option[LocalDate] = {
+  def getClosureDate(userAnswers: UserAnswers): Option[LocalDate] =
     if (userAnswers.isTrustTaxable) {
       userAnswers.get(DateLastAssetSharedOutPage)
     } else {
       userAnswers.get(DateClosedPage)
     }
-  }
 
-  def setClosureDate(answers: UserAnswers, date: Option[LocalDate]): Either[TrustErrors, UserAnswers] = {
+  def setClosureDate(answers: UserAnswers, date: Option[LocalDate]): Either[TrustErrors, UserAnswers] =
     date match {
       case Some(value) =>
         val page: QuestionPage[LocalDate] = if (answers.isTrustTaxable) DateLastAssetSharedOutPage else DateClosedPage
         answers.set(page, value)
-      case None =>
+      case None        =>
         Right(answers)
     }
-  }
+
 }

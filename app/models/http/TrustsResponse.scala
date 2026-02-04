@@ -39,52 +39,53 @@ object TrustsResponse extends Logging {
   final val CLOSED_REQUEST = 499
 
   implicit object TrustStatusReads extends Reads[TrustStatus] {
-    override def reads(json:JsValue): JsResult[TrustStatus] = json("responseHeader")("status") match {
-      case JsString("In Processing") =>
+
+    override def reads(json: JsValue): JsResult[TrustStatus] = json("responseHeader")("status") match {
+      case JsString("In Processing")   =>
         JsSuccess(Processing)
-      case JsString("Closed") =>
+      case JsString("Closed")          =>
         JsSuccess(Closed)
       case JsString("Pending Closure") =>
         JsSuccess(Closed)
-      case JsString("Processed") =>
+      case JsString("Processed")       =>
         validatedProcessedStatus(json)
-      case JsString("Parked") =>
+      case JsString("Parked")          =>
         JsSuccess(SorryThereHasBeenAProblem)
-      case JsString("Obsoleted") =>
+      case JsString("Obsoleted")       =>
         JsSuccess(SorryThereHasBeenAProblem)
-      case JsString("Suspended") =>
+      case JsString("Suspended")       =>
         JsSuccess(SorryThereHasBeenAProblem)
-      case _ =>
+      case _                           =>
         logger.error(s"[TrustsResponse][TrustStatusReads] unexpected status for trust")
         JsError("Unexpected Status")
     }
+
   }
 
-  private def validatedProcessedStatus(json: JsValue): JsResult[Processed] = {
+  private def validatedProcessedStatus(json: JsValue): JsResult[Processed] =
     json("getTrust").validate[GetTrust] match {
       case JsSuccess(trust, _) =>
         val formBundle = json("responseHeader")("formBundleNo").as[String]
         JsSuccess(Processed(trust, formBundle))
-      case JsError(errors) =>
+      case JsError(errors)     =>
         logger.error(s"[TrustsResponse][validatedProcessedStatus] Unable to parse processed response due to $errors")
         JsError(s"Can not parse as GetTrust due to $errors")
     }
-  }
 
-  implicit lazy val httpReads: HttpReads[TrustsResponse] = (_: String, _: String, response: HttpResponse) => {
+  implicit lazy val httpReads: HttpReads[TrustsResponse] = (_: String, _: String, response: HttpResponse) =>
     response.status match {
-      case OK =>
+      case OK                  =>
         response.json.as[TrustStatus]
-      case NO_CONTENT =>
+      case NO_CONTENT          =>
         SorryThereHasBeenAProblem
-      case NOT_FOUND =>
+      case NOT_FOUND           =>
         IdentifierNotFound
       case SERVICE_UNAVAILABLE =>
         TrustServiceUnavailable
-      case CLOSED_REQUEST =>
+      case CLOSED_REQUEST      =>
         ClosedRequestResponse
-      case status =>
+      case status              =>
         TrustsErrorResponse(status)
     }
-  }
+
 }

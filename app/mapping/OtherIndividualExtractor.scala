@@ -28,35 +28,53 @@ class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
 
   override val optionalEntity: Boolean = true
 
-  override def addressYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualAddressYesNoPage(index)
+  override def addressYesNoPage(index: Int): QuestionPage[Boolean]   = OtherIndividualAddressYesNoPage(index)
   override def ukAddressYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualAddressUKYesNoPage(index)
-  override def addressPage(index: Int): QuestionPage[Address] = OtherIndividualAddressPage(index)
+  override def addressPage(index: Int): QuestionPage[Address]        = OtherIndividualAddressPage(index)
 
   override def ninoYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualNationalInsuranceYesNoPage(index)
-  override def ninoPage(index: Int): QuestionPage[String] = OtherIndividualNationalInsuranceNumberPage(index)
+  override def ninoPage(index: Int): QuestionPage[String]       = OtherIndividualNationalInsuranceNumberPage(index)
 
-  override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualPassportIDCardYesNoPage(index)
+  override def passportOrIdCardYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualPassportIDCardYesNoPage(
+    index
+  )
+
   override def passportOrIdCardPage(index: Int): QuestionPage[PassportType] = OtherIndividualPassportIDCardPage(index)
 
   override def dateOfBirthYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualDateOfBirthYesNoPage(index)
-  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate] = OtherIndividualDateOfBirthPage(index)
+  override def dateOfBirthPage(index: Int): QuestionPage[LocalDate]    = OtherIndividualDateOfBirthPage(index)
 
-  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualCountryOfNationalityYesNoPage(index)
-  override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualCountryOfNationalityInTheUkYesNoPage(index)
-  override def countryOfNationalityPage(index: Int): QuestionPage[String] = OtherIndividualCountryOfNationalityPage(index)
+  override def countryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
+    OtherIndividualCountryOfNationalityYesNoPage(index)
 
-  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualCountryOfResidenceYesNoPage(index)
-  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualCountryOfResidenceInTheUkYesNoPage(index)
+  override def ukCountryOfNationalityYesNoPage(index: Int): QuestionPage[Boolean] =
+    OtherIndividualCountryOfNationalityInTheUkYesNoPage(index)
+
+  override def countryOfNationalityPage(index: Int): QuestionPage[String] = OtherIndividualCountryOfNationalityPage(
+    index
+  )
+
+  override def countryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    OtherIndividualCountryOfResidenceYesNoPage(index)
+
+  override def ukCountryOfResidenceYesNoPage(index: Int): QuestionPage[Boolean] =
+    OtherIndividualCountryOfResidenceInTheUkYesNoPage(index)
+
   override def countryOfResidencePage(index: Int): QuestionPage[String] = OtherIndividualCountryOfResidencePage(index)
 
-  override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualMentalCapacityYesNoPage(index)
+  override def mentalCapacityYesNoPage(index: Int): QuestionPage[Boolean] = OtherIndividualMentalCapacityYesNoPage(
+    index
+  )
 
   override def metaDataPage(index: Int): QuestionPage[MetaData] = OtherIndividualMetaData(index)
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: NaturalPersonType,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
-    super.updateUserAnswers(answers, entity, index)
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: NaturalPersonType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
+    super
+      .updateUserAnswers(answers, entity, index)
       .flatMap(_.set(OtherIndividualNamePage(index), entity.name))
       .flatMap(answers => extractDateOfBirth(entity.dateOfBirth, index, answers))
       .flatMap(answers => extractCountryOfNationality(entity.nationality, index, answers))
@@ -64,6 +82,5 @@ class OtherIndividualExtractor extends PlaybackExtractor[NaturalPersonType] {
       .flatMap(answers => extractIndIdentification(entity.identification, index, answers))
       .flatMap(_.set(OtherIndividualSafeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(answers => extractMentalCapacity(entity.legallyIncapable, index, answers))
-  }
 
 }

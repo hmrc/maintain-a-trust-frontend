@@ -28,7 +28,8 @@ class PrintMaintainFinalDeclaredAnswersViewSpec extends ViewBehaviours {
 
     val view = application.injector.instanceOf[PrintMaintainFinalDeclaredAnswersView]
 
-    val applyView = view.apply(AnswerSection(), Nil, Nil, "tvn", "crn", "27 January 2020", isAgent = true)(fakeRequest, messages)
+    val applyView =
+      view.apply(AnswerSection(), Nil, Nil, "tvn", "crn", "27 January 2020", isAgent = true)(fakeRequest, messages)
 
     behave like normalPage(applyView, "playbackFinalDeclarationAnswers")
 
@@ -41,26 +42,20 @@ class PrintMaintainFinalDeclaredAnswersViewSpec extends ViewBehaviours {
     "render correct content" in {
       val doc = asDocument(applyView)
 
-      assertContainsText(doc,
-        "Final declared copy of updates to this trust"
-      )
+      assertContainsText(doc, "Final declared copy of updates to this trust")
 
-      assertContainsText(doc,
-        "Declaration reference number is: tvn"
-      )
+      assertContainsText(doc, "Declaration reference number is: tvn")
 
-      assertContainsText(doc,
-        "Client reference number: crn"
-      )
+      assertContainsText(doc, "Client reference number: crn")
 
-      assertContainsText(doc,
-        "The trust’s final declaration was sent on 27 January 2020"
-      )
+      assertContainsText(doc, "The trust’s final declaration was sent on 27 January 2020")
 
-      assertContainsText(doc,
+      assertContainsText(
+        doc,
         "No further updates to trust details, assets and years of tax liability are required through this service."
       )
-      assertContainsText(doc,
+      assertContainsText(
+        doc,
         "If you need to view the latest information HMRC holds about these sections or need to update them, use Self Assessment Online for trusts."
       )
     }

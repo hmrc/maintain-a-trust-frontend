@@ -36,54 +36,50 @@ import views.html.declaration.AgencyRegisteredAddressUkView
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AgencyRegisteredAddressUkController @Inject()(
-                                                     override val messagesApi: MessagesApi,
-                                                     playbackRepository: PlaybackRepository,
-                                                     actions: Actions,
-                                                     formProvider: UKAddressFormProvider,
-                                                     val controllerComponents: MessagesControllerComponents,
-                                                     view: AgencyRegisteredAddressUkView,
-                                                     errorHandler: ErrorHandler
-                                                   ) (implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Logging {
+class AgencyRegisteredAddressUkController @Inject() (
+  override val messagesApi: MessagesApi,
+  playbackRepository: PlaybackRepository,
+  actions: Actions,
+  formProvider: UKAddressFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: AgencyRegisteredAddressUkView,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  private val className = getClass.getSimpleName
+  private val className             = getClass.getSimpleName
   private val form: Form[UKAddress] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer {
-    implicit request =>
-
-      val preparedForm = request.userAnswers.get(AgencyRegisteredAddressUkPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-      Ok(view(preparedForm))
+  def onPageLoad(): Action[AnyContent] = actions.requireIsClosingAnswer { implicit request =>
+    val preparedForm = request.userAnswers.get(AgencyRegisteredAddressUkPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
+    Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async {
-    implicit request =>
+  def onSubmit(): Action[AnyContent] = actions.requireIsClosingAnswer.async { implicit request =>
+    val result = for {
+      formData       <- TrustEnvelope(handleFormValidation)
+      updatedAnswers <- TrustEnvelope(request.userAnswers.set(AgencyRegisteredAddressUkPage, formData))
+      _              <- playbackRepository.set(updatedAnswers)
+    } yield Redirect(agentDeclarationUrl(request.userAnswers.isTrustMigratingFromNonTaxableToTaxable))
 
-      val result = for {
-        formData <- TrustEnvelope(handleFormValidation)
-        updatedAnswers <- TrustEnvelope(request.userAnswers.set(AgencyRegisteredAddressUkPage, formData))
-        _ <- playbackRepository.set(updatedAnswers)
-      } yield Redirect(agentDeclarationUrl(request.userAnswers.isTrustMigratingFromNonTaxableToTaxable))
-
-      result.value.flatMap {
-        case Right(call) => Future.successful(call)
-        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
-        case Left(_) =>
-          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-      }
+    result.value.flatMap {
+      case Right(call)                               => Future.successful(call)
+      case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
+      case Left(_)                                   =>
+        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
+    }
   }
 
-  private def handleFormValidation(implicit request: ClosingTrustRequest[AnyContent]): Either[TrustErrors, UKAddress] = {
-    form.bindFromRequest().fold(
-      (formWithErrors: Form[_]) =>
-        Left(FormValidationError(BadRequest(view(formWithErrors)))),
-      value => Right(value)
-    )
-  }
+  private def handleFormValidation(implicit request: ClosingTrustRequest[AnyContent]): Either[TrustErrors, UKAddress] =
+    form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) => Left(FormValidationError(BadRequest(view(formWithErrors)))),
+        value => Right(value)
+      )
 
 }

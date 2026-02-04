@@ -31,17 +31,22 @@ object WhatIsNext extends Enumerable.Implicits {
   case object GeneratePdf extends WithName("generate-pdf") with WhatIsNext
 
   val values: List[WhatIsNext] = List(
-    DeclareTheTrustIsUpToDate, MakeChanges, CloseTrust, NoLongerTaxable, NeedsToPayTax, GeneratePdf
+    DeclareTheTrustIsUpToDate,
+    MakeChanges,
+    CloseTrust,
+    NoLongerTaxable,
+    NeedsToPayTax,
+    GeneratePdf
   )
 
-  def options(trustMldStatus: TrustMldStatus): List[(RadioOption, String)] = {
+  def options(trustMldStatus: TrustMldStatus): List[(RadioOption, String)] =
     values
       .filterNot(_ == DeclareTheTrustIsUpToDate && trustMldStatus == Underlying5mldNonTaxableTrustIn5mldMode)
       .filterNot(_ == NoLongerTaxable && trustMldStatus != Underlying5mldTaxableTrustIn5mldMode)
       .filterNot(_ == NeedsToPayTax && trustMldStatus != Underlying5mldNonTaxableTrustIn5mldMode)
       .map(value => (RadioOption(s"declarationWhatNext5mld", value.toString), s"declarationWhatNext5mld.$value.hint"))
-  }
 
   implicit val enumerable: Enumerable[WhatIsNext] =
     Enumerable(values.map(v => v.toString -> v): _*)
+
 }

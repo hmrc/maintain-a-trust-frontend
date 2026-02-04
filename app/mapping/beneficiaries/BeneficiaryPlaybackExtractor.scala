@@ -27,50 +27,57 @@ trait BeneficiaryPlaybackExtractor[T <: BeneficiaryType] extends PlaybackExtract
   def namePage(index: Int): QuestionPage[String] = new EmptyPage[String]
 
   def shareOfIncomeYesNoPage(index: Int): QuestionPage[Boolean] = new EmptyPage[Boolean]
-  def shareOfIncomePage(index: Int): QuestionPage[String] = new EmptyPage[String]
+  def shareOfIncomePage(index: Int): QuestionPage[String]       = new EmptyPage[String]
 
-  def extractShareOfIncome(shareOfIncome: Option[String],
-                           index: Int,
-                           answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  def extractShareOfIncome(
+    shareOfIncome: Option[String],
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     extractIfTaxableOrMigratingToTaxable(answers) {
       shareOfIncome match {
         case Some(income) =>
-          answers.set(shareOfIncomeYesNoPage(index), false)
+          answers
+            .set(shareOfIncomeYesNoPage(index), false)
             .flatMap(_.set(shareOfIncomePage(index), income))
-        case None =>
+        case None         =>
           answers.set(shareOfIncomeYesNoPage(index), true)
       }
     }
-  }
 
-  override def extractOrgIdentification(identification: Option[DisplayTrustIdentificationOrgType],
-                                        index: Int,
-                                        answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  override def extractOrgIdentification(
+    identification: Option[DisplayTrustIdentificationOrgType],
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     extractIfTaxableOrMigratingToTaxable(answers) {
       identification map {
-        case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
-          answers.set(utrPage(index), utr)
+        case DisplayTrustIdentificationOrgType(_, Some(utr), None)     =>
+          answers
+            .set(utrPage(index), utr)
             .flatMap(_.set(addressYesNoPage(index), false))
         case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
           extractAddress(address, index, answers)
-        case _ =>
-          logger.error(s"[BeneficiaryPlaybackExtractor][extractOrgIdentification][UTR/URN: ${answers.identifier}] both utr/urn and address parsed")
+        case _                                                         =>
+          logger.error(
+            s"[BeneficiaryPlaybackExtractor][extractOrgIdentification][UTR/URN: ${answers.identifier}] both utr/urn and address parsed"
+          )
           Left(InvalidExtractorState)
-      } getOrElse {
+      } getOrElse
         answers.set(addressYesNoPage(index), false)
-      }
     }
-  }
 
-  def updateUserAnswersForOrgBeneficiary(answers: Either[TrustErrors, UserAnswers],
-                                         entity: OrgBeneficiaryType,
-                                         index: Int): Either[TrustErrors, UserAnswers] = {
-    super.updateUserAnswers(answers, entity.asInstanceOf[T], index)
+  def updateUserAnswersForOrgBeneficiary(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: OrgBeneficiaryType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
+    super
+      .updateUserAnswers(answers, entity.asInstanceOf[T], index)
       .flatMap(_.set(namePage(index), entity.organisationName))
       .flatMap(answers => extractShareOfIncome(entity.beneficiaryShareOfIncome, index, answers))
       .flatMap(_.set(safeIdPage(index), entity.identification.flatMap(_.safeId)))
       .flatMap(answers => extractCountryOfResidence(entity.countryOfResidence, index, answers))
       .flatMap(answers => extractOrgIdentification(entity.identification, index, answers))
-  }
 
 }

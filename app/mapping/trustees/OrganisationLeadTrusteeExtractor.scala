@@ -24,10 +24,13 @@ import pages.trustees._
 
 class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayTrustLeadTrusteeOrgType] {
 
-  override def updateUserAnswers(answers: Either[TrustErrors, UserAnswers],
-                                 entity: DisplayTrustLeadTrusteeOrgType,
-                                 index: Int): Either[TrustErrors, UserAnswers] = {
-    super.updateUserAnswers(answers, entity, index)
+  override def updateUserAnswers(
+    answers: Either[TrustErrors, UserAnswers],
+    entity: DisplayTrustLeadTrusteeOrgType,
+    index: Int
+  ): Either[TrustErrors, UserAnswers] =
+    super
+      .updateUserAnswers(answers, entity, index)
       .flatMap(_.set(IsThisLeadTrusteePage(index), true))
       .flatMap(_.set(TrusteeIndividualOrBusinessPage(index), IndividualOrBusiness.Business))
       .flatMap(_.set(TrusteeOrgNamePage(index), entity.name))
@@ -36,29 +39,34 @@ class OrganisationLeadTrusteeExtractor extends TrusteePlaybackExtractor[DisplayT
       .flatMap(answers => extractEmail(entity.email, index, answers))
       .flatMap(_.set(TrusteeTelephoneNumberPage(index), entity.phoneNumber))
       .flatMap(_.set(TrusteeSafeIdPage(index), entity.identification.safeId))
-  }
 
-  private def extractIdentification(identification: DisplayTrustIdentificationOrgType,
-                                    index: Int,
-                                    answers: UserAnswers): Either[TrustErrors, UserAnswers] = {
+  private def extractIdentification(
+    identification: DisplayTrustIdentificationOrgType,
+    index: Int,
+    answers: UserAnswers
+  ): Either[TrustErrors, UserAnswers] =
     identification match {
       case DisplayTrustIdentificationOrgType(_, Some(utr), Some(address)) =>
-        answers.set(TrusteeUtrYesNoPage(index), true)
+        answers
+          .set(TrusteeUtrYesNoPage(index), true)
           .flatMap(_.set(TrusteeUtrPage(index), utr))
           .flatMap(answers => extractAddress(address, index, answers))
 
       case DisplayTrustIdentificationOrgType(_, None, Some(address)) =>
-        answers.set(TrusteeUtrYesNoPage(index), false)
+        answers
+          .set(TrusteeUtrYesNoPage(index), false)
           .flatMap(answers => extractAddress(address, index, answers))
 
       case DisplayTrustIdentificationOrgType(_, Some(utr), None) =>
-        answers.set(TrusteeUtrYesNoPage(index), true)
+        answers
+          .set(TrusteeUtrYesNoPage(index), true)
           .flatMap(_.set(TrusteeUtrPage(index), utr))
 
       case DisplayTrustIdentificationOrgType(_, _, _) =>
-        logger.error(s"[OrganisationLeadTrusteeExtractor][extractIdentification][UTR/URN: ${answers.identifier}] no identification for lead trustee company returned in DisplayTrustOrEstate api")
+        logger.error(
+          s"[OrganisationLeadTrusteeExtractor][extractIdentification][UTR/URN: ${answers.identifier}] no identification for lead trustee company returned in DisplayTrustOrEstate api"
+        )
         Left(InvalidExtractorState)
     }
-  }
 
 }

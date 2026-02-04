@@ -15,6 +15,7 @@
  */
 
 package controllers.actions
+
 import config.FrontendAppConfig
 import handlers.ErrorHandler
 import models.UserAnswers
@@ -24,22 +25,23 @@ import repositories.{ActiveSessionRepository, PlaybackRepository}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeDataRetrievalRefinerAction(dataToReturn: Option[UserAnswers],
-                                     activeSessionRepository: ActiveSessionRepository,
-                                     playbackRepository: PlaybackRepository,
-                                     errorHandler: ErrorHandler,
-                                     appConfig: FrontendAppConfig
-                                    )(implicit ec: ExecutionContext)
-  extends DataRetrievalRefinerAction(activeSessionRepository, playbackRepository, errorHandler, appConfig) {
+class FakeDataRetrievalRefinerAction(
+  dataToReturn: Option[UserAnswers],
+  activeSessionRepository: ActiveSessionRepository,
+  playbackRepository: PlaybackRepository,
+  errorHandler: ErrorHandler,
+  appConfig: FrontendAppConfig
+)(implicit ec: ExecutionContext)
+    extends DataRetrievalRefinerAction(activeSessionRepository, playbackRepository, errorHandler, appConfig) {
 
   private val utr: String = "1234567890"
 
-  override protected def refine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = {
+  override protected def refine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] =
     dataToReturn match {
-      case None =>
+      case None              =>
         Future.successful(Right(OptionalDataRequest(request.request, None, request.user, utr)))
       case Some(userAnswers) =>
         Future.successful(Right(OptionalDataRequest(request.request, Some(userAnswers), request.user, utr)))
     }
-  }
+
 }

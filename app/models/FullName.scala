@@ -24,7 +24,7 @@ case class FullName(firstName: String, middleName: Option[String], lastName: Str
 
   def displayFullName: String = middleName match {
     case Some(middleName) => s"$firstName $middleName $lastName"
-    case None => this.toString
+    case None             => this.toString
   }
 
 }

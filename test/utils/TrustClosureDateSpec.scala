@@ -57,7 +57,8 @@ class TrustClosureDateSpec extends SpecBase {
           "taxable" in {
 
             val userAnswers = emptyUserAnswersForUtr
-              .set(DateLastAssetSharedOutPage, date).value
+              .set(DateLastAssetSharedOutPage, date)
+              .value
 
             val result: Option[LocalDate] = getClosureDate(userAnswers)
 
@@ -67,7 +68,8 @@ class TrustClosureDateSpec extends SpecBase {
           "non-taxable" in {
 
             val userAnswers = emptyUserAnswersForUrn
-              .set(DateClosedPage, date).value
+              .set(DateClosedPage, date)
+              .value
 
             val result: Option[LocalDate] = getClosureDate(userAnswers)
 
@@ -103,7 +105,7 @@ class TrustClosureDateSpec extends SpecBase {
 
             result mustNot be(userAnswers)
             result.get(DateLastAssetSharedOutPage).get mustBe date
-            result.get(DateClosedPage) mustBe None
+            result.get(DateClosedPage)                 mustBe None
           }
 
           "non-taxable" in {
@@ -114,10 +116,11 @@ class TrustClosureDateSpec extends SpecBase {
 
             result mustNot be(userAnswers)
             result.get(DateLastAssetSharedOutPage) mustBe None
-            result.get(DateClosedPage).get mustBe date
+            result.get(DateClosedPage).get         mustBe date
           }
         }
       }
     }
   }
+
 }

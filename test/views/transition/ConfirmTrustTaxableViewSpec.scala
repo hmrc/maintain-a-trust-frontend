@@ -32,11 +32,13 @@ class ConfirmTrustTaxableViewSpec extends ViewBehaviours {
     behave like normalPage(
       applyView,
       "confirmTrustTaxable",
-      "p1", "p2"
+      "p1",
+      "p2"
     )
 
     behave like pageWithBackLink(applyView)
 
     behave like pageWithASubmitButton(applyView)
   }
+
 }

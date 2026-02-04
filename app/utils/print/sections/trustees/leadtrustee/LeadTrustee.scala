@@ -25,8 +25,9 @@ import viewmodels.AnswerRow
 
 class LeadTrustee(converter: AnswerRowConverter) {
 
-  def addressAnswers(index: Int, userAnswers: UserAnswers, name: String)
-                    (implicit messages: Messages): Seq[Option[AnswerRow]] = {
+  def addressAnswers(index: Int, userAnswers: UserAnswers, name: String)(implicit
+    messages: Messages
+  ): Seq[Option[AnswerRow]] =
 
     userAnswers.get(TrusteeAddressPage(index)) match {
       case Some(_) =>
@@ -34,11 +35,10 @@ class LeadTrustee(converter: AnswerRowConverter) {
           converter.yesNoQuestion(TrusteeAddressInTheUKPage(index), userAnswers, "trusteeLiveInTheUK", name),
           converter.addressQuestion(TrusteeAddressPage(index), userAnswers, "trusteeUkAddress", name)
         )
-      case _ =>
+      case _       =>
         Seq(
           converter.addressQuestion(CorrespondenceAddressPage, userAnswers, "trusteeUkAddress", name)
         )
     }
-  }
 
 }

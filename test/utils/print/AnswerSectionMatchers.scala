@@ -21,38 +21,42 @@ import play.twirl.api.Html
 import viewmodels.AnswerSection
 
 trait AnswerSectionMatchers {
+
   class ContainsHeadingSection(expectedHeadingKey: String) extends Matcher[Seq[AnswerSection]] {
+
     override def apply(left: Seq[AnswerSection]): MatchResult =
       MatchResult(
         left.exists(section => section.sectionKey.contains(expectedHeadingKey)),
-        s"""sections did not contains a section with section key "${expectedHeadingKey}"""",
-        s"""sections contained a section with section key "${expectedHeadingKey}""""
+        s"""sections did not contains a section with section key "$expectedHeadingKey"""",
+        s"""sections contained a section with section key "$expectedHeadingKey""""
       )
+
   }
 
+  class ContainsSectionWithHeadingAndValues(expectedHeading: String, expectedValues: Seq[(String, Html)])
+      extends Matcher[Seq[AnswerSection]] {
 
-  class ContainsSectionWithHeadingAndValues(expectedHeading: String, expectedValues: Seq[(String, Html)]) extends Matcher[Seq[AnswerSection]] {
-    private def sectionContainsValue(answerSection: AnswerSection, value: (String, Html)) = {
+    private def sectionContainsValue(answerSection: AnswerSection, value: (String, Html)) =
       answerSection.rows.exists(r => r.label == value._1 && r.answer == value._2)
-    }
 
-    private def sectionContainsValues(section: AnswerSection, values: Seq[(String, Html)]): Boolean = {
+    private def sectionContainsValues(section: AnswerSection, values: Seq[(String, Html)]): Boolean =
       values.forall(sectionContainsValue(section, _))
-    }
 
-    override def apply(left: Seq[AnswerSection]): MatchResult = {
+    override def apply(left: Seq[AnswerSection]): MatchResult =
       MatchResult(
         left.exists(section =>
           section.headingKey.contains(expectedHeading) &&
-          sectionContainsValues(section, expectedValues)),
-        s"${left} did not contain a section with the heading ${expectedHeading} which contains all values from ${expectedValues}",
+            sectionContainsValues(section, expectedValues)
+        ),
+        s"$left did not contain a section with the heading $expectedHeading which contains all values from $expectedValues",
         s"A section with the expected heading was found containing all of the expected values"
       )
-    }
+
   }
 
   def containHeadingSection(expectedHeadingKey: String) = new ContainsHeadingSection(expectedHeadingKey)
 
   def containSectionWithHeadingAndValues(expectedHeading: String, expectedValues: (String, Html)*) =
     new ContainsSectionWithHeadingAndValues(expectedHeading, expectedValues)
+
 }

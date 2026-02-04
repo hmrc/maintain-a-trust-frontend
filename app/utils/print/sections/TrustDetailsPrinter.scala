@@ -24,7 +24,7 @@ import viewmodels.{AnswerRow, AnswerSection}
 
 import javax.inject.Inject
 
-class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends PrinterHelper {
+class TrustDetailsPrinter @Inject() (converter: AnswerRowConverter) extends PrinterHelper {
 
   def print(userAnswers: UserAnswers)(implicit messages: Messages): Seq[AnswerSection] = {
 
@@ -37,33 +37,32 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
       Seq(
         converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
         converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
-
         converter.whichIdentifier(userAnswers),
         utrOrUrnRow,
-
         converter.yesNoQuestion(GovernedInsideTheUKPage, userAnswers, "governedByUkLaw"),
         converter.countryQuestion(CountryGoverningTrustPage, userAnswers, "governingCountry"),
         converter.yesNoQuestion(AdministrationInsideUKPage, userAnswers, "administeredInUk"),
         converter.countryQuestion(CountryAdministeringTrustPage, userAnswers, "administrationCountry"),
-
         converter.yesNoQuestion(SetUpAfterSettlorDiedYesNoPage, userAnswers, "setUpAfterSettlorDied"),
         converter.enumQuestion(KindOfTrustPage, userAnswers, "typeOfTrust", "kindOfTrust"),
-        converter.enumQuestion(HowDeedOfVariationCreatedPage, userAnswers, "whyDeedOfVariationCreated", "deedOfVariation"),
+        converter
+          .enumQuestion(HowDeedOfVariationCreatedPage, userAnswers, "whyDeedOfVariationCreated", "deedOfVariation"),
         converter.yesNoQuestion(HoldoverReliefYesNoPage, userAnswers, "holdoverReliefClaimed"),
         converter.yesNoQuestion(EfrbsYesNoPage, userAnswers, "efrbsYesNo"),
         converter.dateQuestion(EfrbsStartDatePage, userAnswers, "efrbsStartDate"),
-
         converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
-        converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
-
+        converter
+          .yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
         converter.enumQuestion(WhereTrusteesBasedPage, userAnswers, "whereTrusteesBased", "whereTrusteesBased"),
         converter.yesNoQuestion(SettlorsUkBasedPage, userAnswers, "settlorsUkBased"),
-
         converter.yesNoQuestion(EstablishedUnderScotsLawPage, userAnswers, "establishedUnderScotsLaw"),
         converter.yesNoQuestion(TrustResidentOffshorePage, userAnswers, "previouslyResidentOffshore"),
         converter.countryQuestion(TrustPreviouslyResidentPage, userAnswers, "previouslyResidentOffshoreCountry"),
-
-        converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo"),
+        converter.yesNoQuestion(
+          TrustHasBusinessRelationshipInUkYesNoPage,
+          userAnswers,
+          "trustHasBusinessRelationshipInUkYesNo"
+        ),
         converter.yesNoQuestion(RegisteringTrustFor5APage, userAnswers, "settlorBenefitsFromAssets"),
         converter.yesNoQuestion(InheritanceTaxActPage, userAnswers, "forPurposeOfSection218"),
         converter.yesNoQuestion(AgentOtherThanBarristerPage, userAnswers, "agentCreatedTrust"),
@@ -73,13 +72,16 @@ class TrustDetailsPrinter @Inject()(converter: AnswerRowConverter) extends Print
       Seq(
         converter.stringQuestion(TrustNamePage, userAnswers, "trustName"),
         converter.dateQuestion(WhenTrustSetupPage, userAnswers, "whenTrustSetup"),
-
         converter.whichIdentifier(userAnswers),
         utrOrUrnRow,
-
         converter.yesNoQuestion(TrustUkPropertyYesNoPage, userAnswers, "trustUkPropertyYesNo"),
-        converter.yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
-        converter.yesNoQuestion(TrustHasBusinessRelationshipInUkYesNoPage, userAnswers, "trustHasBusinessRelationshipInUkYesNo"),
+        converter
+          .yesNoQuestion(TrustRecordedOnAnotherRegisterYesNoPage, userAnswers, "trustRecordedOnAnotherRegisterYesNo"),
+        converter.yesNoQuestion(
+          TrustHasBusinessRelationshipInUkYesNoPage,
+          userAnswers,
+          "trustHasBusinessRelationshipInUkYesNo"
+        ),
         converter.yesNoQuestion(Schedule3aExemptYesNoPage, userAnswers, "schedule3aExemptYesNo")
       )
     }

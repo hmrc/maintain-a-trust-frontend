@@ -22,32 +22,42 @@ import views.html.status.PlaybackProblemContactHMRCView
 
 class PlaybackProblemContactHMRCViewSpec extends ViewBehaviours {
 
-
   "PlaybackProblemContactHMRC view for utr" must {
-    val utr = "0987654321"
+    val utr  = "0987654321"
     val view = viewFor[PlaybackProblemContactHMRCView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(utr, UTR)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "playbackProblemContactHMRC",
       "utr",
       utr,
-      "p1", "p2", "p2.link", "p3")
+      "p1",
+      "p2",
+      "p2.link",
+      "p3"
+    )
 
   }
 
   "PlaybackProblemContactHMRC view for urn" must {
-    val urn = "XATRUST12345678"
+    val urn  = "XATRUST12345678"
     val view = viewFor[PlaybackProblemContactHMRCView](Some(emptyUserAnswersForUtr))
 
     val applyView = view.apply(urn, URN)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "playbackProblemContactHMRC",
       "urn",
       urn,
-      "p1", "p2", "p2.link", "p3")
+      "p1",
+      "p2",
+      "p2.link",
+      "p3"
+    )
 
   }
+
 }

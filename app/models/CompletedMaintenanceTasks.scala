@@ -21,14 +21,16 @@ import models.pages.Tag
 import models.pages.Tag._
 import play.api.libs.json.{Format, Json}
 
-case class CompletedMaintenanceTasks(trustDetails: Tag,
-                                     assets: Tag,
-                                     taxLiability: Tag,
-                                     trustees: Tag,
-                                     beneficiaries: Tag,
-                                     settlors: Tag,
-                                     protectors: Tag,
-                                     other: Tag)
+case class CompletedMaintenanceTasks(
+  trustDetails: Tag,
+  assets: Tag,
+  taxLiability: Tag,
+  trustees: Tag,
+  beneficiaries: Tag,
+  settlors: Tag,
+  protectors: Tag,
+  other: Tag
+)
 
 object CompletedMaintenanceTasks {
 
@@ -48,25 +50,23 @@ object CompletedMaintenanceTasks {
   private def tagForDecision(needToAmend: Boolean): Tag = if (needToAmend) NotStarted else Completed
 
   def from(userAnswers: UserAnswers): Option[CompletedMaintenanceTasks] = for {
-    trustDetails <- userAnswers.getWithDefault(UpdateTrustDetailsYesNoPage, false)
-    assets <- userAnswers.getWithDefault(AddOrUpdateNonEeaCompanyYesNoPage, false)
-    taxLiability <- userAnswers.getWithDefault(UpdateTaxLiabilityYesNoPage, false)
-    trustees <- userAnswers.get(UpdateTrusteesYesNoPage)
-    beneficiaries <- userAnswers.get(UpdateBeneficiariesYesNoPage)
-    settlors <- userAnswers.get(UpdateSettlorsYesNoPage)
-    protectors <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
+    trustDetails     <- userAnswers.getWithDefault(UpdateTrustDetailsYesNoPage, false)
+    assets           <- userAnswers.getWithDefault(AddOrUpdateNonEeaCompanyYesNoPage, false)
+    taxLiability     <- userAnswers.getWithDefault(UpdateTaxLiabilityYesNoPage, false)
+    trustees         <- userAnswers.get(UpdateTrusteesYesNoPage)
+    beneficiaries    <- userAnswers.get(UpdateBeneficiariesYesNoPage)
+    settlors         <- userAnswers.get(UpdateSettlorsYesNoPage)
+    protectors       <- userAnswers.get(AddOrUpdateProtectorYesNoPage)
     otherIndividuals <- userAnswers.get(AddOrUpdateOtherIndividualsYesNoPage)
-  } yield {
-    CompletedMaintenanceTasks(
-      tagForDecision(trustDetails),
-      tagForDecision(assets),
-      tagForDecision(taxLiability),
-      tagForDecision(trustees),
-      tagForDecision(beneficiaries),
-      tagForDecision(settlors),
-      tagForDecision(protectors),
-      tagForDecision(otherIndividuals)
-    )
-  }
+  } yield CompletedMaintenanceTasks(
+    tagForDecision(trustDetails),
+    tagForDecision(assets),
+    tagForDecision(taxLiability),
+    tagForDecision(trustees),
+    tagForDecision(beneficiaries),
+    tagForDecision(settlors),
+    tagForDecision(protectors),
+    tagForDecision(otherIndividuals)
+  )
 
 }

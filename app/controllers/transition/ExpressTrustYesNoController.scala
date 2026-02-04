@@ -37,78 +37,77 @@ import views.html.transition.ExpressTrustYesNoView
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ExpressTrustYesNoController @Inject()(
-                                             override val messagesApi: MessagesApi,
-                                             playbackRepository: PlaybackRepository,
-                                             actions: Actions,
-                                             yesNoFormProvider: YesNoFormProvider,
-                                             val controllerComponents: MessagesControllerComponents,
-                                             view: ExpressTrustYesNoView,
-                                             trustsConnector: TrustConnector,
-                                             maintainATrustService: MaintainATrustService,
-                                             errorHandler: ErrorHandler
-                                           ) (implicit ec: ExecutionContext)
-  extends FrontendBaseController with I18nSupport with Logging {
+class ExpressTrustYesNoController @Inject() (
+  override val messagesApi: MessagesApi,
+  playbackRepository: PlaybackRepository,
+  actions: Actions,
+  yesNoFormProvider: YesNoFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: ExpressTrustYesNoView,
+  trustsConnector: TrustConnector,
+  maintainATrustService: MaintainATrustService,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  private val className = getClass.getSimpleName
+  private val className           = getClass.getSimpleName
   private val form: Form[Boolean] = yesNoFormProvider.withPrefix("expressTrustYesNo")
 
-  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier {
-    implicit request =>
-
-      val preparedForm = request.userAnswers.get(ExpressTrustYesNoPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-      Ok(view(preparedForm))
+  def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
+    val preparedForm = request.userAnswers.get(ExpressTrustYesNoPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
+    Ok(view(preparedForm))
   }
 
-  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async {
-    implicit request =>
+  def onSubmit(): Action[AnyContent] = actions.verifiedForIdentifier.async { implicit request =>
+    val isTrustMigrating = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
 
-      val isTrustMigrating = request.userAnswers.isTrustMigratingFromNonTaxableToTaxable
-
-      val result = for {
-        formData <- TrustEnvelope(handleFormValidation)
-        updatedAnswers <- TrustEnvelope(request.userAnswers.set(ExpressTrustYesNoPage, formData))
-        _ <- playbackRepository.set(updatedAnswers)
-        _ <- removeTransformsIfNotMigrating(isTrustMigrating)
-        _ <- trustsConnector.setExpressTrust(request.userAnswers.identifier, formData)
-      } yield {
-        if (isTrustMigrating) {
-          Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
-        } else {
-          Redirect(routes.ConfirmTrustTaxableController.onPageLoad())
-        }
+    val result = for {
+      formData       <- TrustEnvelope(handleFormValidation)
+      updatedAnswers <- TrustEnvelope(request.userAnswers.set(ExpressTrustYesNoPage, formData))
+      _              <- playbackRepository.set(updatedAnswers)
+      _              <- removeTransformsIfNotMigrating(isTrustMigrating)
+      _              <- trustsConnector.setExpressTrust(request.userAnswers.identifier, formData)
+    } yield
+      if (isTrustMigrating) {
+        Redirect(controllers.tasklist.routes.TaskListController.onPageLoad())
+      } else {
+        Redirect(routes.ConfirmTrustTaxableController.onPageLoad())
       }
 
-      result.value.flatMap {
-        case Right(call) => Future.successful(call)
-        case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
-        case Left(_) =>
-          logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
-          errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
-      }
-  }
-
-  private def removeTransformsIfNotMigrating(isTrustMigrating: Boolean)
-                                            (implicit request: DataRequest[AnyContent]): TrustEnvelope[Unit] = {
-    if (isTrustMigrating) {
-      logger.info(s"[$className][removeTransformsIfNotMigrating][Session ID: ${Session.id(hc)}] Migrating from non-taxable to taxable. Keeping transforms.")
-      TrustEnvelope(())
-    } else {
-      logger.info(s"[$className][removeTransformsIfNotMigrating][Session ID: ${Session.id(hc)}] Redirected from RefreshedDataPreSubmitRetrievalAction or " +
-        s"transitioning from 4MLD to 5MLD. Removing transforms and resetting tasks.")
-      maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
+    result.value.flatMap {
+      case Right(call)                               => Future.successful(call)
+      case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
+      case Left(_)                                   =>
+        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+        errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
     }
   }
 
-  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, Boolean] = {
-    form.bindFromRequest().fold(
-      (formWithErrors: Form[_]) =>
-        Left(FormValidationError(BadRequest(view(formWithErrors)))),
-      value => Right(value)
-    )
-  }
+  private def removeTransformsIfNotMigrating(
+    isTrustMigrating: Boolean
+  )(implicit request: DataRequest[AnyContent]): TrustEnvelope[Unit] =
+    if (isTrustMigrating) {
+      logger.info(
+        s"[$className][removeTransformsIfNotMigrating][Session ID: ${Session.id(hc)}] Migrating from non-taxable to taxable. Keeping transforms."
+      )
+      TrustEnvelope(())
+    } else {
+      logger.info(
+        s"[$className][removeTransformsIfNotMigrating][Session ID: ${Session.id(hc)}] Redirected from RefreshedDataPreSubmitRetrievalAction or " +
+          s"transitioning from 4MLD to 5MLD. Removing transforms and resetting tasks."
+      )
+      maintainATrustService.removeTransformsAndResetTaskList(request.userAnswers.identifier)
+    }
+
+  private def handleFormValidation(implicit request: DataRequest[AnyContent]): Either[TrustErrors, Boolean] =
+    form
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) => Left(FormValidationError(BadRequest(view(formWithErrors)))),
+        value => Right(value)
+      )
 
 }

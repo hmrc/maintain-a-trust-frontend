@@ -25,8 +25,8 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.EitherValues
 import pages.assets.propertyOrLand._
 
-class PropertyOrLandAssetExtractorSpec extends AnyFreeSpec with Matchers
-  with EitherValues with Generators with SpecBaseHelpers {
+class PropertyOrLandAssetExtractorSpec
+    extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   private val (num2000, num1000) = (2000L, 1000L)
 
@@ -41,7 +41,7 @@ class PropertyOrLandAssetExtractorSpec extends AnyFreeSpec with Matchers
     valuePrevious = Some(num1000)
   )
 
-  val assetExtractor : PropertyOrLandAssetExtractor =
+  val assetExtractor: PropertyOrLandAssetExtractor =
     injector.instanceOf[PropertyOrLandAssetExtractor]
 
   "Property or Land Asset Extractor" - {
@@ -56,7 +56,7 @@ class PropertyOrLandAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         val extraction = assetExtractor.extract(ua, assets)
 
-        extraction mustBe Symbol("right")
+        extraction            mustBe Symbol("right")
         extraction.value.data mustBe ua.data
 
       }
@@ -69,76 +69,94 @@ class PropertyOrLandAssetExtractorSpec extends AnyFreeSpec with Matchers
 
         "with minimum data (no address) must return user answers updated" in {
 
-          val businessAssets = List(PropertyLandType(
-            buildingLandName = Some(s"building land name 1"),
-            address = None,
-            valueFull = num2000,
-            valuePrevious = None
-          ))
+          val businessAssets = List(
+            PropertyLandType(
+              buildingLandName = Some(s"building land name 1"),
+              address = None,
+              valueFull = num2000,
+              valuePrevious = None
+            )
+          )
 
           val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, businessAssets)
 
-          extraction.value.get(PropertyOrLandDescriptionPage(0)).get mustBe "building land name 1"
-          extraction.value.get(PropertyOrLandAddressYesNoPage(0)).get mustBe false
+          extraction.value.get(PropertyOrLandDescriptionPage(0)).get    mustBe "building land name 1"
+          extraction.value.get(PropertyOrLandAddressYesNoPage(0)).get   mustBe false
           extraction.value.get(PropertyOrLandAddressPage(0)) mustNot be(defined)
-          extraction.value.get(PropertyOrLandTotalValuePage(0)).get mustBe 2000L
+          extraction.value.get(PropertyOrLandTotalValuePage(0)).get     mustBe 2000L
           extraction.value.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe true
           extraction.value.get(PropertyLandValueTrustPage(0)) mustNot be(defined)
         }
 
         "with international address must return user answers updated" in {
 
-          val businessAssets = List(PropertyLandType(
-            buildingLandName = None,
-            address = Some(AddressType(s"line1", "line2", None, None, None, "FR")),
-            valueFull = num2000,
-            valuePrevious = Some(num1000)
-          ))
+          val businessAssets = List(
+            PropertyLandType(
+              buildingLandName = None,
+              address = Some(AddressType(s"line1", "line2", None, None, None, "FR")),
+              valueFull = num2000,
+              valuePrevious = Some(num1000)
+            )
+          )
 
           val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, businessAssets)
 
           extraction.value.get(PropertyOrLandDescriptionPage(0)) mustNot be(defined)
-          extraction.value.get(PropertyOrLandAddressYesNoPage(0)).get mustBe true
+          extraction.value.get(PropertyOrLandAddressYesNoPage(0)).get   mustBe true
           extraction.value.get(PropertyOrLandAddressUkYesNoPage(0)).get mustBe false
-          extraction.value.get(PropertyOrLandAddressPage(0)).get mustBe InternationalAddress("line1", "line2", None, "FR")
-          extraction.value.get(PropertyOrLandTotalValuePage(0)).get mustBe 2000L
+          extraction.value.get(PropertyOrLandAddressPage(0)).get        mustBe InternationalAddress(
+            "line1",
+            "line2",
+            None,
+            "FR"
+          )
+          extraction.value.get(PropertyOrLandTotalValuePage(0)).get     mustBe 2000L
           extraction.value.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe false
-          extraction.value.get(PropertyLandValueTrustPage(0)).get mustBe 1000L
+          extraction.value.get(PropertyLandValueTrustPage(0)).get       mustBe 1000L
         }
 
         "with uk address must return user answers updated" in {
 
-          val businessAssets = List(PropertyLandType(
-            buildingLandName = None,
-            address = Some(AddressType(s"line1", "line2", None, None, Some("NE1 1AA"), "GB")),
-            valueFull = num2000,
-            valuePrevious = Some(num1000)
-          ))
+          val businessAssets = List(
+            PropertyLandType(
+              buildingLandName = None,
+              address = Some(AddressType(s"line1", "line2", None, None, Some("NE1 1AA"), "GB")),
+              valueFull = num2000,
+              valuePrevious = Some(num1000)
+            )
+          )
 
           val ua = emptyUserAnswersForUtr
 
           val extraction = assetExtractor.extract(ua, businessAssets)
 
           extraction.value.get(PropertyOrLandDescriptionPage(0)) mustNot be(defined)
-          extraction.value.get(PropertyOrLandAddressYesNoPage(0)).get mustBe true
+          extraction.value.get(PropertyOrLandAddressYesNoPage(0)).get   mustBe true
           extraction.value.get(PropertyOrLandAddressUkYesNoPage(0)).get mustBe true
-          extraction.value.get(PropertyOrLandAddressPage(0)).get mustBe UKAddress("line1", "line2", None, None, "NE1 1AA")
-          extraction.value.get(PropertyOrLandTotalValuePage(0)).get mustBe 2000L
+          extraction.value.get(PropertyOrLandAddressPage(0)).get        mustBe UKAddress(
+            "line1",
+            "line2",
+            None,
+            None,
+            "NE1 1AA"
+          )
+          extraction.value.get(PropertyOrLandTotalValuePage(0)).get     mustBe 2000L
           extraction.value.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe false
-          extraction.value.get(PropertyLandValueTrustPage(0)).get mustBe 1000L
+          extraction.value.get(PropertyLandValueTrustPage(0)).get       mustBe 1000L
         }
 
         "with uk address property and business name property must return user answers updated" in {
 
-          val businessAssets = List(PropertyLandType(
-            buildingLandName = None,
-            address = Some(AddressType(s"line1", "line2", None, None, Some("NE1 1AA"), "GB")),
-            valueFull = num2000,
-            valuePrevious = Some(num1000)
+          val businessAssets = List(
+            PropertyLandType(
+              buildingLandName = None,
+              address = Some(AddressType(s"line1", "line2", None, None, Some("NE1 1AA"), "GB")),
+              valueFull = num2000,
+              valuePrevious = Some(num1000)
             ),
             PropertyLandType(
               buildingLandName = Some(s"building land name 1"),
@@ -153,17 +171,23 @@ class PropertyOrLandAssetExtractorSpec extends AnyFreeSpec with Matchers
           val extraction = assetExtractor.extract(ua, businessAssets)
 
           extraction.value.get(PropertyOrLandDescriptionPage(0)) mustNot be(defined)
-          extraction.value.get(PropertyOrLandAddressYesNoPage(0)).get mustBe true
+          extraction.value.get(PropertyOrLandAddressYesNoPage(0)).get   mustBe true
           extraction.value.get(PropertyOrLandAddressUkYesNoPage(0)).get mustBe true
-          extraction.value.get(PropertyOrLandAddressPage(0)).get mustBe UKAddress("line1", "line2", None, None, "NE1 1AA")
-          extraction.value.get(PropertyOrLandTotalValuePage(0)).get mustBe 2000L
+          extraction.value.get(PropertyOrLandAddressPage(0)).get        mustBe UKAddress(
+            "line1",
+            "line2",
+            None,
+            None,
+            "NE1 1AA"
+          )
+          extraction.value.get(PropertyOrLandTotalValuePage(0)).get     mustBe 2000L
           extraction.value.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe false
-          extraction.value.get(PropertyLandValueTrustPage(0)).get mustBe 1000L
+          extraction.value.get(PropertyLandValueTrustPage(0)).get       mustBe 1000L
 
-          extraction.value.get(PropertyOrLandDescriptionPage(1)).get mustBe "building land name 1"
-          extraction.value.get(PropertyOrLandAddressYesNoPage(1)).get mustBe false
+          extraction.value.get(PropertyOrLandDescriptionPage(1)).get    mustBe "building land name 1"
+          extraction.value.get(PropertyOrLandAddressYesNoPage(1)).get   mustBe false
           extraction.value.get(PropertyOrLandAddressPage(1)) mustNot be(defined)
-          extraction.value.get(PropertyOrLandTotalValuePage(1)).get mustBe 2000L
+          extraction.value.get(PropertyOrLandTotalValuePage(1)).get     mustBe 2000L
           extraction.value.get(TrustOwnAllThePropertyOrLandPage(1)).get mustBe true
           extraction.value.get(PropertyLandValueTrustPage(1)) mustNot be(defined)
 
@@ -179,28 +203,44 @@ class PropertyOrLandAssetExtractorSpec extends AnyFreeSpec with Matchers
           extraction mustBe Symbol("right")
 
           extraction.value.get(PropertyOrLandDescriptionPage(0)) mustNot be(defined)
-          extraction.value.get(PropertyOrLandAddressYesNoPage(0)).get mustBe true
+          extraction.value.get(PropertyOrLandAddressYesNoPage(0)).get   mustBe true
           extraction.value.get(PropertyOrLandAddressUkYesNoPage(0)).get mustBe false
-          extraction.value.get(PropertyOrLandAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "FR")
-          extraction.value.get(PropertyOrLandTotalValuePage(0)).get mustBe 2000L
+          extraction.value.get(PropertyOrLandAddressPage(0)).get        mustBe InternationalAddress(
+            "line 0",
+            "line2",
+            None,
+            "FR"
+          )
+          extraction.value.get(PropertyOrLandTotalValuePage(0)).get     mustBe 2000L
           extraction.value.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe false
-          extraction.value.get(PropertyLandValueTrustPage(0)).get mustBe 1000L
+          extraction.value.get(PropertyLandValueTrustPage(0)).get       mustBe 1000L
 
           extraction.value.get(PropertyOrLandDescriptionPage(1)) mustNot be(defined)
-          extraction.value.get(PropertyOrLandAddressYesNoPage(1)).get mustBe true
+          extraction.value.get(PropertyOrLandAddressYesNoPage(1)).get   mustBe true
           extraction.value.get(PropertyOrLandAddressUkYesNoPage(1)).get mustBe true
-          extraction.value.get(PropertyOrLandAddressPage(1)).get mustBe UKAddress("line 1", "line2", None, None, "NE1 1AA")
-          extraction.value.get(PropertyOrLandTotalValuePage(1)).get mustBe 2000L
+          extraction.value.get(PropertyOrLandAddressPage(1)).get        mustBe UKAddress(
+            "line 1",
+            "line2",
+            None,
+            None,
+            "NE1 1AA"
+          )
+          extraction.value.get(PropertyOrLandTotalValuePage(1)).get     mustBe 2000L
           extraction.value.get(TrustOwnAllThePropertyOrLandPage(1)).get mustBe false
-          extraction.value.get(PropertyLandValueTrustPage(1)).get mustBe 1000L
+          extraction.value.get(PropertyLandValueTrustPage(1)).get       mustBe 1000L
 
           extraction.value.get(PropertyOrLandDescriptionPage(2)) mustNot be(defined)
-          extraction.value.get(PropertyOrLandAddressYesNoPage(2)).get mustBe true
+          extraction.value.get(PropertyOrLandAddressYesNoPage(2)).get   mustBe true
           extraction.value.get(PropertyOrLandAddressUkYesNoPage(2)).get mustBe false
-          extraction.value.get(PropertyOrLandAddressPage(2)).get mustBe InternationalAddress("line 2", "line2", None, "ES")
-          extraction.value.get(PropertyOrLandTotalValuePage(2)).get mustBe 2000L
+          extraction.value.get(PropertyOrLandAddressPage(2)).get        mustBe InternationalAddress(
+            "line 2",
+            "line2",
+            None,
+            "ES"
+          )
+          extraction.value.get(PropertyOrLandTotalValuePage(2)).get     mustBe 2000L
           extraction.value.get(TrustOwnAllThePropertyOrLandPage(1)).get mustBe false
-          extraction.value.get(PropertyLandValueTrustPage(2)).get mustBe 1000L
+          extraction.value.get(PropertyLandValueTrustPage(2)).get       mustBe 1000L
 
         }
 
@@ -221,16 +261,16 @@ class PropertyOrLandAssetExtractorSpec extends AnyFreeSpec with Matchers
             val userAnswers = assetExtractor.updateUserAnswers(emptyUserAnswers, partOwnedProperty, 0).value
 
             userAnswers.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe false
-            userAnswers.get(PropertyLandValueTrustPage(0)).get mustBe num1000
-            userAnswers.get(PropertyOrLandTotalValuePage(0)).get mustBe num2000
+            userAnswers.get(PropertyLandValueTrustPage(0)).get       mustBe num1000
+            userAnswers.get(PropertyOrLandTotalValuePage(0)).get     mustBe num2000
           }
 
           "sets full ownership correctly" in {
             val userAnswers = assetExtractor.updateUserAnswers(emptyUserAnswers, fullyOwnedProperty, 0).value
 
             userAnswers.get(TrustOwnAllThePropertyOrLandPage(0)).get mustBe true
-            userAnswers.get(PropertyLandValueTrustPage(0)) mustBe None
-            userAnswers.get(PropertyOrLandTotalValuePage(0)).get mustBe num2000
+            userAnswers.get(PropertyLandValueTrustPage(0))           mustBe None
+            userAnswers.get(PropertyOrLandTotalValuePage(0)).get     mustBe num2000
           }
         }
       }

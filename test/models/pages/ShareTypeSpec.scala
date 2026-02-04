@@ -32,10 +32,8 @@ class ShareTypeSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChe
 
       val gen = Gen.oneOf(ShareType.values.toSeq)
 
-      forAll(gen) {
-        shareType =>
-
-          JsString(shareType.toString).validate[ShareType].asOpt.value mustEqual shareType
+      forAll(gen) { shareType =>
+        JsString(shareType.toString).validate[ShareType].asOpt.value mustEqual shareType
       }
     }
 
@@ -43,10 +41,8 @@ class ShareTypeSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChe
 
       val gen = arbitrary[String] suchThat (!ShareType.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[ShareType] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[ShareType] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,11 +50,10 @@ class ShareTypeSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChe
 
       val gen = Gen.oneOf(ShareType.values.toSeq)
 
-      forAll(gen) {
-        shareType =>
-
-          Json.toJson(shareType) mustEqual JsString(shareType.toString)
+      forAll(gen) { shareType =>
+        Json.toJson(shareType) mustEqual JsString(shareType.toString)
       }
     }
   }
+
 }

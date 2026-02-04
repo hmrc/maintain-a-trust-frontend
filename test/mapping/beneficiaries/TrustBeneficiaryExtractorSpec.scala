@@ -26,8 +26,8 @@ import org.scalatest.EitherValues
 import pages.beneficiaries.trust._
 import utils.Constants.{DE, GB}
 
-class TrustBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
-  with EitherValues with Generators with SpecBaseHelpers {
+class TrustBeneficiaryExtractorSpec
+    extends AnyFreeSpec with Matchers with EitherValues with Generators with SpecBaseHelpers {
 
   def generateTrust(index: Int) = DisplayTrustBeneficiaryTrustType(
     lineNo = Some(s"$index"),
@@ -66,7 +66,7 @@ class TrustBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
       case _ => None
     }
 
-  val trustExtractor : TrustBeneficiaryExtractor =
+  val trustExtractor: TrustBeneficiaryExtractor =
     injector.instanceOf[TrustBeneficiaryExtractor]
 
   "Trust Beneficiary Extractor" - {
@@ -92,23 +92,25 @@ class TrustBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
       "for a 4mld taxable trust" - {
 
         "should not populate Country Of Residence pages" in {
-          val trust = List(DisplayTrustBeneficiaryTrustType(
-            lineNo = Some(s"1"),
-            bpMatchStatus = Some("01"),
-            organisationName = s"Trust 1",
-            beneficiaryDiscretion = None,
-            beneficiaryShareOfIncome = None,
-            countryOfResidence = Some("FR"),
-            identification = None,
-            entityStart = "2019-11-26"
-          ))
+          val trust = List(
+            DisplayTrustBeneficiaryTrustType(
+              lineNo = Some(s"1"),
+              bpMatchStatus = Some("01"),
+              organisationName = s"Trust 1",
+              beneficiaryDiscretion = None,
+              beneficiaryShareOfIncome = None,
+              countryOfResidence = Some("FR"),
+              identification = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUtr
 
           val extraction = trustExtractor.extract(ua, trust)
 
-          extraction.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 1"
-          extraction.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(TrustBeneficiaryNamePage(0)).get            mustBe "Trust 1"
+          extraction.value.get(TrustBeneficiaryMetaData(0)).get            mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.value.get(TrustBeneficiaryDiscretionYesNoPage(0)).get mustBe true
           extraction.value.get(TrustBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
           extraction.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(0)) mustNot be(defined)
@@ -116,7 +118,7 @@ class TrustBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(TrustBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
           extraction.value.get(TrustBeneficiaryUtrPage(0)) mustNot be(defined)
           extraction.value.get(TrustBeneficiarySafeIdPage(0)) mustNot be(defined)
-          extraction.value.get(TrustBeneficiaryAddressYesNoPage(0)).get mustBe false
+          extraction.value.get(TrustBeneficiaryAddressYesNoPage(0)).get    mustBe false
           extraction.value.get(TrustBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
           extraction.value.get(TrustBeneficiaryAddressPage(0)) mustNot be(defined)
         }
@@ -125,31 +127,33 @@ class TrustBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
       "for a 5mld taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val trust = List(DisplayTrustBeneficiaryTrustType(
-            lineNo = Some(s"1"),
-            bpMatchStatus = Some("01"),
-            organisationName = s"Trust 1",
-            beneficiaryDiscretion = None,
-            beneficiaryShareOfIncome = None,
-            countryOfResidence = None,
-            identification = None,
-            entityStart = "2019-11-26"
-          ))
+          val trust = List(
+            DisplayTrustBeneficiaryTrustType(
+              lineNo = Some(s"1"),
+              bpMatchStatus = Some("01"),
+              organisationName = s"Trust 1",
+              beneficiaryDiscretion = None,
+              beneficiaryShareOfIncome = None,
+              countryOfResidence = None,
+              identification = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUtr.copy(isUnderlyingData5mld = true)
 
           val extraction = trustExtractor.extract(ua, trust)
 
-          extraction.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 1"
-          extraction.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
-          extraction.value.get(TrustBeneficiaryDiscretionYesNoPage(0)).get mustBe true
+          extraction.value.get(TrustBeneficiaryNamePage(0)).get                    mustBe "Trust 1"
+          extraction.value.get(TrustBeneficiaryMetaData(0)).get                    mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(TrustBeneficiaryDiscretionYesNoPage(0)).get         mustBe true
           extraction.value.get(TrustBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
           extraction.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe false
           extraction.value.get(TrustBeneficiaryCountryOfResidenceInTheUkYesNoPage(0)) mustNot be(defined)
           extraction.value.get(TrustBeneficiaryCountryOfResidencePage(0)) mustNot be(defined)
           extraction.value.get(TrustBeneficiaryUtrPage(0)) mustNot be(defined)
           extraction.value.get(TrustBeneficiarySafeIdPage(0)) mustNot be(defined)
-          extraction.value.get(TrustBeneficiaryAddressYesNoPage(0)).get mustBe false
+          extraction.value.get(TrustBeneficiaryAddressYesNoPage(0)).get            mustBe false
           extraction.value.get(TrustBeneficiaryAddressUKYesNoPage(0)) mustNot be(defined)
           extraction.value.get(TrustBeneficiaryAddressPage(0)) mustNot be(defined)
         }
@@ -203,9 +207,20 @@ class TrustBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
           extraction.value.get(TrustBeneficiaryAddressYesNoPage(1)).get mustBe false
           extraction.value.get(TrustBeneficiaryAddressYesNoPage(2)).get mustBe true
 
-          extraction.value.get(TrustBeneficiaryAddressPage(0)).get mustBe InternationalAddress("line 0", "line2", None, "DE")
+          extraction.value.get(TrustBeneficiaryAddressPage(0)).get mustBe InternationalAddress(
+            "line 0",
+            "line2",
+            None,
+            "DE"
+          )
           extraction.value.get(TrustBeneficiaryAddressPage(1)) mustNot be(defined)
-          extraction.value.get(TrustBeneficiaryAddressPage(2)).get mustBe UKAddress("line 2", "line2", None, None, "NE11NE")
+          extraction.value.get(TrustBeneficiaryAddressPage(2)).get mustBe UKAddress(
+            "line 2",
+            "line2",
+            None,
+            None,
+            "NE11NE"
+          )
 
           extraction.value.get(TrustBeneficiaryAddressUKYesNoPage(0)).get mustBe false
           extraction.value.get(TrustBeneficiaryAddressUKYesNoPage(1)) mustNot be(defined)
@@ -217,23 +232,25 @@ class TrustBeneficiaryExtractorSpec extends AnyFreeSpec with Matchers
       "for a non taxable trust" - {
 
         "with minimum data must return user answers updated" in {
-          val trust = List(DisplayTrustBeneficiaryTrustType(
-            lineNo = Some(s"1"),
-            bpMatchStatus = Some("01"),
-            organisationName = s"Trust 1",
-            beneficiaryDiscretion = None,
-            beneficiaryShareOfIncome = None,
-            countryOfResidence = None,
-            identification = None,
-            entityStart = "2019-11-26"
-          ))
+          val trust = List(
+            DisplayTrustBeneficiaryTrustType(
+              lineNo = Some(s"1"),
+              bpMatchStatus = Some("01"),
+              organisationName = s"Trust 1",
+              beneficiaryDiscretion = None,
+              beneficiaryShareOfIncome = None,
+              countryOfResidence = None,
+              identification = None,
+              entityStart = "2019-11-26"
+            )
+          )
 
           val ua = emptyUserAnswersForUrn
 
           val extraction = trustExtractor.extract(ua, trust)
 
-          extraction.value.get(TrustBeneficiaryNamePage(0)).get mustBe "Trust 1"
-          extraction.value.get(TrustBeneficiaryMetaData(0)).get mustBe MetaData("1", Some("01"), "2019-11-26")
+          extraction.value.get(TrustBeneficiaryNamePage(0)).get                    mustBe "Trust 1"
+          extraction.value.get(TrustBeneficiaryMetaData(0)).get                    mustBe MetaData("1", Some("01"), "2019-11-26")
           extraction.value.get(TrustBeneficiaryDiscretionYesNoPage(0)) mustNot be(defined)
           extraction.value.get(TrustBeneficiaryShareOfIncomePage(0)) mustNot be(defined)
           extraction.value.get(TrustBeneficiaryCountryOfResidenceYesNoPage(0)).get mustBe false
