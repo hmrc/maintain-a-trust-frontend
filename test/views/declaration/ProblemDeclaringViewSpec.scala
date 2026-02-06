@@ -18,6 +18,7 @@ package views.declaration
 
 import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
+import views.html.CustomErrorTemplate
 import views.html.declaration.ProblemDeclaringView
 
 class ProblemDeclaringViewSpec extends ViewBehaviours {
@@ -29,6 +30,23 @@ class ProblemDeclaringViewSpec extends ViewBehaviours {
     val applyView = view.apply(AffinityGroup.Agent)(fakeRequest, messages)
 
     behave like normalPage(applyView, "problemDeclaring", "p1", "p2", "contact.link", "p3", "return.link")
+  }
+
+  "ProblemDeclaring customErrorView" must {
+
+    val view = viewFor[CustomErrorTemplate]()
+
+    val applyView = view.apply(messages("customError.title"), "Error")(fakeRequest, messages)
+
+    behave like normalPage(
+      applyView,
+      "customError",
+      "paragraph1",
+      "subheading",
+      "paragraph2",
+      "paragraph3",
+      "paragraph4"
+    )
   }
 
 }

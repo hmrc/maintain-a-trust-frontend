@@ -89,22 +89,31 @@ class AgentDeclarationController @Inject() (
     } yield Redirect(controllers.declaration.routes.ConfirmationController.onPageLoad())
     result.value.flatMap {
       case Right(call)                               => Future.successful(call)
-      case Left(FormValidationError(formBadRequest)) => Future.successful(formBadRequest)
+      case Left(FormValidationError(formBadRequest)) =>
+        logger.warn(
+          s"[$className][onSubmit][FormValidationError][Session ID: ${utils.Session.id(hc)}] User was not an agent."
+        )
+        Future.successful(formBadRequest)
       case Left(WrongUserType())                     =>
-        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] User was not an agent.")
+        logger.warn(
+          s"[$className][onSubmit][WrongUserType][Session ID: ${utils.Session.id(hc)}] User was not an agent."
+        )
         Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
       case Left(DeclarationError())                  =>
-        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] problem declaring trust.")
+        logger.warn(
+          s"[$className][onSubmit][DeclarationError][Session ID: ${utils.Session.id(hc)}] problem declaring trust."
+        )
         Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-      case Left(badReq())                  =>
-        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] problem declaring trust.")
-        Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-
+      case Left(badReq())                            =>
+        logger.warn(s"[$className][onSubmit][badReq][Session ID: ${utils.Session.id(hc)}] problem declaring trust.")
+        Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.customErrorView()))
       case Left(NoData)                              =>
-        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Failed to get agency address")
+        logger.warn(s"[$className][onSubmit][NoData][Session ID: ${utils.Session.id(hc)}] Failed to get agency address")
         Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
       case Left(_)                                   =>
-        logger.warn(s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers")
+        logger.warn(
+          s"[$className][onSubmit][Session ID: ${utils.Session.id(hc)}] Error while storing user answers"
+        )
         errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
     }
   }
