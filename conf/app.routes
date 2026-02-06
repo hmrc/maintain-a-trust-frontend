@@ -95,6 +95,8 @@ GET        /status                                      controllers.TrustStatusC
 
 GET        /problem-declaring                           controllers.declaration.ProblemDeclaringController.onPageLoad()
 
+GET        /invalid-request                             controllers.declaration.ProblemDeclaringController.customErrorView()
+
 GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
 
 GET        /last-declaration                            controllers.print.PrintLastDeclaredAnswersController.onPageLoad()

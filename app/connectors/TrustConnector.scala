@@ -141,11 +141,11 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
       .execute[HttpResponse](httpReads, ec)
       .map { response =>
         response.status match {
-          case OK     => Right(response.json.as[TVNResponse])
+          case OK          => Right(response.json.as[TVNResponse])
           case BAD_REQUEST =>
             logger.warn(s"[$className][declare] 400 Bad Request")
             Left(badReq())
-          case status =>
+          case status      =>
             logger.error(
               s"[$className][declare] problem declaring trust, received a non successful status code: $status"
             )
