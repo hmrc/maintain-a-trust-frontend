@@ -18,7 +18,7 @@ package connectors
 
 import cats.data.EitherT
 import config.FrontendAppConfig
-import models.errors.{BadRequestError, DeclarationError, badReq}
+import models.errors.{BadRequestError, DeclarationError}
 import models.http.{DeclarationForApi, TVNResponse, TrustsResponse}
 import models.{FirstTaxYearAvailable, MigrationTaskStatus, TrustDetails}
 import play.api.http.HeaderNames
