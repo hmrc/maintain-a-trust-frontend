@@ -18,7 +18,7 @@ package connectors
 
 import cats.data.EitherT
 import config.FrontendAppConfig
-import models.errors.{DeclarationError, badReq}
+import models.errors.{BadRequestError, DeclarationError, badReq}
 import models.http.{DeclarationForApi, TVNResponse, TrustsResponse}
 import models.{FirstTaxYearAvailable, MigrationTaskStatus, TrustDetails}
 import play.api.http.HeaderNames
@@ -144,7 +144,7 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
           case OK          => Right(response.json.as[TVNResponse])
           case BAD_REQUEST =>
             logger.warn(s"[$className][declare] 400 Bad Request")
-            Left(badReq())
+            Left(BadRequestError())
           case status      =>
             logger.error(
               s"[$className][declare] problem declaring trust, received a non successful status code: $status"

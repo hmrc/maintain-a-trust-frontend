@@ -104,7 +104,7 @@ class AgentDeclarationController @Inject() (
           s"[$className][onSubmit][DeclarationError][Session ID: ${utils.Session.id(hc)}] problem declaring trust."
         )
         Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
-      case Left(badReq())                            =>
+      case Left(BadRequestError())                            =>
         logger.warn(s"[$className][onSubmit][badReq][Session ID: ${utils.Session.id(hc)}] problem declaring trust.")
         Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.customErrorView()))
       case Left(NoData)                              =>

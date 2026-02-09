@@ -26,7 +26,7 @@ final case class FormValidationError(call: Result) extends TrustErrors
 final case class DeclarationError() extends TrustErrors
 case object NoData extends TrustErrors
 final case class WrongUserType() extends TrustErrors
-final case class badReq() extends TrustErrors
+final case class BadRequestError() extends TrustErrors
 
 sealed trait PlaybackExtractionErrors extends TrustErrors
 
