@@ -34,19 +34,49 @@ class ProblemDeclaringViewSpec extends ViewBehaviours {
 
   "ProblemDeclaring customErrorView" must {
 
-    val view = viewFor[CustomErrorTemplate]()
+    "show expected content" when {
 
-    val applyView = view.apply(messages("error.summary.title"), "Error", true)(fakeRequest, messages)
+      val view = viewFor[CustomErrorTemplate]()
 
-    val doc = asDocument(applyView)
+      val applyView =
+        view.apply(messages("error.summary.title"), "Error", showBadRequestContent = false)(fakeRequest, messages)
 
-    behave like assertEqualsMessage(doc, "title", "error.summary.title")
+      behave like normalPage(
+        applyView,
+        "customError",
+        "paragraph1",
+        "subheading",
+        "paragraph2",
+        "paragraph2.telePhone",
+        "paragraph3",
+        "paragraph3.mobile",
+        "paragraph4",
+        "paragraph4.text1",
+        "paragraph4.text2"
+      )
+    }
 
-    behave like assertPageTitleEqualsMessage(doc, "customError.heading")
+    "show expected content for a bad request response" when {
 
-    behave like assertContainsText(doc, messages("customError.badrequest.paragraph1"))
+      val view = viewFor[CustomErrorTemplate]()
 
-    behave like assertContainsText(doc, messages("customError.badrequest.paragraph3.mobile"))
+      val applyView =
+        view.apply(messages("error.summary.title"), "Error", showBadRequestContent = true)(fakeRequest, messages)
+
+      behave like normalPage(
+        applyView,
+        "customError",
+        "badrequest.paragraph1",
+        "subheading",
+        "paragraph2",
+        "paragraph2.telePhone",
+        "paragraph3",
+        "badrequest.paragraph3.mobile",
+        "paragraph4",
+        "paragraph4.text1",
+        "paragraph4.text2"
+      )
+    }
 
   }
 
