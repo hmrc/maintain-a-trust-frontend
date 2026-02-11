@@ -34,7 +34,7 @@ headingComp: Heading
             <h1 class="@headingSize govuk-!-margin-bottom-6">@messages("customError.heading")</h1>
 
             @if(showBadRequestContent) {
-                <p>@messages("badrequest.paragraph1")</p>
+                <p>@messages("customError.badrequest.paragraph1")</p>
             } else {
                 <p>@messages("customError.paragraph1")</p>
             }
@@ -47,7 +47,7 @@ headingComp: Heading
 
                 <strong>
                     @if(showBadRequestContent){
-                        @messages("badrequest.paragraph3.mobile")
+                        @messages("customError.badrequest.paragraph3.mobile")
                     }else{
                         @messages("customError.paragraph3.mobile")
                     }

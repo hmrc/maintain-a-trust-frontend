@@ -91,7 +91,7 @@ class AgentDeclarationController @Inject() (
       case Right(call)                               => Future.successful(call)
       case Left(FormValidationError(formBadRequest)) =>
         logger.warn(
-          s"[$className][onSubmit][FormValidationError][Session ID: ${utils.Session.id(hc)}] User was not an agent."
+          s"[$className][onSubmit][FormValidationError][Session ID: ${utils.Session.id(hc)}]"
         )
         Future.successful(formBadRequest)
       case Left(WrongUserType())                     =>

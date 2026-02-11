@@ -1258,5 +1258,5 @@ customError.paragraph3.mobile = +44 304 123 1472
 customError.paragraph4 = Opening times:
 customError.paragraph4.text1 = Monday to Friday: 9am to 5pm
 customError.paragraph4.text2 = Closed weekends and bank holidays.
-badrequest.paragraph1 = We need to speak to you to confirm you are authorised to view and manage the trust’s details.
-badrequest.paragraph3.mobile = +44 300 123 1072
+customError.badrequest.paragraph1 = We need to speak to you to confirm you are authorised to view and manage the trust’s details.
+customError.badrequest.paragraph3.mobile = +44 300 123 1072
