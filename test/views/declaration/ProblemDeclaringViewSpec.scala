@@ -36,17 +36,18 @@ class ProblemDeclaringViewSpec extends ViewBehaviours {
 
     val view = viewFor[CustomErrorTemplate]()
 
-    val applyView = view.apply(messages("customError.title"), "Error")(fakeRequest, messages)
+    val applyView = view.apply(messages("error.summary.title"), "Error", true)(fakeRequest, messages)
 
-    behave like normalPage(
-      applyView,
-      "customError",
-      "paragraph1",
-      "subheading",
-      "paragraph2",
-      "paragraph3",
-      "paragraph4"
-    )
+    val doc = asDocument(applyView)
+
+    behave like assertEqualsMessage(doc, "title", "error.summary.title")
+
+    behave like assertPageTitleEqualsMessage(doc, "customError.heading")
+
+    behave like assertContainsText(doc, messages("customError.badrequest.paragraph1"))
+
+    behave like assertContainsText(doc, messages("customError.badrequest.paragraph3.mobile"))
+
   }
 
 }

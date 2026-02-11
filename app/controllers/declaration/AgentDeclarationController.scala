@@ -105,7 +105,9 @@ class AgentDeclarationController @Inject() (
         )
         Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.onPageLoad()))
       case Left(BadRequestError())                   =>
-        logger.warn(s"[$className][onSubmit][BadRequestError][Session ID: ${utils.Session.id(hc)}] problem declaring trust.")
+        logger.warn(
+          s"[$className][onSubmit][BadRequestError][Session ID: ${utils.Session.id(hc)}] problem declaring trust."
+        )
         Future.successful(Redirect(controllers.declaration.routes.ProblemDeclaringController.customErrorView()))
       case Left(NoData)                              =>
         logger.warn(s"[$className][onSubmit][NoData][Session ID: ${utils.Session.id(hc)}] Failed to get agency address")
