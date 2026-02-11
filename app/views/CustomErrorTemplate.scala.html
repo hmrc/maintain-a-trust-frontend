@@ -23,7 +23,7 @@ mainTemplate: MainTemplate,
 headingComp: Heading
 )
 
-@(pageTitle: String, heading: String, headingSize: String = "govuk-heading-xl")(implicit request: RequestHeader, messages: Messages)
+@(pageTitle: String, heading: String, showBadRequestContent:Boolean=false, headingSize: String = "govuk-heading-xl")(implicit request: RequestHeader, messages: Messages)
 
     @contentHeader = {
         @headingComp(heading)
@@ -32,11 +32,27 @@ headingComp: Heading
     @mainContent = {
         <div>
             <h1 class="@headingSize govuk-!-margin-bottom-6">@messages("customError.heading")</h1>
-            <p>@messages("customError.paragraph1")</p>
+
+            @if(showBadRequestContent) {
+                <p>@messages("badrequest.paragraph1")</p>
+            } else {
+                <p>@messages("customError.paragraph1")</p>
+            }
+
+
             <h2>@messages("customError.subheading")</h2>
             <p>@messages("customError.paragraph2")<br><strong>@messages("customError.paragraph2.telePhone")</strong></p>
 
-            <p>@messages("customError.paragraph3")<br><strong>@messages("customError.paragraph3.mobile")</strong></p>
+            <p>@messages("customError.paragraph3")<br>
+
+                <strong>
+                    @if(showBadRequestContent){
+                            @messages("badrequest.paragraph3.mobile")
+                        }else{
+                            @messages("customError.paragraph3.mobile")
+                    }
+                </strong>
+            </p>
 
             <p>@messages("customError.paragraph4")<br>
                 <strong>@messages("customError.paragraph4.text1")</strong><br>
