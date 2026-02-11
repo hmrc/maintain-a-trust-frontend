@@ -40,7 +40,7 @@ class ProblemDeclaringController @Inject() (
   }
 
   def customErrorView(): Action[AnyContent] = actions.authWithData.async { implicit request =>
-    errorHandler.customErrorPage("Error", "Error", true).map { html =>
+    errorHandler.customErrorPage("error.summary.title", "Error", true).map { html =>
       InternalServerError(html)
     }
   }
