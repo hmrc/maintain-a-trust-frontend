@@ -18,17 +18,18 @@ package connectors
 
 import cats.data.EitherT
 import config.FrontendAppConfig
-import models.errors.DeclarationError
+import models.errors.{BadRequestError, DeclarationError}
 import models.http.{DeclarationForApi, TVNResponse, TrustsResponse}
 import models.{FirstTaxYearAvailable, MigrationTaskStatus, TrustDetails}
 import play.api.http.HeaderNames
-import play.api.http.Status.OK
+import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.json.{JsBoolean, Json}
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 import utils.TrustEnvelope.TrustEnvelope
+
 import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -140,8 +141,11 @@ class TrustConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) e
       .execute[HttpResponse](httpReads, ec)
       .map { response =>
         response.status match {
-          case OK     => Right(response.json.as[TVNResponse])
-          case status =>
+          case OK          => Right(response.json.as[TVNResponse])
+          case BAD_REQUEST =>
+            logger.warn(s"[$className][declare] 400 Bad Request")
+            Left(BadRequestError())
+          case status      =>
             logger.error(
               s"[$className][declare] problem declaring trust, received a non successful status code: $status"
             )

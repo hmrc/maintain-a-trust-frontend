@@ -1248,6 +1248,7 @@ individualConfirmation.paragraph9 = If any of the trust details change before yo
 
 leadTrustee.default = the lead trustee
 
+customError.title = There is a problem
 customError.heading = There is a problem
 customError.paragraph1 = We need to speak to you to help you to get the proof of registration for the trust.
 customError.subheading = Contact the trusts helpline
@@ -1258,3 +1259,5 @@ customError.paragraph3.mobile = +44 304 123 1472
 customError.paragraph4 = Opening times:
 customError.paragraph4.text1 = Monday to Friday: 9am to 5pm
 customError.paragraph4.text2 = Closed weekends and bank holidays.
+customError.badrequest.paragraph1 = We need to speak to you to confirm you are authorised to view and manage the trust’s details.
+customError.badrequest.paragraph3.mobile = +44 300 123 1072

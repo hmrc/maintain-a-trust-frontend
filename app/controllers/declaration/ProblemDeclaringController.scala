@@ -18,21 +18,31 @@ package controllers.declaration
 
 import com.google.inject.Inject
 import controllers.actions.Actions
+import handlers.ErrorHandler
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.declaration.ProblemDeclaringView
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class ProblemDeclaringController @Inject() (
   override val messagesApi: MessagesApi,
   actions: Actions,
   problemDeclaringView: ProblemDeclaringView,
+  errorHandler: ErrorHandler,
   val controllerComponents: MessagesControllerComponents
-) extends FrontendBaseController with I18nSupport {
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.authWithData.async { implicit request =>
     Future.successful(InternalServerError(problemDeclaringView(request.user.affinityGroup)))
+  }
+
+  def customErrorView(): Action[AnyContent] = actions.authWithData.async { implicit request =>
+    errorHandler.customErrorPage("error.summary.title", "Error", true).map { html =>
+      InternalServerError(html)
+    }
   }
 
 }

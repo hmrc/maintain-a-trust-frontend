@@ -1109,7 +1109,7 @@ nonEeaBusiness.governingCountry.checkYourAnswersLabel = Cyfreithiau pa wlad sy�
 
 leadTrustee.default = y prif ymddiriedolwr
 
-
+customError.title=Mae problem wedi codi
 customError.heading = Mae problem wedi codi
 customError.paragraph1 = Mae angen i ni siarad â chi i’ch helpu i gael tystiolaeth o gofrestru’r ymddiriedolaeth.
 customError.subheading = Cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF
@@ -1120,3 +1120,5 @@ customError.paragraph3.mobile = +44 300 200 1900
 customError.paragraph4 = Oriau agor:
 customError.paragraph4.text1 = Dydd Llun i ddydd Gwener: 08:30 - 17:00
 customError.paragraph4.text2 = Ar gau ar benwythnosau a gwyliau banc.
+customError.badrequest.paragraph1 = Mae angen i ni siarad â chi er mwyn cadarnhau eich bod wedi’ch awdurdodi i fwrw golwg dros fanylion yr ymddiriedolaeth a’u rheoli.
+customError.badrequest.paragraph3.mobile = +44 300 123 1072

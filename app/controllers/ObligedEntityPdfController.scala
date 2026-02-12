@@ -50,7 +50,7 @@ class ObligedEntityPdfController @Inject() (
           logger.error(
             s"[$className][getPdf][Session ID: ${Session.id(hc)}][Identifier: $identifier] Error retrieving pdf: $response."
           )
-          errorHandler.customErrorPage("Error", "Error").map { html =>
+          errorHandler.customErrorPage("error.summary.title", "Error").map { html =>
             InternalServerError(html)
           }
       }

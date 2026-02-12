@@ -18,6 +18,7 @@ package views.declaration
 
 import uk.gov.hmrc.auth.core.AffinityGroup
 import views.behaviours.ViewBehaviours
+import views.html.CustomErrorTemplate
 import views.html.declaration.ProblemDeclaringView
 
 class ProblemDeclaringViewSpec extends ViewBehaviours {
@@ -29,6 +30,54 @@ class ProblemDeclaringViewSpec extends ViewBehaviours {
     val applyView = view.apply(AffinityGroup.Agent)(fakeRequest, messages)
 
     behave like normalPage(applyView, "problemDeclaring", "p1", "p2", "contact.link", "p3", "return.link")
+  }
+
+  "ProblemDeclaring customErrorView" must {
+
+    "show expected content" when {
+
+      val view = viewFor[CustomErrorTemplate]()
+
+      val applyView =
+        view.apply(messages("error.summary.title"), "Error", showBadRequestContent = false)(fakeRequest, messages)
+
+      behave like normalPage(
+        applyView,
+        "customError",
+        "paragraph1",
+        "subheading",
+        "paragraph2",
+        "paragraph2.telePhone",
+        "paragraph3",
+        "paragraph3.mobile",
+        "paragraph4",
+        "paragraph4.text1",
+        "paragraph4.text2"
+      )
+    }
+
+    "show expected content for a bad request response" when {
+
+      val view = viewFor[CustomErrorTemplate]()
+
+      val applyView =
+        view.apply(messages("error.summary.title"), "Error", showBadRequestContent = true)(fakeRequest, messages)
+
+      behave like normalPage(
+        applyView,
+        "customError",
+        "badrequest.paragraph1",
+        "subheading",
+        "paragraph2",
+        "paragraph2.telePhone",
+        "paragraph3",
+        "badrequest.paragraph3.mobile",
+        "paragraph4",
+        "paragraph4.text1",
+        "paragraph4.text2"
+      )
+    }
+
   }
 
 }

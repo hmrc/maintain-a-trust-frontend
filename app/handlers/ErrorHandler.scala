@@ -43,8 +43,10 @@ class ErrorHandler @Inject() (
     notFoundView()
   }
 
-  def customErrorPage(pageTitle: String, heading: String)(implicit rh: RequestHeader): Future[Html] = Future.successful {
-    customError(pageTitle, heading)
+  def customErrorPage(pageTitle: String, heading: String, showBadRequestContent: Boolean = false)(implicit
+    rh: RequestHeader
+  ): Future[Html] = Future.successful {
+    customError(pageTitle, heading, showBadRequestContent)
   }
 
 }
