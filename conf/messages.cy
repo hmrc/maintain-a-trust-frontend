@@ -1109,7 +1109,7 @@ nonEeaBusiness.governingCountry.checkYourAnswersLabel = Cyfreithiau pa wlad sy�
 
 leadTrustee.default = y prif ymddiriedolwr
 
-
+customError.title=Mae problem wedi codi
 customError.heading = Mae problem wedi codi
 customError.paragraph1 = Mae angen i ni siarad â chi i’ch helpu i gael tystiolaeth o gofrestru’r ymddiriedolaeth.
 customError.subheading = Cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF

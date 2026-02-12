@@ -1248,6 +1248,7 @@ individualConfirmation.paragraph9 = If any of the trust details change before yo
 
 leadTrustee.default = the lead trustee
 
+customError.title = There is a problem
 customError.heading = There is a problem
 customError.paragraph1 = We need to speak to you to help you to get the proof of registration for the trust.
 customError.subheading = Contact the trusts helpline
