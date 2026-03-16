@@ -189,7 +189,7 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
 
       val view: IVDownView = application.injector.instanceOf[IVDownView]
 
-      status(result) mustEqual SERVICE_UNAVAILABLE
+      status(result) mustEqual INTERNAL_SERVER_ERROR
 
       contentAsString(result) mustEqual
         view(utr, UTR)(request, messages).toString
