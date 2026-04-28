@@ -56,6 +56,12 @@ class ActiveSessionRepositoryImpl @Inject() (
           IndexOptions()
             .unique(false)
             .name("identifier-index")
+        ),
+        IndexModel(
+          ascending("internalId"),
+          IndexOptions()
+            .unique(false)
+            .name("internal-id-index")
         )
       ),
       replaceIndexes = config.dropIndexes
