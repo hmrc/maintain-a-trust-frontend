@@ -24,7 +24,7 @@ import mapping.UserAnswersExtractor
 import models.errors.TrustErrorWithRedirect
 import models.http._
 import models.requests.{DataRequest, OptionalDataRequest}
-import models.{TrustDetails, Underlying4mldTrustIn5mldMode, UserAnswers}
+import models.{IdentifierType, TrustDetails, URN, Underlying4mldTrustIn5mldMode, UserAnswers}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -34,6 +34,7 @@ import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.{Session, TrustEnvelope}
 import views.html.status._
+
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -167,20 +168,37 @@ class TrustStatusController @Inject() (
     }
 
   private def authenticateForIdentifierAndExtract(identifier: String, playback: GetTrust, fromVerify: Boolean)(implicit
-    request: OptionalDataRequest[AnyContent]
+                                                                                                               request: OptionalDataRequest[AnyContent]
   ): Future[Result] = {
     val expectedResult = for {
-      trustDetails                  <- trustConnector.getUntransformedTrustDetails(identifier)
-      userAnswers                   <- sessionService.initialiseUserAnswers(
-                                         identifier = identifier,
-                                         internalId = request.user.internalId,
-                                         isUnderlyingData5mld = trustDetails.is5mld,
-                                         isUnderlyingDataTaxable = trustDetails.isTaxable
-                                       )
-      dataRequest                    = DataRequest(request.request, userAnswers, request.user)
-      _                             <- TrustEnvelope.fromLeftResult(authenticationService.authenticateForIdentifier(identifier)(dataRequest, hc))
+      trustDetails <- trustConnector.getUntransformedTrustDetails(identifier)
       resultFromExtractedUserAnswer <-
-        TrustEnvelope.fromFuture(extract(userAnswers, identifier, playback, fromVerify, trustDetails))
+        if (trustDetails.isTaxable && IdentifierType(identifier) == URN) {
+          logger.warn(
+            s"[$className][authenticateForIdentifierAndExtract][Session ID: ${Session.id(hc)}] " +
+              s"$identifier is a URN but trust has already migrated to taxable, blocking claim"
+          )
+          TrustEnvelope(
+            Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())
+          ) //UCD to design new page
+        } else {
+          for {
+            userAnswers <- sessionService.initialiseUserAnswers(
+              identifier = identifier,
+              internalId = request.user.internalId,
+              isUnderlyingData5mld = trustDetails.is5mld,
+              isUnderlyingDataTaxable = trustDetails.isTaxable
+            )
+            dataRequest = DataRequest(request.request, userAnswers, request.user)
+            _<- TrustEnvelope.fromLeftResult(
+              authenticationService.authenticateForIdentifier(identifier)(dataRequest, hc)
+            )
+            extractedResult <- TrustEnvelope.fromFuture(
+              extract(userAnswers, identifier, playback, fromVerify, trustDetails)
+            )
+          } yield extractedResult
+        }
+
     } yield resultFromExtractedUserAnswer
 
     expectedResult.value.map {
