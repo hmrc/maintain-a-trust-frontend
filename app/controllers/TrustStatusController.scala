@@ -292,4 +292,5 @@ class TrustStatusController @Inject() (
     )
 
   }
+
 }
