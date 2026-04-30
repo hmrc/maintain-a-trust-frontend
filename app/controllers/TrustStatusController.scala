@@ -31,6 +31,8 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.PlaybackRepository
 import services.{AuthenticationService, SessionService}
 import uk.gov.hmrc.auth.core.AffinityGroup
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.{Session, TrustEnvelope}
 import views.html.status._
@@ -48,6 +50,7 @@ class TrustStatusController @Inject() (
   ivDownView: IVDownView,
   trustConnector: TrustConnector,
   trustStoreConnector: TrustsStoreConnector,
+  auditConnector: AuditConnector,
   lockedView: TrustLockedView,
   alreadyClaimedView: TrustAlreadyClaimedView,
   playbackProblemContactHMRCView: PlaybackProblemContactHMRCView,
@@ -168,37 +171,27 @@ class TrustStatusController @Inject() (
     }
 
   private def authenticateForIdentifierAndExtract(identifier: String, playback: GetTrust, fromVerify: Boolean)(implicit
-                                                                                                               request: OptionalDataRequest[AnyContent]
+    request: OptionalDataRequest[AnyContent]
   ): Future[Result] = {
     val expectedResult = for {
-      trustDetails <- trustConnector.getUntransformedTrustDetails(identifier)
+      trustDetails                  <- trustConnector.getUntransformedTrustDetails(identifier)
+      _                              = if (trustDetails.isTaxable && IdentifierType(identifier) == URN) {
+                                         logger.warn(
+                                           s"[$className][authenticateForIdentifierAndExtract][Session ID: ${Session.id(hc)}] " +
+                                             s"$identifier is a URN but trust has already migrated to taxable"
+                                         )
+                                         sendAuditEvent(identifier)
+                                       }
+      userAnswers                   <- sessionService.initialiseUserAnswers(
+                                         identifier = identifier,
+                                         internalId = request.user.internalId,
+                                         isUnderlyingData5mld = trustDetails.is5mld,
+                                         isUnderlyingDataTaxable = trustDetails.isTaxable
+                                       )
+      dataRequest                    = DataRequest(request.request, userAnswers, request.user)
+      _                             <- TrustEnvelope.fromLeftResult(authenticationService.authenticateForIdentifier(identifier)(dataRequest, hc))
       resultFromExtractedUserAnswer <-
-        if (trustDetails.isTaxable && IdentifierType(identifier) == URN) {
-          logger.warn(
-            s"[$className][authenticateForIdentifierAndExtract][Session ID: ${Session.id(hc)}] " +
-              s"$identifier is a URN but trust has already migrated to taxable, blocking claim"
-          )
-          TrustEnvelope(
-            Redirect(routes.TrustStatusController.sorryThereHasBeenAProblem())
-          ) //UCD to design new page
-        } else {
-          for {
-            userAnswers <- sessionService.initialiseUserAnswers(
-              identifier = identifier,
-              internalId = request.user.internalId,
-              isUnderlyingData5mld = trustDetails.is5mld,
-              isUnderlyingDataTaxable = trustDetails.isTaxable
-            )
-            dataRequest = DataRequest(request.request, userAnswers, request.user)
-            _<- TrustEnvelope.fromLeftResult(
-              authenticationService.authenticateForIdentifier(identifier)(dataRequest, hc)
-            )
-            extractedResult <- TrustEnvelope.fromFuture(
-              extract(userAnswers, identifier, playback, fromVerify, trustDetails)
-            )
-          } yield extractedResult
-        }
-
+        TrustEnvelope.fromFuture(extract(userAnswers, identifier, playback, fromVerify, trustDetails))
     } yield resultFromExtractedUserAnswer
 
     expectedResult.value.map {
@@ -279,4 +272,24 @@ class TrustStatusController @Inject() (
     }
   }
 
+  private def sendAuditEvent(identifier: String)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Unit = {
+
+    val identifierKey: String = IdentifierType(identifier).toString
+
+    val auditData = Map(
+      "sessionId"   -> Session.id(hc),
+      "service"     -> "maintain-a-trust-frontend",
+      "event"       -> "Converting non taxable to taxable",
+      identifierKey -> identifier
+    )
+
+    auditConnector.sendExplicitAudit(
+      "MaintainATrustURNClaiming",
+      auditData
+    )
+
+  }
 }
