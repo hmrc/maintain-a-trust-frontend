@@ -41,7 +41,9 @@ class FakeDataRetrievalRefinerAction(
       case None              =>
         Future.successful(Right(OptionalDataRequest(request.request, None, request.user, utr)))
       case Some(userAnswers) =>
-        Future.successful(Right(OptionalDataRequest(request.request, Some(userAnswers), request.user, utr)))
+        Future.successful(
+          Right(OptionalDataRequest(request.request, Some(userAnswers), request.user, userAnswers.identifier))
+        )
     }
 
 }

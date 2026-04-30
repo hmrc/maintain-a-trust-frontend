@@ -24,7 +24,7 @@ import models.errors.{FailedToExtractData, ServerError, TrustErrors}
 import models.http._
 import models.{TrustDetails, UTR, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{verify, when}
 import org.scalatest.BeforeAndAfterEach
 import play.api.Application
 import play.api.http.Status.INTERNAL_SERVER_ERROR
@@ -38,6 +38,7 @@ import repositories.PlaybackRepository
 import services.{AuthenticationService, FakeAuthenticationService, FakeFailingAuthenticationService, SessionService}
 import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import views.html.status._
 
 import java.time.LocalDate
@@ -882,6 +883,93 @@ class TrustStatusControllerSpec extends SpecBase with BeforeAndAfterEach {
           }
         }
       }
+    }
+  }
+
+  "verify audit log" when {
+
+    "user claims the trust after the taxable migration" in new LocalSetup {
+
+      when(mockSessionService.initialiseUserAnswers(any(), any(), any(), any())(any(), any()))
+        .thenReturn(
+          EitherT[Future, TrustErrors, UserAnswers](
+            Future.successful(
+              Right(
+                emptyUserAnswersForUrn
+              )
+            )
+          )
+        )
+
+      val mockAuditConnector: AuditConnector = mock[AuditConnector]
+
+      lazy val request = FakeRequest(GET, routes.TrustStatusController.statusAfterVerify().url)
+
+      override lazy val application: Application = applicationBuilder(userAnswers = Some(emptyUserAnswersForUrn))
+        .overrides(
+          bind[TrustConnector].to(fakeTrustConnector),
+          bind[TrustsStoreConnector].to(fakeTrustStoreConnector),
+          bind[AuthenticationService].to(new FakeAuthenticationService()),
+          bind[UserAnswersExtractor].to(new FakeUserAnswerExtractor(Right(emptyUserAnswersForUrn))),
+          bind[AuditConnector].toInstance(mockAuditConnector),
+          bind[SessionService].toInstance(mockSessionService)
+        )
+        .build()
+
+      val payload: String =
+        Source
+          .fromInputStream(getClass.getResourceAsStream("/display-trust-non-taxable-with-taxable-true.json"))
+          .mkString
+
+      val json: JsValue = Json.parse(payload)
+
+      val getTrust: GetTrust = json.as[GetTrustDesResponse].getTrust.value
+
+      when(fakeTrustStoreConnector.get(any[String])(any(), any()))
+        .thenReturn(
+          EitherT[Future, TrustErrors, Option[TrustClaim]](
+            Future.successful(Right(Some(TrustClaim("urn", trustLocked = false, managedByAgent = false))))
+          )
+        )
+
+      when(fakeTrustConnector.playbackFromEtmp(any())(any(), any()))
+        .thenReturn(
+          EitherT[Future, TrustErrors, TrustsResponse](
+            Future.successful(Right(Processed(getTrust, "9873459837459837")))
+          )
+        )
+
+      when(fakeTrustConnector.getUntransformedTrustDetails(any())(any(), any()))
+        .thenReturn(
+          EitherT[Future, TrustErrors, TrustDetails](
+            Future.successful(
+              Right(
+                TrustDetails(
+                  LocalDate.now,
+                  trustTaxable = Some(true),
+                  expressTrust = Some(true),
+                  schedule3aExempt = Some(true)
+                )
+              )
+            )
+          )
+        )
+
+      when(fakePlaybackRepository.resetCache(any(), any(), any()))
+        .thenReturn(EitherT[Future, TrustErrors, Option[Boolean]](Future.successful(Right(Some(true)))))
+
+      when(fakePlaybackRepository.set(any()))
+        .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+
+      when(mockActiveSessionRepository.set(any()))
+        .thenReturn(EitherT[Future, TrustErrors, Boolean](Future.successful(Right(true))))
+
+      status(result) mustEqual SEE_OTHER
+
+      verify(mockAuditConnector).sendExplicitAudit(any(), any[Map[String, String]])(any(), any())
+
+      application.stop()
+
     }
   }
 
