@@ -281,8 +281,8 @@ class TrustStatusController @Inject() (
 
     val auditData = Map(
       "sessionId"   -> Session.id(hc),
-      "service"     -> "maintain-a-trust-frontend",
       "event"       -> "Converting non taxable to taxable",
+      "service"     -> "maintain-a-trust-frontend",
       identifierKey -> identifier
     )
 
