@@ -24,7 +24,7 @@ import mapping.UserAnswersExtractor
 import models.errors.TrustErrorWithRedirect
 import models.http._
 import models.requests.{DataRequest, OptionalDataRequest}
-import models.{IdentifierType, TrustDetails, Underlying4mldTrustIn5mldMode, UserAnswers}
+import models.{IdentifierType, TrustDetails, URN, Underlying4mldTrustIn5mldMode, UserAnswers}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -175,8 +175,8 @@ class TrustStatusController @Inject() (
   ): Future[Result] = {
     val expectedResult = for {
       trustDetails                  <- trustConnector.getUntransformedTrustDetails(identifier)
-      _                              = if (trustDetails.isTaxable && IdentifierType(identifier).toString.equalsIgnoreCase("urn")) {
-                                         logger.warn(
+      _                              = if (trustDetails.isTaxable && IdentifierType(identifier).toString.equalsIgnoreCase(URN.toString)) {
+                                         logger.info(
                                            s"[$className][authenticateForIdentifierAndExtract][Session ID: ${Session.id(hc)}] " +
                                              s"$identifier is a URN but trust has already migrated to taxable"
                                          )
