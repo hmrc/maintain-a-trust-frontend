@@ -112,8 +112,6 @@
 
     <p>@messages("obligedEntityPdfYesNo.p8")</p>
 
-    <h2 class="govuk-heading-l">@messages("obligedEntityPdfYesNo.question")</h2>
-
 }
 
 @main_template(
@@ -144,14 +142,9 @@
             },
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    content =  {
-                        HtmlContent(
-                            s"""<span class="govuk-caption-l">${messages("obligedEntityPdfYesNo.caption")}</span>
-                            |${messages("obligedEntityPdfYesNo.heading")}""".stripMargin
-                        )
-                    },
+                    content = Text(messages("obligedEntityPdfYesNo.question")),
                     isPageHeading = false,
-                    classes = Some("govuk-visually-hidden").getOrElse("govuk-fieldset__legend--l")
+                    classes = "govuk-fieldset__legend--l"
                 ))
             )),
             items = Seq(
