@@ -23,6 +23,8 @@
     legendClass: Option[String] = None,
     legendAsHeading: Boolean = true,
     caption: Option[String] = None,
+    yesLabel : Option[String] = None,
+    noLabel  : Option[String] = None
 )(implicit messages: Messages)
 
 @govukRadios(Radios(
@@ -50,13 +52,13 @@
             id = Some(field.id + "-yes"),
             value = Some("true"),
             checked = field.value.contains("true"),
-            content = Text(messages("site.yes"))
+            content = Text(yesLabel.getOrElse(messages("site.yes")))
         ),
         RadioItem(
             id = Some(field.id + "-no"),
             value = Some("false"),
             checked = field.value.contains("false"),
-            content = Text(messages("site.no"))
+            content = Text(noLabel.getOrElse(messages("site.no")))
         )
     )
 ))
