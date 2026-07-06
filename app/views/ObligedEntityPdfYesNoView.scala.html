@@ -15,16 +15,14 @@
  *@
 
 @import controllers.routes._
-@import views.html.components.{ErrorSummary, SubmitButton, InputYesNo, HeadingWithCaption}
+@import views.html.components.{ErrorSummary, SubmitButton, InputYesNo}
 
 @this(
     main_template: MainTemplate,
     submitButton: SubmitButton,
     errorSummary: ErrorSummary,
     inputYesNo: InputYesNo,
-    headingWithCaption: HeadingWithCaption,
-    formHelper: FormWithCSRF,
-    govukRadios: GovukRadios
+    formHelper: FormWithCSRF
 )
 
 @(form: Form[_], identifier: String)(implicit request: RequestHeader, messages: Messages)
