@@ -91,7 +91,14 @@ class ObligedEntityPdfYesNoViewSpec extends YesNoViewBehaviours {
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix)
+    behave like yesNoPage(form, applyView, messageKeyPrefix, headingAndTitleKey = Some(messageKeyPrefix))
+
+    "render the legend with the govuk-fieldset__legend--l class" in {
+      val doc    = asDocument(applyView(form))
+      val legend = doc.getElementsByTag("legend").first()
+
+      legend.hasClass("govuk-fieldset__legend--l") mustBe true
+    }
   }
 
 }

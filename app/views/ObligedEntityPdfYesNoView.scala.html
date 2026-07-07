@@ -15,16 +15,14 @@
  *@
 
 @import controllers.routes._
-@import views.html.components.{ErrorSummary, SubmitButton, InputYesNo, HeadingWithCaption}
+@import views.html.components.{ErrorSummary, SubmitButton, InputYesNo}
 
 @this(
     main_template: MainTemplate,
     submitButton: SubmitButton,
     errorSummary: ErrorSummary,
     inputYesNo: InputYesNo,
-    headingWithCaption: HeadingWithCaption,
-    formHelper: FormWithCSRF,
-    govukRadios: GovukRadios
+    formHelper: FormWithCSRF
 )
 
 @(form: Form[_], identifier: String)(implicit request: RequestHeader, messages: Messages)
@@ -112,8 +110,6 @@
 
     <p>@messages("obligedEntityPdfYesNo.p8")</p>
 
-    <h2 class="govuk-heading-l">@messages("obligedEntityPdfYesNo.question")</h2>
-
 }
 
 @main_template(
@@ -134,41 +130,13 @@
 
         @content
 
-        @govukRadios(Radios(
-            idPrefix = Some("yes-no"),
-            name = form("value").name,
-            classes = "govuk-radios--inline",
-            errorMessage = form("value").error match {
-                case Some(e) => Some(ErrorMessage.errorMessageWithDefaultStringsTranslated(content = Text(messages(e.message, e.args: _*))))
-                case None => None
-            },
-            fieldset = Some(Fieldset(
-                legend = Some(Legend(
-                    content =  {
-                        HtmlContent(
-                            s"""<span class="govuk-caption-l">${messages("obligedEntityPdfYesNo.caption")}</span>
-                            |${messages("obligedEntityPdfYesNo.heading")}""".stripMargin
-                        )
-                    },
-                    isPageHeading = false,
-                    classes = Some("govuk-visually-hidden").getOrElse("govuk-fieldset__legend--l")
-                ))
-            )),
-            items = Seq(
-                RadioItem(
-                id = Some(form("value").id + "-yes"),
-                value = Some("true"),
-                checked = form("value").value.contains("true"),
-                content = Text(messages("obligedEntityPdfYesNo.yes"))
-                ),
-                RadioItem(
-                    id = Some(form("value").id + "-no"),
-                    value = Some("false"),
-                    checked = form("value").value.contains("false"),
-                    content = Text(messages("obligedEntityPdfYesNo.no"))
-                )
-            )
-        ))
+    @inputYesNo(
+        field = form("value"),
+        label = messages("obligedEntityPdfYesNo.question"),
+        legendAsHeading = false,
+        yesLabel = Some(messages("obligedEntityPdfYesNo.yes")),
+        noLabel = Some(messages("obligedEntityPdfYesNo.no"))
+    )
 
         @submitButton()
     }
