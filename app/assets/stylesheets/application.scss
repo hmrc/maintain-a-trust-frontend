@@ -71,7 +71,7 @@ h3 {
 // ----------------
 // Ensures the correct alignment of buttons within the button-group
 // ----------------
-@include govuk-media-query() {
+@include govuk-media-query($from: tablet) {
   .govuk-button-group {
      align-items: normal;
   }
