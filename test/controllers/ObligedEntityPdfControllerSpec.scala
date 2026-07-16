@@ -106,9 +106,11 @@ class ObligedEntityPdfControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual INTERNAL_SERVER_ERROR
-        contentAsString(result) contains "There is a problem"
-        contentAsString(result) contains "Contact the trusts helpline"
-        contentAsString(result) contains "0300 123 1072"
+
+        val body = contentAsString(result)
+        body.contains("There is a problem")          mustBe true
+        body.contains("Contact the trusts helpline") mustBe true
+        body.contains("0300 322 9640")               mustBe true
 
         application.stop()
       }
