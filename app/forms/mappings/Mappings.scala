@@ -46,12 +46,6 @@ trait Mappings extends Formatters with Constraints {
   ): FieldMapping[String] =
     of(urnFormatter(requiredKey, invalidKey, lengthKey))
 
-  protected def currency(
-    requiredKey: String = "assetMoneyValue.error.required",
-    invalidKey: String = "assetMoneyValue.error.invalidFormat"
-  ): FieldMapping[String] =
-    of(currencyFormatter(requiredKey, invalidKey))
-
   protected def int(
     requiredKey: String = "error.required",
     wholeNumberKey: String = "error.wholeNumber",

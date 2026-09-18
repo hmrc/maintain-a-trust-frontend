@@ -30,7 +30,7 @@ class KindOfTrustSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
 
     "deserialise valid values" in {
 
-      val gen = Gen.oneOf(KindOfTrust.values.toSeq)
+      val gen = Gen.oneOf(KindOfTrust.values)
 
       forAll(gen) { kindOfTrust =>
         JsString(kindOfTrust.toString).validate[KindOfTrust].asOpt.value mustEqual kindOfTrust
@@ -48,7 +48,7 @@ class KindOfTrustSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
 
     "serialise" in {
 
-      val gen = Gen.oneOf(KindOfTrust.values.toSeq)
+      val gen = Gen.oneOf(KindOfTrust.values)
 
       forAll(gen) { kindOfTrust =>
         Json.toJson(kindOfTrust) mustEqual JsString(kindOfTrust.toString)

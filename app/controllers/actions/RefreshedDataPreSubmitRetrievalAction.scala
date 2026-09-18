@@ -30,7 +30,7 @@ import pages.WhatIsNextPage
 import pages.declaration.AgentDeclarationPage
 import play.api.Logging
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{ActionRefiner, BodyParsers, Result}
+import play.api.mvc.{ActionRefiner, Result}
 import repositories.PlaybackRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -42,7 +42,6 @@ import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class RefreshedDataPreSubmitRetrievalActionImpl @Inject() (
-  val parser: BodyParsers.Default,
   playbackRepository: PlaybackRepository,
   trustConnector: TrustConnector,
   playbackExtractor: UserAnswersExtractor

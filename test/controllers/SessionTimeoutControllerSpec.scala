@@ -21,7 +21,7 @@ import config.FrontendAppConfig
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Configuration, Environment}
+import play.api.Configuration
 
 class SessionTimeoutControllerSpec extends SpecBase {
 
@@ -29,7 +29,6 @@ class SessionTimeoutControllerSpec extends SpecBase {
       extends SessionTimeoutController(
         app.injector.instanceOf[FrontendAppConfig],
         app.injector.instanceOf[Configuration],
-        app.injector.instanceOf[Environment],
         app.injector.instanceOf[MessagesControllerComponents]
       )
 

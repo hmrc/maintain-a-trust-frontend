@@ -18,11 +18,7 @@ package forms.mappings
 
 import java.time.LocalDate
 
-import forms.Validation
 import play.api.data.validation.{Constraint, Invalid, Valid}
-import uk.gov.hmrc.domain.Nino
-
-import scala.util.matching.Regex
 
 trait Constraints {
 
@@ -53,17 +49,6 @@ trait Constraints {
         Valid
       } else {
         Invalid(errorKey, maximum)
-      }
-    }
-
-  protected def inRange[A](minimum: A, maximum: A, errorKey: String)(implicit ev: Ordering[A]): Constraint[A] =
-    Constraint { input =>
-      import ev._
-
-      if (input >= minimum && input <= maximum) {
-        Valid
-      } else {
-        Invalid(errorKey, minimum, maximum)
       }
     }
 
@@ -99,14 +84,6 @@ trait Constraints {
         Invalid(errorKey, value)
     }
 
-  protected def isNinoValid(value: String, errorKey: String): Constraint[String] =
-    Constraint {
-      case str if Nino.isValid(str) =>
-        Valid
-      case _                        =>
-        Invalid(errorKey, value)
-    }
-
   protected def maxDate(maximum: LocalDate, errorKey: String, args: Any*): Constraint[LocalDate] =
     Constraint {
       case date if date.isAfter(maximum) =>
@@ -122,16 +99,6 @@ trait Constraints {
       case _                              =>
         Valid
     }
-
-  protected def wholeNumber(errorKey: String): Constraint[String] = {
-
-    val regex: Regex = Validation.decimalCheck.r
-
-    Constraint {
-      case regex(_*) => Valid
-      case _         => Invalid(errorKey)
-    }
-  }
 
   protected def isTelephoneNumberValid(value: String, errorKey: String): Constraint[String] =
     Constraint {

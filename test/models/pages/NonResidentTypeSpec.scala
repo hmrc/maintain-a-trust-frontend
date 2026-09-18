@@ -30,7 +30,7 @@ class NonResidentTypeSpec extends AnyWordSpec with Matchers with ScalaCheckPrope
 
     "deserialise valid values" in {
 
-      val gen = Gen.oneOf(NonResidentType.values.toSeq)
+      val gen = Gen.oneOf(NonResidentType.values)
 
       forAll(gen) { nonresidentType =>
         JsString(nonresidentType.toString).validate[NonResidentType].asOpt.value mustEqual nonresidentType
@@ -48,7 +48,7 @@ class NonResidentTypeSpec extends AnyWordSpec with Matchers with ScalaCheckPrope
 
     "serialise" in {
 
-      val gen = Gen.oneOf(NonResidentType.values.toSeq)
+      val gen = Gen.oneOf(NonResidentType.values)
 
       forAll(gen) { nonresidentType =>
         Json.toJson(nonresidentType) mustEqual JsString(nonresidentType.toString)

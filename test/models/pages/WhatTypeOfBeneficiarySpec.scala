@@ -30,7 +30,7 @@ class WhatTypeOfBeneficiarySpec extends AnyWordSpec with Matchers with ScalaChec
 
     "deserialise valid values" in {
 
-      val gen = Gen.oneOf(WhatTypeOfBeneficiary.values.toSeq)
+      val gen = Gen.oneOf(WhatTypeOfBeneficiary.values)
 
       forAll(gen) { whatTypeOfBeneficiary =>
         JsString(whatTypeOfBeneficiary.toString)
@@ -51,7 +51,7 @@ class WhatTypeOfBeneficiarySpec extends AnyWordSpec with Matchers with ScalaChec
 
     "serialise" in {
 
-      val gen = Gen.oneOf(WhatTypeOfBeneficiary.values.toSeq)
+      val gen = Gen.oneOf(WhatTypeOfBeneficiary.values)
 
       forAll(gen) { whatTypeOfBeneficiary =>
         Json.toJson(whatTypeOfBeneficiary) mustEqual JsString(whatTypeOfBeneficiary.toString)

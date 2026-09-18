@@ -17,7 +17,6 @@
 package controllers.actions
 
 import com.google.inject.Inject
-import config.FrontendAppConfig
 import models.requests.{AgentUser, IdentifierRequest, OrganisationUser}
 import play.api.Logging
 import play.api.mvc.Results._
@@ -29,13 +28,13 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait IdentifierAction
     extends ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest]
 
 class AuthenticatedIdentifierAction @Inject() (
-  config: FrontendAppConfig,
   trustsAuthFunctions: TrustsAuthorisedFunctions,
   val parser: BodyParsers.Default,
   playbackAuthenticationService: AuthenticationService

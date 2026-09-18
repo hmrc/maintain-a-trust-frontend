@@ -21,15 +21,6 @@ import models.errors.TrustErrors
 
 trait ConditionalExtractor {
 
-  def extractIfTaxable(
-    answers: UserAnswers
-  )(block: Either[TrustErrors, UserAnswers]): Either[TrustErrors, UserAnswers] =
-    if (answers.isTrustTaxable) {
-      block
-    } else {
-      Right(answers)
-    }
-
   def extractIfTaxableOrMigratingToTaxable(
     answers: UserAnswers
   )(block: Either[TrustErrors, UserAnswers]): Either[TrustErrors, UserAnswers] =

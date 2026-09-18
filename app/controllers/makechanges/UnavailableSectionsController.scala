@@ -35,14 +35,6 @@ class UnavailableSectionsController @Inject() (
 ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = actions.verifiedForIdentifier { implicit request =>
-    case class AvailableSections(
-      trustees: (Boolean, String),
-      beneficiaries: (Boolean, String),
-      settlors: (Boolean, String),
-      protectors: (Boolean, String),
-      otherIndividuals: (Boolean, String)
-    )
-
     val sections = List(
       (config.maintainSettlorsEnabled, request.messages(messagesApi)("section.settlors")),
       (config.maintainTrusteesEnabled, request.messages(messagesApi)("section.trustees")),

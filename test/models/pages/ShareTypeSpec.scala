@@ -30,7 +30,7 @@ class ShareTypeSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChe
 
     "deserialise valid values" in {
 
-      val gen = Gen.oneOf(ShareType.values.toSeq)
+      val gen = Gen.oneOf(ShareType.values)
 
       forAll(gen) { shareType =>
         JsString(shareType.toString).validate[ShareType].asOpt.value mustEqual shareType
@@ -48,7 +48,7 @@ class ShareTypeSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChe
 
     "serialise" in {
 
-      val gen = Gen.oneOf(ShareType.values.toSeq)
+      val gen = Gen.oneOf(ShareType.values)
 
       forAll(gen) { shareType =>
         Json.toJson(shareType) mustEqual JsString(shareType.toString)

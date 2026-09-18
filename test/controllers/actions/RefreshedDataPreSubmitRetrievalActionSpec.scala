@@ -59,7 +59,6 @@ class RefreshedDataPreSubmitRetrievalActionSpec
     trustConnector: TrustConnector,
     playbackExtractor: UserAnswersExtractor
   ) extends RefreshedDataPreSubmitRetrievalActionImpl(
-        bodyParsers,
         playbackRepository,
         trustConnector,
         playbackExtractor

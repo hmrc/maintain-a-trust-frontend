@@ -61,7 +61,7 @@ class IdentifierActionSpec extends SpecBase {
     application: Application,
     authService: AuthenticationService = new FakeAuthenticationService
   ) =
-    new AuthenticatedIdentifierAction(appConfig, trustsAuth, bodyParsers, authService)
+    new AuthenticatedIdentifierAction(trustsAuth, bodyParsers, authService)
 
   "invoking an AuthenticatedIdentifier" when {
 
