@@ -32,8 +32,7 @@ class IVDownViewSpec extends ViewBehaviours {
       view = applyView,
       messageKeyPrefix = "ivDown",
       "utr",
-      captionParam = utr,
-      "p1"
+      captionParam = utr
     )
   }
 
@@ -47,8 +46,7 @@ class IVDownViewSpec extends ViewBehaviours {
       view = applyView,
       messageKeyPrefix = "ivDown",
       "urn",
-      captionParam = urn,
-      "p1"
+      captionParam = urn
     )
   }
 

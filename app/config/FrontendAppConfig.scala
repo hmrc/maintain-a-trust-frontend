@@ -77,8 +77,7 @@ class FrontendAppConfig @Inject() (
 
   lazy val trustsObligedEntityOutputUrl: String = servicesConfig.baseUrl("trusts-obliged-entity-output")
 
-  lazy val agentOverviewUrl: String      = configuration.get[String]("urls.agentOverview")
-  lazy val serviceDownContactUrl: String = "/contact/problem_reports_nonjs?service=trusts"
+  lazy val agentOverviewUrl: String = configuration.get[String]("urls.agentOverview")
 
   lazy val schedule3aExemptEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.schedule3aExempt.enabled")
