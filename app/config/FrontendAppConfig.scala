@@ -17,17 +17,13 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
-import controllers.routes
 import play.api.Configuration
 import play.api.i18n.{Lang, Messages}
-import play.api.mvc.Call
-import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class FrontendAppConfig @Inject() (
   val configuration: Configuration,
-  contactFrontendConfig: ContactFrontendConfig,
   servicesConfig: ServicesConfig
 ) {
 
@@ -56,11 +52,8 @@ class FrontendAppConfig @Inject() (
 
   def maintainNonEeaCompanyUrl(identifier: String) = s"$maintainNonEeaCompaniesFrontendUrl/$identifier"
 
-  val betaFeedbackUrl =
-    s"${contactFrontendConfig.baseUrl.get}/contact/beta-feedback?service=${contactFrontendConfig.serviceId.get}"
-
-  lazy val agentsSubscriptionsUrl: String = configuration.get[String]("urls.agentSubscriptions")
-  lazy val agentServiceRegistrationUrl    = s"$agentsSubscriptionsUrl?continue=$loginContinueUrl"
+  private lazy val agentsSubscriptionsUrl: String = configuration.get[String]("urls.agentSubscriptions")
+  lazy val agentServiceRegistrationUrl            = s"$agentsSubscriptionsUrl?continue=$loginContinueUrl"
 
   lazy val agentInvitationsUrl: String = configuration.get[String]("urls.agentInvitations")
 
@@ -69,10 +62,9 @@ class FrontendAppConfig @Inject() (
 
   lazy val trustsIndividualCheck: String = servicesConfig.baseUrl("trusts-individual-check")
 
-  lazy val authUrl: String          = servicesConfig.baseUrl("auth")
   lazy val loginUrl: String         = configuration.get[String]("urls.login")
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
-  lazy val logoutUrl: String        = loadConfig("urls.logout")
+  lazy val logoutUrl: String        = s"${configuration.get[String]("urls.logout")}?useServiceNavigation"
 
   lazy val redirectToLoginUrl: String = s"$loginUrl?continue=$loginContinueUrl&origin=$appName"
 
@@ -85,8 +77,7 @@ class FrontendAppConfig @Inject() (
 
   lazy val trustsObligedEntityOutputUrl: String = servicesConfig.baseUrl("trusts-obliged-entity-output")
 
-  lazy val agentOverviewUrl: String      = configuration.get[String]("urls.agentOverview")
-  lazy val serviceDownContactUrl: String = "/contact/problem_reports_nonjs?service=trusts"
+  lazy val agentOverviewUrl: String = configuration.get[String]("urls.agentOverview")
 
   lazy val schedule3aExemptEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.schedule3aExempt.enabled")
@@ -95,9 +86,6 @@ class FrontendAppConfig @Inject() (
 
   lazy val locationCanonicalList: String   = loadConfig("location.canonical.list.all")
   lazy val locationCanonicalListCY: String = loadConfig("location.canonical.list.allCY")
-
-  lazy val languageTranslationEnabled: Boolean =
-    configuration.get[Boolean]("microservice.services.features.welsh-translation")
 
   lazy val primaryEnrolmentCheckEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.primaryEnrolmentCheck.enabled")
@@ -112,9 +100,6 @@ class FrontendAppConfig @Inject() (
     "english" -> Lang(ENGLISH),
     "cymraeg" -> Lang(WELSH)
   )
-
-  def routeToSwitchLanguage: String => Call =
-    (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
 
   lazy val playbackEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.playback.enabled")
 
@@ -144,9 +129,6 @@ class FrontendAppConfig @Inject() (
 
   lazy val maintainNonEeaCompaniesEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.maintain-non-eea-companies.enabled")
-
-  lazy val closeATrustEnabled: Boolean =
-    configuration.get[Boolean]("microservice.services.features.close-a-trust.enabled")
 
   lazy val migrateATrustEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.migrate-a-trust.enabled")

@@ -122,34 +122,6 @@ class MappingsSpec extends AnyWordSpec with Matchers with OptionValues with Mapp
     }
   }
 
-  "int" must {
-
-    val testForm: Form[Int] =
-      Form(
-        "value" -> int()
-      )
-
-    "bind a valid integer" in {
-      val result = testForm.bind(Map("value" -> "1"))
-      result.get mustEqual 1
-    }
-
-    "not bind an empty value" in {
-      val result = testForm.bind(Map("value" -> ""))
-      result.errors must contain(FormError("value", "error.required"))
-    }
-
-    "not bind an empty map" in {
-      val result = testForm.bind(Map.empty[String, String])
-      result.errors must contain(FormError("value", "error.required"))
-    }
-
-    "unbind a valid value" in {
-      val result = testForm.fill(123)
-      result.apply("value").value.value mustEqual "123"
-    }
-  }
-
   "urn" must {
 
     val testForm: Form[String] =

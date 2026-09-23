@@ -24,9 +24,6 @@ import play.api.data.Forms.of
 
 trait Mappings extends Formatters with Constraints {
 
-  protected def nino(errorKey: String = "error.required"): FieldMapping[String] =
-    of(ninoFormatter(errorKey))
-
   protected def text(errorKey: String = "error.required"): FieldMapping[String] =
     of(stringFormatter(errorKey))
 
@@ -45,19 +42,6 @@ trait Mappings extends Formatters with Constraints {
     lengthKey: String = "urn.error.length"
   ): FieldMapping[String] =
     of(urnFormatter(requiredKey, invalidKey, lengthKey))
-
-  protected def currency(
-    requiredKey: String = "assetMoneyValue.error.required",
-    invalidKey: String = "assetMoneyValue.error.invalidFormat"
-  ): FieldMapping[String] =
-    of(currencyFormatter(requiredKey, invalidKey))
-
-  protected def int(
-    requiredKey: String = "error.required",
-    wholeNumberKey: String = "error.wholeNumber",
-    nonNumericKey: String = "error.nonNumeric"
-  ): FieldMapping[Int] =
-    of(intFormatter(requiredKey, wholeNumberKey, nonNumericKey))
 
   protected def boolean(
     requiredKey: String = "error.required",

@@ -30,7 +30,7 @@ class RoleInCompanySpec extends AnyWordSpec with Matchers with ScalaCheckPropert
 
     "deserialise valid values" in {
 
-      val gen = Gen.oneOf(RoleInCompany.values.toSeq)
+      val gen = Gen.oneOf(RoleInCompany.values)
 
       forAll(gen) { roleInCompany =>
         JsString(roleInCompany.toString).validate[RoleInCompany].asOpt.value mustEqual roleInCompany
@@ -48,7 +48,7 @@ class RoleInCompanySpec extends AnyWordSpec with Matchers with ScalaCheckPropert
 
     "serialise" in {
 
-      val gen = Gen.oneOf(RoleInCompany.values.toSeq)
+      val gen = Gen.oneOf(RoleInCompany.values)
 
       forAll(gen) { roleInCompany =>
         Json.toJson(roleInCompany) mustEqual JsString(roleInCompany.toString)

@@ -18,11 +18,7 @@ package forms.mappings
 
 import java.time.LocalDate
 
-import forms.Validation
 import play.api.data.validation.{Constraint, Invalid, Valid}
-import uk.gov.hmrc.domain.Nino
-
-import scala.util.matching.Regex
 
 trait Constraints {
 
@@ -32,39 +28,6 @@ trait Constraints {
         .map(_.apply(input))
         .find(_ != Valid)
         .getOrElse(Valid)
-    }
-
-  protected def minimumValue[A](minimum: A, errorKey: String)(implicit ev: Ordering[A]): Constraint[A] =
-    Constraint { input =>
-      import ev._
-
-      if (input >= minimum) {
-        Valid
-      } else {
-        Invalid(errorKey, minimum)
-      }
-    }
-
-  protected def maximumValue[A](maximum: A, errorKey: String)(implicit ev: Ordering[A]): Constraint[A] =
-    Constraint { input =>
-      import ev._
-
-      if (input <= maximum) {
-        Valid
-      } else {
-        Invalid(errorKey, maximum)
-      }
-    }
-
-  protected def inRange[A](minimum: A, maximum: A, errorKey: String)(implicit ev: Ordering[A]): Constraint[A] =
-    Constraint { input =>
-      import ev._
-
-      if (input >= minimum && input <= maximum) {
-        Valid
-      } else {
-        Invalid(errorKey, minimum, maximum)
-      }
     }
 
   protected def regexp(regex: String, errorKey: String): Constraint[String] =
@@ -83,25 +46,9 @@ trait Constraints {
         Invalid(errorKey, maximum)
     }
 
-  protected def minLength(minimum: Int, errorKey: String): Constraint[String] =
-    Constraint {
-      case str if str.length >= minimum =>
-        Valid
-      case _                            =>
-        Invalid(errorKey, minimum)
-    }
-
   protected def isNotEmpty(value: String, errorKey: String): Constraint[String] =
     Constraint {
       case str if str.trim.nonEmpty =>
-        Valid
-      case _                        =>
-        Invalid(errorKey, value)
-    }
-
-  protected def isNinoValid(value: String, errorKey: String): Constraint[String] =
-    Constraint {
-      case str if Nino.isValid(str) =>
         Valid
       case _                        =>
         Invalid(errorKey, value)
@@ -122,16 +69,6 @@ trait Constraints {
       case _                              =>
         Valid
     }
-
-  protected def wholeNumber(errorKey: String): Constraint[String] = {
-
-    val regex: Regex = Validation.decimalCheck.r
-
-    Constraint {
-      case regex(_*) => Valid
-      case _         => Invalid(errorKey)
-    }
-  }
 
   protected def isTelephoneNumberValid(value: String, errorKey: String): Constraint[String] =
     Constraint {

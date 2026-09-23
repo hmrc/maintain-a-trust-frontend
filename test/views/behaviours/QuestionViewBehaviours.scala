@@ -80,7 +80,7 @@ trait QuestionViewBehaviours[A] extends ViewBehaviours {
 
             val doc       = asDocument(createView(form.withError(FormError(field, "error"))))
             val errorSpan = doc.getElementsByClass("govuk-error-message").first
-            errorSpan.attr("id") contains field
+            errorSpan.attr("id")                             must include(field)
             errorSpan.siblingElements().get(0).attr("for") mustBe field
           }
         }

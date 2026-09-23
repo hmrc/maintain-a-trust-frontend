@@ -225,8 +225,6 @@ internationalAddress.error.line3.invalidCharacters = Address line 3 must only in
 
 ivDown.heading = Sorry, there is a problem with the service
 ivDown.title = Sorry, there is a problem with the service
-ivDown.p1 = To help you with this trust, we need you to
-ivDown.contact.link = send some information to us
 
 problemDeclaring.heading = Sorry, there is a problem with the service
 problemDeclaring.title = Sorry, there is a problem with the service

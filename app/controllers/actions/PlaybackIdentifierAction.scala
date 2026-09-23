@@ -18,7 +18,7 @@ package controllers.actions
 
 import com.google.inject.{ImplementedBy, Inject}
 import models.requests.DataRequest
-import play.api.mvc.{ActionRefiner, BodyParsers, Result}
+import play.api.mvc.{ActionRefiner, Result}
 import services.AuthenticationService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -26,7 +26,6 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
 class PlaybackIdentifierActionImpl @Inject() (
-  val parser: BodyParsers.Default,
   playbackAuthenticationService: AuthenticationService
 )(implicit override val executionContext: ExecutionContext)
     extends PlaybackIdentifierAction {

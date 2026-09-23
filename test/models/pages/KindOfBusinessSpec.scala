@@ -30,7 +30,7 @@ class KindOfBusinessSpec extends AnyWordSpec with Matchers with ScalaCheckProper
 
     "deserialise valid values" in {
 
-      val gen = Gen.oneOf(KindOfBusiness.values.toSeq)
+      val gen = Gen.oneOf(KindOfBusiness.values)
 
       forAll(gen) { kindOfBusiness =>
         JsString(kindOfBusiness.toString).validate[KindOfBusiness].asOpt.value mustEqual kindOfBusiness
@@ -48,7 +48,7 @@ class KindOfBusinessSpec extends AnyWordSpec with Matchers with ScalaCheckProper
 
     "serialise" in {
 
-      val gen = Gen.oneOf(KindOfBusiness.values.toSeq)
+      val gen = Gen.oneOf(KindOfBusiness.values)
 
       forAll(gen) { kindOfBusiness =>
         Json.toJson(kindOfBusiness) mustEqual JsString(kindOfBusiness.toString)

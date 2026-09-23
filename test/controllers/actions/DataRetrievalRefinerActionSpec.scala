@@ -64,9 +64,7 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
 
         val futureResult = action.callRefine(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
-        futureResult.map { result =>
-          assert(result == Results.Redirect(appConfig.logoutUrl))
-        }
+        futureResult.futureValue mustBe Left(Results.Redirect(appConfig.logoutUrl))
       }
 
       "return an Internal Server Error when there is a problem when calling ActiveSessionRepository" in {
