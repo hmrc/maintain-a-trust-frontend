@@ -41,7 +41,8 @@
   timeoutEnabled: Boolean = true,
   canSignOut: Boolean = true,
   showBackLink: Boolean = false,
-  showFooter: Boolean = true
+  showFooter: Boolean = true,
+  showBanner: Boolean = false
 )(mainContent: Html)(implicit request: RequestHeader, messages: Messages)
 
 @additionalHead = {
@@ -69,6 +70,10 @@
     }
 }
 
+@urBannerWithUrl = @{
+                Some(UserResearchBanner(url=appConfig.urBannerURL))
+                    }
+
 @mainContentWithGetHelp = {
     @mainContent
     @if(showFooter){
@@ -85,6 +90,9 @@
     serviceURLs = ServiceURLs(
         serviceUrl = Some(appConfig.loginContinueUrl),
         signOutUrl = if(canSignOut) Some(controllers.routes.LogoutController.logout().url) else None
+    ),
+    banners = uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.Banners(
+                userResearchBanner = if(showBanner) urBannerWithUrl else None
     ),
     templateOverrides = TemplateOverrides(
         additionalHeadBlock = Some(additionalHead),
