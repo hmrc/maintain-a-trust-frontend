@@ -46,6 +46,8 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
 
     behave like pageWithContinueButton(applyView, Some("site.startMaintaining"))
 
+    behave like pageWithUserResearchBanner(applyView)
+
   }
 
   "InformationMaintainingThisTrust view for URN" must {
@@ -71,6 +73,8 @@ class InformationMaintainingThisTrustViewSpec extends ViewBehaviours {
     behave like pageWithBackLink(applyView)
 
     behave like pageWithContinueButton(applyView, Some("site.startMaintaining"))
+
+    behave like pageWithUserResearchBanner(applyView)
 
   }
 
