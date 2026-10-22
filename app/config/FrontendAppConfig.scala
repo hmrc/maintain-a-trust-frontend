@@ -163,7 +163,7 @@ class FrontendAppConfig @Inject() (
   lazy val sa900Link: String =
     configuration.get[String]("urls.sa900")
 
-  lazy val urBannerURL: String                         = configuration.get[String]("urls.urBannerURL")
+  lazy val urBannerURL: String = configuration.get[String]("urls.urBannerURL")
 
   def helplineUrl(implicit messages: Messages): String = {
     val path = messages.lang.code match {
