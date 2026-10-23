@@ -17,6 +17,7 @@
 @import models.Mode
 @import config.FrontendAppConfig
 @import views.html.components.{Warning, HeadingWithCaption, SubmitButton}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
 
 @this(
     appConfig: FrontendAppConfig,
@@ -31,7 +32,8 @@
 
 @main_template(
     title = messages("informationMaintainingThisTrust.title"),
-    showBackLink = true
+    showBackLink = true,
+    showBanner = true
 ) {
 
     @headingWithCaption(

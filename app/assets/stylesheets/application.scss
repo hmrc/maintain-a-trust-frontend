@@ -68,6 +68,17 @@ h3 {
   @extend .govuk-heading-s;
 }
 
+.hmrc-user-research-banner {
+ &__title {
+     @include govuk-responsive-margin(1, "bottom");
+     color: govuk-colour("white");
+   }
+
+  &__link {
+    @include govuk-link-common;
+    @include govuk-link-style-inverse;
+  }
+}
 // ----------------
 // Ensures the correct alignment of buttons within the button-group
 // ----------------
