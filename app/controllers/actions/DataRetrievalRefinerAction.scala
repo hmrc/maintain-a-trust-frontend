@@ -59,9 +59,7 @@ class DataRetrievalRefinerAction @Inject() (
         logger.warn(s"[$className][refine] no active UTR/URN present in the session data")
 
         Future.successful(
-          Left(
-            Results.Redirect(appConfig.logoutUrl)
-          )
+          Left(Results.Redirect(appConfig.logoutWithBasGatewayUrl, Map("continue" -> Seq(appConfig.timeOutUrl))))
         )
       case Left(_)              =>
         logger.warn(s"[$className][refine] Error while retrieving data from active session repository")
