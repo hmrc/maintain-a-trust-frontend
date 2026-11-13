@@ -62,11 +62,17 @@ class FrontendAppConfig @Inject() (
 
   lazy val trustsIndividualCheck: String = servicesConfig.baseUrl("trusts-individual-check")
 
-  lazy val loginUrl: String         = configuration.get[String]("urls.login")
-  lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
-  lazy val logoutUrl: String        = s"${configuration.get[String]("urls.logout")}?useServiceNavigation"
-
+  lazy val loginUrl: String           = configuration.get[String]("urls.login")
+  lazy val loginContinueUrl: String   = configuration.get[String]("urls.loginContinue")
   lazy val redirectToLoginUrl: String = s"$loginUrl?continue=$loginContinueUrl&origin=$appName"
+
+  lazy val feedbackFrontendUrl: String = s"${servicesConfig.getString("feedback-frontend.url")}?useServiceNavigation"
+
+  lazy val logoutUrl: String               = configuration.get[String]("urls.logout")
+  lazy val basGatewayBaseUrl: String       = servicesConfig.getString("bas-gateway.host")
+  lazy val logoutWithBasGatewayUrl: String = s"$basGatewayBaseUrl$logoutUrl"
+
+  lazy val timeOutUrl: String = servicesConfig.getString("urls.timeOut")
 
   lazy val logoutAudit: Boolean =
     configuration.get[Boolean]("microservice.services.features.auditing.logout")
