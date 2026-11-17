@@ -48,7 +48,8 @@
 @additionalHead = {
     @if(timeoutEnabled) {
         @hmrcTimeoutDialogHelper(
-            signOutUrl = controllers.routes.SessionTimeoutController.timeout.url,
+            signOutUrl = controllers.routes.LogoutController.logout().url,
+            timeoutUrl = Some(controllers.routes.SessionTimeoutController.timeout.url),
             keepAliveUrl = Some(controllers.routes.SessionTimeoutController.keepAlive.url),
             timeout = Some(appConfig.timeoutLength),
             countdown = Some(appConfig.countdownLength),

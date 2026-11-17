@@ -32,6 +32,8 @@ import repositories.ActiveSessionRepository
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TestUserAnswers
+
+import java.net.URLEncoder
 import scala.concurrent.Future
 
 class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with ScalaFutures {
@@ -64,7 +66,10 @@ class DataRetrievalRefinerActionSpec extends SpecBase with MockitoSugar with Sca
 
         val futureResult = action.callRefine(IdentifierRequest(fakeRequest, OrganisationUser("id", Enrolments(Set()))))
 
-        futureResult.futureValue mustBe Left(Results.Redirect(appConfig.logoutUrl))
+        val continueUrl = URLEncoder.encode(frontendAppConfig.timeOutUrl, "UTF-8")
+        val expectedUrl = s"${frontendAppConfig.logoutWithBasGatewayUrl}?continue=$continueUrl"
+
+        futureResult.futureValue mustBe Left(Results.Redirect(expectedUrl))
       }
 
       "return an Internal Server Error when there is a problem when calling ActiveSessionRepository" in {
