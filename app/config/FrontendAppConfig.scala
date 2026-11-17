@@ -68,8 +68,11 @@ class FrontendAppConfig @Inject() (
 
   lazy val feedbackFrontendUrl: String = s"${servicesConfig.getString("feedback-frontend.url")}?useServiceNavigation"
 
-  lazy val logoutUrl: String               = configuration.get[String]("urls.logout")
-  lazy val basGatewayBaseUrl: String       = servicesConfig.getString("bas-gateway.host")
+  lazy val logoutUrl: String = configuration.get[String]("urls.logout")
+
+  // set to "" in deployed envs as the URL is relative, locally set to localhost:port
+  lazy val basGatewayBaseUrl: String = servicesConfig.getString("bas-gateway.host")
+
   lazy val logoutWithBasGatewayUrl: String = s"$basGatewayBaseUrl$logoutUrl"
 
   lazy val timeOutUrl: String = servicesConfig.getString("urls.timeOut")
